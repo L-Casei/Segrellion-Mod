@@ -118,6 +118,9 @@ segrellion_intro.0002 = {
 							using_cb = daemon_stepstones_first_war
 						}
 						add_attacker = root
+						root = {
+							add_character_flag = segrellion_stepstones_war_joined
+						}
 						save_scope_as = segrellion_stepstones_war
 					}
 				}
@@ -142,6 +145,101 @@ segrellion_intro.0002 = {
 		trigger_event = {
 			id = segrellion_intro.0003
 			days = 21
+		}
+	}
+}
+
+segrellion_intro.0006 = {
+	type = character_event
+	title = segrellion_intro.0006.t
+	desc = segrellion_intro.0006.desc
+	theme = war
+
+	override_background = { reference = army_camp }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Targaryen_61
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_flag = segrellion_chose_stepstones
+		has_character_flag = segrellion_stepstones_war_joined
+		NOT = { has_character_flag = segrellion_stepstones_story_completed }
+		character:Targaryen_61 ?= { is_alive = yes }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_stepstones_story_completed
+		remove_character_flag = segrellion_stepstones_aftermath_pending
+	}
+
+	option = {
+		name = segrellion_intro.0006.a
+		ai_chance = { base = 65 }
+		add_character_modifier = {
+			modifier = segrellion_restless_for_war_modifier
+			years = 1000
+		}
+		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
+		add_character_flag = segrellion_restless_for_war_path
+		add_character_flag = segrellion_targaryen_service_remembered
+		character:Targaryen_61 ?= {
+			if = {
+				limit = {
+					NOR = {
+						has_relation_friend = root
+						has_relation_best_friend = root
+					}
+				}
+				set_relation_friend = {
+					target = root
+					reason = friend
+				}
+			}
+		}
+		character:Targaryen_63 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
+			}
+		}
+	}
+
+	option = {
+		name = segrellion_intro.0006.b
+		ai_chance = { base = 35 }
+		add_character_modifier = {
+			modifier = segrellion_homeward_purpose_modifier
+			years = 1000
+		}
+		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
+		add_character_flag = segrellion_homeward_purpose_path
+		add_character_flag = segrellion_targaryen_service_remembered
+		character:Targaryen_61 ?= {
+			if = {
+				limit = {
+					NOR = {
+						has_relation_friend = root
+						has_relation_best_friend = root
+					}
+				}
+				set_relation_friend = {
+					target = root
+					reason = friend
+				}
+			}
+		}
+		character:Targaryen_63 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
+			}
 		}
 	}
 }

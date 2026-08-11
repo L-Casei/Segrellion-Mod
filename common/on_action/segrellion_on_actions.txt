@@ -7,6 +7,13 @@ on_game_start = {
 on_game_start_after_lobby = {
 	on_actions = {
 		segrellion_on_game_start_after_lobby
+		iaf_canon_children_on_game_start_after_lobby
+	}
+}
+
+on_player_select_destiny_confirmed = {
+	on_actions = {
+		segrellion_intro_on_player_select_destiny_confirmed
 	}
 }
 
@@ -20,6 +27,8 @@ yearly_global_pulse = {
 
 monthly_global_pulse = {
 	on_actions = {
+		segrellion_stepstones_war_end_monthly_check
+		segrellion_restless_for_war_monthly_check
 		segrellion_refresh_scripted_appearances
 		segrellion_refresh_firstflame_dynasty_bonus
 		segrellion_refresh_icebringer_affinity
@@ -61,6 +70,18 @@ segrellion_on_game_start = {
 				add_character_flag = has_scripted_appearance
 				add_character_flag = hair_trait_male_hair_custom_20
 				add_character_flag = beard_trait_no_beard
+			}
+		}
+		character:Segrellion_1 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					NOT = { has_character_flag = segrellion_intro_event_seen }
+				}
+				trigger_event = {
+					id = segrellion_intro.0001
+					days = 3
+				}
 			}
 		}
 		character:Vladwyn_1 ?= {
@@ -135,13 +156,31 @@ segrellion_refresh_scripted_appearances = {
 
 segrellion_on_game_start_after_lobby = {
 	effect = {
-		every_player = {
+		character:Segrellion_1 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					NOT = { has_character_flag = segrellion_intro_event_seen }
+				}
+				trigger_event = {
+					id = segrellion_intro.0001
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+segrellion_intro_on_player_select_destiny_confirmed = {
+	effect = {
+		if = {
 			limit = {
 				this = character:Segrellion_1
 				NOT = { has_character_flag = segrellion_intro_event_seen }
 			}
 			trigger_event = {
 				id = segrellion_intro.0001
+				days = 3
 			}
 		}
 	}
@@ -156,6 +195,7 @@ segrellion_intro_yearly_fallback = {
 			}
 			trigger_event = {
 				id = segrellion_intro.0001
+				days = 3
 			}
 		}
 	}
@@ -164,6 +204,89 @@ segrellion_intro_yearly_fallback = {
 segrellion_legacy_yearly_refresh = {
 	effect = {
 		segrellion_refresh_valyrian_kin_opinion_effect = yes
+	}
+}
+
+segrellion_stepstones_war_end_monthly_check = {
+	effect = {
+		character:Segrellion_1 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					has_character_flag = segrellion_chose_stepstones
+					has_character_flag = segrellion_stepstones_war_joined
+					NOT = { has_character_flag = segrellion_stepstones_story_completed }
+					NOT = { has_character_flag = segrellion_stepstones_aftermath_pending }
+					character:Targaryen_61 ?= {
+						is_alive = yes
+						NOT = {
+							any_character_war = {
+								using_cb = daemon_stepstones_first_war
+							}
+						}
+					}
+				}
+				add_character_flag = segrellion_stepstones_aftermath_pending
+				trigger_event = {
+					id = segrellion_intro.0006
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+segrellion_restless_for_war_monthly_check = {
+	effect = {
+		character:Segrellion_1 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					has_character_flag = segrellion_restless_for_war_path
+					NOT = { has_character_flag = segrellion_restless_for_war_answered_call }
+				}
+				if = {
+					limit = {
+						character:Targaryen_61 ?= {
+							any_character_war = {
+								primary_attacker ?= prev
+							}
+						}
+					}
+					character:Targaryen_61 = {
+						random_character_war = {
+							limit = {
+								primary_attacker ?= prev
+							}
+							add_attacker = root
+							root = {
+								add_character_flag = segrellion_restless_for_war_answered_call
+							}
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						character:Velaryon_31 ?= {
+							any_character_war = {
+								primary_attacker ?= prev
+							}
+						}
+					}
+					character:Velaryon_31 = {
+						random_character_war = {
+							limit = {
+								primary_attacker ?= prev
+							}
+							add_attacker = root
+							root = {
+								add_character_flag = segrellion_restless_for_war_answered_call
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
