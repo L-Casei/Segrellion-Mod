@@ -1,0 +1,47 @@
+namespace = segrellion_dragonlore
+
+segrellion_dragonlore.0001 = {
+	type = character_event
+	title = segrellion_dragonlore.0001.t
+	desc = segrellion_dragonlore.0001.desc
+	theme = dragon
+	left_portrait = root
+
+	trigger = {
+		location = province:4427
+		current_travel_plan.travel_plan_owner = root
+		is_ruler = yes
+		is_location_valid_for_travel_event_on_land = yes
+		NOT = { exists = var:segrellion_firstflame_dragonlore_found }
+		location = {
+			OR = {
+				has_building = segrellion_fort_01
+				has_building = segrellion_aeryns_den_02
+				has_building = segrellion_firstflame_03
+			}
+		}
+	}
+
+	option = {
+		name = segrellion_dragonlore.0001.a
+
+		custom_tooltip = {
+			text = segrellion_dragonlore_increase_tt
+			if = {
+				limit = { exists = var:dragonlore }
+				change_variable = {
+					name = dragonlore
+					add = 2
+				}
+			}
+			else = {
+				set_variable = {
+					name = dragonlore
+					value = 2
+				}
+			}
+			set_variable = segrellion_firstflame_dragonlore_found
+			add_character_flag = segrellion_firstflame_dragonlore_found
+		}
+	}
+}

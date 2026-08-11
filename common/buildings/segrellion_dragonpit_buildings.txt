@@ -1,0 +1,184 @@
+segrellion_vhal_dragonpit_01 = {
+	construction_time = slow_construction_time
+	cost_gold = 500
+	type_icon = "icon_building_vhal_dragonpit.dds"
+
+	can_construct_potential = {
+		building_requirement_tribal = no
+		barony = title:b_berryport
+	}
+
+	can_construct = {
+		scope:holder = { dynasty = dynasty:dynn_Segrellion }
+	}
+
+	is_enabled = {
+		agot_generic_is_special_building_enabled = yes
+	}
+
+	effect_desc = segrellion_vhal_dragonpit_01_effect_desc
+
+	province_modifier = {
+		fort_level = 1
+		monthly_income = -0.10
+	}
+
+	county_modifier = {
+		county_opinion_add = -2
+		monthly_county_control_growth_add = 0.05
+	}
+
+	character_modifier = {
+		dread_gain_mult = 0.02
+		monthly_dynasty_prestige_mult = 0.03
+	}
+
+	next_building = segrellion_vhal_dragonpit_02
+	type = duchy_capital
+
+	flag = travel_point_of_interest_martial
+}
+
+segrellion_vhal_dragonpit_02 = {
+	construction_time = very_slow_construction_time
+	cost_gold = 1500
+	type_icon = "icon_building_vhal_dragonpit.dds"
+
+	can_construct_potential = {
+		building_requirement_tribal = no
+		barony = title:b_berryport
+	}
+
+	can_construct = {
+		scope:holder = {
+			dynasty = dynasty:dynn_Segrellion
+			has_title = title:d_vhalerion
+			agot_has_dragonpit_requirements_trigger = yes
+		}
+	}
+
+	is_enabled = {
+		agot_generic_is_special_building_enabled = yes
+	}
+
+	effect_desc = segrellion_vhal_dragonpit_02_effect_desc
+
+	on_complete = {
+		county = { set_variable = { name = has_dragonkeeper_order } }
+		county.holder = {
+			if = {
+				limit = { agot_has_any_dragonpit_access_law = no }
+				agot_dragonpit_access_law_close_family_effect = yes
+			}
+			if = {
+				limit = { has_ep1_dlc_trigger = yes }
+				hidden_effect = { set_amenity_level = { type = agot_dragonpit_amenities value = 3 } }
+				custom_tooltip = agot_dragonpit_amenities_level_set_to_three_tt
+			}
+			if = {
+				limit = { NOT = { employs_court_position = head_dragonkeeper_court_position } }
+				trigger_event = {
+					id = agot_dragonkeepers.0100
+					days = 1
+				}
+			}
+		}
+	}
+
+	province_modifier = {
+		fort_level = 2
+		monthly_income = -0.25
+		defender_holding_advantage = 2
+	}
+
+	county_modifier = {
+		county_opinion_add = -4
+		monthly_county_control_growth_add = 0.10
+	}
+
+	character_modifier = {
+		dread_gain_mult = 0.07
+		monthly_dynasty_prestige_mult = 0.08
+		owned_legend_spread_mult = 0.05
+		intimidated_vassal_tax_contribution_mult = 0.05
+		bond_with_dragon_scheme_scheme_phase_duration_add = miniscule_scheme_phase_duration_bonus_value
+		deepen_bond_with_dragon_scheme_scheme_phase_duration_add = miniscule_scheme_phase_duration_bonus_value
+	}
+
+	next_building = segrellion_vhal_dragonpit_03
+	type = duchy_capital
+
+	flag = travel_point_of_interest_martial
+}
+
+segrellion_vhal_dragonpit_03 = {
+	construction_time = very_slow_construction_time
+	cost_gold = 3000
+	type_icon = "icon_building_vhal_dragonpit.dds"
+
+	can_construct_potential = {
+		building_requirement_tribal = no
+		barony = title:b_berryport
+	}
+
+	can_construct = {
+		scope:holder = {
+			dynasty = dynasty:dynn_Segrellion
+			has_title = title:d_vhalerion
+			agot_has_dragonpit_requirements_trigger = yes
+		}
+	}
+
+	is_enabled = {
+		agot_generic_is_special_building_enabled = yes
+	}
+
+	effect_desc = segrellion_vhal_dragonpit_03_effect_desc
+
+	on_complete = {
+		county = { set_variable = { name = has_dragonkeeper_order } }
+		county.holder = {
+			if = {
+				limit = { agot_has_any_dragonpit_access_law = no }
+				agot_dragonpit_access_law_close_family_effect = yes
+			}
+			if = {
+				limit = { has_ep1_dlc_trigger = yes }
+				hidden_effect = { set_amenity_level = { type = agot_dragonpit_amenities value = 4 } }
+				custom_tooltip = agot_dragonpit_amenities_level_set_to_three_tt
+			}
+			if = {
+				limit = { NOT = { employs_court_position = head_dragonkeeper_court_position } }
+				trigger_event = {
+					id = agot_dragonkeepers.0100
+					days = 1
+				}
+			}
+		}
+	}
+
+	province_modifier = {
+		fort_level = 4
+		monthly_income = -0.50
+		defender_holding_advantage = 5
+	}
+
+	county_modifier = {
+		county_opinion_add = -3
+		monthly_county_control_growth_add = 0.20
+		development_growth_factor = 0.10
+	}
+
+	character_modifier = {
+		dread_gain_mult = 0.12
+		monthly_dynasty_prestige_mult = 0.12
+		owned_legend_spread_mult = 0.10
+		intimidated_vassal_tax_contribution_mult = 0.10
+		bond_with_dragon_scheme_scheme_phase_duration_add = minor_scheme_phase_duration_bonus_value
+		deepen_bond_with_dragon_scheme_scheme_phase_duration_add = minor_scheme_phase_duration_bonus_value
+	}
+
+	type = duchy_capital
+
+	flag = travel_point_of_interest_martial
+}

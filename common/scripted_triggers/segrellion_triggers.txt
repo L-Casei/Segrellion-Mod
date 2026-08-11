@@ -1,0 +1,95 @@
+is_segrellion_dynasty = {
+	dynasty ?= dynasty:dynn_Segrellion
+}
+
+is_blackmark_held_by_segrellion = {
+	title:c_blackmark = { holder.dynasty = dynasty:dynn_Segrellion }
+}
+
+segrellion_has_education_level_three_trigger = {
+	OR = {
+		has_trait = education_diplomacy_3
+		has_trait = education_diplomacy_4
+		has_trait = education_diplomacy_5
+		has_trait = education_martial_3
+		has_trait = education_martial_4
+		has_trait = education_martial_5
+		has_trait = education_martial_prowess_3
+		has_trait = education_martial_prowess_4
+		has_trait = education_martial_prowess_5
+		has_trait = education_stewardship_3
+		has_trait = education_stewardship_4
+		has_trait = education_stewardship_5
+		has_trait = education_intrigue_3
+		has_trait = education_intrigue_4
+		has_trait = education_intrigue_5
+		has_trait = education_learning_3
+		has_trait = education_learning_4
+		has_trait = education_learning_5
+	}
+}
+
+segrellion_icebringer_chosen_trigger = {
+	OR = {
+		dynasty = dynasty:dynn_Segrellion
+		any_ancestor = { dynasty = dynasty:dynn_Segrellion }
+		has_character_flag = segrellion_icebringer_authorized
+	}
+	prowess_no_portrait >= 12
+	segrellion_icebringer_affinity_value >= 8
+}
+
+segrellion_icebringer_rejected_trigger = {
+	OR = {
+		NOT = {
+			OR = {
+				dynasty = dynasty:dynn_Segrellion
+				any_ancestor = { dynasty = dynasty:dynn_Segrellion }
+				has_character_flag = segrellion_icebringer_authorized
+			}
+		}
+		prowess_no_portrait < 12
+		segrellion_icebringer_affinity_value <= 0
+	}
+}
+
+segrellion_valyrian_culture_trigger = {
+	culture = {
+		has_cultural_pillar = heritage_valyrian
+	}
+}
+
+segrellion_holds_vhal_trigger = {
+	OR = {
+		has_title = title:d_vhalerion
+		has_title = title:c_blackmark
+	}
+}
+
+segrellion_has_flamelands_hook_power_trigger = {
+	OR = {
+		title:k_the_hook = {
+			any_de_jure_county = {
+				count >= 8
+				holder.top_liege = root
+			}
+		}
+		any_vassal = {
+			count >= 4
+			any_realm_county = {
+				de_jure_liege.de_jure_liege = title:k_the_hook
+			}
+		}
+	}
+}
+
+segrellion_has_founding_relic_trigger = {
+	OR = {
+		any_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+		any_character_artifact = {
+			has_variable = segrellion_plate_of_segrell_artifact
+		}
+	}
+}

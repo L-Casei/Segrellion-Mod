@@ -1,0 +1,231 @@
+segrellion_create_artifact_icebringer_effect = {
+	$OWNER$ = { save_scope_as = owner }
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+		name = segrellion_icebringer_name
+		visuals = segrellion_icebringer_visuals
+		description = segrellion_icebringer_desc
+		type = sword
+		wealth = scope:wealth
+		quality = scope:quality
+		template = segrellion_icebringer_template
+		history = {
+			type = created_before_history
+			date = 7600.1.1
+		}
+		modifier = segrellion_icebringer_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+		equip_artifact_to_owner_replace = yes
+		set_global_variable = {
+			name = segrellion_icebringer
+			value = this
+		}
+		save_scope_as = epic
+		set_variable = { name = valyrian_steel value = yes }
+		set_variable = { name = historical_unique_artifact value = yes }
+		set_variable = { name = traditional_house_owner value = scope:owner.house }
+		set_variable = { name = segrellion_icebringer_artifact value = yes }
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8061.1.1
+			RECIPIENT = character:Segrellion_4
+		}
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8106.4.18
+			RECIPIENT = character:Segrellion_1
+		}
+	}
+}
+
+segrellion_find_icebringer_effect = {
+	if = {
+		limit = { NOT = { exists = global_var:segrellion_icebringer } }
+		character:Segrellion_1 ?= {
+			any_character_artifact = {
+				limit = { has_variable = segrellion_icebringer_artifact }
+				set_global_variable = {
+					name = segrellion_icebringer
+					value = this
+				}
+			}
+		}
+	}
+}
+
+segrellion_refresh_icebringer_affinity_effect = {
+	segrellion_find_icebringer_effect = yes
+	global_var:segrellion_icebringer ?= {
+		artifact_owner ?= {
+			remove_character_modifier = segrellion_icebringer_rejection_modifier
+			if = {
+				limit = {
+					any_equipped_character_artifact = {
+						has_variable = segrellion_icebringer_artifact
+					}
+					segrellion_icebringer_rejected_trigger = yes
+				}
+				add_character_modifier = {
+					modifier = segrellion_icebringer_rejection_modifier
+					days = 40
+				}
+			}
+		}
+	}
+}
+
+segrellion_create_artifact_plate_of_segrell_effect = {
+	$OWNER$ = { save_scope_as = owner }
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+		name = segrellion_plate_of_segrell_name
+		visuals = segrellion_plate_of_segrell_visuals
+		description = segrellion_plate_of_segrell_desc
+		type = armor_plate
+		wealth = scope:wealth
+		quality = scope:quality
+		template = segrellion_plate_of_segrell_template
+		history = {
+			type = created_before_history
+			date = 7600.1.1
+		}
+		modifier = segrellion_plate_of_segrell_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+		equip_artifact_to_owner_replace = yes
+		save_scope_as = epic
+		set_variable = { name = historical_unique_artifact value = yes }
+		set_variable = { name = valyrian_steel value = yes }
+		set_variable = { name = valyrian_steel_armor_artifact value = yes }
+		set_variable = { name = traditional_house_owner value = scope:owner.house }
+		set_variable = { name = segrellion_plate_of_segrell_artifact value = yes }
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8061.1.1
+			RECIPIENT = character:Segrellion_4
+		}
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8106.4.18
+			RECIPIENT = character:Segrellion_1
+		}
+	}
+}
+
+segrellion_create_artifact_dragon_egg_effect = {
+	$OWNER$ = { save_scope_as = owner }
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+		name = segrellion_dragon_egg_name
+		visuals = segrellion_dragon_egg_white_visuals
+		description = segrellion_dragon_egg_desc
+		type = dragon_egg
+		wealth = scope:wealth
+		quality = scope:quality
+		template = segrellion_dragon_egg_template
+		history = {
+			type = created_before_history
+			date = 7600.1.1
+		}
+		modifier = segrellion_dragon_egg_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+		save_scope_as = epic
+		set_variable = { name = dragon_egg value = yes }
+		set_variable = { name = dragon_egg_color value = flag:white }
+		set_variable = { name = agot_artifact_cannot_gift value = yes }
+		set_variable = { name = historical_unique_artifact value = yes }
+		set_variable = { name = traditional_house_owner value = scope:owner.house }
+		set_variable = { name = segrellion_dragon_egg_artifact value = yes }
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8061.1.1
+			RECIPIENT = character:Segrellion_4
+		}
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8106.4.18
+			RECIPIENT = character:Segrellion_1
+		}
+	}
+}
+
+segrellion_create_starting_artifacts_effect = {
+	character:Segrellion_1 ?= {
+		if = {
+			limit = {
+				is_alive = yes
+				NOT = { has_character_flag = segrellion_starting_artifacts_created }
+			}
+			segrellion_create_artifact_icebringer_effect = { OWNER = this }
+			segrellion_create_artifact_plate_of_segrell_effect = { OWNER = this }
+			segrellion_create_artifact_dragon_egg_effect = { OWNER = this }
+			add_character_flag = segrellion_starting_artifacts_created
+		}
+	}
+}
+
+segrellion_create_artifact_sword_of_the_sentinel_effect = {
+	$OWNER$ = { save_scope_as = owner }
+	set_artifact_rarity_masterwork = yes
+
+	create_artifact = {
+		name = segrellion_sword_of_the_sentinel_name
+		description = segrellion_sword_of_the_sentinel_desc
+		visuals = sword
+		type = sword
+		modifier = artifact_prowess_3_modifier
+		wealth = scope:wealth
+		quality = scope:quality
+		save_scope_as = newly_created_artifact
+	}
+
+	scope:newly_created_artifact ?= {
+		equip_artifact_to_owner_replace = yes
+		set_variable = { name = segrellion_sword_of_the_sentinel value = yes }
+	}
+}
+
+segrellion_create_artifact_throne_of_the_flamelands_effect = {
+	$OWNER$ = { save_scope_as = owner }
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+		name = segrellion_throne_of_the_flamelands_name
+		description = segrellion_throne_of_the_flamelands_desc
+		visuals = segrellion_throne_of_the_flamelands_visuals
+		type = throne
+		template = segrellion_throne_of_the_flamelands_template
+		wealth = scope:wealth
+		quality = scope:quality
+		modifier = segrellion_throne_of_the_flamelands_modifier
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+		equip_artifact_to_owner_replace = yes
+		set_variable = { name = historical_unique_artifact value = yes }
+		set_variable = { name = traditional_house_owner value = scope:owner.house }
+		set_variable = { name = segrellion_throne_of_the_flamelands_artifact value = yes }
+	}
+}

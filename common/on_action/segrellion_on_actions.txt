@@ -1,0 +1,247 @@
+on_game_start = {
+	on_actions = {
+		segrellion_on_game_start
+	}
+}
+
+on_game_start_after_lobby = {
+	on_actions = {
+		segrellion_on_game_start_after_lobby
+	}
+}
+
+yearly_global_pulse = {
+	on_actions = {
+		segrellion_intro_yearly_fallback
+		segrellion_legacy_yearly_refresh
+		segrellion_vhalyrax_yearly_growth
+	}
+}
+
+monthly_global_pulse = {
+	on_actions = {
+		segrellion_refresh_scripted_appearances
+		segrellion_refresh_firstflame_dynasty_bonus
+		segrellion_refresh_icebringer_affinity
+	}
+}
+
+segrellion_on_game_start = {
+	effect = {
+		dynasty:dynn_Segrellion = {
+			while = {
+				limit = { dynasty_prestige_level < 2 }
+				add_dynasty_prestige_level = 1
+			}
+			add_dynasty_prestige = 250
+		}
+		dynasty:dynn_Segrellion = { add_dynasty_modifier = valyrian_heritage_dynasty_modifier }
+		dynasty:dynn_Segrellion = { every_dynasty_house = { add_house_modifier = dragonrider_house_modifier } }
+		title:b_castle_farring.title_province = {
+			if = {
+				limit = { has_special_building_slot = no }
+				add_special_building_slot = segrellion_beacon_01
+			}
+		}
+		character:Segrellion_1 ?= {
+			if = {
+				limit = { is_alive = yes }
+				if = {
+					limit = {
+						has_character_flag = segrellion_intro_event_seen
+						NOR = {
+							has_character_flag = segrellion_opening_route_dragonstone
+							has_character_flag = segrellion_opening_route_vhalerion
+							has_character_flag = segrellion_chose_stepstones
+							has_character_flag = segrellion_returned_to_vhalerion
+						}
+					}
+					remove_character_flag = segrellion_intro_event_seen
+				}
+				add_character_flag = has_scripted_appearance
+				add_character_flag = hair_trait_male_hair_custom_20
+				add_character_flag = beard_trait_no_beard
+			}
+		}
+		character:Vladwyn_1 ?= {
+			if = {
+				limit = { is_alive = yes }
+				add_character_flag = segrellion_icebringer_authorized
+				add_character_flag = has_scripted_appearance
+				add_character_flag = hair_trait_m_hair_ep3_byzantine_01
+				add_character_flag = beard_trait_no_beard
+			}
+		}
+		character:Segrellion_2 ?= {
+			if = {
+				limit = { is_alive = yes }
+				add_character_flag = has_scripted_appearance
+				add_character_flag = hair_trait_female_hair_custom_15
+				add_character_flag = beard_trait_no_beard
+				add_character_flag = segrellion_alysanne_custom_clothes
+			}
+		}
+		character:Segrellion_3 ?= {
+			if = {
+				limit = { is_alive = yes }
+				add_character_flag = has_scripted_appearance
+				add_character_flag = hair_trait_female_hair_custom_14
+				add_character_flag = beard_trait_no_beard
+				add_character_flag = segrellion_daenerys_custom_clothes
+			}
+		}
+		segrellion_create_starting_artifacts_effect = yes
+		character:Segrellion_1 ?= {
+			any_character_artifact = {
+				limit = { has_variable = segrellion_dragon_egg_artifact }
+				remove_variable = dud_egg
+				set_variable = { name = agot_artifact_cannot_gift value = yes }
+			}
+		}
+		segrellion_find_icebringer_effect = yes
+		segrellion_assign_historical_canon_traits_effect = yes
+		segrellion_refresh_firstflame_dynasty_bonus = yes
+	}
+}
+
+segrellion_refresh_icebringer_affinity = {
+	effect = {
+		segrellion_refresh_icebringer_affinity_effect = yes
+	}
+}
+
+segrellion_refresh_scripted_appearances = {
+	effect = {
+		character:Segrellion_2 ?= {
+			if = {
+				limit = { is_alive = yes }
+				add_character_flag = has_scripted_appearance
+				add_character_flag = hair_trait_female_hair_custom_15
+				add_character_flag = beard_trait_no_beard
+				add_character_flag = segrellion_alysanne_custom_clothes
+			}
+		}
+		character:Segrellion_3 ?= {
+			if = {
+				limit = { is_alive = yes }
+				add_character_flag = has_scripted_appearance
+				add_character_flag = hair_trait_female_hair_custom_14
+				add_character_flag = beard_trait_no_beard
+				add_character_flag = segrellion_daenerys_custom_clothes
+			}
+		}
+	}
+}
+
+segrellion_on_game_start_after_lobby = {
+	effect = {
+		every_player = {
+			limit = {
+				this = character:Segrellion_1
+				NOT = { has_character_flag = segrellion_intro_event_seen }
+			}
+			trigger_event = {
+				id = segrellion_intro.0001
+			}
+		}
+	}
+}
+
+segrellion_intro_yearly_fallback = {
+	effect = {
+		every_player = {
+			limit = {
+				this = character:Segrellion_1
+				NOT = { has_character_flag = segrellion_intro_event_seen }
+			}
+			trigger_event = {
+				id = segrellion_intro.0001
+			}
+		}
+	}
+}
+
+segrellion_legacy_yearly_refresh = {
+	effect = {
+		segrellion_refresh_valyrian_kin_opinion_effect = yes
+	}
+}
+
+segrellion_vhalyrax_yearly_growth = {
+	effect = {
+		segrellion_vhalyrax_growth_effect = yes
+	}
+}
+
+segrellion_refresh_firstflame_dynasty_bonus = {
+	effect = {
+		title:c_blackmark = {
+			remove_county_modifier = segrellion_firstflame_dynasty_county_01
+			remove_county_modifier = segrellion_firstflame_dynasty_county_02
+			remove_county_modifier = segrellion_firstflame_dynasty_county_03
+		}
+
+		title:b_berryport = {
+			province = {
+				remove_province_modifier = segrellion_firstflame_dynasty_province_01
+				remove_province_modifier = segrellion_firstflame_dynasty_province_02
+				remove_province_modifier = segrellion_firstflame_dynasty_province_03
+			}
+
+			if = {
+				limit = {
+					has_building = segrellion_firstflame_03
+					county = { holder.dynasty = dynasty:dynn_Segrellion }
+				}
+				province = {
+					add_province_modifier = {
+						modifier = segrellion_firstflame_dynasty_province_03
+						months = 2
+					}
+				}
+				title:c_blackmark = {
+					add_county_modifier = {
+						modifier = segrellion_firstflame_dynasty_county_03
+						months = 2
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_building = segrellion_aeryns_den_02
+					county = { holder.dynasty = dynasty:dynn_Segrellion }
+				}
+				province = {
+					add_province_modifier = {
+						modifier = segrellion_firstflame_dynasty_province_02
+						months = 2
+					}
+				}
+				title:c_blackmark = {
+					add_county_modifier = {
+						modifier = segrellion_firstflame_dynasty_county_02
+						months = 2
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_building = segrellion_fort_01
+					county = { holder.dynasty = dynasty:dynn_Segrellion }
+				}
+				province = {
+					add_province_modifier = {
+						modifier = segrellion_firstflame_dynasty_province_01
+						months = 2
+					}
+				}
+				title:c_blackmark = {
+					add_county_modifier = {
+						modifier = segrellion_firstflame_dynasty_county_01
+						months = 2
+					}
+				}
+			}
+		}
+	}
+}

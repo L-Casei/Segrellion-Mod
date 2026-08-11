@@ -1,0 +1,377 @@
+segrellion_proclaim_lordship_of_vhalerion_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_proclaim_lordship_of_vhalerion_decision_desc
+	selection_tooltip = segrellion_proclaim_lordship_of_vhalerion_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		has_title = title:c_blackmark
+		NOT = { has_title = title:d_vhalerion }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		gold >= 300
+		prestige >= 500
+		prestige_level >= 2
+		completely_controls = title:c_blackmark
+		title:c_blackmark = { holder = root }
+		title:b_berryport = { holder = root }
+		OR = {
+			title:d_dragonstone.holder = {
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+			title:d_driftmark.holder = {
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+		}
+	}
+
+	effect = {
+		trigger_event = segrellion_decision.0001
+	}
+
+	cost = {
+		gold = 300
+		prestige = 500
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		dynasty = dynasty:dynn_Segrellion
+	}
+
+	ai_will_do = {
+		base = 25
+	}
+}
+
+segrellion_forge_the_flamelands_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/forge_the_flamelands_decision_background.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_forge_the_flamelands_decision_desc
+	selection_tooltip = segrellion_forge_the_flamelands_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		NOT = { has_title = title:k_flamelands }
+		NOT = { has_global_variable = segrellion_flamelands_founded }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		custom_description = {
+			text = segrellion_flamelands_has_vhal_tt
+			segrellion_holds_vhal_trigger = yes
+		}
+		OR = {
+			custom_description = {
+				text = segrellion_flamelands_control_half_hook_tt
+				title:k_the_hook = {
+					any_de_jure_county = {
+						count >= 8
+						holder.top_liege = root
+					}
+				}
+			}
+			custom_description = {
+				text = segrellion_flamelands_has_four_hook_vassals_tt
+				any_vassal = {
+					count >= 4
+					any_realm_county = {
+						de_jure_liege.de_jure_liege = title:k_the_hook
+					}
+				}
+			}
+		}
+		custom_description = {
+			text = segrellion_flamelands_has_founding_relic_tt
+			segrellion_has_founding_relic_trigger = yes
+		}
+		gold >= 500
+		prestige_level >= 3
+		piety_level >= 2
+		OR = {
+			custom_description = {
+				text = segrellion_flamelands_follows_fourteen_flames_tt
+				faith = { has_doctrine = special_doctrine_agot_is_flames_faith }
+			}
+			custom_description = {
+				text = segrellion_flamelands_iron_throne_opinion_tt
+				AND = {
+					title:h_the_iron_throne = { exists = holder }
+					title:h_the_iron_throne.holder = {
+						opinion = {
+							target = root
+							value >= 75
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		trigger_event = segrellion_decision.0002
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_raise_unicorn_riders_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_knight_kneeling.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_raise_unicorn_riders_decision_desc
+	selection_tooltip = segrellion_raise_unicorn_riders_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		has_global_variable = segrellion_flamelands_founded
+		NOT = { has_global_variable = segrellion_unicorn_riders_unlocked }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		has_title = title:k_flamelands
+		gold >= 300
+		prestige >= 500
+	}
+
+	effect = {
+		trigger_event = segrellion_decision.0003
+	}
+
+	cost = {
+		gold = 300
+		prestige = 500
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_establish_the_beacon_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_establish_the_beacon_decision_desc
+	selection_tooltip = segrellion_establish_the_beacon_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		has_global_variable = segrellion_flamelands_founded
+		NOT = { has_character_flag = segrellion_established_the_beacon }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		has_title = title:k_flamelands
+		has_title = title:c_farring_cross
+		title:b_castle_farring = { holder = root }
+	}
+
+	effect = {
+		trigger_event = segrellion_decision.0004
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_uncover_the_lost_legacy_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_legend.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_uncover_the_lost_legacy_decision_desc
+	selection_tooltip = segrellion_uncover_the_lost_legacy_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+	}
+
+	is_valid = {
+		custom_description = {
+			text = segrellion_decision_not_available_yet
+			always = no
+		}
+	}
+
+	effect = { }
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_claim_the_iron_throne_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_claim_iron_throne.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_claim_the_iron_throne_decision_desc
+	selection_tooltip = segrellion_claim_the_iron_throne_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		NOT = { has_title = title:h_the_iron_throne }
+		NOT = { has_character_flag = segrellion_claimed_iron_throne_right }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		has_trait = dragonrider
+		custom_description = {
+			text = segrellion_claim_no_iron_throne_claim_tt
+			NOT = { has_claim_on = title:h_the_iron_throne }
+		}
+		title:h_the_iron_throne = {
+			exists = holder
+		}
+		OR = {
+			prestige_level >= 5
+			highest_held_title_tier >= tier_empire
+		}
+	}
+
+	effect = {
+		trigger_event = segrellion_decision.0005
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_keep_the_dragon_egg_close_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tend_the_ancient_egg_decision_background.dds"
+	}
+
+	desc = segrellion_keep_the_dragon_egg_close_decision_desc
+	selection_tooltip = segrellion_keep_the_dragon_egg_close_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		NOT = { has_character_flag = segrellion_tending_ancient_egg }
+		NOT = { has_character_flag = vhalyrax_hatched_secretly }
+		any_character_artifact = {
+			has_variable = segrellion_dragon_egg_artifact
+		}
+	}
+
+	is_valid = {
+		is_adult = yes
+		custom_description = {
+			text = segrellion_has_dragon_egg_tt
+			any_character_artifact = {
+				has_variable = segrellion_dragon_egg_artifact
+			}
+		}
+		OR = {
+			custom_description = {
+				text = segrellion_ancient_egg_stepstones_story_tt
+				has_character_flag = segrellion_chose_stepstones
+			}
+			custom_description = {
+				text = segrellion_ancient_egg_year_115_tt
+				current_date >= 8115.1.1
+			}
+		}
+	}
+
+	effect = {
+		trigger_event = {
+			id = segrellion_dragon.0001
+			days = 1
+		}
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_attempt_to_awaken_icebringer_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/awaken_icebringer_decision_background.dds"
+	}
+
+	desc = segrellion_attempt_to_awaken_icebringer_decision_desc
+	selection_tooltip = segrellion_attempt_to_awaken_icebringer_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+	}
+
+	is_valid = {
+		custom_description = {
+			text = segrellion_decision_not_available_yet
+			always = no
+		}
+	}
+
+	effect = { }
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_sentinels_path_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_knight_kneeling.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_sentinels_path_decision_desc
+	selection_tooltip = segrellion_sentinels_path_decision_tooltip
+
+	is_shown = {
+		this = character:Segrellion_1
+		NOT = { has_character_flag = segrellion_sentinels_path_resolved }
+		character:Vladwyn_1 ?= {
+			is_alive = yes
+		}
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		character:Vladwyn_1 = {
+			is_alive = yes
+			is_adult = yes
+			is_imprisoned = no
+			is_courtier_of = root
+		}
+	}
+
+	effect = {
+		custom_tooltip = segrellion_sentinels_path_effect_tt
+		trigger_event = segrellion_sentinel.0001
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}

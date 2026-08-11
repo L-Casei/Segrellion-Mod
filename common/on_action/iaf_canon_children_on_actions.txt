@@ -1,0 +1,26 @@
+on_birth_mother = {
+	on_actions = {
+		iaf_canon_children_on_birth_mother
+	}
+}
+
+iaf_canon_children_on_game_start_after_lobby = {
+	effect = {
+		iaf_init_canon_children_setup = yes
+	}
+}
+
+iaf_canon_children_on_birth_mother = {
+	effect = {
+		scope:mother = {
+			if = {
+				limit = {
+					has_game_rule = segrellion_canon_children_enabled
+					has_character_flag = agot_is_pregnant
+					has_variable = agot_pregnancy_child
+				}
+				scope:child = { iaf_canon_children_birth_effect = yes }
+			}
+		}
+	}
+}

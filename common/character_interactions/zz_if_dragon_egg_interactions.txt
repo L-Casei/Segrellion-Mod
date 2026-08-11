@@ -1,0 +1,335 @@
+﻿# AGOT: Ice and Fire override. The ancient Segrellion egg can only hatch through Tend the Ancient Egg.
+
+cradle_egg = {
+	category = interaction_category_friendly
+	common_interaction = yes
+	interface_priority = 80
+	icon = icon_scheme_dragon
+	desc = cradle_egg_desc
+
+	target_type = artifact
+	target_filter = actor_artifacts
+
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	ai_targets = {
+		ai_recipients = self
+	}
+	ai_frequency = 84
+
+	can_be_picked_artifact = {
+		scope:target = {
+			has_variable = dragon_egg
+			NOT = { has_variable = segrellion_dragon_egg_artifact }
+			has_none_of_variables = {
+				name = cradled_egg
+				name = dud_egg
+			}
+		}
+	}
+
+
+	is_shown = {
+		scope:actor = {
+			this = scope:recipient
+			any_character_artifact = {
+				has_variable = dragon_egg
+				NOT = { has_variable = segrellion_dragon_egg_artifact }
+			NOT = { has_variable = segrellion_dragon_egg_artifact }
+				has_none_of_variables = {
+					name = cradled_egg
+					name = dud_egg
+				}
+			}
+			is_human = yes #just to be sure
+		}
+		agot_dragon_population_alive = yes
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			custom_tooltip = {
+				text = has_a_dragon
+				any_relation = {
+					type = agot_dragon
+					count = 0
+				}
+			}
+			NOT = { has_trait = dragonwidowed }
+		}
+	}
+
+	on_accept = {
+		scope:actor = {
+			send_interface_toast = {
+				type = dragon_neutral_toast
+				title = started_cradling_egg_notification_title
+				desc = started_cradling_egg_notification_desc
+				left_icon = scope:actor
+				right_icon = scope:target
+			}
+
+			every_character_artifact = {
+				limit = {
+					has_all_variables = {
+						name = dragon_egg
+						name = cradled_egg
+					}
+				}
+				save_scope_as = current_egg
+				custom_description = {
+					text = stop_cradling_egg
+					remove_variable = cradled_egg
+					remove_variable = cradled_egg_year
+				}
+			}
+		}
+
+		scope:target = {
+			set_variable = cradled_egg
+			set_variable = { name = cradled_egg_year value = current_year }
+			equip_artifact_to_owner_replace = yes
+		}
+	}
+
+	auto_accept = yes
+
+	ai_will_do = {
+		base = 0
+
+		#Only try to cradle if you have a chance
+		modifier = {
+			add = 100
+			trigger_if = {
+				limit = {
+					NOT = { has_game_rule = dragons_anyone }
+				}
+				agot_has_dragonblood_heritage = yes
+			}
+		}
+	}
+}
+
+give_egg = {
+	category = interaction_category_friendly
+	interface_priority = 80
+	icon = icon_scheme_dragon
+	desc = give_egg_desc
+
+	target_type = artifact
+	target_filter = actor_artifacts
+
+	ai_frequency = 60
+	ai_targets = {
+		ai_recipients = children
+	}
+
+	can_be_picked_artifact = {
+		scope:target = {
+			has_variable = dragon_egg
+			NOT = { has_variable = segrellion_dragon_egg_artifact }
+			trigger_if = {
+				limit = {
+					scope:actor = { is_ai = yes }
+				}
+				has_none_of_variables = {
+					name = cradled_egg
+					name = selected_egg_for_hatching
+					name = dud_egg
+				}
+			}
+			NOT = { has_variable = agot_artifact_cannot_gift }
+		}
+	}
+
+	is_shown = {
+		scope:actor = {
+			is_human = yes
+			any_character_artifact = {
+				has_variable = dragon_egg
+				NOT = { has_variable = segrellion_dragon_egg_artifact }
+			NOT = { has_variable = segrellion_dragon_egg_artifact }
+				NOT = { has_variable = agot_artifact_cannot_gift }
+			}
+			NOT = { this = scope:recipient }
+		}
+		scope:recipient = {
+			is_human = yes
+		}
+	}
+
+	on_accept = {
+		scope:actor = {
+			send_interface_toast = {
+				type = dragon_neutral_toast
+				title = gave_egg_for_cradling_notification_title
+				desc = gave_egg_for_cradling_notification_desc
+				left_icon = scope:recipient
+				right_icon = scope:target
+			}
+		}
+
+		scope:recipient = {
+			send_interface_toast = {
+				type = dragon_neutral_toast
+				title = received_egg_for_cradling_notification_title
+				desc = received_egg_for_cradling_notification_desc
+				left_icon = scope:recipient
+				right_icon = scope:target
+			}
+			add_opinion = {
+				target = scope:actor
+				modifier = gift_artifact_opinion
+				opinion = 60
+			}
+
+			every_character_artifact = {
+				limit = {
+					has_all_variables = {
+						name = dragon_egg
+						name = cradled_egg
+					}
+				}
+				save_scope_as = current_egg
+				custom_description = {
+					text = stop_cradling_egg
+					remove_variable = cradled_egg
+					remove_variable = cradled_egg_year
+				}
+			}
+		}
+
+		scope:target = {
+			set_owner = scope:recipient
+			equip_artifact_to_owner_replace = yes
+		}
+	}
+
+	auto_accept = yes
+
+	ai_will_do = {
+		base = 0
+
+		#Give eggs to your children
+		modifier = {
+			add = 25
+			scope:recipient = {
+				is_child_of = scope:actor
+			}
+		}
+		#especially heir
+		modifier = {
+			add = 75
+			scope:recipient = {
+				is_heir_of = scope:actor
+			}
+		}
+		opinion_modifier = { # Opinion Factor
+			who = scope:actor
+			opinion_target = scope:recipient
+			multiplier = 0.5
+		}
+		#Give eggs to lover
+		modifier = {
+			add = 10
+			scope:recipient = {
+				has_relation_lover = scope:actor
+				has_relation_soulmate = scope:actor
+			}
+		}
+		#bonus points
+		modifier = {
+			factor = 5
+			scope:recipient = {
+				OR = {
+					has_relation_friend = scope:actor
+					has_relation_best_friend = scope:actor
+				}
+			}
+		}
+		#If you are weak, less chance to get an egg
+		modifier = {
+			add = -40
+			scope:recipient = {
+				OR = {
+					has_trait = physique_bad_1
+					has_trait = physique_bad_2
+					has_trait = physique_bad_3
+				}
+			}
+		}
+		#don't give eggs to people who can't ride, or to our nemesis/rival
+		modifier = {
+			factor = 0
+			scope:recipient = {
+				OR = {
+					has_trait = incapable
+					has_trait = crippled
+					has_trait = infirm
+					has_relation_potential_rival = scope:actor
+					has_relation_rival = scope:actor
+					has_relation_nemesis = scope:actor
+					trigger_if = {
+						limit = {
+							NOT = { has_game_rule = dragons_anyone }
+						}
+						agot_has_dragonblood_heritage = no
+					}
+				}
+			}
+		}
+		#if my kids aren't riders, you dont get to be one
+		modifier = {
+			factor = 0
+			AND = {
+				scope:recipient = {
+					NOT = { is_child_of = scope:actor }
+				}
+				scope:actor = {
+					any_child = {
+						AND = {
+							any_relation = {
+								type = agot_dragon
+								count = 0
+							}
+							any_character_artifact = {
+								has_none_of_variables = {
+									name = dragon_egg
+									name = cradled_egg
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		#Already has a dragon
+		modifier = {
+			factor = 0
+			scope:recipient = {
+				OR = {
+					any_relation = {
+						type = agot_dragon
+					}
+					any_character_artifact = {
+						has_all_variables = {
+							name = dragon_egg
+							name = cradled_egg
+						}
+					}
+				}
+			}
+		}
+		#Canon Dragons
+		modifier = {
+			factor = 0
+			agot_canon_dragons_enabled = yes
+			AND = {
+				scope:recipient = { agot_is_canon_rider = yes }
+				scope:recipient = { agot_has_canon_cradle_egg = no }
+			}
+		}
+	}
+}
+

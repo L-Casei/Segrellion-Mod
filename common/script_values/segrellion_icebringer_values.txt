@@ -1,0 +1,53 @@
+segrellion_icebringer_affinity_value = {
+	value = 0
+
+	# Blood grants a strong claim, while explicit authorization lets an outsider be judged.
+	if = {
+		limit = {
+			OR = {
+				dynasty = dynasty:dynn_Segrellion
+				any_ancestor = { dynasty = dynasty:dynn_Segrellion }
+				has_character_flag = segrellion_icebringer_authorized
+			}
+		}
+		add = 5
+	}
+	if = { limit = { has_trait = brave } add = 2 }
+	if = { limit = { has_trait = just } add = 2 }
+	if = { limit = { has_trait = honest } add = 2 }
+	if = { limit = { has_trait = loyal } add = 2 }
+	if = { limit = { ai_honor >= 50 } add = 2 }
+	if = { limit = { prowess_no_portrait >= 20 } add = 2 }
+	if = { limit = { has_trait = dragonrider } add = 1 }
+	if = { limit = { agot_has_dragonblood_heritage = yes } add = 1 }
+	if = { limit = { has_trait = dragon_dreams } add = 2 }
+
+	# Narrative events can award these flags as the bearer proves their character.
+	if = { limit = { has_character_flag = segrellion_icebringer_saved_charge } add = 3 }
+	if = { limit = { has_character_flag = segrellion_icebringer_kept_oath } add = 3 }
+	if = { limit = { has_character_flag = segrellion_icebringer_spared_enemy } add = 2 }
+	if = { limit = { has_character_flag = segrellion_icebringer_refused_reward } add = 2 }
+	if = { limit = { has_character_flag = segrellion_icebringer_survived_magic } add = 2 }
+	if = { limit = { has_character_flag = segrellion_icebringer_guardian_touched } add = 2 }
+
+	if = { limit = { has_trait = craven } add = -5 }
+	if = { limit = { has_trait = deceitful } add = -3 }
+	if = { limit = { has_trait = arbitrary } add = -3 }
+	if = { limit = { has_trait = disloyal } add = -3 }
+	if = { limit = { ai_honor <= -50 } add = -2 }
+	if = { limit = { has_trait = sadistic } add = -4 }
+	if = {
+		limit = {
+			OR = {
+				has_trait = kinslayer_1
+				has_trait = kinslayer_2
+				has_trait = kinslayer_3
+			}
+		}
+		add = -8
+	}
+	if = { limit = { tyranny >= medium_tyranny } add = -4 }
+	if = { limit = { has_character_flag = segrellion_icebringer_stolen } add = -10 }
+	if = { limit = { has_character_flag = segrellion_icebringer_betrayed_house } add = -6 }
+	if = { limit = { has_character_flag = segrellion_icebringer_killed_previous_bearer } add = -10 }
+}

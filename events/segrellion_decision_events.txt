@@ -1,0 +1,218 @@
+namespace = segrellion_decision
+
+segrellion_decision.0001 = {
+	type = character_event
+	title = segrellion_decision.0001.t
+	desc = segrellion_decision.0001.desc
+	theme = realm
+	override_background = { reference = docks }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_decision.0001.a
+		add_prestige = 250
+		dynasty = { add_dynasty_prestige = 500 }
+		title:d_vhalerion = { set_de_jure_liege_title = title:k_dragonstone }
+		title:c_blackmark = { set_de_jure_liege_title = title:d_vhalerion }
+		get_title = title:d_vhalerion
+		add_character_flag = proclaimed_vhalerion_lordship
+		add_character_modifier = {
+			modifier = segrellion_first_domain_modifier
+			years = 5
+		}
+		title:c_blackmark = {
+			change_development_level = 1
+			add_county_modifier = {
+				modifier = segrellion_first_domain_county_modifier
+				years = 5
+			}
+		}
+	}
+}
+
+segrellion_decision.0002 = {
+	type = character_event
+	title = segrellion_decision.0002.t
+	desc = segrellion_decision.0002.desc
+	theme = realm
+	override_background = { reference = wilderness }
+
+	left_portrait = {
+		character = root
+		animation = happiness
+	}
+
+	option = {
+		name = segrellion_decision.0002.a
+		add_prestige = 3000
+		dynasty = { add_dynasty_prestige = 1000 }
+		give_nickname = nick_the_true_dragon
+		get_title = title:k_flamelands
+		title:k_flamelands = {
+			set_de_jure_liege_title = title:h_the_iron_throne
+			set_variable = {
+				name = segrellion_founded_by_house
+				value = dynasty:dynn_Segrellion.dynasty_founder.house
+			}
+		}
+		title:d_vhalerion = { set_de_jure_liege_title = title:k_flamelands }
+		title:c_blackmark = { set_de_jure_liege_title = title:d_vhalerion }
+		title:d_masseys_hook = { set_de_jure_liege_title = title:k_flamelands }
+		title:d_wendwater_forest = { set_de_jure_liege_title = title:k_flamelands }
+		title:d_the_baywater_woods = { set_de_jure_liege_title = title:k_flamelands }
+		title:b_castle_farring.title_province = {
+			if = {
+				limit = { has_special_building_slot = no }
+				add_special_building_slot = segrellion_beacon_01
+			}
+		}
+		set_global_variable = {
+			name = segrellion_flamelands_founded
+			value = yes
+		}
+		add_character_flag = segrellion_founded_the_flamelands
+		add_character_modifier = {
+			modifier = segrellion_founder_of_the_flamelands_modifier
+			years = 10
+		}
+		custom_tooltip = segrellion_flamelands_vassal_opinion_tt
+		hidden_effect = {
+			every_vassal = {
+				limit = {
+					any_realm_county = {
+						OR = {
+							de_jure_liege.de_jure_liege = title:k_flamelands
+							de_jure_liege.de_jure_liege = title:k_the_hook
+						}
+					}
+				}
+				add_opinion = {
+					target = root
+					modifier = segrellion_flamelands_founder_opinion
+				}
+			}
+		}
+		segrellion_create_artifact_throne_of_the_flamelands_effect = { OWNER = this }
+	}
+}
+
+segrellion_decision.0003 = {
+	type = character_event
+	title = segrellion_decision.0003.t
+	desc = segrellion_decision.0003.desc
+	theme = war
+	override_background = { reference = army_camp }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_decision.0003.a
+		set_global_variable = {
+			name = segrellion_unicorn_riders_unlocked
+			value = yes
+		}
+		create_maa_regiment = {
+			type = segrellion_unicorn_riders
+			check_can_recruit = no
+			size = 3
+		}
+		add_prestige = 300
+		add_martial_lifestyle_xp = 150
+		add_character_modifier = {
+			modifier = segrellion_masters_of_the_heavy_charge_modifier
+			years = 10
+		}
+	}
+}
+
+segrellion_decision.0004 = {
+	type = character_event
+	title = segrellion_decision.0004.t
+	desc = segrellion_decision.0004.desc
+	theme = realm
+	override_background = { reference = wilderness }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = segrellion_decision.0004.a
+		set_realm_capital = title:c_farring_cross
+		title:k_flamelands = { set_capital_county = title:c_farring_cross }
+		title:c_farring_cross = { set_title_name = segrellion_the_beacon_name }
+		title:b_castle_farring = { set_title_name = segrellion_the_beacon_name }
+		title:d_wendwater_forest = { set_title_name = segrellion_blue_forest_name }
+		title:b_castle_farring.title_province = {
+			if = {
+				limit = { has_special_building_slot = no }
+				add_special_building_slot = segrellion_beacon_01
+			}
+			if = {
+				limit = { NOT = { has_building = segrellion_beacon_01 } }
+				add_building = segrellion_beacon_01
+			}
+		}
+		title:c_farring_cross = {
+			change_development_level = 2
+			add_county_modifier = {
+				modifier = segrellion_heart_of_the_flamelands_county_modifier
+				years = 10
+			}
+		}
+		title:b_castle_farring.title_province = {
+			add_province_modifier = {
+				modifier = segrellion_heart_of_the_flamelands_province_modifier
+			}
+		}
+		add_prestige = 500
+		add_character_flag = segrellion_established_the_beacon
+	}
+}
+
+segrellion_decision.0005 = {
+	type = character_event
+	title = segrellion_decision.0005.t
+	desc = segrellion_decision.0005.desc
+	theme = war
+	override_background = { reference = agot_iron_throne }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_decision.0005.a
+		add_character_flag = segrellion_claimed_iron_throne_right
+		add_pressed_claim = title:h_the_iron_throne
+		add_prestige = 1500
+		dynasty = { add_dynasty_prestige = 300 }
+		add_legitimacy = 250
+		add_character_modifier = {
+			modifier = segrellion_unicorns_claim_modifier
+			years = 10
+		}
+		title:h_the_iron_throne.holder = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_declared_claim_on_iron_throne_opinion
+			}
+		}
+		every_vassal = {
+			limit = { dynasty = root.dynasty }
+			add_opinion = {
+				target = root
+				modifier = segrellion_unicorn_claim_loyalist_opinion
+			}
+		}
+	}
+}

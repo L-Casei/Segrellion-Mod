@@ -1,0 +1,262 @@
+namespace = segrellion_intro
+
+segrellion_intro.0001 = {
+	type = character_event
+	title = segrellion_intro.0001.t
+	desc = segrellion_intro.0001.desc
+	theme = realm
+
+	override_background = { reference = docks }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		NOT = { has_character_flag = segrellion_intro_event_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_intro_event_seen
+	}
+
+	option = {
+		name = segrellion_intro.0001.a
+		ai_chance = { base = 75 }
+		add_character_flag = segrellion_opening_route_dragonstone
+		custom_tooltip = segrellion_intro_dragonstone_route_tt
+		if = {
+			limit = {
+				location = title:c_dragonstone.title_province
+			}
+			trigger_event = {
+				id = segrellion_intro.0002
+				days = 1
+			}
+		}
+		else = {
+			start_travel_plan = {
+				destination = title:c_dragonstone.title_province
+				on_arrival_event = segrellion_intro.0002
+				on_arrival_destinations = last
+				return_trip = no
+			}
+			trigger_event = {
+				id = segrellion_intro.0002
+				days = 180
+			}
+		}
+	}
+
+	option = {
+		name = segrellion_intro.0001.b
+		ai_chance = { base = 25 }
+		add_character_flag = segrellion_opening_route_vhalerion
+		custom_tooltip = segrellion_intro_vhalerion_route_tt
+		trigger_event = {
+			id = segrellion_intro.0003
+			days = 3
+		}
+	}
+}
+
+segrellion_intro.0002 = {
+	type = character_event
+	title = segrellion_intro.0002.t
+	desc = segrellion_intro.0002.desc
+	theme = diplomacy
+
+	override_background = { reference = agot_dragonstone_throneroom }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Targaryen_63
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_character_flag = segrellion_opening_route_dragonstone
+		NOT = { has_character_flag = segrellion_chose_stepstones }
+		NOT = { has_character_flag = segrellion_returned_to_vhalerion }
+	}
+
+	option = {
+		name = segrellion_intro.0002.a
+		ai_chance = { base = 80 }
+		add_character_flag = segrellion_chose_stepstones
+		add_prestige = 75
+		custom_tooltip = segrellion_stepstones_route_started_tt
+		hidden_effect = {
+			if = {
+				limit = {
+					character:Targaryen_61 ?= { is_alive = yes }
+					title:d_first_stepstones.holder ?= { exists = this }
+				}
+				character:Targaryen_61 = {
+					if = {
+						limit = {
+							NOT = {
+								any_character_war = {
+									using_cb = daemon_stepstones_first_war
+								}
+							}
+						}
+						start_war = {
+							casus_belli = daemon_stepstones_first_war
+							target = title:d_first_stepstones.holder
+							claimant = this
+							target_title = title:d_first_stepstones
+						}
+					}
+					random_character_war = {
+						limit = {
+							using_cb = daemon_stepstones_first_war
+						}
+						add_attacker = root
+						save_scope_as = segrellion_stepstones_war
+					}
+				}
+				spawn_army = {
+					levies = 1000
+					location = root.capital_province
+					origin = root.capital_province
+					war = scope:segrellion_stepstones_war
+					name = segrellion_stepstones_volunteers_army
+					inheritable = no
+					uses_supply = yes
+				}
+			}
+		}
+	}
+
+	option = {
+		name = segrellion_intro.0002.b
+		ai_chance = { base = 20 }
+		add_character_flag = segrellion_returned_to_vhalerion
+		custom_tooltip = segrellion_vhalerion_route_continues_tt
+		trigger_event = {
+			id = segrellion_intro.0003
+			days = 21
+		}
+	}
+}
+
+segrellion_intro.0003 = {
+	type = character_event
+	title = segrellion_intro.0003.t
+	desc = segrellion_intro.0003.desc
+	theme = stewardship
+
+	override_background = { reference = docks }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		NOT = { has_character_flag = segrellion_vhalerion_chain_started }
+	}
+
+	option = {
+		name = segrellion_intro.0003.a
+		add_character_flag = segrellion_vhalerion_chain_started
+		title:c_blackmark = {
+			change_county_control = 10
+			add_county_modifier = {
+				modifier = segrellion_lords_promise_county_modifier
+				years = 5
+			}
+		}
+		trigger_event = {
+			id = segrellion_intro.0004
+			days = { 365 730 }
+		}
+	}
+}
+
+segrellion_intro.0004 = {
+	type = character_event
+	title = segrellion_intro.0004.t
+	desc = segrellion_intro.0004.desc
+	theme = stewardship
+
+	override_background = { reference = docks }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Segrellion_2
+		animation = personality_honorable
+	}
+
+	trigger = {
+		has_character_flag = segrellion_vhalerion_chain_started
+		NOT = { has_character_flag = segrellion_harbor_below_begun }
+	}
+
+	option = {
+		name = segrellion_intro.0004.a
+		add_character_flag = segrellion_harbor_below_begun
+		add_gold = {
+			value = -75
+		}
+		title:c_blackmark = {
+			change_development_level = 1
+			add_county_modifier = {
+				modifier = segrellion_growing_tradeport_county_modifier
+				years = 10
+			}
+		}
+		character:Segrellion_2 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_alysanne_harbor_accounts_opinion
+			}
+		}
+		trigger_event = {
+			id = segrellion_intro.0005
+			days = { 540 1080 }
+		}
+	}
+}
+
+segrellion_intro.0005 = {
+	type = character_event
+	title = segrellion_intro.0005.t
+	desc = segrellion_intro.0005.desc
+	theme = stewardship
+
+	override_background = { reference = wilderness }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		has_character_flag = segrellion_harbor_below_begun
+		NOT = { has_character_flag = segrellion_foundations_of_vhalerion_begun }
+	}
+
+	option = {
+		name = segrellion_intro.0005.a
+		add_character_flag = segrellion_foundations_of_vhalerion_begun
+		add_stewardship_lifestyle_xp = minor_lifestyle_xp
+		title:c_blackmark = {
+			change_development_level = 1
+			add_county_modifier = {
+				modifier = segrellion_foundations_of_vhalerion_county_modifier
+				years = 15
+			}
+		}
+	}
+}

@@ -1,0 +1,77 @@
+namespace = segrellion_sentinel
+
+segrellion_sentinel.0001 = {
+	type = character_event
+	title = segrellion_sentinel.0001.t
+	desc = segrellion_sentinel.0001.desc
+	theme = realm
+
+	override_background = { reference = corridor_night }
+
+	left_portrait = {
+		character = scope:tristan
+		animation = thinking
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		NOT = { has_character_flag = segrellion_sentinels_path_resolved }
+		character:Vladwyn_1 ?= {
+			is_alive = yes
+			is_adult = yes
+		}
+	}
+
+	immediate = {
+		character:Vladwyn_1 = { save_scope_as = tristan }
+		add_character_flag = segrellion_sentinels_path_resolved
+	}
+
+	option = {
+		name = segrellion_sentinel.0001.a
+		custom_tooltip = segrellion_sentinel.0001.a.best_friend_tt
+		custom_tooltip = segrellion_sentinel.0001.a.kingsguard_tt
+		custom_tooltip = segrellion_sentinel.0001.a.sword_tt
+
+		if = {
+			limit = {
+				NOT = { has_relation_best_friend = scope:tristan }
+			}
+			set_relation_best_friend = {
+				target = scope:tristan
+				reason = best_friend_childhood_oath
+				copy_reason = friend
+			}
+		}
+
+		scope:tristan = {
+			add_trait = refusing_marriage
+			add_character_flag = kingsguard_ambition
+			add_character_modifier = training_for_kingsguard
+			segrellion_create_artifact_sword_of_the_sentinel_effect = { OWNER = this }
+		}
+	}
+
+	option = {
+		name = segrellion_sentinel.0001.b
+		trigger = {
+			has_dlc_feature = roads_to_power
+			has_multiple_players = no
+		}
+		custom_tooltip = segrellion_sentinel.0001.b.tt
+
+		hidden_effect = {
+			scope:tristan = {
+				create_landless_adventurer_title_effect = {
+					REASON = flag:voluntary
+					FLAVOR_CHAR = root
+				}
+			}
+		}
+		add_internal_flag = special
+		set_player_character = scope:tristan
+		scope:tristan = {
+			create_landless_adventurer_title_tooltip_effect = yes
+		}
+	}
+}

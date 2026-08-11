@@ -1,0 +1,215 @@
+segrellion_remove_legacy_canon_traits_effect = {
+	if = { limit = { has_trait = segrellion_canon_balerion } remove_trait = segrellion_canon_balerion }
+	if = { limit = { has_trait = segrellion_canon_shiera } remove_trait = segrellion_canon_shiera }
+	if = { limit = { has_trait = segrellion_canon_aegor } remove_trait = segrellion_canon_aegor }
+	if = { limit = { has_trait = segrellion_canon_saera } remove_trait = segrellion_canon_saera }
+	if = { limit = { has_trait = segrellion_canon_alex } remove_trait = segrellion_canon_alex }
+	if = { limit = { has_trait = segrellion_canon_alysanne } remove_trait = segrellion_canon_alysanne }
+	if = { limit = { has_trait = segrellion_canon_daenerys } remove_trait = segrellion_canon_daenerys }
+	if = { limit = { has_trait = vladwyn_canon_tristan } remove_trait = vladwyn_canon_tristan }
+}
+
+segrellion_add_canon_modifier_effect = {
+	segrellion_remove_legacy_canon_traits_effect = yes
+	if = {
+		limit = {
+			has_game_rule = segrellion_canon_traits_enabled
+			NOT = { has_character_modifier = $MODIFIER$ }
+		}
+		add_character_modifier = $MODIFIER$
+	}
+}
+
+segrellion_remove_canon_modifier_effect = {
+	segrellion_remove_legacy_canon_traits_effect = yes
+	if = {
+		limit = { has_character_modifier = $MODIFIER$ }
+		remove_character_modifier = $MODIFIER$
+	}
+}
+
+# Compatibility wrappers for older scripted calls.
+segrellion_add_canon_trait_effect = {
+	segrellion_remove_legacy_canon_traits_effect = yes
+}
+
+segrellion_remove_canon_trait_effect = {
+	segrellion_remove_legacy_canon_traits_effect = yes
+}
+
+segrellion_assign_historical_canon_traits_effect = {
+	if = {
+		limit = { has_game_rule = segrellion_canon_traits_enabled }
+
+		character:Segrellion_7 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_balerion_modifier } }
+		character:Segrellion_8 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_shiera_modifier } }
+		character:Segrellion_4 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aegor_modifier } }
+		character:Segrellion_5 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_saera_modifier } }
+		character:Segrellion_13 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_daeryn_modifier } }
+		character:Segrellion_14 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_gaela_modifier } }
+		character:Segrellion_15 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_doran_modifier } }
+		character:Segrellion_1 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_alex_modifier } }
+		character:Segrellion_2 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_alysanne_modifier } }
+		character:Segrellion_3 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_daenerys_modifier } }
+		character:Segrellion_9 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_alyssa_modifier } }
+		character:Segrellion_10 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_maenar_modifier } }
+		character:Segrellion_11 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_daenerys_young_modifier } }
+		character:Segrellion_12 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aeryn_modifier } }
+		character:Vladwyn_1 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = vladwyn_canon_tristan_modifier } }
+	}
+	else = {
+		character:Segrellion_7 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_balerion_modifier } }
+		character:Segrellion_8 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_shiera_modifier } }
+		character:Segrellion_4 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_aegor_modifier } }
+		character:Segrellion_5 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_saera_modifier } }
+		character:Segrellion_13 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_daeryn_modifier } }
+		character:Segrellion_14 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_gaela_modifier } }
+		character:Segrellion_15 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_doran_modifier } }
+		character:Segrellion_1 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_alex_modifier } }
+		character:Segrellion_2 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_alysanne_modifier } }
+		character:Segrellion_3 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_daenerys_modifier } }
+		character:Segrellion_9 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_alyssa_modifier } }
+		character:Segrellion_10 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_maenar_modifier } }
+		character:Segrellion_11 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_daenerys_young_modifier } }
+		character:Segrellion_12 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_aeryn_modifier } }
+		character:Vladwyn_1 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = vladwyn_canon_tristan_modifier } }
+	}
+}
+
+segrellion_assign_canon_trait_from_identity_effect = {
+	if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_7
+				has_inactive_trait = is_Segrellion_7
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_balerion_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_8
+				has_inactive_trait = is_Segrellion_8
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_shiera_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_4
+				has_inactive_trait = is_Segrellion_4
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aegor_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_5
+				has_inactive_trait = is_Segrellion_5
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_saera_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_13
+				has_inactive_trait = is_Segrellion_13
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_daeryn_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_14
+				has_inactive_trait = is_Segrellion_14
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_gaela_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_15
+				has_inactive_trait = is_Segrellion_15
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_doran_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_1
+				has_inactive_trait = is_Segrellion_1
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_alex_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_2
+				has_inactive_trait = is_Segrellion_2
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_alysanne_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_3
+				has_inactive_trait = is_Segrellion_3
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_daenerys_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_9
+				has_inactive_trait = is_Segrellion_9
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_alyssa_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_10
+				has_inactive_trait = is_Segrellion_10
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_maenar_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_11
+				has_inactive_trait = is_Segrellion_11
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_daenerys_young_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Segrellion_12
+				has_inactive_trait = is_Segrellion_12
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aeryn_modifier }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_character_flag = is_Vladwyn_1
+				has_inactive_trait = is_Vladwyn_1
+			}
+		}
+		segrellion_add_canon_modifier_effect = { MODIFIER = vladwyn_canon_tristan_modifier }
+	}
+}
