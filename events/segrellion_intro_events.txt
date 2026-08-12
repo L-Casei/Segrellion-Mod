@@ -92,10 +92,6 @@ segrellion_intro.0002 = {
 		add_character_flag = segrellion_stepstones_war_joined
 		add_prestige = 75
 		custom_tooltip = segrellion_stepstones_route_started_tt
-		trigger_event = {
-			id = segrellion_intro.0007
-			days = 30
-		}
 		hidden_effect = {
 			if = {
 				limit = {
@@ -122,6 +118,7 @@ segrellion_intro.0002 = {
 						limit = {
 							using_cb = daemon_stepstones_first_war
 						}
+						set_variable = { name = segrellion_tracked_first_stepstones_war value = yes }
 						add_attacker = root
 						root = {
 							add_character_flag = segrellion_stepstones_war_joined
@@ -193,19 +190,22 @@ segrellion_intro.0006 = {
 			years = 5
 		}
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
+		custom_tooltip = segrellion_stepstones_daemon_friendship_tt
 		add_character_flag = segrellion_restless_for_war_path
 		add_character_flag = segrellion_targaryen_service_remembered
-		character:Targaryen_61 ?= {
-			if = {
-				limit = {
-					NOR = {
-						has_relation_friend = root
-						has_relation_best_friend = root
+		hidden_effect = {
+			character:Targaryen_61 ?= {
+				if = {
+					limit = {
+						NOR = {
+							has_relation_friend = root
+							has_relation_best_friend = root
+						}
 					}
-				}
-				set_relation_friend = {
-					target = root
-					reason = friend
+					set_relation_friend = {
+						target = root
+						reason = segrellion_stepstones_brothers_in_arms
+					}
 				}
 			}
 		}
@@ -225,19 +225,22 @@ segrellion_intro.0006 = {
 			years = 5
 		}
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
+		custom_tooltip = segrellion_stepstones_daemon_friendship_tt
 		add_character_flag = segrellion_homeward_purpose_path
 		add_character_flag = segrellion_targaryen_service_remembered
-		character:Targaryen_61 ?= {
-			if = {
-				limit = {
-					NOR = {
-						has_relation_friend = root
-						has_relation_best_friend = root
+		hidden_effect = {
+			character:Targaryen_61 ?= {
+				if = {
+					limit = {
+						NOR = {
+							has_relation_friend = root
+							has_relation_best_friend = root
+						}
 					}
-				}
-				set_relation_friend = {
-					target = root
-					reason = friend
+					set_relation_friend = {
+						target = root
+						reason = segrellion_stepstones_brothers_in_arms
+					}
 				}
 			}
 		}
@@ -250,9 +253,23 @@ segrellion_intro.0006 = {
 	}
 }
 
-segrellion_intro.0007 = {
+segrellion_intro.0008 = {
 	type = character_event
-	hidden = yes
+	title = segrellion_intro.0008.t
+	desc = segrellion_intro.0008.desc
+	theme = war
+
+	override_background = { reference = army_camp }
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = character:Targaryen_61
+		animation = sadness
+	}
 
 	trigger = {
 		OR = {
@@ -263,18 +280,26 @@ segrellion_intro.0007 = {
 	}
 
 	immediate = {
-		if = {
-			limit = { current_date >= 8108.1.1 }
-			add_character_flag = segrellion_stepstones_aftermath_pending
-			trigger_event = {
-				id = segrellion_intro.0006
-				days = 1
+		add_character_flag = segrellion_stepstones_story_completed
+		remove_character_flag = segrellion_stepstones_aftermath_pending
+		add_character_flag = segrellion_targaryen_service_remembered
+	}
+
+	option = {
+		name = segrellion_intro.0008.a
+		ai_chance = { base = 100 }
+		add_prestige = 250
+		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
+		character:Targaryen_61 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_bled_for_daemon_in_failed_stepstones_opinion
 			}
 		}
-		else = {
-			trigger_event = {
-				id = segrellion_intro.0007
-				days = 30
+		character:Targaryen_63 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_bled_for_targaryens_in_failed_stepstones_opinion
 			}
 		}
 	}

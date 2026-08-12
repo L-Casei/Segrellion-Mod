@@ -17,6 +17,30 @@ on_player_select_destiny_confirmed = {
 	}
 }
 
+on_war_won_attacker = {
+	on_actions = {
+		segrellion_first_stepstones_attacker_victory
+	}
+}
+
+on_war_won_defender = {
+	on_actions = {
+		segrellion_first_stepstones_no_victory
+	}
+}
+
+on_war_white_peace = {
+	on_actions = {
+		segrellion_first_stepstones_no_victory
+	}
+}
+
+on_war_invalidated = {
+	on_actions = {
+		segrellion_first_stepstones_no_victory
+	}
+}
+
 on_marriage = {
 	on_actions = {
 		segrellion_daenerys_marriage_guard
@@ -28,14 +52,12 @@ yearly_global_pulse = {
 		segrellion_intro_yearly_fallback
 		segrellion_legacy_yearly_refresh
 		segrellion_later_canon_children_yearly_check
-		segrellion_stepstones_first_moon_108_check
 		segrellion_vhalyrax_yearly_growth
 	}
 }
 
 monthly_global_pulse = {
 	on_actions = {
-		segrellion_stepstones_first_moon_108_check
 		segrellion_restless_for_war_monthly_check
 		segrellion_refresh_scripted_appearances
 		segrellion_refresh_firstflame_dynasty_bonus
@@ -250,25 +272,57 @@ segrellion_later_canon_children_yearly_check = {
 	}
 }
 
-segrellion_stepstones_first_moon_108_check = {
+segrellion_first_stepstones_attacker_victory = {
+	trigger = {
+		exists = scope:war
+		scope:war = {
+			using_cb = daemon_stepstones_first_war
+		}
+		OR = {
+			scope:war = { has_variable = segrellion_tracked_first_stepstones_war }
+			character:Segrellion_1 ?= { is_participant_in_war = scope:war }
+		}
+		character:Segrellion_1 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_stepstones_war_joined
+			NOT = { has_character_flag = segrellion_stepstones_story_completed }
+		}
+	}
 	effect = {
 		character:Segrellion_1 ?= {
-			if = {
-				limit = {
-					is_alive = yes
-					current_date >= 8108.1.1
-					OR = {
-						has_character_flag = segrellion_chose_stepstones
-						has_character_flag = segrellion_stepstones_war_joined
-					}
-					NOT = { has_character_flag = segrellion_stepstones_story_completed }
-					NOT = { has_character_flag = segrellion_stepstones_aftermath_pending }
-				}
-				add_character_flag = segrellion_stepstones_aftermath_pending
-				trigger_event = {
-					id = segrellion_intro.0007
-					days = 1
-				}
+			add_character_flag = segrellion_stepstones_daemon_won
+			add_character_flag = segrellion_stepstones_aftermath_pending
+			trigger_event = {
+				id = segrellion_intro.0006
+				days = 3
+			}
+		}
+	}
+}
+
+segrellion_first_stepstones_no_victory = {
+	trigger = {
+		exists = scope:war
+		scope:war = {
+			using_cb = daemon_stepstones_first_war
+		}
+		OR = {
+			scope:war = { has_variable = segrellion_tracked_first_stepstones_war }
+			character:Segrellion_1 ?= { is_participant_in_war = scope:war }
+		}
+		character:Segrellion_1 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_stepstones_war_joined
+			NOT = { has_character_flag = segrellion_stepstones_story_completed }
+		}
+	}
+	effect = {
+		character:Segrellion_1 ?= {
+			add_character_flag = segrellion_stepstones_daemon_failed
+			add_character_flag = segrellion_stepstones_aftermath_pending
+			trigger_event = {
+				id = segrellion_intro.0008
+				days = 3
 			}
 		}
 	}

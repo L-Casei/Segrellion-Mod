@@ -149,6 +149,48 @@ segrellion_try_force_later_canon_marriages_effect = {
 			}
 			character:Segrellion_10 = { add_spouse = character:Segrellion_9 }
 		}
+		agot_canon_children_get_canon_child_scope_effect = {
+			ID = Segrellion_10
+			SCOPE = segrellion_canon_maenar
+		}
+		agot_canon_children_get_canon_child_scope_effect = {
+			ID = Segrellion_9
+			SCOPE = segrellion_canon_alyssa
+		}
+		if = {
+			limit = {
+				scope:segrellion_canon_maenar ?= {
+					is_alive = yes
+					is_married = no
+					is_betrothed = no
+				}
+				scope:segrellion_canon_alyssa ?= {
+					is_alive = yes
+					is_married = no
+					is_betrothed = no
+				}
+				OR = {
+					scope:segrellion_canon_maenar = { is_adult = no }
+					scope:segrellion_canon_alyssa = { is_adult = no }
+				}
+			}
+			scope:segrellion_canon_maenar = { create_betrothal = scope:segrellion_canon_alyssa }
+		}
+		if = {
+			limit = {
+				scope:segrellion_canon_maenar ?= {
+					is_alive = yes
+					is_adult = yes
+					is_married = no
+				}
+				scope:segrellion_canon_alyssa ?= {
+					is_alive = yes
+					is_adult = yes
+					is_married = no
+				}
+			}
+			scope:segrellion_canon_maenar = { add_spouse = scope:segrellion_canon_alyssa }
+		}
 		if = {
 			limit = {
 				iaf_later_canon_identity_exists_trigger = { ID = Segrellion_17 }
@@ -637,6 +679,7 @@ iaf_canon_children_Segrellion_17_birth_effect = {
 	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_rhaenys_modifier }
 	add_trait = beauty_good_1
 	add_trait = pure_blooded
+	segrellion_try_force_later_canon_marriages_effect = yes
 }
 
 iaf_canon_children_Segrellion_18_birth_effect = {
@@ -665,6 +708,7 @@ iaf_canon_children_Segrellion_20_birth_effect = {
 	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aemma_modifier }
 	add_trait = beauty_good_1
 	add_trait = pure_blooded
+	segrellion_try_force_later_canon_marriages_effect = yes
 }
 
 iaf_canon_children_Segrellion_21_birth_effect = {
@@ -684,6 +728,7 @@ iaf_canon_children_Segrellion_22_birth_effect = {
 	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_samantha_modifier }
 	add_trait = beauty_good_1
 	add_trait = pure_blooded
+	segrellion_try_force_later_canon_marriages_effect = yes
 }
 
 iaf_canon_children_Segrellion_23_birth_effect = {
@@ -728,6 +773,7 @@ iaf_canon_children_Segrellion_27_birth_effect = {
 
 segrellion_assign_later_canon_child_personality_effect = {
 	segrellion_assign_single_canon_child_education_effect = yes
+	segrellion_remove_standard_personality_traits_effect = yes
 
 	if = {
 		limit = {
