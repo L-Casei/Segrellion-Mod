@@ -6,7 +6,7 @@ segrellion_intro.0001 = {
 	desc = segrellion_intro.0001.desc
 	theme = realm
 
-	override_background = { reference = docks }
+	override_background = { reference = segrellion_vhal_island }
 
 	left_portrait = {
 		character = root
@@ -89,8 +89,13 @@ segrellion_intro.0002 = {
 		name = segrellion_intro.0002.a
 		ai_chance = { base = 80 }
 		add_character_flag = segrellion_chose_stepstones
+		add_character_flag = segrellion_stepstones_war_joined
 		add_prestige = 75
 		custom_tooltip = segrellion_stepstones_route_started_tt
+		trigger_event = {
+			id = segrellion_intro.0007
+			days = 30
+		}
 		hidden_effect = {
 			if = {
 				limit = {
@@ -168,10 +173,11 @@ segrellion_intro.0006 = {
 	}
 
 	trigger = {
-		has_character_flag = segrellion_chose_stepstones
-		has_character_flag = segrellion_stepstones_war_joined
+		OR = {
+			has_character_flag = segrellion_chose_stepstones
+			has_character_flag = segrellion_stepstones_war_joined
+		}
 		NOT = { has_character_flag = segrellion_stepstones_story_completed }
-		character:Targaryen_61 ?= { is_alive = yes }
 	}
 
 	immediate = {
@@ -184,7 +190,7 @@ segrellion_intro.0006 = {
 		ai_chance = { base = 65 }
 		add_character_modifier = {
 			modifier = segrellion_restless_for_war_modifier
-			years = 1000
+			years = 5
 		}
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
 		add_character_flag = segrellion_restless_for_war_path
@@ -216,7 +222,7 @@ segrellion_intro.0006 = {
 		ai_chance = { base = 35 }
 		add_character_modifier = {
 			modifier = segrellion_homeward_purpose_modifier
-			years = 1000
+			years = 5
 		}
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
 		add_character_flag = segrellion_homeward_purpose_path
@@ -244,13 +250,43 @@ segrellion_intro.0006 = {
 	}
 }
 
+segrellion_intro.0007 = {
+	type = character_event
+	hidden = yes
+
+	trigger = {
+		OR = {
+			has_character_flag = segrellion_chose_stepstones
+			has_character_flag = segrellion_stepstones_war_joined
+		}
+		NOT = { has_character_flag = segrellion_stepstones_story_completed }
+	}
+
+	immediate = {
+		if = {
+			limit = { current_date >= 8108.1.1 }
+			add_character_flag = segrellion_stepstones_aftermath_pending
+			trigger_event = {
+				id = segrellion_intro.0006
+				days = 1
+			}
+		}
+		else = {
+			trigger_event = {
+				id = segrellion_intro.0007
+				days = 30
+			}
+		}
+	}
+}
+
 segrellion_intro.0003 = {
 	type = character_event
 	title = segrellion_intro.0003.t
 	desc = segrellion_intro.0003.desc
 	theme = stewardship
 
-	override_background = { reference = docks }
+	override_background = { reference = segrellion_vhal_island }
 
 	left_portrait = {
 		character = root
@@ -284,7 +320,7 @@ segrellion_intro.0004 = {
 	desc = segrellion_intro.0004.desc
 	theme = stewardship
 
-	override_background = { reference = docks }
+	override_background = { reference = segrellion_vhal_island }
 
 	left_portrait = {
 		character = root
@@ -333,7 +369,7 @@ segrellion_intro.0005 = {
 	desc = segrellion_intro.0005.desc
 	theme = stewardship
 
-	override_background = { reference = wilderness }
+	override_background = { reference = segrellion_vhalerion_throne_room }
 
 	left_portrait = {
 		character = root

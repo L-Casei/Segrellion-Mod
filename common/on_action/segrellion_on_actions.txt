@@ -17,17 +17,25 @@ on_player_select_destiny_confirmed = {
 	}
 }
 
+on_marriage = {
+	on_actions = {
+		segrellion_daenerys_marriage_guard
+	}
+}
+
 yearly_global_pulse = {
 	on_actions = {
 		segrellion_intro_yearly_fallback
 		segrellion_legacy_yearly_refresh
+		segrellion_later_canon_children_yearly_check
+		segrellion_stepstones_first_moon_108_check
 		segrellion_vhalyrax_yearly_growth
 	}
 }
 
 monthly_global_pulse = {
 	on_actions = {
-		segrellion_stepstones_war_end_monthly_check
+		segrellion_stepstones_first_moon_108_check
 		segrellion_restless_for_war_monthly_check
 		segrellion_refresh_scripted_appearances
 		segrellion_refresh_firstflame_dynasty_bonus
@@ -45,7 +53,6 @@ segrellion_on_game_start = {
 			add_dynasty_prestige = 250
 		}
 		dynasty:dynn_Segrellion = { add_dynasty_modifier = valyrian_heritage_dynasty_modifier }
-		dynasty:dynn_Segrellion = { every_dynasty_house = { add_house_modifier = dragonrider_house_modifier } }
 		title:b_castle_farring.title_province = {
 			if = {
 				limit = { has_special_building_slot = no }
@@ -120,8 +127,34 @@ segrellion_on_game_start = {
 			}
 		}
 		segrellion_find_icebringer_effect = yes
+		iaf_init_historical_canon_identities_effect = yes
+		iaf_init_later_historical_canon_identities_effect = yes
 		segrellion_assign_historical_canon_traits_effect = yes
+		segrellion_assign_later_historical_canon_traits_effect = yes
+		segrellion_assign_historical_canon_child_personalities_effect = yes
+		segrellion_assign_later_historical_canon_child_personalities_effect = yes
 		segrellion_refresh_firstflame_dynasty_bonus = yes
+	}
+}
+
+segrellion_daenerys_marriage_guard = {
+	effect = {
+		if = {
+			limit = {
+				current_date < 8113.1.1
+				OR = {
+					AND = {
+						this = character:Segrellion_1
+						scope:spouse = character:Segrellion_3
+					}
+					AND = {
+						this = character:Segrellion_3
+						scope:spouse = character:Segrellion_1
+					}
+				}
+			}
+			set_relation_wedding_very_bad_fertility = scope:spouse
+		}
 	}
 }
 
@@ -207,29 +240,34 @@ segrellion_legacy_yearly_refresh = {
 	}
 }
 
-segrellion_stepstones_war_end_monthly_check = {
+segrellion_later_canon_children_yearly_check = {
+	effect = {
+		segrellion_try_force_later_canon_marriages_effect = yes
+		character:Segrellion_10 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
+		character:Segrellion_12 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
+		character:Segrellion_19 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
+		character:Segrellion_21 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
+	}
+}
+
+segrellion_stepstones_first_moon_108_check = {
 	effect = {
 		character:Segrellion_1 ?= {
 			if = {
 				limit = {
 					is_alive = yes
-					has_character_flag = segrellion_chose_stepstones
-					has_character_flag = segrellion_stepstones_war_joined
+					current_date >= 8108.1.1
+					OR = {
+						has_character_flag = segrellion_chose_stepstones
+						has_character_flag = segrellion_stepstones_war_joined
+					}
 					NOT = { has_character_flag = segrellion_stepstones_story_completed }
 					NOT = { has_character_flag = segrellion_stepstones_aftermath_pending }
-					character:Targaryen_61 ?= {
-						is_alive = yes
-						NOT = {
-							any_character_war = {
-								using_cb = daemon_stepstones_first_war
-							}
-						}
-					}
 				}
 				add_character_flag = segrellion_stepstones_aftermath_pending
 				trigger_event = {
-					id = segrellion_intro.0006
-					days = 3
+					id = segrellion_intro.0007
+					days = 1
 				}
 			}
 		}

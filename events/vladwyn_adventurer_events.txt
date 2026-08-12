@@ -1,0 +1,290 @@
+namespace = vladwyn_adventurer
+
+vladwyn_adventurer.0001 = {
+	type = character_event
+	title = vladwyn_adventurer.0001.t
+	desc = vladwyn_adventurer.0001.desc
+	theme = travel
+	override_background = { reference = wilderness }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = vladwyn_adventurer.0001.a
+		add_character_flag = vladwyn_landless_route_unlocked
+		add_character_flag = vladwyn_open_road_taken
+		add_character_flag = vladwyn_adventurer_events_unlocked
+		primary_title ?= {
+			save_title_name_change_data = { TRANSFER_VAR = yes }
+			reset_title_prefix = yes
+			set_title_name = vladwyn_the_honorables_name
+		}
+		add_prestige = 200
+		add_martial_lifestyle_xp = 250
+		add_character_modifier = {
+			modifier = vladwyn_wandering_knight_modifier
+			years = 8
+		}
+	}
+}
+
+vladwyn_adventurer.0002 = {
+	type = character_event
+	title = vladwyn_adventurer.0002.t
+	desc = vladwyn_adventurer.0002.desc
+	theme = war
+	override_background = { reference = army_camp }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = vladwyn_adventurer.0002.a
+		add_character_flag = vladwyn_gathered_banner_men
+		set_variable = {
+			name = vladwyn_sentinel_progress
+			value = 1
+		}
+		add_prestige = 1000
+		add_prestige_experience = 1000
+		vladwyn_upgrade_martial_education_effect = yes
+		vladwyn_upgrade_fighter_trait_effect = yes
+		vladwyn_followers_gain_knight_opinion_effect = yes
+		add_character_modifier = {
+			modifier = vladwyn_a_knight_amongst_men_modifier
+			years = 8
+		}
+	}
+}
+
+vladwyn_adventurer.0003 = {
+	type = character_event
+	title = vladwyn_adventurer.0003.t
+	desc = vladwyn_adventurer.0003.desc
+	theme = intrigue
+	override_background = { reference = study }
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = vladwyn_adventurer.0003.a
+		add_character_flag = vladwyn_followed_the_name
+		set_variable = {
+			name = vladwyn_origin_progress
+			value = 1
+		}
+		add_learning_lifestyle_xp = 200
+		add_intrigue_lifestyle_xp = 200
+		add_stress = 30
+		add_character_modifier = {
+			modifier = vladwyn_questions_without_answers_modifier
+			years = 6
+		}
+	}
+}
+
+vladwyn_adventurer.0004 = {
+	type = character_event
+	title = vladwyn_adventurer.0004.t
+	desc = vladwyn_adventurer.0004.desc
+	theme = intrigue
+	override_background = { reference = study }
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = character:Baratheon_36
+		animation = personality_bold
+	}
+
+	option = {
+		name = vladwyn_adventurer.0004.a
+		add_character_flag = vladwyn_searched_stormlands
+		add_character_flag = vladwyn_parentage_revealed
+		set_variable = {
+			name = vladwyn_origin_progress
+			value = 2
+		}
+		add_intrigue_lifestyle_xp = 250
+		add_prestige = 300
+		if = {
+			limit = { NOT = { has_trait = blood_of_the_stag } }
+			add_trait = blood_of_the_stag
+		}
+		remove_character_modifier = vladwyn_questions_without_answers_modifier
+	}
+}
+
+vladwyn_adventurer.0005 = {
+	type = character_event
+	title = vladwyn_adventurer.0005.t
+	desc = vladwyn_adventurer.0005.desc
+	theme = diplomacy
+	override_background = { reference = council_chamber }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = vladwyn_adventurer.0005.a
+		add_character_flag = vladwyn_claimed_blood_of_storm
+		add_pressed_claim = title:e_the_stormlands
+		add_prestige = 750
+		dynasty = { add_dynasty_prestige = 300 }
+		add_character_modifier = {
+			modifier = vladwyn_blood_of_the_storm_modifier
+			years = 10
+		}
+		if = {
+			limit = {
+				title:e_the_stormlands = { exists = holder }
+			}
+			title:e_the_stormlands.holder = {
+				add_opinion = {
+					target = root
+					modifier = vladwyn_claimed_baratheon_blood_opinion
+				}
+			}
+		}
+		house:house_BaratheonSE = {
+			every_house_member = {
+				limit = {
+					is_alive = yes
+					NOT = { this = root }
+				}
+				add_opinion = {
+					target = root
+					modifier = vladwyn_claimed_baratheon_blood_opinion
+				}
+			}
+		}
+	}
+}
+
+vladwyn_adventurer.0006 = {
+	type = character_event
+	title = vladwyn_adventurer.0006.t
+	desc = vladwyn_adventurer.0006.desc
+	theme = diplomacy
+	override_background = { reference = corridor_night }
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	option = {
+		name = vladwyn_adventurer.0006.a
+		add_character_flag = vladwyn_renounced_stag
+		add_prestige = 650
+		dynasty = { add_dynasty_prestige = 500 }
+		add_character_modifier = {
+			modifier = vladwyn_a_name_of_his_own_modifier
+			years = 10
+		}
+	}
+}
+
+vladwyn_adventurer.0007 = {
+	type = character_event
+	title = vladwyn_adventurer.0007.t
+	desc = vladwyn_adventurer.0007.desc
+	theme = stewardship
+	override_background = { reference = wilderness }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = vladwyn_adventurer.0007.a
+		add_character_flag = vladwyn_sought_house_home
+		add_prestige = 300
+		add_martial_lifestyle_xp = 300
+		vladwyn_greater_ambition_stress_effect = yes
+		add_character_modifier = {
+			modifier = vladwyn_a_greater_ambition_modifier
+		}
+	}
+}
+
+vladwyn_adventurer.0009 = {
+	type = character_event
+	title = vladwyn_adventurer.0009.t
+	desc = vladwyn_adventurer.0009.desc
+	theme = intrigue
+	override_background = { reference = council_chamber }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = vladwyn_adventurer.0009.a
+	}
+}
+
+vladwyn_adventurer.0010 = {
+	type = character_event
+	title = vladwyn_adventurer.0010.t
+	desc = vladwyn_adventurer.0010.desc
+	theme = diplomacy
+	override_background = { reference = council_chamber }
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = vladwyn_adventurer.0010.a
+	}
+}
+
+vladwyn_adventurer.0008 = {
+	type = character_event
+	title = vladwyn_adventurer.0008.t
+	desc = vladwyn_adventurer.0008.desc
+	theme = war
+	override_background = { reference = army_camp }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = vladwyn_adventurer.0008.a
+		add_character_flag = vladwyn_founded_black_sentinels
+		set_global_variable = {
+			name = vladwyn_black_sentinels_unlocked
+			value = yes
+		}
+		create_maa_regiment = {
+			type = black_sentinels
+			check_can_recruit = no
+			size = 2
+		}
+		add_martial_lifestyle_xp = 500
+		add_prestige = 600
+		add_character_modifier = {
+			modifier = vladwyn_the_black_sentinel_modifier
+			years = 10
+		}
+	}
+}

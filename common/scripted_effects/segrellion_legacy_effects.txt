@@ -1,28 +1,30 @@
 segrellion_refresh_valyrian_kin_opinion_effect = {
-	if = {
-		limit = {
-			dynasty:dynn_Segrellion = { has_dynasty_perk = segrellion_legacy_3 }
-		}
-
-		every_living_character = {
+	hidden_effect = {
+		if = {
 			limit = {
-				is_landed = yes
-				culture = { has_cultural_pillar = heritage_valyrian }
+				dynasty:dynn_Segrellion = { has_dynasty_perk = segrellion_legacy_3 }
 			}
-			save_scope_as = segrellion_valyrian_opinion_observer
 
-			dynasty:dynn_Segrellion = {
-				every_dynasty_member = {
-					limit = {
-						is_alive = yes
-						is_landed = yes
-						NOT = { this = scope:segrellion_valyrian_opinion_observer }
-					}
-					save_scope_as = segrellion_valyrian_opinion_target
-					scope:segrellion_valyrian_opinion_observer = {
-						add_opinion = {
-							target = scope:segrellion_valyrian_opinion_target
-							modifier = segrellion_valyrian_kin_opinion
+			every_living_character = {
+				limit = {
+					is_landed = yes
+					culture = { has_cultural_pillar = heritage_valyrian }
+				}
+				save_scope_as = segrellion_valyrian_opinion_observer
+
+				dynasty:dynn_Segrellion = {
+					every_dynasty_member = {
+						limit = {
+							is_alive = yes
+							is_landed = yes
+							NOT = { this = scope:segrellion_valyrian_opinion_observer }
+						}
+						save_scope_as = segrellion_valyrian_opinion_target
+						scope:segrellion_valyrian_opinion_observer = {
+							add_opinion = {
+								target = scope:segrellion_valyrian_opinion_target
+								modifier = segrellion_valyrian_kin_opinion
+							}
 						}
 					}
 				}

@@ -39,6 +39,7 @@ segrellion_proclaim_lordship_of_vhalerion_decision = {
 	}
 
 	effect = {
+		custom_tooltip = segrellion_proclaim_lordship_effect_tt
 		trigger_event = segrellion_decision.0001
 	}
 
@@ -128,7 +129,12 @@ segrellion_forge_the_flamelands_decision = {
 	}
 
 	effect = {
+		custom_tooltip = segrellion_forge_flamelands_effect_tt
 		trigger_event = segrellion_decision.0002
+	}
+
+	cost = {
+		gold = 500
 	}
 
 	ai_potential = { always = no }
@@ -158,6 +164,7 @@ segrellion_raise_unicorn_riders_decision = {
 	}
 
 	effect = {
+		custom_tooltip = segrellion_raise_unicorn_riders_effect_tt
 		trigger_event = segrellion_decision.0003
 	}
 
@@ -190,10 +197,95 @@ segrellion_establish_the_beacon_decision = {
 		has_title = title:k_flamelands
 		has_title = title:c_farring_cross
 		title:b_castle_farring = { holder = root }
+		prestige_level >= 3
+		sub_realm_size >= 10
+		gold >= 1000
+		prestige >= 500
 	}
 
 	effect = {
+		custom_tooltip = segrellion_establish_beacon_effect_tt
 		trigger_event = segrellion_decision.0004
+	}
+
+	cost = {
+		gold = 1000
+		prestige = 500
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_proclaim_paramountcy_of_the_flamelands_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/proclaim_paramountcy_of_the_flamelands_decision_background.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_proclaim_paramountcy_of_the_flamelands_decision_desc
+	selection_tooltip = segrellion_proclaim_paramountcy_of_the_flamelands_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		has_title = title:k_flamelands
+		title:k_flamelands = { holder = root }
+		NOT = { has_title = title:e_flamelands }
+		title:e_flamelands = { NOT = { exists = holder } }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		has_title = title:k_flamelands
+		gold >= 1000
+		prestige >= 2000
+		piety >= 500
+		custom_description = {
+			text = segrellion_paramountcy_flamelands_50_years_tt
+			title:k_flamelands = {
+				NOT = { has_variable = segrellion_flamelands_less_than_50_years_old }
+			}
+		}
+		custom_description = {
+			text = segrellion_paramountcy_beacon_established_tt
+			has_character_flag = segrellion_established_the_beacon
+		}
+		custom_description = {
+			text = segrellion_paramountcy_owns_beacon_tt
+			title:b_castle_farring = { holder = root }
+		}
+		OR = {
+			AND = {
+				prestige_level >= 4
+				piety_level >= 4
+			}
+			custom_description = {
+				text = segrellion_paramountcy_realm_size_tt
+				sub_realm_size >= 30
+			}
+		}
+		custom_description = {
+			text = segrellion_paramountcy_iron_throne_opinion_tt
+			title:h_the_iron_throne = { exists = holder }
+			title:h_the_iron_throne.holder = {
+				opinion = {
+					target = root
+					value >= 100
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = segrellion_proclaim_paramountcy_effect_tt
+		trigger_event = segrellion_decision.0006
+	}
+
+	cost = {
+		gold = 1000
+		prestige = 2000
+		piety = 500
 	}
 
 	ai_potential = { always = no }
@@ -220,7 +312,9 @@ segrellion_uncover_the_lost_legacy_decision = {
 		}
 	}
 
-	effect = { }
+	effect = {
+		custom_tooltip = segrellion_lost_legacy_effect_tt
+	}
 
 	ai_potential = { always = no }
 	ai_will_do = { base = 0 }
@@ -244,22 +338,44 @@ segrellion_claim_the_iron_throne_decision = {
 	is_valid = {
 		is_imprisoned = no
 		is_adult = yes
-		has_trait = dragonrider
+		prestige >= 3000
+		custom_description = {
+			text = segrellion_claim_three_dragonriders_tt
+			segrellion_house_has_three_active_dragonriders_trigger = yes
+		}
 		custom_description = {
 			text = segrellion_claim_no_iron_throne_claim_tt
 			NOT = { has_claim_on = title:h_the_iron_throne }
 		}
-		title:h_the_iron_throne = {
-			exists = holder
+		custom_description = {
+			text = segrellion_claim_iron_throne_exists_tt
+			title:h_the_iron_throne = {
+				exists = holder
+			}
 		}
 		OR = {
-			prestige_level >= 5
-			highest_held_title_tier >= tier_empire
+			has_title = title:k_flamelands
+			AND = {
+				has_title = title:d_vhalerion
+				custom_description = {
+					text = segrellion_claim_has_kingdom_or_higher_tt
+					highest_held_title_tier >= tier_kingdom
+				}
+				custom_description = {
+					text = segrellion_claim_has_10000_soldiers_tt
+					current_military_strength >= 10000
+				}
+			}
 		}
 	}
 
 	effect = {
+		custom_tooltip = segrellion_claim_iron_throne_effect_tt
 		trigger_event = segrellion_decision.0005
+	}
+
+	cost = {
+		prestige = 3000
 	}
 
 	ai_potential = { always = no }
@@ -270,6 +386,7 @@ segrellion_keep_the_dragon_egg_close_decision = {
 	picture = {
 		reference = "gfx/interface/illustrations/decisions/tend_the_ancient_egg_decision_background.dds"
 	}
+	decision_group_type = major
 
 	desc = segrellion_keep_the_dragon_egg_close_decision_desc
 	selection_tooltip = segrellion_keep_the_dragon_egg_close_decision_tooltip
@@ -305,6 +422,7 @@ segrellion_keep_the_dragon_egg_close_decision = {
 	}
 
 	effect = {
+		custom_tooltip = segrellion_tend_ancient_egg_effect_tt
 		add_character_flag = segrellion_ancient_egg_decision_pending
 		trigger_event = {
 			id = segrellion_dragon.0001
@@ -337,7 +455,9 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 		}
 	}
 
-	effect = { }
+	effect = {
+		custom_tooltip = segrellion_awaken_icebringer_effect_tt
+	}
 
 	ai_potential = { always = no }
 	ai_will_do = { base = 0 }

@@ -5,7 +5,7 @@ segrellion_dragon.0001 = {
 	title = segrellion_dragon.0001.t
 	desc = segrellion_dragon.0001.desc
 	theme = dragon
-	override_background = { reference = bedchamber }
+	override_background = { reference = segrellion_vhalerion_throne_room }
 
 	left_portrait = {
 		character = root
@@ -26,17 +26,23 @@ segrellion_dragon.0001 = {
 		ai_chance = { base = 100 }
 		remove_character_flag = segrellion_ancient_egg_decision_pending
 		add_character_flag = segrellion_tending_ancient_egg
+		segrellion_dragon_advance_egg_progress_effect = { VALUE = 1 }
+		add_learning_lifestyle_xp = 100
+		add_prestige = 75
+		add_character_modifier = {
+			modifier = segrellion_keeper_of_the_ancient_egg_modifier
+			years = 3
+		}
 		trigger_event = {
 			id = segrellion_dragon.0002
-			days = 120
+			days = 730
 		}
 	}
 
 	option = {
 		name = segrellion_dragon.0001.b
 		ai_chance = { base = 0 }
-		custom_tooltip = segrellion_dragon_chain_paused_tt
-		remove_character_flag = segrellion_ancient_egg_decision_pending
+		segrellion_dragon_pause_chain_effect = yes
 	}
 }
 
@@ -44,107 +50,49 @@ segrellion_dragon.0002 = {
 	type = character_event
 	title = segrellion_dragon.0002.t
 	desc = segrellion_dragon.0002.desc
-	theme = intrigue
-	override_background = { reference = bedchamber }
+	theme = dragon
+	override_background = { reference = segrellion_vhalerion_throne_room }
 
 	left_portrait = {
 		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = character:Segrellion_2
 		animation = personality_rational
 	}
 
 	option = {
 		name = segrellion_dragon.0002.a
-		ai_chance = { base = 50 }
-		add_character_flag = segrellion_egg_kept_secret
+		ai_chance = { base = 100 }
+		segrellion_dragon_advance_egg_progress_effect = { VALUE = 1 }
+		add_stress = 20
+		add_learning_lifestyle_xp = 200
+		add_prestige = 100
+		add_character_modifier = {
+			modifier = segrellion_dragon_dreams_modifier
+			years = 3
+		}
 		trigger_event = {
 			id = segrellion_dragon.0003
-			days = 150
+			days = 730
 		}
 	}
 
 	option = {
 		name = segrellion_dragon.0002.b
-		ai_chance = { base = 25 }
-		add_character_flag = segrellion_egg_maester_examined
-		add_prestige = 50
-		random = {
-			chance = 25
-			add_character_flag = segrellion_egg_rumor_risk
-		}
-		trigger_event = {
-			id = segrellion_dragon.0003
-			days = 120
-		}
-	}
-
-	option = {
-		name = segrellion_dragon.0002.c
-		ai_chance = { base = 25 }
-		add_character_flag = segrellion_egg_warmed_by_fire
-		trigger_event = {
-			id = segrellion_dragon.0003
-			days = 90
-		}
+		ai_chance = { base = 0 }
+		segrellion_dragon_pause_chain_effect = yes
 	}
 }
 
 segrellion_dragon.0003 = {
 	type = character_event
 	title = segrellion_dragon.0003.t
-	desc = {
-		triggered_desc = {
-			trigger = {
-				OR = {
-					has_character_flag = segrellion_opening_route_dragonstone
-					has_character_flag = segrellion_chose_stepstones
-				}
-			}
-			desc = segrellion_dragon.0003.desc_caraxes
-		}
-		triggered_desc = {
-			trigger = {
-				NOR = {
-					has_character_flag = segrellion_opening_route_dragonstone
-					has_character_flag = segrellion_chose_stepstones
-				}
-			}
-			desc = segrellion_dragon.0003.desc_generic
-		}
-	}
+	desc = segrellion_dragon.0003.desc
 	theme = dragon
-	override_background = { reference = study }
-
-	left_portrait = {
-		character = root
-		animation = personality_rational
-	}
-
-	option = {
-		name = segrellion_dragon.0003.a
-		ai_chance = { base = 75 }
-		add_character_flag = segrellion_egg_dragon_sense
-		trigger_event = {
-			id = segrellion_dragon.0004
-			days = 90
-		}
-	}
-
-	option = {
-		name = segrellion_dragon.0003.b
-		ai_chance = { base = 25 }
-		trigger_event = {
-			id = segrellion_dragon.0004
-			days = 150
-		}
-	}
-}
-
-segrellion_dragon.0004 = {
-	type = character_event
-	title = segrellion_dragon.0004.t
-	desc = segrellion_dragon.0004.desc
-	theme = dragon
-	override_background = { reference = bedchamber }
+	override_background = { reference = segrellion_vhalerion_throne_room }
 
 	left_portrait = {
 		character = root
@@ -152,18 +100,87 @@ segrellion_dragon.0004 = {
 	}
 
 	option = {
+		name = segrellion_dragon.0003.a
+		ai_chance = { base = 100 }
+		segrellion_dragon_advance_egg_progress_effect = { VALUE = 2 }
+		add_stress = 35
+		add_learning_lifestyle_xp = 300
+		add_intrigue_lifestyle_xp = 100
+		add_character_flag = alex_advanced_dragon_dreams
+		remove_character_modifier = segrellion_dragon_dreams_modifier
+		add_character_modifier = {
+			modifier = segrellion_haunted_by_the_white_shadow_modifier
+			years = 4
+		}
+		trigger_event = {
+			id = segrellion_dragon.0004
+			days = 700
+		}
+	}
+
+	option = {
+		name = segrellion_dragon.0003.b
+		ai_chance = { base = 0 }
+		segrellion_dragon_pause_chain_effect = yes
+	}
+}
+
+segrellion_dragon.0004 = {
+	type = character_event
+	title = segrellion_dragon.0004.t
+	desc = segrellion_dragon.0004.desc
+	theme = intrigue
+	override_background = { reference = segrellion_vhalerion_throne_room }
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = character:Segrellion_2
+		animation = fear
+	}
+
+	option = {
 		name = segrellion_dragon.0004.a
 		ai_chance = { base = 100 }
+		segrellion_dragon_advance_egg_progress_effect = { VALUE = 3 }
+		add_stress = 20
+		add_prestige = 250
+		add_intrigue_lifestyle_xp = 150
 		add_character_flag = vhalyrax_hatching_imminent
+		character:Segrellion_2 ?= {
+			if = {
+				limit = { is_alive = yes }
+				add_opinion = {
+					target = root
+					modifier = segrellion_protected_alysanne_opinion
+				}
+			}
+		}
+		title:c_blackmark = {
+			add_county_modifier = {
+				modifier = segrellion_night_watch_strengthened_county_modifier
+				years = 5
+			}
+		}
 		trigger_event = {
 			id = segrellion_dragon.0005
-			days = 30
+			days = 3
 		}
+	}
+
+	option = {
+		name = segrellion_dragon.0004.b
+		ai_chance = { base = 0 }
+		segrellion_dragon_pause_chain_effect = yes
 	}
 }
 
 segrellion_dragon.0005 = {
 	type = character_event
+	window = agot_dragon_character_event
 	title = segrellion_dragon.0005.t
 	desc = segrellion_dragon.0005.desc
 	theme = dragon
@@ -173,13 +190,12 @@ segrellion_dragon.0005 = {
 		character = root
 		animation = amazement
 	}
+
 	right_portrait = {
 		character = scope:dragon
-		animation = happiness
-	}
-	lower_right_portrait = {
-		character = character:Vladwyn_1
-		animation = shock
+		animation = dragon_head
+		camera = camera_dragon_event_standing_baby
+		outfit_tags = { linear_camera_zoom }
 	}
 
 	immediate = {
@@ -202,25 +218,60 @@ segrellion_dragon.0005 = {
 		name = segrellion_dragon.0005.a
 		ai_chance = { base = 100 }
 		add_prestige = 1000
-		remove_character_flag = segrellion_tending_ancient_egg
-		add_character_flag = vhalyrax_hatched_secretly
-		add_character_flag = segrellion_knows_vhalyrax_hatched
-		character:Segrellion_2 ?= {
-			if = {
-				limit = { is_alive = yes }
-				add_character_flag = segrellion_knows_vhalyrax_hatched
+		add_prestige_experience = 1000
+		add_legitimacy = 750
+		dynasty = {
+			add_dynasty_prestige = 750
+			while = {
+				limit = { dynasty_prestige_level < 3 }
+				add_dynasty_prestige_level = 1
+			}
+			add_dynasty_modifier = {
+				modifier = segrellion_a_dragon_reborn_dynasty_modifier
+				years = 10
 			}
 		}
-		character:Segrellion_3 ?= {
-			if = {
-				limit = { is_alive = yes }
-				add_character_flag = segrellion_knows_vhalyrax_hatched
+		custom_tooltip = segrellion_house_gains_dragonriding_house_tt
+		hidden_effect = {
+			house:house_Segrellion = {
+				if = {
+					limit = {
+						NOT = { has_house_modifier = dragonrider_house_modifier }
+					}
+					add_house_modifier = dragonrider_house_modifier
+				}
 			}
 		}
-		character:Vladwyn_1 ?= {
-			if = {
-				limit = { is_alive = yes }
-				add_character_flag = segrellion_knows_vhalyrax_hatched
+		add_stress = -60
+		add_character_modifier = {
+			modifier = segrellion_a_quiet_companion_modifier
+			years = 10
+		}
+		hidden_effect = {
+			remove_character_modifier = segrellion_keeper_of_the_ancient_egg_modifier
+			remove_character_modifier = segrellion_dragon_dreams_modifier
+			remove_character_modifier = segrellion_haunted_by_the_white_shadow_modifier
+			remove_character_flag = segrellion_tending_ancient_egg
+			remove_character_flag = vhalyrax_hatching_imminent
+			add_character_flag = vhalyrax_hatched_secretly
+			add_character_flag = segrellion_knows_vhalyrax_hatched
+			character:Segrellion_2 ?= {
+				if = {
+					limit = { is_alive = yes }
+					add_character_flag = segrellion_knows_vhalyrax_hatched
+				}
+			}
+			character:Segrellion_3 ?= {
+				if = {
+					limit = { is_alive = yes }
+					add_character_flag = segrellion_knows_vhalyrax_hatched
+				}
+			}
+			character:Vladwyn_1 ?= {
+				if = {
+					limit = { is_alive = yes }
+					add_character_flag = segrellion_knows_vhalyrax_hatched
+				}
 			}
 		}
 	}

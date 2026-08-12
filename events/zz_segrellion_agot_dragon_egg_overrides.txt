@@ -1,0 +1,181 @@
+namespace = agot_dragon_egg_cradling
+
+# AGOT override: the ancient Segrellion egg must not be offered through the
+# newborn cradling event. It is reserved for the Segrellion Vhalyrax chain.
+agot_dragon_egg_cradling.2000 = {
+	type = character_event
+	title = agot_dragon_egg_cradling.2000.t
+	desc = {
+		random_valid = {
+			triggered_desc = {
+				trigger = { ai_compassion >= low_positive_ai_value }
+				desc = agot_dragon_egg_cradling.2000.desc_start1
+			}
+			desc = agot_dragon_egg_cradling.2000.desc_start2
+		}
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					dynasty = dynasty:dynn_Targaryen
+					scope:child = { dynasty = dynasty:dynn_Targaryen }
+					game_start_date > 8036.6.1
+					NOT = { this = character:Targaryen_32 }
+					NOT = { this = character:Targaryen_35 }
+					NOT = { this = character:Targaryen_36 }
+				}
+				desc = agot_dragon_egg_cradling.2000.desc_targ
+			}
+			desc = agot_dragon_egg_cradling.2000.desc
+		}
+	}
+
+	theme = dragon
+
+	override_background = { reference = bedchamber }
+
+	right_portrait = {
+		character = root
+		animation = newborn
+	}
+
+	lower_center_portrait = {
+		character = scope:child
+	}
+
+	trigger = {
+		scope:child = {
+			is_alive = yes
+		}
+		any_character_artifact = {
+			has_variable = dragon_egg
+			NOT = { has_variable = segrellion_dragon_egg_artifact }
+			NOT = { has_variable = cradled_egg }
+			NOT = { has_variable = dud_egg }
+			NOT = { has_variable = pitted_egg }
+		}
+		NOT = {
+			scope:child = {
+				any_character_artifact = {
+					has_variable = dragon_egg
+				}
+			}
+		}
+		OR = {
+			has_game_rule = dragons_anyone
+			agot_has_dragonblood_heritage = yes
+			scope:child = { agot_has_dragonblood_heritage = yes }
+		}
+		trigger_if = {
+			limit = { agot_canon_dragons_enabled = yes }
+			OR = {
+				is_ai = no
+				NAND = {
+					scope:child = { agot_is_canon_rider = yes }
+					scope:child = { agot_has_canon_cradle_egg = no }
+				}
+			}
+		}
+	}
+
+	widget = {
+		is_shown = {
+			is_ai = no
+		}
+		gui = "agot_artifact_selection"
+		container = "custom_widgets_container"
+	}
+
+	immediate = {
+		every_character_artifact = {
+			limit = {
+				has_variable = dragon_egg
+				NOT = { has_variable = segrellion_dragon_egg_artifact }
+				NOT = { has_variable = cradled_egg }
+				NOT = { has_variable = dud_egg }
+				NOT = { has_variable = pitted_egg }
+			}
+			root = {
+				add_to_variable_list = {
+					name = possible_artifacts
+					target = prev
+				}
+			}
+		}
+
+		ordered_in_list = {
+			variable = possible_artifacts
+			save_scope_as = cradle_egg
+		}
+
+		set_variable = {
+			name = selected_artifact
+			value = scope:cradle_egg
+		}
+	}
+
+	option = {
+		var:selected_artifact = {
+			save_scope_as = cradle_egg
+		}
+
+		name = agot_dragon_egg_cradling.2000.a
+		custom_tooltip = {
+			text = agot_dragon_egg_cradling.2000.a.tt
+			scope:cradle_egg = {
+				set_owner = scope:child
+				set_variable = cradled_egg
+				set_variable = { name = cradled_egg_year value = current_year }
+			}
+		}
+
+		remove_variable = selected_artifact
+		clear_variable_list = possible_artifacts
+
+		if = {
+			limit = {
+				scope:child = {
+					any_parent = {
+						NOT = { this = root }
+						is_alive = yes
+						is_ai = no
+						save_temporary_scope_as = spouse_temp
+					}
+				}
+			}
+
+			scope:spouse_temp = {
+				spouse_provides_egg_interface = { SPOUSE = root EGG = scope:cradle_egg }
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				agot_cannot_use_dragon_egg = yes
+			}
+		}
+	}
+
+	option = {
+		name = agot_dragon_egg_cradling.2000.b
+
+		remove_variable = selected_artifact
+		clear_variable_list = possible_artifacts
+
+		if = {
+			limit = {
+				scope:human_parent ?= root
+			}
+
+			scope:other_parent ?= { trigger_event = agot_dragon_egg_cradling.2000 }
+		}
+
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				agot_cannot_use_dragon_egg = no
+			}
+		}
+	}
+}

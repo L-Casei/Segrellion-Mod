@@ -5,7 +5,7 @@ segrellion_decision.0001 = {
 	title = segrellion_decision.0001.t
 	desc = segrellion_decision.0001.desc
 	theme = realm
-	override_background = { reference = docks }
+	override_background = { reference = segrellion_vhalerion_throne_room }
 
 	left_portrait = {
 		character = root
@@ -39,7 +39,7 @@ segrellion_decision.0002 = {
 	title = segrellion_decision.0002.t
 	desc = segrellion_decision.0002.desc
 	theme = realm
-	override_background = { reference = wilderness }
+	override_background = { reference = segrellion_the_beacon }
 
 	left_portrait = {
 		character = root
@@ -57,6 +57,10 @@ segrellion_decision.0002 = {
 			set_variable = {
 				name = segrellion_founded_by_house
 				value = dynasty:dynn_Segrellion.dynasty_founder.house
+			}
+			set_variable = {
+				name = segrellion_flamelands_less_than_50_years_old
+				years = 50
 			}
 		}
 		title:d_vhalerion = { set_de_jure_liege_title = title:k_flamelands }
@@ -137,7 +141,7 @@ segrellion_decision.0004 = {
 	title = segrellion_decision.0004.t
 	desc = segrellion_decision.0004.desc
 	theme = realm
-	override_background = { reference = wilderness }
+	override_background = { reference = segrellion_the_beacon_throne_room }
 
 	left_portrait = {
 		character = root
@@ -153,19 +157,27 @@ segrellion_decision.0004 = {
 		title:d_wendwater_forest = { set_title_name = segrellion_blue_forest_name }
 		title:b_castle_farring.title_province = {
 			if = {
+				limit = { NOT = { has_holding_type = castle_holding } }
+				set_holding_type = castle_holding
+			}
+			if = {
+				limit = { NOT = { has_building_or_higher = castle_01 } }
+				add_building = castle_01
+			}
+			if = {
 				limit = { has_special_building_slot = no }
 				add_special_building_slot = segrellion_beacon_01
 			}
 			if = {
 				limit = { NOT = { has_building = segrellion_beacon_01 } }
-				add_building = segrellion_beacon_01
+				add_special_building = segrellion_beacon_01
 			}
 		}
 		title:c_farring_cross = {
-			change_development_level = 2
+			change_development_level = 4
 			add_county_modifier = {
 				modifier = segrellion_heart_of_the_flamelands_county_modifier
-				years = 10
+				years = 20
 			}
 		}
 		title:b_castle_farring.title_province = {
@@ -173,7 +185,9 @@ segrellion_decision.0004 = {
 				modifier = segrellion_heart_of_the_flamelands_province_modifier
 			}
 		}
-		add_prestige = 500
+		add_prestige = 1000
+		add_legitimacy = 250
+		dynasty = { add_dynasty_prestige = 500 }
 		add_character_flag = segrellion_established_the_beacon
 	}
 }
@@ -213,6 +227,127 @@ segrellion_decision.0005 = {
 				target = root
 				modifier = segrellion_unicorn_claim_loyalist_opinion
 			}
+		}
+	}
+}
+
+segrellion_decision.0006 = {
+	type = character_event
+	title = segrellion_decision.0006.t
+	desc = segrellion_decision.0006.desc
+	theme = realm
+	override_background = { reference = segrellion_the_beacon_throne_room }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_decision.0006.a
+		get_title = title:e_flamelands
+		title:e_flamelands = {
+			set_de_jure_liege_title = title:h_the_iron_throne
+			set_capital_county = title:c_farring_cross
+			set_coa = title:k_flamelands
+		}
+		title:k_flamelands = {
+			set_de_jure_liege_title = title:e_flamelands
+			add_to_list = segrellion_paramountcy_moved_kingdoms
+		}
+		set_primary_title_to = title:e_flamelands
+		add_character_flag = segrellion_proclaimed_paramountcy_of_the_flamelands
+		hidden_effect = {
+			every_held_title = {
+				limit = {
+					title_tier = kingdom
+					NOT = { this = title:k_flamelands }
+				}
+				set_de_jure_liege_title = title:e_flamelands
+				add_to_list = segrellion_paramountcy_moved_kingdoms
+			}
+			every_sub_realm_county = {
+				limit = {
+					exists = kingdom
+					kingdom = {
+						save_temporary_scope_as = segrellion_paramountcy_test_kingdom
+					}
+					root = {
+						completely_controls = scope:segrellion_paramountcy_test_kingdom
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							kingdom = {
+								is_in_list = segrellion_paramountcy_additional_kingdoms
+							}
+						}
+					}
+					kingdom = {
+						set_de_jure_liege_title = title:e_flamelands
+						add_to_list = segrellion_paramountcy_additional_kingdoms
+						add_to_list = segrellion_paramountcy_moved_kingdoms
+					}
+				}
+			}
+			every_held_title = {
+				limit = {
+					title_tier = duchy
+					OR = {
+						NOT = { exists = kingdom }
+						kingdom = {
+							NOT = { is_in_list = segrellion_paramountcy_moved_kingdoms }
+						}
+					}
+				}
+				set_de_jure_liege_title = title:k_flamelands
+			}
+			every_sub_realm_county = {
+				limit = {
+					exists = duchy
+					OR = {
+						NOT = { exists = kingdom }
+						kingdom = {
+							NOT = { is_in_list = segrellion_paramountcy_moved_kingdoms }
+						}
+					}
+					duchy = {
+						save_temporary_scope_as = segrellion_paramountcy_test_duchy
+					}
+					root = {
+						completely_controls = scope:segrellion_paramountcy_test_duchy
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							duchy = {
+								is_in_list = segrellion_paramountcy_additional_duchies
+							}
+						}
+					}
+					duchy = {
+						set_de_jure_liege_title = title:k_flamelands
+						add_to_list = segrellion_paramountcy_additional_duchies
+					}
+				}
+			}
+		}
+		add_legitimacy = 5000
+		add_prestige = 10000
+		add_piety = 5000
+		give_nickname = nick_the_rightful
+		add_character_modifier = {
+			modifier = segrellion_the_rightful_paramount_modifier
+		}
+		dynasty = {
+			add_dynasty_prestige = 5000
+			add_dynasty_prestige_level = 1
+			add_dynasty_prestige_level = 1
+			add_dynasty_prestige_level = 1
+			add_dynasty_prestige_level = 1
+			add_dynasty_prestige_level = 1
 		}
 	}
 }
