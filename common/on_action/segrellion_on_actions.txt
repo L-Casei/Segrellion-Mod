@@ -52,12 +52,6 @@ yearly_global_pulse = {
 		segrellion_intro_yearly_fallback
 		segrellion_legacy_yearly_refresh
 		segrellion_later_canon_children_yearly_check
-	}
-}
-
-monthly_global_pulse = {
-	on_actions = {
-		segrellion_stepstones_monthly_aftermath_fallback
 		segrellion_restless_for_war_monthly_check
 		segrellion_refresh_scripted_appearances
 		segrellion_refresh_firstflame_dynasty_bonus
@@ -138,9 +132,20 @@ segrellion_on_game_start = {
 				add_character_flag = hair_trait_female_hair_custom_14
 				add_character_flag = beard_trait_no_beard
 				add_character_flag = segrellion_daenerys_custom_clothes
+				if = {
+					limit = {
+						current_date < 8113.1.1
+						any_spouse = { this = character:Segrellion_1 }
+					}
+					add_character_modifier = {
+						modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+						years = 8
+					}
+				}
 			}
 		}
 		segrellion_create_starting_artifacts_effect = yes
+		segrellion_setup_second_dance_bookmark_effect = yes
 		character:Segrellion_1 ?= {
 			any_character_artifact = {
 				limit = { has_variable = segrellion_dragon_egg_artifact }
@@ -164,18 +169,26 @@ segrellion_daenerys_marriage_guard = {
 		if = {
 			limit = {
 				current_date < 8113.1.1
-				OR = {
-					AND = {
-						this = character:Segrellion_1
-						scope:spouse = character:Segrellion_3
-					}
-					AND = {
-						this = character:Segrellion_3
-						scope:spouse = character:Segrellion_1
-					}
+				this = character:Segrellion_1
+				scope:spouse = character:Segrellion_3
+			}
+			scope:spouse = {
+				add_character_modifier = {
+					modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+					years = 8
 				}
 			}
-			set_relation_wedding_very_bad_fertility = scope:spouse
+		}
+		if = {
+			limit = {
+				current_date < 8113.1.1
+				this = character:Segrellion_3
+				scope:spouse = character:Segrellion_1
+			}
+			add_character_modifier = {
+				modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+				years = 8
+			}
 		}
 	}
 }
@@ -276,9 +289,8 @@ segrellion_first_stepstones_attacker_victory = {
 	trigger = {
 		exists = scope:war
 		scope:war = {
-			using_cb = daemon_stepstones_first_war
+			has_variable = segrellion_tracked_first_stepstones_war
 		}
-		scope:attacker = character:Targaryen_61
 		character:Segrellion_1 ?= {
 			is_alive = yes
 			has_character_flag = segrellion_stepstones_war_joined
@@ -304,9 +316,8 @@ segrellion_first_stepstones_no_victory = {
 	trigger = {
 		exists = scope:war
 		scope:war = {
-			using_cb = daemon_stepstones_first_war
+			has_variable = segrellion_tracked_first_stepstones_war
 		}
-		scope:attacker = character:Targaryen_61
 		character:Segrellion_1 ?= {
 			is_alive = yes
 			has_character_flag = segrellion_stepstones_war_joined
@@ -323,55 +334,6 @@ segrellion_first_stepstones_no_victory = {
 			trigger_event = {
 				id = segrellion_intro.0008
 				days = 3
-			}
-		}
-	}
-}
-
-segrellion_stepstones_monthly_aftermath_fallback = {
-	effect = {
-		character:Segrellion_1 ?= {
-			if = {
-				limit = {
-					is_alive = yes
-					has_character_flag = segrellion_stepstones_war_joined
-					NOR = {
-						has_character_flag = segrellion_stepstones_story_completed
-						has_character_flag = segrellion_stepstones_aftermath_pending
-					}
-					character:Targaryen_61 ?= {
-						NOT = {
-							any_character_war = {
-								using_cb = daemon_stepstones_first_war
-								primary_attacker ?= prev
-							}
-						}
-					}
-				}
-				if = {
-					limit = {
-						character:Targaryen_61 ?= {
-							OR = {
-								has_title = title:d_first_stepstones
-								has_title = title:k_the_stepstones
-							}
-						}
-					}
-					add_character_flag = segrellion_stepstones_daemon_won
-					add_character_flag = segrellion_stepstones_aftermath_pending
-					trigger_event = {
-						id = segrellion_intro.0006
-						days = 3
-					}
-				}
-				else = {
-					add_character_flag = segrellion_stepstones_daemon_failed
-					add_character_flag = segrellion_stepstones_aftermath_pending
-					trigger_event = {
-						id = segrellion_intro.0008
-						days = 3
-					}
-				}
 			}
 		}
 	}

@@ -103,7 +103,7 @@ segrellion_intro.0002 = {
 						limit = {
 							NOT = {
 								any_character_war = {
-									using_cb = daemon_stepstones_first_war
+									primary_attacker ?= prev
 								}
 							}
 						}
@@ -116,12 +116,16 @@ segrellion_intro.0002 = {
 					}
 					random_character_war = {
 						limit = {
-							using_cb = daemon_stepstones_first_war
+							primary_attacker ?= prev
 						}
 						set_variable = { name = segrellion_tracked_first_stepstones_war value = yes }
 						add_attacker = root
 						root = {
 							add_character_flag = segrellion_stepstones_war_joined
+							trigger_event = {
+								id = segrellion_intro.0090
+								days = { 10 14 }
+							}
 						}
 						save_scope_as = segrellion_stepstones_war
 					}
@@ -147,6 +151,65 @@ segrellion_intro.0002 = {
 		trigger_event = {
 			id = segrellion_intro.0003
 			days = 21
+		}
+	}
+}
+
+segrellion_intro.0090 = {
+	type = character_event
+	hidden = yes
+
+	trigger = {
+		is_alive = yes
+		has_character_flag = segrellion_stepstones_war_joined
+		NOR = {
+			has_character_flag = segrellion_stepstones_story_completed
+			has_character_flag = segrellion_stepstones_aftermath_pending
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					any_character_war = {
+						has_variable = segrellion_tracked_first_stepstones_war
+					}
+					character:Targaryen_61 ?= {
+						any_character_war = {
+							has_variable = segrellion_tracked_first_stepstones_war
+						}
+					}
+				}
+			}
+			trigger_event = {
+				id = segrellion_intro.0090
+				days = { 10 14 }
+			}
+		}
+		else_if = {
+			limit = {
+				character:Targaryen_61 ?= {
+					OR = {
+						has_title = title:d_first_stepstones
+						has_title = title:k_the_stepstones
+					}
+				}
+			}
+			add_character_flag = segrellion_stepstones_daemon_won
+			add_character_flag = segrellion_stepstones_aftermath_pending
+			trigger_event = {
+				id = segrellion_intro.0006
+				days = 3
+			}
+		}
+		else = {
+			add_character_flag = segrellion_stepstones_daemon_failed
+			add_character_flag = segrellion_stepstones_aftermath_pending
+			trigger_event = {
+				id = segrellion_intro.0008
+				days = 3
+			}
 		}
 	}
 }

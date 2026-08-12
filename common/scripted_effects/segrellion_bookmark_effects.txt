@@ -1,0 +1,61 @@
+segrellion_setup_second_dance_bookmark_effect = {
+	if = {
+		limit = {
+			current_date >= 8168.1.1
+			character:Segrellion_12 ?= { is_alive = yes }
+		}
+
+		title:k_flamelands = { set_capital_county = title:c_farring_cross }
+		title:c_farring_cross = { set_title_name = segrellion_the_beacon_name }
+		title:b_castle_farring = { set_title_name = segrellion_the_beacon_name }
+		title:b_castle_farring.title_province = {
+			if = {
+				limit = { NOT = { has_building_or_higher = castle_01 } }
+				add_building = castle_01
+			}
+			if = {
+				limit = { has_special_building_slot = no }
+				add_special_building_slot = segrellion_beacon_01
+			}
+			if = {
+				limit = { NOT = { has_building = segrellion_beacon_01 } }
+				add_special_building = segrellion_beacon_01
+			}
+		}
+
+		character:Segrellion_12 = {
+			add_character_flag = segrellion_founded_the_flamelands
+			add_character_flag = segrellion_established_the_beacon
+			add_character_flag = segrellion_icebringer_authorized
+			add_character_flag = has_scripted_appearance
+			add_character_flag = hair_trait_male_hair_custom_20
+			add_character_flag = beard_trait_no_beard
+
+			if = {
+				limit = { NOT = { has_trait = leper } }
+				add_trait = leper
+			}
+			if = {
+				limit = { has_title = title:k_flamelands }
+				set_primary_title_to = title:k_flamelands
+			}
+			if = {
+				limit = { has_title = title:c_farring_cross }
+				set_realm_capital = title:c_farring_cross
+			}
+			if = {
+				limit = {
+					NOT = { exists = global_var:segrellion_icebringer }
+					NOT = { any_character_artifact = { has_variable = segrellion_icebringer_artifact } }
+				}
+				segrellion_create_artifact_icebringer_effect = { OWNER = this }
+			}
+			if = {
+				limit = {
+					NOT = { any_character_artifact = { has_variable = segrellion_plate_of_segrell_artifact } }
+				}
+				segrellion_create_artifact_plate_of_segrell_effect = { OWNER = this }
+			}
+		}
+	}
+}
