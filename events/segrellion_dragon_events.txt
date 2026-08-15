@@ -276,3 +276,72 @@ segrellion_dragon.0005 = {
 		}
 	}
 }
+
+segrellion_dragon.0100 = {
+	type = character_event
+	title = segrellion_dragon.0100.t
+	desc = segrellion_dragon.0100.desc
+	theme = dragon
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = amazement
+	}
+
+	right_portrait = {
+		character = scope:vhalyrax
+		animation = dragon_roar
+	}
+
+	immediate = {
+		scope:vhalyrax = {
+			add_character_flag = segrellion_vhalyrax_first_clutch_laid
+			save_scope_as = dragon_parent
+		}
+
+		create_artifact_dragon_egg_frost_effect = {
+			OWNER = root
+		}
+
+		scope:newly_created_artifact = {
+			set_variable = {
+				name = segrellion_maenor_egg
+				value = yes
+			}
+			set_artifact_description = segrellion_maenor_egg_desc
+		}
+
+		create_artifact_dragon_egg_lime_effect = {
+			OWNER = root
+		}
+
+		scope:newly_created_artifact = {
+			set_variable = {
+				name = segrellion_nightdancer_egg
+				value = yes
+			}
+			set_artifact_description = segrellion_nightdancer_egg_desc
+		}
+	}
+
+	option = {
+		name = segrellion_dragon.0100.a
+		ai_chance = {
+			base = 100
+		}
+
+		add_prestige = 500
+
+		if = {
+			limit = {
+				dynasty = dynasty:dynn_Segrellion
+			}
+			dynasty = {
+				add_dynasty_prestige = 250
+			}
+		}
+	}
+}

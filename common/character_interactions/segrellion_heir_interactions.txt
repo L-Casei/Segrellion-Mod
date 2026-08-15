@@ -1,0 +1,73 @@
+segrellion_designate_heir_interaction = {
+	icon = heir
+	category = interaction_category_diplomacy
+	interface_priority = 90
+	desc = segrellion_designate_heir_interaction_desc
+
+	is_shown = {
+		scope:actor = {
+			is_landed = yes
+			dynasty = { has_dynasty_perk = segrellion_legacy_3 }
+		}
+		scope:recipient = {
+			is_alive = yes
+			dynasty = dynasty:dynn_Segrellion
+			is_close_or_extended_family_of = scope:actor
+			NOT = { this = scope:actor }
+		}
+		NOT = { scope:recipient = scope:actor.designated_heir }
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			is_eunuch_trigger = no
+			NOR = {
+				has_trait = disinherited
+				has_trait = devoted
+				has_trait = order_member
+				has_trait = bastard
+				has_trait = nightswatch
+				has_trait = kingsguard
+				has_trait = maester
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor.var:segrellion_designated_unicorn_heir ?= {
+			remove_character_modifier = heir_of_the_unicorn_modifier
+			remove_variable = segrellion_unicorn_designator
+		}
+
+		scope:actor = {
+			set_designated_heir_unsafe = scope:recipient
+			set_variable = {
+				name = segrellion_designated_unicorn_heir
+				value = scope:recipient
+			}
+			send_interface_toast = {
+				type = event_toast_effect_neutral
+				title = segrellion_designate_heir_interaction_notification
+				left_icon = scope:actor
+				right_icon = scope:recipient
+			}
+		}
+
+		scope:recipient = {
+			remove_character_modifier = chosen_by_the_unicorn_modifier
+			add_character_modifier = {
+				modifier = heir_of_the_unicorn_modifier
+			}
+			set_variable = {
+				name = segrellion_unicorn_designator
+				value = scope:actor
+			}
+		}
+	}
+
+	auto_accept = yes
+
+	ai_will_do = {
+		base = 0
+	}
+}

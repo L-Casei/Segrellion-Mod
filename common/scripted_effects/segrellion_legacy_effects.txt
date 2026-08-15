@@ -1,34 +1,47 @@
-segrellion_refresh_valyrian_kin_opinion_effect = {
-	hidden_effect = {
+segrellion_refresh_heir_of_the_unicorn_effect = {
+	every_living_character = {
+		limit = {
+			has_character_modifier = heir_of_the_unicorn_modifier
+			has_variable = segrellion_unicorn_designator
+		}
+
 		if = {
 			limit = {
-				dynasty:dynn_Segrellion = { has_dynasty_perk = segrellion_legacy_3 }
+				var:segrellion_unicorn_designator = { is_alive = no }
 			}
-
-			every_living_character = {
-				limit = {
-					is_landed = yes
-					culture = { has_cultural_pillar = heritage_valyrian }
-				}
-				save_scope_as = segrellion_valyrian_opinion_observer
-
-				dynasty:dynn_Segrellion = {
-					every_dynasty_member = {
-						limit = {
-							is_alive = yes
-							is_landed = yes
-							NOT = { this = scope:segrellion_valyrian_opinion_observer }
-						}
-						save_scope_as = segrellion_valyrian_opinion_target
-						scope:segrellion_valyrian_opinion_observer = {
-							add_opinion = {
-								target = scope:segrellion_valyrian_opinion_target
-								modifier = segrellion_valyrian_kin_opinion
-							}
-						}
+			remove_character_modifier = heir_of_the_unicorn_modifier
+			remove_variable = segrellion_unicorn_designator
+		}
+		else_if = {
+			limit = {
+				var:segrellion_unicorn_designator = {
+					NOR = {
+						primary_heir ?= prev
+						designated_heir ?= prev
 					}
 				}
 			}
+			remove_character_modifier = heir_of_the_unicorn_modifier
+			var:segrellion_unicorn_designator ?= {
+				remove_variable = segrellion_designated_unicorn_heir
+			}
+			remove_variable = segrellion_unicorn_designator
+		}
+	}
+}
+
+segrellion_convert_inherited_unicorn_heir_effect = {
+	if = {
+		limit = {
+			has_character_modifier = heir_of_the_unicorn_modifier
+			has_variable = segrellion_unicorn_designator
+			var:segrellion_unicorn_designator ?= scope:previous_holder
+		}
+		remove_character_modifier = heir_of_the_unicorn_modifier
+		remove_variable = segrellion_unicorn_designator
+		add_character_modifier = {
+			modifier = chosen_by_the_unicorn_modifier
+			years = 10
 		}
 	}
 }
