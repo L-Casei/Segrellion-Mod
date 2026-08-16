@@ -1,5 +1,5 @@
 segrellion_designate_heir_interaction = {
-	icon = heir
+	icon = segrellion_designate_heir
 	category = interaction_category_diplomacy
 	interface_priority = 90
 	desc = segrellion_designate_heir_interaction_desc
@@ -16,9 +16,17 @@ segrellion_designate_heir_interaction = {
 			NOT = { this = scope:actor }
 		}
 		NOT = { scope:recipient = scope:actor.designated_heir }
+		NOT = { scope:recipient = scope:actor.primary_heir }
 	}
 
 	is_valid_showing_failures_only = {
+		scope:actor = {
+			prestige >= 500
+			custom_tooltip = {
+				text = segrellion_designate_heir_cooldown_tt
+				NOT = { has_character_flag = segrellion_designate_heir_cooldown }
+			}
+		}
 		scope:recipient = {
 			is_eunuch_trigger = no
 			NOR = {
@@ -34,12 +42,21 @@ segrellion_designate_heir_interaction = {
 	}
 
 	on_accept = {
+		scope:actor.primary_heir ?= {
+			save_scope_as = segrellion_displaced_heir
+		}
+
 		scope:actor.var:segrellion_designated_unicorn_heir ?= {
 			remove_character_modifier = heir_of_the_unicorn_modifier
 			remove_variable = segrellion_unicorn_designator
 		}
 
 		scope:actor = {
+			add_prestige = -500
+			add_character_flag = {
+				flag = segrellion_designate_heir_cooldown
+				years = 1
+			}
 			set_designated_heir_unsafe = scope:recipient
 			set_variable = {
 				name = segrellion_designated_unicorn_heir
@@ -48,8 +65,16 @@ segrellion_designate_heir_interaction = {
 			send_interface_toast = {
 				type = event_toast_effect_neutral
 				title = segrellion_designate_heir_interaction_notification
+				desc = segrellion_designate_heir_interaction_notification_desc
 				left_icon = scope:actor
 				right_icon = scope:recipient
+			}
+		}
+
+		scope:segrellion_displaced_heir ?= {
+			add_opinion = {
+				target = scope:actor
+				modifier = segrellion_displaced_as_heir_opinion
 			}
 		}
 
