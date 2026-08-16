@@ -13,6 +13,82 @@ segrellion_setup_second_dance_bookmark_effect = {
 			set_de_jure_liege_title = title:k_flamelands
 		}
 		title:d_the_baywater_woods = { set_de_jure_liege_title = title:k_flamelands }
+
+		# History should already create Baywater Woods in 8145. This fallback
+		# makes the bookmark setup deterministic if another mod overrides that
+		# title history later in the load order.
+		if = {
+			limit = { title:d_the_baywater_woods = { NOT = { exists = holder } } }
+			create_title_and_vassal_change = {
+				type = created
+				save_scope_as = segrellion_baywater_title_change
+				add_claim_on_loss = no
+			}
+			title:d_the_baywater_woods = {
+				change_title_holder = {
+					holder = character:Segrellion_12
+					change = scope:segrellion_baywater_title_change
+				}
+			}
+			resolve_title_and_vassal_change = scope:segrellion_baywater_title_change
+		}
+
+		# Preserve every historical count holder and make each one Aeryn's
+		# vassal. The duchy remains in Aeryn's own hands.
+		create_title_and_vassal_change = {
+			type = granted
+			save_scope_as = segrellion_baywater_vassal_change
+			add_claim_on_loss = no
+		}
+		title:c_the_gauntlet.holder ?= {
+			if = {
+				limit = {
+					NOT = { this = character:Segrellion_12 }
+					NOT = { liege = character:Segrellion_12 }
+				}
+				change_liege = {
+					liege = character:Segrellion_12
+					change = scope:segrellion_baywater_vassal_change
+				}
+			}
+		}
+		title:c_brushmill.holder ?= {
+			if = {
+				limit = {
+					NOT = { this = character:Segrellion_12 }
+					NOT = { liege = character:Segrellion_12 }
+				}
+				change_liege = {
+					liege = character:Segrellion_12
+					change = scope:segrellion_baywater_vassal_change
+				}
+			}
+		}
+		title:c_bywater.holder ?= {
+			if = {
+				limit = {
+					NOT = { this = character:Segrellion_12 }
+					NOT = { liege = character:Segrellion_12 }
+				}
+				change_liege = {
+					liege = character:Segrellion_12
+					change = scope:segrellion_baywater_vassal_change
+				}
+			}
+		}
+		title:c_greyhelm.holder ?= {
+			if = {
+				limit = {
+					NOT = { this = character:Segrellion_12 }
+					NOT = { liege = character:Segrellion_12 }
+				}
+				change_liege = {
+					liege = character:Segrellion_12
+					change = scope:segrellion_baywater_vassal_change
+				}
+			}
+		}
+		resolve_title_and_vassal_change = scope:segrellion_baywater_vassal_change
 		title:c_farring_cross = { set_title_name = segrellion_the_beacon_name }
 		title:b_castle_farring = { set_title_name = segrellion_the_beacon_name }
 		title:b_castle_farring.title_province = {
