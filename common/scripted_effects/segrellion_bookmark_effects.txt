@@ -1,3 +1,113 @@
+segrellion_setup_petty_rebellion_characters_effect = {
+	# AGOT's historical Joffrey Arryn is born in 100 A.C. This alternate
+	# timeline uses the same character and titles, but makes him forty-three at
+	# the 150 A.C. start instead of creating a duplicate Arryn.
+	character:Arryn_90 ?= {
+		if = {
+			limit = {
+				is_alive = yes
+				NOT = { has_character_flag = segrellion_joffrey_age_adjusted }
+			}
+			set_age = 43
+			add_character_flag = segrellion_joffrey_age_adjusted
+		}
+	}
+
+	# House Buckwell has been removed from the alternate history before the
+	# bookmark. death_vanished keeps the one-time cleanup silent, while the
+	# explicit title transfer below ensures Deerfield cannot pass to a survivor.
+	character:Vladwyn_2 ?= {
+		if = {
+			limit = { NOT = { has_character_flag = segrellion_buckwell_cleanup_done } }
+			dynasty:dynn_Buckwell = {
+				every_dynasty_member = {
+					limit = { is_alive = yes }
+					death = { death_reason = death_vanished }
+				}
+			}
+			add_character_flag = segrellion_buckwell_cleanup_done
+		}
+	}
+
+	# Title history grants Antlers (whose capital is Deerfield) in 130 A.C.
+	# This fallback protects the intended holder from later-loading submods.
+	if = {
+		limit = {
+			character:Vladwyn_2 ?= { is_alive = yes }
+			OR = {
+				title:c_antlers = { NOT = { exists = holder } }
+				title:c_antlers.holder ?= { NOT = { this = character:Vladwyn_2 } }
+			}
+		}
+		create_title_and_vassal_change = {
+			type = granted
+			save_scope_as = segrellion_deerfield_title_change
+			add_claim_on_loss = no
+		}
+		title:c_antlers = {
+			change_title_holder = {
+				holder = character:Vladwyn_2
+				change = scope:segrellion_deerfield_title_change
+			}
+		}
+		resolve_title_and_vassal_change = scope:segrellion_deerfield_title_change
+	}
+
+	# Tristan is part of Aegon III's historical Kingsguard from 131 A.C. The
+	# runtime setup uses AGOT's public Kingsguard effects so its council slots,
+	# title variables, White Book and Lord Commander title stay synchronized.
+	title:d_kingsguard.holder ?= {
+		if = {
+			limit = { NOT = { this = character:Vladwyn_1 } }
+			agot_remove_kingsguard_effect = { KINGSGUARD = this }
+		}
+	}
+
+	$KING$ = {
+		if = {
+			limit = {
+				character:Vladwyn_1 = { NOT = { has_trait = kingsguard } }
+				exists = cp:kingsguard_1
+				exists = cp:kingsguard_2
+				exists = cp:kingsguard_3
+				exists = cp:kingsguard_4
+				exists = cp:kingsguard_5
+				exists = cp:kingsguard_6
+			}
+			cp:kingsguard_6 = {
+				agot_remove_kingsguard_effect = { KINGSGUARD = this }
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			character:Vladwyn_1 = {
+				is_alive = yes
+				NOT = { has_trait = kingsguard }
+			}
+		}
+		agot_join_kingsguard_effect = {
+			KINGSGUARD = character:Vladwyn_1
+			KING = $KING$
+		}
+	}
+
+	if = {
+		limit = {
+			character:Vladwyn_1 = {
+				is_alive = yes
+				has_trait = kingsguard
+				NOT = { has_character_flag = lord_commander }
+			}
+		}
+		agot_assign_lord_commander_effect = {
+			COMMANDER = character:Vladwyn_1
+			KING = $KING$
+		}
+	}
+}
+
 segrellion_setup_petty_rebellion_bookmark_effect = {
 	if = {
 		limit = {
@@ -123,6 +233,9 @@ segrellion_setup_petty_rebellion_bookmark_effect = {
 		title:h_the_iron_throne.holder ?= {
 			save_scope_as = petty_rebellion_king
 			add_character_flag = segrellion_petty_rebellion_young_king
+		}
+		segrellion_setup_petty_rebellion_characters_effect = {
+			KING = scope:petty_rebellion_king
 		}
 
 		# Cregan Stark and Joffrey Arryn are the two active rebel leaders at
