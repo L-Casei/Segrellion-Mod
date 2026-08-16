@@ -143,6 +143,55 @@ segrellion_spawn_maenor_from_egg_effect = {
 	}
 }
 
+# The 8150 bookmark begins after Maenor has already hatched and bonded with
+# Aeryn. This avoids replaying the egg chain while still creating a genuine
+# AGOT dragon/rider relation for the alternate-history start.
+segrellion_spawn_petty_rebellion_maenor_effect = {
+	$OWNER$ = { save_scope_as = owner }
+
+	create_character = {
+		name = Maenor
+		location = $OWNER$.location
+		template = agot_dragon_hatchling_template
+		age = 22
+		gender = female
+		random_traits = no
+		save_scope_as = dragon
+	}
+
+	hidden_effect = {
+		agot_set_as_owned_dragon = {
+			OWNER = scope:owner
+			DRAGON = scope:dragon
+		}
+	}
+
+	scope:dragon = {
+		change_first_name = Maenor
+		add_character_flag = segrellion_maenor_dragon
+		add_character_flag = agot_no_silly_name
+		add_trait = dragon_majestic
+		add_trait = dragon_cooperative
+		add_trait = dragon_accepting
+		add_trait = dragon_calculating
+		add_trait = dragon_restrained
+		add_trait = dragon_physique_good_2
+		add_trait = education_dragon_4
+		add_prowess_skill = 18
+		change_dragon_size = { VALUE = 28 }
+	}
+
+	agot_dragon_tree_creation_effect = { DRAGON = scope:dragon }
+	agot_bond_dragon_relation_effect = {
+		ACTOR = scope:owner
+		DRAGON = scope:dragon
+	}
+	set_global_variable = {
+		name = segrellion_historical_maenor
+		value = scope:dragon
+	}
+}
+
 segrellion_spawn_nightdancer_from_egg_effect = {
 	create_character = {
 		name = Nightdancer

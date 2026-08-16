@@ -1,7 +1,8 @@
-segrellion_setup_second_dance_bookmark_effect = {
+segrellion_setup_petty_rebellion_bookmark_effect = {
 	if = {
 		limit = {
-			current_date >= 8168.1.1
+			current_date >= 8150.1.1
+			current_date < 8151.1.1
 			character:Segrellion_12 ?= { is_alive = yes }
 		}
 
@@ -106,16 +107,63 @@ segrellion_setup_second_dance_bookmark_effect = {
 			}
 		}
 
+		# Alternate-history royal succession for this bookmark. At the normal
+		# 8150 date Aegon III still rules in AGOT history; here he was killed by
+		# Vhalyrax in 8148 and his primary heir, Daeron, inherits the throne.
+		title:h_the_iron_throne.holder ?= {
+			if = {
+				limit = { exists = primary_heir }
+				save_scope_as = petty_rebellion_aegon
+				primary_heir = { save_scope_as = petty_rebellion_daeron }
+			}
+		}
+		scope:petty_rebellion_aegon ?= {
+			death = { death_reason = death_dragon }
+		}
+		title:h_the_iron_throne.holder ?= {
+			save_scope_as = petty_rebellion_king
+			add_character_flag = segrellion_petty_rebellion_young_king
+		}
+
+		# Cregan Stark and Joffrey Arryn are the two active rebel leaders at
+		# bookmark start. Optional title scopes keep the setup compatible with
+		# submods that rename or remove either lord-paramountcy.
+		title:k_the_north.holder ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					scope:petty_rebellion_king ?= { is_alive = yes }
+					NOT = { this = scope:petty_rebellion_king }
+					NOT = { is_at_war_with = scope:petty_rebellion_king }
+				}
+				add_character_flag = segrellion_petty_rebellion_leader
+				start_war = {
+					casus_belli = independence_war
+					target = scope:petty_rebellion_king
+				}
+			}
+		}
+		title:k_the_vale.holder ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					scope:petty_rebellion_king ?= { is_alive = yes }
+					NOT = { this = scope:petty_rebellion_king }
+					NOT = { is_at_war_with = scope:petty_rebellion_king }
+				}
+				add_character_flag = segrellion_petty_rebellion_leader
+				start_war = {
+					casus_belli = independence_war
+					target = scope:petty_rebellion_king
+				}
+			}
+		}
+
 		character:Segrellion_12 = {
-			save_scope_as = second_dance_aeryn
+			save_scope_as = petty_rebellion_aeryn
 			add_character_flag = segrellion_founded_the_flamelands
 			add_character_flag = segrellion_established_the_beacon
 			add_character_flag = segrellion_icebringer_authorized
-
-			if = {
-				limit = { NOT = { has_trait = leper } }
-				add_trait = leper
-			}
 			if = {
 				limit = { has_title = title:k_flamelands }
 				set_primary_title_to = title:k_flamelands
@@ -126,13 +174,23 @@ segrellion_setup_second_dance_bookmark_effect = {
 			}
 		}
 
+		character:Segrellion_12 = {
+			if = {
+				limit = {
+					is_current_dragonrider = no
+					NOT = { exists = global_var:segrellion_historical_maenor }
+				}
+				segrellion_spawn_petty_rebellion_maenor_effect = { OWNER = this }
+			}
+		}
+
 		global_var:segrellion_icebringer ?= {
-			set_owner = scope:second_dance_aeryn
+			set_owner = scope:petty_rebellion_aeryn
 			equip_artifact_to_owner_replace = yes
 			agot_add_artifact_history = {
 				ARTIFACT = this
 				TYPE = inherited
-				DATE = 8168.1.1
+				DATE = 8150.1.1
 				RECIPIENT = character:Segrellion_12
 			}
 		}
@@ -140,12 +198,12 @@ segrellion_setup_second_dance_bookmark_effect = {
 		character:Segrellion_1 ?= {
 			every_character_artifact = {
 				limit = { has_variable = segrellion_plate_of_segrell_artifact }
-				set_owner = scope:second_dance_aeryn
+				set_owner = scope:petty_rebellion_aeryn
 				equip_artifact_to_owner_replace = yes
 				agot_add_artifact_history = {
 					ARTIFACT = this
 					TYPE = inherited
-					DATE = 8168.1.1
+					DATE = 8150.1.1
 					RECIPIENT = character:Segrellion_12
 				}
 			}
