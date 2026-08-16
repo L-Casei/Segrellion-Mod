@@ -13,6 +13,151 @@ segrellion_setup_petty_rebellion_characters_effect = {
 		}
 	}
 
+	# Keep every selectable ruler on the culture and faith shown by the
+	# bookmark. The explicit runtime assignment also protects this alternate
+	# start from later-loading AGOT history or compatibility submods.
+	character:IAF_Baratheon_Argella_1 ?= {
+		set_culture = culture:stormlander_main
+		set_character_faith = faith:fots_seven
+	}
+	character:IAF_Tully_Edmure_1 ?= {
+		set_culture = culture:riverman_main
+		set_character_faith = faith:fots_seven
+	}
+	character:Arryn_90 ?= {
+		set_culture = culture:valeman_main
+		set_character_faith = faith:fots_seven
+	}
+	character:Stark_86 ?= {
+		set_culture = culture:northman
+		set_character_faith = faith:old_gods_wnw
+	}
+
+	# Reapply the hairstyles and beards exported with the supplied DNA after
+	# AGOT initializes its own scripted appearances. Clothing remains dynamic,
+	# so these rulers wear normal rank- and culture-appropriate outfits in game.
+	character:IAF_Baratheon_Argella_1 ?= {
+		add_character_flag = has_scripted_appearance
+		add_character_flag = hair_trait_female_hair_custom_27_1
+		add_character_flag = beard_trait_no_beard
+	}
+	character:IAF_Tully_Edmure_1 ?= {
+		add_character_flag = has_scripted_appearance
+		add_character_flag = hair_trait_m_hair_ep3_byzantine_01
+		add_character_flag = beard_trait_m_beard_ep3_byzantine_02
+	}
+	character:Arryn_90 ?= {
+		add_character_flag = has_scripted_appearance
+		add_character_flag = hair_trait_male_hair_western_08
+		add_character_flag = beard_trait_no_beard
+	}
+
+	# AGOT normally gives these realms to Kermit Tully (Tully_44) and Corwen,
+	# the heir of Davos (Baratheon_55), in 150 A.C. Transfer the full
+	# lord-paramount titles and their
+	# direct vassals to the alternate-history rulers before removing the other
+	# Baratheons. This is deliberately repeated at runtime because title-history
+	# load order can otherwise restore AGOT's canon holders.
+	if = {
+		limit = {
+			character:IAF_Baratheon_Argella_1 ?= { is_alive = yes }
+			OR = {
+				title:e_the_stormlands = { NOT = { exists = holder } }
+				title:e_the_stormlands.holder ?= { NOT = { this = character:IAF_Baratheon_Argella_1 } }
+			}
+		}
+		create_title_and_vassal_change = {
+			type = granted
+			save_scope_as = segrellion_argella_stormlands_change
+			add_claim_on_loss = no
+		}
+		title:e_the_stormlands = {
+			change_title_holder_include_vassals = {
+				holder = character:IAF_Baratheon_Argella_1
+				change = scope:segrellion_argella_stormlands_change
+			}
+		}
+		title:d_shipbreaker_bay = {
+			change_title_holder = {
+				holder = character:IAF_Baratheon_Argella_1
+				change = scope:segrellion_argella_stormlands_change
+			}
+		}
+		title:c_storms_end = {
+			change_title_holder = {
+				holder = character:IAF_Baratheon_Argella_1
+				change = scope:segrellion_argella_stormlands_change
+				take_baronies = yes
+			}
+		}
+		resolve_title_and_vassal_change = scope:segrellion_argella_stormlands_change
+		character:IAF_Baratheon_Argella_1 = {
+			set_primary_title_to = title:e_the_stormlands
+			set_realm_capital = title:c_storms_end
+		}
+	}
+
+	if = {
+		limit = {
+			character:IAF_Tully_Edmure_1 ?= { is_alive = yes }
+			OR = {
+				title:e_the_riverlands = { NOT = { exists = holder } }
+				title:e_the_riverlands.holder ?= { NOT = { this = character:IAF_Tully_Edmure_1 } }
+			}
+		}
+		create_title_and_vassal_change = {
+			type = granted
+			save_scope_as = segrellion_edmure_riverlands_change
+			add_claim_on_loss = no
+		}
+		title:e_the_riverlands = {
+			change_title_holder_include_vassals = {
+				holder = character:IAF_Tully_Edmure_1
+				change = scope:segrellion_edmure_riverlands_change
+			}
+		}
+		title:d_riverrun = {
+			change_title_holder = {
+				holder = character:IAF_Tully_Edmure_1
+				change = scope:segrellion_edmure_riverlands_change
+			}
+		}
+		title:c_riverrun = {
+			change_title_holder = {
+				holder = character:IAF_Tully_Edmure_1
+				change = scope:segrellion_edmure_riverlands_change
+				take_baronies = yes
+			}
+		}
+		resolve_title_and_vassal_change = scope:segrellion_edmure_riverlands_change
+		character:IAF_Tully_Edmure_1 = {
+			set_primary_title_to = title:e_the_riverlands
+			set_realm_capital = title:c_riverrun
+		}
+	}
+
+	# Orys remains AGOT's single Baratheon_38 character. Give that original
+	# character the alternate-history execution, then extinguish every other
+	# living Baratheon so Argella is the dynasty's sole survivor in 150 A.C.
+	character:Baratheon_38 ?= {
+		if = {
+			limit = { is_alive = yes }
+			death = {
+				death_reason = death_execution
+				killer = character:Segrellion_1
+			}
+		}
+	}
+	dynasty:dynn_Baratheon = {
+		every_dynasty_member = {
+			limit = {
+				is_alive = yes
+				NOT = { this = character:IAF_Baratheon_Argella_1 }
+			}
+			death = { death_reason = death_natural }
+		}
+	}
+
 	# House Buckwell has been removed from the alternate history before the
 	# bookmark. death_vanished keeps the one-time cleanup silent, while the
 	# explicit title transfer below ensures Deerfield cannot pass to a survivor.
@@ -29,12 +174,14 @@ segrellion_setup_petty_rebellion_characters_effect = {
 		}
 	}
 
-	# Title history grants Antlers (whose capital is Deerfield) in 130 A.C.
-	# This fallback protects the intended holder from later-loading submods.
+	# Title history grants the High Lordship of Deerfield and its capital county
+	# in 131 A.C. This fallback protects both titles from later-loading submods.
 	if = {
 		limit = {
 			character:Vladwyn_2 ?= { is_alive = yes }
 			OR = {
+				title:d_deerfield = { NOT = { exists = holder } }
+				title:d_deerfield.holder ?= { NOT = { this = character:Vladwyn_2 } }
 				title:c_antlers = { NOT = { exists = holder } }
 				title:c_antlers.holder ?= { NOT = { this = character:Vladwyn_2 } }
 			}
@@ -44,6 +191,12 @@ segrellion_setup_petty_rebellion_characters_effect = {
 			save_scope_as = segrellion_deerfield_title_change
 			add_claim_on_loss = no
 		}
+		title:d_deerfield = {
+			change_title_holder_include_vassals = {
+				holder = character:Vladwyn_2
+				change = scope:segrellion_deerfield_title_change
+			}
+		}
 		title:c_antlers = {
 			change_title_holder = {
 				holder = character:Vladwyn_2
@@ -51,11 +204,22 @@ segrellion_setup_petty_rebellion_characters_effect = {
 			}
 		}
 		resolve_title_and_vassal_change = scope:segrellion_deerfield_title_change
+		character:Vladwyn_2 = {
+			set_primary_title_to = title:d_deerfield
+			set_realm_capital = title:c_antlers
+		}
 	}
 
 	# Tristan is part of Aegon III's historical Kingsguard from 131 A.C. The
 	# runtime setup uses AGOT's public Kingsguard effects so its council slots,
 	# title variables, White Book and Lord Commander title stay synchronized.
+	character:Caron_33 ?= {
+		if = {
+			limit = { is_alive = yes }
+			death = { death_reason = death_natural }
+		}
+	}
+
 	title:d_kingsguard.holder ?= {
 		if = {
 			limit = { NOT = { this = character:Vladwyn_1 } }
@@ -238,45 +402,18 @@ segrellion_setup_petty_rebellion_bookmark_effect = {
 			KING = scope:petty_rebellion_king
 		}
 
-		# Cregan Stark and Joffrey Arryn are the two active rebel leaders at
-		# bookmark start. Optional title scopes keep the setup compatible with
-		# submods that rename or remove either lord-paramountcy.
-		title:k_the_north.holder ?= {
-			if = {
-				limit = {
-					is_alive = yes
-					scope:petty_rebellion_king ?= { is_alive = yes }
-					NOT = { this = scope:petty_rebellion_king }
-					NOT = { is_at_war_with = scope:petty_rebellion_king }
-				}
-				add_character_flag = segrellion_petty_rebellion_leader
-				start_war = {
-					casus_belli = independence_war
-					target = scope:petty_rebellion_king
-				}
-			}
-		}
-		title:k_the_vale.holder ?= {
-			if = {
-				limit = {
-					is_alive = yes
-					scope:petty_rebellion_king ?= { is_alive = yes }
-					NOT = { this = scope:petty_rebellion_king }
-					NOT = { is_at_war_with = scope:petty_rebellion_king }
-				}
-				add_character_flag = segrellion_petty_rebellion_leader
-				start_war = {
-					casus_belli = independence_war
-					target = scope:petty_rebellion_king
-				}
-			}
-		}
+		# The North and the Vale remain vassals of the Iron Throne at bookmark
+		# start. Their rebellion is deliberately left to the later event chain.
 
 		character:Segrellion_12 = {
 			save_scope_as = petty_rebellion_aeryn
 			add_character_flag = segrellion_founded_the_flamelands
 			add_character_flag = segrellion_established_the_beacon
 			add_character_flag = segrellion_icebringer_authorized
+			add_character_flag = has_scripted_appearance
+			add_character_flag = hair_trait_m_hair_ep3_byzantine_01
+			add_character_flag = beard_trait_no_beard
+			add_character_flag = segrellion_aeryn_custom_clothes
 			if = {
 				limit = { has_title = title:k_flamelands }
 				set_primary_title_to = title:k_flamelands

@@ -156,6 +156,7 @@ segrellion_on_game_start = {
 				add_character_flag = has_scripted_appearance
 				add_character_flag = hair_trait_m_hair_ep3_byzantine_01
 				add_character_flag = beard_trait_no_beard
+				add_character_flag = segrellion_aeryn_custom_clothes
 			}
 		}
 		segrellion_create_starting_artifacts_effect = yes
@@ -221,6 +222,7 @@ segrellion_refresh_scripted_appearances = {
 				add_character_flag = has_scripted_appearance
 				add_character_flag = hair_trait_m_hair_ep3_byzantine_01
 				add_character_flag = beard_trait_no_beard
+				add_character_flag = segrellion_aeryn_custom_clothes
 			}
 		}
 		character:Segrellion_2 ?= {
@@ -246,6 +248,9 @@ segrellion_refresh_scripted_appearances = {
 
 segrellion_on_game_start_after_lobby = {
 	effect = {
+		# A second, post-lobby pass runs after AGOT's scenario initialization so
+		# canon succession cannot restore Kermit or Davos's line at game start.
+		segrellion_setup_petty_rebellion_bookmark_effect = yes
 		character:Segrellion_1 ?= {
 			if = {
 				limit = {
