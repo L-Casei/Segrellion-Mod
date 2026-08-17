@@ -1,0 +1,121 @@
+segrellion_fix_historical_flamelands_capital_effect = {
+
+    if = {
+        limit = {
+            current_date >= 8144.1.28
+        }
+
+        if = {
+            limit = {
+                title:e_flamelands = { exists = holder }
+            }
+
+            title:e_flamelands.holder = {
+                if = {
+                    limit = {
+                        has_title = title:c_farring_cross
+                    }
+                    set_realm_capital = title:c_farring_cross
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                title:k_flamelands = { exists = holder }
+            }
+
+            title:k_flamelands.holder = {
+                if = {
+                    limit = {
+                        has_title = title:c_farring_cross
+                    }
+                    set_realm_capital = title:c_farring_cross
+                }
+            }
+        }
+    }
+}
+
+
+segrellion_initialize_historical_vhal_dragonpit_effect = {
+
+    title:c_blackmark ?= {
+
+        if = {
+            limit = {
+                any_county_province = {
+                    has_building_or_higher = segrellion_vhal_dragonpit_02
+                }
+            }
+
+            if = {
+                limit = {
+                    NOT = {
+                        has_variable = has_dragonkeeper_order
+                    }
+                }
+
+                set_variable = {
+                    name = has_dragonkeeper_order
+                }
+            }
+
+            holder ?= {
+
+                if = {
+                    limit = {
+                        agot_has_any_dragonpit_access_law = no
+                    }
+
+                    agot_dragonpit_access_law_close_family_effect = yes
+                }
+
+                if = {
+                    limit = {
+                        title:c_blackmark = {
+                            any_county_province = {
+                                has_building_or_higher = segrellion_vhal_dragonpit_03
+                            }
+                        }
+
+                        has_ep1_dlc_trigger = yes
+                    }
+
+                    hidden_effect = {
+                        set_amenity_level = {
+                            type = agot_dragonpit_amenities
+                            value = 4
+                        }
+                    }
+                }
+
+                else_if = {
+                    limit = {
+                        has_ep1_dlc_trigger = yes
+                    }
+
+                    hidden_effect = {
+                        set_amenity_level = {
+                            type = agot_dragonpit_amenities
+                            value = 3
+                        }
+                    }
+                }
+
+                if = {
+                    limit = {
+                        NOT = {
+                            employs_court_position = head_dragonkeeper_court_position
+                        }
+                    }
+
+                    trigger_event = {
+                        id = agot_dragonkeepers.0100
+                        days = 1
+                    }
+                }
+            }
+        }
+    }
+}
