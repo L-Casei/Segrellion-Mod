@@ -64,26 +64,10 @@ segrellion_vhal_dragonpit_02 = {
 	effect_desc = segrellion_vhal_dragonpit_02_effect_desc
 
 	on_complete = {
-		county = { set_variable = { name = has_dragonkeeper_order } }
-		county.holder = {
-			if = {
-				limit = { agot_has_any_dragonpit_access_law = no }
-				agot_dragonpit_access_law_close_family_effect = yes
-			}
-			if = {
-				limit = { has_ep1_dlc_trigger = yes }
-				hidden_effect = { set_amenity_level = { type = agot_dragonpit_amenities value = 3 } }
-				custom_tooltip = agot_dragonpit_amenities_level_set_to_three_tt
-			}
-			if = {
-				limit = { NOT = { employs_court_position = head_dragonkeeper_court_position } }
-				trigger_event = {
-					id = agot_dragonkeepers.0100
-					days = 1
-				}
-			}
-		}
+	county.holder = {
+		segrellion_activate_vhal_dragonpit_effect = yes
 	}
+}
 
 	province_modifier = {
 		fort_level = 2
@@ -136,26 +120,23 @@ segrellion_vhal_dragonpit_03 = {
 	effect_desc = segrellion_vhal_dragonpit_03_effect_desc
 
 	on_complete = {
-		county = { set_variable = { name = has_dragonkeeper_order } }
-		county.holder = {
-			if = {
-				limit = { agot_has_any_dragonpit_access_law = no }
-				agot_dragonpit_access_law_close_family_effect = yes
+	county.holder = {
+		segrellion_activate_vhal_dragonpit_effect = yes
+
+		if = {
+			limit = {
+				has_ep1_dlc_trigger = yes
 			}
-			if = {
-				limit = { has_ep1_dlc_trigger = yes }
-				hidden_effect = { set_amenity_level = { type = agot_dragonpit_amenities value = 4 } }
-				custom_tooltip = agot_dragonpit_amenities_level_set_to_three_tt
-			}
-			if = {
-				limit = { NOT = { employs_court_position = head_dragonkeeper_court_position } }
-				trigger_event = {
-					id = agot_dragonkeepers.0100
-					days = 1
+
+			hidden_effect = {
+				set_amenity_level = {
+					type = agot_dragonpit_amenities
+					value = 4
 				}
 			}
 		}
 	}
+}
 
 	province_modifier = {
 		fort_level = 4

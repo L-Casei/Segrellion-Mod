@@ -1,0 +1,54 @@
+segrellion_activate_vhal_dragonpit_effect = {
+
+	# Only activate if Caverns II or higher actually exists
+	if = {
+		limit = {
+			title:c_blackmark = {
+				any_county_province = {
+					has_building_or_higher = segrellion_vhal_dragonpit_02
+				}
+
+				NOT = {
+					has_variable = has_dragonkeeper_order
+				}
+			}
+		}
+
+
+		# AGOT's actual Head Dragonkeeper creation event
+		trigger_event = agot_dragonkeepers.0001
+
+
+		# Mark Vhal as having a Dragonkeeper Order
+		title:c_blackmark = {
+			set_variable = {
+				name = has_dragonkeeper_order
+			}
+		}
+
+
+		# Same default law used by AGOT generic dragonpits
+		if = {
+			limit = {
+				agot_has_any_dragonpit_access_law = no
+			}
+
+			add_realm_law = dragonpit_close_family_law
+		}
+
+
+		# Dragonpit amenities
+		if = {
+			limit = {
+				has_ep1_dlc_trigger = yes
+			}
+
+			hidden_effect = {
+				set_amenity_level = {
+					type = agot_dragonpit_amenities
+					value = 3
+				}
+			}
+		}
+	}
+}
