@@ -563,6 +563,67 @@ segrellion_create_artifact_sword_of_the_sentinel_effect = {
 	}
 }
 
+segrellion_create_artifact_dragonspear_lance_effect = {
+    $OWNER$ = { save_scope_as = owner }
+
+    set_artifact_rarity_masterwork = yes
+
+    create_artifact = {
+        name = segrellion_dragonspear_lance_name
+        visuals = segrellion_dragonspear_lance_visuals
+        description = segrellion_dragonspear_lance_desc
+
+        type = spear
+
+        wealth = scope:wealth
+        quality = scope:quality
+
+        template = segrellion_dragonspear_lance_template
+
+        history = {
+            type = created
+            date = 8176.2.15
+            recipient = character:Segrellion_21
+        }
+
+        modifier = segrellion_dragonspear_lance_modifier
+
+        save_scope_as = newly_created_artifact
+
+        decaying = no
+    }
+
+    scope:newly_created_artifact ?= {
+        equip_artifact_to_owner_replace = yes
+
+        set_global_variable = {
+            name = segrellion_dragonspear_lance
+            value = this
+        }
+
+        set_variable = {
+            name = historical_unique_artifact
+            value = yes
+        }
+
+        set_variable = {
+            name = traditional_house_owner
+            value = scope:owner.house
+        }
+
+        set_variable = {
+            name = segrellion_dragonspear_lance_artifact
+            value = yes
+        }
+
+        set_variable = {
+            name = agot_artifact_cannot_gift
+            value = yes
+        }
+    }
+}
+
+
 segrellion_create_artifact_throne_of_the_flamelands_effect = {
 	$OWNER$ = { save_scope_as = owner }
 	set_artifact_rarity_illustrious = yes
@@ -890,6 +951,43 @@ segrellion_setup_trueflame_history_effect = {
     }
 }
 
+
+segrellion_setup_dragonspear_lance_history_effect = {
+
+    # Aegon creates Dragonspear upon coming of age.
+    if = {
+        limit = {
+            current_date >= 8176.2.15
+            current_date < 8205.9.24
+
+            NOT = {
+                exists = global_var:segrellion_dragonspear_lance
+            }
+
+            character:Segrellion_21 ?= {
+                is_alive = yes
+            }
+        }
+
+        character:Segrellion_21 = {
+            segrellion_create_artifact_dragonspear_lance_effect = {
+                OWNER = this
+            }
+        }
+    }
+
+    # Dragonspear vanishes together with Aegon.
+    else_if = {
+        limit = {
+            current_date >= 8205.9.24
+            exists = global_var:segrellion_dragonspear_lance
+        }
+
+        destroy_artifact = global_var:segrellion_dragonspear_lance
+    }
+}
+
+
 segrellion_setup_throne_of_the_flamelands_history_effect = {
 
     if = {
@@ -911,10 +1009,12 @@ segrellion_setup_throne_of_the_flamelands_history_effect = {
 }
 
 
+
 segrellion_setup_historical_artifacts_effect = {
     segrellion_setup_icebringer_history_effect = yes
     segrellion_setup_plate_of_segrell_history_effect = yes
     segrellion_setup_dragon_egg_history_effect = yes
     segrellion_setup_trueflame_history_effect = yes
     segrellion_setup_throne_of_the_flamelands_history_effect = yes
+    segrellion_setup_dragonspear_lance_history_effect = yes
 }
