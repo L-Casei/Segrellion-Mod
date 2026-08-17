@@ -351,85 +351,117 @@ segrellion_setup_plate_of_segrell_history_effect = {
 
     if = {
         limit = {
-            current_date < 8073.5.16
-        }
-        character:Segrellion_7 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
+            NOT = {
+                exists = global_var:segrellion_plate_of_segrell
             }
         }
-    }
 
-    else_if = {
-        limit = { current_date < 8106.4.18 }
-        character:Segrellion_4 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
+        if = {
+            limit = {
+                current_date < 8073.5.16
             }
-        }
-    }
 
-    else_if = {
-        limit = { current_date < 8139.4.18 }
-        character:Segrellion_1 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
-            }
-        }
-    }
-
-    else_if = {
-        limit = { current_date < 8168.6.13 }
-        character:Segrellion_12 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
-            }
-        }
-    }
-
-    else_if = {
-        limit = { current_date < 8174.9.17 }
-        character:Segrellion_19 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
-            }
-        }
-    }
-
-    else_if = {
-        limit = { current_date < 8205.9.24 }
-        character:Segrellion_21 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
-            }
-        }
-    }
-
-    else_if = {
-        limit = { current_date < 8218.9.26 }
-        character:Segrellion_24 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
-            }
-        }
-    }
-
-    else_if = {
-        limit = { current_date < 8245.2.21 }
-        character:Segrellion_25 = {
-            segrellion_create_artifact_plate_of_segrell_effect = {
-                OWNER = this
-            }
-        }
-    }
-
-    else = {
-        character:Segrellion_30 ?= {
-            if = {
-                limit = { is_alive = yes }
-
+            character:Segrellion_7 = {
                 segrellion_create_artifact_plate_of_segrell_effect = {
                     OWNER = this
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                current_date < 8106.4.18
+            }
+
+            character:Segrellion_4 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                current_date < 8139.4.18
+            }
+
+            character:Segrellion_1 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                current_date < 8168.6.13
+            }
+
+            character:Segrellion_12 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                current_date < 8174.9.17
+            }
+
+            character:Segrellion_19 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                current_date < 8205.9.24
+            }
+
+            character:Segrellion_21 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                current_date < 8218.9.26
+            }
+
+            character:Segrellion_24 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        else_if = {
+            limit = {
+                current_date < 8245.2.21
+            }
+
+            character:Segrellion_25 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        else = {
+            character:Segrellion_30 ?= {
+                if = {
+                    limit = {
+                        is_alive = yes
+                    }
+
+                    segrellion_create_artifact_plate_of_segrell_effect = {
+                        OWNER = this
+                    }
                 }
             }
         }
@@ -440,6 +472,10 @@ segrellion_setup_dragon_egg_history_effect = {
 
     if = {
         limit = {
+            NOT = {
+                exists = global_var:segrellion_dragon_egg
+            }
+
             current_date >= 8106.4.18
             current_date < 8113.1.1
 
@@ -517,6 +553,10 @@ segrellion_create_artifact_trueflame_effect = {
         modifier = segrellion_trueflame_modifier
         save_scope_as = newly_created_artifact
         decaying = no
+        history = {
+        type = created_before_history
+        date = 8150.1.1
+        }
     }
 
     scope:newly_created_artifact ?= {
@@ -546,6 +586,84 @@ segrellion_create_artifact_trueflame_effect = {
             name = segrellion_trueflame_artifact
             value = yes
         }
+
+            if = {
+        limit = {
+            current_date >= 8161.10.21
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8161.10.21
+            RECIPIENT = character:Segrellion_18
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8174.9.17
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8174.9.17
+            RECIPIENT = character:Segrellion_38
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8196.4.12
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8196.4.12
+            RECIPIENT = character:Segrellion_21
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8200.4.12
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8200.4.12
+            RECIPIENT = character:Segrellion_24
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8218.9.26
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8218.9.26
+            RECIPIENT = character:Segrellion_25
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8245.2.21
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8245.2.21
+            RECIPIENT = character:Segrellion_30
+        }
+    }
     }
 }
 
@@ -556,19 +674,130 @@ segrellion_setup_trueflame_history_effect = {
     if = {
         limit = {
             current_date >= 8150.1.1
-            NOT = { exists = global_var:segrellion_trueflame }
+            NOT = {
+                exists = global_var:segrellion_trueflame
+            }
         }
 
-        # Until we define the exact transfer from Aeryn to Rhaegar,
-        # Aeryn remains the historical holder.
-        character:Segrellion_12 ?= {
-            if = {
-                limit = {
+        # Aeryn discovers Trueflame around 150 AC.
+        if = {
+            limit = {
+                current_date < 8161.10.21
+
+                character:Segrellion_12 ?= {
                     is_alive = yes
                 }
+            }
 
+            character:Segrellion_12 = {
                 segrellion_create_artifact_trueflame_effect = {
                     OWNER = this
+                }
+            }
+        }
+
+        # Aeryn gives Trueflame to his eldest son Rhaegar
+        # when Rhaegar comes of age.
+        else_if = {
+            limit = {
+                current_date < 8174.9.17
+
+                character:Segrellion_18 ?= {
+                    is_alive = yes
+                }
+            }
+
+            character:Segrellion_18 = {
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # After the Segrellion civil war and Rhaegar's fall,
+        # his son Maelor becomes the bearer of Trueflame.
+        else_if = {
+            limit = {
+                current_date < 8196.4.12
+
+                character:Segrellion_38 ?= {
+                    is_alive = yes
+                }
+            }
+
+            character:Segrellion_38 = {
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # Maelor dies in 196 AC.
+        # Trueflame returns to Aegon Dragonspear,
+        # the head of House Segrellion.
+        else_if = {
+            limit = {
+                current_date < 8200.4.12
+
+                character:Segrellion_21 ?= {
+                    is_alive = yes
+                }
+            }
+
+            character:Segrellion_21 = {
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # Four years after Maelor's death,
+        # Dragonspear entrusts Trueflame to Aethan.
+        else_if = {
+            limit = {
+                current_date < 8218.9.26
+
+                character:Segrellion_24 ?= {
+                    is_alive = yes
+                }
+            }
+
+            character:Segrellion_24 = {
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # After Aethan's death, Trueflame passes
+        # to his brother Rhaegar.
+        else_if = {
+            limit = {
+                current_date < 8245.2.21
+
+                character:Segrellion_25 ?= {
+                    is_alive = yes
+                }
+            }
+
+            character:Segrellion_25 = {
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # Rhaegar's heir Aenys becomes the next bearer.
+        else = {
+            character:Segrellion_30 ?= {
+                if = {
+                    limit = {
+                        is_alive = yes
+                    }
+
+                    segrellion_create_artifact_trueflame_effect = {
+                        OWNER = this
+                    }
                 }
             }
         }
