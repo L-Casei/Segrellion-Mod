@@ -165,7 +165,7 @@ segrellion_create_artifact_plate_of_segrell_effect = {
             ARTIFACT = this
             TYPE = inherited
             DATE = 8139.4.18
-            RECIPIENT = character:Segrellion_12
+            RECIPIENT = character:Segrellion_12 # Aeryn
         }
     }
 
@@ -175,7 +175,7 @@ segrellion_create_artifact_plate_of_segrell_effect = {
             ARTIFACT = this
             TYPE = inherited
             DATE = 8168.6.13
-            RECIPIENT = character:Segrellion_19
+            RECIPIENT = character:Segrellion_19 # Valerion
         }
     }
 
@@ -185,39 +185,62 @@ segrellion_create_artifact_plate_of_segrell_effect = {
             ARTIFACT = this
             TYPE = inherited
             DATE = 8174.9.17
-            RECIPIENT = character:Segrellion_21
+            RECIPIENT = character:Segrellion_21 # Aegon Dragonspear
         }
     }
 
-    if = {
-        limit = { current_date >= 8205.9.24 }
+        if = {
+        limit = {
+            current_date >= 8205.9.24
+        }
+
         agot_add_artifact_history = {
             ARTIFACT = this
             TYPE = inherited
             DATE = 8205.9.24
-            RECIPIENT = character:Segrellion_24
+            RECIPIENT = character:Segrellion_23 # Daeron
         }
     }
 
     if = {
-        limit = { current_date >= 8218.9.26 }
+        limit = {
+            current_date >= 8209.9.24
+        }
+
         agot_add_artifact_history = {
             ARTIFACT = this
             TYPE = inherited
-            DATE = 8218.9.26
-            RECIPIENT = character:Segrellion_25
+            DATE = 8209.9.24
+            RECIPIENT = character:Segrellion_25 # Rhaegar
         }
     }
 
     if = {
-        limit = { current_date >= 8245.2.21 }
+        limit = {
+            current_date >= 8245.2.21
+        }
+
         agot_add_artifact_history = {
             ARTIFACT = this
             TYPE = inherited
             DATE = 8245.2.21
-            RECIPIENT = character:Segrellion_30
+            RECIPIENT = character:Segrellion_30 # Aenys
         }
     }
+
+    if = {
+        limit = {
+            current_date >= 8248.4.8
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8248.4.8
+            RECIPIENT = character:Segrellion_39 # Maegor
+        }
+    }
+
 	}
 }
 
@@ -428,18 +451,20 @@ segrellion_setup_plate_of_segrell_history_effect = {
             }
         }
 
+        # Daeron inherits the Plate when Dragonspear vanishes.
         else_if = {
             limit = {
-                current_date < 8218.9.26
+                current_date < 8209.9.24
             }
 
-            character:Segrellion_24 = {
+            character:Segrellion_23 = {
                 segrellion_create_artifact_plate_of_segrell_effect = {
                     OWNER = this
                 }
             }
         }
 
+        # After Daeron's death it passes to Rhaegar.
         else_if = {
             limit = {
                 current_date < 8245.2.21
@@ -452,19 +477,44 @@ segrellion_setup_plate_of_segrell_history_effect = {
             }
         }
 
-        else = {
-            character:Segrellion_30 ?= {
-                if = {
-                    limit = {
-                        is_alive = yes
-                    }
+        # Rhaegar -> Aenys.
+        else_if = {
+            limit = {
+                current_date < 8248.4.8
+            }
 
-                    segrellion_create_artifact_plate_of_segrell_effect = {
-                        OWNER = this
-                    }
+            character:Segrellion_30 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
                 }
             }
         }
+
+        # Aenys -> Maegor.
+        #
+        # Once Leo Stormflame holds the Flamelands,
+        # the Plate has disappeared with the mysterious Sneaky.
+        else_if = {
+            limit = {
+                NOT = {
+                    title:k_flamelands.holder = character:Segrellion_36
+                }
+
+                character:Segrellion_39 ?= {
+                    is_alive = yes
+                }
+            }
+
+            character:Segrellion_39 = {
+                segrellion_create_artifact_plate_of_segrell_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # If Leo Stormflame has usurped the Flamelands,
+        # DO NOTHING.
+        # Plate of Segrell is historically missing.
     }
 }
 
@@ -531,6 +581,10 @@ segrellion_create_artifact_throne_of_the_flamelands_effect = {
 	}
 
 	scope:newly_created_artifact ?= {
+        set_global_variable = {
+            name = segrellion_throne_of_the_flamelands
+            value = this
+        }
 		equip_artifact_to_owner_replace = yes
 		set_variable = { name = historical_unique_artifact value = yes }
 		set_variable = { name = traditional_house_owner value = scope:owner.house }
@@ -635,7 +689,7 @@ segrellion_create_artifact_trueflame_effect = {
             ARTIFACT = this
             TYPE = inherited
             DATE = 8200.4.12
-            RECIPIENT = character:Segrellion_24
+            RECIPIENT = character:Segrellion_24 # Aethan
         }
     }
 
@@ -648,20 +702,47 @@ segrellion_create_artifact_trueflame_effect = {
             ARTIFACT = this
             TYPE = inherited
             DATE = 8218.9.26
-            RECIPIENT = character:Segrellion_25
+            RECIPIENT = character:Segrellion_25 # Rhaegar (II)
         }
     }
 
-    if = {
+        if = {
         limit = {
-            current_date >= 8245.2.21
+            current_date >= 8231.5.2
         }
 
         agot_add_artifact_history = {
             ARTIFACT = this
             TYPE = inherited
-            DATE = 8245.2.21
-            RECIPIENT = character:Segrellion_30
+            DATE = 8231.5.2
+            RECIPIENT = character:Segrellion_30 # Aenys
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8248.4.8
+        }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8248.4.8
+            RECIPIENT = character:Segrellion_39 # Maegor
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8266.1.1
+        }
+
+        # Daena steals Trueflame from Maegor.
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8266.1.1
+            RECIPIENT = character:Segrellion_40 # Daena
         }
     }
     }
@@ -674,19 +755,17 @@ segrellion_setup_trueflame_history_effect = {
     if = {
         limit = {
             current_date >= 8150.1.1
+
             NOT = {
                 exists = global_var:segrellion_trueflame
             }
         }
 
-        # Aeryn discovers Trueflame around 150 AC.
+        # Aeryn discovers Trueflame.
         if = {
             limit = {
                 current_date < 8161.10.21
-
-                character:Segrellion_12 ?= {
-                    is_alive = yes
-                }
+                character:Segrellion_12 ?= { is_alive = yes }
             }
 
             character:Segrellion_12 = {
@@ -696,15 +775,11 @@ segrellion_setup_trueflame_history_effect = {
             }
         }
 
-        # Aeryn gives Trueflame to his eldest son Rhaegar
-        # when Rhaegar comes of age.
+        # Aeryn gives Trueflame to Rhaegar I.
         else_if = {
             limit = {
                 current_date < 8174.9.17
-
-                character:Segrellion_18 ?= {
-                    is_alive = yes
-                }
+                character:Segrellion_18 ?= { is_alive = yes }
             }
 
             character:Segrellion_18 = {
@@ -714,15 +789,11 @@ segrellion_setup_trueflame_history_effect = {
             }
         }
 
-        # After the Segrellion civil war and Rhaegar's fall,
-        # his son Maelor becomes the bearer of Trueflame.
+        # Maelor keeps Trueflame after Rhaegar's fall.
         else_if = {
             limit = {
                 current_date < 8196.4.12
-
-                character:Segrellion_38 ?= {
-                    is_alive = yes
-                }
+                character:Segrellion_38 ?= { is_alive = yes }
             }
 
             character:Segrellion_38 = {
@@ -732,16 +803,11 @@ segrellion_setup_trueflame_history_effect = {
             }
         }
 
-        # Maelor dies in 196 AC.
-        # Trueflame returns to Aegon Dragonspear,
-        # the head of House Segrellion.
+        # After Maelor's death it returns to Aegon Dragonspear.
         else_if = {
             limit = {
                 current_date < 8200.4.12
-
-                character:Segrellion_21 ?= {
-                    is_alive = yes
-                }
+                character:Segrellion_21 ?= { is_alive = yes }
             }
 
             character:Segrellion_21 = {
@@ -751,15 +817,11 @@ segrellion_setup_trueflame_history_effect = {
             }
         }
 
-        # Four years after Maelor's death,
-        # Dragonspear entrusts Trueflame to Aethan.
+        # Dragonspear entrusts it to Aethan.
         else_if = {
             limit = {
                 current_date < 8218.9.26
-
-                character:Segrellion_24 ?= {
-                    is_alive = yes
-                }
+                character:Segrellion_24 ?= { is_alive = yes }
             }
 
             character:Segrellion_24 = {
@@ -769,15 +831,11 @@ segrellion_setup_trueflame_history_effect = {
             }
         }
 
-        # After Aethan's death, Trueflame passes
-        # to his brother Rhaegar.
+        # After Aethan's death it passes to Rhaegar II.
         else_if = {
             limit = {
-                current_date < 8245.2.21
-
-                character:Segrellion_25 ?= {
-                    is_alive = yes
-                }
+                current_date < 8231.5.2
+                character:Segrellion_25 ?= { is_alive = yes }
             }
 
             character:Segrellion_25 = {
@@ -787,9 +845,37 @@ segrellion_setup_trueflame_history_effect = {
             }
         }
 
-        # Rhaegar's heir Aenys becomes the next bearer.
+        # Rhaegar gives Trueflame to Aenys when Aenys comes of age.
+        else_if = {
+            limit = {
+                current_date < 8248.4.8
+                character:Segrellion_30 ?= { is_alive = yes }
+            }
+
+            character:Segrellion_30 = {
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # After Aenys' death it passes to Maegor.
+        else_if = {
+            limit = {
+                current_date < 8266.1.1
+                character:Segrellion_39 ?= { is_alive = yes }
+            }
+
+            character:Segrellion_39 = {
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+
+        # In 266 AC Daena steals Trueflame.
         else = {
-            character:Segrellion_30 ?= {
+            character:Segrellion_40 ?= {
                 if = {
                     limit = {
                         is_alive = yes
@@ -804,10 +890,31 @@ segrellion_setup_trueflame_history_effect = {
     }
 }
 
+segrellion_setup_throne_of_the_flamelands_history_effect = {
+
+    if = {
+        limit = {
+            current_date >= 8131.1.1
+
+            NOT = {
+                exists = global_var:segrellion_throne_of_the_flamelands
+            }
+        }
+
+        title:k_flamelands.holder ?= {
+
+            segrellion_create_artifact_throne_of_the_flamelands_effect = {
+                OWNER = this
+            }
+        }
+    }
+}
+
 
 segrellion_setup_historical_artifacts_effect = {
     segrellion_setup_icebringer_history_effect = yes
     segrellion_setup_plate_of_segrell_history_effect = yes
     segrellion_setup_dragon_egg_history_effect = yes
     segrellion_setup_trueflame_history_effect = yes
+    segrellion_setup_throne_of_the_flamelands_history_effect = yes
 }
