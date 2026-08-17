@@ -1,0 +1,109 @@
+namespace = segrellion_historical_startup
+
+segrellion_historical_startup.0001 = {
+    type = character_event
+    hidden = yes
+
+    immediate = {
+
+        # ============================================================
+        # HISTORICAL FLAMELANDS CAPITAL
+        # ============================================================
+
+        if = {
+            limit = {
+                current_date >= 8144.1.28
+                has_title = title:c_farring_cross
+            }
+
+            set_realm_capital = title:c_farring_cross
+        }
+
+
+        # ============================================================
+        # HISTORICAL CAVERNS OF VHAL INITIALIZATION
+        # ============================================================
+
+        if = {
+            limit = {
+                title:c_blackmark = {
+                    any_county_province = {
+                        has_building_or_higher = segrellion_vhal_dragonpit_02
+                    }
+                }
+            }
+
+            # Historical province buildings do not run on_complete.
+            title:c_blackmark = {
+                if = {
+                    limit = {
+                        NOT = {
+                            has_variable = has_dragonkeeper_order
+                        }
+                    }
+
+                    set_variable = {
+                        name = has_dragonkeeper_order
+                    }
+                }
+            }
+
+            # Dragonpit access law
+            if = {
+                limit = {
+                    agot_has_any_dragonpit_access_law = no
+                }
+
+                agot_dragonpit_access_law_close_family_effect = yes
+            }
+
+            # Level III = amenities 4
+            if = {
+                limit = {
+                    title:c_blackmark = {
+                        any_county_province = {
+                            has_building_or_higher = segrellion_vhal_dragonpit_03
+                        }
+                    }
+
+                    has_ep1_dlc_trigger = yes
+                }
+
+                hidden_effect = {
+                    set_amenity_level = {
+                        type = agot_dragonpit_amenities
+                        value = 4
+                    }
+                }
+            }
+
+            # Level II = amenities 3
+            else_if = {
+                limit = {
+                    has_ep1_dlc_trigger = yes
+                }
+
+                hidden_effect = {
+                    set_amenity_level = {
+                        type = agot_dragonpit_amenities
+                        value = 3
+                    }
+                }
+            }
+
+            # Head Dragonkeeper
+            if = {
+                limit = {
+                    NOT = {
+                        employs_court_position = head_dragonkeeper_court_position
+                    }
+                }
+
+                trigger_event = {
+                    id = agot_dragonkeepers.0100
+                    days = 1
+                }
+            }
+        }
+    }
+}
