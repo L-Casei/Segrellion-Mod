@@ -229,3 +229,50 @@ segrellion_create_artifact_throne_of_the_flamelands_effect = {
 		set_variable = { name = segrellion_throne_of_the_flamelands_artifact value = yes }
 	}
 }
+
+segrellion_create_artifact_trueflame_effect = {
+    $OWNER$ = { save_scope_as = owner }
+    set_artifact_rarity_illustrious = yes
+
+    create_artifact = {
+        name = segrellion_trueflame_name
+        visuals = segrellion_trueflame_visuals
+        description = segrellion_trueflame_desc
+        type = sword
+        wealth = scope:wealth
+        quality = scope:quality
+        template = segrellion_trueflame_template
+        modifier = segrellion_trueflame_modifier
+        save_scope_as = newly_created_artifact
+        decaying = no
+    }
+
+    scope:newly_created_artifact ?= {
+        equip_artifact_to_owner_replace = yes
+
+        set_global_variable = {
+            name = segrellion_trueflame
+            value = this
+        }
+
+        set_variable = {
+            name = valyrian_steel
+            value = yes
+        }
+
+        set_variable = {
+            name = historical_unique_artifact
+            value = yes
+        }
+
+        set_variable = {
+            name = traditional_house_owner
+            value = scope:owner.house
+        }
+
+        set_variable = {
+            name = segrellion_trueflame_artifact
+            value = yes
+        }
+    }
+}
