@@ -1,0 +1,55 @@
+segrellion_rhaegar_wall_transition_effect = {
+
+    remove_trait = lustful
+    remove_trait = vengeful
+
+    # Personality after the Wall
+    add_trait = temperate
+    add_trait = forgiving
+
+    if = {
+        limit = {
+            NOT = { has_trait = nightswatch }
+        }
+
+        add_trait = nightswatch_historical
+        agot_join_nightswatch_history_effect = yes
+    }
+
+    add_character_flag = iaf_rhaegar_wall_transition_done
+}
+
+segrellion_rhaegar_historical_progression = {
+    effect = {
+
+        character:Segrellion_18 ?= {
+
+            if = {
+                limit = {
+                    is_alive = yes
+                    current_date >= 8174.10.1
+
+                    NOT = {
+                        has_character_flag = iaf_rhaegar_wall_transition_done
+                    }
+                }
+
+                segrellion_rhaegar_wall_transition_effect = yes
+            }
+        }
+    }
+
+    if = {
+        limit = {
+            current_date >= 8180.1.1
+            NOT = {
+                has_character_flag = iaf_rhaegar_lord_commander_done
+            }
+        }
+
+        # Aquí transferimos k_the_wall a Rhaegar
+        # usando el cambio de holder del título.
+
+        add_character_flag = iaf_rhaegar_lord_commander_done
+    }
+}
