@@ -42,6 +42,39 @@ segrellion_create_artifact_icebringer_effect = {
 			DATE = 8106.4.18
 			RECIPIENT = character:Segrellion_1
 		}
+        
+        if = {
+    limit = { current_date >= 8139.4.18 }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8139.4.18
+            RECIPIENT = character:Segrellion_12
+        }
+    }
+
+    if = {
+        limit = { current_date >= 8168.6.13 }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8168.6.13
+            RECIPIENT = character:Segrellion_19
+        }
+    }
+
+    if = {
+        limit = { current_date >= 8174.9.17 }
+
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8174.9.17
+            RECIPIENT = character:Segrellion_21
+        }
+    }
 	}
 }
 
@@ -103,6 +136,10 @@ segrellion_create_artifact_plate_of_segrell_effect = {
 	}
 
 	scope:newly_created_artifact ?= {
+                set_global_variable = {
+            name = segrellion_plate_of_segrell
+            value = this
+        }
 		equip_artifact_to_owner_replace = yes
 		save_scope_as = epic
 		set_variable = { name = historical_unique_artifact value = yes }
@@ -122,6 +159,65 @@ segrellion_create_artifact_plate_of_segrell_effect = {
 			DATE = 8106.4.18
 			RECIPIENT = character:Segrellion_1
 		}
+        if = {
+        limit = { current_date >= 8139.4.18 }
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8139.4.18
+            RECIPIENT = character:Segrellion_12
+        }
+    }
+
+    if = {
+        limit = { current_date >= 8168.6.13 }
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8168.6.13
+            RECIPIENT = character:Segrellion_19
+        }
+    }
+
+    if = {
+        limit = { current_date >= 8174.9.17 }
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8174.9.17
+            RECIPIENT = character:Segrellion_21
+        }
+    }
+
+    if = {
+        limit = { current_date >= 8205.9.24 }
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8205.9.24
+            RECIPIENT = character:Segrellion_24
+        }
+    }
+
+    if = {
+        limit = { current_date >= 8218.9.26 }
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8218.9.26
+            RECIPIENT = character:Segrellion_25
+        }
+    }
+
+    if = {
+        limit = { current_date >= 8245.2.21 }
+        agot_add_artifact_history = {
+            ARTIFACT = this
+            TYPE = inherited
+            DATE = 8245.2.21
+            RECIPIENT = character:Segrellion_30
+        }
+    }
 	}
 }
 
@@ -147,6 +243,10 @@ segrellion_create_artifact_dragon_egg_effect = {
 	}
 
 	scope:newly_created_artifact ?= {
+        set_global_variable = {
+    name = segrellion_dragon_egg
+    value = this
+}
 		save_scope_as = epic
 		set_variable = { name = dragon_egg value = yes }
 		set_variable = { name = dragon_egg_color value = flag:white }
@@ -154,18 +254,6 @@ segrellion_create_artifact_dragon_egg_effect = {
 		set_variable = { name = historical_unique_artifact value = yes }
 		set_variable = { name = traditional_house_owner value = scope:owner.house }
 		set_variable = { name = segrellion_dragon_egg_artifact value = yes }
-		agot_add_artifact_history = {
-			ARTIFACT = this
-			TYPE = inherited
-			DATE = 8061.1.1
-			RECIPIENT = character:Segrellion_4
-		}
-		agot_add_artifact_history = {
-			ARTIFACT = this
-			TYPE = inherited
-			DATE = 8106.4.18
-			RECIPIENT = character:Segrellion_1
-		}
 	}
 }
 
@@ -348,6 +436,26 @@ segrellion_setup_plate_of_segrell_history_effect = {
     }
 }
 
+segrellion_setup_dragon_egg_history_effect = {
+
+    if = {
+        limit = {
+            current_date >= 8106.4.18
+            current_date < 8113.1.1
+
+            character:Segrellion_1 ?= {
+                is_alive = yes
+            }
+        }
+
+        character:Segrellion_1 = {
+            segrellion_create_artifact_dragon_egg_effect = {
+                OWNER = this
+            }
+        }
+    }
+}
+
 segrellion_create_artifact_sword_of_the_sentinel_effect = {
 	$OWNER$ = { save_scope_as = owner }
 	set_artifact_rarity_masterwork = yes
@@ -439,4 +547,38 @@ segrellion_create_artifact_trueflame_effect = {
             value = yes
         }
     }
+}
+
+
+
+segrellion_setup_trueflame_history_effect = {
+
+    if = {
+        limit = {
+            current_date >= 8150.1.1
+            NOT = { exists = global_var:segrellion_trueflame }
+        }
+
+        # Until we define the exact transfer from Aeryn to Rhaegar,
+        # Aeryn remains the historical holder.
+        character:Segrellion_12 ?= {
+            if = {
+                limit = {
+                    is_alive = yes
+                }
+
+                segrellion_create_artifact_trueflame_effect = {
+                    OWNER = this
+                }
+            }
+        }
+    }
+}
+
+
+segrellion_setup_historical_artifacts_effect = {
+    segrellion_setup_icebringer_history_effect = yes
+    segrellion_setup_plate_of_segrell_history_effect = yes
+    segrellion_setup_dragon_egg_history_effect = yes
+    segrellion_setup_trueflame_history_effect = yes
 }
