@@ -7,11 +7,18 @@
 # ============================================================
 
 
+# -----------------------------------------------------------------
+# Player / portrait dragonpit status effect
+# -----------------------------------------------------------------
+# AGOT normally searches the holder's counties for a recognised pit.
+# The Caverns are a custom building, so when Vhal is the only active
+# pit we resolve c_blackmark explicitly instead of relying on the
+# vanilla random county search.
+# -----------------------------------------------------------------
 agot_change_dragonpit_status = {
     save_scope_as = dragon
 
     scope:owner = {
-
         if = {
             limit = {
                 agot_has_multiple_active_dragonpits = yes
@@ -21,45 +28,50 @@ agot_change_dragonpit_status = {
         }
 
         else = {
-
-            random_held_county = {
+            # Prefer the Caverns of Vhal when they are the active pit.
+            if = {
                 limit = {
-
-                    OR = {
-
-    AND = {
-        OR = {
-            any_county_province = {
-                has_holding_type = castle_holding
-                has_building_or_higher = generic_dragon_pit_01
-            }
-
-            any_county_province = {
-                OR = {
-                    has_building_or_higher = dragonpit_01
-                    has_building = dragonpit_ruins_03
-                    has_building = agot_dragonmont_01
-                }
-            }
-        }
-
-        has_variable = has_dragonkeeper_order
-    }
-
-    any_county_province = {
-        has_building_or_higher = segrellion_vhal_dragonpit_02
-    }
-}
-
-                    has_variable = has_dragonkeeper_order
+                    has_title = title:c_blackmark
+                    title:c_blackmark = {
+                        has_variable = has_dragonkeeper_order
+                        any_county_province = {
+                            has_building_or_higher = segrellion_vhal_dragonpit_02
+                        }
+                    }
                 }
 
-                save_scope_as = dragon_pit_location
+                title:c_blackmark = {
+                    save_scope_as = dragon_pit_location
+                }
             }
 
+            # Otherwise use AGOT's normal dragonpit lookup.
+            else = {
+                random_held_county = {
+                    limit = {
+                        OR = {
+                            any_county_province = {
+                                has_holding_type = castle_holding
+                                has_building_or_higher = generic_dragon_pit_01
+                            }
+
+                            any_county_province = {
+                                OR = {
+                                    has_building_or_higher = dragonpit_01
+                                    has_building = dragonpit_ruins_03
+                                    has_building = agot_dragonmont_01
+                                }
+                            }
+                        }
+
+                        has_variable = has_dragonkeeper_order
+                    }
+
+                    save_scope_as = dragon_pit_location
+                }
+            }
 
             scope:dragon = {
-
                 if = {
                     limit = {
                         has_character_flag = in_dragonpit
@@ -103,53 +115,77 @@ agot_change_dragonpit_status = {
 }
 
 
-
+# -----------------------------------------------------------------
+# Interaction / AI-style routing effect
+# -----------------------------------------------------------------
+# AGOT's Send to Dragonpit interaction calls this effect even for the
+# player. Resolve Vhal directly first; fall back to vanilla pits when
+# the owner does not possess an active Caverns dragonpit.
+# -----------------------------------------------------------------
 agot_change_dragonpit_status_ai = {
-
     $OWNER$ = {
+        save_scope_as = segrellion_dragonpit_owner
+    }
 
-        random_held_county = {
-            limit = {
+    $DRAGON_REC$ = {
+        save_scope_as = segrellion_dragonpit_dragon
+    }
 
-                OR = {
-
-                    # Generic constructed dragonpit
-                    any_county_province = {
-                        has_holding_type = castle_holding
-                        has_building_or_higher = generic_dragon_pit_01
-                    }
-
-                    # Historical / special dragonpits
-                    any_county_province = {
-                        OR = {
-                            has_building_or_higher = dragonpit_01
-                            has_building = dragonpit_ruins_03
-                            has_building = agot_dragonmont_01
-
-                            # The Caverns of Vhal
-                            has_building_or_higher = segrellion_vhal_dragonpit_02
-                        }
-                    }
-                }
-
-                has_variable = has_dragonkeeper_order
+    if = {
+        limit = {
+            scope:segrellion_dragonpit_owner = {
+                has_title = title:c_blackmark
             }
 
+            title:c_blackmark = {
+                has_variable = has_dragonkeeper_order
+                any_county_province = {
+                    has_building_or_higher = segrellion_vhal_dragonpit_02
+                }
+            }
+        }
+
+        title:c_blackmark = {
             save_scope_as = dragon_pit_location
         }
     }
 
+    else = {
+        scope:segrellion_dragonpit_owner = {
+            random_held_county = {
+                limit = {
+                    OR = {
+                        any_county_province = {
+                            has_holding_type = castle_holding
+                            has_building_or_higher = generic_dragon_pit_01
+                        }
 
-    $DRAGON_REC$ = {
+                        any_county_province = {
+                            OR = {
+                                has_building_or_higher = dragonpit_01
+                                has_building = dragonpit_ruins_03
+                                has_building = agot_dragonmont_01
+                            }
+                        }
+                    }
 
+                    has_variable = has_dragonkeeper_order
+                }
+
+                save_scope_as = dragon_pit_location
+            }
+        }
+    }
+
+    scope:segrellion_dragonpit_dragon = {
         if = {
             limit = {
                 has_character_flag = in_dragonpit
             }
 
             agot_remove_from_dragonpit = {
-                DRAGON = $DRAGON_REC$
-                DRAGONPIT_HOLDER = $OWNER$
+                DRAGON = scope:segrellion_dragonpit_dragon
+                DRAGONPIT_HOLDER = scope:segrellion_dragonpit_owner
                 DRAGONPIT_COUNTY = scope:dragon_pit_location
             }
         }
@@ -160,8 +196,8 @@ agot_change_dragonpit_status_ai = {
             }
 
             agot_send_to_dragonpit = {
-                DRAGON = $DRAGON_REC$
-                DRAGONPIT_HOLDER = $OWNER$
+                DRAGON = scope:segrellion_dragonpit_dragon
+                DRAGONPIT_HOLDER = scope:segrellion_dragonpit_owner
                 DRAGONPIT_COUNTY = scope:dragon_pit_location
             }
         }
@@ -174,8 +210,8 @@ agot_change_dragonpit_status_ai = {
             }
 
             agot_force_wild_dragon_into_dragonpit_effect = {
-                DRAGON = $DRAGON_REC$
-                DRAGONPIT_HOLDER = $OWNER$
+                DRAGON = scope:segrellion_dragonpit_dragon
+                DRAGONPIT_HOLDER = scope:segrellion_dragonpit_owner
                 DRAGONPIT_COUNTY = scope:dragon_pit_location
             }
         }
