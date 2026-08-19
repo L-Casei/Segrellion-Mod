@@ -1,0 +1,120 @@
+# ============================================================
+# SILVERWING
+#
+# Canon:
+# - Alysanne Targaryen is her original rider
+# - Ulf White NEVER becomes her rider
+# - Rhaenys Segrellion claims her in 146 A.C.
+# - Vhalyrax kills Silverwing in 173 A.C.
+# ============================================================
+
+segrellion_silverwing_historical_progression_effect = {
+
+	# --------------------------------------------------------
+	# Remove Ulf White from Silverwing if AGOT canon assigned him.
+	# --------------------------------------------------------
+
+	character:White_1 ?= {
+
+		if = {
+			limit = {
+				has_variable = current_dragon
+				var:current_dragon ?= character:dragon_silverwing
+			}
+
+			agot_untame_dragon = {
+				OWNER = this
+				DRAGON = character:dragon_silverwing
+			}
+		}
+	}
+
+
+	# --------------------------------------------------------
+	# 146 A.C.
+	# Rhaenys Segrellion becomes Silverwing's rider.
+	# --------------------------------------------------------
+
+	if = {
+		limit = {
+			current_date >= 8146.1.1
+			current_date < 8173.1.1
+
+			character:dragon_silverwing ?= {
+				is_alive = yes
+			}
+
+			character:Segrellion_17 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		# Remove any incorrect rider that AGOT may have assigned.
+		character:White_1 ?= {
+
+			if = {
+				limit = {
+					has_variable = current_dragon
+					var:current_dragon ?= character:dragon_silverwing
+				}
+
+				agot_untame_dragon = {
+					OWNER = this
+					DRAGON = character:dragon_silverwing
+				}
+			}
+		}
+
+
+		# Give Silverwing to Rhaenys only once.
+		character:Segrellion_17 = {
+
+			if = {
+				limit = {
+					OR = {
+						NOT = { has_variable = current_dragon }
+						NOT = {
+							var:current_dragon ?= character:dragon_silverwing
+						}
+					}
+				}
+
+				agot_bond_dragon_relation_effect = {
+					ACTOR = this
+					DRAGON = character:dragon_silverwing
+				}
+			}
+		}
+	}
+
+
+	# --------------------------------------------------------
+	# 173 A.C.
+	# Vhalyrax burns Silverwing to death.
+	# --------------------------------------------------------
+
+	if = {
+		limit = {
+			current_date >= 8173.1.1
+
+			character:dragon_silverwing ?= {
+				is_alive = yes
+			}
+
+			exists = global_var:segrellion_historical_vhalyrax
+		}
+
+		global_var:segrellion_historical_vhalyrax = {
+			save_scope_as = vhalyrax
+		}
+
+		character:dragon_silverwing = {
+
+			death = {
+				death_reason = death_segrellion_burned_by_vhalyrax
+				killer = scope:vhalyrax
+			}
+		}
+	}
+}

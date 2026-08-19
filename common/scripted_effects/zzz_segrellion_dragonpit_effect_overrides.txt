@@ -1,219 +1,184 @@
 # ============================================================
 # SEGRELLION - THE CAVERNS OF VHAL
-# Dragonpit compatibility overrides
-#
-# Makes level II+ of the Caverns of Vhal behave as a fully
-# functional AGOT dragonpit.
+# AGOT Dragonpit compatibility
 # ============================================================
 
 
-# -----------------------------------------------------------------
-# Player / portrait dragonpit status effect
-# -----------------------------------------------------------------
-# AGOT normally searches the holder's counties for a recognised pit.
-# The Caverns are a custom building, so when Vhal is the only active
-# pit we resolve c_blackmark explicitly instead of relying on the
-# vanilla random county search.
-# -----------------------------------------------------------------
+# ============================================================
+# PLAYER DRAGON WINDOW
+#
+# Root = Dragon
+# scope:owner = Player
+# ============================================================
+
 agot_change_dragonpit_status = {
-    save_scope_as = dragon
 
-    scope:owner = {
-        if = {
-            limit = {
-                agot_has_multiple_active_dragonpits = yes
-            }
+	save_scope_as = dragon
 
-            trigger_event = agot_choose_dragonpit_event.0001
-        }
+	scope:owner = {
 
-        else = {
-            # Prefer the Caverns of Vhal when they are the active pit.
-            if = {
-                limit = {
-                    has_title = title:c_blackmark
-                    title:c_blackmark = {
-                        has_variable = has_dragonkeeper_order
-                        any_county_province = {
-                            has_building_or_higher = segrellion_vhal_dragonpit_02
-                        }
-                    }
-                }
+		# If more than one dragonpit exists, let AGOT choose.
+		if = {
+			limit = {
+				agot_has_multiple_active_dragonpits = yes
+			}
 
-                title:c_blackmark = {
-                    save_scope_as = dragon_pit_location
-                }
-            }
+			trigger_event = agot_choose_dragonpit_event.0001
+		}
 
-            # Otherwise use AGOT's normal dragonpit lookup.
-            else = {
-                random_held_county = {
-                    limit = {
-                        OR = {
-                            any_county_province = {
-                                has_holding_type = castle_holding
-                                has_building_or_higher = generic_dragon_pit_01
-                            }
+		else = {
 
-                            any_county_province = {
-                                OR = {
-                                    has_building_or_higher = dragonpit_01
-                                    has_building = dragonpit_ruins_03
-                                    has_building = agot_dragonmont_01
-                                }
-                            }
-                        }
+			random_held_county = {
+				limit = {
 
-                        has_variable = has_dragonkeeper_order
-                    }
+					OR = {
 
-                    save_scope_as = dragon_pit_location
-                }
-            }
+						# Generic constructed dragonpit
+						any_county_province = {
+							has_holding_type = castle_holding
+							has_building_or_higher = generic_dragon_pit_01
+						}
 
-            scope:dragon = {
-                if = {
-                    limit = {
-                        has_character_flag = in_dragonpit
-                    }
+						# Special / historical dragonpits
+						any_county_province = {
+							OR = {
+								has_building_or_higher = dragonpit_01
+								has_building = dragonpit_ruins_03
+								has_building = agot_dragonmont_01
 
-                    agot_remove_from_dragonpit = {
-                        DRAGON = root
-                        DRAGONPIT_HOLDER = scope:owner
-                        DRAGONPIT_COUNTY = scope:dragon_pit_location
-                    }
-                }
+								# SEGRELLION
+								has_building_or_higher = segrellion_vhal_dragonpit_02
+							}
+						}
+					}
 
-                else_if = {
-                    limit = {
-                        has_character_flag = owned_dragon
-                    }
+					has_variable = has_dragonkeeper_order
+				}
 
-                    agot_send_to_dragonpit = {
-                        DRAGON = root
-                        DRAGONPIT_HOLDER = scope:owner
-                        DRAGONPIT_COUNTY = scope:dragon_pit_location
-                    }
-                }
+				save_scope_as = dragon_pit_location
+			}
+		}
+	}
 
-                else_if = {
-                    limit = {
-                        NOT = {
-                            has_character_flag = owned_dragon
-                        }
-                    }
 
-                    agot_force_wild_dragon_into_dragonpit_effect = {
-                        DRAGON = root
-                        DRAGONPIT_HOLDER = scope:owner
-                        DRAGONPIT_COUNTY = scope:dragon_pit_location
-                    }
-                }
-            }
-        }
-    }
+	# IMPORTANT:
+	# We are back in ROOT here.
+	# ROOT is the dragon.
+
+	if = {
+		limit = {
+			exists = scope:dragon_pit_location
+			has_character_flag = in_dragonpit
+		}
+
+		agot_remove_from_dragonpit = {
+			DRAGON = root
+			DRAGONPIT_HOLDER = scope:owner
+			DRAGONPIT_COUNTY = scope:dragon_pit_location
+		}
+	}
+
+	else_if = {
+		limit = {
+			exists = scope:dragon_pit_location
+			has_character_flag = owned_dragon
+		}
+
+		agot_send_to_dragonpit = {
+			DRAGON = root
+			DRAGONPIT_HOLDER = scope:owner
+			DRAGONPIT_COUNTY = scope:dragon_pit_location
+		}
+	}
+
+	else_if = {
+		limit = {
+			exists = scope:dragon_pit_location
+			NOT = {
+				has_character_flag = owned_dragon
+			}
+		}
+
+		agot_force_wild_dragon_into_dragonpit_effect = {
+			DRAGON = root
+			DRAGONPIT_HOLDER = scope:owner
+			DRAGONPIT_COUNTY = scope:dragon_pit_location
+		}
+	}
 }
 
 
-# -----------------------------------------------------------------
-# Interaction / AI-style routing effect
-# -----------------------------------------------------------------
-# AGOT's Send to Dragonpit interaction calls this effect even for the
-# player. Resolve Vhal directly first; fall back to vanilla pits when
-# the owner does not possess an active Caverns dragonpit.
-# -----------------------------------------------------------------
+# ============================================================
+# AI / CHARACTER INTERACTION VERSION
+# ============================================================
+
 agot_change_dragonpit_status_ai = {
-    $OWNER$ = {
-        save_scope_as = segrellion_dragonpit_owner
-    }
 
-    $DRAGON_REC$ = {
-        save_scope_as = segrellion_dragonpit_dragon
-    }
+	$OWNER$ = {
 
-    if = {
-        limit = {
-            scope:segrellion_dragonpit_owner = {
-                has_title = title:c_blackmark
-            }
+		random_held_county = {
+			limit = {
 
-            title:c_blackmark = {
-                has_variable = has_dragonkeeper_order
-                any_county_province = {
-                    has_building_or_higher = segrellion_vhal_dragonpit_02
-                }
-            }
-        }
+				OR = {
 
-        title:c_blackmark = {
-            save_scope_as = dragon_pit_location
-        }
-    }
+					any_county_province = {
+						has_holding_type = castle_holding
+						has_building_or_higher = generic_dragon_pit_01
+					}
 
-    else = {
-        scope:segrellion_dragonpit_owner = {
-            random_held_county = {
-                limit = {
-                    OR = {
-                        any_county_province = {
-                            has_holding_type = castle_holding
-                            has_building_or_higher = generic_dragon_pit_01
-                        }
+					any_county_province = {
+						OR = {
+							has_building_or_higher = dragonpit_01
+							has_building = dragonpit_ruins_03
+							has_building = agot_dragonmont_01
 
-                        any_county_province = {
-                            OR = {
-                                has_building_or_higher = dragonpit_01
-                                has_building = dragonpit_ruins_03
-                                has_building = agot_dragonmont_01
-                            }
-                        }
-                    }
+							# SEGRELLION
+							has_building_or_higher = segrellion_vhal_dragonpit_02
+						}
+					}
+				}
 
-                    has_variable = has_dragonkeeper_order
-                }
+				has_variable = has_dragonkeeper_order
+			}
 
-                save_scope_as = dragon_pit_location
-            }
-        }
-    }
+			save_scope_as = dragon_pit_location
+		}
+	}
 
-    scope:segrellion_dragonpit_dragon = {
-        if = {
-            limit = {
-                has_character_flag = in_dragonpit
-            }
 
-            agot_remove_from_dragonpit = {
-                DRAGON = scope:segrellion_dragonpit_dragon
-                DRAGONPIT_HOLDER = scope:segrellion_dragonpit_owner
-                DRAGONPIT_COUNTY = scope:dragon_pit_location
-            }
-        }
+	$DRAGON_REC$ = {
 
-        else_if = {
-            limit = {
-                has_character_flag = owned_dragon
-            }
+		if = {
+			limit = {
+				has_character_flag = in_dragonpit
+			}
 
-            agot_send_to_dragonpit = {
-                DRAGON = scope:segrellion_dragonpit_dragon
-                DRAGONPIT_HOLDER = scope:segrellion_dragonpit_owner
-                DRAGONPIT_COUNTY = scope:dragon_pit_location
-            }
-        }
+			agot_remove_from_dragonpit = {
+				DRAGON = $DRAGON_REC$
+				DRAGONPIT_HOLDER = $OWNER$
+				DRAGONPIT_COUNTY = scope:dragon_pit_location
+			}
+		}
 
-        else_if = {
-            limit = {
-                NOT = {
-                    has_character_flag = owned_dragon
-                }
-            }
+		else_if = {
+			limit = {
+				has_character_flag = owned_dragon
+			}
 
-            agot_force_wild_dragon_into_dragonpit_effect = {
-                DRAGON = scope:segrellion_dragonpit_dragon
-                DRAGONPIT_HOLDER = scope:segrellion_dragonpit_owner
-                DRAGONPIT_COUNTY = scope:dragon_pit_location
-            }
-        }
-    }
+			agot_send_to_dragonpit = {
+				DRAGON = $DRAGON_REC$
+				DRAGONPIT_HOLDER = $OWNER$
+				DRAGONPIT_COUNTY = scope:dragon_pit_location
+			}
+		}
+
+		else = {
+
+			agot_force_wild_dragon_into_dragonpit_effect = {
+				DRAGON = $DRAGON_REC$
+				DRAGONPIT_HOLDER = $OWNER$
+				DRAGONPIT_COUNTY = scope:dragon_pit_location
+			}
+		}
+	}
 }
