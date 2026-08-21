@@ -17,7 +17,10 @@ agot_change_dragonpit_status = {
 
 	scope:owner = {
 
-		# If more than one dragonpit exists, let AGOT choose.
+		# --------------------------------------------------------
+		# MULTIPLE DRAGONPITS
+		# --------------------------------------------------------
+
 		if = {
 			limit = {
 				agot_has_multiple_active_dragonpits = yes
@@ -26,6 +29,10 @@ agot_change_dragonpit_status = {
 			trigger_event = agot_choose_dragonpit_event.0001
 		}
 
+		# --------------------------------------------------------
+		# SINGLE DRAGONPIT
+		# --------------------------------------------------------
+
 		else = {
 
 			random_held_county = {
@@ -33,20 +40,20 @@ agot_change_dragonpit_status = {
 
 					OR = {
 
-						# Generic constructed dragonpit
+						# Generic constructed Dragonpit
 						any_county_province = {
 							has_holding_type = castle_holding
 							has_building_or_higher = generic_dragon_pit_01
 						}
 
-						# Special / historical dragonpits
+						# Historical / special Dragonpits
 						any_county_province = {
 							OR = {
 								has_building_or_higher = dragonpit_01
 								has_building = dragonpit_ruins_03
 								has_building = agot_dragonmont_01
 
-								# SEGRELLION
+								# Caverns of Vhal
 								has_building_or_higher = segrellion_vhal_dragonpit_02
 							}
 						}
@@ -57,52 +64,57 @@ agot_change_dragonpit_status = {
 
 				save_scope_as = dragon_pit_location
 			}
-		}
-	}
 
 
-	# IMPORTANT:
-	# We are back in ROOT here.
-	# ROOT is the dragon.
+			# ----------------------------------------------------
+			# ACT ON THE DRAGON
+			# ----------------------------------------------------
 
-	if = {
-		limit = {
-			exists = scope:dragon_pit_location
-			has_character_flag = in_dragonpit
-		}
+			scope:dragon = {
 
-		agot_remove_from_dragonpit = {
-			DRAGON = root
-			DRAGONPIT_HOLDER = scope:owner
-			DRAGONPIT_COUNTY = scope:dragon_pit_location
-		}
-	}
+				# Dragon is already inside a pit
+				if = {
+					limit = {
+						has_character_flag = in_dragonpit
+					}
 
-	else_if = {
-		limit = {
-			exists = scope:dragon_pit_location
-			has_character_flag = owned_dragon
-		}
+					agot_remove_from_dragonpit_effect = {
+						DRAGON = root
+						DRAGONPIT_HOLDER = scope:owner
+						DRAGONPIT_COUNTY = scope:dragon_pit_location
+					}
+				}
 
-		agot_send_to_dragonpit = {
-			DRAGON = root
-			DRAGONPIT_HOLDER = scope:owner
-			DRAGONPIT_COUNTY = scope:dragon_pit_location
-		}
-	}
 
-	else_if = {
-		limit = {
-			exists = scope:dragon_pit_location
-			NOT = {
-				has_character_flag = owned_dragon
+				# Owned dragon -> send normally
+				else_if = {
+					limit = {
+						has_character_flag = owned_dragon
+					}
+
+					agot_send_to_dragonpit_effect = {
+						DRAGON = root
+						DRAGONPIT_HOLDER = scope:owner
+						DRAGONPIT_COUNTY = scope:dragon_pit_location
+					}
+				}
+
+
+				# Wild / unowned dragon -> force into pit
+				else_if = {
+					limit = {
+						NOT = {
+							has_character_flag = owned_dragon
+						}
+					}
+
+					agot_force_wild_dragon_into_dragonpit_effect = {
+						DRAGON = root
+						DRAGONPIT_HOLDER = scope:owner
+						DRAGONPIT_COUNTY = scope:dragon_pit_location
+					}
+				}
 			}
-		}
-
-		agot_force_wild_dragon_into_dragonpit_effect = {
-			DRAGON = root
-			DRAGONPIT_HOLDER = scope:owner
-			DRAGONPIT_COUNTY = scope:dragon_pit_location
 		}
 	}
 }
@@ -121,18 +133,20 @@ agot_change_dragonpit_status_ai = {
 
 				OR = {
 
+					# Generic constructed Dragonpit
 					any_county_province = {
 						has_holding_type = castle_holding
 						has_building_or_higher = generic_dragon_pit_01
 					}
 
+					# Historical / special Dragonpits
 					any_county_province = {
 						OR = {
 							has_building_or_higher = dragonpit_01
 							has_building = dragonpit_ruins_03
 							has_building = agot_dragonmont_01
 
-							# SEGRELLION
+							# Caverns of Vhal
 							has_building_or_higher = segrellion_vhal_dragonpit_02
 						}
 					}
@@ -148,31 +162,41 @@ agot_change_dragonpit_status_ai = {
 
 	$DRAGON_REC$ = {
 
+		# Already in a Dragonpit
 		if = {
 			limit = {
 				has_character_flag = in_dragonpit
 			}
 
-			agot_remove_from_dragonpit = {
+			agot_remove_from_dragonpit_effect = {
 				DRAGON = $DRAGON_REC$
 				DRAGONPIT_HOLDER = $OWNER$
 				DRAGONPIT_COUNTY = scope:dragon_pit_location
 			}
 		}
 
+
+		# Owned dragon
 		else_if = {
 			limit = {
 				has_character_flag = owned_dragon
 			}
 
-			agot_send_to_dragonpit = {
+			agot_send_to_dragonpit_effect = {
 				DRAGON = $DRAGON_REC$
 				DRAGONPIT_HOLDER = $OWNER$
 				DRAGONPIT_COUNTY = scope:dragon_pit_location
 			}
 		}
 
-		else = {
+
+		# Wild / unowned dragon
+		else_if = {
+			limit = {
+				NOT = {
+					has_character_flag = owned_dragon
+				}
+			}
 
 			agot_force_wild_dragon_into_dragonpit_effect = {
 				DRAGON = $DRAGON_REC$
