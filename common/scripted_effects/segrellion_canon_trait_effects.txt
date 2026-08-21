@@ -14,9 +14,16 @@ segrellion_add_canon_modifier_effect = {
 	if = {
 		limit = {
 			has_game_rule = segrellion_canon_traits_enabled
-			NOT = { has_character_modifier = $MODIFIER$ }
 		}
-		add_character_modifier = $MODIFIER$
+		# Canon information is a real trait so it remains visible on dead characters.
+		if = {
+			limit = { has_character_modifier = $MODIFIER$ }
+			remove_character_modifier = $MODIFIER$
+		}
+		if = {
+			limit = { NOT = { has_trait = $MODIFIER$ } }
+			add_trait = $MODIFIER$
+		}
 	}
 }
 
@@ -25,6 +32,10 @@ segrellion_remove_canon_modifier_effect = {
 	if = {
 		limit = { has_character_modifier = $MODIFIER$ }
 		remove_character_modifier = $MODIFIER$
+	}
+	if = {
+		limit = { has_trait = $MODIFIER$ }
+		remove_trait = $MODIFIER$
 	}
 }
 
