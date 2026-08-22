@@ -2323,92 +2323,98 @@ segrellion_icebringer.5531 = {
 	}
 
 	option = {
-			name = segrellion_icebringer.5531.a
+		name = segrellion_icebringer.5531.a
 
-			option = {
-			name = segrellion_icebringer.5531.a
 
-			# =====================================================
-			# ALREADY AT MAXIMUM WOUND TIER
-			# Another real wound may simply kill them.
-			# =====================================================
+		# =====================================================
+		# ALREADY AT MAXIMUM WOUND TIER
+		#
+		# Another real wound may simply kill them.
+		# =====================================================
 
-			if = {
-				limit = {
-					has_trait = wounded_3
-				}
-
-				random_list = {
-
-					50 = {
-						death = {
-							death_reason = death_wounds
-						}
-					}
-
-					50 = {
-						add_stress = 40
-					}
-				}
+		if = {
+			limit = {
+				has_trait = wounded_3
 			}
 
+			random_list = {
 
-			# =====================================================
-			# SEVERELY WOUNDED
-			# Escalate to maximum tier, with some chance of death.
-			# =====================================================
-
-			else_if = {
-				limit = {
-					has_trait = wounded_2
-				}
-
-				random_list = {
-
-					20 = {
-						death = {
-							death_reason = death_wounds
-						}
-					}
-
-					80 = {
-						remove_trait = wounded_2
-						add_trait = wounded_3
-						add_stress = 30
+				50 = {
+					death = {
+						death_reason = death_wounds
 					}
 				}
-			}
 
-
-			# =====================================================
-			# WOUNDED
-			# Escalate one tier.
-			# =====================================================
-
-			else_if = {
-				limit = {
-					has_trait = wounded_1
+				50 = {
+					add_stress = 40
 				}
-
-				remove_trait = wounded_1
-				add_trait = wounded_2
-				add_stress = 20
 			}
-
-
-			# =====================================================
-			# NOT CURRENTLY WOUNDED
-			# Normal result.
-			# =====================================================
-
-			else = {
-				add_trait = wounded_1
-				add_stress = 10
-			}
-
-
-			remove_character_flag = segrellion_icebringer_awakening_chain_active
 		}
+
+
+		# =====================================================
+		# SEVERELY WOUNDED
+		#
+		# Escalate to maximum tier, with some chance of death.
+		# =====================================================
+
+		else_if = {
+			limit = {
+				has_trait = wounded_2
+			}
+
+			random_list = {
+
+				20 = {
+					death = {
+						death_reason = death_wounds
+					}
+				}
+
+				80 = {
+					remove_trait = wounded_2
+					add_trait = wounded_3
+					add_stress = 30
+				}
+			}
+		}
+
+
+		# =====================================================
+		# WOUNDED
+		#
+		# Escalate one tier.
+		# =====================================================
+
+		else_if = {
+			limit = {
+				has_trait = wounded_1
+			}
+
+			remove_trait = wounded_1
+			add_trait = wounded_2
+
+			add_stress = 20
+		}
+
+
+		# =====================================================
+		# NOT CURRENTLY WOUNDED
+		#
+		# Normal result.
+		# =====================================================
+
+		else = {
+
+			add_trait = wounded_1
+
+			add_stress = 10
+		}
+
+
+		# =====================================================
+		# THIS ATTEMPT ENDS HERE
+		# =====================================================
 
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
