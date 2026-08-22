@@ -2522,8 +2522,10 @@ segrellion_icebringer.5534 = {
 
 		add_character_flag = segrellion_icebringer_choice_passed
 
-		# NEXT AWAKENING STAGE WILL BEGIN HERE.
-		# Do NOT remove awakening_chain_active.
+		trigger_event = {
+			id = segrellion_icebringer.5600
+			days = 1
+		}
 	}
 }
 
@@ -2662,7 +2664,7 @@ segrellion_icebringer.5551 = {
 	theme = intrigue
 
 	override_background = {
-		reference = segrellion_icebringer_event
+		reference = segrellion_icebringer_fountain
 	}
 
 	left_portrait = {
@@ -2688,7 +2690,7 @@ segrellion_icebringer.5552 = {
 	theme = intrigue
 
 	override_background = {
-		reference = segrellion_icebringer_event
+		reference = segrellion_icebringer_fountain
 	}
 
 	left_portrait = {
@@ -2723,7 +2725,7 @@ segrellion_icebringer.5600 = {
 	theme = intrigue
 
 	override_background = {
-		reference = segrellion_icebringer_event
+		reference = wilderness_mountains
 	}
 
 	left_portrait = {
@@ -3071,7 +3073,7 @@ segrellion_icebringer.5622 = {
 	theme = intrigue
 
 	override_background = {
-		reference = segrellion_icebringer_event
+		reference = segrellion_ice_dragon_event
 	}
 
 	left_portrait = {
@@ -3101,7 +3103,7 @@ segrellion_icebringer.5630 = {
 	theme = intrigue
 
 	override_background = {
-		reference = segrellion_icebringer_event
+		reference = wilderness_mountains
 	}
 
 	left_portrait = {
@@ -3148,5 +3150,343 @@ segrellion_icebringer.5630 = {
 		remove_character_flag = segrellion_icebringer_state_rejected
 		remove_character_flag = segrellion_icebringer_state_partial
 		remove_character_flag = segrellion_icebringer_state_accepted
+	}
+}
+
+# =========================================================
+# V - THE WHITE FLAME
+# =========================================================
+
+
+# =========================================================
+# 5700 - THE BLACK SHORE
+# =========================================================
+
+segrellion_icebringer.5700 = {
+	type = character_event
+
+	title = segrellion_icebringer.5700.t
+	desc = segrellion_icebringer.5700.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.5700.a
+
+		# Immediate continuation.
+		trigger_event = segrellion_icebringer.5701
+	}
+}
+
+
+# =========================================================
+# 5701 - THE LAST QUESTION
+# =========================================================
+
+segrellion_icebringer.5701 = {
+	type = character_event
+
+	title = segrellion_icebringer.5701.t
+	desc = segrellion_icebringer.5701.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# =====================================================
+	# TRUE ANSWER
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.5701.a
+
+		trigger_event = segrellion_icebringer.5710
+	}
+
+
+	# =====================================================
+	# "I AM MYSELF"
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.5701.b
+
+		trigger_event = segrellion_icebringer.5720
+	}
+
+
+	# =====================================================
+	# TARGARYEN EXCLUSIVE
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.5701.c
+
+		trigger = {
+			dynasty = dynasty:dynn_Targaryen
+		}
+
+		add_internal_flag = special
+
+		custom_tooltip = segrellion_icebringer_targaryen_answer_tt
+
+		trigger_event = segrellion_icebringer.5730
+	}
+
+
+	# =====================================================
+	# R'HLLOR EXCLUSIVE
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.5701.d
+
+		trigger = {
+			faith.religion = religion:the_rhllor_religion
+		}
+
+		add_internal_flag = special
+
+		custom_tooltip = segrellion_icebringer_rhllor_answer_tt
+
+		trigger_event = segrellion_icebringer.5740
+	}
+
+
+	# =====================================================
+	# "I DON'T KNOW"
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.5701.e
+
+		trigger_event = segrellion_icebringer.5750
+	}
+}
+
+
+# =========================================================
+# 5710 - THE WHITE FLAME
+#
+# TRUE ENDING
+# =========================================================
+
+segrellion_icebringer.5710 = {
+	type = character_event
+
+	title = segrellion_icebringer.5710.t
+	desc = segrellion_icebringer.5710.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5710.a
+
+		segrellion_awaken_icebringer_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5720 - I AM MYSELF
+# =========================================================
+
+segrellion_icebringer.5720 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			5 = {
+				trigger_event = segrellion_icebringer.5721
+			}
+
+			95 = {
+				trigger_event = segrellion_icebringer.5722
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5721 - SUCH A SHAME
+# =========================================================
+
+segrellion_icebringer.5721 = {
+	type = character_event
+
+	title = segrellion_icebringer.5721.t
+	desc = segrellion_icebringer.5721.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5721.a
+
+		death = {
+			death_reason = death_segrellion_slain_by_white_keeper
+		}
+	}
+}
+
+
+# =========================================================
+# 5722 - A DISAPPOINTMENT
+# =========================================================
+
+segrellion_icebringer.5722 = {
+	type = character_event
+
+	title = segrellion_icebringer.5722.t
+	desc = segrellion_icebringer.5722.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.5722.a
+
+		segrellion_icebringer_vanish_forever_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5730 - THE FALSE PRINCE
+#
+# TARGARYEN EXCLUSIVE WRONG ANSWER
+# =========================================================
+
+segrellion_icebringer.5730 = {
+	type = character_event
+
+	title = segrellion_icebringer.5730.t
+	desc = segrellion_icebringer.5730.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5730.a
+
+		death = {
+			death_reason = death_segrellion_slain_by_white_keeper
+		}
+	}
+}
+
+
+# =========================================================
+# 5740 - THE FALSE HERO
+#
+# R'HLLOR EXCLUSIVE WRONG ANSWER
+# =========================================================
+
+segrellion_icebringer.5740 = {
+	type = character_event
+
+	title = segrellion_icebringer.5740.t
+	desc = segrellion_icebringer.5740.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5740.a
+
+		death = {
+			death_reason = death_segrellion_slain_by_white_keeper
+		}
+	}
+}
+
+
+# =========================================================
+# 5750 - NOT THE ONE
+# =========================================================
+
+segrellion_icebringer.5750 = {
+	type = character_event
+
+	title = segrellion_icebringer.5750.t
+	desc = segrellion_icebringer.5750.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.5750.a
+
+		segrellion_icebringer_vanish_forever_effect = yes
 	}
 }
