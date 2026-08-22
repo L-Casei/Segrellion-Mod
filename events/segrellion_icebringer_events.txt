@@ -2,6 +2,23 @@ namespace = segrellion_icebringer
 
 
 # =========================================================
+# ICEBRINGER RANDOM EVENTS
+#
+# REJECTED:           1000s
+# PARTIALLY ACCEPTED: 2000s
+# ACCEPTED:           3000s
+#
+# FUTURE:
+# AWAKENED:           4000s
+#
+# Event backgrounds are temporary.
+# They will later be replaced by a custom Icebringer
+# event background.
+# =========================================================
+
+
+
+# =========================================================
 # REJECTED POOL
 # =========================================================
 
@@ -11,12 +28,17 @@ segrellion_icebringer.0001 = {
 
 	immediate = {
 		random_list = {
-			50 = {
+			25 = {
 				trigger_event = segrellion_icebringer.1001
 			}
-
-			50 = {
+			25 = {
 				trigger_event = segrellion_icebringer.1002
+			}
+			25 = {
+				trigger_event = segrellion_icebringer.1003
+			}
+			25 = {
+				trigger_event = segrellion_icebringer.1004
 			}
 		}
 	}
@@ -33,12 +55,17 @@ segrellion_icebringer.0002 = {
 
 	immediate = {
 		random_list = {
-			50 = {
+			25 = {
 				trigger_event = segrellion_icebringer.2001
 			}
-
-			50 = {
+			25 = {
 				trigger_event = segrellion_icebringer.2002
+			}
+			25 = {
+				trigger_event = segrellion_icebringer.2003
+			}
+			25 = {
+				trigger_event = segrellion_icebringer.2004
 			}
 		}
 	}
@@ -55,13 +82,586 @@ segrellion_icebringer.0003 = {
 
 	immediate = {
 		random_list = {
-			50 = {
+			25 = {
 				trigger_event = segrellion_icebringer.3001
 			}
-
-			50 = {
+			25 = {
 				trigger_event = segrellion_icebringer.3002
+			}
+			25 = {
+				trigger_event = segrellion_icebringer.3003
+			}
+			25 = {
+				trigger_event = segrellion_icebringer.3004
 			}
 		}
 	}
 }
+
+
+
+# =========================================================
+# REJECTED EVENTS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 1001 - THE BURNING GRIP
+# ---------------------------------------------------------
+
+segrellion_icebringer.1001 = {
+	type = character_event
+	title = segrellion_icebringer.1001.t
+	desc = segrellion_icebringer.1001.desc
+	theme = war
+
+	override_background = {
+		reference = army_camp
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_rejected
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.1001.a
+
+		add_stress = 10
+		add_prestige = -15
+	}
+
+	option = {
+		name = segrellion_icebringer.1001.b
+
+		add_stress = 25
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_burned_hand_modifier
+			days = 180
+		}
+
+		add_martial_lifestyle_xp = 50
+	}
+}
+
+
+# ---------------------------------------------------------
+# 1002 - THE SCORCHED SCABBARD
+# ---------------------------------------------------------
+
+segrellion_icebringer.1002 = {
+	type = character_event
+	title = segrellion_icebringer.1002.t
+	desc = segrellion_icebringer.1002.desc
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_rejected
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.1002.a
+
+		add_gold = -10
+		add_stress = 10
+	}
+
+	option = {
+		name = segrellion_icebringer.1002.b
+
+		add_prestige = -25
+		add_stress = 15
+	}
+}
+
+
+# ---------------------------------------------------------
+# 1003 - CAST FROM THE HAND
+# ---------------------------------------------------------
+
+segrellion_icebringer.1003 = {
+	type = character_event
+	title = segrellion_icebringer.1003.t
+	desc = segrellion_icebringer.1003.desc
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_rejected
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.1003.a
+
+		add_stress = 20
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_burned_hand_modifier
+			days = 120
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.1003.b
+
+		add_stress = 5
+		add_prestige = -10
+	}
+}
+
+
+# ---------------------------------------------------------
+# 1004 - A HAND THAT WILL NOT HEAL
+# ---------------------------------------------------------
+
+segrellion_icebringer.1004 = {
+	type = character_event
+	title = segrellion_icebringer.1004.t
+	desc = segrellion_icebringer.1004.desc
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_rejected
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.1004.a
+
+		add_gold = -15
+		add_stress = -5
+	}
+
+	option = {
+		name = segrellion_icebringer.1004.b
+
+		add_stress = 15
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_burned_hand_modifier
+			days = 90
+		}
+	}
+}
+
+
+
+# =========================================================
+# PARTIALLY ACCEPTED EVENTS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 2001 - HEAT BENEATH THE LEATHER
+# ---------------------------------------------------------
+
+segrellion_icebringer.2001 = {
+	type = character_event
+	title = segrellion_icebringer.2001.t
+	desc = segrellion_icebringer.2001.desc
+	theme = war
+
+	override_background = {
+		reference = army_camp
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_partial
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.2001.a
+
+		add_stress = 10
+		add_martial_lifestyle_xp = 50
+	}
+
+	option = {
+		name = segrellion_icebringer.2001.b
+
+		add_gold = -5
+		add_stress = 2
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_tender_grip_modifier
+			days = 90
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 2002 - A PULSE IN THE STEEL
+# ---------------------------------------------------------
+
+segrellion_icebringer.2002 = {
+	type = character_event
+	title = segrellion_icebringer.2002.t
+	desc = segrellion_icebringer.2002.desc
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_partial
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.2002.a
+
+		add_learning_lifestyle_xp = 75
+		add_stress = 10
+	}
+
+	option = {
+		name = segrellion_icebringer.2002.b
+
+		add_stress = 5
+	}
+}
+
+
+# ---------------------------------------------------------
+# 2003 - A WARNING WITHOUT WORDS
+# ---------------------------------------------------------
+
+segrellion_icebringer.2003 = {
+	type = character_event
+	title = segrellion_icebringer.2003.t
+	desc = segrellion_icebringer.2003.desc
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_partial
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.2003.a
+
+		add_intrigue_lifestyle_xp = 50
+		add_stress = -5
+		add_prestige = -10
+	}
+
+	option = {
+		name = segrellion_icebringer.2003.b
+
+		add_stress = 10
+		add_prestige = 20
+	}
+}
+
+
+# ---------------------------------------------------------
+# 2004 - HALF A HEARTBEAT AHEAD
+# ---------------------------------------------------------
+
+segrellion_icebringer.2004 = {
+	type = character_event
+	title = segrellion_icebringer.2004.t
+	desc = segrellion_icebringer.2004.desc
+	theme = war
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_partial
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.2004.a
+
+		add_martial_lifestyle_xp = 100
+		add_stress = 5
+	}
+
+	option = {
+		name = segrellion_icebringer.2004.b
+
+		add_stress = 10
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_tender_grip_modifier
+			days = 120
+		}
+	}
+}
+
+
+
+# =========================================================
+# ACCEPTED EVENTS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 3001 - PERFECT BALANCE
+# ---------------------------------------------------------
+
+segrellion_icebringer.3001 = {
+	type = character_event
+	title = segrellion_icebringer.3001.t
+	desc = segrellion_icebringer.3001.desc
+	theme = war
+
+	override_background = {
+		reference = army_camp
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_accepted
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.3001.a
+
+		add_stress = -10
+		add_martial_lifestyle_xp = 75
+	}
+}
+
+
+# ---------------------------------------------------------
+# 3002 - THE WHISPER OF ICE
+# ---------------------------------------------------------
+
+segrellion_icebringer.3002 = {
+	type = character_event
+	title = segrellion_icebringer.3002.t
+	desc = segrellion_icebringer.3002.desc
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_accepted
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.3002.a
+
+		add_learning_lifestyle_xp = 75
+		add_stress = 5
+	}
+
+	option = {
+		name = segrellion_icebringer.3002.b
+
+		add_stress = -5
+		add_prestige = 25
+	}
+}
+
+
+# ---------------------------------------------------------
+# 3003 - BEFORE THE FALL
+# ---------------------------------------------------------
+
+segrellion_icebringer.3003 = {
+	type = character_event
+	title = segrellion_icebringer.3003.t
+	desc = segrellion_icebringer.3003.desc
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_accepted
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.3003.a
+
+		add_martial_lifestyle_xp = 100
+		add_prestige = 25
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_in_harmony_modifier
+			days = 180
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 3004 - A WHITE REFLECTION
+# ---------------------------------------------------------
+
+segrellion_icebringer.3004 = {
+	type = character_event
+	title = segrellion_icebringer.3004.t
+	desc = segrellion_icebringer.3004.desc
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	trigger = {
+		has_character_flag = segrellion_icebringer_state_accepted
+
+		any_equipped_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+	option = {
+		name = segrellion_icebringer.3004.a
+
+		add_learning_lifestyle_xp = 100
+		add_stress = 5
+	}
+
+	option = {
+		name = segrellion_icebringer.3004.b
+
+		add_stress = -5
+		add_prestige = 25
+	}
+}
+
+
+
+# =========================================================
+# FUTURE - AWAKENED ICEBRINGER
+# =========================================================
+#
+# segrellion_icebringer.4000+
+#
+# These events will only exist for the singular character
+# capable of awakening Icebringer.
+#
+# Blue-white flame.
+# Apparent independent movement.
+# Impossible reactions.
+# Enormous combat effects.
+#
+# This MUST NOT simply be affinity >= X.
+#
+# =========================================================
