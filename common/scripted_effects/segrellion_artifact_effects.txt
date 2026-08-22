@@ -1302,6 +1302,127 @@ segrellion_icebringer_vanish_forever_effect = {
 }
 
 # =========================================================
+# CREATE AWAKENED ICEBRINGER
+# =========================================================
+
+segrellion_create_artifact_awakened_icebringer_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 100
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 100
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+
+		name = segrellion_awakened_icebringer_name
+		description = segrellion_awakened_icebringer_desc
+
+		type = sword
+
+		visuals = segrellion_awakened_icebringer_visuals
+		template = segrellion_awakened_icebringer_template
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_awakened_icebringer_modifier
+
+		history = {
+			type = reforged
+			actor = scope:owner
+			recipient = scope:owner
+		}
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+
+	scope:newly_created_artifact = {
+
+		equip_artifact_to_owner_replace = yes
+
+		set_global_variable = {
+			name = segrellion_awakened_icebringer
+			value = this
+		}
+
+		set_variable = {
+			name = valyrian_steel
+			value = yes
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		set_variable = {
+			name = segrellion_awakened_icebringer_artifact
+			value = yes
+		}
+
+
+		# =================================================
+		# ICEBRINGER'S HISTORICAL LINE
+		# =================================================
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8061.1.1
+			RECIPIENT = character:Segrellion_4
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8106.4.18
+			RECIPIENT = character:Segrellion_1
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8139.4.18
+			RECIPIENT = character:Segrellion_12
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8168.6.13
+			RECIPIENT = character:Segrellion_19
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8174.9.17
+			RECIPIENT = character:Segrellion_21
+		}
+	}
+}
+
+
+# =========================================================
 # AWAKEN ICEBRINGER
 # =========================================================
 
@@ -1315,6 +1436,7 @@ segrellion_awaken_icebringer_effect = {
 
 	add_character_flag = segrellion_icebringer_awakening_succeeded
 	add_character_flag = segrellion_icebringer_awakened_bearer
+	add_character_flag = segrellion_icebringer_state_awakened
 
 	remove_character_flag = segrellion_icebringer_awakening_chain_active
 
@@ -1330,11 +1452,9 @@ segrellion_awaken_icebringer_effect = {
 	remove_character_flag = segrellion_icebringer_state_partial
 	remove_character_flag = segrellion_icebringer_state_accepted
 
-	add_character_flag = segrellion_icebringer_state_awakened
-
 
 	# =====================================================
-	# ONLY ONCE IN THE ENTIRE GAME
+	# ONLY ONE AWAKENING PER GAME
 	# =====================================================
 
 	set_global_variable = {
@@ -1344,22 +1464,29 @@ segrellion_awaken_icebringer_effect = {
 
 
 	# =====================================================
-	# AWAKEN THE SAME HISTORICAL ARTIFACT
+	# DESTROY DORMANT ICEBRINGER
 	# =====================================================
 
-	global_var:segrellion_icebringer = {
-
-		remove_artifact_modifier = segrellion_icebringer_modifier
-
-		add_artifact_modifier = segrellion_awakened_icebringer_modifier
-
-		set_artifact_name = segrellion_awakened_icebringer_name
-
-		set_artifact_description = segrellion_awakened_icebringer_desc
-
-		set_variable = {
-			name = segrellion_icebringer_awakened
-			value = yes
+	if = {
+		limit = {
+			exists = global_var:segrellion_icebringer
 		}
+
+		global_var:segrellion_icebringer = {
+			save_scope_as = dormant_icebringer
+		}
+
+		remove_global_variable = segrellion_icebringer
+
+		destroy_artifact = scope:dormant_icebringer
+	}
+
+
+	# =====================================================
+	# CREATE AWAKENED ICEBRINGER
+	# =====================================================
+
+	segrellion_create_artifact_awakened_icebringer_effect = {
+		OWNER = this
 	}
 }
