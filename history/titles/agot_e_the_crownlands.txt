@@ -3389,52 +3389,97 @@ b_kings_mountain = {
 		holder = Kings_Mountain_1
 	}
 }
+############################################
+# WHITE POINT
+# Capital holding: White Hall
+############################################
+
 c_winded_glade = {
-	185.1.1 = {
-		liege = d_masseys_hook
-	}
-	7890.1.1 = {
-		holder = Bentley_70
-	}
-	7919.1.1 = {
-		holder = Bentley_5
-	}
-	7930.1.1 = {
-		holder = Bentley_3
-	}
-	7983.1.1 = {
-		holder = Bentley_10
-	}
-	8004.1.1 = {
-		holder = Bentley_15
-	}
-	8052.1.1 = {
-		holder = Bentley_34
-	}
-	8078.1.1 = {
-		holder = Bentley_41
-	}
-	8096.1.1 = {
-		holder = Bentley_67
-	}
-	8124.1.1 = {
-		holder = Bentley_50
-	}
-	8152.1.1 = {
-		holder = Bentley_53
-	}
-	8178.1.1 = {
-		holder = Bentley_57
-	}
-	8214.1.1 = {
-		holder = Bentley_59
-	}
-	8250.1.1 = {
-		holder = Bentley_19
-	}
-	8288.1.1 = {
-		holder = Bentley_21
-	}
+
+    # Aeryn acquires White Point.
+    8144.1.28 = {
+        holder = Segrellion_12
+
+        # Directly subject to the Flamelands.
+        liege = k_flamelands
+
+        # De jure part of The Beacon.
+        de_jure_liege = d_wendwater_forest
+
+        effect = {
+            save_title_name_change_data = { TRANSFER_VAR = no }
+            set_title_name = segrellion_white_point_name
+
+            title:b_benthill_dale = {
+                save_title_name_change_data = { TRANSFER_VAR = no }
+                set_title_name = segrellion_white_hall_name
+            }
+        }
+    }
+
+    # Aeryn grants White Point to Rhaegar.
+    8164.1.1 = {
+        holder = Segrellion_18
+    }
+
+    # After the Flamelands Civil War.
+    8169.1.1 = {
+        holder = Segrellion_19
+    }
+
+    # Granted to Aegon Dragonspear.
+    8171.1.1 = {
+        holder = Segrellion_21
+    }
+
+    # Granted to Aemon.
+    8185.1.1 = {
+        holder = Segrellion_37
+    }
+
+    # Aemon dies. His son Baenor inherits.
+    8209.2.28 = {
+        holder = Segrellion_Baenor
+    }
+
+    # Baenor grants White Point to Maegor.
+    8275.1.1 = {
+        holder = Segrellion_39
+    }
+
+    # Maegor grants White Point to his son Alex.
+    8275.2.1 = {
+        holder = Segrellion_57
+    }
+
+    # BLACK MOON
+    # Eldon Stormflame usurps White Point.
+    8284.1.8 = {
+        liege = k_flamelands
+        de_jure_liege = d_wendwater_forest
+
+        effect = {
+            create_title_and_vassal_change = {
+                type = usurped
+                save_scope_as = stormflame_white_point_usurpation
+                add_claim_on_loss = yes
+            }
+
+            change_title_holder = {
+                holder = character:Segrellion_52
+                change = scope:stormflame_white_point_usurpation
+            }
+
+            title:b_benthill_dale = {
+                change_title_holder = {
+                    holder = character:Segrellion_52
+                    change = scope:stormflame_white_point_usurpation
+                }
+            }
+
+            resolve_title_and_vassal_change = scope:stormflame_white_point_usurpation
+        }
+    }
 }
 c_wisewood = {
 	185.1.1 = {

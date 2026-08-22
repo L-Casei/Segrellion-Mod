@@ -56,7 +56,58 @@ e_flamelands = {
     # Leo Stormflame seizes the Paramountcy.
     # Exact date within 284 AC is provisional.
     8284.1.8 = {
-        holder = Segrellion_36
+        effect = {
+            create_title_and_vassal_change = {
+                type = usurped
+                save_scope_as = stormflame_flamelands_usurpation
+                add_claim_on_loss = yes
+            }
+
+            # Transfer the paramountcy together with its existing vassal tree.
+            change_title_holder_include_vassals = {
+                holder = character:Segrellion_36
+                change = scope:stormflame_flamelands_usurpation
+            }
+
+            # Every title taken during the Black Moon belongs to the same
+            # usurpation transaction, so resolving it cannot split the realm.
+            title:k_flamelands = {
+                change_title_holder = {
+                    holder = character:Segrellion_36
+                    change = scope:stormflame_flamelands_usurpation
+                }
+            }
+
+            title:d_wendwater_forest = {
+                change_title_holder = {
+                    holder = character:Segrellion_36
+                    change = scope:stormflame_flamelands_usurpation
+                }
+            }
+
+            title:d_the_baywater_woods = {
+                change_title_holder = {
+                    holder = character:Segrellion_36
+                    change = scope:stormflame_flamelands_usurpation
+                }
+            }
+
+            title:c_farring_cross = {
+                change_title_holder = {
+                    holder = character:Segrellion_36
+                    change = scope:stormflame_flamelands_usurpation
+                }
+            }
+
+            title:b_castle_farring = {
+                change_title_holder = {
+                    holder = character:Segrellion_36
+                    change = scope:stormflame_flamelands_usurpation
+                }
+            }
+
+            resolve_title_and_vassal_change = scope:stormflame_flamelands_usurpation
+        }
     }
 }
 
@@ -121,7 +172,8 @@ k_flamelands = {
     # House Stormflame murders Maegor and most of his family and usurps the Flamelands.
     # Exact date within 284 AC is provisional.
     8284.1.8 = {
-        holder = Segrellion_36
+        liege = e_flamelands
+        de_jure_liege = e_flamelands
     }
 }
 
@@ -131,10 +183,17 @@ d_masseys_hook = {
         de_jure_liege = k_flamelands
     }
 
+    # Reassert the Flamelands hierarchy after the Black Moon.
+    8284.1.8 = {
+        liege = k_flamelands
+        de_jure_liege = k_flamelands
+    }
+
     # Keep Massey's Hook inside the Flamelands after AGOT's canonical
     # 298 AC dissolution entry for the Crownlands version of the title.
     8298.10.24 = {
         liege = k_flamelands
+        de_jure_liege = k_flamelands
     }
 }
 
@@ -176,12 +235,24 @@ d_wendwater_forest = {
 		}
 	}
 
+	# Override AGOT's later Wendwater succession.
+	8146.1.1 = {
+		holder = Segrellion_12
+	}
 
 	8168.6.13 = {
 		holder = Segrellion_19
 	}
 
 	8174.9.17 = {
+		holder = Segrellion_21
+	}
+
+	8179.1.1 = {
+		holder = Segrellion_21
+	}
+
+	8203.1.1 = {
 		holder = Segrellion_21
 	}
 
@@ -193,7 +264,19 @@ d_wendwater_forest = {
 		holder = Segrellion_25
 	}
 
+	8220.1.1 = {
+		holder = Segrellion_25
+	}
+
+	8236.5.22 = {
+		holder = Segrellion_25
+	}
+
 	8245.2.21 = {
+		holder = Segrellion_30
+	}
+
+	8258.1.1 = {
 		holder = Segrellion_30
 	}
 
@@ -201,8 +284,25 @@ d_wendwater_forest = {
 		holder = Segrellion_39
 	}
 
+	8270.1.1 = {
+		holder = Segrellion_39
+	}
+
 	8284.1.8 = {
+		liege = k_flamelands
+		de_jure_liege = k_flamelands
+	}
+
+	# Override AGOT's final Farring succession.
+	8296.1.1 = {
 		holder = Segrellion_36
+	}
+
+	# Keep The Beacon inside the Flamelands after AGOT dissolves its
+	# Crownlands hierarchy.
+	8298.10.24 = {
+		liege = k_flamelands
+		de_jure_liege = k_flamelands
 	}
 }
 
@@ -244,7 +344,8 @@ d_the_baywater_woods = {
     }
 
     8284.1.8 = {
-        holder = Segrellion_36
+        liege = k_flamelands
+        de_jure_liege = k_flamelands
     }
 }
 
@@ -270,24 +371,32 @@ d_vhalerion = {
         holder = Segrellion_21
     }
 
+    # Aegon Dragonspear disappears.
+    # Daeron initially succeeds to Vhalerion.
     8205.9.24 = {
         holder = Segrellion_23
     }
 
-    8209.9.24 = {
+    # Daeron grants Vhal to his younger brother Rhaegar.
+    8205.9.25 = {
         holder = Segrellion_25
     }
 
-    8245.2.21 = {
-        holder = Segrellion_30
+    # Rhaegar grants Vhal to Symon.
+    8240.1.1 = {
+        holder = Segrellion_34
     }
 
-    8258.4.8 = {
-        holder = Segrellion_39
+    # Symon dies. Hugh inherits Vhal.
+    8281.1.1 = {
+        holder = Segrellion_43
     }
 
+    # BLACK MOON
+    # Hugh retains Vhal as a vassal and de jure duke of the Flamelands.
     8284.1.8 = {
-        holder = Segrellion_36
+        liege = k_flamelands
+        de_jure_liege = k_flamelands
     }
 }
 
@@ -299,10 +408,20 @@ c_the_gauntlet = {
         liege = d_the_baywater_woods
         de_jure_liege = d_the_baywater_woods
     }
+
+    8284.1.8 = {
+        liege = d_the_baywater_woods
+        de_jure_liege = d_the_baywater_woods
+    }
 }
 
 c_brushmill = {
     8144.1.28 = {
+        liege = d_the_baywater_woods
+        de_jure_liege = d_the_baywater_woods
+    }
+
+    8284.1.8 = {
         liege = d_the_baywater_woods
         de_jure_liege = d_the_baywater_woods
     }
@@ -313,6 +432,11 @@ c_bywater = {
         liege = d_the_baywater_woods
         de_jure_liege = d_the_baywater_woods
     }
+
+    8284.1.8 = {
+        liege = d_the_baywater_woods
+        de_jure_liege = d_the_baywater_woods
+    }
 }
 
 c_greyhelm = {
@@ -320,9 +444,18 @@ c_greyhelm = {
         liege = d_the_baywater_woods
         de_jure_liege = d_the_baywater_woods
     }
+
+    8284.1.8 = {
+        liege = d_the_baywater_woods
+        de_jure_liege = d_the_baywater_woods
+    }
 }
 
 c_farring_cross = {
+
+    8120.1.1 = {
+        holder = Farring_50
+    }
 
 	# Aeryn establishes The Beacon
 	8144.1.28 = {
@@ -339,12 +472,24 @@ c_farring_cross = {
 		}
 	}
 
+	# Override AGOT's later Farring succession.
+	8151.1.1 = {
+		holder = Segrellion_12
+	}
 
 	8168.6.13 = {
 		holder = Segrellion_19
 	}
 
 	8174.9.17 = {
+		holder = Segrellion_21
+	}
+
+	8177.1.1 = {
+		holder = Segrellion_21
+	}
+
+	8191.1.1 = {
 		holder = Segrellion_21
 	}
 
@@ -356,7 +501,15 @@ c_farring_cross = {
 		holder = Segrellion_25
 	}
 
+	8226.1.1 = {
+		holder = Segrellion_25
+	}
+
 	8245.2.21 = {
+		holder = Segrellion_30
+	}
+
+	8258.1.1 = {
 		holder = Segrellion_30
 	}
 
@@ -364,8 +517,13 @@ c_farring_cross = {
 		holder = Segrellion_39
 	}
 
+	8270.1.1 = {
+		holder = Segrellion_39
+	}
+
 	8284.1.8 = {
-		holder = Segrellion_36
+		liege = d_wendwater_forest
+		de_jure_liege = d_wendwater_forest
 	}
 }
 
@@ -406,9 +564,6 @@ b_castle_farring = {
 		holder = Segrellion_39
 	}
 
-	8284.1.8 = {
-		holder = Segrellion_36
-	}
 }
 
 
@@ -457,36 +612,41 @@ c_blackmark = {
         holder = Segrellion_21
     }
 
+    # Aegon Dragonspear disappears.
     8205.9.24 = {
         holder = Segrellion_23
     }
 
-    8209.1.1 = {
-        holder = Segrellion_23
+    # Daeron grants Vhal to Rhaegar.
+    8205.9.25 = {
+        holder = Segrellion_25
     }
 
+    # Override original county history.
+    8209.1.1 = {
+        holder = Segrellion_25
+    }
+
+    # Daeron dies. Rhaegar already possesses Vhal.
     8209.9.24 = {
         holder = Segrellion_25
     }
 
+    # Rhaegar grants Vhal to Symon.
     8240.1.1 = {
-        holder = Segrellion_25
+        holder = Segrellion_34
     }
 
-    8245.2.21 = {
-        holder = Segrellion_30
+    # Symon dies and Hugh inherits.
+    8281.1.1 = {
+        holder = Segrellion_43
     }
 
-    8258.4.8 = {
-        holder = Segrellion_39
-    }
-
-    8269.1.1 = {
-        holder = Segrellion_39
-    }
-
+    # Black Moon does not affect ownership of Vhal.
     8284.1.8 = {
-        holder = Segrellion_36
+        holder = Segrellion_43
+        liege = d_vhalerion
+        de_jure_liege = d_vhalerion
     }
 }
 
@@ -518,20 +678,16 @@ b_berryport = {
         holder = Segrellion_23
     }
 
-    8209.9.24 = {
+    8205.9.25 = {
         holder = Segrellion_25
     }
 
-    8245.2.21 = {
-        holder = Segrellion_30
+    8240.1.1 = {
+        holder = Segrellion_34
     }
 
-    8258.4.8 = {
-        holder = Segrellion_39
-    }
-
-    8284.1.8 = {
-        holder = Segrellion_36
+    8281.1.1 = {
+        holder = Segrellion_43
     }
 }
 
@@ -543,7 +699,7 @@ b_berryport = {
 c_winded_glade = {
 
     # Aeryn acquires Winded Glade.
-    # Benthill Dale becomes known as White Hall.
+    # Benthill Dale becomes White Hall.
     8144.1.28 = {
         holder = Segrellion_12
         liege = d_wendwater_forest
@@ -551,12 +707,13 @@ c_winded_glade = {
 
         effect = {
             title:b_benthill_dale = {
+                save_title_name_change_data = { TRANSFER_VAR = no }
                 set_title_name = segrellion_white_hall_name
             }
         }
     }
 
-    # Override canonical Bentley succession.
+    # Override original Bentley succession.
     8152.1.1 = {
         holder = Segrellion_12
     }
@@ -566,7 +723,7 @@ c_winded_glade = {
         holder = Segrellion_18
     }
 
-    # Valerion receives White Hall after the civil war.
+    # Valerion receives it after the Flamelands Civil War.
     8169.1.1 = {
         holder = Segrellion_19
     }
@@ -576,7 +733,7 @@ c_winded_glade = {
         holder = Segrellion_21
     }
 
-    # Override canonical Bentley succession.
+    # Override original Bentley succession.
     8178.1.1 = {
         holder = Segrellion_21
     }
@@ -585,4 +742,84 @@ c_winded_glade = {
     8185.1.1 = {
         holder = Segrellion_37
     }
+
+    # Aemon dies. White Hall passes to his son Baenor.
+    8209.2.28 = {
+        holder = Segrellion_Baenor
+    }
+
+    # Override original Bentley succession.
+    8214.1.1 = {
+        holder = Segrellion_Baenor
+    }
+
+    # Override original Bentley succession.
+    8250.1.1 = {
+        holder = Segrellion_Baenor
+    }
+
+    # Baenor grants White Hall to Maegor.
+    # Exact day provisional.
+    8275.1.1 = {
+        holder = Segrellion_39
+    }
+
+    # Maegor grants White Hall to his son Alex.
+    # Exact day provisional.
+    8275.2.1 = {
+        holder = Segrellion_57
+    }
+
+    # THE BLACK MOON
+    # Eldon Stormflame seizes White Hall from Alex.
+    8284.1.8 = {
+        liege = k_flamelands
+        de_jure_liege = d_wendwater_forest
+    }
+
+    # Override AGOT's later Bentley succession.
+    8288.1.1 = {
+        holder = Segrellion_52
+    }
+}
+
+b_benthill_dale = {
+
+    8144.1.28 = {
+        holder = Segrellion_12
+
+        effect = {
+            save_title_name_change_data = { TRANSFER_VAR = no }
+            set_title_name = segrellion_white_hall_name
+        }
+    }
+
+    8164.1.1 = {
+        holder = Segrellion_18
+    }
+
+    8169.1.1 = {
+        holder = Segrellion_19
+    }
+
+    8171.1.1 = {
+        holder = Segrellion_21
+    }
+
+    8185.1.1 = {
+        holder = Segrellion_37
+    }
+
+    8209.2.28 = {
+        holder = Segrellion_Baenor
+    }
+
+    8275.1.1 = {
+        holder = Segrellion_39
+    }
+
+    8275.2.1 = {
+        holder = Segrellion_57
+    }
+
 }
