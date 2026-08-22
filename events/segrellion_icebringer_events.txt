@@ -665,3 +665,1207 @@ segrellion_icebringer.3004 = {
 # This MUST NOT simply be affinity >= X.
 #
 # =========================================================
+
+# =========================================================
+# TRY TO AWAKEN ICEBRINGER
+#
+# 5000s
+#
+# 5000 = The Door
+#
+# 5100 = White Door dispatcher
+# 5200 = Black Door dispatcher
+# 5300 = Red Door dispatcher
+#
+# =========================================================
+
+
+
+# =========================================================
+# 5000 - THE DOOR
+# =========================================================
+
+segrellion_icebringer.5000 = {
+	type = character_event
+
+	title = segrellion_icebringer.5000.t
+	desc = segrellion_icebringer.5000.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# ---------------------------------------------------------
+	# THE WHITE DOOR
+	# ---------------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.5000.a
+
+		trigger_event = {
+			id = segrellion_icebringer.5100
+			days = 1
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# THE BLACK DOOR
+	# Correct path.
+	# ---------------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.5000.b
+
+		trigger_event = {
+			id = segrellion_icebringer.5200
+			days = 1
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# THE RED DOOR
+	# ---------------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.5000.c
+
+		trigger_event = {
+			id = segrellion_icebringer.5300
+			days = 1
+		}
+	}
+}
+
+
+
+# =========================================================
+# WHITE DOOR
+# =========================================================
+
+segrellion_icebringer.5100 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			33 = {
+				trigger_event = segrellion_icebringer.5111
+			}
+
+			33 = {
+				trigger_event = segrellion_icebringer.5112
+			}
+
+			34 = {
+				trigger_event = segrellion_icebringer.5113
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# BLACK DOOR
+#
+# DAEMON SEGRELLION:
+# Always reaches the true event.
+#
+# EVERYONE ELSE:
+# Two false endings and one extremely rare true ending.
+# =========================================================
+
+segrellion_icebringer.5200 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+
+		# -----------------------------------------------------
+		# THE PROPHESIED GUARDIAN
+		#
+		# Daemon Segrellion always reaches the true path.
+		# -----------------------------------------------------
+
+		if = {
+			limit = {
+				has_trait = segrellion_canon_daemon_bastard_unicorn_modifier
+			}
+
+			trigger_event = segrellion_icebringer.5213
+		}
+
+
+		# -----------------------------------------------------
+		# EVERYONE ELSE
+		# -----------------------------------------------------
+
+		else = {
+
+			random_list = {
+
+
+				# ---------------------------------------------
+				# FALSE ENDING I
+				# ---------------------------------------------
+
+				100 = {
+					trigger_event = segrellion_icebringer.5211
+				}
+
+
+				# ---------------------------------------------
+				# FALSE ENDING II
+				# ---------------------------------------------
+
+				100 = {
+					trigger_event = segrellion_icebringer.5212
+				}
+
+
+				# ---------------------------------------------
+				# TRUE ENDING
+				#
+				# Base weight = 1
+				#
+				# Against 200 failure weight.
+				# Roughly 0.5% before modifiers.
+				# ---------------------------------------------
+
+				1 = {
+
+					# -----------------------------------------
+					# ERA
+					#
+					# The closer the world moves toward the
+					# prophetic age, the more willing the
+					# blade becomes to answer.
+					# -----------------------------------------
+
+					modifier = {
+						factor = 0.10
+
+						current_date < 8200.1.1
+					}
+
+					modifier = {
+						factor = 0.25
+
+						current_date >= 8200.1.1
+						current_date < 8250.1.1
+					}
+
+					modifier = {
+						factor = 0.50
+
+						current_date >= 8250.1.1
+						current_date < 8280.1.1
+					}
+
+					# 8280-8294:
+					# Base factor remains 1.
+
+					modifier = {
+						factor = 2.00
+
+						current_date >= 8295.1.1
+					}
+
+
+					# -----------------------------------------
+					# PERSONALITY
+					# -----------------------------------------
+
+					modifier = {
+						factor = 1.25
+						has_trait = brave
+					}
+
+					modifier = {
+						factor = 1.35
+						has_trait = honest
+					}
+
+					modifier = {
+						factor = 1.20
+						has_trait = just
+					}
+
+					modifier = {
+						factor = 1.10
+						has_trait = stubborn
+					}
+
+
+					# -----------------------------------------
+					# PROPHECY / SUPERNATURAL SENSITIVITY
+					# -----------------------------------------
+
+					modifier = {
+						factor = 1.50
+						has_trait = dragon_dreams
+					}
+
+
+					trigger_event = segrellion_icebringer.5213
+				}
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# RED DOOR
+# =========================================================
+
+segrellion_icebringer.5300 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			33 = {
+				trigger_event = segrellion_icebringer.5311
+			}
+
+			33 = {
+				trigger_event = segrellion_icebringer.5312
+			}
+
+			34 = {
+				trigger_event = segrellion_icebringer.5313
+			}
+		}
+	}
+}
+
+# =========================================================
+# WHITE DOOR ENDINGS
+# =========================================================
+
+
+segrellion_icebringer.5111 = {
+	type = character_event
+
+	title = segrellion_icebringer.5111.t
+	desc = segrellion_icebringer.5111.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.5111.a
+
+		add_stress = 25
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+segrellion_icebringer.5112 = {
+	type = character_event
+
+	title = segrellion_icebringer.5112.t
+	desc = segrellion_icebringer.5112.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.5112.a
+
+		add_stress = 20
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+segrellion_icebringer.5113 = {
+	type = character_event
+
+	title = segrellion_icebringer.5113.t
+	desc = segrellion_icebringer.5113.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5113.a
+
+		add_stress = 30
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+# =========================================================
+# BLACK DOOR ENDINGS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# FALSE ENDING I
+# ---------------------------------------------------------
+
+segrellion_icebringer.5211 = {
+	type = character_event
+
+	title = segrellion_icebringer.5211.t
+	desc = segrellion_icebringer.5211.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.5211.a
+
+		add_stress = 25
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# ---------------------------------------------------------
+# FALSE ENDING II
+# ---------------------------------------------------------
+
+segrellion_icebringer.5212 = {
+	type = character_event
+
+	title = segrellion_icebringer.5212.t
+	desc = segrellion_icebringer.5212.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = army_camp
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5212.a
+
+		add_stress = 30
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# ---------------------------------------------------------
+# TRUE ENDING
+#
+# NEXT STEP:
+# This will become the actual Awakening event.
+# For now it records that the player reached the
+# prophetic result correctly.
+# ---------------------------------------------------------
+
+# =========================================================
+# 5213 - SOMETHING OPENS ITS EYES
+#
+# Correct Black Door result.
+# This does NOT awaken Icebringer.
+# It opens the next stage of the dream.
+# =========================================================
+
+segrellion_icebringer.5213 = {
+	type = character_event
+
+	title = segrellion_icebringer.5213.t
+	desc = segrellion_icebringer.5213.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5213.a
+
+		add_character_flag = segrellion_icebringer_black_door_passed
+
+		trigger_event = {
+			id = segrellion_icebringer.5400
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# RED DOOR ENDINGS
+# =========================================================
+
+
+segrellion_icebringer.5311 = {
+	type = character_event
+
+	title = segrellion_icebringer.5311.t
+	desc = segrellion_icebringer.5311.desc
+
+	theme = war
+
+	override_background = {
+		reference = army_camp
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5311.a
+
+		add_stress = 30
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+segrellion_icebringer.5312 = {
+	type = character_event
+
+	title = segrellion_icebringer.5312.t
+	desc = segrellion_icebringer.5312.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.5312.a
+
+		add_stress = 20
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+segrellion_icebringer.5313 = {
+	type = character_event
+
+	title = segrellion_icebringer.5313.t
+	desc = segrellion_icebringer.5313.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5313.a
+
+		add_stress = 35
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+# =========================================================
+# 5400 - THE CORRIDOR
+# =========================================================
+
+segrellion_icebringer.5400 = {
+	type = character_event
+
+	title = segrellion_icebringer.5400.t
+	desc = segrellion_icebringer.5400.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# ---------------------------------------------------------
+	# SEA
+	# ---------------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.5400.a
+
+		trigger_event = {
+			id = segrellion_icebringer.5410
+			days = 1
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# FIELDS
+	# ---------------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.5400.b
+
+		trigger_event = {
+			id = segrellion_icebringer.5420
+			days = 1
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# SNOW
+	# Correct path.
+	# ---------------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.5400.c
+
+		trigger_event = {
+			id = segrellion_icebringer.5430
+			days = 1
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# NOTHING
+	# ---------------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.5400.d
+
+		trigger_event = {
+			id = segrellion_icebringer.5440
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# SEA CORRIDOR
+# =========================================================
+
+segrellion_icebringer.5410 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			8 = {
+				trigger_event = segrellion_icebringer.5411
+			}
+
+			46 = {
+				trigger_event = segrellion_icebringer.5412
+			}
+
+			46 = {
+				trigger_event = segrellion_icebringer.5413
+			}
+		}
+	}
+}
+
+segrellion_icebringer.5411 = {
+	type = character_event
+
+	title = segrellion_icebringer.5411.t
+	desc = segrellion_icebringer.5411.desc
+
+	theme = death
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5411.a
+
+		death = {
+			death_reason = death_drowned
+		}
+	}
+}
+
+segrellion_icebringer.5413 = {
+	type = character_event
+
+	title = segrellion_icebringer.5413.t
+	desc = segrellion_icebringer.5413.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = sick_stomach
+	}
+
+	option = {
+		name = segrellion_icebringer.5413.a
+
+		add_stress = 20
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_salt_sickness_modifier
+			years = 1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+# =========================================================
+# FIELD CORRIDOR
+# =========================================================
+
+segrellion_icebringer.5420 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			33 = {
+				trigger_event = segrellion_icebringer.5421
+			}
+
+			34 = {
+				trigger_event = segrellion_icebringer.5422
+			}
+
+			33 = {
+				trigger_event = segrellion_icebringer.5423
+			}
+		}
+	}
+}
+
+segrellion_icebringer.5421 = {
+	type = character_event
+
+	title = segrellion_icebringer.5421.t
+	desc = segrellion_icebringer.5421.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	option = {
+		name = segrellion_icebringer.5421.a
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_field_blessing_modifier
+			years = 3
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+segrellion_icebringer.5422 = {
+	type = character_event
+
+	title = segrellion_icebringer.5422.t
+	desc = segrellion_icebringer.5422.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_compassionate
+	}
+
+	option = {
+		name = segrellion_icebringer.5422.a
+
+		add_stress = -40
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+segrellion_icebringer.5423 = {
+	type = character_event
+
+	title = segrellion_icebringer.5423.t
+	desc = segrellion_icebringer.5423.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	option = {
+		name = segrellion_icebringer.5423.a
+
+		add_stress = -15
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_living_field_modifier
+			years = 2
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+# =========================================================
+# SNOW CORRIDOR
+#
+# Correct corridor.
+# =========================================================
+
+segrellion_icebringer.5430 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		# =====================================================
+		# DAEMON SEGRELLION
+		#
+		# The prophesied Guardian cannot fail this stage.
+		# =====================================================
+
+		if = {
+			limit = {
+				has_trait = segrellion_canon_daemon_bastard_unicorn_modifier
+			}
+
+			trigger_event = segrellion_icebringer.5434
+		}
+
+
+		# =====================================================
+		# EVERYONE ELSE
+		# =====================================================
+
+		else = {
+
+			random_list = {
+
+				33 = {
+					trigger_event = segrellion_icebringer.5431
+				}
+
+				33 = {
+					trigger_event = segrellion_icebringer.5432
+				}
+
+				33 = {
+					trigger_event = segrellion_icebringer.5433
+				}
+
+
+				# =================================================
+				# TRUE PATH
+				#
+				# Base: roughly 1%
+				# before date / personality modifiers.
+				# =================================================
+
+				1 = {
+
+					# ---------------------------------------------
+					# ERA
+					# ---------------------------------------------
+
+					modifier = {
+						factor = 0.25
+						current_date < 8200.1.1
+					}
+
+					modifier = {
+						factor = 0.50
+
+						current_date >= 8200.1.1
+						current_date < 8250.1.1
+					}
+
+					# 250-279 AC:
+					# factor remains 1.
+
+					modifier = {
+						factor = 1.50
+
+						current_date >= 8280.1.1
+						current_date < 8295.1.1
+					}
+
+					modifier = {
+						factor = 2.50
+						current_date >= 8295.1.1
+					}
+
+
+					# ---------------------------------------------
+					# PERSONALITY
+					# ---------------------------------------------
+
+					modifier = {
+						factor = 1.25
+						has_trait = brave
+					}
+
+					modifier = {
+						factor = 1.35
+						has_trait = honest
+					}
+
+					modifier = {
+						factor = 1.20
+						has_trait = just
+					}
+
+					modifier = {
+						factor = 1.10
+						has_trait = stubborn
+					}
+
+					modifier = {
+						factor = 1.50
+						has_trait = dragon_dreams
+					}
+
+
+					trigger_event = segrellion_icebringer.5434
+				}
+			}
+		}
+	}
+}
+
+segrellion_icebringer.5431 = {
+	type = character_event
+
+	title = segrellion_icebringer.5431.t
+	desc = segrellion_icebringer.5431.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = sick
+	}
+
+	option = {
+		name = segrellion_icebringer.5431.a
+
+		add_stress = 15
+
+		add_character_modifier = {
+			modifier = segrellion_icebringer_dream_frost_modifier
+			years = 1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+segrellion_icebringer.5432 = {
+	type = character_event
+
+	title = segrellion_icebringer.5432.t
+	desc = segrellion_icebringer.5432.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	option = {
+		name = segrellion_icebringer.5432.a
+
+		add_stress = -40
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+segrellion_icebringer.5433 = {
+	type = character_event
+
+	title = segrellion_icebringer.5433.t
+	desc = segrellion_icebringer.5433.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5433.a
+
+		agot_create_artifact_winter_rose_effect = {
+			OWNER = root
+		}
+
+		add_stress = -10
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+segrellion_icebringer.5434 = {
+	type = character_event
+
+	title = segrellion_icebringer.5434.t
+	desc = segrellion_icebringer.5434.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5434.a
+
+		add_character_flag = segrellion_icebringer_corridor_passed
+
+		# TEMPORARY.
+		# Next stage will replace this ending.
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+# =========================================================
+# THE VOID
+# =========================================================
+
+segrellion_icebringer.5440 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			50 = {
+				trigger_event = segrellion_icebringer.5441
+			}
+
+			30 = {
+				trigger_event = segrellion_icebringer.5442
+			}
+
+			20 = {
+				trigger_event = segrellion_icebringer.5443
+			}
+		}
+	}
+}
+
+segrellion_icebringer.5441 = {
+	type = character_event
+
+	title = segrellion_icebringer.5441.t
+	desc = segrellion_icebringer.5441.desc
+
+	theme = death
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5441.a
+
+		death = {
+			death_reason = death_segrellion_swallowed_by_nothing
+		}
+	}
+}
+
+segrellion_icebringer.5442 = {
+	type = character_event
+
+	title = segrellion_icebringer.5442.t
+	desc = segrellion_icebringer.5442.desc
+
+	theme = death
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = sick
+	}
+
+	option = {
+		name = segrellion_icebringer.5442.a
+
+		if = {
+			limit = {
+				can_contract_disease_trigger = {
+					DISEASE = typhus
+				}
+			}
+
+			contract_disease_effect = {
+				DISEASE = typhus
+				TREATMENT_EVENT = yes
+			}
+		}
+
+		else = {
+			add_stress = 60
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+segrellion_icebringer.5443 = {
+	type = character_event
+
+	title = segrellion_icebringer.5443.t
+	desc = segrellion_icebringer.5443.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.5443.a
+
+		add_stress = 60
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}

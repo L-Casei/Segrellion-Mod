@@ -441,26 +441,72 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 		reference = "gfx/interface/illustrations/decisions/awaken_icebringer_decision_background.dds"
 	}
 
+	decision_group_type = major
+
 	desc = segrellion_attempt_to_awaken_icebringer_decision_desc
 	selection_tooltip = segrellion_attempt_to_awaken_icebringer_decision_tooltip
 
-	is_shown = {
-		dynasty = dynasty:dynn_Segrellion
-	}
 
-	is_valid = {
-		custom_description = {
-			text = segrellion_decision_not_available_yet
-			always = no
+	# =========================================================
+	# VISIBILITY
+	#
+	# If you do not personally possess Icebringer,
+	# the decision does not exist for you.
+	# =========================================================
+
+	is_shown = {
+
+		any_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+
+		NOT = {
+			has_global_variable = segrellion_icebringer_has_awakened
+		}
+
+		NOT = {
+			has_character_flag = segrellion_icebringer_awakening_chain_active
+		}
+
+		NOT = {
+			has_character_flag = segrellion_icebringer_awakening_succeeded
 		}
 	}
 
-	effect = {
-		custom_tooltip = segrellion_awaken_icebringer_effect_tt
+
+	# =========================================================
+	# ONLY REQUIREMENT
+	# =========================================================
+
+	is_valid = {
+
+		custom_description = {
+			text = segrellion_icebringer_chosen_desc
+			segrellion_icebringer_chosen_trigger = yes
+		}
 	}
 
-	ai_potential = { always = no }
-	ai_will_do = { base = 0 }
+
+	effect = {
+
+		add_character_flag = segrellion_icebringer_awakening_chain_active
+
+		trigger_event = {
+			id = segrellion_icebringer.5000
+			days = 1
+		}
+	}
+
+
+	ai_check_interval = 0
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
 }
 
 segrellion_sentinels_path_decision = {
