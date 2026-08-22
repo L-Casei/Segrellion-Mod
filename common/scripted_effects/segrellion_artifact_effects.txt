@@ -1163,3 +1163,105 @@ segrellion_setup_historical_artifacts_effect = {
     segrellion_setup_throne_of_the_flamelands_history_effect = yes
     segrellion_setup_dragonspear_lance_history_effect = yes
 }
+
+# =========================================================
+# CROWN OF THE VOID
+# =========================================================
+
+segrellion_create_crown_of_void_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 10
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 10
+	}
+
+	create_artifact = {
+		name = segrellion_crown_of_void_name
+		description = segrellion_crown_of_void_desc
+
+		type = helmet
+
+		# Reuse AGOT's Valyrian crown model.
+		visuals = valyrian_crown1_visuals
+		template = valyrian_crown1_template
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_crown_of_void_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+		set_variable = {
+			name = segrellion_crown_of_void_artifact
+			value = yes
+		}
+	}
+}
+
+
+# =========================================================
+# WHITE DRAGON HORN
+# =========================================================
+
+segrellion_create_white_dragon_horn_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 80
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 80
+	}
+
+	create_artifact = {
+		name = segrellion_white_dragon_horn_name
+		description = segrellion_white_dragon_horn_desc
+
+		type = dragon_horn
+
+		visuals = dragon_horn
+		template = dragon_horn_template
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = dragon_horn_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+
+		set_variable = {
+			name = creator
+			value = scope:owner
+		}
+
+		set_variable = {
+			name = segrellion_white_dragon_horn_artifact
+			value = yes
+		}
+	}
+}
