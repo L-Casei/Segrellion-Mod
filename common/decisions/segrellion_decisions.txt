@@ -441,7 +441,9 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 		reference = "gfx/interface/illustrations/decisions/awaken_icebringer_decision_background.dds"
 	}
 
-	decision_group_type = major
+	cooldown = {
+		years = 1
+	}
 
 	desc = segrellion_attempt_to_awaken_icebringer_decision_desc
 	selection_tooltip = segrellion_attempt_to_awaken_icebringer_decision_tooltip
@@ -506,34 +508,98 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 	effect = {
 
-		# ---------------------------------------------------------
-		# WARNING SHOWN IN THE DECISION WINDOW
-		# ---------------------------------------------------------
+	# =========================================================
+	# WARNING
+	# =========================================================
 
-		custom_tooltip = segrellion_awaken_icebringer_danger_tt
+	custom_tooltip = segrellion_awaken_icebringer_danger_tt
 
 
-		# ---------------------------------------------------------
-		# THE CHARACTER CROSSES THE WAKING VEIL
-		# ---------------------------------------------------------
+	# =========================================================
+	# CROSS THE WAKING VEIL
+	# =========================================================
 
-		add_character_modifier = {
-			modifier = segrellion_beyond_waking_veil_modifier
-			days = 30
+	add_character_modifier = {
+		modifier = segrellion_beyond_waking_veil_modifier
+		days = 30
+	}
+
+
+	# =========================================================
+	# BEGIN / RESUME THE DREAM
+	# =========================================================
+
+	add_character_flag = segrellion_icebringer_awakening_chain_active
+
+
+	# ---------------------------------------------------------
+	# STAGE III COMPLETED
+	#
+	# Once Stage IV exists, resume there.
+	# ---------------------------------------------------------
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_choice_passed
 		}
 
+		trigger_event = {
+			id = segrellion_icebringer.5600
+			days = 1
+		}
+	}
 
-		# ---------------------------------------------------------
-		# BEGIN THE DREAM
-		# ---------------------------------------------------------
 
-		add_character_flag = segrellion_icebringer_awakening_chain_active
+	# ---------------------------------------------------------
+	# STAGE II COMPLETED
+	#
+	# Resume at III - The Choice
+	# ---------------------------------------------------------
+
+	else_if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_corridor_passed
+		}
+
+		trigger_event = {
+			id = segrellion_icebringer.5500
+			days = 1
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# STAGE I COMPLETED
+	#
+	# Resume at II - The Corridor
+	# ---------------------------------------------------------
+
+	else_if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_black_door_passed
+		}
+
+		trigger_event = {
+			id = segrellion_icebringer.5400
+			days = 1
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# NO PROGRESS
+	#
+	# Begin at I - The Door
+	# ---------------------------------------------------------
+
+	else = {
 
 		trigger_event = {
 			id = segrellion_icebringer.5000
 			days = 1
 		}
 	}
+}
 
 
 	ai_check_interval = 0
