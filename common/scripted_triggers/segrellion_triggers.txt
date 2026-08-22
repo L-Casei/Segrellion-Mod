@@ -29,29 +29,134 @@ segrellion_has_education_level_three_trigger = {
 	}
 }
 
-segrellion_icebringer_chosen_trigger = {
+# =========================================================
+# ICEBRINGER
+# =========================================================
+
+
+# ---------------------------------------------------------
+# CANON BEARERS
+#
+# These characters are known in canon to be capable of
+# carrying Icebringer without being rejected.
+# ---------------------------------------------------------
+
+segrellion_icebringer_canon_bearer_trigger = {
 	OR = {
-		dynasty = dynasty:dynn_Segrellion
-		any_ancestor = { dynasty = dynasty:dynn_Segrellion }
-		has_character_flag = segrellion_icebringer_authorized
+		this = character:Segrellion_1       # Alex
+		this = character:Vladwyn_1          # Tristan Vladwyn
+		this = character:Segrellion_19      # Valerion
+		this = character:Segrellion_21      # Aegon Dragonspear
+
+		has_trait = segrellion_canon_alex_modifier
+		has_trait = vladwyn_canon_tristan_modifier
+		has_trait = segrellion_canon_valerion_modifier
+		has_trait = segrellion_canon_aegon_dragonspear_modifier
+
+		# Aegon Reborn may be generated through Canon Children,
+		# so his canon identity trait is safer than a fixed ID.
+		has_trait = segrellion_canon_aegon_reborn_modifier
 	}
-	prowess_no_portrait >= 12
-	segrellion_icebringer_affinity_value >= 8
 }
+
+
+# ---------------------------------------------------------
+# CANON REJECTIONS
+#
+# Aeryn canonically cannot wield Icebringer without being
+# burned by the blade.
+# ---------------------------------------------------------
+
+segrellion_icebringer_canon_rejected_trigger = {
+	OR = {
+		this = character:Segrellion_12
+		has_trait = segrellion_canon_aeryn_modifier
+	}
+}
+
+
+# ---------------------------------------------------------
+# FULL ACCEPTANCE
+# ---------------------------------------------------------
+
+segrellion_icebringer_accepted_trigger = {
+	NOR = {
+		segrellion_icebringer_canon_rejected_trigger = yes
+	}
+
+	OR = {
+		segrellion_icebringer_canon_bearer_trigger = yes
+
+		segrellion_icebringer_affinity_value >= 8
+	}
+}
+
+
+# ---------------------------------------------------------
+# PARTIAL ACCEPTANCE
+#
+# The bearer receives Icebringer's full artifact bonuses,
+# but the blade remains uncomfortable and unpredictable.
+# ---------------------------------------------------------
+
+segrellion_icebringer_partial_trigger = {
+	NOR = {
+		segrellion_icebringer_canon_bearer_trigger = yes
+		segrellion_icebringer_canon_rejected_trigger = yes
+	}
+
+	segrellion_icebringer_affinity_value >= 4
+	segrellion_icebringer_affinity_value < 8
+}
+
+
+# ---------------------------------------------------------
+# REJECTION
+# ---------------------------------------------------------
 
 segrellion_icebringer_rejected_trigger = {
 	OR = {
-		NOT = {
-			OR = {
-				dynasty = dynasty:dynn_Segrellion
-				any_ancestor = { dynasty = dynasty:dynn_Segrellion }
-				has_character_flag = segrellion_icebringer_authorized
+		segrellion_icebringer_canon_rejected_trigger = yes
+
+		AND = {
+			NOT = {
+				segrellion_icebringer_canon_bearer_trigger = yes
 			}
+
+			segrellion_icebringer_affinity_value < 4
 		}
-		prowess_no_portrait < 12
-		segrellion_icebringer_affinity_value <= 0
 	}
 }
+
+
+# ---------------------------------------------------------
+# GAMEPLAY "CHOSEN"
+#
+# Both partial and complete acceptance unlock the full
+# artifact modifier.
+# ---------------------------------------------------------
+
+segrellion_icebringer_chosen_trigger = {
+	OR = {
+		segrellion_icebringer_partial_trigger = yes
+		segrellion_icebringer_accepted_trigger = yes
+	}
+}
+
+
+# =========================================================
+# FUTURE: AWAKENED ICEBRINGER
+#
+# This is deliberately NOT implemented yet.
+#
+# segrellion_icebringer_awakened_trigger = {
+#     has_character_flag = segrellion_icebringer_awakened
+# }
+#
+# This state will represent the singular bearer capable of
+# awakening Icebringer's blue-white flame and apparent will.
+# It must NOT simply be a higher affinity threshold.
+# =========================================================
 
 segrellion_valyrian_culture_trigger = {
 	culture = {

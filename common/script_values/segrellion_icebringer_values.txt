@@ -1,53 +1,206 @@
 segrellion_icebringer_affinity_value = {
 	value = 0
 
-	# Blood grants a strong claim, while explicit authorization lets an outsider be judged.
+	# =========================================================
+	# BLOOD
+	# Being a Segrellion helps, but it is far from enough.
+	# =========================================================
+
 	if = {
 		limit = {
-			OR = {
-				dynasty = dynasty:dynn_Segrellion
-				any_ancestor = { dynasty = dynasty:dynn_Segrellion }
-				has_character_flag = segrellion_icebringer_authorized
-			}
+			dynasty = dynasty:dynn_Segrellion
 		}
-		add = 5
+		add = 3
 	}
-	if = { limit = { has_trait = brave } add = 2 }
-	if = { limit = { has_trait = just } add = 2 }
-	if = { limit = { has_trait = honest } add = 2 }
-	if = { limit = { has_trait = loyal } add = 2 }
-	if = { limit = { ai_honor >= 50 } add = 2 }
-	if = { limit = { prowess_no_portrait >= 20 } add = 2 }
-	if = { limit = { has_trait = dragonrider } add = 1 }
-	if = { limit = { agot_has_dragonblood_heritage = yes } add = 1 }
-	if = { limit = { has_trait = dragon_dreams } add = 2 }
 
-	# Narrative events can award these flags as the bearer proves their character.
-	if = { limit = { has_character_flag = segrellion_icebringer_saved_charge } add = 3 }
-	if = { limit = { has_character_flag = segrellion_icebringer_kept_oath } add = 3 }
-	if = { limit = { has_character_flag = segrellion_icebringer_spared_enemy } add = 2 }
-	if = { limit = { has_character_flag = segrellion_icebringer_refused_reward } add = 2 }
-	if = { limit = { has_character_flag = segrellion_icebringer_survived_magic } add = 2 }
-	if = { limit = { has_character_flag = segrellion_icebringer_guardian_touched } add = 2 }
 
-	if = { limit = { has_trait = craven } add = -5 }
-	if = { limit = { has_trait = deceitful } add = -3 }
-	if = { limit = { has_trait = arbitrary } add = -3 }
-	if = { limit = { has_trait = disloyal } add = -3 }
-	if = { limit = { ai_honor <= -50 } add = -2 }
-	if = { limit = { has_trait = sadistic } add = -4 }
+	# =========================================================
+	# CHARACTER
+	# Icebringer responds to truth of purpose, resolve,
+	# courage and consistency rather than simple morality.
+	# =========================================================
+
+	if = {
+		limit = { has_trait = brave }
+		add = 1
+	}
+
+	if = {
+		limit = { has_trait = honest }
+		add = 1
+	}
+
+	if = {
+		limit = { has_trait = just }
+		add = 1
+	}
+
+	if = {
+		limit = { has_trait = diligent }
+		add = 1
+	}
+
+	if = {
+		limit = { has_trait = stubborn }
+		add = 1
+	}
+
+	if = {
+		limit = { has_trait = loyal }
+		add = 1
+	}
+
+
+	# =========================================================
+	# NEGATIVE CHARACTER TRAITS
+	# =========================================================
+
+	if = {
+		limit = { has_trait = craven }
+		add = -1
+	}
+
+	if = {
+		limit = { has_trait = deceitful }
+		add = -1
+	}
+
+	if = {
+		limit = { has_trait = arbitrary }
+		add = -1
+	}
+
+	if = {
+		limit = { has_trait = lazy }
+		add = -1
+	}
+
+	if = {
+		limit = { has_trait = fickle }
+		add = -2
+	}
+
+	if = {
+		limit = { has_trait = disloyal }
+		add = -1
+	}
+
+
+	# =========================================================
+	# ABILITY TO WIELD THE BLADE
+	# Prowess helps, but cannot make Icebringer accept someone.
+	# =========================================================
+
 	if = {
 		limit = {
-			OR = {
-				has_trait = kinslayer_1
-				has_trait = kinslayer_2
-				has_trait = kinslayer_3
-			}
+			prowess_no_portrait >= 25
 		}
-		add = -8
+		add = 1
 	}
-	if = { limit = { tyranny >= medium_tyranny } add = -4 }
-	if = { limit = { has_character_flag = segrellion_icebringer_stolen } add = -10 }
-	if = { limit = { has_character_flag = segrellion_icebringer_betrayed_house } add = -6 }
-	if = { limit = { has_character_flag = segrellion_icebringer_killed_previous_bearer } add = -10 }
+
+	if = {
+		limit = {
+			prowess_no_portrait >= 35
+		}
+		add = 2
+	}
+
+	if = {
+		limit = {
+			has_trait = lifestyle_blademaster
+		}
+		add = 1
+	}
+
+
+	# =========================================================
+	# DEEDS
+	# These flags are awarded by narrative events.
+	# They will become increasingly important as we add
+	# Icebringer's moral / purpose events.
+	# =========================================================
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_kept_oath
+		}
+		add = 2
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_refused_reward
+		}
+		add = 1
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_saved_charge
+		}
+		add = 1
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_spared_enemy
+		}
+		add = 1
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_survived_magic
+		}
+		add = 1
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_guardian_touched
+		}
+		add = 1
+	}
+
+
+	# =========================================================
+	# DEEDS AGAINST ONE'S DECLARED NATURE / PURPOSE
+	# =========================================================
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_betrayed_house
+		}
+		add = -3
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_broke_oath
+		}
+		add = -3
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_betrayed_declared_purpose
+		}
+		add = -4
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_lied_for_gain
+		}
+		add = -1
+	}
+
+
+	# =========================================================
+	# FUTURE:
+	#
+	# Awakened Icebringer will NOT be determined by this score.
+	# It will be a unique narrative condition for a single
+	# chosen bearer.
+	# =========================================================
 }

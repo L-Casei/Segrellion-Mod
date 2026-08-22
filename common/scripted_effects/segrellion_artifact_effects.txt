@@ -95,20 +95,165 @@ segrellion_find_icebringer_effect = {
 
 segrellion_refresh_icebringer_affinity_effect = {
 	segrellion_find_icebringer_effect = yes
+
 	global_var:segrellion_icebringer ?= {
 		artifact_owner ?= {
-			remove_character_modifier = segrellion_icebringer_rejection_modifier
+
+			# -------------------------------------------------
+			# Clear previous state
+			# -------------------------------------------------
+
+			remove_character_flag = segrellion_icebringer_state_rejected
+			remove_character_flag = segrellion_icebringer_state_partial
+			remove_character_flag = segrellion_icebringer_state_accepted
+
+
+			# -------------------------------------------------
+			# Determine current relationship with the blade
+			# -------------------------------------------------
+
 			if = {
 				limit = {
+					segrellion_icebringer_accepted_trigger = yes
+				}
+
+				add_character_flag = segrellion_icebringer_state_accepted
+			}
+
+			else_if = {
+				limit = {
+					segrellion_icebringer_partial_trigger = yes
+				}
+
+				add_character_flag = segrellion_icebringer_state_partial
+			}
+
+			else = {
+				add_character_flag = segrellion_icebringer_state_rejected
+			}
+
+
+			# -------------------------------------------------
+			# Rejection penalty only matters while equipped
+			# -------------------------------------------------
+
+			if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_state_rejected
+
 					any_equipped_character_artifact = {
 						has_variable = segrellion_icebringer_artifact
 					}
-					segrellion_icebringer_rejected_trigger = yes
 				}
-				add_character_modifier = {
-					modifier = segrellion_icebringer_rejection_modifier
-					days = 40
+
+				if = {
+					limit = {
+						NOT = {
+							has_character_modifier = segrellion_icebringer_rejection_modifier
+						}
+					}
+
+					add_character_modifier = {
+						modifier = segrellion_icebringer_rejection_modifier
+					}
 				}
+			}
+
+			else = {
+				remove_character_modifier = segrellion_icebringer_rejection_modifier
+			}
+		}
+	}
+}
+
+# =========================================================
+# ICEBRINGER CARRIER EVENT PULSE
+# =========================================================
+
+segrellion_icebringer_monthly_event_pulse_effect = {
+	segrellion_find_icebringer_effect = yes
+
+	global_var:segrellion_icebringer ?= {
+		artifact_owner ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					any_equipped_character_artifact = {
+						has_variable = segrellion_icebringer_artifact
+					}
+				}
+
+				# Keep the state up to date.
+				segrellion_refresh_icebringer_affinity_effect = yes
+
+
+				# ---------------------------------------------
+				# REJECTED
+				# Roughly 1.2 events/year on average.
+				# ---------------------------------------------
+
+				if = {
+					limit = {
+						has_character_flag = segrellion_icebringer_state_rejected
+					}
+
+					random = {
+						chance = 10
+
+						trigger_event = {
+							id = segrellion_icebringer.0001
+							days = 1
+						}
+					}
+				}
+
+
+				# ---------------------------------------------
+				# PARTIAL
+				# Roughly 0.8 events/year.
+				# ---------------------------------------------
+
+				else_if = {
+					limit = {
+						has_character_flag = segrellion_icebringer_state_partial
+					}
+
+					random = {
+						chance = 7
+
+						trigger_event = {
+							id = segrellion_icebringer.0002
+							days = 1
+						}
+					}
+				}
+
+
+				# ---------------------------------------------
+				# ACCEPTED
+				# Roughly 0.6 events/year.
+				# ---------------------------------------------
+
+				else_if = {
+					limit = {
+						has_character_flag = segrellion_icebringer_state_accepted
+					}
+
+					random = {
+						chance = 5
+
+						trigger_event = {
+							id = segrellion_icebringer.0003
+							days = 1
+						}
+					}
+				}
+			}
+
+			else = {
+				remove_character_modifier = segrellion_icebringer_rejection_modifier
 			}
 		}
 	}
