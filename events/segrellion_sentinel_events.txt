@@ -1,78 +1,157 @@
 namespace = segrellion_sentinel
 
 segrellion_sentinel.0001 = {
-	type = character_event
-	title = segrellion_sentinel.0001.t
-	desc = segrellion_sentinel.0001.desc
-	theme = realm
+    type = character_event
 
-	override_background = { reference = corridor_night }
+    title = segrellion_sentinel.0001.t
+    desc = segrellion_sentinel.0001.desc
+    theme = travel
 
-	left_portrait = {
-		character = scope:tristan
-		animation = thinking
-	}
+    override_background = {
+        reference = wilderness
+    }
 
-	trigger = {
-		this = character:Segrellion_1
-		NOT = { has_character_flag = segrellion_sentinels_path_resolved }
-		character:Vladwyn_1 ?= {
-			is_alive = yes
-			is_adult = yes
-		}
-	}
+    left_portrait = {
+        character = root
+        animation = thinking
+    }
 
-	immediate = {
-		character:Vladwyn_1 = { save_scope_as = tristan }
-		add_character_flag = segrellion_sentinels_path_resolved
-	}
+    right_portrait = {
+        character = character:Segrellion_1
+        animation = personality_honorable
+    }
 
-	option = {
-		name = segrellion_sentinel.0001.a
-		custom_tooltip = segrellion_sentinel.0001.a.best_friend_tt
-		custom_tooltip = segrellion_sentinel.0001.a.kingsguard_tt
-		custom_tooltip = segrellion_sentinel.0001.a.sword_tt
+    trigger = {
+        this = character:Vladwyn_1
+        game_start_date = 8106.4.18
 
-		if = {
-			limit = {
-				NOT = { has_relation_best_friend = scope:tristan }
-			}
-			set_relation_best_friend = {
-				target = scope:tristan
-				reason = best_friend_childhood_oath
-				copy_reason = friend
-			}
-		}
+        NOT = {
+            has_character_flag = vladwyn_sentinels_path_resolved
+        }
 
-		scope:tristan = {
-			add_trait = refusing_marriage
-			add_character_flag = kingsguard_ambition
-			add_character_modifier = training_for_kingsguard
-			segrellion_create_artifact_sword_of_the_sentinel_effect = { OWNER = this }
-		}
-	}
+        character:Segrellion_1 ?= {
+            is_alive = yes
+        }
+    }
 
-	option = {
-		name = segrellion_sentinel.0001.b
-		trigger = {
-			has_dlc_feature = roads_to_power
-			has_multiple_players = no
-		}
-		custom_tooltip = segrellion_sentinel.0001.b.tt
+    immediate = {
+        add_character_flag = vladwyn_sentinels_path_resolved
+        remove_character_flag = vladwyn_sentinels_path_queued
 
-		hidden_effect = {
-			scope:tristan = {
-				add_character_flag = vladwyn_landless_route_unlocked
-				create_landless_adventurer_title_effect = {
-					REASON = flag:voluntary
-					FLAVOR_CHAR = root
-				}
-			}
-		}
-		add_internal_flag = special
-		set_player_character = scope:tristan
-		scope:tristan = {
-			create_landless_adventurer_title_tooltip_effect = yes
-		}
-	}
+        character:Segrellion_1 = {
+            save_scope_as = alex
+        }
+    }
+
+    # =========================================================
+    # PATH A:
+    # TRISTAN CHOOSES FREEDOM
+    # =========================================================
+
+    option = {
+        name = segrellion_sentinel.0001.a
+
+        custom_tooltip = segrellion_sentinel.0001.a.tt
+
+        add_character_flag = vladwyn_landless_route_unlocked
+        add_character_flag = vladwyn_open_road_taken
+        add_character_flag = vladwyn_adventurer_events_unlocked
+
+        # Rename his company/camp as in the existing
+        # Open Road event.
+        primary_title ?= {
+            save_title_name_change_data = {
+                TRANSFER_VAR = yes
+            }
+
+            reset_title_prefix = yes
+            set_title_name = vladwyn_the_honorables_name
+        }
+
+        add_prestige = 200
+        add_martial_lifestyle_xp = 250
+
+        add_character_modifier = {
+            modifier = vladwyn_wandering_knight_modifier
+            years = 8
+        }
+    }
+
+    # =========================================================
+    # PATH B:
+    # ALEX, THE WHITE CLOAK AND THE CANON PATH
+    # =========================================================
+
+    option = {
+        name = segrellion_sentinel.0001.b
+
+        trigger = {
+            has_multiple_players = no
+        }
+
+        custom_tooltip = segrellion_sentinel.0001.b.best_friend_tt
+        custom_tooltip = segrellion_sentinel.0001.b.kingsguard_tt
+        custom_tooltip = segrellion_sentinel.0001.b.sword_tt
+        custom_tooltip = segrellion_sentinel.0001.b.switch_tt
+
+        # -----------------------------------------------
+        # Alex and Tristan become best friends
+        # -----------------------------------------------
+
+        if = {
+            limit = {
+                NOT = {
+                    has_relation_best_friend = scope:alex
+                }
+            }
+
+            set_relation_best_friend = {
+                target = scope:alex
+                reason = best_friend_childhood_oath
+                copy_reason = friend
+            }
+        }
+
+        # -----------------------------------------------
+        # Tristan commits himself to the Kingsguard path
+        # -----------------------------------------------
+
+        add_trait = refusing_marriage
+        add_character_flag = kingsguard_ambition
+
+        add_character_modifier = {
+            modifier = training_for_kingsguard
+        }
+
+        segrellion_create_artifact_sword_of_the_sentinel_effect = {
+            OWNER = this
+        }
+
+        # Save the camp before switching player.
+        primary_title ?= {
+            save_scope_as = tristan_old_camp
+        }
+
+        # Important:
+        # Switch player BEFORE destroying Tristan's title,
+        # otherwise CK3 may interpret it as the player
+        # losing their last playable title.
+        add_internal_flag = special
+        set_player_character = scope:alex
+
+        hidden_effect = {
+
+            # Dissolve Tristan's adventurer company/camp.
+            if = {
+                limit = {
+                    exists = scope:tristan_old_camp
+                }
+
+                destroy_title = scope:tristan_old_camp
+            }
+
+            # Tristan now joins Alex's court.
+            set_employer = scope:alex
+        }
+    }
 }

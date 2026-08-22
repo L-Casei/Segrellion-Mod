@@ -25,10 +25,11 @@ monthly_global_pulse = {
 }
 
 on_game_start_after_lobby = {
-	on_actions = {
-		segrellion_on_game_start_after_lobby
-		iaf_canon_children_on_game_start_after_lobby
-	}
+    on_actions = {
+        segrellion_on_game_start_after_lobby
+        iaf_canon_children_on_game_start_after_lobby
+        vladwyn_8106_startup
+    }
 }
 
 on_player_select_destiny_confirmed = {
@@ -550,4 +551,44 @@ segrellion_refresh_firstflame_dynasty_bonus = {
 			}
 		}
 	}
+}
+
+vladwyn_8106_startup = {
+    effect = {
+        every_player = {
+            limit = {
+                this = character:Vladwyn_1
+                game_start_date = 8106.4.18
+                NOT = { has_character_flag = vladwyn_sentinels_path_resolved }
+                NOT = { has_character_flag = vladwyn_sentinels_path_queued }
+            }
+
+            # -------------------------------------------------
+            # FAILSAFE:
+            # Tristan MUST begin as a Landless Adventurer.
+            # If AGOT/startup has reduced him to a courtier,
+            # remove him from that court and rebuild his camp.
+            # -------------------------------------------------
+            if = {
+                limit = {
+                    has_dlc_feature = roads_to_power
+                    NOT = { is_landless_adventurer = yes }
+                }
+
+                move_to_pool = yes
+
+                create_landless_adventurer_title_effect = {
+                    REASON = flag:historical
+                    FLAVOR_CHAR = this
+                }
+            }
+
+            add_character_flag = vladwyn_sentinels_path_queued
+
+            trigger_event = {
+                id = segrellion_sentinel.0001
+                days = 1
+            }
+        }
+    }
 }

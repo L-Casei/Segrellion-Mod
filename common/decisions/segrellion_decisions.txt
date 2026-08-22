@@ -475,10 +475,27 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 
 	# =========================================================
-	# ONLY REQUIREMENT
+	# ONLY REQUIREMENTS
 	# =========================================================
 
 	is_valid = {
+
+		# ---------------------------------------------------------
+		# YOU PERSONALLY HOLD ICEBRINGER
+		# ---------------------------------------------------------
+
+		custom_description = {
+			text = segrellion_icebringer_holder_requirement
+
+			global_var:segrellion_icebringer = {
+				artifact_owner = root
+			}
+		}
+
+
+		# ---------------------------------------------------------
+		# ICEBRINGER HAS CHOSEN YOU
+		# ---------------------------------------------------------
 
 		custom_description = {
 			text = segrellion_icebringer_chosen_desc
@@ -488,6 +505,27 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 
 	effect = {
+
+		# ---------------------------------------------------------
+		# WARNING SHOWN IN THE DECISION WINDOW
+		# ---------------------------------------------------------
+
+		custom_tooltip = segrellion_awaken_icebringer_danger_tt
+
+
+		# ---------------------------------------------------------
+		# THE CHARACTER CROSSES THE WAKING VEIL
+		# ---------------------------------------------------------
+
+		add_character_modifier = {
+			modifier = segrellion_beyond_waking_veil_modifier
+			days = 30
+		}
+
+
+		# ---------------------------------------------------------
+		# BEGIN THE DREAM
+		# ---------------------------------------------------------
 
 		add_character_flag = segrellion_icebringer_awakening_chain_active
 
@@ -507,41 +545,4 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 	ai_will_do = {
 		base = 0
 	}
-}
-
-segrellion_sentinels_path_decision = {
-	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_knight_kneeling.dds"
-	}
-	decision_group_type = major
-
-	desc = segrellion_sentinels_path_decision_desc
-	selection_tooltip = segrellion_sentinels_path_decision_tooltip
-
-	is_shown = {
-		this = character:Segrellion_1
-		NOT = { has_character_flag = segrellion_sentinels_path_resolved }
-		character:Vladwyn_1 ?= {
-			is_alive = yes
-		}
-	}
-
-	is_valid = {
-		is_imprisoned = no
-		is_adult = yes
-		character:Vladwyn_1 = {
-			is_alive = yes
-			is_adult = yes
-			is_imprisoned = no
-			is_courtier_of = root
-		}
-	}
-
-	effect = {
-		custom_tooltip = segrellion_sentinels_path_effect_tt
-		trigger_event = segrellion_sentinel.0001
-	}
-
-	ai_potential = { always = no }
-	ai_will_do = { base = 0 }
 }
