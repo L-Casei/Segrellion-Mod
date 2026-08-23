@@ -2,17 +2,12 @@ namespace = segrellion_relic
 
 
 # =========================================================
-# SEARCH FOR A LEGENDARY RELIC
-#
-# 0000s - Beginning of the search
-# =========================================================
-
-
-# =========================================================
-# 0001 - THE FIRST THREAD
+# 0001 - WHERE DID DRAGONSPEAR GO?
+# Route selection directly from the decision.
 # =========================================================
 
 segrellion_relic.0001 = {
+
 	type = character_event
 
 	title = segrellion_relic.0001.t
@@ -21,7 +16,97 @@ segrellion_relic.0001 = {
 	theme = travel
 
 	override_background = {
-		reference = segrellion_vhalerion_bedchamber
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	# ---------------------------------------------------------
+	# TYROSH
+	# ---------------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.0001.a
+		custom_tooltip = segrellion_relic.0001.a.tt
+
+		add_character_flag = segrellion_relic_route_tyrosh
+
+		start_travel_plan = {
+
+			destination = title:c_tyrosh.capital_province
+
+			on_arrival_event = segrellion_relic.1000
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# OLDTOWN
+	# ---------------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.0001.b
+		custom_tooltip = segrellion_relic.0001.b.tt
+
+		add_character_flag = segrellion_relic_route_oldtown
+
+		start_travel_plan = {
+
+			destination = title:c_oldtown.capital_province
+
+			on_arrival_event = segrellion_relic.2000
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# WINTERFELL
+	# ---------------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.0001.c
+		custom_tooltip = segrellion_relic.0001.c.tt
+
+		add_character_flag = segrellion_relic_route_winterfell
+
+		start_travel_plan = {
+
+			destination = title:c_winterfell.capital_province
+
+			on_arrival_event = segrellion_relic.3000
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+}
+
+
+# =========================================================
+# 0090 - SEARCH ABANDONED / TRAVEL CANCELLED
+# =========================================================
+
+segrellion_relic.0090 = {
+
+	type = character_event
+
+	title = segrellion_relic.0090.t
+	desc = segrellion_relic.0090.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
 	}
 
 	left_portrait = {
@@ -30,13 +115,742 @@ segrellion_relic.0001 = {
 	}
 
 	option = {
-		name = segrellion_relic.0001.a
 
-		add_character_flag = segrellion_legendary_relic_search_begun
+		name = segrellion_relic.0090.a
 
-		# =================================================
-		# NEXT:
-		# The actual investigation / journey begins here.
-		# =================================================
+		remove_character_flag = segrellion_legendary_relic_search_active
+
+		remove_character_flag = segrellion_relic_route_tyrosh
+		remove_character_flag = segrellion_relic_route_oldtown
+		remove_character_flag = segrellion_relic_route_winterfell
+	}
+}
+
+
+# =========================================================
+# TYROSH PATH
+# =========================================================
+
+
+# =========================================================
+# 1000 - TYROSH
+# =========================================================
+
+segrellion_relic.1000 = {
+
+	type = character_event
+
+	title = segrellion_relic.1000.t
+	desc = segrellion_relic.1000.desc
+
+	theme = travel
+
+	override_background = {
+		reference = docks
+	}
+
+	immediate = {
+
+		title:c_tyrosh.holder ?= {
+			save_scope_as = relic_tyrosh_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_tyrosh_host
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_relic.1000.a
+
+		trigger_event = {
+			id = segrellion_relic.1010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1010 - THE TYROSHI LEDGER
+# =========================================================
+
+segrellion_relic.1010 = {
+
+	type = character_event
+
+	title = segrellion_relic.1010.t
+	desc = segrellion_relic.1010.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.1010.a
+
+		add_learning_lifestyle_xp = 50
+
+		start_travel_plan = {
+
+			destination = title:c_white_harbor.capital_province
+
+			on_arrival_event = segrellion_relic.1100
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+}
+
+
+# =========================================================
+# 1100 - WHITE HARBOR
+# =========================================================
+
+segrellion_relic.1100 = {
+
+	type = character_event
+
+	title = segrellion_relic.1100.t
+	desc = segrellion_relic.1100.desc
+
+	theme = travel
+
+	override_background = {
+		reference = docks
+	}
+
+	immediate = {
+
+		title:c_white_harbor.holder ?= {
+			save_scope_as = relic_white_harbor_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_white_harbor_host
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.1100.a
+
+		start_travel_plan = {
+
+			destination = title:c_winterfell.capital_province
+
+			on_arrival_event = segrellion_relic.3000
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+}
+
+
+# =========================================================
+# OLDTOWN PATH
+# =========================================================
+
+
+# =========================================================
+# 2000 - OLDTOWN
+# =========================================================
+
+segrellion_relic.2000 = {
+
+	type = character_event
+
+	title = segrellion_relic.2000.t
+	desc = segrellion_relic.2000.desc
+
+	theme = learning
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	immediate = {
+
+		title:c_oldtown.holder ?= {
+			save_scope_as = relic_oldtown_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_oldtown_host
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.2000.a
+
+		trigger_event = {
+			id = segrellion_relic.2010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 2010 - THE CITADEL RECORD
+# =========================================================
+
+segrellion_relic.2010 = {
+
+	type = character_event
+
+	title = segrellion_relic.2010.t
+	desc = segrellion_relic.2010.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.2010.a
+
+		add_learning_lifestyle_xp = 100
+
+		start_travel_plan = {
+
+			destination = title:c_winterfell.capital_province
+
+			on_arrival_event = segrellion_relic.3000
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+}
+
+
+# =========================================================
+# COMMON NORTHERN PATH
+# =========================================================
+
+
+# =========================================================
+# 3000 - WINTERFELL
+# =========================================================
+
+segrellion_relic.3000 = {
+
+	type = character_event
+
+	title = segrellion_relic.3000.t
+	desc = segrellion_relic.3000.desc
+
+	theme = realm
+
+	override_background = {
+		reference = throne_room
+	}
+
+	immediate = {
+
+		title:c_winterfell.holder ?= {
+			save_scope_as = relic_winterfell_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_winterfell_host
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.3000.a
+
+		add_character_flag = segrellion_relic_knows_nightfort
+
+		start_travel_plan = {
+
+			destination = title:c_castle_black.capital_province
+
+			on_arrival_event = segrellion_relic.4000
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+}
+
+
+# =========================================================
+# 4000 - CASTLE BLACK
+# =========================================================
+
+segrellion_relic.4000 = {
+
+	type = character_event
+
+	title = segrellion_relic.4000.t
+	desc = segrellion_relic.4000.desc
+
+	theme = travel
+
+	override_background = {
+		reference = courtyard
+	}
+
+	immediate = {
+
+		title:c_castle_black.holder ?= {
+			save_scope_as = relic_watch_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_watch_host
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.4000.a
+
+		trigger_event = {
+			id = segrellion_relic.4010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 4010 - THE WATCH'S RECORD
+# =========================================================
+
+segrellion_relic.4010 = {
+
+	type = character_event
+
+	title = segrellion_relic.4010.t
+	desc = segrellion_relic.4010.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.4010.a
+
+		add_learning_lifestyle_xp = 100
+
+		start_travel_plan = {
+
+			destination = title:c_the_nightfort.capital_province
+
+			on_arrival_event = segrellion_relic.5000
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+}
+
+
+# =========================================================
+# THE NIGHTFORT
+# =========================================================
+
+
+# =========================================================
+# 5000 - THE NIGHTFORT
+# =========================================================
+
+segrellion_relic.5000 = {
+
+	type = character_event
+
+	title = segrellion_relic.5000.t
+	desc = segrellion_relic.5000.desc
+
+	theme = travel
+
+	override_background = {
+		reference = segrellion_icebringer_event
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.5000.a
+
+		trigger_event = {
+			id = segrellion_relic.5010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 5010 - DOES THE SWORD WISH TO BE FOUND?
+# =========================================================
+
+segrellion_relic.5010 = {
+
+	type = character_event
+
+	title = segrellion_relic.5010.t
+	desc = segrellion_relic.5010.desc
+
+	theme = mystery
+
+	override_background = {
+		reference = dungeon
+	}
+
+	left_portrait = {
+		character = root
+		animation = fear
+	}
+
+	option = {
+
+		name = segrellion_relic.5010.a
+
+		custom_tooltip = segrellion_relic.5010.a.tt
+
+
+		# =====================================================
+		# FULL ACCEPTANCE
+		# =====================================================
+
+		if = {
+
+			limit = {
+				segrellion_icebringer_accepted_trigger = yes
+			}
+
+
+			# Winterfell: strongest trail.
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_relic_route_winterfell
+				}
+
+				random_list = {
+
+					90 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					10 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+
+
+			# Oldtown: strong archival evidence.
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_relic_route_oldtown
+				}
+
+				random_list = {
+
+					85 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					15 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+
+
+			# Tyrosh: longest and most uncertain trail.
+			else = {
+
+				random_list = {
+
+					80 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					20 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+		}
+
+
+		# =====================================================
+		# PARTIAL ACCEPTANCE
+		# =====================================================
+
+		else_if = {
+
+			limit = {
+				segrellion_icebringer_partial_trigger = yes
+			}
+
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_relic_route_winterfell
+				}
+
+				random_list = {
+
+					65 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					35 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_relic_route_oldtown
+				}
+
+				random_list = {
+
+					50 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					50 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					40 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					60 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+		}
+
+
+		# =====================================================
+		# REJECTED
+		# =====================================================
+
+		else = {
+
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_relic_route_winterfell
+				}
+
+				random_list = {
+
+					15 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					85 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_relic_route_oldtown
+				}
+
+				random_list = {
+
+					10 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					90 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					5 = {
+						trigger_event = segrellion_relic.5100
+					}
+
+					95 = {
+						trigger_event = segrellion_relic.5200
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5100 - ICEBRINGER
+# SUCCESS
+# =========================================================
+
+segrellion_relic.5100 = {
+
+	type = character_event
+
+	title = segrellion_relic.5100.t
+	desc = segrellion_relic.5100.desc
+
+	theme = mystery
+
+	# Replace this with a custom Icebringer discovery
+	# background later if desired.
+	override_background = {
+		reference = segrellion_icebringer_event
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_relic.5100.a
+
+		segrellion_create_artifact_icebringer_effect = {
+			OWNER = root
+		}
+
+		segrellion_refresh_icebringer_affinity_effect = yes
+
+		add_prestige = 1000
+
+		dynasty = {
+			add_dynasty_prestige = 500
+		}
+
+		remove_character_flag = segrellion_legendary_relic_search_active
+
+		remove_character_flag = segrellion_relic_route_tyrosh
+		remove_character_flag = segrellion_relic_route_oldtown
+		remove_character_flag = segrellion_relic_route_winterfell
+
+		add_character_flag = segrellion_recovered_icebringer
+	}
+}
+
+
+# =========================================================
+# 5200 - NOTHING
+# FAILURE
+# =========================================================
+
+segrellion_relic.5200 = {
+
+	type = character_event
+
+	title = segrellion_relic.5200.t
+	desc = segrellion_relic.5200.desc
+
+	theme = mystery
+
+	override_background = {
+		reference = dungeon
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.5200.a
+
+		remove_character_flag = segrellion_legendary_relic_search_active
+
+		remove_character_flag = segrellion_relic_route_tyrosh
+		remove_character_flag = segrellion_relic_route_oldtown
+		remove_character_flag = segrellion_relic_route_winterfell
+
+		add_character_flag = segrellion_failed_to_find_icebringer
 	}
 }

@@ -621,33 +621,35 @@ segrellion_search_for_legendary_relic_decision = {
 
 	decision_group_type = major
 
+	cooldown = {
+		years = 5
+	}
+
 	desc = segrellion_search_for_legendary_relic_decision_desc
 	selection_tooltip = segrellion_search_for_legendary_relic_decision_tooltip
-	confirm_text = segrellion_search_for_legendary_relic_decision_confirm
 
 
 	# =====================================================
 	# VISIBILITY
-	#
-	# Hidden conditions:
-	# - Must be an adult.
-	# - Must belong to the Segrellion dynasty.
-	# - Icebringer must currently be lost / nonexistent.
-	# - Cannot already be undertaking the search.
-	#
-	# Cadet houses of the Segrellion dynasty are valid.
 	# =====================================================
 
 	is_shown = {
 
+		# Only members of the Segrellion dynasty.
 		dynasty = dynasty:dynn_Segrellion
 
 		is_adult = yes
 
+		# Aegon Dragonspear disappears in 205 AC.
+		# Before then there is nothing to search for.
+		current_date >= 8205.9.24
+
+		# Icebringer must actually be lost.
 		NOT = {
 			exists = global_var:segrellion_icebringer
 		}
 
+		# Prevent duplicate expeditions.
 		NOT = {
 			has_character_flag = segrellion_legendary_relic_search_active
 		}
@@ -660,28 +662,29 @@ segrellion_search_for_legendary_relic_decision = {
 
 	is_valid = {
 
-		custom_description = {
-			text = segrellion_search_relic_segrellion_dynasty_requirement
+		is_imprisoned = no
 
-			dynasty = dynasty:dynn_Segrellion
+		NOT = {
+			has_trait = incapable
+		}
+
+		custom_description = {
+			text = segrellion_search_relic_after_dragonspear_requirement
+			current_date >= 8205.9.24
 		}
 	}
 
 
 	# =====================================================
-	# EFFECT
+	# BEGIN SEARCH
 	# =====================================================
 
 	effect = {
 
-		custom_tooltip = segrellion_search_relic_journey_warning_tt
-
 		add_character_flag = segrellion_legendary_relic_search_active
 
-		trigger_event = {
-			id = segrellion_relic.0001
-			days = 1
-		}
+		# Immediate route-selection event.
+		trigger_event = segrellion_relic.0001
 	}
 
 
