@@ -595,6 +595,7 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 					days = 1
 				}
 			}
+		}
 
 
 		ai_check_interval = 0
@@ -605,8 +606,8 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 		ai_will_do = {
 			base = 0
+		
 		}
-	}
 }
 
 
@@ -636,21 +637,17 @@ segrellion_search_for_legendary_relic_decision = {
 
 	is_shown = {
 
-		# Only members of the Segrellion dynasty.
+		# Only Segrellions.
 		dynasty = dynasty:dynn_Segrellion
 
+		# Only adults.
 		is_adult = yes
 
-		# Aegon Dragonspear disappears in 205 AC.
-		# Before then there is nothing to search for.
+		# Icebringer cannot be searched for before
+		# Aegon Dragonspear disappears.
 		current_date >= 8205.9.24
 
-		# Icebringer must actually be lost.
-		NOT = {
-			has_global_variable = segrellion_icebringer
-		}
-
-		# Prevent duplicate expeditions.
+		# No duplicate expedition.
 		NOT = {
 			has_character_flag = segrellion_legendary_relic_search_active
 		}
@@ -661,7 +658,7 @@ segrellion_search_for_legendary_relic_decision = {
 	# REQUIREMENTS
 	# =====================================================
 
-	is_valid = {
+		is_valid = {
 
 		is_imprisoned = no
 
@@ -669,9 +666,42 @@ segrellion_search_for_legendary_relic_decision = {
 			has_trait = incapable
 		}
 
+
+		# =====================================================
+		# ICEBRINGER MUST CURRENTLY BE LOST
+		# =====================================================
+
+		custom_description = {
+			text = segrellion_search_relic_icebringer_lost_requirement
+
+			NOT = {
+				exists = global_var:segrellion_icebringer
+			}
+		}
+
+
+		# =====================================================
+		# HISTORICAL DISAPPEARANCE
+		# =====================================================
+
 		custom_description = {
 			text = segrellion_search_relic_after_dragonspear_requirement
+
 			current_date >= 8205.9.24
+		}
+
+
+		# =====================================================
+		# CANNOT SEARCH FOR DORMANT ICEBRINGER
+		# AFTER IT HAS ALREADY AWAKENED
+		# =====================================================
+
+		custom_description = {
+			text = segrellion_search_relic_not_awakened_requirement
+
+			NOT = {
+				has_global_variable = segrellion_icebringer_has_awakened
+			}
 		}
 	}
 
