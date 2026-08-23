@@ -1,0 +1,1340 @@
+namespace = segrellion_icebringer
+
+
+# =========================================================
+# ICEBRINGER AWAKENING V2
+#
+# STAGE IV - THE GUARDIAN
+#
+# 7000-7099
+#
+# Guardian score:
+#
+# Petition I
+#   Tristan                         +2
+#   Own compromise                  +1
+#   Garlan                          -1
+#
+# Petition II
+#   Tristan                         +2
+#   Own judgment                    +1
+#   Garlan                          -1
+#
+# Petition III
+#   Heroic intervention             +6
+#   Command the attacker to stop    +3
+#   Trust Tristan                   +1
+#   Garlan                          -3
+#
+# MAXIMUM = 10
+#
+# Final:
+#   <= 0     Unworthy
+#   1-4      Worthy bearer, failed Guardian
+#   5-9      Guardian Stage V
+#   10       Truest Warrior + Guardian Stage V
+#
+# Special Darkness route:
+# Ignore petitioner I
+# -> execute petitioner II
+# -> immediately execute petitioner III
+#
+# =========================================================
+
+
+
+# =========================================================
+# 7000 - VHAL
+# =========================================================
+
+segrellion_icebringer.7000 = {
+	type = character_event
+
+	title = segrellion_icebringer.7000.t
+	desc = segrellion_icebringer.7000.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_vhal_island
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	immediate = {
+
+		# Every Guardian trial begins clean.
+
+		set_variable = {
+			name = segrellion_guardian_score
+			value = 0
+		}
+
+		remove_character_flag = segrellion_guardian_ignored_fisherman
+		remove_character_flag = segrellion_guardian_ignored_ale_woman
+		remove_character_flag = segrellion_guardian_executed_ale_woman
+		remove_character_flag = segrellion_guardian_darkness_path
+	}
+
+	option = {
+		name = segrellion_icebringer.7000.a
+		trigger_event = segrellion_icebringer.7001
+	}
+}
+
+
+
+# =========================================================
+# 7001 - THE THRONE OF VHAL
+# =========================================================
+
+segrellion_icebringer.7001 = {
+	type = character_event
+
+	title = segrellion_icebringer.7001.t
+	desc = segrellion_icebringer.7001.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.7001.a
+		trigger_event = segrellion_icebringer.7002
+	}
+}
+
+
+
+# =========================================================
+# 7002 - A COURT FROM ANOTHER AGE
+# =========================================================
+
+segrellion_icebringer.7002 = {
+	type = character_event
+
+	title = segrellion_icebringer.7002.t
+	desc = segrellion_icebringer.7002.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_icebringer.7002.a
+		trigger_event = segrellion_icebringer.7010
+	}
+}
+
+
+
+# =========================================================
+# PETITION I - THE FISHERMAN
+# =========================================================
+
+
+# =========================================================
+# 7010 - THE FISHERMAN'S PETITION
+# =========================================================
+
+segrellion_icebringer.7010 = {
+	type = character_event
+
+	title = segrellion_icebringer.7010.t
+	desc = segrellion_icebringer.7010.desc
+
+	theme = stewardship
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# -----------------------------------------------------
+	# HEAR HIM
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7010.a
+
+		trigger_event = segrellion_icebringer.7011
+	}
+
+
+	# -----------------------------------------------------
+	# DISMISS HIM
+	#
+	# First step toward the Darkness route.
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7010.b
+
+		add_character_flag = segrellion_guardian_ignored_fisherman
+
+		trigger_event = segrellion_icebringer.7020
+	}
+}
+
+
+
+# =========================================================
+# 7011 - THE FISHERMAN: COUNCIL
+# =========================================================
+
+segrellion_icebringer.7011 = {
+	type = character_event
+
+	title = segrellion_icebringer.7011.t
+	desc = segrellion_icebringer.7011.desc
+
+	theme = stewardship
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# -----------------------------------------------------
+	# TRISTAN
+	# +2
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7011.a
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = 2
+		}
+
+		trigger_event = segrellion_icebringer.7020
+	}
+
+
+	# -----------------------------------------------------
+	# GARLAN
+	# -1
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7011.b
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = -1
+		}
+
+		trigger_event = segrellion_icebringer.7020
+	}
+
+
+	# -----------------------------------------------------
+	# PERSONAL COMPROMISE
+	# +1
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7011.c
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = 1
+		}
+
+		trigger_event = segrellion_icebringer.7020
+	}
+
+
+	# -----------------------------------------------------
+	# FLAME OBSESSED - FUTURE
+	#
+	# TODO:
+	# Enable for R'hllor / appropriate fire faiths.
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7011.d
+
+		trigger = {
+			segrellion_icebringer_flame_obsessed_stage4_option_trigger = yes
+		}
+
+		add_internal_flag = special
+
+		trigger_event = segrellion_icebringer.7095
+	}
+}
+
+
+
+# =========================================================
+# PETITION II - THE ALE WOMAN
+# =========================================================
+
+
+# =========================================================
+# 7020 - BAD ALE
+# =========================================================
+
+segrellion_icebringer.7020 = {
+	type = character_event
+
+	title = segrellion_icebringer.7020.t
+
+	desc = {
+
+		desc = segrellion_icebringer.7020.desc
+
+		triggered_desc = {
+			trigger = {
+				has_character_flag = segrellion_guardian_ignored_fisherman
+			}
+
+			desc = segrellion_icebringer.7020.desc_darkness
+		}
+	}
+
+	theme = stewardship
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# -----------------------------------------------------
+	# HEAR HER
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7020.a
+
+		trigger_event = segrellion_icebringer.7021
+	}
+
+
+	# -----------------------------------------------------
+	# NORMAL DISMISSAL
+	#
+	# Only available if the first petitioner was heard.
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7020.b
+
+		trigger = {
+			NOT = {
+				has_character_flag = segrellion_guardian_ignored_fisherman
+			}
+		}
+
+		add_character_flag = segrellion_guardian_ignored_ale_woman
+
+		trigger_event = segrellion_icebringer.7030
+	}
+
+
+	# -----------------------------------------------------
+	# ESCALATED CRUELTY
+	#
+	# If petitioner I was ignored, dismissal has now
+	# escalated into arbitrary execution.
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7020.c
+
+		trigger = {
+			has_character_flag = segrellion_guardian_ignored_fisherman
+		}
+
+		add_character_flag = segrellion_guardian_executed_ale_woman
+
+		trigger_event = segrellion_icebringer.7022
+	}
+}
+
+
+
+# =========================================================
+# 7021 - THE ALE WOMAN: COUNCIL
+# =========================================================
+
+segrellion_icebringer.7021 = {
+	type = character_event
+
+	title = segrellion_icebringer.7021.t
+	desc = segrellion_icebringer.7021.desc
+
+	theme = stewardship
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# -----------------------------------------------------
+	# YOUR JUDGMENT
+	# +1
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7021.a
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = 1
+		}
+
+		trigger_event = segrellion_icebringer.7030
+	}
+
+
+	# -----------------------------------------------------
+	# GARLAN
+	# -1
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7021.b
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = -1
+		}
+
+		trigger_event = segrellion_icebringer.7030
+	}
+
+
+	# -----------------------------------------------------
+	# TRISTAN
+	# +2
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7021.c
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = 2
+		}
+
+		trigger_event = segrellion_icebringer.7030
+	}
+
+
+	# -----------------------------------------------------
+	# FLAME OBSESSED - FUTURE
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7021.d
+
+		trigger = {
+			segrellion_icebringer_flame_obsessed_stage4_option_trigger = yes
+		}
+
+		add_internal_flag = special
+
+		trigger_event = segrellion_icebringer.7095
+	}
+}
+
+
+
+# =========================================================
+# 7022 - AN EXECUTION FOR A COMPLAINT
+# =========================================================
+
+segrellion_icebringer.7022 = {
+	type = character_event
+
+	title = segrellion_icebringer.7022.t
+	desc = segrellion_icebringer.7022.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_callous
+	}
+
+	option = {
+		name = segrellion_icebringer.7022.a
+
+		trigger_event = segrellion_icebringer.7030
+	}
+}
+
+
+
+# =========================================================
+# PETITION III - THE GREYSCALE MAN
+# =========================================================
+
+
+# =========================================================
+# 7030 - THE CLOAKED MAN
+# =========================================================
+
+segrellion_icebringer.7030 = {
+	type = character_event
+
+	title = segrellion_icebringer.7030.t
+
+	desc = {
+
+		desc = segrellion_icebringer.7030.desc
+
+		triggered_desc = {
+			trigger = {
+				has_character_flag = segrellion_guardian_ignored_fisherman
+				has_character_flag = segrellion_guardian_executed_ale_woman
+			}
+
+			desc = segrellion_icebringer.7030.desc_darkness
+		}
+	}
+
+	theme = physical_health
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+
+	# -----------------------------------------------------
+	# LISTEN TO TRISTAN
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7030.a
+
+		trigger_event = segrellion_icebringer.7031
+	}
+
+
+	# -----------------------------------------------------
+	# KILL HIM IMMEDIATELY
+	#
+	# If the first two escalations were also chosen:
+	# -> Corrupted / Darkness route.
+	#
+	# Otherwise:
+	# -> terrible Guardian score result.
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7030.b
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_guardian_ignored_fisherman
+				has_character_flag = segrellion_guardian_executed_ale_woman
+			}
+
+			add_character_flag = segrellion_guardian_darkness_path
+
+			trigger_event = segrellion_icebringer.7050
+		}
+
+		else = {
+
+			change_variable = {
+				name = segrellion_guardian_score
+				add = -3
+			}
+
+			trigger_event = segrellion_icebringer.7032
+		}
+	}
+}
+
+
+
+# =========================================================
+# 7031 - STONE SKIN
+# =========================================================
+
+segrellion_icebringer.7031 = {
+	type = character_event
+
+	title = segrellion_icebringer.7031.t
+	desc = segrellion_icebringer.7031.desc
+
+	theme = physical_health
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.7031.a
+
+		trigger_event = segrellion_icebringer.7040
+	}
+}
+
+
+
+# =========================================================
+# 7032 - KILLED BEFORE HE SPOKE
+# =========================================================
+
+segrellion_icebringer.7032 = {
+	type = character_event
+
+	title = segrellion_icebringer.7032.t
+	desc = segrellion_icebringer.7032.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.7032.a
+
+		trigger_event = segrellion_icebringer.7070
+	}
+}
+
+
+
+# =========================================================
+# 7040 - TRISTAN IS SEIZED
+# =========================================================
+
+segrellion_icebringer.7040 = {
+	type = character_event
+
+	title = segrellion_icebringer.7040.t
+	desc = segrellion_icebringer.7040.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+
+	# -----------------------------------------------------
+	# GARLAN:
+	# Kill the man and amputate Tristan's arm.
+	#
+	# -3
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7040.a
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = -3
+		}
+
+		trigger_event = segrellion_icebringer.7041
+	}
+
+
+	# -----------------------------------------------------
+	# HEROIC INTERVENTION
+	#
+	# Brave OR Segrellion only.
+	#
+	# +6
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7040.b
+
+		trigger = {
+			OR = {
+				has_trait = brave
+				dynasty = dynasty:dynn_Segrellion
+			}
+		}
+
+		add_internal_flag = special
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = 6
+		}
+
+		trigger_event = segrellion_icebringer.7042
+	}
+
+
+	# -----------------------------------------------------
+	# COMMAND HIM TO STOP
+	#
+	# +3
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7040.c
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = 3
+		}
+
+		trigger_event = segrellion_icebringer.7043
+	}
+
+
+	# -----------------------------------------------------
+	# TRUST TRISTAN
+	#
+	# +1
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7040.d
+
+		change_variable = {
+			name = segrellion_guardian_score
+			add = 1
+		}
+
+		trigger_event = segrellion_icebringer.7044
+	}
+
+
+	# -----------------------------------------------------
+	# FLAME OBSESSED - FUTURE
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7040.e
+
+		trigger = {
+			segrellion_icebringer_flame_obsessed_stage4_option_trigger = yes
+		}
+
+		add_internal_flag = special
+
+		trigger_event = segrellion_icebringer.7095
+	}
+}
+
+
+
+# =========================================================
+# 7041 - FEAR MADE LAW
+# =========================================================
+
+segrellion_icebringer.7041 = {
+	type = character_event
+
+	title = segrellion_icebringer.7041.t
+	desc = segrellion_icebringer.7041.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.7041.a
+
+		trigger_event = segrellion_icebringer.7070
+	}
+}
+
+
+
+# =========================================================
+# 7042 - BETWEEN THEM
+#
+# Heroic +6 path.
+# =========================================================
+
+segrellion_icebringer.7042 = {
+	type = character_event
+
+	title = segrellion_icebringer.7042.t
+	desc = segrellion_icebringer.7042.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_icebringer.7042.a
+
+		trigger_event = segrellion_icebringer.7070
+	}
+}
+
+
+
+# =========================================================
+# 7043 - ENOUGH
+#
+# +3 path.
+# =========================================================
+
+segrellion_icebringer.7043 = {
+	type = character_event
+
+	title = segrellion_icebringer.7043.t
+	desc = segrellion_icebringer.7043.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_icebringer.7043.a
+
+		trigger_event = segrellion_icebringer.7070
+	}
+}
+
+
+
+# =========================================================
+# 7044 - TRUST THE SENTINEL
+#
+# +1 path.
+# =========================================================
+
+segrellion_icebringer.7044 = {
+	type = character_event
+
+	title = segrellion_icebringer.7044.t
+	desc = segrellion_icebringer.7044.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.7044.a
+
+		trigger_event = segrellion_icebringer.7070
+	}
+}
+
+
+
+# =========================================================
+# DARKNESS / CORRUPTED ICEBRINGER DIVERSION
+# =========================================================
+
+
+# =========================================================
+# 7050 - WHAT HAVE YOU DONE?
+# =========================================================
+
+segrellion_icebringer.7050 = {
+	type = character_event
+
+	title = segrellion_icebringer.7050.t
+	desc = segrellion_icebringer.7050.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = lunatic
+	}
+
+	option = {
+		name = segrellion_icebringer.7050.a
+
+		trigger_event = segrellion_icebringer.7051
+	}
+}
+
+
+
+# =========================================================
+# 7051 - THE BLACK BLADE
+# =========================================================
+
+segrellion_icebringer.7051 = {
+	type = character_event
+
+	title = segrellion_icebringer.7051.t
+	desc = segrellion_icebringer.7051.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_darkness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+
+	# -----------------------------------------------------
+	# ACCEPT CORRUPTED ICEBRINGER
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7051.a
+
+		add_character_flag = segrellion_icebringer_v2_stage_four_passed
+		add_character_flag = segrellion_icebringer_stage5_corrupted_locked
+
+		remove_variable = segrellion_guardian_score
+
+		trigger_event = segrellion_icebringer.8200
+	}
+
+
+	# -----------------------------------------------------
+	# REFUSE
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.7051.b
+
+		trigger_event = segrellion_icebringer.7052
+	}
+}
+
+
+
+# =========================================================
+# 7052 - DOOM HAS FALLEN UPON YOU
+# =========================================================
+
+segrellion_icebringer.7052 = {
+	type = character_event
+
+	title = segrellion_icebringer.7052.t
+	desc = segrellion_icebringer.7052.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_darkness
+	}
+
+	left_portrait = {
+		character = root
+		animation = severelywounded
+	}
+
+	option = {
+		name = segrellion_icebringer.7052.a
+
+		custom_tooltip = segrellion_icebringer.7052.doom_tt
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					NOT = { has_trait = blind }
+				}
+				add_trait = blind
+			}
+
+			if = {
+				limit = {
+					NOT = { has_trait = mute }
+				}
+				add_trait = mute
+			}
+
+			if = {
+				limit = {
+					NOT = { has_trait = maimed }
+				}
+				add_trait = maimed
+			}
+
+			if = {
+				limit = {
+					NOT = { has_trait = cancer }
+				}
+				add_trait = cancer
+			}
+
+			if = {
+				limit = {
+					NOT = { has_trait = leper }
+				}
+				add_trait = leper
+			}
+
+			if = {
+				limit = {
+					NOT = { has_trait = wounded_3 }
+				}
+				add_trait = wounded_3
+			}
+
+			add_character_flag = segrellion_icebringer_awaken_path_closed
+
+			remove_variable = segrellion_guardian_score
+
+			remove_character_flag = segrellion_icebringer_awakening_chain_active
+		}
+	}
+}
+
+
+
+# =========================================================
+# FINAL GUARDIAN EVALUATION
+# =========================================================
+
+
+# =========================================================
+# 7070 - SCORE DISPATCHER
+# =========================================================
+
+segrellion_icebringer.7070 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		# =================================================
+		# 0 OR LESS
+		# =================================================
+
+		if = {
+			limit = {
+				var:segrellion_guardian_score <= 0
+			}
+
+			trigger_event = segrellion_icebringer.7071
+		}
+
+
+		# =================================================
+		# 1 - 4
+		# =================================================
+
+		else_if = {
+			limit = {
+				var:segrellion_guardian_score < 5
+			}
+
+			trigger_event = segrellion_icebringer.7072
+		}
+
+
+		# =================================================
+		# 5 - 9
+		# =================================================
+
+		else_if = {
+			limit = {
+				var:segrellion_guardian_score < 10
+			}
+
+			trigger_event = segrellion_icebringer.7073
+		}
+
+
+		# =================================================
+		# PERFECT 10
+		# =================================================
+
+		else = {
+
+			trigger_event = segrellion_icebringer.7074
+		}
+	}
+}
+
+
+
+# =========================================================
+# 7071 - UNWORTHY
+#
+# Score <= 0
+# =========================================================
+
+segrellion_icebringer.7071 = {
+	type = character_event
+
+	title = segrellion_icebringer.7071.t
+	desc = segrellion_icebringer.7071.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.7071.a
+
+		add_character_modifier = {
+			modifier = segrellion_unworthy_of_icebringer_modifier
+			years = 100
+		}
+
+		add_character_flag = segrellion_icebringer_awaken_path_closed
+
+
+		# -------------------------------------------------
+		# ICEBRINGER DISAPPEARS
+		#
+		# Destroy the current artifact instance and remove
+		# the global pointer so it can later become a lost
+		# relic again.
+		# -------------------------------------------------
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					exists = global_var:segrellion_icebringer
+				}
+
+				destroy_artifact = global_var:segrellion_icebringer
+
+				remove_global_variable = segrellion_icebringer
+			}
+
+			remove_variable = segrellion_guardian_score
+
+			remove_character_flag = segrellion_icebringer_awakening_chain_active
+		}
+	}
+}
+
+
+
+# =========================================================
+# 7072 - WORTHY OF THE BLADE, NOT ITS PURPOSE
+#
+# Score 1-4
+# =========================================================
+
+segrellion_icebringer.7072 = {
+	type = character_event
+
+	title = segrellion_icebringer.7072.t
+	desc = segrellion_icebringer.7072.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.7072.a
+
+		add_character_flag = segrellion_icebringer_awaken_path_closed
+
+		remove_variable = segrellion_guardian_score
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+
+# =========================================================
+# 7073 - THE CHOSEN GUARDIAN
+#
+# Score 5-9
+# =========================================================
+
+segrellion_icebringer.7073 = {
+	type = character_event
+
+	title = segrellion_icebringer.7073.t
+	desc = segrellion_icebringer.7073.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.7073.a
+
+		add_character_flag = segrellion_icebringer_v2_stage_four_passed
+		add_character_flag = segrellion_icebringer_stage5_guardian_locked
+
+		remove_variable = segrellion_guardian_score
+
+		trigger_event = segrellion_icebringer.8000
+	}
+}
+
+
+
+# =========================================================
+# 7074 - THE TRUEST AMONG WARRIORS
+#
+# Perfect score = 10
+# =========================================================
+
+segrellion_icebringer.7074 = {
+	type = character_event
+
+	title = segrellion_icebringer.7074.t
+	desc = segrellion_icebringer.7074.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.7074.a
+
+		add_character_flag = segrellion_icebringer_v2_stage_four_passed
+		add_character_flag = segrellion_icebringer_stage5_guardian_locked
+		add_character_flag = segrellion_icebringer_stage5_truest_warrior
+
+		remove_variable = segrellion_guardian_score
+
+		trigger_event = segrellion_icebringer.8001
+	}
+}
+
+
+
+# =========================================================
+# 7095 - FLAME OBSESSED PLACEHOLDER
+#
+# Currently unreachable.
+# We will replace this when the R'hllor path is developed.
+# =========================================================
+
+segrellion_icebringer.7095 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		add_character_flag = segrellion_icebringer_flame_obsessed_placeholder
+
+		remove_variable = segrellion_guardian_score
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
