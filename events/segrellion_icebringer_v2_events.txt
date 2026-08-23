@@ -48,81 +48,6 @@ segrellion_icebringer.6000 = {
 # 6001 - THREE ROADS
 # =========================================================
 
-segrellion_icebringer.6001 = {
-	type = character_event
-
-	title = segrellion_icebringer.6001.t
-	desc = segrellion_icebringer.6001.desc
-
-	theme = travel
-
-	override_background = {
-		reference = segrellion_valyrian_doom
-	}
-
-	left_portrait = {
-		character = root
-		animation = worry
-	}
-
-
-	# =====================================================
-	# LEFT - THE GIRL
-	# TRUE ROUTE, BUT NOT GUARANTEED SUCCESS
-	# =====================================================
-
-	option = {
-		name = segrellion_icebringer.6001.a
-
-		trigger_event = segrellion_icebringer.6100
-	}
-
-
-	# =====================================================
-	# FORWARD - THE HARBOR
-	# =====================================================
-
-	option = {
-		name = segrellion_icebringer.6001.b
-
-		trigger_event = segrellion_icebringer.6200
-	}
-
-
-	# =====================================================
-	# RIGHT - THE RED PROCESSION
-	# =====================================================
-
-	option = {
-		name = segrellion_icebringer.6001.c
-
-		trigger_event = segrellion_icebringer.6300
-	}
-}
-
-
-# =========================================================
-# THE LOST GIRL
-# =========================================================
-
-
-# =========================================================
-# 6100 - GIRL DISPATCHER
-#
-# FIRST VISIT:
-#   Father          59
-#   Other Self      40
-#   True Path        1 + character modifiers
-#
-# SEEN RESULTS ARE REMOVED.
-#
-# Once both false unique results have been seen:
-#   Loop            99
-#   True Path        1 + character modifiers
-#
-# This prevents content exhaustion from making success 100%.
-# =========================================================
-
 segrellion_icebringer.6100 = {
 	type = character_event
 	hidden = yes
@@ -130,15 +55,64 @@ segrellion_icebringer.6100 = {
 	immediate = {
 
 		# =================================================
-		# NEITHER FALSE RESULT HAS BEEN SEEN
+		# BOTH FALSE VISIONS ALREADY SEEN
 		# =================================================
 
 		if = {
 			limit = {
-				NOT = {
-					has_character_flag = segrellion_doom_seen_girl_father
+				has_character_flag = segrellion_doom_seen_girl_father
+				has_character_flag = segrellion_doom_seen_girl_other_self
+			}
+
+			random_list = {
+
+				99 = {
+					trigger_event = segrellion_icebringer.6104
 				}
 
+				4.5 = {
+					trigger = {
+						segrellion_icebringer_destined_guardian_trigger = yes
+					}
+					trigger_event = segrellion_icebringer.6103
+				}
+
+				4 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						segrellion_icebringer_exceptional_bearer_trigger = yes
+					}
+					trigger_event = segrellion_icebringer.6103
+				}
+
+				1.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						segrellion_icebringer_strong_candidate_trigger = yes
+					}
+					trigger_event = segrellion_icebringer.6103
+				}
+
+				0.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						NOT = { segrellion_icebringer_strong_candidate_trigger = yes }
+					}
+					trigger_event = segrellion_icebringer.6103
+				}
+			}
+		}
+
+
+		# =================================================
+		# FATHER SEEN, OTHER SELF NOT SEEN
+		# =================================================
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_doom_seen_girl_father
 				NOT = {
 					has_character_flag = segrellion_doom_seen_girl_other_self
 				}
@@ -147,94 +121,43 @@ segrellion_icebringer.6100 = {
 			random_list = {
 
 				59 = {
-					trigger_event = segrellion_icebringer.6101
+					trigger_event = segrellion_icebringer.6104
 				}
 
 				40 = {
 					trigger_event = segrellion_icebringer.6102
 				}
 
-				# =========================================
-				# TRUE PATH
-				# =========================================
-
-				1 = {
-
-					# -------------------------------------
-					# ERA
-					# -------------------------------------
-
-					modifier = {
-						factor = 0.10
-						current_date < 8200.1.1
+				4.5 = {
+					trigger = {
+						segrellion_icebringer_destined_guardian_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 0.25
-						current_date >= 8200.1.1
-						current_date < 8250.1.1
+				4 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						segrellion_icebringer_exceptional_bearer_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 0.50
-						current_date >= 8250.1.1
-						current_date < 8280.1.1
+				1.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						segrellion_icebringer_strong_candidate_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					# 280-294 AC = base factor 1.
-
-					modifier = {
-						factor = 2.00
-						current_date >= 8295.1.1
+				0.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						NOT = { segrellion_icebringer_strong_candidate_trigger = yes }
 					}
-
-
-					# -------------------------------------
-					# PERSONALITY
-					# -------------------------------------
-
-					modifier = {
-						factor = 1.25
-						has_trait = brave
-					}
-
-					modifier = {
-						factor = 1.35
-						has_trait = honest
-					}
-
-					modifier = {
-						factor = 1.20
-						has_trait = just
-					}
-
-					modifier = {
-						factor = 1.10
-						has_trait = stubborn
-					}
-
-
-					# -------------------------------------
-					# SUPERNATURAL SENSITIVITY
-					# -------------------------------------
-
-					modifier = {
-						factor = 1.50
-						has_trait = dragon_dreams
-					}
-
-
-					# -------------------------------------
-					# THE CANON GUARDIAN
-					#
-					# Strongly favored, but NOT automatic.
-					# -------------------------------------
-
-					modifier = {
-						factor = 10
-						has_trait = segrellion_canon_daemon_bastard_unicorn_modifier
-					}
-
 					trigger_event = segrellion_icebringer.6103
 				}
 			}
@@ -242,86 +165,7 @@ segrellion_icebringer.6100 = {
 
 
 		# =================================================
-		# FATHER ALREADY SEEN
-		# =================================================
-
-		else_if = {
-			limit = {
-				has_character_flag = segrellion_doom_seen_girl_father
-
-				NOT = {
-					has_character_flag = segrellion_doom_seen_girl_other_self
-				}
-			}
-
-			random_list = {
-
-				40 = {
-					trigger_event = segrellion_icebringer.6102
-				}
-
-				1 = {
-
-					modifier = {
-						factor = 0.10
-						current_date < 8200.1.1
-					}
-
-					modifier = {
-						factor = 0.25
-						current_date >= 8200.1.1
-						current_date < 8250.1.1
-					}
-
-					modifier = {
-						factor = 0.50
-						current_date >= 8250.1.1
-						current_date < 8280.1.1
-					}
-
-					modifier = {
-						factor = 2.00
-						current_date >= 8295.1.1
-					}
-
-					modifier = {
-						factor = 1.25
-						has_trait = brave
-					}
-
-					modifier = {
-						factor = 1.35
-						has_trait = honest
-					}
-
-					modifier = {
-						factor = 1.20
-						has_trait = just
-					}
-
-					modifier = {
-						factor = 1.10
-						has_trait = stubborn
-					}
-
-					modifier = {
-						factor = 1.50
-						has_trait = dragon_dreams
-					}
-
-					modifier = {
-						factor = 10
-						has_trait = segrellion_canon_daemon_bastard_unicorn_modifier
-					}
-
-					trigger_event = segrellion_icebringer.6103
-				}
-			}
-		}
-
-
-		# =================================================
-		# OTHER SELF ALREADY SEEN
+		# OTHER SELF SEEN, FATHER NOT SEEN
 		# =================================================
 
 		else_if = {
@@ -329,7 +173,6 @@ segrellion_icebringer.6100 = {
 				NOT = {
 					has_character_flag = segrellion_doom_seen_girl_father
 				}
-
 				has_character_flag = segrellion_doom_seen_girl_other_self
 			}
 
@@ -339,60 +182,40 @@ segrellion_icebringer.6100 = {
 					trigger_event = segrellion_icebringer.6101
 				}
 
-				1 = {
+				40 = {
+					trigger_event = segrellion_icebringer.6104
+				}
 
-					modifier = {
-						factor = 0.10
-						current_date < 8200.1.1
+				4.5 = {
+					trigger = {
+						segrellion_icebringer_destined_guardian_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 0.25
-						current_date >= 8200.1.1
-						current_date < 8250.1.1
+				4 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						segrellion_icebringer_exceptional_bearer_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 0.50
-						current_date >= 8250.1.1
-						current_date < 8280.1.1
+				1.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						segrellion_icebringer_strong_candidate_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 2.00
-						current_date >= 8295.1.1
+				0.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						NOT = { segrellion_icebringer_strong_candidate_trigger = yes }
 					}
-
-					modifier = {
-						factor = 1.25
-						has_trait = brave
-					}
-
-					modifier = {
-						factor = 1.35
-						has_trait = honest
-					}
-
-					modifier = {
-						factor = 1.20
-						has_trait = just
-					}
-
-					modifier = {
-						factor = 1.10
-						has_trait = stubborn
-					}
-
-					modifier = {
-						factor = 1.50
-						has_trait = dragon_dreams
-					}
-
-					modifier = {
-						factor = 10
-						has_trait = segrellion_canon_daemon_bastard_unicorn_modifier
-					}
-
 					trigger_event = segrellion_icebringer.6103
 				}
 			}
@@ -400,73 +223,51 @@ segrellion_icebringer.6100 = {
 
 
 		# =================================================
-		# BOTH UNIQUE FALSE OUTCOMES HAVE BEEN SEEN
-		#
-		# The dream begins looping.
+		# FIRST ATTEMPT
 		# =================================================
 
 		else = {
 
 			random_list = {
 
-				99 = {
-					trigger_event = segrellion_icebringer.6104
+				59 = {
+					trigger_event = segrellion_icebringer.6101
 				}
 
-				1 = {
+				40 = {
+					trigger_event = segrellion_icebringer.6102
+				}
 
-					modifier = {
-						factor = 0.10
-						current_date < 8200.1.1
+				4.5 = {
+					trigger = {
+						segrellion_icebringer_destined_guardian_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 0.25
-						current_date >= 8200.1.1
-						current_date < 8250.1.1
+				4 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						segrellion_icebringer_exceptional_bearer_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 0.50
-						current_date >= 8250.1.1
-						current_date < 8280.1.1
+				1.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						segrellion_icebringer_strong_candidate_trigger = yes
 					}
+					trigger_event = segrellion_icebringer.6103
+				}
 
-					modifier = {
-						factor = 2.00
-						current_date >= 8295.1.1
+				0.5 = {
+					trigger = {
+						NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+						NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+						NOT = { segrellion_icebringer_strong_candidate_trigger = yes }
 					}
-
-					modifier = {
-						factor = 1.25
-						has_trait = brave
-					}
-
-					modifier = {
-						factor = 1.35
-						has_trait = honest
-					}
-
-					modifier = {
-						factor = 1.20
-						has_trait = just
-					}
-
-					modifier = {
-						factor = 1.10
-						has_trait = stubborn
-					}
-
-					modifier = {
-						factor = 1.50
-						has_trait = dragon_dreams
-					}
-
-					modifier = {
-						factor = 10
-						has_trait = segrellion_canon_daemon_bastard_unicorn_modifier
-					}
-
 					trigger_event = segrellion_icebringer.6103
 				}
 			}
@@ -1731,9 +1532,11 @@ segrellion_icebringer.6423 = {
 	hidden = yes
 
 	immediate = {
+
 		random_list = {
 
 			95 = {
+
 				if = {
 					limit = {
 						has_character_flag = segrellion_island_seen_resisted_temptation
@@ -1741,80 +1544,48 @@ segrellion_icebringer.6423 = {
 
 					trigger_event = segrellion_icebringer.6427
 				}
+
 				else = {
 					trigger_event = segrellion_icebringer.6424
 				}
 			}
 
-			1 = {
 
-				# -----------------------------------------
-				# ERA
-				# -----------------------------------------
-
-				modifier = {
-					factor = 0.10
-					current_date < 8200.1.1
-				}
-
-				modifier = {
-					factor = 0.25
-					current_date >= 8200.1.1
-					current_date < 8250.1.1
-				}
-
-				modifier = {
-					factor = 0.50
-					current_date >= 8250.1.1
-					current_date < 8280.1.1
-				}
-
-				modifier = {
-					factor = 2.00
-					current_date >= 8295.1.1
-				}
-
-				# -----------------------------------------
-				# PERSONALITY / PURPOSE
-				# -----------------------------------------
-
-				modifier = {
-					factor = 1.35
-					has_trait = honest
-				}
-
-				modifier = {
-					factor = 1.25
-					has_trait = just
-				}
-
-				modifier = {
-					factor = 1.15
-					has_trait = temperate
-				}
-
-				modifier = {
-					factor = 1.20
-					has_trait = chaste
-				}
-
-				modifier = {
-					factor = 1.25
-					has_trait = brave
-				}
-
-				modifier = {
-					factor = 1.50
-					has_trait = dragon_dreams
-				}
-
-				# -----------------------------------------
-				# DESTINED ONES
-				# -----------------------------------------
-
-				modifier = {
-					factor = 10
+			3 = {
+				trigger = {
 					segrellion_icebringer_destined_guardian_trigger = yes
+				}
+
+				trigger_event = segrellion_icebringer.6425
+			}
+
+
+			2.5 = {
+				trigger = {
+					NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+					segrellion_icebringer_exceptional_bearer_trigger = yes
+				}
+
+				trigger_event = segrellion_icebringer.6425
+			}
+
+
+			0.9 = {
+				trigger = {
+					NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+					NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+					segrellion_icebringer_strong_candidate_trigger = yes
+				}
+
+				trigger_event = segrellion_icebringer.6425
+			}
+
+
+			0.3 = {
+				trigger = {
+					NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+					NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+					NOT = { segrellion_icebringer_strong_candidate_trigger = yes }
 				}
 
 				trigger_event = segrellion_icebringer.6425
@@ -1822,6 +1593,7 @@ segrellion_icebringer.6423 = {
 		}
 	}
 }
+
 
 
 # =========================================================
@@ -2551,15 +2323,19 @@ segrellion_icebringer.6520 = {
 	hidden = yes
 
 	immediate = {
+
 		random_list = {
 
 			70 = {
+
 				if = {
 					limit = {
 						has_character_flag = segrellion_stage3_seen_shield_almost
 					}
+
 					trigger_event = segrellion_icebringer.6525
 				}
+
 				else = {
 					trigger_event = segrellion_icebringer.6521
 				}
@@ -2567,91 +2343,63 @@ segrellion_icebringer.6520 = {
 
 
 			29 = {
+
 				if = {
 					limit = {
 						has_character_flag = segrellion_stage3_seen_serwyn_shield
 					}
+
 					trigger_event = segrellion_icebringer.6526
 				}
+
 				else = {
 					trigger_event = segrellion_icebringer.6522
 				}
 			}
 
 
-			# =================================================
-			# TRUE PATH
-			# =================================================
-
-			1 = {
-
-				# ERA
-
-				modifier = {
-					factor = 0.10
-					current_date < 8200.1.1
-				}
-
-				modifier = {
-					factor = 0.25
-					current_date >= 8200.1.1
-					current_date < 8250.1.1
-				}
-
-				modifier = {
-					factor = 0.50
-					current_date >= 8250.1.1
-					current_date < 8280.1.1
-				}
-
-				modifier = {
-					factor = 2.00
-					current_date >= 8295.1.1
-				}
-
-
-				# CHARACTER
-
-				modifier = {
-					factor = 1.35
-					has_trait = brave
-				}
-
-				modifier = {
-					factor = 1.35
-					has_trait = just
-				}
-
-				modifier = {
-					factor = 1.20
-					has_trait = compassionate
-				}
-
-				modifier = {
-					factor = 1.15
-					has_trait = honest
-				}
-
-				modifier = {
-					factor = 1.50
-					has_trait = dragon_dreams
-				}
-
-
-				# DESTINY
-
-				modifier = {
-					factor = 10
+			1.5 = {
+				trigger = {
 					segrellion_icebringer_destined_guardian_trigger = yes
 				}
 
+				trigger_event = segrellion_icebringer.6523
+			}
+
+
+			1.25 = {
+				trigger = {
+					NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+					segrellion_icebringer_exceptional_bearer_trigger = yes
+				}
+
+				trigger_event = segrellion_icebringer.6523
+			}
+
+
+			0.45 = {
+				trigger = {
+					NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+					NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+					segrellion_icebringer_strong_candidate_trigger = yes
+				}
+
+				trigger_event = segrellion_icebringer.6523
+			}
+
+
+			0.15 = {
+				trigger = {
+					NOT = { segrellion_icebringer_destined_guardian_trigger = yes }
+					NOT = { segrellion_icebringer_exceptional_bearer_trigger = yes }
+					NOT = { segrellion_icebringer_strong_candidate_trigger = yes }
+				}
 
 				trigger_event = segrellion_icebringer.6523
 			}
 		}
 	}
 }
-
 
 # =========================================================
 # 6521 - ALMOST
