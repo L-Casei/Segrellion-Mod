@@ -1490,3 +1490,89 @@ segrellion_awaken_icebringer_effect = {
 		OWNER = this
 	}
 }
+
+# =========================================================
+# DOOM DREAM - TEAL DRAGON EGG
+#
+# A real, viable AGOT dragon egg brought out of the dream.
+# =========================================================
+
+segrellion_create_doom_dragon_egg_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 100
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 100
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+
+	create_artifact = {
+
+		name = dragon_egg_teal
+
+		description = dragon_egg_teal_desc_living
+
+		visuals = segrellion_doom_dragon_egg_visuals
+
+		type = dragon_egg
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		template = segrellion_doom_dragon_egg_template
+
+		modifier = segrellion_dragon_egg_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+
+	scope:newly_created_artifact = {
+
+		# =================================================
+		# AGOT DRAGON EGG SYSTEM
+		# =================================================
+
+		set_variable = {
+			name = dragon_egg
+			value = yes
+		}
+
+		set_variable = {
+			name = dragon_egg_color
+			value = flag:teal
+		}
+
+
+		# =================================================
+		# SPECIAL ORIGIN
+		# =================================================
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		set_variable = {
+			name = segrellion_doom_dragon_egg_artifact
+			value = yes
+		}
+	}
+}

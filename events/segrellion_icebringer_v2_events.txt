@@ -580,10 +580,7 @@ segrellion_icebringer.6103 = {
 
 		add_character_flag = segrellion_icebringer_v2_stage_one_passed
 
-		# TEMPORARY UNTIL STAGE II EXISTS.
-		# Later this option will directly trigger Stage II.
-
-		remove_character_flag = segrellion_icebringer_awakening_chain_active
+		trigger_event = segrellion_icebringer.6400
 	}
 }
 
@@ -1142,6 +1139,984 @@ segrellion_icebringer.6305 = {
 		name = segrellion_icebringer.6305.a
 
 		add_stress = 5
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+# =========================================================
+# STAGE II - THE ISLAND AND THE LIGHT
+#
+# 6400-6499
+# =========================================================
+
+
+# =========================================================
+# 6400 - THE ISLAND
+# =========================================================
+
+segrellion_icebringer.6400 = {
+	type = character_event
+
+	title = segrellion_icebringer.6400.t
+	desc = segrellion_icebringer.6400.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6400.a
+
+		trigger_event = segrellion_icebringer.6401
+	}
+}
+
+
+# =========================================================
+# 6401 - THE OPEN DOOR
+# =========================================================
+
+segrellion_icebringer.6401 = {
+	type = character_event
+
+	title = segrellion_icebringer.6401.t
+	desc = segrellion_icebringer.6401.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6401.a
+
+		trigger_event = segrellion_icebringer.6410
+	}
+
+	option = {
+		name = segrellion_icebringer.6401.b
+
+		trigger_event = segrellion_icebringer.6420
+	}
+}
+
+
+# =========================================================
+# 6410 - THE GREAT HALL
+# =========================================================
+
+segrellion_icebringer.6410 = {
+	type = character_event
+
+	title = segrellion_icebringer.6410.t
+	desc = segrellion_icebringer.6410.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6410.a
+
+		trigger_event = segrellion_icebringer.6411
+	}
+
+	option = {
+		name = segrellion_icebringer.6410.b
+
+		trigger_event = segrellion_icebringer.6412
+	}
+}
+
+
+# =========================================================
+# 6411 - TOWER DISPATCHER
+#
+# Fixed weights always preserved:
+# Light vision 35
+# Torture      60
+# Madness       5
+#
+# If a result has already been seen, its weight is replaced
+# by a loop variant, so the RNG does not become easier.
+# =========================================================
+
+segrellion_icebringer.6411 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+		random_list = {
+
+			35 = {
+				if = {
+					limit = {
+						has_character_flag = segrellion_island_seen_tower_light
+					}
+
+					trigger_event = segrellion_icebringer.6417
+				}
+				else = {
+					if = {
+						limit = {
+							segrellion_icebringer_destined_guardian_trigger = yes
+						}
+
+						trigger_event = segrellion_icebringer.6413
+					}
+					else = {
+						trigger_event = segrellion_icebringer.6414
+					}
+				}
+			}
+
+			60 = {
+				if = {
+					limit = {
+						has_character_flag = segrellion_island_seen_tower_torture
+					}
+
+					trigger_event = segrellion_icebringer.6418
+				}
+				else = {
+					trigger_event = segrellion_icebringer.6415
+				}
+			}
+
+			5 = {
+				if = {
+					limit = {
+						has_character_flag = segrellion_island_seen_tower_madness
+					}
+
+					trigger_event = segrellion_icebringer.6419
+				}
+				else = {
+					trigger_event = segrellion_icebringer.6416
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6412 - TRAPDOOR DISPATCHER
+#
+# Fixed weights always preserved:
+# Sea dragon / dreams   95
+# Dragon egg             4
+# Drowned God death      1
+#
+# Repeated non-fatal results become loop variants with the
+# same weights so the RNG stays stable.
+# =========================================================
+
+segrellion_icebringer.6412 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+		random_list = {
+
+			95 = {
+				if = {
+					limit = {
+						has_character_flag = segrellion_island_seen_under_sea_dragon
+					}
+
+					trigger_event = segrellion_icebringer.6433
+				}
+				else = {
+					trigger_event = segrellion_icebringer.6430
+				}
+			}
+
+			4 = {
+				if = {
+					limit = {
+						has_character_flag = segrellion_island_seen_under_egg
+					}
+
+					trigger_event = segrellion_icebringer.6434
+				}
+				else = {
+					trigger_event = segrellion_icebringer.6431
+				}
+			}
+
+			1 = {
+				trigger_event = segrellion_icebringer.6432
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6413 - THE LIGHT CHOOSES YOU
+# =========================================================
+
+segrellion_icebringer.6413 = {
+	type = character_event
+
+	title = segrellion_icebringer.6413.t
+	desc = segrellion_icebringer.6413.desc
+
+	theme = mystic
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6413.a
+
+		add_character_flag = segrellion_island_seen_tower_light
+
+		if = {
+			limit = {
+				NOT = { has_character_modifier = segrellion_chosen_by_the_light_modifier }
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_chosen_by_the_light_modifier
+				years = 1
+			}
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6414 - YOU SHOULD NOT BE HERE
+# =========================================================
+
+segrellion_icebringer.6414 = {
+	type = character_event
+
+	title = segrellion_icebringer.6414.t
+	desc = segrellion_icebringer.6414.desc
+
+	theme = mystic
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6414.a
+
+		add_character_flag = segrellion_island_seen_tower_light
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6415 - TOWER TORTURE
+# =========================================================
+
+segrellion_icebringer.6415 = {
+	type = character_event
+
+	title = segrellion_icebringer.6415.t
+	desc = segrellion_icebringer.6415.desc
+
+	theme = death
+
+	override_background = {
+		reference = insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = severelywounded
+	}
+
+	option = {
+		name = segrellion_icebringer.6415.a
+
+		add_character_flag = segrellion_island_seen_tower_torture
+
+		add_character_modifier = {
+			modifier = segrellion_headless_modifier
+			years = 1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6416 - SHADOW MADNESS
+# =========================================================
+
+segrellion_icebringer.6416 = {
+	type = character_event
+
+	title = segrellion_icebringer.6416.t
+	desc = segrellion_icebringer.6416.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = lunatic
+	}
+
+	option = {
+		name = segrellion_icebringer.6416.a
+
+		add_character_flag = segrellion_island_seen_tower_madness
+
+		if = {
+			limit = {
+				NOT = { has_trait = lunatic_1 }
+			}
+
+			add_trait = lunatic_1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6417 - TOWER LIGHT LOOP
+# =========================================================
+
+segrellion_icebringer.6417 = {
+	type = character_event
+
+	title = segrellion_icebringer.6417.t
+	desc = segrellion_icebringer.6417.desc
+
+	theme = mystic
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6417.a
+
+		add_stress = 5
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6418 - TOWER TORTURE LOOP
+# =========================================================
+
+segrellion_icebringer.6418 = {
+	type = character_event
+
+	title = segrellion_icebringer.6418.t
+	desc = segrellion_icebringer.6418.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6418.a
+
+		add_stress = 10
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6419 - TOWER MADNESS LOOP
+# =========================================================
+
+segrellion_icebringer.6419 = {
+	type = character_event
+
+	title = segrellion_icebringer.6419.t
+	desc = segrellion_icebringer.6419.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6419.a
+
+		add_stress = 8
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6420 - THE WOMAN AT THE DOOR
+# =========================================================
+
+segrellion_icebringer.6420 = {
+	type = character_event
+
+	title = segrellion_icebringer.6420.t
+	desc = segrellion_icebringer.6420.desc
+
+	theme = seduction
+
+	override_background = {
+		reference = lonely_light
+	}
+
+	left_portrait = {
+		character = root
+		animation = flirtation
+	}
+
+	option = {
+		name = segrellion_icebringer.6420.a
+
+		trigger_event = segrellion_icebringer.6421
+	}
+}
+
+
+# =========================================================
+# 6421 - THE BEDCHAMBER
+# =========================================================
+
+segrellion_icebringer.6421 = {
+	type = character_event
+
+	title = segrellion_icebringer.6421.t
+	desc = segrellion_icebringer.6421.desc
+
+	theme = seduction
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = flirtation
+	}
+
+	option = {
+		name = segrellion_icebringer.6421.a
+
+		trigger_event = segrellion_icebringer.6422
+	}
+
+	option = {
+		name = segrellion_icebringer.6421.b
+
+		trigger_event = segrellion_icebringer.6423
+	}
+}
+
+
+# =========================================================
+# 6422 - DISHONORABLE
+# =========================================================
+
+segrellion_icebringer.6422 = {
+	type = character_event
+
+	title = segrellion_icebringer.6422.t
+	desc = segrellion_icebringer.6422.desc
+
+	theme = death
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6422.a
+
+		add_character_modifier = {
+			modifier = segrellion_dishonorable_modifier
+			years = 1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6423 - RESIST DISPATCHER
+#
+# Visible correct choice, but two hidden outcomes:
+#
+# Partial success 95
+# True path       1 + modifiers
+#
+# If partial success has already been seen, it becomes a
+# loop event with the same fixed weight, so true path does
+# not inflate automatically.
+# =========================================================
+
+segrellion_icebringer.6423 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+		random_list = {
+
+			95 = {
+				if = {
+					limit = {
+						has_character_flag = segrellion_island_seen_resisted_temptation
+					}
+
+					trigger_event = segrellion_icebringer.6427
+				}
+				else = {
+					trigger_event = segrellion_icebringer.6424
+				}
+			}
+
+			1 = {
+
+				# -----------------------------------------
+				# ERA
+				# -----------------------------------------
+
+				modifier = {
+					factor = 0.10
+					current_date < 8200.1.1
+				}
+
+				modifier = {
+					factor = 0.25
+					current_date >= 8200.1.1
+					current_date < 8250.1.1
+				}
+
+				modifier = {
+					factor = 0.50
+					current_date >= 8250.1.1
+					current_date < 8280.1.1
+				}
+
+				modifier = {
+					factor = 2.00
+					current_date >= 8295.1.1
+				}
+
+				# -----------------------------------------
+				# PERSONALITY / PURPOSE
+				# -----------------------------------------
+
+				modifier = {
+					factor = 1.35
+					has_trait = honest
+				}
+
+				modifier = {
+					factor = 1.25
+					has_trait = just
+				}
+
+				modifier = {
+					factor = 1.15
+					has_trait = temperate
+				}
+
+				modifier = {
+					factor = 1.20
+					has_trait = chaste
+				}
+
+				modifier = {
+					factor = 1.25
+					has_trait = brave
+				}
+
+				modifier = {
+					factor = 1.50
+					has_trait = dragon_dreams
+				}
+
+				# -----------------------------------------
+				# DESTINED ONES
+				# -----------------------------------------
+
+				modifier = {
+					factor = 10
+					segrellion_icebringer_destined_guardian_trigger = yes
+				}
+
+				trigger_event = segrellion_icebringer.6425
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6424 - RESISTED TEMPTATION
+# =========================================================
+
+segrellion_icebringer.6424 = {
+	type = character_event
+
+	title = segrellion_icebringer.6424.t
+	desc = segrellion_icebringer.6424.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6424.a
+
+		add_character_flag = segrellion_island_seen_resisted_temptation
+
+		add_character_modifier = {
+			modifier = segrellion_resisted_temptation_modifier
+			years = 1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6425 - THE GIRL OUTSIDE THE ROOM
+# =========================================================
+
+segrellion_icebringer.6425 = {
+	type = character_event
+
+	title = segrellion_icebringer.6425.t
+	desc = segrellion_icebringer.6425.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6425.a
+
+		trigger_event = segrellion_icebringer.6426
+	}
+}
+
+
+# =========================================================
+# 6426 - I AM THE SWORD
+#
+# TRUE ENDING OF STAGE II
+# =========================================================
+
+segrellion_icebringer.6426 = {
+	type = character_event
+
+	title = segrellion_icebringer.6426.t
+	desc = segrellion_icebringer.6426.desc
+
+	theme = mystic
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.6426.a
+
+		add_character_flag = segrellion_icebringer_v2_stage_two_passed
+
+		# HOOK FOR STAGE III
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6427 - RESIST LOOP
+# =========================================================
+
+segrellion_icebringer.6427 = {
+	type = character_event
+
+	title = segrellion_icebringer.6427.t
+	desc = segrellion_icebringer.6427.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6427.a
+
+		add_stress = 5
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6430 - THE SEA DRAGON
+# =========================================================
+
+segrellion_icebringer.6430 = {
+	type = character_event
+
+	title = segrellion_icebringer.6430.t
+	desc = segrellion_icebringer.6430.desc
+
+	theme = mystic
+
+	override_background = {
+		reference = insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6430.a
+
+		add_character_flag = segrellion_island_seen_under_sea_dragon
+
+		if = {
+			limit = {
+				NOT = { has_trait = dragon_dreams }
+			}
+			add_trait = dragon_dreams
+		}
+		else = {
+			add_learning_lifestyle_xp = 250
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6431 - THE EGG
+# =========================================================
+
+segrellion_icebringer.6431 = {
+	type = character_event
+
+	title = segrellion_icebringer.6431.t
+	desc = segrellion_icebringer.6431.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.6431.a
+
+		add_character_flag = segrellion_island_seen_under_egg
+
+		segrellion_create_doom_dragon_egg_effect = {
+			OWNER = root
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6432 - THE DROWNED GOD
+# =========================================================
+
+segrellion_icebringer.6432 = {
+	type = character_event
+
+	title = segrellion_icebringer.6432.t
+	desc = segrellion_icebringer.6432.desc
+
+	theme = death
+
+	override_background = {
+		reference = drowned_god
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6432.a
+
+		death = {
+			death_reason = death_segrellion_eldritch_horror
+		}
+	}
+}
+
+
+# =========================================================
+# 6433 - SEA DRAGON LOOP
+# =========================================================
+
+segrellion_icebringer.6433 = {
+	type = character_event
+
+	title = segrellion_icebringer.6433.t
+	desc = segrellion_icebringer.6433.desc
+
+	theme = mystic
+
+	override_background = {
+		reference = insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6433.a
+
+		add_learning_lifestyle_xp = 100
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6434 - EGG LOOP
+# =========================================================
+
+segrellion_icebringer.6434 = {
+	type = character_event
+
+	title = segrellion_icebringer.6434.t
+	desc = segrellion_icebringer.6434.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_icebringer.6434.a
+
+		add_stress_loss = 15
 
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
