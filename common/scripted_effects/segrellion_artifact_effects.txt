@@ -79,11 +79,43 @@ segrellion_create_artifact_icebringer_effect = {
 }
 
 segrellion_find_icebringer_effect = {
+
+	# =====================================================
+	# CLEAN A STALE GLOBAL POINTER
+	# =====================================================
+
 	if = {
-		limit = { NOT = { exists = global_var:segrellion_icebringer } }
+		limit = {
+			has_global_variable = segrellion_icebringer
+
+			NOT = {
+				exists = global_var:segrellion_icebringer
+			}
+		}
+
+		remove_global_variable = segrellion_icebringer
+	}
+
+
+	# =====================================================
+	# LEGACY / EARLY-GAME RECOVERY
+	# =====================================================
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = segrellion_icebringer
+			}
+		}
+
 		character:Segrellion_1 ?= {
+
 			any_character_artifact = {
-				limit = { has_variable = segrellion_icebringer_artifact }
+
+				limit = {
+					has_variable = segrellion_icebringer_artifact
+				}
+
 				set_global_variable = {
 					name = segrellion_icebringer
 					value = this
@@ -1708,6 +1740,58 @@ segrellion_create_hearts_favor_effect = {
 		set_variable = {
 			name = traditional_house_owner
 			value = scope:owner.house
+		}
+	}
+}
+
+# =========================================================
+# ICEBRINGER HISTORICAL LOSS
+#
+# Aegon Dragonspear vanishes with Icebringer in 205 AC.
+# This must happen only once.
+# =========================================================
+
+segrellion_process_icebringer_historical_loss_effect = {
+
+	if = {
+		limit = {
+			current_date >= 8205.9.24
+
+			NOT = {
+				has_global_variable = segrellion_icebringer_historical_loss_processed
+			}
+		}
+
+
+		# If an old/pre-205 game still has the historical
+		# Icebringer object, it vanishes with Dragonspear.
+
+		if = {
+			limit = {
+				exists = global_var:segrellion_icebringer
+			}
+
+			destroy_artifact = global_var:segrellion_icebringer
+		}
+
+
+		# Clear the global pointer as well.
+
+		if = {
+			limit = {
+				has_global_variable = segrellion_icebringer
+			}
+
+			remove_global_variable = segrellion_icebringer
+		}
+
+
+		# Never perform the canonical 205 AC disappearance again.
+		# If Icebringer is recovered afterwards it remains real.
+
+		set_global_variable = {
+			name = segrellion_icebringer_historical_loss_processed
+			value = yes
 		}
 	}
 }
