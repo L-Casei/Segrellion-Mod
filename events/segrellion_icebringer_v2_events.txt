@@ -2112,6 +2112,38 @@ segrellion_icebringer.6502 = {
 			desc = segrellion_icebringer.6502.debug
 		}
 
+				triggered_desc = {
+			trigger = {
+				debug_only = yes
+				segrellion_icebringer_azor_ahai_candidate_trigger = yes
+			}
+
+			desc = segrellion_icebringer.6502.debug_shield_azor
+		}
+
+
+		triggered_desc = {
+			trigger = {
+				debug_only = yes
+
+				NOT = {
+					segrellion_icebringer_azor_ahai_candidate_trigger = yes
+				}
+			}
+
+			desc = segrellion_icebringer.6502.debug_shield_normal
+		}
+
+
+		triggered_desc = {
+			trigger = {
+				debug_only = yes
+				has_character_flag = segrellion_stage3_heart_favor_earned
+			}
+
+			desc = segrellion_icebringer.6502.debug_heart_unlocked
+		}
+
 
 		# =====================================================
 		# BLACK APPLE - DESTINED FIRST ATTEMPT
@@ -2542,18 +2574,25 @@ segrellion_icebringer.6518 = {
 	}
 }
 
-
 # =========================================================
 # MIRROR SHIELD
+#
+# NORMAL CHARACTERS:
+#   70 Almost
+#   30 Serwyn's Victory
+#
+# AZOR AHAI CANDIDATES:
+#   95 Failure
+#    X Kill Dragon
+#
+# Killing the dragon is NOT enough.
+# A second extremely rare roll determines whether the
+# candidate reaches the true Azor Ahai gate.
 # =========================================================
 
 
 # =========================================================
 # 6520 - SHIELD DISPATCHER
-#
-# 70 Almost
-# 29 Kill + obtain Serwyn's shield
-#  1 True Guardian path, modified by candidate
 # =========================================================
 
 segrellion_icebringer.6520 = {
@@ -2562,53 +2601,89 @@ segrellion_icebringer.6520 = {
 
 	immediate = {
 
-		random_list = {
+		# =================================================
+		# AZOR AHAI CANDIDATE
+		# =================================================
 
-			70 = {
+		if = {
+			limit = {
+				has_character_flag = segrellion_stage3_azor_declined_once
+				segrellion_icebringer_azor_ahai_candidate_trigger = yes
+			}
 
-				if = {
-					limit = {
-						has_character_flag = segrellion_stage3_seen_shield_almost
+			trigger_event = segrellion_icebringer.6527
+		}
+
+		else if = {
+			limit = {
+				segrellion_icebringer_azor_ahai_candidate_trigger = yes
+			}
+
+			random_list = {
+
+				95 = {
+					trigger_event = segrellion_icebringer.6528
+				}
+
+				0 = {
+					modifier = {
+						add = segrellion_icebringer_stage3_azor_dragon_weight
 					}
 
-					trigger_event = segrellion_icebringer.6525
-				}
-
-				else = {
-					trigger_event = segrellion_icebringer.6521
+					trigger_event = segrellion_icebringer.6523
 				}
 			}
+		}
 
 
-			29 = {
+		# =================================================
+		# EVERYONE ELSE
+		# =================================================
 
-				if = {
-					limit = {
-						has_character_flag = segrellion_stage3_seen_serwyn_shield
+		else = {
+
+			random_list = {
+
+				70 = {
+
+					if = {
+						limit = {
+							has_character_flag = segrellion_stage3_seen_shield_almost
+						}
+
+						trigger_event = segrellion_icebringer.6525
 					}
 
-					trigger_event = segrellion_icebringer.6526
+					else = {
+						trigger_event = segrellion_icebringer.6521
+					}
 				}
 
-				else = {
-					trigger_event = segrellion_icebringer.6522
+
+				30 = {
+
+					if = {
+						limit = {
+							has_character_flag = segrellion_stage3_seen_serwyn_shield
+						}
+
+						trigger_event = segrellion_icebringer.6526
+					}
+
+					else = {
+						trigger_event = segrellion_icebringer.6522
+					}
 				}
 			}
-
-			0 = {
-				modifier = {
-					add = segrellion_icebringer_stage3_true_weight
-				}
-
-				trigger_event = segrellion_icebringer.6523
-			}
-			
 		}
 	}
 }
 
+
 # =========================================================
 # 6521 - ALMOST
+#
+# NORMAL CHARACTER ONLY
 # =========================================================
 
 segrellion_icebringer.6521 = {
@@ -2646,6 +2721,8 @@ segrellion_icebringer.6521 = {
 
 # =========================================================
 # 6522 - SERWYN'S VICTORY
+#
+# NORMAL CHARACTER ONLY
 # =========================================================
 
 segrellion_icebringer.6522 = {
@@ -2683,7 +2760,8 @@ segrellion_icebringer.6522 = {
 # =========================================================
 # 6523 - THE DRAGON FALLS
 #
-# TRUE PATH
+# AZOR CANDIDATE ONLY.
+# Victory does NOT complete Stage III.
 # =========================================================
 
 segrellion_icebringer.6523 = {
@@ -2706,23 +2784,16 @@ segrellion_icebringer.6523 = {
 	option = {
 		name = segrellion_icebringer.6523.a
 
-		if = {
-			limit = {
-				has_character_flag = segrellion_stage3_persevered
-			}
+		add_character_flag = segrellion_stage3_seen_azor_dragon_killed
+		add_character_flag = segrellion_stage3_persevered
 
-			trigger_event = segrellion_icebringer.6527
-		}
-
-		else = {
-			trigger_event = segrellion_icebringer.6524
-		}
+		trigger_event = segrellion_icebringer.6529
 	}
 }
 
 
 # =========================================================
-# 6524 - TRUE PATH, FIRST TRY
+# 6524 - NOTHING BEYOND THE DRAGON
 # =========================================================
 
 segrellion_icebringer.6524 = {
@@ -2745,39 +2816,7 @@ segrellion_icebringer.6524 = {
 	option = {
 		name = segrellion_icebringer.6524.a
 
-		add_character_flag = segrellion_icebringer_v2_stage_three_passed
-
-		# Stage IV hook goes here later.
-		remove_character_flag = segrellion_icebringer_awakening_chain_active
-	}
-}
-
-
-# =========================================================
-# 6527 - TRUE PATH AFTER PERSEVERING
-# =========================================================
-
-segrellion_icebringer.6527 = {
-	type = character_event
-
-	title = segrellion_icebringer.6527.t
-	desc = segrellion_icebringer.6527.desc
-
-	theme = intrigue
-
-	override_background = {
-		reference = segrellion_serwyn_hill
-	}
-
-	left_portrait = {
-		character = root
-		animation = worry
-	}
-
-	option = {
-		name = segrellion_icebringer.6527.a
-
-		add_character_flag = segrellion_icebringer_v2_stage_three_passed
+		add_character_flag = segrellion_stage3_persevered
 
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
@@ -2785,7 +2824,7 @@ segrellion_icebringer.6527 = {
 
 
 # =========================================================
-# SHIELD LOOPS
+# 6525 - ALMOST LOOP
 # =========================================================
 
 segrellion_icebringer.6525 = {
@@ -2802,10 +2841,17 @@ segrellion_icebringer.6525 = {
 
 	option = {
 		name = segrellion_icebringer.6525.a
+
 		add_character_flag = segrellion_stage3_persevered
+
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
 }
+
+
+# =========================================================
+# 6526 - SERWYN LOOP
+# =========================================================
 
 segrellion_icebringer.6526 = {
 	type = character_event
@@ -2821,11 +2867,130 @@ segrellion_icebringer.6526 = {
 
 	option = {
 		name = segrellion_icebringer.6526.a
+
 		add_character_flag = segrellion_stage3_persevered
+
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
 }
 
+
+# =========================================================
+# 6527 - THE GIRL BEYOND THE DRAGON
+#
+# AZOR AHAI GATE.
+# =========================================================
+
+segrellion_icebringer.6527 = {
+	type = character_event
+
+	title = segrellion_icebringer.6527.t
+	desc = segrellion_icebringer.6527.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_serwyn_hill
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	# -----------------------------------------------------
+	# CONTINUE
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.6527.a
+
+		add_character_flag = segrellion_icebringer_v2_stage_three_passed
+		add_character_flag = segrellion_icebringer_stage4_azor_locked
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+
+
+	# -----------------------------------------------------
+	# TURN BACK
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.6527.b
+
+		add_character_flag = segrellion_stage3_azor_declined_once
+		add_character_flag = segrellion_stage3_persevered
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6528 - AZOR FAILURE
+# =========================================================
+
+segrellion_icebringer.6528 = {
+	type = character_event
+
+	title = segrellion_icebringer.6528.t
+	desc = segrellion_icebringer.6528.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_serwyn_hill
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6528.a
+
+		add_character_flag = segrellion_stage3_persevered
+
+		add_character_modifier = {
+			modifier = segrellion_fought_a_dragon_modifier
+			years = 1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# 6529 - WHAT LIES BEYOND?
+#
+# Second Azor roll.
+# =========================================================
+
+segrellion_icebringer.6529 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			99 = {
+				trigger_event = segrellion_icebringer.6524
+			}
+
+			0 = {
+				modifier = {
+					add = segrellion_icebringer_stage3_azor_revelation_weight
+				}
+
+				trigger_event = segrellion_icebringer.6527
+			}
+		}
+	}
+}
 
 # =========================================================
 # BLACK APPLE
@@ -2854,6 +3019,14 @@ segrellion_icebringer.6530 = {
 	immediate = {
 
 		if = {
+			limit = {
+				has_character_flag = segrellion_stage3_darkness_declined_once
+			}
+
+			trigger_event = segrellion_icebringer.6543
+		}
+		
+		else if = {
 			limit = {
 				segrellion_icebringer_destined_guardian_trigger = yes
 
@@ -3031,7 +3204,7 @@ segrellion_icebringer.6532 = {
 			add_trait = segrellion_touched_by_darkness_trait
 		}
 
-		remove_character_flag = segrellion_icebringer_awakening_chain_active
+		trigger_event = segrellion_icebringer.6541
 	}
 }
 
@@ -3183,9 +3356,10 @@ segrellion_icebringer.6537 = {
 
 	option = {
 		name = segrellion_icebringer.6537.a
+
 		add_character_flag = segrellion_stage3_persevered
-		add_stress = 5
-		remove_character_flag = segrellion_icebringer_awakening_chain_active
+
+		trigger_event = segrellion_icebringer.6541
 	}
 }
 
@@ -3665,23 +3839,35 @@ segrellion_icebringer.6570 = {
 
 	immediate = {
 
-		random_list = {
+		# =================================================
+		# HEART'S FAVOR ALREADY EARNED
+		#
+		# Once the true answer has been discovered,
+		# selecting the Heart always returns to its gate.
+		# =================================================
 
-			50 = {
-				trigger_event = segrellion_icebringer.6571
+		if = {
+			limit = {
+				has_character_flag = segrellion_stage3_heart_favor_earned
 			}
 
-			50 = {
+			trigger_event = segrellion_icebringer.6595
+		}
 
-				if = {
-					limit = {
-						has_character_flag = segrellion_stage3_heart_favor_earned
-					}
 
-					trigger_event = segrellion_icebringer.6595
+		# =================================================
+		# HEART NOT YET UNDERSTOOD
+		# =================================================
+
+		else = {
+
+			random_list = {
+
+				50 = {
+					trigger_event = segrellion_icebringer.6571
 				}
 
-				else = {
+				50 = {
 					trigger_event = segrellion_icebringer.6580
 				}
 			}
@@ -4086,7 +4272,7 @@ segrellion_icebringer.6591 = {
 			OWNER = root
 		}
 
-		remove_character_flag = segrellion_icebringer_awakening_chain_active
+		trigger_event = segrellion_icebringer.6596
 	}
 }
 
@@ -4222,6 +4408,89 @@ segrellion_icebringer.6595 = {
 
 		add_character_flag = segrellion_stage3_persevered
 
+		trigger_event = segrellion_icebringer.6596
+	}
+}
+
+# =========================================================
+# 6596 - SHE RETURNS
+#
+# GUARDIAN REVELATION
+# =========================================================
+
+segrellion_icebringer.6596 = {
+	type = character_event
+
+	title = segrellion_icebringer.6596.t
+	desc = segrellion_icebringer.6596.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_barren_expanse
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.6596.a
+
+		trigger_event = segrellion_icebringer.6597
+	}
+}
+
+
+# =========================================================
+# 6597 - THE GUARDIAN'S PATH
+#
+# IRREVERSIBLE GUARDIAN GATE
+# =========================================================
+
+segrellion_icebringer.6597 = {
+	type = character_event
+
+	title = segrellion_icebringer.6597.t
+	desc = segrellion_icebringer.6597.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_barren_expanse
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# =====================================================
+	# ACCEPT GUARDIAN PATH
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.6597.a
+
+		add_character_flag = segrellion_icebringer_v2_stage_three_passed
+		add_character_flag = segrellion_icebringer_stage4_guardian_locked
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+
+
+	# =====================================================
+	# REFUSE FOR NOW
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.6597.b
+
+		add_character_flag = segrellion_stage3_guardian_declined_once
+		add_character_flag = segrellion_stage3_persevered
+
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
 }
@@ -4348,5 +4617,118 @@ segrellion_icebringer.6999 = {
 
 	option = {
 		name = segrellion_icebringer.6999.a
+	}
+}
+
+
+# =========================================================
+# 6541 - DARKNESS GATE DISPATCHER
+#
+# Every actual encounter with the Darkness has a 10%
+# chance of exposing the deeper path.
+#
+# Since Darkness itself occupies 70% of the normal Apple
+# pool, the normal total chance is effectively 7%.
+# =========================================================
+
+segrellion_icebringer.6541 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			90 = {
+				remove_character_flag = segrellion_icebringer_awakening_chain_active
+			}
+
+			10 = {
+				trigger_event = segrellion_icebringer.6542
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6542 - THE SHAPE IN THE DARK
+# =========================================================
+
+segrellion_icebringer.6542 = {
+	type = character_event
+
+	title = segrellion_icebringer.6542.t
+	desc = segrellion_icebringer.6542.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = segrellion_darkness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.6542.a
+
+		add_character_flag = segrellion_stage3_darkness_gate_seen
+
+		trigger_event = segrellion_icebringer.6543
+	}
+}
+
+
+# =========================================================
+# 6543 - THE DARK PATH
+#
+# IRREVERSIBLE DARKNESS GATE
+# =========================================================
+
+segrellion_icebringer.6543 = {
+	type = character_event
+
+	title = segrellion_icebringer.6543.t
+	desc = segrellion_icebringer.6543.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_darkness
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	# -----------------------------------------------------
+	# CONTINUE
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.6543.a
+
+		add_character_flag = segrellion_icebringer_v2_stage_three_passed
+		add_character_flag = segrellion_icebringer_stage4_darkness_locked
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+
+
+	# -----------------------------------------------------
+	# TURN BACK
+	# -----------------------------------------------------
+
+	option = {
+		name = segrellion_icebringer.6543.b
+
+		add_character_flag = segrellion_stage3_darkness_declined_once
+		add_character_flag = segrellion_stage3_persevered
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
 }

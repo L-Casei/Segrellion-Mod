@@ -437,6 +437,7 @@ segrellion_keep_the_dragon_egg_close_decision = {
 }
 
 segrellion_attempt_to_awaken_icebringer_decision = {
+
 	picture = {
 		reference = "gfx/interface/illustrations/decisions/awaken_icebringer_decision_background.dds"
 	}
@@ -532,16 +533,76 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 			add_character_flag = segrellion_icebringer_awakening_chain_active
 
 
-			# ---------------------------------------------------------
-			# STAGE III COMPLETED
+			# =========================================================
+			# RESUME AWAKENING
 			#
-			# Temporary until Stage IV exists.
+			# Route locks always take priority.
+			# =========================================================
+
+
+			# ---------------------------------------------------------
+			# STAGE IV - GUARDIAN
 			# ---------------------------------------------------------
 
 			if = {
 				limit = {
+					has_character_flag = segrellion_icebringer_stage4_guardian_locked
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.7000
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE IV - AZOR AHAI
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_stage4_azor_locked
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.7100
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE IV - DARKNESS
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_stage4_darkness_locked
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.7200
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# LEGACY / SAFETY REPAIR
+			#
+			# A save from the old system might have Stage III passed
+			# without possessing one of the new route locks.
+			#
+			# Send that character back to Stage III.
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
 					has_character_flag = segrellion_icebringer_v2_stage_three_passed
 				}
+
+				remove_character_flag = segrellion_icebringer_v2_stage_three_passed
 
 				trigger_event = {
 					id = segrellion_icebringer.6500
@@ -552,7 +613,7 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 			# ---------------------------------------------------------
 			# STAGE II COMPLETED
-			# Resume at Stage III
+			# Resume Stage III
 			# ---------------------------------------------------------
 
 			else_if = {
@@ -569,7 +630,7 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 			# ---------------------------------------------------------
 			# STAGE I COMPLETED
-			# Resume at Stage II
+			# Resume Stage II
 			# ---------------------------------------------------------
 
 			else_if = {
@@ -590,12 +651,12 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 			# ---------------------------------------------------------
 
 			else = {
+
 				trigger_event = {
 					id = segrellion_icebringer.6000
 					days = 1
 				}
 			}
-		}
 
 
 		ai_check_interval = 0

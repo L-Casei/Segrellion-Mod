@@ -599,46 +599,116 @@ segrellion_icebringer_stage2_true_weight = {
 # False weight = 99
 # =========================================================
 
-segrellion_icebringer_stage3_true_weight = {
-
-	value = 0.08
-
-
-	if = {
-		limit = {
-			segrellion_icebringer_destined_guardian_trigger = yes
-		}
-
-		value = 25
-	}
-
-
-	else_if = {
-		limit = {
-			segrellion_icebringer_exceptional_bearer_trigger = yes
-		}
-
-		value = 0.60
-	}
+# =========================================================
+# STAGE III - AZOR AHAI / MIRROR SHIELD
+#
+# Only Azor Ahai candidates ever use these values.
+#
+# First roll:
+#   Failure = 95
+#   Kill Dragon = dynamic
+#
+# Second roll, after killing dragon:
+#   Nothing Beyond = 99
+#   Revelation / Girl = dynamic
+#
+# Reaching the actual Azor gate is intentionally
+# extraordinarily difficult.
+# =========================================================
 
 
-	else_if = {
-		limit = {
-			segrellion_icebringer_strong_candidate_trigger = yes
-		}
+# =========================================================
+# KILL THE DRAGON
+# =========================================================
 
-		value = 0.25
-	}
+segrellion_icebringer_stage3_azor_dragon_weight = {
 
+	value = 5
 
 	multiply = segrellion_icebringer_affinity_multiplier
 
+	# Even the greatest candidate never gets an easy roll.
 
-	# 66 / (99 + 66) = 40%
+	max = 25
 
-	max = 66
+	min = 1
+}
 
-	min = 0.01
+
+# =========================================================
+# FIND THE GIRL AFTER THE DRAGON FALLS
+# =========================================================
+
+segrellion_icebringer_stage3_azor_revelation_weight = {
+
+	value = 1.50
+
+	multiply = segrellion_icebringer_affinity_multiplier
+
+	max = 5
+
+	min = 0.50
+}
+
+
+# =========================================================
+# DEBUG - DRAGON KILL
+# =========================================================
+
+segrellion_icebringer_stage3_azor_dragon_percent = {
+
+	value = segrellion_icebringer_stage3_azor_dragon_weight
+
+	divide = {
+		value = 95
+		add = segrellion_icebringer_stage3_azor_dragon_weight
+	}
+
+	multiply = 100
+}
+
+
+segrellion_icebringer_stage3_azor_dragon_failure_percent = {
+
+	value = 95
+
+	divide = {
+		value = 95
+		add = segrellion_icebringer_stage3_azor_dragon_weight
+	}
+
+	multiply = 100
+}
+
+
+# =========================================================
+# DEBUG - REVELATION AFTER KILL
+# =========================================================
+
+segrellion_icebringer_stage3_azor_revelation_percent = {
+
+	value = segrellion_icebringer_stage3_azor_revelation_weight
+
+	divide = {
+		value = 99
+		add = segrellion_icebringer_stage3_azor_revelation_weight
+	}
+
+	multiply = 100
+}
+
+
+# =========================================================
+# DEBUG - TOTAL CHANCE FROM MIRROR SHIELD TO AZOR GATE
+# =========================================================
+
+segrellion_icebringer_stage3_azor_total_percent = {
+
+	value = segrellion_icebringer_stage3_azor_dragon_percent
+
+	multiply = segrellion_icebringer_stage3_azor_revelation_percent
+
+	divide = 100
 }
 
 
@@ -722,53 +792,6 @@ segrellion_icebringer_stage2_partial_percent = {
 	divide = {
 		value = 95
 		add = segrellion_icebringer_stage2_true_weight
-	}
-
-	multiply = 100
-}
-
-
-# =========================================================
-# STAGE III - MIRROR SHIELD
-#
-# Almost = 70
-# Serwyn = 29
-# True = dynamic
-# =========================================================
-
-segrellion_icebringer_stage3_success_percent = {
-
-	value = segrellion_icebringer_stage3_true_weight
-
-	divide = {
-		value = 99
-		add = segrellion_icebringer_stage3_true_weight
-	}
-
-	multiply = 100
-}
-
-
-segrellion_icebringer_stage3_almost_percent = {
-
-	value = 70
-
-	divide = {
-		value = 99
-		add = segrellion_icebringer_stage3_true_weight
-	}
-
-	multiply = 100
-}
-
-
-segrellion_icebringer_stage3_serwyn_percent = {
-
-	value = 29
-
-	divide = {
-		value = 99
-		add = segrellion_icebringer_stage3_true_weight
 	}
 
 	multiply = 100
