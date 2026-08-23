@@ -508,120 +508,93 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 	effect = {
 
-	# =========================================================
-	# WARNING
-	# =========================================================
+		# =========================================================
+		# WARNING
+		# =========================================================
 
-	custom_tooltip = segrellion_awaken_icebringer_danger_tt
-
-
-	# =========================================================
-	# CROSS THE WAKING VEIL
-	# =========================================================
-
-	add_character_modifier = {
-		modifier = segrellion_beyond_waking_veil_modifier
-		days = 30
-	}
+		custom_tooltip = segrellion_awaken_icebringer_danger_tt
 
 
-	# =========================================================
-	# BEGIN / RESUME THE DREAM
-	# =========================================================
+		# =========================================================
+		# CROSS THE WAKING VEIL
+		# =========================================================
 
-	add_character_flag = segrellion_icebringer_awakening_chain_active
-
-
-	# ---------------------------------------------------------
-	# STAGE III COMPLETED
-	#
-	# Once Stage IV exists, resume there.
-	# ---------------------------------------------------------
-
-	# ---------------------------------------------------------
-	# STAGE IV COMPLETED
-	# Resume at V
-	# ---------------------------------------------------------
-
-	if = {
-		limit = {
-			has_character_flag = segrellion_icebringer_truth_passed
+		add_character_modifier = {
+			modifier = segrellion_beyond_waking_veil_modifier
+			days = 30
 		}
 
-		trigger_event = {
-			id = segrellion_icebringer.5700
-			days = 1
-		}
-	}
+
+		# =========================================================
+		# BEGIN / RESUME AWAKENING V2
+		# =========================================================
+
+		add_character_flag = segrellion_icebringer_awakening_chain_active
 
 
-	# ---------------------------------------------------------
-	# STAGE III COMPLETED
-	# Resume at IV - The Truth
-	# ---------------------------------------------------------
+		# ---------------------------------------------------------
+		# STAGE III COMPLETED
+		#
+		# Temporary until Stage IV exists.
+		# ---------------------------------------------------------
 
-	else_if = {
-		limit = {
-			has_character_flag = segrellion_icebringer_choice_passed
-		}
+		if = {
+			limit = {
+				has_character_flag = segrellion_icebringer_v2_stage_three_passed
+			}
 
-		trigger_event = {
-			id = segrellion_icebringer.5600
-			days = 1
-		}
-	}
-
-
-	# ---------------------------------------------------------
-	# STAGE II COMPLETED
-	#
-	# Resume at III - The Choice
-	# ---------------------------------------------------------
-
-	else_if = {
-		limit = {
-			has_character_flag = segrellion_icebringer_corridor_passed
+			trigger_event = {
+				id = segrellion_icebringer.6500
+				days = 1
+			}
 		}
 
-		trigger_event = {
-			id = segrellion_icebringer.5500
-			days = 1
+
+		# ---------------------------------------------------------
+		# STAGE II COMPLETED
+		# Resume at Stage III
+		# ---------------------------------------------------------
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_icebringer_v2_stage_two_passed
+			}
+
+			trigger_event = {
+				id = segrellion_icebringer.6500
+				days = 1
+			}
 		}
-	}
 
 
-	# ---------------------------------------------------------
-	# STAGE I COMPLETED
-	#
-	# Resume at II - The Corridor
-	# ---------------------------------------------------------
+		# ---------------------------------------------------------
+		# STAGE I COMPLETED
+		# Resume at Stage II
+		# ---------------------------------------------------------
 
-	else_if = {
-		limit = {
-			has_character_flag = segrellion_icebringer_black_door_passed
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_icebringer_v2_stage_one_passed
+			}
+
+			trigger_event = {
+				id = segrellion_icebringer.6400
+				days = 1
+			}
 		}
 
-		trigger_event = {
-			id = segrellion_icebringer.5400
-			days = 1
+
+		# ---------------------------------------------------------
+		# NO PROGRESS
+		# Begin Stage I
+		# ---------------------------------------------------------
+
+		else = {
+			trigger_event = {
+				id = segrellion_icebringer.6000
+				days = 1
+			}
 		}
-	}
-
-
-	# ---------------------------------------------------------
-	# NO PROGRESS
-	#
-	# Begin at I - The Door
-	# ---------------------------------------------------------
-
-	else = {
-
-		trigger_event = {
-			id = segrellion_icebringer.5000
-			days = 1
-		}
-	}
-}
 
 
 	ai_check_interval = 0
@@ -650,6 +623,7 @@ segrellion_search_for_legendary_relic_decision = {
 
 	desc = segrellion_search_for_legendary_relic_decision_desc
 	selection_tooltip = segrellion_search_for_legendary_relic_decision_tooltip
+	confirm_text = segrellion_search_for_legendary_relic_decision_confirm
 
 
 	# =====================================================
