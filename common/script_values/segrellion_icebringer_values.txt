@@ -204,3 +204,439 @@ segrellion_icebringer_affinity_value = {
 	# chosen bearer.
 	# =========================================================
 }
+
+# =========================================================
+# ICEBRINGER AWAKENING - AFFINITY MULTIPLIER
+#
+# This modifies the TRUE PATH weight after the character's
+# base candidate tier has been determined.
+# =========================================================
+
+segrellion_icebringer_affinity_multiplier = {
+
+	value = 1
+
+
+	# =====================================================
+	# PROPHECY ERA
+	#
+	# IMPORTANT:
+	# These are EXCLUSIVE tiers, not cumulative.
+	#
+	# 106 AC = x1.00
+	# 150 AC = x1.05
+	# 200 AC = x1.15
+	# 250 AC = x1.35
+	# 290 AC = x1.70
+	# 295 AC = x2.40
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8295.1.1
+		}
+		multiply = 2.40
+	}
+
+	else_if = {
+		limit = {
+			current_date >= 8290.1.1
+		}
+		multiply = 1.70
+	}
+
+	else_if = {
+		limit = {
+			current_date >= 8250.1.1
+		}
+		multiply = 1.35
+	}
+
+	else_if = {
+		limit = {
+			current_date >= 8200.1.1
+		}
+		multiply = 1.15
+	}
+
+	else_if = {
+		limit = {
+			current_date >= 8150.1.1
+		}
+		multiply = 1.05
+	}
+
+
+	# =====================================================
+	# BLOOD / SUPERNATURAL AFFINITY
+	# =====================================================
+
+	if = {
+		limit = {
+			has_trait = dragon_dreams
+		}
+		multiply = 1.20
+	}
+
+
+	# Segrellion blood has the strongest family affinity.
+
+	if = {
+		limit = {
+			dynasty = dynasty:dynn_Segrellion
+		}
+		multiply = 1.18
+	}
+
+
+	# Valyrian blood helps, but less than the actual
+	# bloodline historically tied to Icebringer.
+
+	else_if = {
+		limit = {
+			dynasty = dynasty:dynn_Targaryen
+		}
+		multiply = 1.10
+	}
+
+
+	# =====================================================
+	# ICEBRINGER RELATIONSHIP
+	# =====================================================
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_state_accepted
+		}
+		multiply = 1.15
+	}
+
+	else_if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_state_partial
+		}
+		multiply = 1.05
+	}
+
+	else_if = {
+		limit = {
+			has_character_flag = segrellion_icebringer_state_rejected
+		}
+		multiply = 0.75
+	}
+
+
+	if = {
+		limit = {
+			has_trait = segrellion_icebringer_bearer_trait
+		}
+		multiply = 1.10
+	}
+
+
+	# =====================================================
+	# POSITIVE CHARACTER TRAITS
+	#
+	# These stack.
+	# =====================================================
+
+	if = {
+		limit = { has_trait = just }
+		multiply = 1.10
+	}
+
+	if = {
+		limit = { has_trait = honest }
+		multiply = 1.08
+	}
+
+	if = {
+		limit = { has_trait = brave }
+		multiply = 1.10
+	}
+
+	if = {
+		limit = { has_trait = compassionate }
+		multiply = 1.10
+	}
+
+	if = {
+		limit = { has_trait = diligent }
+		multiply = 1.06
+	}
+
+	if = {
+		limit = { has_trait = patient }
+		multiply = 1.05
+	}
+
+	if = {
+		limit = { has_trait = temperate }
+		multiply = 1.05
+	}
+
+	if = {
+		limit = { has_trait = humble }
+		multiply = 1.04
+	}
+
+	if = {
+		limit = { has_trait = chaste }
+		multiply = 1.05
+	}
+
+	if = {
+		limit = { has_trait = stubborn }
+		multiply = 1.04
+	}
+
+	if = {
+		limit = { has_trait = loyal }
+		multiply = 1.06
+	}
+
+
+	# =====================================================
+	# NEGATIVE CHARACTER TRAITS
+	# =====================================================
+
+	if = {
+		limit = { has_trait = craven }
+		multiply = 0.75
+	}
+
+	if = {
+		limit = { has_trait = arbitrary }
+		multiply = 0.82
+	}
+
+	if = {
+		limit = { has_trait = deceitful }
+		multiply = 0.88
+	}
+
+	if = {
+		limit = { has_trait = callous }
+		multiply = 0.85
+	}
+
+	if = {
+		limit = { has_trait = sadistic }
+		multiply = 0.75
+	}
+
+	if = {
+		limit = { has_trait = greedy }
+		multiply = 0.90
+	}
+
+	if = {
+		limit = { has_trait = lazy }
+		multiply = 0.88
+	}
+
+	if = {
+		limit = { has_trait = fickle }
+		multiply = 0.90
+	}
+
+	if = {
+		limit = { has_trait = lustful }
+		multiply = 0.90
+	}
+
+	if = {
+		limit = { has_trait = impatient }
+		multiply = 0.92
+	}
+
+	if = {
+		limit = { has_trait = disloyal }
+		multiply = 0.85
+	}
+
+
+	# =====================================================
+	# MARTIAL CAPABILITY
+	#
+	# Exclusive tiers.
+	# =====================================================
+
+	if = {
+		limit = {
+			prowess >= 25
+		}
+		multiply = 1.15
+	}
+
+	else_if = {
+		limit = {
+			prowess >= 20
+		}
+		multiply = 1.10
+	}
+
+	else_if = {
+		limit = {
+			prowess >= 15
+		}
+		multiply = 1.06
+	}
+
+
+	if = {
+		limit = {
+			has_trait = strong
+		}
+		multiply = 1.05
+	}
+}
+
+# =========================================================
+# STAGE I - TRUE PATH WEIGHT
+#
+# False weight = 99
+# =========================================================
+
+segrellion_icebringer_stage1_true_weight = {
+
+	# Ordinary
+	value = 0.25
+
+
+	# DESTINED
+	if = {
+		limit = {
+			segrellion_icebringer_destined_guardian_trigger = yes
+		}
+
+		value = 99
+	}
+
+
+	# ALEX / EXCEPTIONAL
+	else_if = {
+		limit = {
+			segrellion_icebringer_exceptional_bearer_trigger = yes
+		}
+
+		value = 2
+	}
+
+
+	# STRONG
+	else_if = {
+		limit = {
+			segrellion_icebringer_strong_candidate_trigger = yes
+		}
+
+		value = 0.80
+	}
+
+
+	multiply = segrellion_icebringer_affinity_multiplier
+
+
+	# Absolute ceiling:
+	# 198 / (99 + 198) = 66.67%
+
+	max = 198
+
+	min = 0.01
+}
+
+# =========================================================
+# STAGE II - TRUE PATH WEIGHT
+#
+# False weight = 95
+# =========================================================
+
+segrellion_icebringer_stage2_true_weight = {
+
+	value = 0.15
+
+
+	if = {
+		limit = {
+			segrellion_icebringer_destined_guardian_trigger = yes
+		}
+
+		value = 51
+	}
+
+
+	else_if = {
+		limit = {
+			segrellion_icebringer_exceptional_bearer_trigger = yes
+		}
+
+		value = 1.25
+	}
+
+
+	else_if = {
+		limit = {
+			segrellion_icebringer_strong_candidate_trigger = yes
+		}
+
+		value = 0.50
+	}
+
+
+	multiply = segrellion_icebringer_affinity_multiplier
+
+
+	# 115 / (95 + 115) = 54.76%
+
+	max = 115
+
+	min = 0.01
+}
+
+# =========================================================
+# STAGE III - TRUE SHIELD PATH
+#
+# False weight = 99
+# =========================================================
+
+segrellion_icebringer_stage3_true_weight = {
+
+	value = 0.08
+
+
+	if = {
+		limit = {
+			segrellion_icebringer_destined_guardian_trigger = yes
+		}
+
+		value = 25
+	}
+
+
+	else_if = {
+		limit = {
+			segrellion_icebringer_exceptional_bearer_trigger = yes
+		}
+
+		value = 0.60
+	}
+
+
+	else_if = {
+		limit = {
+			segrellion_icebringer_strong_candidate_trigger = yes
+		}
+
+		value = 0.25
+	}
+
+
+	multiply = segrellion_icebringer_affinity_multiplier
+
+
+	# 66 / (99 + 66) = 40%
+
+	max = 66
+
+	min = 0.01
+}

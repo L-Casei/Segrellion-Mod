@@ -449,162 +449,163 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 	selection_tooltip = segrellion_attempt_to_awaken_icebringer_decision_tooltip
 
 
-	# =========================================================
-	# VISIBILITY
-	#
-	# If you do not personally possess Icebringer,
-	# the decision does not exist for you.
-	# =========================================================
-
-	is_shown = {
-
-		any_character_artifact = {
-			has_variable = segrellion_icebringer_artifact
-		}
-
-		NOT = {
-			has_global_variable = segrellion_icebringer_has_awakened
-		}
-
-		NOT = {
-			has_character_flag = segrellion_icebringer_awakening_chain_active
-		}
-
-		NOT = {
-			has_character_flag = segrellion_icebringer_awakening_succeeded
-		}
-	}
-
-
-	# =========================================================
-	# ONLY REQUIREMENTS
-	# =========================================================
-
-	is_valid = {
-
-		# ---------------------------------------------------------
-		# YOU PERSONALLY HOLD ICEBRINGER
-		# ---------------------------------------------------------
-
-		custom_description = {
-			text = segrellion_icebringer_holder_requirement
-
-			global_var:segrellion_icebringer = {
-				artifact_owner = root
-			}
-		}
-
-
-		# ---------------------------------------------------------
-		# ICEBRINGER HAS CHOSEN YOU
-		# ---------------------------------------------------------
-
-		custom_description = {
-			text = segrellion_icebringer_chosen_desc
-			segrellion_icebringer_chosen_trigger = yes
-		}
-	}
-
-
-	effect = {
-
 		# =========================================================
-		# WARNING
-		# =========================================================
-
-		custom_tooltip = segrellion_awaken_icebringer_danger_tt
-
-
-		# =========================================================
-		# CROSS THE WAKING VEIL
-		# =========================================================
-
-		add_character_modifier = {
-			modifier = segrellion_beyond_waking_veil_modifier
-			days = 30
-		}
-
-
-		# =========================================================
-		# BEGIN / RESUME AWAKENING V2
-		# =========================================================
-
-		add_character_flag = segrellion_icebringer_awakening_chain_active
-
-
-		# ---------------------------------------------------------
-		# STAGE III COMPLETED
+		# VISIBILITY
 		#
-		# Temporary until Stage IV exists.
-		# ---------------------------------------------------------
+		# If you do not personally possess Icebringer,
+		# the decision does not exist for you.
+		# =========================================================
 
-		if = {
-			limit = {
-				has_character_flag = segrellion_icebringer_v2_stage_three_passed
+		is_shown = {
+
+			any_character_artifact = {
+				has_variable = segrellion_icebringer_artifact
 			}
 
-			trigger_event = {
-				id = segrellion_icebringer.6500
-				days = 1
-			}
-		}
-
-
-		# ---------------------------------------------------------
-		# STAGE II COMPLETED
-		# Resume at Stage III
-		# ---------------------------------------------------------
-
-		else_if = {
-			limit = {
-				has_character_flag = segrellion_icebringer_v2_stage_two_passed
+			NOT = {
+				has_global_variable = segrellion_icebringer_has_awakened
 			}
 
-			trigger_event = {
-				id = segrellion_icebringer.6500
-				days = 1
+			NOT = {
+				has_character_flag = segrellion_icebringer_awakening_chain_active
+			}
+
+			NOT = {
+				has_character_flag = segrellion_icebringer_awakening_succeeded
 			}
 		}
 
 
-		# ---------------------------------------------------------
-		# STAGE I COMPLETED
-		# Resume at Stage II
-		# ---------------------------------------------------------
+		# =========================================================
+		# ONLY REQUIREMENTS
+		# =========================================================
 
-		else_if = {
-			limit = {
-				has_character_flag = segrellion_icebringer_v2_stage_one_passed
+		is_valid = {
+
+			# ---------------------------------------------------------
+			# YOU PERSONALLY HOLD ICEBRINGER
+			# ---------------------------------------------------------
+
+			custom_description = {
+				text = segrellion_icebringer_holder_requirement
+
+				global_var:segrellion_icebringer = {
+					artifact_owner = root
+				}
 			}
 
-			trigger_event = {
-				id = segrellion_icebringer.6400
-				days = 1
+
+			# ---------------------------------------------------------
+			# ICEBRINGER HAS CHOSEN YOU
+			# ---------------------------------------------------------
+
+			custom_description = {
+				text = segrellion_icebringer_chosen_desc
+				segrellion_icebringer_chosen_trigger = yes
 			}
 		}
 
 
-		# ---------------------------------------------------------
-		# NO PROGRESS
-		# Begin Stage I
-		# ---------------------------------------------------------
+		effect = {
 
-		else = {
-			trigger_event = {
-				id = segrellion_icebringer.6000
-				days = 1
+			# =========================================================
+			# WARNING
+			# =========================================================
+
+			custom_tooltip = segrellion_awaken_icebringer_danger_tt
+
+
+			# =========================================================
+			# CROSS THE WAKING VEIL
+			# =========================================================
+
+			add_character_modifier = {
+				modifier = segrellion_beyond_waking_veil_modifier
+				days = 30
 			}
+
+
+			# =========================================================
+			# BEGIN / RESUME AWAKENING V2
+			# =========================================================
+
+			add_character_flag = segrellion_icebringer_awakening_chain_active
+
+
+			# ---------------------------------------------------------
+			# STAGE III COMPLETED
+			#
+			# Temporary until Stage IV exists.
+			# ---------------------------------------------------------
+
+			if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_v2_stage_three_passed
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.6500
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE II COMPLETED
+			# Resume at Stage III
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_v2_stage_two_passed
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.6500
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE I COMPLETED
+			# Resume at Stage II
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_v2_stage_one_passed
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.6400
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# NO PROGRESS
+			# Begin Stage I
+			# ---------------------------------------------------------
+
+			else = {
+				trigger_event = {
+					id = segrellion_icebringer.6000
+					days = 1
+				}
+			}
+
+
+		ai_check_interval = 0
+
+		ai_potential = {
+			always = no
 		}
 
-
-	ai_check_interval = 0
-
-	ai_potential = {
-		always = no
-	}
-
-	ai_will_do = {
-		base = 0
+		ai_will_do = {
+			base = 0
+		}
 	}
 }
 
