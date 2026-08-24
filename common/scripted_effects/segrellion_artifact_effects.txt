@@ -1524,6 +1524,248 @@ segrellion_awaken_icebringer_effect = {
 }
 
 # =========================================================
+# CREATE CORRUPTED ICEBRINGER
+# =========================================================
+
+segrellion_create_artifact_corrupted_icebringer_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 100
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 100
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+
+	create_artifact = {
+
+		name = segrellion_corrupted_icebringer_name
+		description = segrellion_corrupted_icebringer_desc
+
+		type = sword
+
+		visuals = segrellion_corrupted_icebringer_visuals
+		template = segrellion_corrupted_icebringer_template
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_corrupted_icebringer_modifier
+
+		history = {
+			type = reforged
+			actor = scope:owner
+			recipient = scope:owner
+		}
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+
+	scope:newly_created_artifact = {
+
+		equip_artifact_to_owner_replace = yes
+
+
+		# =================================================
+		# GLOBAL REFERENCE
+		# =================================================
+
+		set_global_variable = {
+			name = segrellion_corrupted_icebringer
+			value = this
+		}
+
+
+		# =================================================
+		# VALYRIAN STEEL
+		# =================================================
+
+		set_variable = {
+			name = valyrian_steel
+			value = yes
+		}
+
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+
+		set_variable = {
+			name = segrellion_corrupted_icebringer_artifact
+			value = yes
+		}
+
+
+		# =================================================
+		# ICEBRINGER'S HISTORICAL LINE
+		# =================================================
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8061.1.1
+			RECIPIENT = character:Segrellion_4
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8106.4.18
+			RECIPIENT = character:Segrellion_1
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8139.4.18
+			RECIPIENT = character:Segrellion_12
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8168.6.13
+			RECIPIENT = character:Segrellion_19
+		}
+
+		agot_add_artifact_history = {
+			ARTIFACT = this
+			TYPE = inherited
+			DATE = 8174.9.17
+			RECIPIENT = character:Segrellion_21
+		}
+	}
+}
+
+# =========================================================
+# CORRUPT ICEBRINGER
+#
+# Stage V Darkness transformation.
+# Destroys the previous form and replaces it with
+# Corrupted Icebringer.
+# =========================================================
+
+segrellion_corrupt_icebringer_effect = {
+
+
+	# =====================================================
+	# THE DARKNESS HAS CHOSEN A BEARER
+	# =====================================================
+
+	if = {
+		limit = {
+			NOT = {
+				has_trait = segrellion_bearer_of_darkness_trait
+			}
+		}
+
+		add_trait = segrellion_bearer_of_darkness_trait
+	}
+
+
+	# =====================================================
+	# MARK ICEBRINGER AS HAVING PASSED BEYOND DORMANCY
+	#
+	# This also prevents the legendary relic decision
+	# from ever treating the sword as merely "lost".
+	# =====================================================
+
+	set_global_variable = {
+		name = segrellion_icebringer_has_awakened
+		value = yes
+	}
+
+
+	# =====================================================
+	# DESTROY DORMANT ICEBRINGER
+	# =====================================================
+
+	if = {
+		limit = {
+			exists = global_var:segrellion_icebringer
+		}
+
+		global_var:segrellion_icebringer = {
+			save_scope_as = corrupted_old_icebringer
+		}
+
+		remove_global_variable = segrellion_icebringer
+
+		destroy_artifact = scope:corrupted_old_icebringer
+	}
+
+
+	# =====================================================
+	# DEFENSIVE SUPPORT:
+	# DESTROY AWAKENED ICEBRINGER IF THIS EFFECT IS EVER
+	# REACHED THROUGH DEBUG / FUTURE ALTERNATE CONTENT
+	# =====================================================
+
+	if = {
+		limit = {
+			exists = global_var:segrellion_awakened_icebringer
+		}
+
+		global_var:segrellion_awakened_icebringer = {
+			save_scope_as = corrupted_old_awakened_icebringer
+		}
+
+		remove_global_variable = segrellion_awakened_icebringer
+
+		destroy_artifact = scope:corrupted_old_awakened_icebringer
+	}
+
+
+	# =====================================================
+	# OLD ICEBRINGER STATES END
+	# =====================================================
+
+	remove_character_modifier = segrellion_icebringer_rejection_modifier
+	remove_character_modifier = segrellion_beyond_waking_veil_modifier
+
+	remove_character_flag = segrellion_icebringer_state_rejected
+	remove_character_flag = segrellion_icebringer_state_partial
+	remove_character_flag = segrellion_icebringer_state_accepted
+
+
+	# =====================================================
+	# DARKNESS STATE
+	# =====================================================
+
+	add_character_flag = segrellion_icebringer_corrupted_bearer
+	add_character_flag = segrellion_icebringer_state_corrupted
+
+
+	# =====================================================
+	# CREATE THE NEW BLADE
+	# =====================================================
+
+	segrellion_create_artifact_corrupted_icebringer_effect = {
+		OWNER = this
+	}
+}
+
+# =========================================================
 # DOOM DREAM - TEAL DRAGON EGG
 #
 # A real, viable AGOT dragon egg brought out of the dream.
