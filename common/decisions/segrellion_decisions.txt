@@ -726,6 +726,7 @@ segrellion_search_for_legendary_relic_decision = {
 
 	desc = segrellion_search_for_legendary_relic_decision_desc
 	selection_tooltip = segrellion_search_for_legendary_relic_decision_tooltip
+	confirm_text = segrellion_search_for_legendary_relic_decision_confirm
 
 
 	# =====================================================
@@ -734,17 +735,18 @@ segrellion_search_for_legendary_relic_decision = {
 
 	is_shown = {
 
-		# Only Segrellions.
+		# House Segrellion and all cadet houses.
 		dynasty = dynasty:dynn_Segrellion
 
-		# Only adults.
 		is_adult = yes
 
-		# Icebringer cannot be searched for before
-		# Aegon Dragonspear disappears.
-		current_date >= 8205.9.24
+		# Historical safeguard.
+		# Intentionally hidden from the normal decision UI.
+		# The search does not exist before the end of 195 AC.
+		hidden_trigger = {
+			current_date >= 8196.1.1
+		}
 
-		# No duplicate expedition.
 		NOT = {
 			has_character_flag = segrellion_legendary_relic_search_active
 		}
@@ -755,7 +757,7 @@ segrellion_search_for_legendary_relic_decision = {
 	# REQUIREMENTS
 	# =====================================================
 
-		is_valid = {
+	is_valid = {
 
 		is_imprisoned = no
 
@@ -763,11 +765,7 @@ segrellion_search_for_legendary_relic_decision = {
 			has_trait = incapable
 		}
 
-
-		# =====================================================
-		# ICEBRINGER MUST CURRENTLY BE LOST
-		# =====================================================
-
+		# Icebringer must currently be lost.
 		custom_description = {
 			text = segrellion_search_relic_icebringer_lost_requirement
 
@@ -776,23 +774,8 @@ segrellion_search_for_legendary_relic_decision = {
 			}
 		}
 
-
-		# =====================================================
-		# HISTORICAL DISAPPEARANCE
-		# =====================================================
-
-		custom_description = {
-			text = segrellion_search_relic_after_dragonspear_requirement
-
-			current_date >= 8205.9.24
-		}
-
-
-		# =====================================================
-		# CANNOT SEARCH FOR DORMANT ICEBRINGER
-		# AFTER IT HAS ALREADY AWAKENED
-		# =====================================================
-
+		# Dormant Icebringer cannot be searched for after
+		# the sword has already awakened.
 		custom_description = {
 			text = segrellion_search_relic_not_awakened_requirement
 
@@ -802,7 +785,12 @@ segrellion_search_for_legendary_relic_decision = {
 		}
 	}
 
-		widget = {
+
+	# =====================================================
+	# CHOOSE THE FIRST TRAIL
+	# =====================================================
+
+	widget = {
 		gui = "decision_view_widget_option_list_generic"
 		controller = decision_option_list_controller
 		decision_to_second_step_button = "segrellion_search_for_legendary_relic_decision_next_step"
@@ -880,6 +868,9 @@ segrellion_search_for_legendary_relic_decision = {
 	# =====================================================
 
 	effect = {
+
+		# Displayed as an actual effect before the cooldown notice.
+		custom_tooltip = segrellion_search_relic_multiple_journeys_effect_tt
 
 		add_character_flag = segrellion_legendary_relic_search_active
 

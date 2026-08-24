@@ -6,7 +6,6 @@ namespace = segrellion_relic
 # Route selection directly from the decision.
 # =========================================================
 
-
 # =========================================================
 # 0090 - SEARCH ABANDONED / TRAVEL CANCELLED
 # =========================================================
@@ -30,25 +29,20 @@ segrellion_relic.0090 = {
 	}
 
 	option = {
-
 		name = segrellion_relic.0090.a
 
-		remove_character_flag = segrellion_legendary_relic_search_active
-
-		remove_character_flag = segrellion_relic_route_tyrosh
-		remove_character_flag = segrellion_relic_route_oldtown
-		remove_character_flag = segrellion_relic_route_winterfell
+		segrellion_finish_relic_search_effect = yes
 	}
 }
 
 
 # =========================================================
-# TYROSH PATH
+# TYROSH
 # =========================================================
 
 
 # =========================================================
-# 1000 - TYROSH
+# 1000 - BEFORE THE ARCHON
 # =========================================================
 
 segrellion_relic.1000 = {
@@ -58,14 +52,13 @@ segrellion_relic.1000 = {
 	title = segrellion_relic.1000.t
 	desc = segrellion_relic.1000.desc
 
-	theme = travel
+	theme = diplomacy
 
 	override_background = {
-		reference = docks
+		reference = throne_room
 	}
 
 	immediate = {
-
 		title:c_tyrosh.holder ?= {
 			save_scope_as = relic_tyrosh_host
 		}
@@ -82,11 +75,10 @@ segrellion_relic.1000 = {
 	}
 
 	option = {
-
 		name = segrellion_relic.1000.a
 
 		trigger_event = {
-			id = segrellion_relic.1010
+			id = segrellion_relic.1005
 			days = 1
 		}
 	}
@@ -94,7 +86,136 @@ segrellion_relic.1000 = {
 
 
 # =========================================================
-# 1010 - THE TYROSHI LEDGER
+# 1005 - THE ARCHON'S ANSWER
+# =========================================================
+
+segrellion_relic.1005 = {
+
+	type = character_event
+
+	title = segrellion_relic.1005.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					scope:relic_tyrosh_host = {
+						opinion = {
+							target = root
+							value < 0
+						}
+					}
+				}
+
+				desc = segrellion_relic.1005.desc.hostile
+			}
+
+			triggered_desc = {
+				trigger = {
+					scope:relic_tyrosh_host = {
+						opinion = {
+							target = root
+							value >= 75
+						}
+					}
+				}
+
+				desc = segrellion_relic.1005.desc_warm
+			}
+
+			desc = segrellion_relic.1005.desc_cautious
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_tyrosh_host
+		animation = personality_bold
+	}
+
+
+	# Hostile: opinion below 0.
+	option = {
+
+		trigger = {
+			scope:relic_tyrosh_host = {
+				opinion = {
+					target = root
+					value < 0
+				}
+			}
+		}
+
+		name = segrellion_relic.1005.a
+
+		trigger_event = {
+			id = segrellion_relic.1091
+			days = 1
+		}
+	}
+
+
+	# Neutral/cautious: 0-74.
+	option = {
+
+		trigger = {
+			scope:relic_tyrosh_host = {
+				opinion = {
+					target = root
+					value >= 0
+				}
+
+				opinion = {
+					target = root
+					value < 75
+				}
+			}
+		}
+
+		name = segrellion_relic.1005.b
+
+		trigger_event = {
+			id = segrellion_relic.1010
+			days = { 4 7 }
+		}
+	}
+
+
+	# Excellent relations: 75+.
+	option = {
+
+		trigger = {
+			scope:relic_tyrosh_host = {
+				opinion = {
+					target = root
+					value >= 75
+				}
+			}
+		}
+
+		name = segrellion_relic.1005.c
+
+		trigger_event = {
+			id = segrellion_relic.1050
+			days = 2
+		}
+	}
+}
+
+
+# =========================================================
+# 1010 - FIRST TEST
 # =========================================================
 
 segrellion_relic.1010 = {
@@ -112,46 +233,179 @@ segrellion_relic.1010 = {
 
 	left_portrait = {
 		character = root
-		animation = personality_rational
+		animation = thinking
 	}
 
-	option = {
 
+	# CORRECT
+	option = {
 		name = segrellion_relic.1010.a
 
-		add_learning_lifestyle_xp = 50
+		trigger_event = {
+			id = segrellion_relic.1020
+			days = 1
+		}
+	}
 
-		start_travel_plan = {
-			destination = title:c_white_harbor.title_province
-			on_arrival_event = segrellion_relic.1100
-			on_arrival_destinations = all_but_last
-			on_travel_planner_cancel_event = segrellion_relic.0090
+
+	# WRONG
+	option = {
+		name = segrellion_relic.1010.b
+
+		trigger_event = {
+			id = segrellion_relic.1090
+			days = 1
+		}
+	}
+
+
+	# WRONG
+	option = {
+		name = segrellion_relic.1010.c
+
+		trigger_event = {
+			id = segrellion_relic.1090
+			days = 1
 		}
 	}
 }
 
 
 # =========================================================
-# 1100 - WHITE HARBOR
+# 1020 - SECOND TEST
 # =========================================================
 
-segrellion_relic.1100 = {
+segrellion_relic.1020 = {
 
 	type = character_event
 
-	title = segrellion_relic.1100.t
-	desc = segrellion_relic.1100.desc
+	title = segrellion_relic.1020.t
+	desc = segrellion_relic.1020.desc
 
-	theme = travel
+	theme = learning
 
 	override_background = {
-		reference = docks
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	# WRONG
+	option = {
+		name = segrellion_relic.1020.a
+
+		trigger_event = {
+			id = segrellion_relic.1090
+			days = 1
+		}
+	}
+
+
+	# CORRECT
+	option = {
+		name = segrellion_relic.1020.b
+
+		trigger_event = {
+			id = segrellion_relic.1030
+			days = 1
+		}
+	}
+
+
+	# WRONG
+	option = {
+		name = segrellion_relic.1020.c
+
+		trigger_event = {
+			id = segrellion_relic.1090
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1030 - FINAL TEST
+# =========================================================
+
+segrellion_relic.1030 = {
+
+	type = character_event
+
+	title = segrellion_relic.1030.t
+	desc = segrellion_relic.1030.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	# WRONG
+	option = {
+		name = segrellion_relic.1030.a
+
+		trigger_event = {
+			id = segrellion_relic.1090
+			days = 1
+		}
+	}
+
+
+	# WRONG
+	option = {
+		name = segrellion_relic.1030.b
+
+		trigger_event = {
+			id = segrellion_relic.1090
+			days = 1
+		}
+	}
+
+
+	# CORRECT
+	option = {
+		name = segrellion_relic.1030.c
+
+		trigger_event = {
+			id = segrellion_relic.1060
+			days = { 1 3 }
+		}
+	}
+}
+
+
+# =========================================================
+# 1050 - AN OLD PROMISE
+# Opinion 75+
+# =========================================================
+
+segrellion_relic.1050 = {
+
+	type = character_event
+
+	title = segrellion_relic.1050.t
+	desc = segrellion_relic.1050.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
 	}
 
 	immediate = {
-
-		title:c_white_harbor.holder ?= {
-			save_scope_as = relic_white_harbor_host
+		title:c_tyrosh.holder ?= {
+			save_scope_as = relic_tyrosh_host
 		}
 	}
 
@@ -161,31 +415,219 @@ segrellion_relic.1100 = {
 	}
 
 	right_portrait = {
-		character = scope:relic_white_harbor_host
-		animation = personality_rational
+		character = scope:relic_tyrosh_host
+		animation = personality_bold
 	}
 
 	option = {
+		name = segrellion_relic.1050.a
 
-		name = segrellion_relic.1100.a
-
-		start_travel_plan = {
-			destination = title:c_winterfell.title_province
-			on_arrival_event = segrellion_relic.3000
-			on_arrival_destinations = all_but_last
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		trigger_event = {
+			id = segrellion_relic.1060
+			days = 1
 		}
 	}
 }
 
 
 # =========================================================
-# OLDTOWN PATH
+# 1060 - THE SEGRELLION OF TYROSH
+# Both successful paths converge here.
+# =========================================================
+
+segrellion_relic.1060 = {
+
+	type = character_event
+
+	title = segrellion_relic.1060.t
+	desc = segrellion_relic.1060.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.1060.a
+
+		hidden_effect = {
+
+			random_list = {
+
+				# 10% chance to actually recover the pendant.
+				10 = {
+
+					trigger = {
+						NOT = {
+							has_global_variable = segrellion_silver_flame_pendant
+						}
+					}
+
+					trigger_event = {
+						id = segrellion_relic.1070
+						days = 1
+					}
+				}
+
+
+				# Otherwise the record survives, but the object does not.
+				90 = {
+					trigger_event = {
+						id = segrellion_relic.1080
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1070 - THE PENDANT OF THE SILVER FLAME
+# =========================================================
+
+segrellion_relic.1070 = {
+
+	type = character_event
+
+	title = segrellion_relic.1070.t
+	desc = segrellion_relic.1070.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.1070.a
+		custom_tooltip = segrellion_relic.1070.a.tt
+
+		hidden_effect = {
+
+			segrellion_create_artifact_silver_flame_pendant_effect = {
+				OWNER = root
+			}
+
+			add_character_flag = segrellion_found_silver_flame_pendant
+
+			segrellion_finish_relic_search_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1080 - AN EMPTY PLACE IN THE INVENTORY
+# =========================================================
+
+segrellion_relic.1080 = {
+
+	type = character_event
+
+	title = segrellion_relic.1080.t
+	desc = segrellion_relic.1080.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_relic.1080.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1090 - FAILED THE ARCHIVIST'S TESTS
+# =========================================================
+
+segrellion_relic.1090 = {
+
+	type = character_event
+
+	title = segrellion_relic.1090.t
+	desc = segrellion_relic.1090.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_relic.1090.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1091 - THROWN OUT OF TYROSH
+# =========================================================
+
+segrellion_relic.1091 = {
+
+	type = character_event
+
+	title = segrellion_relic.1091.t
+	desc = segrellion_relic.1091.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	option = {
+		name = segrellion_relic.1091.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+
+# =========================================================
+# OLDTOWN
 # =========================================================
 
 
 # =========================================================
-# 2000 - OLDTOWN
+# 2000 - BEFORE THE LORD OF OLDTOWN
 # =========================================================
 
 segrellion_relic.2000 = {
@@ -195,14 +637,13 @@ segrellion_relic.2000 = {
 	title = segrellion_relic.2000.t
 	desc = segrellion_relic.2000.desc
 
-	theme = learning
+	theme = diplomacy
 
 	override_background = {
 		reference = council_chamber
 	}
 
 	immediate = {
-
 		title:c_oldtown.holder ?= {
 			save_scope_as = relic_oldtown_host
 		}
@@ -219,11 +660,10 @@ segrellion_relic.2000 = {
 	}
 
 	option = {
-
 		name = segrellion_relic.2000.a
 
 		trigger_event = {
-			id = segrellion_relic.2010
+			id = segrellion_relic.2005
 			days = 1
 		}
 	}
@@ -231,7 +671,137 @@ segrellion_relic.2000 = {
 
 
 # =========================================================
-# 2010 - THE CITADEL RECORD
+# 2005 - THE HIGHTOWER'S ANSWER
+# =========================================================
+
+segrellion_relic.2005 = {
+
+	type = character_event
+
+	title = segrellion_relic.2005.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					scope:relic_oldtown_host = {
+						opinion = {
+							target = root
+							value < 0
+						}
+					}
+				}
+
+				desc = segrellion_relic.2005.desc_hostile
+			}
+
+			triggered_desc = {
+				trigger = {
+					scope:relic_oldtown_host = {
+						opinion = {
+							target = root
+							value >= 75
+						}
+					}
+				}
+
+				desc = segrellion_relic.2005.desc_warm
+			}
+
+			desc = segrellion_relic.2005.desc_cautious
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_oldtown_host
+		animation = personality_rational
+	}
+
+
+	# Below 0.
+	option = {
+
+		trigger = {
+			scope:relic_oldtown_host = {
+				opinion = {
+					target = root
+					value < 0
+				}
+			}
+		}
+
+		name = segrellion_relic.2005.a
+
+		trigger_event = {
+			id = segrellion_relic.2091
+			days = 1
+		}
+	}
+
+
+	# 0-74.
+	option = {
+
+		trigger = {
+			scope:relic_oldtown_host = {
+
+				opinion = {
+					target = root
+					value >= 0
+				}
+
+				opinion = {
+					target = root
+					value < 75
+				}
+			}
+		}
+
+		name = segrellion_relic.2005.b
+
+		trigger_event = {
+			id = segrellion_relic.2010
+			days = { 4 7 }
+		}
+	}
+
+
+	# 75+.
+	option = {
+
+		trigger = {
+			scope:relic_oldtown_host = {
+				opinion = {
+					target = root
+					value >= 75
+				}
+			}
+		}
+
+		name = segrellion_relic.2005.c
+
+		trigger_event = {
+			id = segrellion_relic.2100
+			days = 2
+		}
+	}
+}
+
+
+# =========================================================
+# 2010 - FIRST TEST
 # =========================================================
 
 segrellion_relic.2010 = {
@@ -249,21 +819,504 @@ segrellion_relic.2010 = {
 
 	left_portrait = {
 		character = root
+		animation = thinking
+	}
+
+
+	# CORRECT
+	option = {
+		name = segrellion_relic.2010.a
+
+		trigger_event = {
+			id = segrellion_relic.2020
+			days = 1
+		}
+	}
+
+	option = {
+		name = segrellion_relic.2010.b
+
+		trigger_event = {
+			id = segrellion_relic.2090
+			days = 1
+		}
+	}
+
+	option = {
+		name = segrellion_relic.2010.c
+
+		trigger_event = {
+			id = segrellion_relic.2090
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 2020 - SECOND TEST
+# =========================================================
+
+segrellion_relic.2020 = {
+
+	type = character_event
+
+	title = segrellion_relic.2020.t
+	desc = segrellion_relic.2020.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+		name = segrellion_relic.2020.a
+
+		trigger_event = {
+			id = segrellion_relic.2090
+			days = 1
+		}
+	}
+
+
+	# CORRECT
+	option = {
+		name = segrellion_relic.2020.b
+
+		trigger_event = {
+			id = segrellion_relic.2030
+			days = 1
+		}
+	}
+
+	option = {
+		name = segrellion_relic.2020.c
+
+		trigger_event = {
+			id = segrellion_relic.2090
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 2030 - FINAL TEST
+# =========================================================
+
+segrellion_relic.2030 = {
+
+	type = character_event
+
+	title = segrellion_relic.2030.t
+	desc = segrellion_relic.2030.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+		name = segrellion_relic.2030.a
+
+		trigger_event = {
+			id = segrellion_relic.2090
+			days = 1
+		}
+	}
+
+
+	# CORRECT
+	option = {
+		name = segrellion_relic.2030.b
+
+		trigger_event = {
+			id = segrellion_relic.2040
+			days = { 1 2 }
+		}
+	}
+
+	option = {
+		name = segrellion_relic.2030.c
+
+		trigger_event = {
+			id = segrellion_relic.2090
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 2040 - PERMISSION FOR THE CITADEL
+# =========================================================
+
+segrellion_relic.2040 = {
+
+	type = character_event
+
+	title = segrellion_relic.2040.t
+	desc = segrellion_relic.2040.desc
+
+	theme = learning
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = segrellion_relic.2040.a
+
+		trigger_event = {
+			id = segrellion_relic.2060
+			days = { 7 12 }
+		}
+	}
+}
+
+
+# =========================================================
+# 2060 - THE ORDINARY CITADEL SEARCH
+#
+# Temporary endpoint for the normal 0-74 successful route.
+# Replace/expand this when the next Citadel material is written.
+# =========================================================
+
+segrellion_relic.2060 = {
+
+	type = character_event
+
+	title = segrellion_relic.2060.t
+	desc = segrellion_relic.2060.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_relic.2060.a
+
+		add_learning_lifestyle_xp = 75
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+
+# =========================================================
+# 2090 - FAILED THE ARCHIVAL TESTS
+# =========================================================
+
+segrellion_relic.2090 = {
+
+	type = character_event
+
+	title = segrellion_relic.2090.t
+	desc = segrellion_relic.2090.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_relic.2090.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+
+# =========================================================
+# 2091 - REFUSED BY OLDTOWN
+# =========================================================
+
+segrellion_relic.2091 = {
+
+	type = character_event
+
+	title = segrellion_relic.2091.t
+	desc = segrellion_relic.2091.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	option = {
+		name = segrellion_relic.2091.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+
+# =========================================================
+# 2100 - A HIGHTOWER WELCOME
+# Opinion 75+
+# =========================================================
+
+segrellion_relic.2100 = {
+
+	type = character_event
+
+	title = segrellion_relic.2100.t
+	desc = segrellion_relic.2100.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	immediate = {
+		title:c_oldtown.holder ?= {
+			save_scope_as = relic_oldtown_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_oldtown_host
 		animation = personality_rational
 	}
 
 	option = {
 
-		name = segrellion_relic.2010.a
+		name = segrellion_relic.2100.a
 
-		add_learning_lifestyle_xp = 100
-
-		start_travel_plan = {
-			destination = title:c_winterfell.title_province
-			on_arrival_event = segrellion_relic.3000
-			on_arrival_destinations = all_but_last
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		trigger_event = {
+			id = segrellion_relic.2110
+			days = { 3 5 }
 		}
+	}
+}
+
+
+# =========================================================
+# 2110 - AMONG THE DEEPEST SHELVES
+# 10% chance of discovering the hidden chamber.
+# =========================================================
+
+segrellion_relic.2110 = {
+
+	type = character_event
+
+	title = segrellion_relic.2110.t
+	desc = segrellion_relic.2110.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_relic.2110.a
+
+		hidden_effect = {
+
+			random_list = {
+
+				10 = {
+
+					trigger = {
+						NOT = {
+							has_global_variable = segrellion_unicorn_codex
+						}
+					}
+
+					trigger_event = {
+						id = segrellion_relic.2200
+						days = 1
+					}
+				}
+
+				90 = {
+					trigger_event = {
+						id = segrellion_relic.2060
+						days = { 3 6 }
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 2200 - THE SEALED CHAMBER
+# =========================================================
+
+segrellion_relic.2200 = {
+
+	type = character_event
+
+	title = segrellion_relic.2200.t
+	desc = segrellion_relic.2200.desc
+
+	theme = mystery
+
+	override_background = {
+		reference = dungeon
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	# ENTER
+	option = {
+		name = segrellion_relic.2200.a
+
+		trigger_event = {
+			id = segrellion_relic.2210
+			days = 1
+		}
+	}
+
+
+	# LEAVE IT SEALED
+	option = {
+		name = segrellion_relic.2200.b
+
+		trigger_event = {
+			id = segrellion_relic.2220
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 2210 - THE UNICORN CODEX
+# =========================================================
+
+segrellion_relic.2210 = {
+
+	type = character_event
+
+	title = segrellion_relic.2210.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					knows_language = language_agot_valyrian
+				}
+
+				desc = segrellion_relic.2210.desc_valyrian
+			}
+
+			desc = segrellion_relic.2210.desc_unknown
+		}
+	}
+
+	theme = mystery
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.2210.a
+		custom_tooltip = segrellion_relic.2210.a.tt
+
+		hidden_effect = {
+
+			segrellion_create_artifact_unicorn_codex_effect = {
+				OWNER = root
+			}
+
+			add_character_flag = segrellion_found_unicorn_codex
+
+			segrellion_finish_relic_search_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 2220 - SOME DOORS REMAIN CLOSED
+# =========================================================
+
+segrellion_relic.2220 = {
+
+	type = character_event
+
+	title = segrellion_relic.2220.t
+	desc = segrellion_relic.2220.desc
+
+	theme = mystery
+
+	override_background = {
+		reference = dungeon
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_relic.2220.a
+
+		segrellion_finish_relic_search_effect = yes
 	}
 }
 
@@ -476,21 +1529,24 @@ segrellion_relic.5010 = {
 
 
 		# =====================================================
-		# FULL ACCEPTANCE
+		# ONLY WINTERFELL CAN LEAD TO ICEBRINGER
 		# =====================================================
 
 		if = {
 
 			limit = {
-				segrellion_icebringer_accepted_trigger = yes
+				has_character_flag = segrellion_relic_route_winterfell
 			}
 
 
-			# Winterfell: strongest trail.
+			# =====================================================
+			# FULL ACCEPTANCE
+			# =====================================================
+
 			if = {
 
 				limit = {
-					has_character_flag = segrellion_relic_route_winterfell
+					segrellion_icebringer_accepted_trigger = yes
 				}
 
 				random_list = {
@@ -506,58 +1562,14 @@ segrellion_relic.5010 = {
 			}
 
 
-			# Oldtown: strong archival evidence.
+			# =====================================================
+			# PARTIAL ACCEPTANCE
+			# =====================================================
+
 			else_if = {
 
 				limit = {
-					has_character_flag = segrellion_relic_route_oldtown
-				}
-
-				random_list = {
-
-					85 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					15 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-
-
-			# Tyrosh: longest and most uncertain trail.
-			else = {
-
-				random_list = {
-
-					80 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					20 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-		}
-
-
-		# =====================================================
-		# PARTIAL ACCEPTANCE
-		# =====================================================
-
-		else_if = {
-
-			limit = {
-				segrellion_icebringer_partial_trigger = yes
-			}
-
-
-			if = {
-
-				limit = {
-					has_character_flag = segrellion_relic_route_winterfell
+					segrellion_icebringer_partial_trigger = yes
 				}
 
 				random_list = {
@@ -573,53 +1585,11 @@ segrellion_relic.5010 = {
 			}
 
 
-			else_if = {
-
-				limit = {
-					has_character_flag = segrellion_relic_route_oldtown
-				}
-
-				random_list = {
-
-					50 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					50 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-
+			# =====================================================
+			# REJECTED
+			# =====================================================
 
 			else = {
-
-				random_list = {
-
-					40 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					60 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-		}
-
-
-		# =====================================================
-		# REJECTED
-		# =====================================================
-
-		else = {
-
-
-			if = {
-
-				limit = {
-					has_character_flag = segrellion_relic_route_winterfell
-				}
 
 				random_list = {
 
@@ -632,40 +1602,14 @@ segrellion_relic.5010 = {
 					}
 				}
 			}
+		}
 
 
-			else_if = {
-
-				limit = {
-					has_character_flag = segrellion_relic_route_oldtown
-				}
-
-				random_list = {
-
-					10 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					90 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-
-
-			else = {
-
-				random_list = {
-
-					5 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					95 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
+		# Defensive fallback.
+		# Even an old save/debug chain can NEVER recover Icebringer
+		# through Tyrosh or Oldtown.
+		else = {
+			trigger_event = segrellion_relic.5200
 		}
 	}
 }
@@ -712,13 +1656,9 @@ segrellion_relic.5100 = {
 			add_dynasty_prestige = 500
 		}
 
-		remove_character_flag = segrellion_legendary_relic_search_active
-
-		remove_character_flag = segrellion_relic_route_tyrosh
-		remove_character_flag = segrellion_relic_route_oldtown
-		remove_character_flag = segrellion_relic_route_winterfell
-
 		add_character_flag = segrellion_recovered_icebringer
+
+		segrellion_finish_relic_search_effect = yes
 	}
 }
 
