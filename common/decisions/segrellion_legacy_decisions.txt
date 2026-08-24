@@ -1,42 +1,90 @@
 segrellion_call_upon_great_houses_decision = {
 
-	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
-	}
+    picture = {
+        reference = "gfx/interface/illustrations/decisions/call_upon_great_houses_decision_background.dds"
+    }
 
-	decision_group_type = major
+    decision_group_type = major
 
-	desc = segrellion_call_upon_great_houses_decision_desc
-	selection_tooltip = segrellion_call_upon_great_houses_decision_tooltip
+    desc = segrellion_call_upon_great_houses_decision_desc
+    selection_tooltip = segrellion_call_upon_great_houses_decision_tooltip
+    confirm_text = segrellion_call_upon_great_houses_decision_confirm
 
-	is_shown = {
-		is_ruler = yes
 
-		dynasty = {
-			has_dynasty_perk = segrellion_legacy_5
-		}
+    # =====================================================
+    # VISIBILITY
+    # =====================================================
 
-		highest_held_title_tier >= tier_duchy
-	}
+    is_shown = {
 
-	is_valid = {
-		is_adult = yes
-		is_imprisoned = no
+        is_ruler = yes
 
-		NOT = {
-			has_character_flag = segrellion_great_house_favor_cooldown
-		}
+        dynasty = {
+            has_dynasty_perk = segrellion_legacy_5
+        }
 
-		any_neighboring_realm_same_rank_owner = {
-			segrellion_legacy_v_valid_peer_trigger = yes
-		}
-	}
+        highest_held_title_tier >= tier_duchy
+    }
 
-	effect = {
-		trigger_event = segrellion_legacy.5000
-	}
 
-	ai_potential = {
-		always = no
-	}
+    # =====================================================
+    # REQUIREMENTS
+    # =====================================================
+
+    is_valid = {
+
+        custom_description = {
+            text = segrellion_great_houses_house_head_requirement
+            is_house_head = yes
+        }
+
+        custom_description = {
+            text = segrellion_great_houses_adult_requirement
+            is_adult = yes
+        }
+
+        custom_description = {
+            text = segrellion_great_houses_free_requirement
+            is_imprisoned = no
+        }
+
+        custom_description = {
+            text = segrellion_great_houses_cooldown_requirement
+
+            hidden_trigger = {
+                NOT = {
+                    has_character_flag = segrellion_great_house_favor_cooldown
+                }
+            }
+        }
+
+        custom_description = {
+            text = segrellion_great_houses_target_requirement
+
+            hidden_trigger = {
+                segrellion_legacy_v_has_valid_target_trigger = yes
+            }
+        }
+    }
+
+
+    # =====================================================
+    # EFFECT
+    # =====================================================
+
+    effect = {
+
+        custom_tooltip = segrellion_call_upon_great_houses_effect_tt
+
+        trigger_event = segrellion_legacy.5000
+    }
+
+
+    ai_potential = {
+        always = no
+    }
+
+    ai_will_do = {
+        base = 0
+    }
 }

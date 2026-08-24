@@ -1,22 +1,70 @@
-segrellion_legacy_v_valid_peer_trigger = {
-	is_alive = yes
-	is_adult = yes
-	is_ruler = yes
-	is_imprisoned = no
+# =========================================================
+# SEGRELLION LEGACY V
+# CALL UPON THE GREAT HOUSES
+# =========================================================
 
-	NOT = { this = root }
 
-	OR = {
-		# Fellow vassals under the same liege.
-		AND = {
-			exists = root.liege
-			liege ?= root.liege
-		}
+# ---------------------------------------------------------
+# BASIC VALID TARGET
+# ---------------------------------------------------------
 
-		# Independent rulers may appeal to independent peers.
-		AND = {
-			NOT = { exists = root.liege }
-			is_independent_ruler = yes
-		}
-	}
+segrellion_legacy_v_valid_great_house_target_trigger = {
+
+    is_alive = yes
+    is_adult = yes
+    is_ruler = yes
+    is_imprisoned = no
+
+    NOT = { this = root }
+
+    # We only deal with major rulers.
+    highest_held_title_tier >= tier_kingdom
+}
+
+
+# ---------------------------------------------------------
+# DOES THE HOUSE HEAD HAVE ANYONE TO CALL UPON?
+# ---------------------------------------------------------
+
+segrellion_legacy_v_has_valid_target_trigger = {
+
+    OR = {
+
+        # =================================================
+        # VASSAL RULER
+        #
+        # Other great vassals beneath the same liege.
+        # Perfect for Lords Paramount beneath the Iron Throne.
+        # =================================================
+
+        AND = {
+
+            exists = liege
+
+            liege = {
+
+                any_vassal = {
+
+                    segrellion_legacy_v_valid_great_house_target_trigger = yes
+                }
+            }
+        }
+
+
+        # =================================================
+        # INDEPENDENT RULER
+        #
+        # Independent neighboring Kings / Emperors.
+        # =================================================
+
+        AND = {
+
+            is_independent_ruler = yes
+
+            any_neighboring_top_liege_realm_owner = {
+
+                segrellion_legacy_v_valid_great_house_target_trigger = yes
+            }
+        }
+    }
 }
