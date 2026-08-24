@@ -442,10 +442,6 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 		reference = "gfx/interface/illustrations/decisions/awaken_icebringer_decision_background.dds"
 	}
 
-	cooldown = {
-		years = 1
-	}
-
 	desc = segrellion_attempt_to_awaken_icebringer_decision_desc
 	selection_tooltip = segrellion_attempt_to_awaken_icebringer_decision_tooltip
 
@@ -458,27 +454,33 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 		# =========================================================
 
 		is_shown = {
+			OR = {
+				debug_only = yes
 
-			any_character_artifact = {
-				has_variable = segrellion_icebringer_artifact
-			}
+				AND = {
 
-			NOT = {
-				has_global_variable = segrellion_icebringer_has_awakened
-			}
+					any_character_artifact = {
+						has_variable = segrellion_icebringer_artifact
+					}
 
-			NOT = {
-				has_character_flag = segrellion_icebringer_awakening_chain_active
-			}
+					NOT = {
+						has_global_variable = segrellion_icebringer_has_awakened
+					}
 
-			NOT = {
-				has_character_flag = segrellion_icebringer_awakening_succeeded
-			}
-			NOT = {
-				has_character_flag = segrellion_icebringer_awaken_path_closed
-			}
-			NOT = {
-				has_character_flag = segrellion_icebringer_stage5_entry_reached
+					NOT = {
+						has_character_flag = segrellion_icebringer_awakening_chain_active
+					}
+
+					NOT = {
+						has_character_flag = segrellion_icebringer_awakening_succeeded
+					}
+					NOT = {
+						has_character_flag = segrellion_icebringer_awaken_path_closed
+					}
+					NOT = {
+						has_character_flag = segrellion_icebringer_stage5_entry_reached
+					}
+				}
 			}
 		}
 
@@ -488,6 +490,22 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 		# =========================================================
 
 		is_valid = {
+
+			OR = {
+				debug_only = yes
+
+				AND = {
+					is_adult = yes
+
+					any_equipped_character_artifact = {
+						has_variable = segrellion_icebringer_artifact
+					}
+
+					NOT = {
+						has_character_flag = segrellion_icebringer_decision_cooldown
+					}
+				}
+			}
 
 			# ---------------------------------------------------------
 			# YOU PERSONALLY HOLD ICEBRINGER
@@ -514,6 +532,11 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 
 
 		effect = {
+
+			add_character_flag = {
+				flag = segrellion_icebringer_decision_cooldown
+				years = 1
+			}
 
 			# =========================================================
 			# WARNING
@@ -663,6 +686,7 @@ segrellion_attempt_to_awaken_icebringer_decision = {
 					days = 1
 				}
 			}
+		}
 
 
 		ai_check_interval = 0
@@ -931,4 +955,3 @@ segrellion_search_for_legendary_relic_decision = {
 		base = 0
 	}
 }
-
