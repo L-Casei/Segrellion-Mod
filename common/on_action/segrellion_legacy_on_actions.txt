@@ -1,3 +1,43 @@
-# The former Weight of Truth childhood event was retired when the legacy track
-# was redesigned. This file remains as a stable extension point for future
-# legacy on_actions.
+# ============================================================
+# HOUSE SEGRELLION LEGACY ON ACTIONS
+# ============================================================
+
+
+# ------------------------------------------------------------
+# LEGACY V - THE WEIGHT OF THE UNICORN
+#
+# A Segrellion who gains a landed title of county tier or
+# higher cannot begin their new rule below Legitimacy Level 4.
+# ------------------------------------------------------------
+
+on_title_gain = {
+	on_actions = {
+		segrellion_legacy_v_on_title_gain
+	}
+}
+
+
+segrellion_legacy_v_on_title_gain = {
+
+	effect = {
+
+		if = {
+			limit = {
+				exists = dynasty
+
+				dynasty = {
+					has_dynasty_perk = segrellion_legacy_5
+				}
+
+				has_legitimacy = yes
+				legitimacy_level < 4
+
+				scope:title = {
+					tier >= tier_county
+				}
+			}
+
+			add_legitimacy = legitimacy_level_4
+		}
+	}
+}

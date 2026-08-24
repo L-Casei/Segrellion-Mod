@@ -1,0 +1,42 @@
+segrellion_call_upon_great_houses_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_call_upon_great_houses_decision_desc
+	selection_tooltip = segrellion_call_upon_great_houses_decision_tooltip
+
+	is_shown = {
+		is_ruler = yes
+
+		dynasty = {
+			has_dynasty_perk = segrellion_legacy_5
+		}
+
+		highest_held_title_tier >= tier_duchy
+	}
+
+	is_valid = {
+		is_adult = yes
+		is_imprisoned = no
+
+		NOT = {
+			has_character_flag = segrellion_great_house_favor_cooldown
+		}
+
+		any_neighboring_realm_same_rank_owner = {
+			segrellion_legacy_v_valid_peer_trigger = yes
+		}
+	}
+
+	effect = {
+		trigger_event = segrellion_legacy.5000
+	}
+
+	ai_potential = {
+		always = no
+	}
+}

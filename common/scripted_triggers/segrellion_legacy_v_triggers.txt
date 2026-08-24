@@ -1,0 +1,22 @@
+segrellion_legacy_v_valid_peer_trigger = {
+	is_alive = yes
+	is_adult = yes
+	is_ruler = yes
+	is_imprisoned = no
+
+	NOT = { this = root }
+
+	OR = {
+		# Fellow vassals under the same liege.
+		AND = {
+			exists = root.liege
+			liege ?= root.liege
+		}
+
+		# Independent rulers may appeal to independent peers.
+		AND = {
+			NOT = { exists = root.liege }
+			is_independent_ruler = yes
+		}
+	}
+}
