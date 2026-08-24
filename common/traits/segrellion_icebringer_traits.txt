@@ -84,13 +84,14 @@ segrellion_touched_by_darkness_trait = {
 
 
 # =========================================================
-# ICEBRINGER BEARER
+# BOND WITH ICEBRINGER
 #
 # XP TRAIT
 #
-# 0-49   Bearer
-# 50-99  Adept
-# 100    Master
+# TIER 0:   0 - 59 XP
+# TIER I:  60 - 149 XP
+# TIER II: 150 - 299 XP
+# TIER III: 300+ XP
 # =========================================================
 
 segrellion_icebringer_bearer_trait = {
@@ -106,39 +107,71 @@ segrellion_icebringer_bearer_trait = {
 	shown_in_encyclopedia = yes
 
 
-	# -----------------------------------------------------
-	# LEVEL I
-	# -----------------------------------------------------
+	# =====================================================
+	# TIER 0
+	# =====================================================
 
-	martial = 1
-	prowess_no_portrait = 2
+	prowess_no_portrait = 1
 	advantage = 1
 
 
-	# -----------------------------------------------------
+	# =====================================================
 	# EXPERIENCE TRACK
-	# -----------------------------------------------------
+	#
+	# Bonuses are cumulative.
+	# =====================================================
 
 	track = {
 
-		50 = {
+		# -------------------------------------------------
+		# TIER I - 60 XP
+		# -------------------------------------------------
+
+		60 = {
 			martial = 1
 			prowess_no_portrait = 2
 			advantage = 1
+
+			monthly_prestige = 0.10
 		}
 
 
-		100 = {
+		# -------------------------------------------------
+		# TIER II - 150 XP
+		# -------------------------------------------------
+
+		150 = {
 			martial = 1
-			prowess_no_portrait = 2
-			advantage = 1
+			prowess_no_portrait = 3
+			advantage = 2
+
+			monthly_prestige = 0.15
+
+			knight_effectiveness_mult = 0.05
+		}
+
+
+		# -------------------------------------------------
+		# TIER III - 300 XP
+		# -------------------------------------------------
+
+		300 = {
+			martial = 2
+			prowess_no_portrait = 4
+			advantage = 2
 
 			monthly_prestige = 0.25
+
+			knight_effectiveness_mult = 0.10
 
 			stress_gain_mult = -0.10
 		}
 	}
 
+
+	# =====================================================
+	# DYNAMIC NAME
+	# =====================================================
 
 	name = {
 		first_valid = {
@@ -149,11 +182,11 @@ segrellion_icebringer_bearer_trait = {
 
 					has_trait_xp = {
 						trait = segrellion_icebringer_bearer_trait
-						value >= 100
+						value >= 300
 					}
 				}
 
-				desc = segrellion_icebringer_bearer_trait_3
+				desc = segrellion_icebringer_bond_trait_3
 			}
 
 
@@ -163,20 +196,34 @@ segrellion_icebringer_bearer_trait = {
 
 					has_trait_xp = {
 						trait = segrellion_icebringer_bearer_trait
-						value >= 50
+						value >= 150
 					}
 				}
 
-				desc = segrellion_icebringer_bearer_trait_2
+				desc = segrellion_icebringer_bond_trait_2
 			}
 
 
-			desc = segrellion_icebringer_bearer_trait_1
+			triggered_desc = {
+				trigger = {
+					exists = this
+
+					has_trait_xp = {
+						trait = segrellion_icebringer_bearer_trait
+						value >= 60
+					}
+				}
+
+				desc = segrellion_icebringer_bond_trait_1
+			}
+
+
+			desc = segrellion_icebringer_bond_trait_0
 		}
 	}
 
 
-	desc = segrellion_icebringer_bearer_trait_desc
+	desc = desc_icebringer_bond
 }
 
 # =========================================================
