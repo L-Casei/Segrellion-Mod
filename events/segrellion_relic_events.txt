@@ -976,17 +976,29 @@ segrellion_relic.2040 = {
 		reference = council_chamber
 	}
 
+	immediate = {
+		title:c_oldtown.holder ?= {
+			save_scope_as = relic_oldtown_host
+		}
+	}
+
 	left_portrait = {
 		character = root
 		animation = personality_rational
 	}
 
+	right_portrait = {
+		character = scope:relic_oldtown_host
+		animation = personality_rational
+	}
+
 	option = {
+
 		name = segrellion_relic.2040.a
 
 		trigger_event = {
-			id = segrellion_relic.2060
-			days = { 7 12 }
+			id = segrellion_relic.2110
+			days = { 4 8 }
 		}
 	}
 }
@@ -1135,7 +1147,7 @@ segrellion_relic.2100 = {
 
 # =========================================================
 # 2110 - AMONG THE DEEPEST SHELVES
-# 10% chance of discovering the hidden chamber.
+# 10% CHANCE TO DISCOVER THE SEALED CHAMBER
 # =========================================================
 
 segrellion_relic.2110 = {
@@ -1164,6 +1176,10 @@ segrellion_relic.2110 = {
 
 			random_list = {
 
+				# =================================================
+				# 10% - THE HIDDEN CHAMBER
+				# =================================================
+
 				10 = {
 
 					trigger = {
@@ -1178,10 +1194,16 @@ segrellion_relic.2110 = {
 					}
 				}
 
+
+				# =================================================
+				# 90% - NOTHING FOUND
+				# =================================================
+
 				90 = {
+
 					trigger_event = {
-						id = segrellion_relic.2060
-						days = { 3 6 }
+						id = segrellion_relic.2120
+						days = { 2 4 }
 					}
 				}
 			}
@@ -1247,9 +1269,11 @@ segrellion_relic.2210 = {
 	title = segrellion_relic.2210.t
 
 	desc = {
+
 		first_valid = {
 
 			triggered_desc = {
+
 				trigger = {
 					knows_language = language_agot_valyrian
 				}
@@ -1275,18 +1299,18 @@ segrellion_relic.2210 = {
 	option = {
 
 		name = segrellion_relic.2210.a
+
 		custom_tooltip = segrellion_relic.2210.a.tt
 
-		hidden_effect = {
-
-			segrellion_create_artifact_unicorn_codex_effect = {
-				OWNER = root
-			}
-
-			add_character_flag = segrellion_found_unicorn_codex
-
-			segrellion_finish_relic_search_effect = yes
+		segrellion_create_artifact_unicorn_codex_effect = {
+			OWNER = root
 		}
+
+		add_learning_lifestyle_xp = 150
+
+		add_character_flag = segrellion_found_unicorn_codex
+
+		segrellion_finish_relic_search_effect = yes
 	}
 }
 
