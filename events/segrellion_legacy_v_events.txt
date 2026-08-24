@@ -43,179 +43,264 @@ segrellion_legacy.5001 = {
 
 	immediate = {
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+    # =====================================================
+    # VASSAL HOUSE HEAD
+    # Other Great Houses beneath the same liege
+    # =====================================================
+
+    if = {
+        limit = {
+            exists = liege
+        }
+
+        liege = {
+
+            ordered_vassal = {
+                limit = {
+                    segrellion_legacy_v_valid_great_house_target_trigger = yes
+                }
+                order_by = max_military_strength
+                position = 0
+                check_range_bounds = no
+                save_scope_as = segrellion_peer_1
+            }
+
+            ordered_vassal = {
+                limit = {
+                    segrellion_legacy_v_valid_great_house_target_trigger = yes
+                }
+                order_by = max_military_strength
+                position = 1
+                check_range_bounds = no
+                save_scope_as = segrellion_peer_2
+            }
+
+            ordered_vassal = {
+                limit = {
+                    segrellion_legacy_v_valid_great_house_target_trigger = yes
+                }
+                order_by = max_military_strength
+                position = 2
+                check_range_bounds = no
+                save_scope_as = segrellion_peer_3
+            }
+
+            ordered_vassal = {
+                limit = {
+                    segrellion_legacy_v_valid_great_house_target_trigger = yes
+                }
+                order_by = max_military_strength
+                position = 3
+                check_range_bounds = no
+                save_scope_as = segrellion_peer_4
+            }
+
+            ordered_vassal = {
+                limit = {
+                    segrellion_legacy_v_valid_great_house_target_trigger = yes
+                }
+                order_by = max_military_strength
+                position = 4
+                check_range_bounds = no
+                save_scope_as = segrellion_peer_5
+            }
+
+            # Probe for page 2
+            ordered_vassal = {
+                limit = {
+                    segrellion_legacy_v_valid_great_house_target_trigger = yes
+                }
+                order_by = max_military_strength
+                position = 5
+                check_range_bounds = no
+                save_scope_as = segrellion_peer_6_probe
+            }
+        }
+    }
+
+
+    # =====================================================
+    # INDEPENDENT HOUSE HEAD
+    # Neighboring independent Great Houses
+    # =====================================================
+
+    else_if = {
+        limit = {
+            is_independent_ruler = yes
+        }
+
+        ordered_neighboring_top_liege_realm_owner = {
+            limit = {
+                segrellion_legacy_v_valid_great_house_target_trigger = yes
+            }
+            order_by = max_military_strength
+            position = 0
+            check_range_bounds = no
+            save_scope_as = segrellion_peer_1
+        }
+
+        ordered_neighboring_top_liege_realm_owner = {
+            limit = {
+                segrellion_legacy_v_valid_great_house_target_trigger = yes
+            }
+            order_by = max_military_strength
+            position = 1
+            check_range_bounds = no
+            save_scope_as = segrellion_peer_2
+        }
+
+        ordered_neighboring_top_liege_realm_owner = {
+            limit = {
+                segrellion_legacy_v_valid_great_house_target_trigger = yes
+            }
+            order_by = max_military_strength
+            position = 2
+            check_range_bounds = no
+            save_scope_as = segrellion_peer_3
+        }
+
+        ordered_neighboring_top_liege_realm_owner = {
+            limit = {
+                segrellion_legacy_v_valid_great_house_target_trigger = yes
+            }
+            order_by = max_military_strength
+            position = 3
+            check_range_bounds = no
+            save_scope_as = segrellion_peer_4
+        }
+
+        ordered_neighboring_top_liege_realm_owner = {
+            limit = {
+                segrellion_legacy_v_valid_great_house_target_trigger = yes
+            }
+            order_by = max_military_strength
+            position = 4
+            check_range_bounds = no
+            save_scope_as = segrellion_peer_5
+        }
+
+        # Probe for page 2
+        ordered_neighboring_top_liege_realm_owner = {
+            limit = {
+                segrellion_legacy_v_valid_great_house_target_trigger = yes
+            }
+            order_by = max_military_strength
+            position = 5
+            check_range_bounds = no
+            save_scope_as = segrellion_peer_6_probe
+        }
+    }
+		left_portrait = {
+			character = scope:segrellion_peer_1
+		}
+
+		right_portrait = {
+			character = scope:segrellion_peer_2
+		}
+
+		lower_left_portrait = {
+			character = scope:segrellion_peer_3
+		}
+
+		lower_center_portrait = {
+			character = scope:segrellion_peer_4
+		}
+
+		lower_right_portrait = {
+			character = scope:segrellion_peer_5
+		}
+		option = {
+			trigger = {
+				exists = scope:segrellion_peer_1
 			}
-			order_by = max_military_strength
-			position = 0
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_1
-		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+			name = segrellion_legacy.select_peer_1
+			highlight_portrait = scope:segrellion_peer_1
+
+			scope:segrellion_peer_1 = {
+				save_scope_as = segrellion_favor_target
 			}
-			order_by = max_military_strength
-			position = 1
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_2
+
+			trigger_event = segrellion_legacy.5010
 		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+		option = {
+			trigger = {
+				exists = scope:segrellion_peer_2
 			}
-			order_by = max_military_strength
-			position = 2
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_3
-		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+			name = segrellion_legacy.select_peer_2
+			highlight_portrait = scope:segrellion_peer_2
+
+			scope:segrellion_peer_2 = {
+				save_scope_as = segrellion_favor_target
 			}
-			order_by = max_military_strength
-			position = 3
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_4
+
+			trigger_event = segrellion_legacy.5010
 		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+		option = {
+			trigger = {
+				exists = scope:segrellion_peer_3
 			}
-			order_by = max_military_strength
-			position = 4
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_5
-		}
 
-		# Probe for page 2
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+			name = segrellion_legacy.select_peer_3
+			highlight_portrait = scope:segrellion_peer_3
+
+			scope:segrellion_peer_3 = {
+				save_scope_as = segrellion_favor_target
 			}
-			order_by = max_military_strength
-			position = 5
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_6_probe
-		}
-	}
 
-	left_portrait = {
-		character = scope:segrellion_peer_1
-	}
-
-	right_portrait = {
-		character = scope:segrellion_peer_2
-	}
-
-	lower_left_portrait = {
-		character = scope:segrellion_peer_3
-	}
-
-	lower_center_portrait = {
-		character = scope:segrellion_peer_4
-	}
-
-	lower_right_portrait = {
-		character = scope:segrellion_peer_5
-	}
-
-
-	option = {
-		trigger = {
-			exists = scope:segrellion_peer_1
+			trigger_event = segrellion_legacy.5010
 		}
 
-		name = segrellion_legacy.select_peer_1
-		highlight_portrait = scope:segrellion_peer_1
+		option = {
+			trigger = {
+				exists = scope:segrellion_peer_4
+			}
 
-		scope:segrellion_peer_1 = {
-			save_scope_as = segrellion_favor_target
+			name = segrellion_legacy.select_peer_4
+			highlight_portrait = scope:segrellion_peer_4
+
+			scope:segrellion_peer_4 = {
+				save_scope_as = segrellion_favor_target
+			}
+
+			trigger_event = segrellion_legacy.5010
 		}
 
-		trigger_event = segrellion_legacy.5010
-	}
+		option = {
+			trigger = {
+				exists = scope:segrellion_peer_5
+			}
 
-	option = {
-		trigger = {
-			exists = scope:segrellion_peer_2
+			name = segrellion_legacy.select_peer_5
+			highlight_portrait = scope:segrellion_peer_5
+
+			scope:segrellion_peer_5 = {
+				save_scope_as = segrellion_favor_target
+			}
+
+			trigger_event = segrellion_legacy.5010
 		}
 
-		name = segrellion_legacy.select_peer_2
-		highlight_portrait = scope:segrellion_peer_2
 
-		scope:segrellion_peer_2 = {
-			save_scope_as = segrellion_favor_target
+		option = {
+			trigger = {
+				exists = scope:segrellion_peer_6_probe
+			}
+
+			name = segrellion_legacy.next_page
+			trigger_event = segrellion_legacy.5002
 		}
 
-		trigger_event = segrellion_legacy.5010
-	}
 
-	option = {
-		trigger = {
-			exists = scope:segrellion_peer_3
+		option = {
+			name = segrellion_legacy.cancel
 		}
-
-		name = segrellion_legacy.select_peer_3
-		highlight_portrait = scope:segrellion_peer_3
-
-		scope:segrellion_peer_3 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = {
-			exists = scope:segrellion_peer_4
-		}
-
-		name = segrellion_legacy.select_peer_4
-		highlight_portrait = scope:segrellion_peer_4
-
-		scope:segrellion_peer_4 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = {
-			exists = scope:segrellion_peer_5
-		}
-
-		name = segrellion_legacy.select_peer_5
-		highlight_portrait = scope:segrellion_peer_5
-
-		scope:segrellion_peer_5 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-
-	option = {
-		trigger = {
-			exists = scope:segrellion_peer_6_probe
-		}
-
-		name = segrellion_legacy.next_page
-		trigger_event = segrellion_legacy.5002
-	}
-
-
-	option = {
-		name = segrellion_legacy.cancel
 	}
 }
+
 
 
 # ============================================================
@@ -230,67 +315,155 @@ segrellion_legacy.5002 = {
 
 	immediate = {
 
-		ordered_neighboring_realm_same_rank_owner = {
+		# =====================================================
+		# VASSAL HOUSE HEAD
+		# Positions 5-10
+		# =====================================================
+
+		if = {
 			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+				exists = liege
 			}
-			order_by = max_military_strength
-			position = 5
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_6
+
+			liege = {
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 5
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_6
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 6
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_7
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 7
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_8
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 8
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_9
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 9
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_10
+				}
+
+				# Probe for page 3
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 10
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_11_probe
+				}
+			}
 		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
-			}
-			order_by = max_military_strength
-			position = 6
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_7
-		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
-			}
-			order_by = max_military_strength
-			position = 7
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_8
-		}
+		# =====================================================
+		# INDEPENDENT HOUSE HEAD
+		# Positions 5-10
+		# =====================================================
 
-		ordered_neighboring_realm_same_rank_owner = {
+		else_if = {
 			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+				is_independent_ruler = yes
 			}
-			order_by = max_military_strength
-			position = 8
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_9
-		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 5
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_6
 			}
-			order_by = max_military_strength
-			position = 9
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_10
-		}
 
-		# Probe for page 3
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = {
-				segrellion_legacy_v_valid_peer_trigger = yes
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 6
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_7
 			}
-			order_by = max_military_strength
-			position = 10
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_11_probe
+
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 7
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_8
+			}
+
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 8
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_9
+			}
+
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 9
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_10
+			}
+
+			# Probe for page 3
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 10
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_11_probe
+			}
 		}
 	}
+
 
 	left_portrait = {
 		character = scope:segrellion_peer_6
@@ -402,44 +575,130 @@ segrellion_legacy.5003 = {
 
 	immediate = {
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = { segrellion_legacy_v_valid_peer_trigger = yes }
-			order_by = max_military_strength
-			position = 10
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_11
+		# =====================================================
+		# VASSAL HOUSE HEAD
+		# Positions 10-14
+		# =====================================================
+
+		if = {
+			limit = {
+				exists = liege
+			}
+
+			liege = {
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 10
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_11
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 11
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_12
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 12
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_13
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 13
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_14
+				}
+
+				ordered_vassal = {
+					limit = {
+						segrellion_legacy_v_valid_great_house_target_trigger = yes
+					}
+					order_by = max_military_strength
+					position = 14
+					check_range_bounds = no
+					save_scope_as = segrellion_peer_15
+				}
+			}
 		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = { segrellion_legacy_v_valid_peer_trigger = yes }
-			order_by = max_military_strength
-			position = 11
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_12
-		}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = { segrellion_legacy_v_valid_peer_trigger = yes }
-			order_by = max_military_strength
-			position = 12
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_13
-		}
+		# =====================================================
+		# INDEPENDENT HOUSE HEAD
+		# Positions 10-14
+		# =====================================================
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = { segrellion_legacy_v_valid_peer_trigger = yes }
-			order_by = max_military_strength
-			position = 13
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_14
-		}
+		else_if = {
+			limit = {
+				is_independent_ruler = yes
+			}
 
-		ordered_neighboring_realm_same_rank_owner = {
-			limit = { segrellion_legacy_v_valid_peer_trigger = yes }
-			order_by = max_military_strength
-			position = 14
-			check_range_bounds = no
-			save_scope_as = segrellion_peer_15
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 10
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_11
+			}
+
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 11
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_12
+			}
+
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 12
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_13
+			}
+
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 13
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_14
+			}
+
+			ordered_neighboring_top_liege_realm_owner = {
+				limit = {
+					segrellion_legacy_v_valid_great_house_target_trigger = yes
+				}
+				order_by = max_military_strength
+				position = 14
+				check_range_bounds = no
+				save_scope_as = segrellion_peer_15
+			}
 		}
 	}
 
