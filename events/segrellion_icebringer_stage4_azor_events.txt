@@ -69,6 +69,12 @@ segrellion_icebringer.7100 = {
 	option = {
 		name = segrellion_icebringer.7100.b
 
+		trigger = {
+			NOT = {
+				has_character_flag = segrellion_azor_lightbringer_received
+			}
+		}
+
 		trigger_event = segrellion_icebringer.7130
 	}
 
@@ -718,7 +724,29 @@ segrellion_icebringer.7130 = {
 
 	immediate = {
 
+		# =================================================
+		# AFTER THE FIRST VICTORY
+		#
+		# Returning again is a hidden persistence path.
+		# =================================================
+
 		if = {
+			limit = {
+				has_character_flag = segrellion_azor_white_walker_rematch_two
+			}
+
+			trigger_event = segrellion_icebringer.7139
+		}
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_azor_white_walker_rematch_one
+			}
+
+			trigger_event = segrellion_icebringer.7138
+		}
+
+		else_if = {
 			limit = {
 				has_character_flag = segrellion_azor_white_walker_defeated
 			}
@@ -726,6 +754,10 @@ segrellion_icebringer.7130 = {
 			trigger_event = segrellion_icebringer.7137
 		}
 
+
+		# =================================================
+		# ORIGINAL LEARNING LOOP
+		# =================================================
 
 		else_if = {
 			limit = {
@@ -735,7 +767,6 @@ segrellion_icebringer.7130 = {
 			trigger_event = segrellion_icebringer.7135
 		}
 
-
 		else_if = {
 			limit = {
 				has_character_flag = segrellion_azor_white_walker_attempt_three
@@ -743,7 +774,6 @@ segrellion_icebringer.7130 = {
 
 			trigger_event = segrellion_icebringer.7134
 		}
-
 
 		else_if = {
 			limit = {
@@ -753,7 +783,6 @@ segrellion_icebringer.7130 = {
 			trigger_event = segrellion_icebringer.7133
 		}
 
-
 		else_if = {
 			limit = {
 				has_character_flag = segrellion_azor_white_walker_attempt_one
@@ -761,7 +790,6 @@ segrellion_icebringer.7130 = {
 
 			trigger_event = segrellion_icebringer.7132
 		}
-
 
 		else = {
 			trigger_event = segrellion_icebringer.7131
@@ -1012,9 +1040,9 @@ segrellion_icebringer.7136 = {
 
 
 # =========================================================
-# 7137 - TEMPTING FATE
+# 7137 - THE COLD REMEMBERS
 #
-# Repeat after victory.
+# First rematch after defeating the White Walker.
 # =========================================================
 
 segrellion_icebringer.7137 = {
@@ -1037,6 +1065,56 @@ segrellion_icebringer.7137 = {
 	option = {
 		name = segrellion_icebringer.7137.a
 
+		add_character_flag = segrellion_azor_white_walker_rematch_one
+
+		add_stress = 25
+
+		if = {
+			limit = {
+				NOR = {
+					has_trait = wounded_1
+					has_trait = wounded_2
+					has_trait = wounded_3
+				}
+			}
+
+			add_trait = wounded_1
+		}
+
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+# =========================================================
+# 7138 - AGAIN
+#
+# Second rematch.
+# =========================================================
+
+segrellion_icebringer.7138 = {
+	type = character_event
+
+	title = segrellion_icebringer.7138.t
+	desc = segrellion_icebringer.7138.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+	left_portrait = {
+		character = root
+		animation = severelywounded
+	}
+
+	option = {
+		name = segrellion_icebringer.7138.a
+
+		add_character_flag = segrellion_azor_white_walker_rematch_two
+
+		add_stress = 40
+
 		if = {
 			limit = {
 				has_trait = wounded_1
@@ -1047,16 +1125,123 @@ segrellion_icebringer.7137 = {
 
 		if = {
 			limit = {
-				NOR = {
-					has_trait = wounded_2
+				NOT = {
 					has_trait = wounded_3
 				}
 			}
 
-			add_trait = wounded_2
+			if = {
+				limit = {
+					NOT = {
+						has_trait = wounded_2
+					}
+				}
+
+				add_trait = wounded_2
+			}
 		}
 
-		add_character_flag = segrellion_azor_white_walker_retested
+		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+
+# =========================================================
+# 7139 - ONE MORE TIME
+#
+# Third rematch.
+#
+# The character is not killed.
+# Instead they leave brutally mauled.
+# =========================================================
+
+segrellion_icebringer.7139 = {
+	type = character_event
+
+	title = segrellion_icebringer.7139.t
+	desc = segrellion_icebringer.7139.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+	left_portrait = {
+		character = root
+		animation = severelywounded
+	}
+
+	option = {
+		name = segrellion_icebringer.7139.a
+
+		add_stress = 60
+
+		if = {
+			limit = {
+				has_trait = wounded_1
+			}
+
+			remove_trait = wounded_1
+		}
+
+		if = {
+			limit = {
+				has_trait = wounded_2
+			}
+
+			remove_trait = wounded_2
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_trait = wounded_3
+				}
+			}
+
+			add_trait = wounded_3
+		}
+
+		trigger_event = segrellion_icebringer.7140
+	}
+}
+
+
+
+# =========================================================
+# 7140 - WHAT REFUSED TO BREAK
+#
+# SECRET LIGHTBRINGER PATH
+# =========================================================
+
+segrellion_icebringer.7140 = {
+	type = character_event
+
+	title = segrellion_icebringer.7140.t
+	desc = segrellion_icebringer.7140.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.7140.a
+
+		segrellion_transform_icebringer_into_lightbringer_effect = {
+			OWNER = root
+		}
+
+		add_character_flag = segrellion_azor_lightbringer_received
+		add_character_flag = segrellion_azor_lightbringer_walker_path
 
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
 	}
@@ -1164,6 +1349,7 @@ segrellion_icebringer.7161 = {
 	option = {
 		name = segrellion_icebringer.7161.a
 
+		custom_tooltip = segrellion_azor_stage5_irreversible_warning_tt
 		add_character_flag = segrellion_icebringer_v2_stage_four_passed
 		add_character_flag = segrellion_icebringer_stage5_azor_locked
 
