@@ -125,7 +125,7 @@ segrellion_vhalyrax_growth_effect = {
 # ============================================================
 # MAENOR
 # Canon daughter of Vhalyrax
-# Rider: Aeryn Segrellion
+# Cradle dragon of Aeryn Segrellion
 # ============================================================
 
 segrellion_spawn_maenor_from_egg_effect = {
@@ -142,6 +142,10 @@ segrellion_spawn_maenor_from_egg_effect = {
 	scope:dragon = {
 		change_first_name = Maenor
 
+		# Exact canon DNA.
+		copy_inheritable_appearance_from = character:Segrellion_Dragon_DNA_Maenor
+		add_character_flag = has_scripted_appearance
+
 		add_character_flag = segrellion_maenor_dragon
 		add_character_flag = agot_no_silly_name
 		add_character_flag = canon_status_canon
@@ -151,23 +155,19 @@ segrellion_spawn_maenor_from_egg_effect = {
 		add_trait = dragon_accepting
 		add_trait = dragon_calculating
 		add_trait = dragon_restrained
+
+		remove_trait = dragon_physique_bad
+		remove_trait = dragon_physique_good_1
+		remove_trait = dragon_physique_good_2
+		remove_trait = dragon_physique_good_3
 		add_trait = dragon_physique_good_2
+
+		remove_trait = education_dragon_1
+		remove_trait = education_dragon_2
+		remove_trait = education_dragon_3
+		remove_trait = education_dragon_4
+		remove_trait = education_dragon_5
 		add_trait = education_dragon_4
-	}
-
-	# White scales, pale blue tones, white eyes.
-	agot_historical_dragon_transfer_vars_to_story_cycle_effect = {
-		DRAGON = scope:dragon
-		dragon_age = scope:dragon.age
-
-		gene_dragon_primary_color_value = 1.00
-		gene_dragon_primary_color_hue = 0.58
-		gene_dragon_secondary_value = 0.98
-		gene_dragon_secondary_hue = 0.58
-		gene_dragon_tertiary_value = 0.96
-		gene_dragon_tertiary_hue = 0.58
-		gene_dragon_horn_color_value = 0.94
-		gene_dragon_horn_color_hue = 0.58
 	}
 
 	set_global_variable = {
@@ -180,7 +180,8 @@ segrellion_spawn_maenor_from_egg_effect = {
 # ============================================================
 # NIGHTDANCER
 # Canon daughter of Vhalyrax
-# Rider: Rhaenyra Segrellion
+# Cradle dragon of Rhaenyra Segrellion
+# Later ridden by Maegor the Usurper
 # ============================================================
 
 segrellion_spawn_nightdancer_from_egg_effect = {
@@ -197,6 +198,10 @@ segrellion_spawn_nightdancer_from_egg_effect = {
 	scope:dragon = {
 		change_first_name = Nightdancer
 
+		# Exact canon DNA.
+		copy_inheritable_appearance_from = character:Segrellion_Dragon_DNA_Nightdancer
+		add_character_flag = has_scripted_appearance
+
 		add_character_flag = segrellion_nightdancer_dragon
 		add_character_flag = agot_no_silly_name
 		add_character_flag = canon_status_canon
@@ -208,28 +213,13 @@ segrellion_spawn_nightdancer_from_egg_effect = {
 		add_trait = dragon_accepting
 		add_trait = dragon_calculating
 		add_trait = dragon_restrained
+
+		remove_trait = education_dragon_1
+		remove_trait = education_dragon_2
+		remove_trait = education_dragon_3
+		remove_trait = education_dragon_4
+		remove_trait = education_dragon_5
 		add_trait = education_dragon_4
-	}
-
-	# Grass-green scales and yellow eyes.
-	agot_historical_dragon_transfer_vars_to_story_cycle_effect = {
-		DRAGON = scope:dragon
-		dragon_age = scope:dragon.age
-
-		gene_dragon_primary_color_value = 0.72
-		gene_dragon_primary_color_hue = 0.33
-
-		gene_dragon_secondary_value = 0.62
-		gene_dragon_secondary_hue = 0.30
-
-		gene_dragon_tertiary_value = 0.54
-		gene_dragon_tertiary_hue = 0.36
-
-		gene_dragon_horn_color_value = 0.48
-		gene_dragon_horn_color_hue = 0.15
-
-		gene_dragon_eye_color_value = 0.96
-		gene_dragon_eye_color_hue = 0.16
 	}
 
 	set_global_variable = {
@@ -237,6 +227,8 @@ segrellion_spawn_nightdancer_from_egg_effect = {
 		value = scope:dragon
 	}
 }
+
+
 
 
 # ============================================================
@@ -586,14 +578,18 @@ segrellion_historical_dragons_progression_effect = {
 				character:Segrellion_12 ?= {
 					is_alive = yes
 				}
+
+				global_var:segrellion_historical_maenor = {
+					is_alive = yes
+				}
 			}
 
 			global_var:segrellion_historical_maenor = {
 				save_scope_as = historical_maenor
 			}
 
-			agot_bond_dragon_relation_effect = {
-				ACTOR = character:Segrellion_12
+			agot_tame_dragon = {
+				TAMER = character:Segrellion_12
 				DRAGON = scope:historical_maenor
 			}
 		}
