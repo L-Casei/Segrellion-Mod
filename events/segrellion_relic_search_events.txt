@@ -55,20 +55,30 @@ segrellion_relic.1000 = {
 
 	type = character_event
 
-	title = segrellion_relic.1000.t
-	desc = segrellion_relic.1000.desc
+    trigger = {
+        has_character_flag = segrellion_legendary_relic_search_active
+        has_character_flag = segrellion_relic_pending_tyrosh
+    }
 
-	theme = diplomacy
+    title = segrellion_relic.1000.t
+    desc = segrellion_relic.1000.desc
 
-	override_background = {
-		reference = throne_room
-	}
+    theme = diplomacy
 
-	immediate = {
-		title:c_tyrosh.holder ?= {
-			save_scope_as = relic_tyrosh_host
-		}
-	}
+    override_background = {
+        reference = throne_room
+    }
+
+    immediate = {
+
+        # We have reached Tyrosh. This arrival can no longer fire again.
+        remove_character_flag = segrellion_relic_pending_tyrosh
+        remove_character_flag = segrellion_legendary_relic_search_paused
+
+        title:c_tyrosh.holder ?= {
+            save_scope_as = relic_tyrosh_host
+        }
+    }
 
 	left_portrait = {
 		character = root
@@ -649,6 +659,11 @@ segrellion_relic.2000 = {
 	title = segrellion_relic.2000.t
 	desc = segrellion_relic.2000.desc
 
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_relic_pending_oldtown
+	}
+
 	theme = diplomacy
 
 	override_background = {
@@ -656,6 +671,10 @@ segrellion_relic.2000 = {
 	}
 
 	immediate = {
+
+			remove_character_flag = segrellion_relic_pending_oldtown
+			remove_character_flag = segrellion_legendary_relic_search_paused
+
 		title:c_oldtown.holder ?= {
 			save_scope_as = relic_oldtown_host
 		}
@@ -1417,6 +1436,11 @@ segrellion_relic.2220 = {
 segrellion_relic.3000 = {
 
 	type = character_event
+
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_relic_pending_winterfell
+	}
 
 	title = segrellion_relic.3000.t
 	desc = segrellion_relic.3000.desc
@@ -2232,6 +2256,11 @@ segrellion_relic.4000 = {
 
 	type = character_event
 
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_relic_pending_castle_black
+	}
+
 	title = segrellion_relic.4000.t
 	desc = segrellion_relic.4000.desc
 
@@ -2331,6 +2360,11 @@ segrellion_relic.4010 = {
 segrellion_relic.5000 = {
 
 	type = character_event
+
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_relic_pending_nightfort
+	}
 
 	title = segrellion_relic.5000.t
 	desc = segrellion_relic.5000.desc
@@ -2542,6 +2576,11 @@ segrellion_relic.6000 = {
 
 	type = character_event
 
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_relic_pending_shadow_tower
+	}
+
 	title = segrellion_relic.6000.t
 	desc = segrellion_relic.6000.desc
 
@@ -2751,6 +2790,11 @@ segrellion_relic.6030 = {
 segrellion_relic.7000 = {
 
 	type = character_event
+
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_relic_pending_skagos
+	}
 
 	title = segrellion_relic.7000.t
 	desc = segrellion_relic.7000.desc
