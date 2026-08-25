@@ -7,7 +7,7 @@ namespace = segrellion_relic
 # =========================================================
 
 # =========================================================
-# 0090 - SEARCH ABANDONED / TRAVEL CANCELLED
+# 0090 - TRAVEL CANCELLED
 # =========================================================
 
 segrellion_relic.0090 = {
@@ -30,6 +30,12 @@ segrellion_relic.0090 = {
 
 	option = {
 		name = segrellion_relic.0090.a
+
+		add_character_flag = segrellion_legendary_relic_search_paused
+	}
+
+	option = {
+		name = segrellion_relic.0090.b
 
 		segrellion_finish_relic_search_effect = yes
 	}
@@ -399,6 +405,12 @@ segrellion_relic.1050 = {
 
 	theme = diplomacy
 
+	immediate = {
+		title:c_tyrosh.holder ?= {
+			save_scope_as = relic_tyrosh_host
+		}
+	}
+
 	override_background = {
 		reference = throne_room
 	}
@@ -679,6 +691,12 @@ segrellion_relic.2005 = {
 	type = character_event
 
 	title = segrellion_relic.2005.t
+
+	immediate = {
+		title:c_oldtown.holder ?= {
+			save_scope_as = relic_oldtown_host
+		}
+	}
 
 	desc = {
 		first_valid = {
@@ -1386,7 +1404,14 @@ segrellion_relic.2220 = {
 
 
 # =========================================================
-# 3000 - WINTERFELL
+# WINTERFELL
+#
+# 3000-3999
+# =========================================================
+
+
+# =========================================================
+# 3000 - ARRIVAL AT WINTERFELL
 # =========================================================
 
 segrellion_relic.3000 = {
@@ -1404,6 +1429,10 @@ segrellion_relic.3000 = {
 
 	immediate = {
 
+		remove_character_flag = segrellion_relic_pending_winterfell
+		remove_character_flag = segrellion_legendary_relic_search_paused
+		remove_character_flag = segrellion_relic_winterfell_full_access
+
 		title:c_winterfell.holder ?= {
 			save_scope_as = relic_winterfell_host
 		}
@@ -1420,42 +1449,190 @@ segrellion_relic.3000 = {
 	}
 
 	option = {
-
 		name = segrellion_relic.3000.a
 
-		add_character_flag = segrellion_relic_knows_nightfort
-
-		start_travel_plan = {
-			destination = title:c_castle_black.title_province
-			on_arrival_event = segrellion_relic.4000
-			on_arrival_destinations = all_but_last
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		trigger_event = {
+			id = segrellion_relic.3005
+			days = 1
 		}
 	}
 }
 
 
 # =========================================================
-# 4000 - CASTLE BLACK
+# 3005 - THE LORD'S ANSWER
 # =========================================================
 
-segrellion_relic.4000 = {
+segrellion_relic.3005 = {
 
 	type = character_event
 
-	title = segrellion_relic.4000.t
-	desc = segrellion_relic.4000.desc
+	title = segrellion_relic.3005.t
 
-	theme = travel
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					scope:relic_winterfell_host = {
+						opinion = {
+							target = root
+							value < 0
+						}
+					}
+				}
+				desc = segrellion_relic.3005.desc_hostile
+			}
+
+			triggered_desc = {
+				trigger = {
+					scope:relic_winterfell_host = {
+						opinion = {
+							target = root
+							value >= 76
+						}
+					}
+				}
+				desc = segrellion_relic.3005.desc_warm
+			}
+
+			desc = segrellion_relic.3005.desc_cautious
+		}
+	}
+
+	theme = realm
 
 	override_background = {
-		reference = courtyard
+		reference = throne_room
 	}
 
 	immediate = {
 
-		title:c_castle_black.holder ?= {
-			save_scope_as = relic_watch_host
+		title:c_winterfell.holder ?= {
+			save_scope_as = relic_winterfell_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = scope:relic_winterfell_host
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# HOSTILE
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3005.a
+
+		trigger = {
+			scope:relic_winterfell_host = {
+				opinion = {
+					target = root
+					value < 0
+				}
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_relic.3090
+			days = 1
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# 0 - 75
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3005.b
+
+		trigger = {
+			scope:relic_winterfell_host = {
+				opinion = {
+					target = root
+					value >= 0
+					value < 76
+				}
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_relic.3010
+			days = 1
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# 76+
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3005.c
+
+		trigger = {
+			scope:relic_winterfell_host = {
+				opinion = {
+					target = root
+					value >= 76
+				}
+			}
+		}
+
+		add_character_flag = segrellion_relic_winterfell_full_access
+
+		trigger_event = {
+			id = segrellion_relic.3010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 3010 - STORIES KEPT BY WOLVES
+# =========================================================
+
+segrellion_relic.3010 = {
+
+	type = character_event
+
+	title = segrellion_relic.3010.t
+	desc = segrellion_relic.3010.desc
+
+	theme = learning
+
+	override_background = {
+		reference = throne_room
+	}
+
+	immediate = {
+
+		title:c_winterfell.holder ?= {
+			save_scope_as = relic_winterfell_host
+		}
+
+		character:Segrellion_1 ?= {
+			save_scope_as = relic_alex_segrellion
+		}
+
+		character:Segrellion_21 ?= {
+			save_scope_as = relic_aegon_dragonspear
+		}
+
+		character:Stark_86 ?= {
+			save_scope_as = relic_cregan_stark
 		}
 	}
 
@@ -1465,93 +1642,88 @@ segrellion_relic.4000 = {
 	}
 
 	right_portrait = {
-		character = scope:relic_watch_host
+		character = scope:relic_winterfell_host
 		animation = personality_rational
 	}
 
 	option = {
 
-		name = segrellion_relic.4000.a
+		name = segrellion_relic.3010.a
 
-		trigger_event = {
-			id = segrellion_relic.4010
-			days = 1
+		if = {
+			limit = {
+				has_character_flag = segrellion_relic_winterfell_full_access
+			}
+
+			trigger_event = {
+				id = segrellion_relic.3020
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_relic.3900
+				days = 1
+			}
 		}
 	}
 }
 
 
 # =========================================================
-# 4010 - THE WATCH'S RECORD
+# 3020 - THE CASTLE IS OPEN TO YOU
 # =========================================================
 
-segrellion_relic.4010 = {
+segrellion_relic.3020 = {
 
 	type = character_event
 
-	title = segrellion_relic.4010.t
-	desc = segrellion_relic.4010.desc
+	title = segrellion_relic.3020.t
+	desc = segrellion_relic.3020.desc
 
 	theme = learning
 
 	override_background = {
-		reference = study
+		reference = throne_room
 	}
 
-	left_portrait = {
-		character = root
+	immediate = {
+
+		title:c_winterfell.holder ?= {
+			save_scope_as = relic_winterfell_host
+		}
+	}
+
+	right_portrait = {
+		character = scope:relic_winterfell_host
 		animation = personality_rational
 	}
 
 	option = {
+		name = segrellion_relic.3020.a
 
-		name = segrellion_relic.4010.a
-
-		add_learning_lifestyle_xp = 100
-
-		start_travel_plan = {
-			destination = title:c_the_nightfort.title_province
-			on_arrival_event = segrellion_relic.5000
-			on_arrival_destinations = all_but_last
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		trigger_event = {
+			id = segrellion_relic.3100
+			days = 1
 		}
-	}
-}
-
-
-# =========================================================
-# THE NIGHTFORT
-# =========================================================
-
-
-# =========================================================
-# 5000 - THE NIGHTFORT
-# =========================================================
-
-segrellion_relic.5000 = {
-
-	type = character_event
-
-	title = segrellion_relic.5000.t
-	desc = segrellion_relic.5000.desc
-
-	theme = travel
-
-	override_background = {
-		reference = segrellion_icebringer_event
-	}
-
-	left_portrait = {
-		character = root
-		animation = worry
 	}
 
 	option = {
-
-		name = segrellion_relic.5000.a
+		name = segrellion_relic.3020.b
 
 		trigger_event = {
-			id = segrellion_relic.5010
+			id = segrellion_relic.3200
+			days = 1
+		}
+	}
+
+	option = {
+		name = segrellion_relic.3020.c
+
+		trigger_event = {
+			id = segrellion_relic.3900
 			days = 1
 		}
 	}
@@ -1559,163 +1731,24 @@ segrellion_relic.5000 = {
 
 
 # =========================================================
-# 5010 - DOES THE SWORD WISH TO BE FOUND?
+# 3090 - TURNED AWAY
 # =========================================================
 
-segrellion_relic.5010 = {
+segrellion_relic.3090 = {
 
 	type = character_event
 
-	title = segrellion_relic.5010.t
-	desc = segrellion_relic.5010.desc
+	title = segrellion_relic.3090.t
+	desc = segrellion_relic.3090.desc
 
-	theme = mystery
+	theme = realm
 
 	override_background = {
-		reference = dungeon
-	}
-
-	left_portrait = {
-		character = root
-		animation = fear
+		reference = wilderness
 	}
 
 	option = {
-
-		name = segrellion_relic.5010.a
-
-		custom_tooltip = segrellion_relic.5010.a.tt
-
-
-		# =====================================================
-		# ONLY WINTERFELL CAN LEAD TO ICEBRINGER
-		# =====================================================
-
-		if = {
-
-			limit = {
-				has_character_flag = segrellion_relic_route_winterfell
-			}
-
-
-			# =====================================================
-			# FULL ACCEPTANCE
-			# =====================================================
-
-			if = {
-
-				limit = {
-					segrellion_icebringer_accepted_trigger = yes
-				}
-
-				random_list = {
-
-					90 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					10 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-
-
-			# =====================================================
-			# PARTIAL ACCEPTANCE
-			# =====================================================
-
-			else_if = {
-
-				limit = {
-					segrellion_icebringer_partial_trigger = yes
-				}
-
-				random_list = {
-
-					65 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					35 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-
-
-			# =====================================================
-			# REJECTED
-			# =====================================================
-
-			else = {
-
-				random_list = {
-
-					15 = {
-						trigger_event = segrellion_relic.5100
-					}
-
-					85 = {
-						trigger_event = segrellion_relic.5200
-					}
-				}
-			}
-		}
-
-
-		# Defensive fallback.
-		# Even an old save/debug chain can NEVER recover Icebringer
-		# through Tyrosh or Oldtown.
-		else = {
-			trigger_event = segrellion_relic.5200
-		}
-	}
-}
-
-
-# =========================================================
-# 5100 - ICEBRINGER
-# SUCCESS
-# =========================================================
-
-segrellion_relic.5100 = {
-
-	type = character_event
-
-	title = segrellion_relic.5100.t
-	desc = segrellion_relic.5100.desc
-
-	theme = intrigue
-
-	# Replace this with a custom Icebringer discovery
-	# background later if desired.
-	override_background = {
-		reference = segrellion_icebringer_event
-	}
-
-	left_portrait = {
-		character = root
-		animation = personality_bold
-	}
-
-	option = {
-
-		name = segrellion_relic.5100.a
-
-		segrellion_create_artifact_icebringer_effect = {
-			OWNER = root
-		}
-
-		segrellion_refresh_icebringer_affinity_effect = yes
-
-		add_prestige = 1000
-
-		dynasty = {
-			add_dynasty_prestige = 500
-		}
-
-		add_character_flag = segrellion_recovered_icebringer
+		name = segrellion_relic.3090.a
 
 		segrellion_finish_relic_search_effect = yes
 	}
@@ -1723,21 +1756,240 @@ segrellion_relic.5100 = {
 
 
 # =========================================================
-# 5200 - NOTHING
-# FAILURE
+# 3100 - THE CRYPTS OF WINTERFELL
 # =========================================================
 
-segrellion_relic.5200 = {
+segrellion_relic.3100 = {
 
 	type = character_event
 
-	title = segrellion_relic.5200.t
-	desc = segrellion_relic.5200.desc
+	title = segrellion_relic.3100.t
+	desc = segrellion_relic.3100.desc
+
+	theme = learning
+
+	override_background = {
+		reference = dungeon
+	}
+
+	immediate = {
+
+		character:Segrellion_1 ?= {
+			save_scope_as = relic_alex_segrellion
+		}
+
+		character:Stark_86 ?= {
+			save_scope_as = relic_cregan_stark
+		}
+
+		character:Stark_88 ?= {
+			save_scope_as = relic_sara_snow
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+
+		name = segrellion_relic.3100.a
+
+		add_learning_lifestyle_xp = 50
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					NOT = {
+						has_global_variable = segrellion_winterfell_vhalyrax_egg
+					}
+				}
+
+				if = {
+					limit = {
+						dynasty = dynasty:dynn_Segrellion
+					}
+
+					random_list = {
+
+						25 = {
+							trigger_event = {
+								id = segrellion_relic.3130
+								days = 1
+							}
+						}
+
+						75 = {
+							trigger_event = {
+								id = segrellion_relic.3900
+								days = 1
+							}
+						}
+					}
+				}
+
+				else = {
+
+					random_list = {
+
+						5 = {
+							trigger_event = {
+								id = segrellion_relic.3130
+								days = 1
+							}
+						}
+
+						95 = {
+							trigger_event = {
+								id = segrellion_relic.3900
+								days = 1
+							}
+						}
+					}
+				}
+			}
+
+			else = {
+
+				trigger_event = {
+					id = segrellion_relic.3900
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3130 - THE ICE-BLUE EGG
+# =========================================================
+
+segrellion_relic.3130 = {
+
+	type = character_event
+
+	title = segrellion_relic.3130.t
+	desc = segrellion_relic.3130.desc
 
 	theme = mystery
 
 	override_background = {
 		reference = dungeon
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_relic.3130.a
+
+		segrellion_create_artifact_winterfell_vhalyrax_egg_effect = {
+			OWNER = root
+		}
+
+		custom_tooltip = segrellion_relic.3130.a.tt
+
+		trigger_event = {
+			id = segrellion_relic.3900
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 3200 - THE GODSWOOD
+# =========================================================
+
+segrellion_relic.3200 = {
+
+	type = character_event
+
+	title = segrellion_relic.3200.t
+	desc = segrellion_relic.3200.desc
+
+	theme = faith
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = contemplation
+	}
+
+
+	# -----------------------------------------------------
+	# REFLECT
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3200.a
+
+		trigger_event = {
+			id = segrellion_relic.3210
+			days = 1
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# OLD GODS
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3200.b
+
+		trigger = {
+			faith.religion = religion:old_gods_religion
+		}
+
+		add_internal_flag = special
+
+		add_character_modifier = {
+			modifier = segrellion_winterfell_godswood_blessing_modifier
+			years = 10
+		}
+
+		trigger_event = {
+			id = segrellion_relic.3210
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 3210 - THE DREAMS OF DRAGONSPEAR
+# =========================================================
+
+segrellion_relic.3210 = {
+
+	type = character_event
+
+	title = segrellion_relic.3210.t
+	desc = segrellion_relic.3210.desc
+
+	theme = mystery
+
+	override_background = {
+		reference = wilderness
+	}
+
+	immediate = {
+
+		character:Segrellion_21 ?= {
+			save_scope_as = relic_aegon_dragonspear
+		}
 	}
 
 	left_portrait = {
@@ -1747,10 +1999,218 @@ segrellion_relic.5200 = {
 
 	option = {
 
-		name = segrellion_relic.5200.a
+		name = segrellion_relic.3210.a
 
-		add_character_flag = segrellion_failed_to_find_icebringer
+		hidden_effect = {
 
-		segrellion_finish_relic_search_effect = yes
+			if = {
+				limit = {
+					NOT = {
+						has_global_variable = segrellion_ring_of_dragonspear
+					}
+				}
+
+				if = {
+					limit = {
+						dynasty = dynasty:dynn_Segrellion
+					}
+
+					random_list = {
+
+						25 = {
+							trigger_event = {
+								id = segrellion_relic.3230
+								days = 1
+							}
+						}
+
+						75 = {
+							trigger_event = {
+								id = segrellion_relic.3900
+								days = 1
+							}
+						}
+					}
+				}
+
+				else = {
+
+					random_list = {
+
+						5 = {
+							trigger_event = {
+								id = segrellion_relic.3230
+								days = 1
+							}
+						}
+
+						95 = {
+							trigger_event = {
+								id = segrellion_relic.3900
+								days = 1
+							}
+						}
+					}
+				}
+			}
+
+			else = {
+
+				trigger_event = {
+					id = segrellion_relic.3900
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3230 - THE RING OF DRAGONSPEAR
+# =========================================================
+
+segrellion_relic.3230 = {
+
+	type = character_event
+
+	title = segrellion_relic.3230.t
+	desc = segrellion_relic.3230.desc
+
+	theme = mystery
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_relic.3230.a
+
+		segrellion_create_artifact_ring_of_dragonspear_effect = {
+			OWNER = root
+		}
+
+		custom_tooltip = segrellion_relic.3230.a.tt
+
+		trigger_event = {
+			id = segrellion_relic.3900
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 3900 - THREE ROADS NORTH
+# =========================================================
+
+segrellion_relic.3900 = {
+
+	type = character_event
+
+	title = segrellion_relic.3900.t
+	desc = segrellion_relic.3900.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# CASTLE BLACK
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3900.a
+
+		add_character_flag = segrellion_relic_knows_nightfort
+
+		segrellion_clear_relic_pending_destination_effect = yes
+		add_character_flag = segrellion_relic_pending_castle_black
+
+		start_travel_plan = {
+			destination = title:c_castle_black.title_province
+
+			return_trip = no
+
+			on_arrival_event = segrellion_relic.4000
+			on_arrival_destinations = all
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# SHADOW TOWER
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3900.b
+
+		trigger = {
+			NOT = {
+				has_character_flag = segrellion_relic_visited_shadow_tower
+			}
+		}
+
+		segrellion_clear_relic_pending_destination_effect = yes
+		add_character_flag = segrellion_relic_pending_shadow_tower
+
+		start_travel_plan = {
+			destination = title:c_the_shadow_tower.title_province
+
+			return_trip = no
+
+			on_arrival_event = segrellion_relic.6000
+			on_arrival_destinations = all
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# SKAGOS
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_relic.3900.c
+
+		trigger = {
+			NOT = {
+				has_character_flag = segrellion_relic_visited_skagos
+			}
+		}
+
+		segrellion_clear_relic_pending_destination_effect = yes
+		add_character_flag = segrellion_relic_pending_skagos
+
+		start_travel_plan = {
+			destination = title:c_drihisesk.title_province
+
+			return_trip = no
+
+			on_arrival_event = segrellion_relic.7000
+			on_arrival_destinations = all
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
 	}
 }

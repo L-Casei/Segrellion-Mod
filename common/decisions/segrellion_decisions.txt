@@ -885,12 +885,16 @@ segrellion_search_for_legendary_relic_decision = {
 			}
 
 			add_character_flag = segrellion_relic_route_tyrosh
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_tyrosh
 
 			start_travel_plan = {
-				destination = title:c_tyrosh.title_province
+				destination = ...
 
-				on_arrival_event = segrellion_relic.1000
-				on_arrival_destinations = all_but_last
+				return_trip = no
+
+				on_arrival_event = ...
+				on_arrival_destinations = all
 
 				on_travel_planner_cancel_event = segrellion_relic.0090
 			}
@@ -908,11 +912,16 @@ segrellion_search_for_legendary_relic_decision = {
 
 			add_character_flag = segrellion_relic_route_oldtown
 
-			start_travel_plan = {
-				destination = title:c_oldtown.title_province
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_oldtown
 
-				on_arrival_event = segrellion_relic.2000
-				on_arrival_destinations = all_but_last
+			start_travel_plan = {
+				destination = ...
+
+				return_trip = no
+
+				on_arrival_event = ...
+				on_arrival_destinations = all
 
 				on_travel_planner_cancel_event = segrellion_relic.0090
 			}
@@ -929,12 +938,16 @@ segrellion_search_for_legendary_relic_decision = {
 			}
 
 			add_character_flag = segrellion_relic_route_winterfell
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_winterfell
 
 			start_travel_plan = {
-				destination = title:c_winterfell.title_province
+				destination = ...
 
-				on_arrival_event = segrellion_relic.3000
-				on_arrival_destinations = all_but_last
+				return_trip = no
+
+				on_arrival_event = ...
+				on_arrival_destinations = all
 
 				on_travel_planner_cancel_event = segrellion_relic.0090
 			}
@@ -1048,3 +1061,53 @@ segrellion_master_icebringer_decision = {
 	}
 }
 
+
+# =========================================================
+# RESUME LEGENDARY RELIC SEARCH
+# =========================================================
+
+segrellion_resume_legendary_relic_search_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/uncover_the_lost_legacy_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_resume_legendary_relic_search_decision_desc
+	selection_tooltip = segrellion_resume_legendary_relic_search_decision_tooltip
+	confirm_text = segrellion_resume_legendary_relic_search_decision_confirm
+
+	is_shown = {
+
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_legendary_relic_search_paused
+	}
+
+	is_valid = {
+
+		is_imprisoned = no
+
+		OR = {
+			has_character_flag = segrellion_relic_pending_tyrosh
+			has_character_flag = segrellion_relic_pending_oldtown
+			has_character_flag = segrellion_relic_pending_winterfell
+			has_character_flag = segrellion_relic_pending_castle_black
+			has_character_flag = segrellion_relic_pending_shadow_tower
+			has_character_flag = segrellion_relic_pending_skagos
+			has_character_flag = segrellion_relic_pending_nightfort
+		}
+	}
+
+	effect = {
+		segrellion_resume_relic_travel_effect = yes
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

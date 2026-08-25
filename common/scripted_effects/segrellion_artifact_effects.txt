@@ -2165,3 +2165,160 @@ segrellion_create_artifact_unicorn_codex_effect = {
 		}
 	}
 }
+
+# =========================================================
+# RING OF DRAGONSPEAR
+# =========================================================
+
+segrellion_create_artifact_ring_of_dragonspear_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 80
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 70
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+
+		name = segrellion_ring_of_dragonspear_name
+		description = segrellion_ring_of_dragonspear_desc
+
+		type = ring
+		visuals = ring
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		template = segrellion_ring_of_dragonspear_template
+		modifier = segrellion_ring_of_dragonspear_modifier
+
+		history = {
+			type = created_before_history
+			date = 8176.1.1
+		}
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+
+		set_global_variable = {
+			name = segrellion_ring_of_dragonspear
+			value = this
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		set_variable = {
+			name = segrellion_ring_of_dragonspear_artifact
+			value = yes
+		}
+	}
+}
+
+# =========================================================
+# CREATE VHALYRAX'S WINTERFELL EGG
+#
+# This is NOT Alex's ancient egg.
+# It was laid by Vhalyrax years later.
+# =========================================================
+
+segrellion_create_artifact_winterfell_vhalyrax_egg_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 100
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 100
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+
+		name = segrellion_winterfell_vhalyrax_egg_name
+		description = segrellion_winterfell_vhalyrax_egg_desc
+
+		type = dragon_egg
+
+		visuals = segrellion_winterfell_vhalyrax_egg_visuals
+		template = segrellion_winterfell_vhalyrax_egg_template
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_dragon_egg_modifier
+
+		history = {
+			type = created_before_history
+			date = 8120.1.1
+		}
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+
+		# Completely separate global from Alex's egg.
+		set_global_variable = {
+			name = segrellion_winterfell_vhalyrax_egg
+			value = this
+		}
+
+		# AGOT recognises it as an actual dragon egg.
+		set_variable = {
+			name = dragon_egg
+			value = yes
+		}
+
+		set_variable = {
+			name = dragon_egg_color
+			value = flag:teal
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		# Unique identifier ONLY for this egg.
+		set_variable = {
+			name = segrellion_winterfell_vhalyrax_egg_artifact
+			value = yes
+		}
+	}
+}
