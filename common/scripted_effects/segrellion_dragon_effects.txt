@@ -124,28 +124,50 @@ segrellion_vhalyrax_growth_effect = {
 
 # ============================================================
 # MAENOR
-# Canon daughter of Vhalyrax
-# Cradle dragon of Aeryn Segrellion
+# Canon daughter of Vhalyrax.
+# Cradle dragon of Aeryn Segrellion.
+#
+# Used only when the campaign begins before her historical
+# birth and Maenor therefore has to hatch during gameplay.
 # ============================================================
 
 segrellion_spawn_maenor_from_egg_effect = {
 
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	$EGG$ = {
+		save_scope_as = egg
+	}
+
+
 	create_character = {
 		name = Maenor
-		location = scope:owner.location
+		location = $OWNER$.location
 		template = agot_dragon_hatchling_template
 		gender = female
 		random_traits = no
 		save_scope_as = dragon
 	}
 
+
+	hidden_effect = {
+		agot_set_as_owned_dragon = {
+			OWNER = scope:owner
+			DRAGON = scope:dragon
+		}
+	}
+
+
 	scope:dragon = {
+
 		change_first_name = Maenor
 
-		# Exact canon DNA.
-		copy_inheritable_appearance_from = character:Segrellion_Dragon_DNA_Maenor
-		add_character_flag = has_scripted_appearance
+		# Copy the exact DNA from the real historical character.
+		copy_inheritable_appearance_from = character:dragon_maenor
 
+		add_character_flag = has_scripted_appearance
 		add_character_flag = segrellion_maenor_dragon
 		add_character_flag = agot_no_silly_name
 		add_character_flag = canon_status_canon
@@ -170,38 +192,91 @@ segrellion_spawn_maenor_from_egg_effect = {
 		add_trait = education_dragon_4
 	}
 
+
+	# Reads Vhalyrax from the egg's parentage.
+	agot_set_dragon_parents = {
+		EGG = scope:egg
+	}
+
+
+	agot_dragon_tree_creation_effect = {
+		DRAGON = scope:dragon
+	}
+
+
+	create_character_memory = {
+		type = agot_hatched_egg
+
+		participants = {
+			dragon = scope:dragon
+		}
+	}
+
+
+	agot_bond_dragon_relation_effect = {
+		ACTOR = scope:owner
+		DRAGON = scope:dragon
+	}
+
+
 	set_global_variable = {
 		name = segrellion_historical_maenor
 		value = scope:dragon
+	}
+
+
+	agot_remove_dragon_egg = {
+		EGG = scope:egg
 	}
 }
 
 
 # ============================================================
 # NIGHTDANCER
-# Canon daughter of Vhalyrax
-# Cradle dragon of Rhaenyra Segrellion
-# Later ridden by Maegor the Usurper
+# Canon daughter of Vhalyrax.
+# Cradle dragon of Rhaenyra Segrellion.
+#
+# Used only when the campaign begins before her historical
+# birth and Nightdancer therefore hatches during gameplay.
 # ============================================================
 
 segrellion_spawn_nightdancer_from_egg_effect = {
 
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	$EGG$ = {
+		save_scope_as = egg
+	}
+
+
 	create_character = {
 		name = Nightdancer
-		location = scope:owner.location
+		location = $OWNER$.location
 		template = agot_dragon_hatchling_template
 		gender = female
 		random_traits = no
 		save_scope_as = dragon
 	}
 
+
+	hidden_effect = {
+		agot_set_as_owned_dragon = {
+			OWNER = scope:owner
+			DRAGON = scope:dragon
+		}
+	}
+
+
 	scope:dragon = {
+
 		change_first_name = Nightdancer
 
-		# Exact canon DNA.
-		copy_inheritable_appearance_from = character:Segrellion_Dragon_DNA_Nightdancer
-		add_character_flag = has_scripted_appearance
+		# Copy the exact DNA from the real historical character.
+		copy_inheritable_appearance_from = character:dragon_nightdancer
 
+		add_character_flag = has_scripted_appearance
 		add_character_flag = segrellion_nightdancer_dragon
 		add_character_flag = agot_no_silly_name
 		add_character_flag = canon_status_canon
@@ -222,269 +297,40 @@ segrellion_spawn_nightdancer_from_egg_effect = {
 		add_trait = education_dragon_4
 	}
 
+
+	agot_set_dragon_parents = {
+		EGG = scope:egg
+	}
+
+
+	agot_dragon_tree_creation_effect = {
+		DRAGON = scope:dragon
+	}
+
+
+	create_character_memory = {
+		type = agot_hatched_egg
+
+		participants = {
+			dragon = scope:dragon
+		}
+	}
+
+
+	agot_bond_dragon_relation_effect = {
+		ACTOR = scope:owner
+		DRAGON = scope:dragon
+	}
+
+
 	set_global_variable = {
 		name = segrellion_historical_nightdancer
 		value = scope:dragon
 	}
-}
 
 
-
-
-# ============================================================
-# HISTORICAL VHALYRAX
-#
-# Used only when loading a bookmark after her historical hatch.
-# In a normal early campaign she MUST hatch from the ancient egg event.
-# ============================================================
-
-segrellion_spawn_historical_vhalyrax_effect = {
-
-	$HOST$ = {
-		save_scope_as = historical_dragon_host
-	}
-
-	create_character = {
-		name = Vhalyrax
-		location = $HOST$.location
-		template = agot_dragon_hatchling_template
-		age = $AGE$
-		gender = female
-		random_traits = no
-		save_scope_as = dragon
-	}
-
-	scope:dragon = {
-
-		change_first_name = Vhalyrax
-
-		add_character_flag = segrellion_vhalyrax_dragon
-		add_character_flag = agot_no_silly_name
-		add_character_flag = canon_status_canon
-		add_character_flag = agot_no_silly_name
-		add_character_flag = canon_status_canon
-
-		# The historical first clutch has already happened.
-		add_character_flag = segrellion_vhalyrax_first_clutch_laid
-
-		add_trait = dragon_majestic
-		add_trait = dragon_restrained
-		add_trait = dragon_calculating
-		add_trait = dragon_imperious
-
-		remove_trait = dragon_physique_bad
-		remove_trait = dragon_physique_good_1
-		remove_trait = dragon_physique_good_2
-		add_trait = dragon_physique_good_3
-
-		remove_trait = education_dragon_1
-		remove_trait = education_dragon_2
-		remove_trait = education_dragon_3
-		remove_trait = education_dragon_4
-		add_trait = education_dragon_5
-
-		add_prowess_skill = 10
-		change_dragon_size = { VALUE = 8 }
-
-		agot_back_apply_dragon_aging_effect = yes
-	}
-
-	agot_historical_dragon_transfer_vars_to_story_cycle_effect = {
-		DRAGON = scope:dragon
-		dragon_age = scope:dragon.age
-
-		gene_dragon_primary_color_value = 1.00
-		gene_dragon_primary_color_hue = 0.58
-
-		gene_dragon_secondary_value = 0.98
-		gene_dragon_secondary_hue = 0.58
-
-		gene_dragon_tertiary_value = 0.96
-		gene_dragon_tertiary_hue = 0.58
-
-		gene_dragon_horn_color_value = 0.94
-		gene_dragon_horn_color_hue = 0.58
-
-		gene_dragon_eye_color_value = 0.58
-		gene_dragon_eye_color_hue = 0.95
-
-		gene_dragon_main_horn_shape_template = 9
-		gene_dragon_main_horn_shape_value = 0.55
-		gene_dragon_body_shading_template = 15
-		gene_dragon_body_shading_value = 0.72
-		gene_dragon_wings_shading_template = 2
-		gene_dragon_wings_shading_value = 0.25
-		gene_dragon_neck_length = 0.44
-		gene_dragon_metallic_scales_strength = 0.12
-		gene_dragon_tail_length = 0.56
-		gene_dragon_center_fin_size = 0.08
-		gene_dragon_side_fin_size = 0.30
-		gene_dragon_crest_depth = 0.66
-		gene_dragon_back_spike_size = 0.28
-		gene_dragon_neck_spike_size = 0.06
-		gene_dragon_snout_length = 0.78
-		gene_dragon_snout_height = 0.25
-		gene_dragon_snout_width = 0.80
-		gene_dragon_snout_end_width = 1.00
-		gene_dragon_chin_profile = 0.27
-		gene_dragon_jaw_width = 0.32
-		gene_dragon_upper_jaw_width = 0.49
-		gene_dragon_lower_jaw_width = 0.35
-		gene_dragon_lower_jaw_height = 0.69
-		gene_dragon_cheek_width = 0.67
-		gene_dragon_head_roundness = 0.54
-		gene_dragon_brow_width = 1.00
-		gene_dragon_outer_brow_height = 0.05
-	}
-
-	agot_dragon_tree_creation_effect = {
-		DRAGON = scope:dragon
-	}
-
-	set_global_variable = {
-		name = segrellion_historical_vhalyrax
-		value = scope:dragon
-	}
-}
-
-
-# ============================================================
-# HISTORICAL MAENOR
-# Used for bookmarks after her hatch.
-# ============================================================
-
-segrellion_spawn_historical_maenor_effect = {
-
-	$HOST$ = {
-		save_scope_as = historical_dragon_host
-	}
-
-	$MOTHER$ = {
-		save_scope_as = historical_dragon_mother
-	}
-
-	create_character = {
-		name = Maenor
-		location = $HOST$.location
-		template = agot_dragon_hatchling_template
-		age = $AGE$
-		gender = female
-		mother = scope:historical_dragon_mother
-		random_traits = no
-		save_scope_as = dragon
-	}
-
-	scope:dragon = {
-		change_first_name = Maenor
-
-		add_character_flag = segrellion_maenor_dragon
-		add_character_flag = agot_no_silly_name
-		add_character_flag = canon_status_canon
-
-		add_trait = dragon_majestic
-		add_trait = dragon_cooperative
-		add_trait = dragon_accepting
-		add_trait = dragon_calculating
-		add_trait = dragon_restrained
-		add_trait = dragon_physique_good_2
-		add_trait = education_dragon_4
-
-		agot_back_apply_dragon_aging_effect = yes
-	}
-
-	agot_historical_dragon_transfer_vars_to_story_cycle_effect = {
-		DRAGON = scope:dragon
-		dragon_age = scope:dragon.age
-
-		gene_dragon_primary_color_value = 1.00
-		gene_dragon_primary_color_hue = 0.58
-		gene_dragon_secondary_value = 0.98
-		gene_dragon_secondary_hue = 0.58
-		gene_dragon_tertiary_value = 0.96
-		gene_dragon_tertiary_hue = 0.58
-		gene_dragon_horn_color_value = 0.94
-		gene_dragon_horn_color_hue = 0.58
-	}
-
-	agot_dragon_tree_creation_effect = {
-		DRAGON = scope:dragon
-	}
-
-	set_global_variable = {
-		name = segrellion_historical_maenor
-		value = scope:dragon
-	}
-}
-
-
-# ============================================================
-# HISTORICAL NIGHTDANCER
-# Used for bookmarks after her hatch.
-# ============================================================
-
-segrellion_spawn_historical_nightdancer_effect = {
-
-	$HOST$ = {
-		save_scope_as = historical_dragon_host
-	}
-
-	$MOTHER$ = {
-		save_scope_as = historical_dragon_mother
-	}
-
-	create_character = {
-		name = Nightdancer
-		location = $HOST$.location
-		template = agot_dragon_hatchling_template
-		age = $AGE$
-		gender = female
-		mother = scope:historical_dragon_mother
-		random_traits = no
-		save_scope_as = dragon
-	}
-
-	scope:dragon = {
-		change_first_name = Nightdancer
-
-		add_character_flag = segrellion_nightdancer_dragon
-		add_character_flag = agot_no_silly_name
-		add_character_flag = canon_status_canon
-
-		add_trait = dragon_majestic
-		add_trait = dragon_swift
-		add_trait = dragon_spindly
-		add_trait = dragon_solitary
-		add_trait = dragon_accepting
-		add_trait = dragon_calculating
-		add_trait = dragon_restrained
-		add_trait = education_dragon_4
-
-		agot_back_apply_dragon_aging_effect = yes
-	}
-
-	agot_historical_dragon_transfer_vars_to_story_cycle_effect = {
-		DRAGON = scope:dragon
-		dragon_age = scope:dragon.age
-
-		gene_dragon_primary_color_value = 0.72
-		gene_dragon_primary_color_hue = 0.33
-		gene_dragon_secondary_value = 0.62
-		gene_dragon_secondary_hue = 0.30
-		gene_dragon_tertiary_value = 0.54
-		gene_dragon_tertiary_hue = 0.36
-		gene_dragon_horn_color_value = 0.48
-		gene_dragon_horn_color_hue = 0.15
-		gene_dragon_eye_color_value = 0.96
-		gene_dragon_eye_color_hue = 0.16
-	}
-
-	agot_dragon_tree_creation_effect = {
-		DRAGON = scope:dragon
-	}
-
-	set_global_variable = {
-		name = segrellion_historical_nightdancer
-		value = scope:dragon
+	agot_remove_dragon_egg = {
+		EGG = scope:egg
 	}
 }
 
@@ -496,6 +342,76 @@ segrellion_spawn_historical_nightdancer_effect = {
 # ============================================================
 
 segrellion_historical_dragons_progression_effect = {
+
+		# ========================================================
+	# HISTORICAL CHARACTER BINDING
+	#
+	# If the bookmark begins after these dragons were born,
+	# use their real history/characters entries.
+	#
+	# If the campaign began before their births, these globals
+	# will instead be populated by the dynamic hatch effects.
+	# ========================================================
+
+
+	# Vhalyrax
+
+	if = {
+		limit = {
+			NOT = {
+				exists = global_var:segrellion_historical_vhalyrax
+			}
+
+			character:dragon_vhalyrax ?= {
+				is_alive = yes
+			}
+		}
+
+		set_global_variable = {
+			name = segrellion_historical_vhalyrax
+			value = character:dragon_vhalyrax
+		}
+	}
+
+
+	# Maenor
+
+	if = {
+		limit = {
+			NOT = {
+				exists = global_var:segrellion_historical_maenor
+			}
+
+			character:dragon_maenor ?= {
+				is_alive = yes
+			}
+		}
+
+		set_global_variable = {
+			name = segrellion_historical_maenor
+			value = character:dragon_maenor
+		}
+	}
+
+
+	# Nightdancer
+
+	if = {
+		limit = {
+			NOT = {
+				exists = global_var:segrellion_historical_nightdancer
+			}
+
+			character:dragon_nightdancer ?= {
+				is_alive = yes
+			}
+		}
+
+		set_global_variable = {
+			name = segrellion_historical_nightdancer
+			value = character:dragon_nightdancer
+		}
+	}
 
 	# ========================================================
 	# LATE BOOKMARK RECONSTRUCTION
@@ -533,98 +449,6 @@ segrellion_historical_dragons_progression_effect = {
 			segrellion_spawn_historical_vhalyrax_effect = {
 				HOST = title:c_blackmark.holder
 				AGE = 29
-			}
-		}
-	}
-
-
-	# Historical Maenor.
-
-	if = {
-		limit = {
-			game_start_date >= 8150.1.1
-			exists = global_var:segrellion_historical_vhalyrax
-
-			NOT = {
-				exists = global_var:segrellion_historical_maenor
-			}
-		}
-
-		if = {
-			limit = {
-				game_start_date >= 8195.1.1
-			}
-
-			segrellion_spawn_historical_maenor_effect = {
-				HOST = title:c_blackmark.holder
-				MOTHER = global_var:segrellion_historical_vhalyrax
-				AGE = 66
-			}
-		}
-
-		else = {
-			segrellion_spawn_historical_maenor_effect = {
-				HOST = title:c_blackmark.holder
-				MOTHER = global_var:segrellion_historical_vhalyrax
-				AGE = 21
-			}
-		}
-
-		# Aeryn is alive in the 150 bookmark and is Maenor's
-		# canonical rider.
-
-		if = {
-			limit = {
-				character:Segrellion_12 ?= {
-					is_alive = yes
-				}
-
-				global_var:segrellion_historical_maenor = {
-					is_alive = yes
-				}
-			}
-
-			global_var:segrellion_historical_maenor = {
-				save_scope_as = historical_maenor
-			}
-
-			agot_tame_dragon = {
-				TAMER = character:Segrellion_12
-				DRAGON = scope:historical_maenor
-			}
-		}
-	}
-
-
-	# Historical Nightdancer.
-
-	if = {
-		limit = {
-			game_start_date >= 8150.1.1
-			exists = global_var:segrellion_historical_vhalyrax
-
-			NOT = {
-				exists = global_var:segrellion_historical_nightdancer
-			}
-		}
-
-		if = {
-			limit = {
-				game_start_date >= 8195.1.1
-			}
-
-			segrellion_spawn_historical_nightdancer_effect = {
-				HOST = title:c_blackmark.holder
-				MOTHER = global_var:segrellion_historical_vhalyrax
-				AGE = 62
-			}
-		}
-
-		else = {
-			segrellion_spawn_historical_nightdancer_effect = {
-				HOST = title:c_blackmark.holder
-				MOTHER = global_var:segrellion_historical_vhalyrax
-				AGE = 17
 			}
 		}
 	}
@@ -711,7 +535,7 @@ segrellion_historical_dragons_progression_effect = {
 			}
 		}
 
-		agot_spawn_owned_hatchling_from_egg_effect = {
+		segrellion_spawn_maenor_from_egg_effect = {
 			OWNER = character:Segrellion_12
 			EGG = scope:segrellion_canon_egg
 		}
@@ -754,7 +578,7 @@ segrellion_historical_dragons_progression_effect = {
 			}
 		}
 
-		agot_spawn_owned_hatchling_from_egg_effect = {
+		segrellion_spawn_nightdancer_from_egg_effect = {
 			OWNER = character:Segrellion_16
 			EGG = scope:segrellion_canon_egg
 		}
