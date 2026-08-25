@@ -733,18 +733,28 @@ segrellion_search_for_legendary_relic_decision = {
 	# VISIBILITY
 	# =====================================================
 
-	is_shown = {
-
-		# House Segrellion and all cadet houses.
-		dynasty = dynasty:dynn_Segrellion
+		is_shown = {
 
 		is_adult = yes
 
-		# Historical safeguard.
-		# Intentionally hidden from the normal decision UI.
-		# The search does not exist before the end of 195 AC.
+		# El personaje debe pertenecer a la dinastía,
+		# o disponer de conocimiento histórico suficiente.
+		segrellion_can_search_legendary_relic_trigger = yes
+
 		hidden_trigger = {
+
+			# La búsqueda no existe antes del final de 195 AC.
 			current_date >= 8196.1.1
+
+			# No mostrar la decisión mientras Icebringer exista.
+			NOT = {
+				segrellion_icebringer_exists_anywhere_trigger = yes
+			}
+
+			# Tampoco después de que Icebringer haya despertado.
+			NOT = {
+				has_global_variable = segrellion_icebringer_has_awakened
+			}
 		}
 
 		NOT = {
@@ -757,7 +767,7 @@ segrellion_search_for_legendary_relic_decision = {
 	# REQUIREMENTS
 	# =====================================================
 
-	is_valid = {
+		is_valid = {
 
 		is_imprisoned = no
 
@@ -765,17 +775,19 @@ segrellion_search_for_legendary_relic_decision = {
 			has_trait = incapable
 		}
 
-		# Icebringer must currently be lost.
+		custom_description = {
+			text = segrellion_search_relic_knowledge_requirement
+			segrellion_can_search_legendary_relic_trigger = yes
+		}
+
 		custom_description = {
 			text = segrellion_search_relic_icebringer_lost_requirement
 
 			NOT = {
-				exists = global_var:segrellion_icebringer
+				segrellion_icebringer_exists_anywhere_trigger = yes
 			}
 		}
 
-		# Dormant Icebringer cannot be searched for after
-		# the sword has already awakened.
 		custom_description = {
 			text = segrellion_search_relic_not_awakened_requirement
 

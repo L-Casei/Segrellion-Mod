@@ -80,14 +80,10 @@ segrellion_create_artifact_icebringer_effect = {
 
 segrellion_find_icebringer_effect = {
 
-	# =====================================================
-	# CLEAN A STALE GLOBAL POINTER
-	# =====================================================
-
+	# Elimina una referencia global inválida.
 	if = {
 		limit = {
 			has_global_variable = segrellion_icebringer
-
 			NOT = {
 				exists = global_var:segrellion_icebringer
 			}
@@ -96,31 +92,59 @@ segrellion_find_icebringer_effect = {
 		remove_global_variable = segrellion_icebringer
 	}
 
-
-	# =====================================================
-	# LEGACY / EARLY-GAME RECOVERY
-	# =====================================================
-
+	# Reconstruye la referencia buscando Icebringer
+	# entre todos los artefactos existentes.
 	if = {
 		limit = {
 			NOT = {
-				has_global_variable = segrellion_icebringer
+				exists = global_var:segrellion_icebringer
 			}
 		}
 
-		character:Segrellion_1 ?= {
-
-			any_character_artifact = {
-
-				limit = {
-					has_variable = segrellion_icebringer_artifact
-				}
-
-				set_global_variable = {
-					name = segrellion_icebringer
-					value = this
-				}
+		every_artifact = {
+			limit = {
+				has_variable = segrellion_icebringer_artifact
 			}
+
+			set_global_variable = {
+				name = segrellion_icebringer
+				value = this
+			}
+		}
+	}
+}
+
+# =========================================================
+# LEGENDARY RELIC SEARCH
+# =========================================================
+
+segrellion_icebringer_exists_anywhere_trigger = {
+	OR = {
+		exists = global_var:segrellion_icebringer
+
+		any_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+}
+
+
+segrellion_can_search_legendary_relic_trigger = {
+	OR = {
+
+		# House Segrellion and its cadet houses.
+		dynasty = dynasty:dynn_Segrellion
+
+		# Segrellion historical knowledge.
+		AND = {
+			exists = var:segrellion_lore
+			var:segrellion_lore >= 5
+		}
+
+		# General draconic knowledge.
+		AND = {
+			exists = var:dragonlore
+			var:dragonlore >= 5
 		}
 	}
 }
