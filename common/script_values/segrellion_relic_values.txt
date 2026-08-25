@@ -1,0 +1,55 @@
+# =========================================================
+# LEGENDARY RELIC SEARCH - SKAGOS
+#
+# This is the actual chance of recovering Icebringer.
+#
+# Canon bearers: 100%
+# Segrellion blood: +15 percentage points
+# Everyone else: determined by Icebringer affinity.
+# =========================================================
+
+segrellion_relic_skagos_legendary_chance = {
+
+	# Base:
+	# 10% + 5% for every point of Icebringer affinity.
+	value = segrellion_icebringer_affinity_value
+
+	multiply = 5
+
+	add = 10
+
+
+	# =====================================================
+	# SEGRELLION BLOOD
+	# =====================================================
+
+	if = {
+		limit = {
+			dynasty = dynasty:dynn_Segrellion
+		}
+
+		add = 15
+	}
+
+
+	# =====================================================
+	# CANON WIELDER
+	#
+	# A canon bearer will always find the trail.
+	# =====================================================
+
+	if = {
+		limit = {
+			segrellion_icebringer_canon_bearer_trigger = yes
+		}
+
+		value = 100
+	}
+
+
+	# Nobody goes below a faint possibility.
+	min = 5
+
+	# Never above certainty.
+	max = 100
+}

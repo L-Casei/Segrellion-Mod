@@ -2193,6 +2193,8 @@ segrellion_relic.3900 = {
 
 		name = segrellion_relic.3900.c
 
+		custom_tooltip = segrellion_relic.3900.c.chance_tt
+
 		trigger = {
 			NOT = {
 				has_character_flag = segrellion_relic_visited_skagos
@@ -2203,7 +2205,7 @@ segrellion_relic.3900 = {
 		add_character_flag = segrellion_relic_pending_skagos
 
 		start_travel_plan = {
-			destination = title:c_drihisesk.title_province
+			destination = title:c_skane.title_province
 
 			return_trip = no
 
@@ -2214,3 +2216,783 @@ segrellion_relic.3900 = {
 		}
 	}
 }
+
+# =========================================================
+# CASTLE BLACK
+#
+# 4000-4999
+# =========================================================
+
+
+# =========================================================
+# 4000 - CASTLE BLACK
+# =========================================================
+
+segrellion_relic.4000 = {
+
+	type = character_event
+
+	title = segrellion_relic.4000.t
+	desc = segrellion_relic.4000.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_relic_pending_castle_black
+		remove_character_flag = segrellion_legendary_relic_search_paused
+
+		title:c_castle_black.holder ?= {
+			save_scope_as = relic_watch_host
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:relic_watch_host
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.4000.a
+
+		trigger_event = {
+			id = segrellion_relic.4010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 4010 - THE WATCH REMEMBERS
+# =========================================================
+
+segrellion_relic.4010 = {
+
+	type = character_event
+
+	title = segrellion_relic.4010.t
+	desc = segrellion_relic.4010.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_relic.4010.a
+
+		segrellion_clear_relic_pending_destination_effect = yes
+
+		add_character_flag = segrellion_relic_pending_nightfort
+
+		start_travel_plan = {
+
+			destination = title:b_the_nightfort.title_province
+
+			return_trip = no
+
+			on_arrival_event = segrellion_relic.5000
+			on_arrival_destinations = all
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
+		}
+	}
+}
+
+# =========================================================
+# THE NIGHTFORT
+#
+# 5000-5999
+# =========================================================
+
+
+# =========================================================
+# 5000 - THE NIGHTFORT
+# =========================================================
+
+segrellion_relic.5000 = {
+
+	type = character_event
+
+	title = segrellion_relic.5000.t
+	desc = segrellion_relic.5000.desc
+
+	theme = travel
+
+	override_background = {
+		reference = segrellion_insidious_castle
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_relic_pending_nightfort
+		remove_character_flag = segrellion_legendary_relic_search_paused
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.5000.a
+
+		trigger_event = {
+			id = segrellion_relic.5010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 5010 - THE FIRST UNICORN
+# =========================================================
+
+segrellion_relic.5010 = {
+
+	type = character_event
+
+	title = segrellion_relic.5010.t
+	desc = segrellion_relic.5010.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_relic.5010.a
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					NOT = {
+						has_global_variable = segrellion_vaenors_compass
+					}
+				}
+
+				if = {
+					limit = {
+						dynasty = dynasty:dynn_Segrellion
+					}
+
+					random_list = {
+
+						25 = {
+							trigger_event = {
+								id = segrellion_relic.5020
+								days = 1
+							}
+						}
+
+						75 = {
+							trigger_event = {
+								id = segrellion_relic.5030
+								days = 1
+							}
+						}
+					}
+				}
+
+				else = {
+
+					random_list = {
+
+						5 = {
+							trigger_event = {
+								id = segrellion_relic.5020
+								days = 1
+							}
+						}
+
+						95 = {
+							trigger_event = {
+								id = segrellion_relic.5030
+								days = 1
+							}
+						}
+					}
+				}
+			}
+
+			else = {
+
+				trigger_event = {
+					id = segrellion_relic.5030
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5020 - VAENOR'S COMPASS
+# =========================================================
+
+segrellion_relic.5020 = {
+
+	type = character_event
+
+	title = segrellion_relic.5020.t
+	desc = segrellion_relic.5020.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_relic.5020.a
+
+		custom_tooltip = segrellion_relic.5020.a.tt
+
+		hidden_effect = {
+
+			segrellion_create_artifact_vaenors_compass_effect = {
+				OWNER = root
+			}
+
+			add_character_flag = segrellion_found_vaenors_compass
+
+			segrellion_finish_relic_search_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 5030 - ONLY THE TRAIL
+# =========================================================
+
+segrellion_relic.5030 = {
+
+	type = character_event
+
+	title = segrellion_relic.5030.t
+	desc = segrellion_relic.5030.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_insidious_castle
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.5030.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+# =========================================================
+# SHADOW TOWER
+#
+# 6000-6999
+# =========================================================
+
+
+# =========================================================
+# 6000 - THE SHADOW TOWER
+# =========================================================
+
+segrellion_relic.6000 = {
+
+	type = character_event
+
+	title = segrellion_relic.6000.t
+	desc = segrellion_relic.6000.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_relic_pending_shadow_tower
+		remove_character_flag = segrellion_legendary_relic_search_paused
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_relic.6000.a
+
+		trigger_event = {
+			id = segrellion_relic.6010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 6010 - DRAGONSPEAR WENT WEST
+# =========================================================
+
+segrellion_relic.6010 = {
+
+	type = character_event
+
+	title = segrellion_relic.6010.t
+	desc = segrellion_relic.6010.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_beyond_the_wall_blizzard
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_relic.6010.a
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					NOT = {
+						has_global_variable = segrellion_dragonspear_black_gauntlet
+					}
+				}
+
+				if = {
+					limit = {
+						dynasty = dynasty:dynn_Segrellion
+					}
+
+					random_list = {
+
+						25 = {
+							trigger_event = {
+								id = segrellion_relic.6020
+								days = 1
+							}
+						}
+
+						75 = {
+							trigger_event = {
+								id = segrellion_relic.6030
+								days = 1
+							}
+						}
+					}
+				}
+
+				else = {
+
+					random_list = {
+
+						5 = {
+							trigger_event = {
+								id = segrellion_relic.6020
+								days = 1
+							}
+						}
+
+						95 = {
+							trigger_event = {
+								id = segrellion_relic.6030
+								days = 1
+							}
+						}
+					}
+				}
+			}
+
+			else = {
+
+				trigger_event = {
+					id = segrellion_relic.6030
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6020 - DRAGONSPEAR'S BLACK GAUNTLET
+# =========================================================
+
+segrellion_relic.6020 = {
+
+	type = character_event
+
+	title = segrellion_relic.6020.t
+	desc = segrellion_relic.6020.desc
+
+	theme = martial
+
+	override_background = {
+		reference = segrellion_beyond_the_wall_blizzard
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_relic.6020.a
+
+		custom_tooltip = segrellion_relic.6020.a.tt
+
+		hidden_effect = {
+
+			segrellion_create_artifact_dragonspear_black_gauntlet_effect = {
+				OWNER = root
+			}
+
+			add_character_flag = segrellion_found_dragonspear_black_gauntlet
+
+			segrellion_finish_relic_search_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 6030 - FURTHER INTO THE FROZEN FANGS
+# =========================================================
+
+segrellion_relic.6030 = {
+
+	type = character_event
+
+	title = segrellion_relic.6030.t
+	desc = segrellion_relic.6030.desc
+
+	theme = travel
+
+	override_background = {
+		reference = segrellion_beyond_the_wall_blizzard
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.6030.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
+# =========================================================
+# SKANE / SKAGOS
+#
+# 7000-7999
+# =========================================================
+
+
+# =========================================================
+# 7000 - SKANE
+# =========================================================
+
+segrellion_relic.7000 = {
+
+	type = character_event
+
+	title = segrellion_relic.7000.t
+	desc = segrellion_relic.7000.desc
+
+	theme = travel
+
+	override_background = {
+		reference = segrellion_barren_expanse
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_relic_pending_skagos
+		remove_character_flag = segrellion_legendary_relic_search_paused
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.7000.a
+
+		trigger_event = {
+			id = segrellion_relic.7010
+			days = { 2 4 }
+		}
+	}
+}
+
+
+# =========================================================
+# 7010 - THE GREAT WEIRWOOD
+# =========================================================
+
+segrellion_relic.7010 = {
+
+	type = character_event
+
+	title = segrellion_relic.7010.t
+	desc = segrellion_relic.7010.desc
+
+	theme = faith
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+
+		name = segrellion_relic.7010.a
+
+		trigger_event = {
+			id = segrellion_relic.7020
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 7020 - THE OLD MAN
+#
+# His identity is NEVER resolved.
+# =========================================================
+
+segrellion_relic.7020 = {
+
+	type = character_event
+
+	title = segrellion_relic.7020.t
+	desc = segrellion_relic.7020.desc
+
+	theme = faith
+
+	override_background = {
+		reference = segrellion_icebringer_weirwood
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.7020.a
+
+		trigger_event = {
+			id = segrellion_relic.7030
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 7030 - DRINK
+# =========================================================
+
+segrellion_relic.7030 = {
+
+	type = character_event
+
+	title = segrellion_relic.7030.t
+	desc = segrellion_relic.7030.desc
+
+	theme = faith
+
+	override_background = {
+		reference = segrellion_icebringer_fountain
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.7030.a
+
+		custom_tooltip = segrellion_relic.7030.a.tt
+
+		hidden_effect = {
+
+			remove_character_flag = segrellion_relic_skagos_success_roll
+
+			random = {
+
+				chance = segrellion_relic_skagos_legendary_chance
+
+				add_character_flag = segrellion_relic_skagos_success_roll
+			}
+
+			if = {
+				limit = {
+					has_character_flag = segrellion_relic_skagos_success_roll
+
+					NOT = {
+						has_global_variable = segrellion_icebringer
+					}
+				}
+
+				remove_character_flag = segrellion_relic_skagos_success_roll
+
+				trigger_event = {
+					id = segrellion_relic.7100
+					days = 1
+				}
+			}
+
+			else = {
+
+				remove_character_flag = segrellion_relic_skagos_success_roll
+
+				trigger_event = {
+					id = segrellion_relic.7200
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 7100 - ICEBRINGER
+# =========================================================
+
+segrellion_relic.7100 = {
+
+	type = character_event
+
+	title = segrellion_relic.7100.t
+	desc = segrellion_relic.7100.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = segrellion_icebringer_event
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_relic.7100.a
+
+		custom_tooltip = segrellion_relic.7100.a.tt
+
+		hidden_effect = {
+
+			segrellion_create_artifact_icebringer_effect = {
+				OWNER = root
+			}
+
+			add_character_flag = segrellion_found_icebringer_on_skagos
+
+			segrellion_finish_relic_search_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 7200 - THE WATER SHOWS NOTHING
+# =========================================================
+
+segrellion_relic.7200 = {
+
+	type = character_event
+
+	title = segrellion_relic.7200.t
+	desc = segrellion_relic.7200.desc
+
+	theme = faith
+
+	override_background = {
+		reference = segrellion_icebringer_fountain
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_relic.7200.a
+
+		segrellion_finish_relic_search_effect = yes
+	}
+}
+
