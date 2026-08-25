@@ -1,12 +1,12 @@
 # =========================================================
 # SEGRELLION LEGACY V
-# CALL UPON THE GREAT HOUSES
+# THE WEIGHT OF THE UNICORN
 # =========================================================
 
 
-# ---------------------------------------------------------
-# BASIC VALID TARGET
-# ---------------------------------------------------------
+# =========================================================
+# GREAT HOUSE TARGET
+# =========================================================
 
 segrellion_legacy_v_valid_great_house_target_trigger = {
 
@@ -15,27 +15,39 @@ segrellion_legacy_v_valid_great_house_target_trigger = {
     is_ruler = yes
     is_imprisoned = no
 
-    NOT = { this = root }
+    NOT = {
+        this = root
+    }
 
-    # We only deal with major rulers.
+    # Only major rulers / Lords Paramount / Kings / Emperors.
     highest_held_title_tier >= tier_kingdom
+
+    # Religious rulers are not considered Great Houses
+    # for the purposes of this legacy.
+    NOR = {
+        government_has_flag = government_is_theocracy
+        government_has_flag = government_is_holy_order
+        is_theocratic_lessee = yes
+
+        faith.religious_head ?= this
+    }
 }
 
 
-# ---------------------------------------------------------
-# DOES THE HOUSE HEAD HAVE ANYONE TO CALL UPON?
-# ---------------------------------------------------------
+# =========================================================
+# DOES THE HOUSE HEAD HAVE A VALID GREAT HOUSE TO CALL UPON?
+# =========================================================
 
 segrellion_legacy_v_has_valid_target_trigger = {
 
     OR = {
 
-        # =================================================
+        # -------------------------------------------------
         # VASSAL RULER
         #
         # Other great vassals beneath the same liege.
-        # Perfect for Lords Paramount beneath the Iron Throne.
-        # =================================================
+        # This is the normal AGOT Lord Paramount situation.
+        # -------------------------------------------------
 
         AND = {
 
@@ -51,11 +63,11 @@ segrellion_legacy_v_has_valid_target_trigger = {
         }
 
 
-        # =================================================
+        # -------------------------------------------------
         # INDEPENDENT RULER
         #
-        # Independent neighboring Kings / Emperors.
-        # =================================================
+        # Neighboring independent Kings / Emperors.
+        # -------------------------------------------------
 
         AND = {
 
@@ -66,5 +78,38 @@ segrellion_legacy_v_has_valid_target_trigger = {
                 segrellion_legacy_v_valid_great_house_target_trigger = yes
             }
         }
+    }
+}
+
+
+# =========================================================
+# BASIC MARRIAGE CANDIDATE
+# =========================================================
+
+segrellion_legacy_v_free_marriage_candidate_trigger = {
+
+    is_alive = yes
+    is_imprisoned = no
+
+    is_married = no
+    is_betrothed = no
+    is_concubine = no
+
+    can_marry_trigger = yes
+}
+
+
+# =========================================================
+# CANDIDATE FROM THE OTHER COURT
+#
+# Requires scope:segrellion_marriage_our_candidate.
+# =========================================================
+
+segrellion_legacy_v_valid_target_marriage_candidate_trigger = {
+
+    segrellion_legacy_v_free_marriage_candidate_trigger = yes
+
+    can_marry_character_trigger = {
+        CHARACTER = scope:segrellion_marriage_our_candidate
     }
 }
