@@ -528,6 +528,195 @@ segrellion_historical_dragons_progression_effect = {
 	}
 
 	# ========================================================
+	# 158 A.C. - DEATH OF NIGHTDANCER
+	# Battle of Connington.
+	# Maenor kills Nightdancer.
+	# ========================================================
+
+	if = {
+		limit = {
+			current_date >= 8158.3.1
+
+			exists = global_var:segrellion_historical_maenor
+			exists = global_var:segrellion_historical_nightdancer
+
+			global_var:segrellion_historical_maenor = {
+				is_alive = yes
+			}
+
+			global_var:segrellion_historical_nightdancer = {
+				is_alive = yes
+			}
+		}
+
+		global_var:segrellion_historical_maenor = {
+			save_scope_as = canon_maenor
+		}
+
+		global_var:segrellion_historical_nightdancer = {
+			death = {
+				death_reason = death_segrellion_dragon_duel
+				killer = scope:canon_maenor
+			}
+		}
+	}
+
+
+	# ========================================================
+	# 170 A.C. - VHALYRAX VS CANNIBAL
+	#
+	# Both dragons die.
+	#
+	# Benjen Snow will also die here once his historical
+	# character exists.
+	# ========================================================
+
+	if = {
+		limit = {
+			current_date >= 8170.1.1
+
+			exists = global_var:segrellion_historical_vhalyrax
+
+			global_var:segrellion_historical_vhalyrax = {
+				is_alive = yes
+			}
+
+			character:dragon_cannibal ?= {
+				is_alive = yes
+			}
+		}
+
+		global_var:segrellion_historical_vhalyrax = {
+			save_scope_as = canon_vhalyrax
+		}
+
+		character:dragon_cannibal = {
+			save_scope_as = canon_cannibal
+		}
+
+
+		scope:canon_cannibal = {
+			death = {
+				death_reason = death_segrellion_dragon_duel
+				killer = scope:canon_vhalyrax
+			}
+		}
+
+
+		scope:canon_vhalyrax = {
+			death = {
+				death_reason = death_segrellion_dragon_duel
+				killer = scope:canon_cannibal
+			}
+		}
+	}
+
+
+	# ========================================================
+	# 174.9.17 A.C. - VALOR AND VALERION
+	# Triarchy ambush at sea.
+	# ========================================================
+
+	if = {
+		limit = {
+			current_date >= 8174.9.17
+
+			character:dragon_valor ?= {
+				is_alive = yes
+			}
+		}
+
+		character:dragon_valor = {
+			death = {
+				death_reason = death_segrellion_triarchy_nets_dragon
+			}
+		}
+	}
+
+
+	if = {
+		limit = {
+			current_date >= 8174.9.17
+
+			character:Segrellion_19 ?= {
+				is_alive = yes
+			}
+		}
+
+		character:Segrellion_19 = {
+			death = {
+				death_reason = death_segrellion_triarchy_nets_rider
+			}
+		}
+	}
+
+
+	# ========================================================
+	# 178.11.1 A.C. - STEPSTONES COLLISION
+	#
+	# Maenor + Aemma
+	# Rhaenyx + Daena
+	#
+	# All four die.
+	# ========================================================
+
+	if = {
+		limit = {
+			current_date >= 8178.11.1
+
+			exists = global_var:segrellion_historical_maenor
+
+			global_var:segrellion_historical_maenor = {
+				is_alive = yes
+			}
+
+			character:dragon_rhaenyx ?= {
+				is_alive = yes
+			}
+		}
+
+
+		global_var:segrellion_historical_maenor = {
+			death = {
+				death_reason = death_segrellion_dragon_collision_dragon
+			}
+		}
+
+
+		character:dragon_rhaenyx = {
+			death = {
+				death_reason = death_segrellion_dragon_collision_dragon
+			}
+		}
+
+
+		character:Segrellion_20 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+				}
+
+				death = {
+					death_reason = death_segrellion_dragon_collision_rider
+				}
+			}
+		}
+
+
+		character:Targaryen_83 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+				}
+
+				death = {
+					death_reason = death_segrellion_dragon_collision_rider
+				}
+			}
+		}
+	}
+
+	# ========================================================
 	# LATE BOOKMARK RECONSTRUCTION
 	#
 	# Never reconstruct these automatically in an early
