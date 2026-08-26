@@ -328,3 +328,27 @@ segrellion_icebringer_strong_candidate_trigger = {
 segrellion_icebringer_flame_obsessed_stage4_option_trigger = {
 	always = no
 }
+
+# =========================================================
+# LEGENDARY RELIC SEARCH
+# =========================================================
+
+segrellion_can_search_legendary_relic_trigger = {
+	OR = {
+
+		# House Segrellion always has access.
+		is_segrellion_dynasty = yes
+
+		# Enough knowledge of Segrellion history.
+		AND = {
+			exists = var:segrellion_lore
+			var:segrellion_lore >= 5
+		}
+
+		# Enough AGOT Dragonlore.
+		AND = {
+			exists = var:dragonlore
+			var:dragonlore >= 5
+		}
+	}
+}
