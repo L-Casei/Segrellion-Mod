@@ -916,97 +916,111 @@ segrellion_create_artifact_trueflame_effect = {
         }
     }
 
-    if = {
-        limit = {
-            current_date >= 8174.9.17
-        }
+		if = {
+			limit = {
+				current_date >= 8174.9.17
+			}
 
-        agot_add_artifact_history = {
-            ARTIFACT = this
-            TYPE = inherited
-            DATE = 8174.9.17
-            RECIPIENT = character:Segrellion_38
-        }
-    }
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8174.9.17
+				RECIPIENT = character:Segrellion_38
+			}
+		}
 
-    if = {
-        limit = {
-            current_date >= 8196.4.12
-        }
+		if = {
+			limit = {
+				current_date >= 8196.4.12
+			}
 
-        agot_add_artifact_history = {
-            ARTIFACT = this
-            TYPE = inherited
-            DATE = 8196.4.12
-            RECIPIENT = character:Segrellion_21
-        }
-    }
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8196.4.12
+				RECIPIENT = character:Segrellion_21
+			}
+		}
 
-    if = {
-        limit = {
-            current_date >= 8200.4.12
-        }
+		if = {
+			limit = {
+				current_date >= 8200.4.12
+			}
 
-        agot_add_artifact_history = {
-            ARTIFACT = this
-            TYPE = inherited
-            DATE = 8200.4.12
-            RECIPIENT = character:Segrellion_24 # Aethan
-        }
-    }
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8200.4.12
+				RECIPIENT = character:Segrellion_24 # Aethan
+			}
+		}
 
-    if = {
-        limit = {
-            current_date >= 8218.9.26
-        }
+		if = {
+			limit = {
+				current_date >= 8218.9.26
+			}
 
-        agot_add_artifact_history = {
-            ARTIFACT = this
-            TYPE = inherited
-            DATE = 8218.9.26
-            RECIPIENT = character:Segrellion_25 # Rhaegar (II)
-        }
-    }
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8218.9.26
+				RECIPIENT = character:Segrellion_25 # Rhaegar (II)
+			}
+		}
 
-        if = {
-        limit = {
-            current_date >= 8231.5.2
-        }
+			if = {
+			limit = {
+				current_date >= 8231.5.2
+			}
 
-        agot_add_artifact_history = {
-            ARTIFACT = this
-            TYPE = inherited
-            DATE = 8231.5.2
-            RECIPIENT = character:Segrellion_30 # Aenys
-        }
-    }
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8231.5.2
+				RECIPIENT = character:Segrellion_30 # Aenys
+			}
+		}
 
-    if = {
-        limit = {
-            current_date >= 8258.4.8
-        }
+		if = {
+			limit = {
+				current_date >= 8258.4.8
+			}
 
-        agot_add_artifact_history = {
-            ARTIFACT = this
-            TYPE = inherited
-            DATE = 8258.4.8
-            RECIPIENT = character:Segrellion_39 # Maegor
-        }
-    }
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8258.4.8
+				RECIPIENT = character:Segrellion_39 # Maegor
+			}
+		}
 
-    if = {
-        limit = {
-            current_date >= 8266.1.1
-        }
+		if = {
+			limit = {
+				current_date >= 8266.1.1
+			}
 
-        # Daena steals Trueflame from Maegor.
-        agot_add_artifact_history = {
-            ARTIFACT = this
-            TYPE = inherited
-            DATE = 8266.1.1
-            RECIPIENT = character:Segrellion_40 # Daena
-        }
-    }
+			# Daena steals Trueflame from Maegor.
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8266.1.1
+				RECIPIENT = character:Segrellion_40 # Daena
+			}
+		}
+
+		if = {
+			limit = {
+				current_date >= 8294.1.1
+			}
+
+			# After Daena's murder, Trueflame passes to her son Daemon.
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8294.1.1
+				RECIPIENT = character:Segrellion_60 # Daemon
+			}
+		}
     }
 }
 
@@ -1136,19 +1150,38 @@ segrellion_setup_trueflame_history_effect = {
         }
 
         # In 266 AC Daena steals Trueflame.
-        else = {
-            character:Segrellion_40 ?= {
-                if = {
-                    limit = {
-                        is_alive = yes
-                    }
+		else_if = {
+			limit = {
+				current_date < 8294.1.1
 
-                    segrellion_create_artifact_trueflame_effect = {
-                        OWNER = this
-                    }
-                }
-            }
-        }
+				character:Segrellion_40 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Segrellion_40 = {
+				segrellion_create_artifact_trueflame_effect = {
+					OWNER = this
+				}
+			}
+		}
+
+		# After Daena's murder in 294 AC, Trueflame passes to Daemon.
+		else_if = {
+			limit = {
+				current_date >= 8294.1.1
+
+				character:Segrellion_60 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Segrellion_60 = {
+				segrellion_create_artifact_trueflame_effect = {
+					OWNER = this
+				}
+			}
+		}
     }
 }
 
