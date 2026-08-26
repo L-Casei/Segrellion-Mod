@@ -16,7 +16,8 @@ segrellion_setup_winds_of_winter_hosts_effect = {
 		# DAEMON SEGRELLION
 		# THE BASTARD UNICORN HOST
 		#
-		# Roughly 4,200 professional soldiers.
+		# Roughly 2,000 professional soldiers.
+		# Daemon must gather another thousand men before returning home.
 		# =====================================================
 
 		character:Segrellion_60 ?= {
@@ -58,25 +59,25 @@ segrellion_setup_winds_of_winter_hosts_effect = {
 				create_maa_regiment = {
 					type = armored_horsemen
 					check_can_recruit = no
-					size = 6
+					size = 4
 				}
 
 				create_maa_regiment = {
 					type = armored_footmen
 					check_can_recruit = no
-					size = 13
+					size = 6
 				}
 
 				create_maa_regiment = {
 					type = pikemen
 					check_can_recruit = no
-					size = 13
+					size = 6
 				}
 
 				create_maa_regiment = {
 					type = bowmen
 					check_can_recruit = no
-					size = 13
+					size = 6
 				}
 
 
@@ -301,6 +302,36 @@ segrellion_setup_young_griff_300_effect = {
 			}
 		}
 
+			# =================================================
+			# ARIANNE MARTELL
+			# One year after the 300 AC start.
+			# =================================================
+
+			if = {
+				limit = {
+
+					current_date < 8301.1.1
+
+					NOT = {
+						has_character_flag = segrellion_arianne_marriage_event_scheduled
+					}
+
+					is_married = no
+
+					character:Martell_9 ?= {
+						is_alive = yes
+						is_married = no
+					}
+				}
+
+				add_character_flag = segrellion_arianne_marriage_event_scheduled
+
+				trigger_event = {
+					id = segrellion_winds.0201
+					days = 365
+				}
+			}
+
 
 		# Prevent AGOT's normal dynamic Faegon invasion
 		# from creating a second Young Griff.
@@ -315,6 +346,291 @@ segrellion_setup_young_griff_300_effect = {
 				name = faegon_invasion
 				value = scope:iaf_young_griff
 			}
+		}
+	}
+}
+
+# =========================================================
+# 300 AC - LEO STORMFLAME
+# DEFENCE OF THE FLAMELANDS
+# =========================================================
+
+segrellion_setup_stormflame_300_effect = {
+
+	if = {
+		limit = {
+
+			current_date >= 8300.1.1
+			current_date < 8301.1.1
+
+			character:Segrellion_36 ?= {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = iaf_8300_leo_stormflame_setup
+				}
+			}
+		}
+
+
+		character:Segrellion_36 = {
+
+			save_scope_as = leo_stormflame_300
+
+
+			# =================================================
+			# THE STORMFLAME HOST
+			# 3,000 levies + 2,000 professional soldiers
+			# =================================================
+
+			spawn_army = {
+
+				name = iaf_leo_stormflame_host
+
+				men_at_arms = {
+					type = armored_footmen
+					men = 800
+				}
+
+				men_at_arms = {
+					type = pikemen
+					men = 600
+				}
+
+				men_at_arms = {
+					type = bowmen
+					men = 600
+				}
+
+				levies = 3000
+
+				inheritable = yes
+
+				location = title:c_farring_cross.title_province
+				origin = title:c_farring_cross.title_province
+			}
+
+
+			# =================================================
+			# WALDER FREY
+			# =================================================
+
+			if = {
+				limit = {
+					character:Frey_1 ?= {
+						is_alive = yes
+					}
+				}
+
+				create_alliance = {
+					target = character:Frey_1
+					allied_through_owner = scope:leo_stormflame_300
+					allied_through_target = character:Frey_1
+				}
+			}
+
+
+			# =================================================
+			# LORD OF DRIFTMARK
+			# =================================================
+
+			title:d_driftmark.holder ?= {
+				save_scope_as = driftmark_lord_300
+			}
+
+			if = {
+				limit = {
+
+					exists = scope:driftmark_lord_300
+
+					scope:driftmark_lord_300 = {
+						is_alive = yes
+						this != scope:leo_stormflame_300
+					}
+				}
+
+				create_alliance = {
+					target = scope:driftmark_lord_300
+					allied_through_owner = scope:leo_stormflame_300
+					allied_through_target = scope:driftmark_lord_300
+				}
+			}
+
+
+			add_character_flag = iaf_8300_leo_stormflame_setup
+		}
+	}
+}
+
+# =========================================================
+# THE UNICORN RETURNS
+# CAPTURE THE STORMFLAME COURT
+# =========================================================
+
+segrellion_capture_stormflame_court_effect = {
+
+	character:Segrellion_60 ?= {
+		save_scope_as = daemon_stormflame_judgement
+	}
+
+
+	# Leo himself.
+	character:Segrellion_36 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			add_character_flag = segrellion_stormflame_captive
+
+			scope:daemon_stormflame_judgement = {
+
+				imprison = {
+					target = character:Segrellion_36
+					type = dungeon
+				}
+			}
+		}
+
+
+		# Every Stormflame actually present in Leo's court.
+		every_courtier_or_guest = {
+
+			limit = {
+
+				is_alive = yes
+
+				house = house:house_Stormflame
+			}
+
+			save_temporary_scope_as = stormflame_captive
+
+			add_character_flag = segrellion_stormflame_captive
+
+			scope:daemon_stormflame_judgement = {
+
+				imprison = {
+					target = scope:stormflame_captive
+					type = dungeon
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# EXECUTE THE ENTIRE CAPTURED STORMFLAME COURT
+# =========================================================
+
+segrellion_execute_all_stormflame_captives_effect = {
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stormflame_captive
+			}
+
+			remove_character_flag = segrellion_stormflame_captive
+
+			death = {
+				death_reason = death_execution
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# EXECUTE LEO, SEND THE MEN TO THE NIGHT'S WATCH
+# =========================================================
+
+segrellion_execute_leo_spare_stormflame_family_effect = {
+
+	character:Segrellion_36 ?= {
+
+		if = {
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stormflame_captive
+			}
+
+			remove_character_flag = segrellion_stormflame_captive
+
+			death = {
+				death_reason = death_execution
+			}
+		}
+	}
+
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stormflame_captive
+			}
+
+
+			# Adult Stormflame men take the black.
+			if = {
+				limit = {
+
+					is_female = no
+					is_adult = yes
+				}
+
+				release_from_prison = yes
+
+				add_trait = nightswatch
+			}
+
+
+			# Women and boys are released.
+			else = {
+
+				release_from_prison = yes
+			}
+
+
+			remove_character_flag = segrellion_stormflame_captive
+		}
+	}
+}
+
+
+# =========================================================
+# SPARE THEM ALL
+# =========================================================
+
+segrellion_spare_all_stormflame_captives_effect = {
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stormflame_captive
+			}
+
+			release_from_prison = yes
+
+			remove_character_flag = segrellion_stormflame_captive
 		}
 	}
 }

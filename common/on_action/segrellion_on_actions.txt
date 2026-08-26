@@ -88,6 +88,24 @@ segrellion_icebringer_historical_loss_progression = {
 	}
 }
 
+on_army_enter_province = {
+	on_actions = {
+		segrellion_unicorn_returns_beacon_arrival_check
+	}
+}
+
+on_army_combat_finished = {
+	on_actions = {
+		segrellion_unicorn_returns_clifford_battle_check
+	}
+}
+
+on_siege_completion = {
+	on_actions = {
+		segrellion_unicorn_returns_beacon_siege_check
+	}
+}
+
 yearly_global_pulse = {
 	on_actions = {
 		segrellion_intro_yearly_fallback
@@ -237,6 +255,7 @@ segrellion_on_game_start = {
 		segrellion_setup_massey_defiance_effect = yes
 		segrellion_setup_young_griff_300_effect = yes
 		segrellion_setup_plate_return_story_effect = yes
+		segrellion_setup_stormflame_300_effect = yes
 		character:Segrellion_1 ?= {
 			any_character_artifact = {
 				limit = { has_variable = segrellion_dragon_egg_artifact }
@@ -644,4 +663,191 @@ vladwyn_8106_startup = {
             }
         }
     }
+}
+
+# =========================================================
+# THE UNICORN RETURNS - CLIFFORD STORMFLAME
+# =========================================================
+
+segrellion_unicorn_returns_clifford_battle_check = {
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		scope:victory = yes
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+		NOT = {
+			has_character_flag = segrellion_killed_clifford_event_done
+		}
+
+		character:Segrellion_53 ?= {
+			is_alive = yes
+		}
+
+		OR = {
+
+			any_in_list = {
+				list = commanders
+				this = character:Segrellion_53
+			}
+
+			any_in_list = {
+				list = knights
+				this = character:Segrellion_53
+			}
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_killed_clifford_event_done
+
+		trigger_event = {
+			id = segrellion_winds.0301
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# THE UNICORN RETURNS - ARRIVAL AT THE BEACON
+# =========================================================
+
+segrellion_unicorn_returns_beacon_arrival_check = {
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+		NOT = {
+			has_character_flag = segrellion_beacon_surrender_demanded
+		}
+
+		scope:army.location = title:b_castle_farring.title_province
+
+		character:Segrellion_36 ?= {
+
+			is_alive = yes
+
+			location = title:b_castle_farring.title_province
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_beacon_surrender_demanded
+
+		trigger_event = {
+			id = segrellion_winds.0401
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# THE BEACON FALLS AFTER LEO REFUSES
+# =========================================================
+
+segrellion_unicorn_returns_beacon_siege_check = {
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+		has_character_flag = segrellion_leo_refused_beacon_surrender
+
+		NOT = {
+			has_character_flag = segrellion_beacon_stormed_resolution
+		}
+
+		scope:barony = title:b_castle_farring
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_beacon_stormed_resolution
+
+		segrellion_capture_stormflame_court_effect = yes
+
+		trigger_event = {
+			id = segrellion_winds.0404
+			days = 1
+		}
+
+		scope:war ?= {
+			end_war = attacker
+		}
+	}
+}
+
+# =========================================================
+# 0404 - THE BEACON TAKEN BY STORM
+# =========================================================
+
+segrellion_winds.0404 = {
+
+	type = character_event
+
+	title = segrellion_winds.0404.t
+	desc = segrellion_winds.0404.desc
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+	right_portrait = character:Segrellion_36
+
+
+	# Kill them all.
+	option = {
+
+		name = segrellion_winds.0404.a
+
+		ai_chance = {
+			base = 50
+		}
+
+		segrellion_execute_all_stormflame_captives_effect = yes
+	}
+
+
+	# Leo dies, the rest are spared.
+	option = {
+
+		name = segrellion_winds.0404.b
+
+		ai_chance = {
+			base = 30
+		}
+
+		segrellion_execute_leo_spare_stormflame_family_effect = yes
+	}
+
+
+	# Mercy.
+	option = {
+
+		name = segrellion_winds.0404.c
+
+		ai_chance = {
+			base = 20
+		}
+
+		segrellion_spare_all_stormflame_captives_effect = yes
+	}
 }

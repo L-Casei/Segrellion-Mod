@@ -79,6 +79,11 @@ segrellion_unicorn_returns_cb = {
 
 			add_character_flag = segrellion_unicorn_returns_war_active
 
+			set_variable = {
+				name = segrellion_unicorn_returns_war
+				value = scope:war
+			}
+
 
 			# ---------------------------------------------
 			# THE UNICORN UNBOUND
@@ -210,6 +215,45 @@ segrellion_unicorn_returns_cb = {
 			}
 		}
 
+				# =================================================
+		# STORMFLAME ALLIES
+		# =================================================
+
+		# Walder Frey answers Leo's call.
+		if = {
+			limit = {
+				character:Frey_1 ?= {
+					is_alive = yes
+				}
+			}
+
+			scope:war ?= {
+				add_defender = character:Frey_1
+			}
+		}
+
+
+		# Driftmark answers Leo's call.
+		title:d_driftmark.holder ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+					this != scope:attacker
+					this != scope:defender
+				}
+
+				save_scope_as = unicorn_returns_driftmark
+			}
+		}
+
+		scope:unicorn_returns_driftmark ?= {
+
+			scope:war ?= {
+				add_defender = scope:unicorn_returns_driftmark
+			}
+		}
+
 		scope:unicorn_returns_young_griff ?= {
 
 			scope:war ?= {
@@ -235,6 +279,8 @@ segrellion_unicorn_returns_cb = {
 			remove_character_flag = segrellion_unicorn_returns_war_active
 
 			add_character_flag = segrellion_unicorn_returns_completed
+
+			remove_variable = segrellion_unicorn_returns_war
 
 
 			# Identify e_flamelands from the war target list.
@@ -343,6 +389,7 @@ segrellion_unicorn_returns_cb = {
 
 		scope:attacker = {
 			remove_character_flag = segrellion_unicorn_returns_war_active
+			remove_variable = segrellion_unicorn_returns_war
 		}
 
 		add_truce_white_peace_effect = yes
@@ -361,6 +408,7 @@ segrellion_unicorn_returns_cb = {
 
 		scope:attacker = {
 			remove_character_flag = segrellion_unicorn_returns_war_active
+			remove_variable = segrellion_unicorn_returns_war
 		}
 
 		add_truce_attacker_defeat_effect = yes
@@ -373,6 +421,7 @@ segrellion_unicorn_returns_cb = {
 
 			remove_character_flag = segrellion_unicorn_returns_cb_authorized
 			remove_character_flag = segrellion_unicorn_returns_war_active
+			remove_variable = segrellion_unicorn_returns_war
 		}
 	}
 

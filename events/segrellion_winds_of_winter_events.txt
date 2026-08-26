@@ -117,7 +117,7 @@ segrellion_winds.0102 = {
 		reference = segrellion_vhalerion_throne_room
 	}
 
-	left_portrait = root
+	right_portrait = character:Segrellion_60
 
 	trigger = {
 
@@ -242,7 +242,11 @@ segrellion_winds.0103 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-	left_portrait = root
+	override_background = {
+		reference = segrellion_vhal_island
+	}
+
+	right_portrait = character:Segrellion_60
 
 	option = {
 		name = segrellion_winds.0103.a
@@ -265,7 +269,12 @@ segrellion_winds.0104 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
+	override_background = {
+		reference = segrellion_vhal_island
+	}
+
 	left_portrait = root
+	right_portrait = character:Segrellion_43
 
 	option = {
 		name = segrellion_winds.0104.a
@@ -288,9 +297,215 @@ segrellion_winds.0105 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
+	override_background = {
+		reference = segrellion_vhal_island
+	}
+
 	left_portrait = root
+	right_portrait = character:Segrellion_43
 
 	option = {
 		name = segrellion_winds.0105.a
+	}
+}
+
+# =========================================================
+# 0201 - A DRAGON AND A SUN
+# Young Griff considers Arianne Martell.
+# =========================================================
+
+segrellion_winds.0201 = {
+
+	type = character_event
+
+	title = segrellion_winds.0201.t
+	desc = segrellion_winds.0201.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = throne_room
+	}
+
+	left_portrait = root
+	right_portrait = character:Martell_9
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+		is_married = no
+
+		character:Martell_9 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+
+	# Canon route.
+	option = {
+
+		name = segrellion_winds.0201.a
+
+		ai_chance = {
+			base = 80
+		}
+
+		marry = character:Martell_9
+	}
+
+
+	# Refuse the match.
+	option = {
+
+		name = segrellion_winds.0201.b
+
+		ai_chance = {
+			base = 20
+		}
+
+		add_character_flag = segrellion_young_griff_refused_arianne
+	}
+}
+
+# =========================================================
+# 0301 - THE GIANT FALLS
+# =========================================================
+
+segrellion_winds.0301 = {
+
+	type = character_event
+
+	title = segrellion_winds.0301.t
+	desc = segrellion_winds.0301.desc
+
+	theme = war
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+	right_portrait = character:Segrellion_53
+
+
+	option = {
+
+		name = segrellion_winds.0301.a
+
+		character:Segrellion_53 = {
+
+			death = {
+				death_reason = death_battle
+				killer = root
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0401 - DAEMON BEFORE THE BEACON
+# =========================================================
+
+segrellion_winds.0401 = {
+
+	type = character_event
+
+	title = segrellion_winds.0401.t
+	desc = segrellion_winds.0401.desc
+
+	theme = war
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+	right_portrait = character:Segrellion_36
+
+
+	option = {
+
+		name = segrellion_winds.0401.a
+
+		character:Segrellion_36 = {
+
+			trigger_event = {
+				id = segrellion_winds.0402
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0402 - LEO'S ANSWER
+# =========================================================
+
+segrellion_winds.0402 = {
+
+	type = character_event
+
+	title = segrellion_winds.0402.t
+	desc = segrellion_winds.0402.desc
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+	right_portrait = character:Segrellion_60
+
+
+	# Surrender.
+	option = {
+
+		name = segrellion_winds.0402.a
+
+		ai_chance = {
+			base = 30
+		}
+
+		segrellion_capture_stormflame_court_effect = yes
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_leo_surrendered_beacon
+
+			trigger_event = {
+				id = segrellion_winds.0403
+				days = 1
+			}
+
+			var:segrellion_unicorn_returns_war ?= {
+				end_war = attacker
+			}
+		}
+	}
+
+
+	# Fight.
+	option = {
+
+		name = segrellion_winds.0402.b
+
+		ai_chance = {
+			base = 70
+		}
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_leo_refused_beacon_surrender
+		}
 	}
 }
