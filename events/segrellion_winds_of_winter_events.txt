@@ -47,3 +47,234 @@ segrellion_winds.0001 = {
 		}
 	}
 }
+
+
+# =========================================================
+# 0101 - THE PLATE RETURNS
+# Hugh Segrellion
+# =========================================================
+
+segrellion_winds.0101 = {
+
+	type = character_event
+
+	title = segrellion_winds.0101.t
+	desc = segrellion_winds.0101.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+
+	trigger = {
+		this = character:Segrellion_43
+
+		NOT = {
+			any_character_artifact = {
+				has_variable = segrellion_plate_of_segrell_artifact
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winds.0101.a
+
+		segrellion_create_artifact_plate_of_segrell_effect = {
+			OWNER = root
+		}
+
+		add_character_flag = segrellion_plate_returned_by_sneakys_kin
+
+		custom_tooltip = segrellion_plate_returns_to_hugh_tt
+	}
+}
+
+
+# =========================================================
+# 0102 - DAEMON DEMANDS THE PLATE
+# Hugh chooses his answer.
+# =========================================================
+
+segrellion_winds.0102 = {
+
+	type = character_event
+
+	title = segrellion_winds.0102.t
+	desc = segrellion_winds.0102.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		any_character_artifact = {
+			has_variable = segrellion_plate_of_segrell_artifact
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_plate_demand_pending
+		}
+	}
+
+
+	# =====================================================
+	# 20% - GIVE THE PLATE AND JOIN DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0102.a
+
+		ai_chance = {
+			base = 20
+		}
+
+		segrellion_transfer_plate_to_daemon_effect = yes
+
+		add_character_flag = segrellion_hugh_will_support_daemon
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_plate_demand_pending
+			add_character_flag = segrellion_plate_demand_resolved
+
+			trigger_event = {
+				id = segrellion_winds.0103
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# 70% - CANON
+	# GIVE THE PLATE, BUT DO NOT JOIN THE WAR
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0102.b
+
+		ai_chance = {
+			base = 70
+		}
+
+		segrellion_transfer_plate_to_daemon_effect = yes
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_plate_demand_pending
+			add_character_flag = segrellion_plate_demand_resolved
+
+			trigger_event = {
+				id = segrellion_winds.0104
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# 10% - REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0102.c
+
+		ai_chance = {
+			base = 10
+		}
+
+		add_character_flag = segrellion_hugh_refused_daemon_plate
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_plate_demand_pending
+			add_character_flag = segrellion_plate_demand_resolved
+
+			trigger_event = {
+				id = segrellion_winds.0105
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0103 - PLATE + HUGH'S SUPPORT
+# =========================================================
+
+segrellion_winds.0103 = {
+
+	type = character_event
+
+	title = segrellion_winds.0103.t
+	desc = segrellion_winds.0103.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+
+	option = {
+		name = segrellion_winds.0103.a
+	}
+}
+
+
+# =========================================================
+# 0104 - PLATE ONLY
+# =========================================================
+
+segrellion_winds.0104 = {
+
+	type = character_event
+
+	title = segrellion_winds.0104.t
+	desc = segrellion_winds.0104.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+
+	option = {
+		name = segrellion_winds.0104.a
+	}
+}
+
+
+# =========================================================
+# 0105 - HUGH REFUSES
+# =========================================================
+
+segrellion_winds.0105 = {
+
+	type = character_event
+
+	title = segrellion_winds.0105.t
+	desc = segrellion_winds.0105.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+
+	option = {
+		name = segrellion_winds.0105.a
+	}
+}

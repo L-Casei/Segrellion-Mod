@@ -165,3 +165,93 @@ segrellion_the_unicorn_returns_decision = {
 		base = 100
 	}
 }
+
+# =========================================================
+# DAEMON SEGRELLION
+# DEMAND THE PLATE OF SEGRELL
+# =========================================================
+
+segrellion_demand_plate_of_segrell_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/proclaim_paramountcy_of_the_flamelands_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_demand_plate_of_segrell_decision_desc
+	selection_tooltip = segrellion_demand_plate_of_segrell_decision_tooltip
+
+
+	# =====================================================
+	# COMPLETELY HIDDEN UNTIL HUGH ACTUALLY HAS THE PLATE
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Segrellion_60
+
+		current_date >= 8300.8.20
+
+		character:Segrellion_43 ?= {
+
+			is_alive = yes
+
+			any_character_artifact = {
+				has_variable = segrellion_plate_of_segrell_artifact
+			}
+		}
+
+		NOT = {
+			has_character_flag = segrellion_plate_demand_pending
+		}
+
+		NOT = {
+			has_character_flag = segrellion_plate_demand_resolved
+		}
+	}
+
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+		custom_description = {
+
+			text = segrellion_demand_plate_hugh_has_plate_tt
+
+			character:Segrellion_43 = {
+
+				any_character_artifact = {
+					has_variable = segrellion_plate_of_segrell_artifact
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_plate_demand_pending
+
+		character:Segrellion_43 = {
+
+			trigger_event = {
+				id = segrellion_winds.0102
+				days = 1
+			}
+		}
+	}
+
+
+	ai_check_interval = 7
+
+	ai_potential = {
+		this = character:Segrellion_60
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
