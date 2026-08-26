@@ -1,0 +1,49 @@
+namespace = segrellion_winds
+
+
+# =========================================================
+# THE UNICORN RETURNS
+# DAEMON SEGRELLION
+# =========================================================
+
+segrellion_winds.0001 = {
+
+	type = character_event
+
+	title = segrellion_winds.0001.t
+	desc = segrellion_winds.0001.desc
+
+	theme = war
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+
+
+	immediate = {
+
+		title:e_flamelands.holder ?= {
+			save_scope_as = flamelands_defender
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winds.0001.a
+
+		remove_character_flag = segrellion_unicorn_returns_event_pending
+
+		add_character_flag = segrellion_unicorn_returns_cb_authorized
+
+		custom_tooltip = segrellion_unicorn_returns_war_begins_tt
+
+		start_war = {
+			cb = segrellion_unicorn_returns_cb
+			target = scope:flamelands_defender
+			target_title = title:e_flamelands
+		}
+	}
+}

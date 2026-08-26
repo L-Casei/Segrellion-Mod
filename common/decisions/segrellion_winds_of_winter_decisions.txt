@@ -1,0 +1,167 @@
+# =========================================================
+# DAEMON SEGRELLION
+# THE UNICORN RETURNS
+# =========================================================
+
+segrellion_the_unicorn_returns_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/proclaim_paramountcy_of_the_flamelands_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_the_unicorn_returns_decision_desc
+	selection_tooltip = segrellion_the_unicorn_returns_decision_tooltip
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Segrellion_60
+
+		current_date >= 8300.1.1
+
+		NOT = {
+			has_character_flag = segrellion_unicorn_returns_completed
+		}
+
+		NOT = {
+			has_character_flag = segrellion_unicorn_returns_event_pending
+		}
+
+		NOT = {
+			has_character_flag = segrellion_unicorn_returns_war_active
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+
+		# The Flamelands cannot already be ruled by House Segrellion.
+		custom_description = {
+			text = segrellion_unicorn_returns_not_segrellion_ruled_tt
+
+			title:e_flamelands = {
+				exists = holder
+
+				holder = {
+					NOT = {
+						house = house:house_Segrellion
+					}
+				}
+			}
+		}
+
+
+		# Daemon cannot already be fighting for either tier
+		# of the Flamelands.
+		custom_description = {
+			text = segrellion_unicorn_returns_not_at_war_tt
+
+			NOT = {
+				any_character_war = {
+
+					casus_belli = {
+
+						any_target_title = {
+
+							OR = {
+								this = title:e_flamelands
+								this = title:k_flamelands
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# THE RELICS
+		#
+		# Either:
+		#   Trueflame + Plate of Segrell
+		#
+		# OR:
+		#   Icebringer
+		# =================================================
+
+		OR = {
+
+			AND = {
+
+				custom_description = {
+					text = segrellion_unicorn_returns_has_trueflame_tt
+
+					any_character_artifact = {
+						has_variable = segrellion_trueflame_artifact
+					}
+				}
+
+				custom_description = {
+					text = segrellion_unicorn_returns_has_plate_tt
+
+					any_character_artifact = {
+						has_variable = segrellion_plate_of_segrell_artifact
+					}
+				}
+			}
+
+
+			custom_description = {
+				text = segrellion_unicorn_returns_has_icebringer_tt
+
+				any_character_artifact = {
+					has_variable = segrellion_icebringer_artifact
+				}
+			}
+		}
+
+
+		# The Bastard Unicorns must actually be ready to invade.
+		custom_description = {
+			text = segrellion_unicorn_returns_host_ready_tt
+
+			current_military_strength >= 4000
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		add_character_flag = segrellion_unicorn_returns_event_pending
+
+		trigger_event = {
+			id = segrellion_winds.0001
+			days = 1
+		}
+	}
+
+
+	# Daemon AI should follow his canonical story when ready.
+	ai_check_interval = 7
+
+	ai_potential = {
+		this = character:Segrellion_60
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}

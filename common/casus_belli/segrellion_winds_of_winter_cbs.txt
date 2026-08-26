@@ -1,0 +1,373 @@
+# =========================================================
+# THE UNICORN RETURNS
+# =========================================================
+
+segrellion_unicorn_returns_cb = {
+
+	icon = invasion
+	group = invasion
+
+	combine_into_one = yes
+	should_show_war_goal_subview = yes
+	mutually_exclusive_titles = {
+		always = yes
+	}
+
+	allow_hostages = no
+
+
+	# =====================================================
+	# ONLY DAEMON, AND ONLY AFTER THE DECISION EVENT
+	# =====================================================
+
+	allowed_for_character = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_unicorn_returns_cb_authorized
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = title:e_flamelands.holder
+	}
+
+
+	# e_flamelands is mechanically empire-tier even though
+	# AGOT presents it as the Lord Paramountcy.
+	target_titles = all
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+	# We handle title transfer using the landless invasion
+	# effects below.
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:e_flamelands
+		}
+	}
+
+
+	should_invalidate = {
+
+		ep3_adventurer_landless_should_invalidate_trigger = yes
+	}
+
+
+	cost = {
+	}
+
+
+	# =====================================================
+	# WAR BEGINS
+	# =====================================================
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_unicorn_returns_cb_authorized
+
+			add_character_flag = segrellion_unicorn_returns_war_active
+
+
+			# ---------------------------------------------
+			# THE UNICORN UNBOUND
+			# ---------------------------------------------
+
+			add_character_modifier = {
+				modifier = segrellion_unicorn_unbound_modifier
+				years = 2
+			}
+
+
+			# ---------------------------------------------
+			# 250 UNICORN RIDERS RALLY TO DAEMON
+			# ---------------------------------------------
+
+			spawn_army = {
+
+				name = segrellion_unicorn_returns_riders
+
+				men_at_arms = {
+					type = segrellion_unicorn_riders
+					men = 250
+				}
+
+				inheritable = yes
+
+				location = scope:attacker.capital_province
+				origin = scope:attacker.capital_province
+
+				war = scope:war
+				war_keep_on_attacker_victory = yes
+			}
+		}
+
+
+		# =================================================
+		# JOFFREY VLADWYN AND THE TRUE SENTINELS
+		# =================================================
+
+		if = {
+			limit = {
+				character:Vladwyn_5 ?= {
+					is_alive = yes
+				}
+			}
+
+			scope:war ?= {
+				add_attacker = character:Vladwyn_5
+			}
+		}
+
+
+		# =================================================
+		# LORD MASSEY
+		# =================================================
+
+		title:d_masseys_hook.holder ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+					this != scope:defender
+				}
+
+				save_scope_as = unicorn_returns_massey
+			}
+		}
+
+		scope:unicorn_returns_massey ?= {
+
+			scope:war ?= {
+				add_attacker = scope:unicorn_returns_massey
+			}
+		}
+
+
+		# =================================================
+		# YOUNG GRIFF
+		#
+		# We deliberately require the flag that his 300 AC
+		# setup will give him. This prevents Stannis from
+		# accidentally joining the war before we replace him
+		# as holder of the Stormlands.
+		# =================================================
+
+		title:e_the_stormlands.holder ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					has_character_flag = segrellion_young_griff_supports_daemon
+
+					this != scope:defender
+				}
+
+				save_scope_as = unicorn_returns_young_griff
+			}
+		}
+
+		scope:unicorn_returns_young_griff ?= {
+
+			scope:war ?= {
+				add_attacker = scope:unicorn_returns_young_griff
+			}
+		}
+	}
+
+
+	# =====================================================
+	# VICTORY
+	# =====================================================
+
+	on_victory_desc = {
+		desc = segrellion_unicorn_returns_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_unicorn_returns_war_active
+
+			add_character_flag = segrellion_unicorn_returns_completed
+
+
+			# Identify e_flamelands from the war target list.
+			ordered_in_list = {
+				list = target_titles
+				order_by = tier
+				save_scope_as = target
+			}
+
+
+			# Standard Roads to Power warning / preparation
+			# for a landless character becoming landed.
+			ep3_become_landed_warning_effect = {
+				TITLE_RECEIVER = scope:attacker
+				TITLE = scope:target
+			}
+
+
+			# Collect the titles belonging to the conquered
+			# Flamelands realm.
+			scope:defender = {
+
+				every_held_title = {
+
+					limit = {
+						empire ?= scope:target
+					}
+
+					add_to_list = target_titles
+				}
+
+
+				# Make sure at least the capital county and
+				# directly-held counties are included.
+				if = {
+
+					limit = {
+
+						NOT = {
+							any_in_list = {
+								list = target_titles
+								tier = tier_county
+							}
+						}
+					}
+
+
+					every_sub_realm_county = {
+
+						limit = {
+
+							OR = {
+
+								AND = {
+									empire = scope:target
+									holder = scope:target.holder
+								}
+
+								scope:target.title_capital_county = this
+							}
+						}
+
+						add_to_list = target_titles
+					}
+				}
+			}
+
+
+			# Transfer the conquered realm to Daemon using
+			# the vanilla adventurer-invasion machinery.
+			ep3_landless_invasion_titles_taken_effect = {
+
+				TITLE_GIVER = scope:defender
+				TITLE_RECEIVER = scope:attacker
+				TITLE = scope:target
+				TITLE_LIST = target_titles
+			}
+
+
+			# The Beacon becomes Daemon's capital.
+			title:c_farring_cross = {
+				save_temporary_scope_as = unicorn_returns_new_capital
+			}
+
+			set_realm_capital = scope:unicorn_returns_new_capital
+
+
+			# Daemon ceases to be a landless adventurer.
+			ep3_become_landed_cleanup_effect = yes
+		}
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	# =====================================================
+	# WHITE PEACE
+	# =====================================================
+
+	on_white_peace_desc = {
+		desc = segrellion_unicorn_returns_white_peace_desc
+	}
+
+	on_white_peace = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_unicorn_returns_war_active
+		}
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	# =====================================================
+	# DEFEAT
+	# =====================================================
+
+	on_defeat_desc = {
+		desc = segrellion_unicorn_returns_defeat_desc
+	}
+
+	on_defeat = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_unicorn_returns_war_active
+		}
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_invalidated = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_unicorn_returns_cb_authorized
+			remove_character_flag = segrellion_unicorn_returns_war_active
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_unicorn_returns_war_name"
+	war_name_base = "segrellion_unicorn_returns_war_name_base"
+	cb_name = "segrellion_unicorn_returns_cb_name"
+
+
+	interface_priority = 100
+
+	use_de_jure_wargoal_only = yes
+
+	attacker_wargoal_percentage = 0.8
+
+	max_attacker_score_from_battles = 75
+
+	max_defender_score_from_occupation = 150
+	max_attacker_score_from_occupation = 150
+}
