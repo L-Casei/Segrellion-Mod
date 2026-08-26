@@ -1,467 +1,117 @@
-segrellion_setup_petty_rebellion_characters_effect = {
-	# AGOT's historical Joffrey Arryn is born in 100 A.C. This alternate
-	# timeline uses the same character and titles, but makes him forty-three at
-	# the 150 A.C. start instead of creating a duplicate Arryn.
-	character:Arryn_90 ?= {
-		if = {
-			limit = {
-				is_alive = yes
-				NOT = { has_character_flag = segrellion_joffrey_age_adjusted }
-			}
-			set_age = 43
-			add_character_flag = segrellion_joffrey_age_adjusted
-		}
-	}
+# =========================================================
+# 300 AC - WINDS OF WINTER
+# PENTOS EXILE HOSTS
+# =========================================================
 
-	# Keep every selectable ruler on the culture and faith shown by the
-	# bookmark. The explicit runtime assignment also protects this alternate
-	# start from later-loading AGOT history or compatibility submods.
-	character:IAF_Baratheon_Argella_1 ?= {
-		set_culture = culture:stormlander_main
-		set_character_faith = faith:fots_seven
-	}
-	character:IAF_Tully_Edmure_1 ?= {
-		set_culture = culture:riverman_main
-		set_character_faith = faith:fots_seven
-	}
-	character:Arryn_90 ?= {
-		set_culture = culture:valeman_main
-		set_character_faith = faith:fots_seven
-	}
-	character:Stark_86 ?= {
-		set_culture = culture:northman
-		set_character_faith = faith:old_gods_wnw
-	}
-
-	# Reapply the hairstyles and beards exported with the supplied DNA after
-	# AGOT initializes its own scripted appearances. Clothing remains dynamic,
-	# so these rulers wear normal rank- and culture-appropriate outfits in game.
-	character:IAF_Baratheon_Argella_1 ?= {
-		add_character_flag = has_scripted_appearance
-		add_character_flag = hair_trait_female_hair_custom_27_1
-		add_character_flag = beard_trait_no_beard
-	}
-	character:IAF_Tully_Edmure_1 ?= {
-		add_character_flag = has_scripted_appearance
-		add_character_flag = hair_trait_m_hair_ep3_byzantine_01
-		add_character_flag = beard_trait_m_beard_ep3_byzantine_02
-	}
-	character:Arryn_90 ?= {
-		add_character_flag = has_scripted_appearance
-		add_character_flag = hair_trait_male_hair_western_08
-		add_character_flag = beard_trait_no_beard
-	}
-
-	# AGOT normally gives these realms to Kermit Tully (Tully_44) and Corwen,
-	# the heir of Davos (Baratheon_55), in 150 A.C. Transfer the full
-	# lord-paramount titles and their
-	# direct vassals to the alternate-history rulers before removing the other
-	# Baratheons. This is deliberately repeated at runtime because title-history
-	# load order can otherwise restore AGOT's canon holders.
-	if = {
-		limit = {
-			character:IAF_Baratheon_Argella_1 ?= { is_alive = yes }
-			OR = {
-				title:e_the_stormlands = { NOT = { exists = holder } }
-				title:e_the_stormlands.holder ?= { NOT = { this = character:IAF_Baratheon_Argella_1 } }
-			}
-		}
-		create_title_and_vassal_change = {
-			type = granted
-			save_scope_as = segrellion_argella_stormlands_change
-			add_claim_on_loss = no
-		}
-		title:e_the_stormlands = {
-			change_title_holder_include_vassals = {
-				holder = character:IAF_Baratheon_Argella_1
-				change = scope:segrellion_argella_stormlands_change
-			}
-		}
-		title:d_shipbreaker_bay = {
-			change_title_holder = {
-				holder = character:IAF_Baratheon_Argella_1
-				change = scope:segrellion_argella_stormlands_change
-			}
-		}
-		title:c_storms_end = {
-			change_title_holder = {
-				holder = character:IAF_Baratheon_Argella_1
-				change = scope:segrellion_argella_stormlands_change
-				take_baronies = yes
-			}
-		}
-		resolve_title_and_vassal_change = scope:segrellion_argella_stormlands_change
-		character:IAF_Baratheon_Argella_1 = {
-			set_primary_title_to = title:e_the_stormlands
-			set_realm_capital = title:c_storms_end
-		}
-	}
+segrellion_setup_winds_of_winter_pentos_effect = {
 
 	if = {
 		limit = {
-			character:IAF_Tully_Edmure_1 ?= { is_alive = yes }
-			OR = {
-				title:e_the_riverlands = { NOT = { exists = holder } }
-				title:e_the_riverlands.holder ?= { NOT = { this = character:IAF_Tully_Edmure_1 } }
-			}
-		}
-		create_title_and_vassal_change = {
-			type = granted
-			save_scope_as = segrellion_edmure_riverlands_change
-			add_claim_on_loss = no
-		}
-		title:e_the_riverlands = {
-			change_title_holder_include_vassals = {
-				holder = character:IAF_Tully_Edmure_1
-				change = scope:segrellion_edmure_riverlands_change
-			}
-		}
-		title:d_riverrun = {
-			change_title_holder = {
-				holder = character:IAF_Tully_Edmure_1
-				change = scope:segrellion_edmure_riverlands_change
-			}
-		}
-		title:c_riverrun = {
-			change_title_holder = {
-				holder = character:IAF_Tully_Edmure_1
-				change = scope:segrellion_edmure_riverlands_change
-				take_baronies = yes
-			}
-		}
-		resolve_title_and_vassal_change = scope:segrellion_edmure_riverlands_change
-		character:IAF_Tully_Edmure_1 = {
-			set_primary_title_to = title:e_the_riverlands
-			set_realm_capital = title:c_riverrun
-		}
-	}
-
-	# Orys remains AGOT's single Baratheon_38 character. Give that original
-	# character the alternate-history execution, then extinguish every other
-	# living Baratheon so Argella is the dynasty's sole survivor in 150 A.C.
-	character:Baratheon_38 ?= {
-		if = {
-			limit = { is_alive = yes }
-			death = {
-				death_reason = death_execution
-				killer = character:Segrellion_1
-			}
-		}
-	}
-	dynasty:dynn_Baratheon = {
-		every_dynasty_member = {
-			limit = {
-				is_alive = yes
-				NOT = { this = character:IAF_Baratheon_Argella_1 }
-			}
-			death = { death_reason = death_natural }
-		}
-	}
-
-	# House Buckwell has been removed from the alternate history before the
-	# bookmark. death_vanished keeps the one-time cleanup silent, while the
-	# explicit title transfer below ensures Deerfield cannot pass to a survivor.
-	character:Vladwyn_2 ?= {
-		if = {
-			limit = { NOT = { has_character_flag = segrellion_buckwell_cleanup_done } }
-			dynasty:dynn_Buckwell = {
-				every_dynasty_member = {
-					limit = { is_alive = yes }
-					death = { death_reason = death_vanished }
-				}
-			}
-			add_character_flag = segrellion_buckwell_cleanup_done
-		}
-	}
-
-	# Title history grants the High Lordship of Deerfield and its capital county
-	# in 131 A.C. This fallback protects both titles from later-loading submods.
-	if = {
-		limit = {
-			character:Vladwyn_2 ?= { is_alive = yes }
-			OR = {
-				title:d_deerfield = { NOT = { exists = holder } }
-				title:d_deerfield.holder ?= { NOT = { this = character:Vladwyn_2 } }
-				title:c_antlers = { NOT = { exists = holder } }
-				title:c_antlers.holder ?= { NOT = { this = character:Vladwyn_2 } }
-			}
-		}
-		create_title_and_vassal_change = {
-			type = granted
-			save_scope_as = segrellion_deerfield_title_change
-			add_claim_on_loss = no
-		}
-		title:d_deerfield = {
-			change_title_holder_include_vassals = {
-				holder = character:Vladwyn_2
-				change = scope:segrellion_deerfield_title_change
-			}
-		}
-		title:c_antlers = {
-			change_title_holder = {
-				holder = character:Vladwyn_2
-				change = scope:segrellion_deerfield_title_change
-			}
-		}
-		resolve_title_and_vassal_change = scope:segrellion_deerfield_title_change
-		character:Vladwyn_2 = {
-			set_primary_title_to = title:d_deerfield
-			set_realm_capital = title:c_antlers
-		}
-	}
-
-	# Tristan is part of Aegon III's historical Kingsguard from 131 A.C. The
-	# runtime setup uses AGOT's public Kingsguard effects so its council slots,
-	# title variables, White Book and Lord Commander title stay synchronized.
-	character:Caron_33 ?= {
-		if = {
-			limit = { is_alive = yes }
-			death = { death_reason = death_natural }
-		}
-	}
-
-	title:d_kingsguard.holder ?= {
-		if = {
-			limit = { NOT = { this = character:Vladwyn_1 } }
-			agot_remove_kingsguard_effect = { KINGSGUARD = this }
-		}
-	}
-
-	$KING$ = {
-		if = {
-			limit = {
-				character:Vladwyn_1 = { NOT = { has_trait = kingsguard } }
-				exists = cp:kingsguard_1
-				exists = cp:kingsguard_2
-				exists = cp:kingsguard_3
-				exists = cp:kingsguard_4
-				exists = cp:kingsguard_5
-				exists = cp:kingsguard_6
-			}
-			cp:kingsguard_6 = {
-				agot_remove_kingsguard_effect = { KINGSGUARD = this }
-			}
-		}
-	}
-
-	if = {
-		limit = {
-			character:Vladwyn_1 = {
-				is_alive = yes
-				NOT = { has_trait = kingsguard }
-			}
-		}
-		agot_join_kingsguard_effect = {
-			KINGSGUARD = character:Vladwyn_1
-			KING = $KING$
-		}
-	}
-
-	if = {
-		limit = {
-			character:Vladwyn_1 = {
-				is_alive = yes
-				has_trait = kingsguard
-				NOT = { has_character_flag = lord_commander }
-			}
-		}
-		agot_assign_lord_commander_effect = {
-			COMMANDER = character:Vladwyn_1
-			KING = $KING$
-		}
-	}
-}
-
-segrellion_setup_petty_rebellion_bookmark_effect = {
-	if = {
-		limit = {
-			current_date >= 8150.1.1
-			current_date < 8151.1.1
-			character:Segrellion_12 ?= { is_alive = yes }
+			current_date >= 8300.1.1
+			current_date < 8301.1.1
 		}
 
-		title:k_flamelands = { set_capital_county = title:c_farring_cross }
-		title:d_vhalerion = { set_de_jure_liege_title = title:k_flamelands }
-		title:d_masseys_hook = { set_de_jure_liege_title = title:k_flamelands }
-		title:d_wendwater_forest = {
-			set_title_name = segrellion_the_beacon_name
-			set_capital_county = title:c_farring_cross
-			set_de_jure_liege_title = title:k_flamelands
-		}
-		title:d_the_baywater_woods = { set_de_jure_liege_title = title:k_flamelands }
+		# =====================================================
+		# DAEMON SEGRELLION
+		# 2,000 MEN
+		# =====================================================
 
-		# History should already create Baywater Woods in 8145. This fallback
-		# makes the bookmark setup deterministic if another mod overrides that
-		# title history later in the load order.
-		if = {
-			limit = { title:d_the_baywater_woods = { NOT = { exists = holder } } }
-			create_title_and_vassal_change = {
-				type = created
-				save_scope_as = segrellion_baywater_title_change
-				add_claim_on_loss = no
-			}
-			title:d_the_baywater_woods = {
-				change_title_holder = {
-					holder = character:Segrellion_12
-					change = scope:segrellion_baywater_title_change
-				}
-			}
-			resolve_title_and_vassal_change = scope:segrellion_baywater_title_change
-		}
+		character:Segrellion_60 ?= {
 
-		# Preserve every historical count holder and make each one Aeryn's
-		# vassal. The duchy remains in Aeryn's own hands.
-		create_title_and_vassal_change = {
-			type = granted
-			save_scope_as = segrellion_baywater_vassal_change
-			add_claim_on_loss = no
-		}
-		title:c_the_gauntlet.holder ?= {
 			if = {
 				limit = {
-					NOT = { this = character:Segrellion_12 }
-					NOT = { liege = character:Segrellion_12 }
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = iaf_8300_daemon_host_created
+					}
 				}
-				change_liege = {
-					liege = character:Segrellion_12
-					change = scope:segrellion_baywater_vassal_change
+
+				spawn_army = {
+
+					name = iaf_daemon_pentos_host
+
+					men_at_arms = {
+						type = armored_horsemen
+						stacks = 3
+					}
+
+					men_at_arms = {
+						type = armored_footmen
+						stacks = 4
+					}
+
+					men_at_arms = {
+						type = pikemen
+						stacks = 3
+					}
+
+					men_at_arms = {
+						type = bowmen
+						stacks = 3
+					}
+
+					levies = 700
+
+					inheritable = yes
+
+					location = title:c_daarilaro_aajon.title_province
+					origin = title:c_daarilaro_aajon.title_province
 				}
+
+				add_character_flag = iaf_8300_daemon_host_created
 			}
 		}
-		title:c_brushmill.holder ?= {
+
+
+		# =====================================================
+		# JOFFREY VLADWYN
+		# THE TRUE SENTINELS
+		# 4,000 PROFESSIONAL SOLDIERS
+		# =====================================================
+
+		character:Vladwyn_5 ?= {
+
 			if = {
 				limit = {
-					NOT = { this = character:Segrellion_12 }
-					NOT = { liege = character:Segrellion_12 }
-				}
-				change_liege = {
-					liege = character:Segrellion_12
-					change = scope:segrellion_baywater_vassal_change
-				}
-			}
-		}
-		title:c_bywater.holder ?= {
-			if = {
-				limit = {
-					NOT = { this = character:Segrellion_12 }
-					NOT = { liege = character:Segrellion_12 }
-				}
-				change_liege = {
-					liege = character:Segrellion_12
-					change = scope:segrellion_baywater_vassal_change
-				}
-			}
-		}
-		title:c_greyhelm.holder ?= {
-			if = {
-				limit = {
-					NOT = { this = character:Segrellion_12 }
-					NOT = { liege = character:Segrellion_12 }
-				}
-				change_liege = {
-					liege = character:Segrellion_12
-					change = scope:segrellion_baywater_vassal_change
-				}
-			}
-		}
-		resolve_title_and_vassal_change = scope:segrellion_baywater_vassal_change
-		title:c_farring_cross = { set_title_name = segrellion_the_beacon_name }
-		title:b_castle_farring = { set_title_name = segrellion_the_beacon_name }
-		title:b_castle_farring.title_province = {
-			if = {
-				limit = { NOT = { has_building_or_higher = castle_01 } }
-				add_building = castle_01
-			}
-			if = {
-				limit = { has_special_building_slot = no }
-				add_special_building_slot = segrellion_beacon_01
-			}
-			if = {
-				limit = { NOT = { has_building_or_higher = segrellion_beacon_01 } }
-				add_special_building = segrellion_beacon_01
-			}
-		}
+					is_alive = yes
 
-		# Alternate-history royal succession for this bookmark. At the normal
-		# 8150 date Aegon III still rules in AGOT history; here he was killed by
-		# Vhalyrax in 8148 and his primary heir, Daeron, inherits the throne.
-		title:h_the_iron_throne.holder ?= {
-			if = {
-				limit = { exists = primary_heir }
-				save_scope_as = petty_rebellion_aegon
-				primary_heir = { save_scope_as = petty_rebellion_daeron }
-			}
-		}
-		scope:petty_rebellion_aegon ?= {
-			death = { death_reason = death_dragon }
-		}
-		title:h_the_iron_throne.holder ?= {
-			save_scope_as = petty_rebellion_king
-			add_character_flag = segrellion_petty_rebellion_young_king
-		}
-		segrellion_setup_petty_rebellion_characters_effect = {
-			KING = scope:petty_rebellion_king
-		}
-
-		# The North and the Vale remain vassals of the Iron Throne at bookmark
-		# start. Their rebellion is deliberately left to the later event chain.
-
-		character:Segrellion_12 = {
-			save_scope_as = petty_rebellion_aeryn
-			add_character_flag = segrellion_founded_the_flamelands
-			add_character_flag = segrellion_established_the_beacon
-			add_character_flag = segrellion_icebringer_authorized
-			add_character_flag = has_scripted_appearance
-			add_character_flag = hair_trait_m_hair_ep3_byzantine_01
-			add_character_flag = beard_trait_no_beard
-			add_character_flag = segrellion_aeryn_custom_clothes
-			if = {
-				limit = { has_title = title:k_flamelands }
-				set_primary_title_to = title:k_flamelands
-			}
-			if = {
-				limit = { has_title = title:c_farring_cross }
-				set_realm_capital = title:c_farring_cross
-			}
-		}
-
-		global_var:segrellion_icebringer ?= {
-			set_owner = scope:petty_rebellion_aeryn
-			equip_artifact_to_owner_replace = yes
-			agot_add_artifact_history = {
-				ARTIFACT = this
-				TYPE = inherited
-				DATE = 8150.1.1
-				RECIPIENT = character:Segrellion_12
-			}
-		}
-
-		character:Segrellion_1 ?= {
-			every_character_artifact = {
-				limit = { has_variable = segrellion_plate_of_segrell_artifact }
-				set_owner = scope:petty_rebellion_aeryn
-				equip_artifact_to_owner_replace = yes
-				agot_add_artifact_history = {
-					ARTIFACT = this
-					TYPE = inherited
-					DATE = 8150.1.1
-					RECIPIENT = character:Segrellion_12
+					NOT = {
+						has_character_flag = iaf_8300_true_sentinels_host_created
+					}
 				}
-			}
-		}
 
-		character:Segrellion_12 = {
-			if = {
-				limit = {
-					NOT = { any_character_artifact = { has_variable = segrellion_icebringer_artifact } }
+				spawn_army = {
+
+					name = iaf_true_sentinels_host
+
+					men_at_arms = {
+						type = black_sentinels
+						stacks = 12
+					}
+
+					men_at_arms = {
+						type = armored_footmen
+						stacks = 11
+					}
+
+					men_at_arms = {
+						type = pikemen
+						stacks = 10
+					}
+
+					men_at_arms = {
+						type = bowmen
+						stacks = 10
+					}
+
+					inheritable = yes
+
+					location = title:c_daarilaro_aajon.title_province
+					origin = title:c_daarilaro_aajon.title_province
 				}
-				segrellion_create_artifact_icebringer_effect = { OWNER = this }
-			}
-			if = {
-				limit = {
-					NOT = { any_character_artifact = { has_variable = segrellion_plate_of_segrell_artifact } }
-				}
-				segrellion_create_artifact_plate_of_segrell_effect = { OWNER = this }
+
+				add_character_flag = iaf_8300_true_sentinels_host_created
 			}
 		}
 	}

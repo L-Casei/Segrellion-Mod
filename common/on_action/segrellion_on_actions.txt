@@ -331,16 +331,22 @@ segrellion_refresh_scripted_appearances = {
 
 segrellion_on_game_start_after_lobby = {
 	effect = {
-		# A second, post-lobby pass runs after AGOT's scenario initialization so
-		# canon succession cannot restore Kermit or Davos's line at game start.
+
+		# Historical bookmark corrections.
 		segrellion_setup_petty_rebellion_bookmark_effect = yes
+		segrellion_setup_winds_of_winter_pentos_effect = yes
+
 		segrellion_apply_later_canon_supplied_appearances_effect = yes
+
 		character:Segrellion_1 ?= {
 			if = {
 				limit = {
 					is_alive = yes
-					NOT = { has_character_flag = segrellion_intro_event_seen }
+					NOT = {
+						has_character_flag = segrellion_intro_event_seen
+					}
 				}
+
 				trigger_event = {
 					id = segrellion_intro.0001
 					days = 3
