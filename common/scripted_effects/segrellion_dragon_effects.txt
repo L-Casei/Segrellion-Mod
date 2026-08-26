@@ -45,7 +45,7 @@ segrellion_spawn_vhalyrax_from_egg_effect = {
 
 	segrellion_native_historical_dragon_setup_effect = {
 		DRAGON = scope:dragon
-		dragon_age = scope:dragon.age
+		DRAGON_AGE = 0
 		gene_dragon_primary_color_value = 1.00
 		gene_dragon_primary_color_hue = 0.58
 		gene_dragon_secondary_value = 0.98
@@ -205,6 +205,7 @@ segrellion_spawn_maenor_from_egg_effect = {
 
 	segrellion_transfer_maenor_runtime_dna_effect = {
 		DRAGON = scope:dragon
+		DRAGON_AGE = 0
 	}
 
 
@@ -313,6 +314,7 @@ segrellion_spawn_nightdancer_from_egg_effect = {
 
 	segrellion_transfer_nightdancer_runtime_dna_effect = {
 		DRAGON = scope:dragon
+		DRAGON_AGE = 0
 	}
 
 
@@ -368,7 +370,18 @@ segrellion_initialize_historical_dragon_effect = {
 				NOT = {
 					any_in_global_list = {
 						variable = gl_dragon_variable_storage
+
 						var:dragon_id ?= scope:segrellion_dragon_to_initialize
+
+						exists = var:dragon_size_base
+
+						OR = {
+							var:dragon_size_base > 0
+
+							scope:segrellion_dragon_to_initialize = {
+								age < 1
+							}
+						}
 					}
 				}
 			}
@@ -400,6 +413,7 @@ segrellion_initialize_historical_dragon_effect = {
 
 				segrellion_transfer_vhalyrax_runtime_dna_effect = {
 					DRAGON = this
+					DRAGON_AGE = character:dragon_vhalyrax.age
 				}
 			}
 
@@ -416,6 +430,7 @@ segrellion_initialize_historical_dragon_effect = {
 
 				segrellion_transfer_maenor_runtime_dna_effect = {
 					DRAGON = this
+					DRAGON_AGE = character:dragon_maenor.age
 				}
 			}
 
@@ -432,6 +447,7 @@ segrellion_initialize_historical_dragon_effect = {
 
 				segrellion_transfer_nightdancer_runtime_dna_effect = {
 					DRAGON = this
+					DRAGON_AGE = character:dragon_nightdancer.age
 				}
 			}
 
@@ -448,6 +464,7 @@ segrellion_initialize_historical_dragon_effect = {
 
 				segrellion_transfer_azuron_runtime_dna_effect = {
 					DRAGON = this
+					DRAGON_AGE = character:dragon_azuron.age
 				}
 			}
 
@@ -464,6 +481,7 @@ segrellion_initialize_historical_dragon_effect = {
 
 				segrellion_transfer_rhaenyx_runtime_dna_effect = {
 					DRAGON = this
+					DRAGON_AGE = character:dragon_rhaenyx.age
 				}
 			}
 
@@ -480,6 +498,7 @@ segrellion_initialize_historical_dragon_effect = {
 
 				segrellion_transfer_valor_runtime_dna_effect = {
 					DRAGON = this
+					DRAGON_AGE = character:dragon_valor.age
 				}
 			}
 
@@ -496,6 +515,7 @@ segrellion_initialize_historical_dragon_effect = {
 
 				segrellion_transfer_aerox_runtime_dna_effect = {
 					DRAGON = this
+					DRAGON_AGE = character:dragon_aerox.age
 				}
 			}
 
@@ -544,42 +564,49 @@ segrellion_historical_dragons_progression_effect = {
 	character:dragon_vhalyrax ?= {
 		segrellion_initialize_historical_dragon_effect = {
 			DRAGON = this
+			DRAGON_AGE = character:dragon_vhalyrax.age
 		}
 	}
 
 	character:dragon_maenor ?= {
 		segrellion_initialize_historical_dragon_effect = {
 			DRAGON = this
+			DRAGON_AGE = character:dragon_maenor.age
 		}
 	}
 
 	character:dragon_nightdancer ?= {
 		segrellion_initialize_historical_dragon_effect = {
 			DRAGON = this
+			DRAGON_AGE = character:dragon_nightdancer.age
 		}
 	}
 
 	character:dragon_azuron ?= {
 		segrellion_initialize_historical_dragon_effect = {
 			DRAGON = this
+			DRAGON_AGE = character:dragon_azuron.age
 		}
 	}
 
 	character:dragon_rhaenyx ?= {
 		segrellion_initialize_historical_dragon_effect = {
 			DRAGON = this
+			DRAGON_AGE = character:dragon_rhaenyx.age
 		}
 	}
 
 	character:dragon_valor ?= {
 		segrellion_initialize_historical_dragon_effect = {
 			DRAGON = this
+			DRAGON_AGE = character:dragon_valor.age
 		}
 	}
 
 	character:dragon_aerox ?= {
 		segrellion_initialize_historical_dragon_effect = {
 			DRAGON = this
+			DRAGON_AGE = character:dragon_aerox.age
 		}
 	}
 
