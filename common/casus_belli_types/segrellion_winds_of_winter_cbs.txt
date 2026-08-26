@@ -130,6 +130,37 @@ segrellion_unicorn_returns_cb = {
 			}
 		}
 
+		# =================================================
+		# HUGH SEGRELLION
+		#
+		# Hugh only joins if he personally promised military
+		# support when Daemon demanded the Plate of Segrell.
+		# =================================================
+
+		character:Segrellion_43 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					has_character_flag = segrellion_hugh_will_support_daemon
+
+					this != scope:defender
+				}
+
+				save_scope_as = unicorn_returns_hugh
+			}
+		}
+
+		scope:unicorn_returns_hugh ?= {
+
+			scope:war ?= {
+				add_attacker = scope:unicorn_returns_hugh
+			}
+
+			remove_character_flag = segrellion_hugh_will_support_daemon
+		}
+
 
 		# =================================================
 		# LORD MASSEY
