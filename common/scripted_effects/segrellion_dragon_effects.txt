@@ -43,7 +43,7 @@ segrellion_spawn_vhalyrax_from_egg_effect = {
 	agot_set_dragon_parents = { EGG = scope:egg }
 	agot_dragon_tree_creation_effect = { DRAGON = scope:dragon }
 
-	agot_historical_dragon_transfer_vars_to_story_cycle_effect = {
+	segrellion_native_historical_dragon_setup_effect = {
 		DRAGON = scope:dragon
 		dragon_age = scope:dragon.age
 		gene_dragon_primary_color_value = 1.00
@@ -369,27 +369,8 @@ segrellion_initialize_historical_dragon_effect = {
 					any_in_global_list = {
 						variable = gl_dragon_variable_storage
 						var:dragon_id ?= scope:segrellion_dragon_to_initialize
-						has_variable = dragon_size_base
-						OR = {
-							var:dragon_size_base > 0
-							scope:segrellion_dragon_to_initialize = { age < 1 }
-						}
 					}
 				}
-			}
-
-			# Remove incomplete storage left by the old early-start setup.
-			# The canonical transfer below rebuilds one clean storage story.
-			every_in_global_list = {
-				variable = gl_dragon_variable_storage
-				limit = {
-					var:dragon_id ?= scope:segrellion_dragon_to_initialize
-				}
-				remove_list_global_variable = {
-					name = gl_dragon_variable_storage
-					target = this
-				}
-				end_story = yes
 			}
 
 			# AGOT already creates this story for every dragon in
@@ -1253,7 +1234,7 @@ segrellion_spawn_dream_chosen_dragon_effect = {
 	# White / pale-blue scales, reflecting the scale
 	# that began the vision.
 
-	agot_historical_dragon_transfer_vars_to_story_cycle_effect = {
+	segrellion_native_historical_dragon_setup_effect = {
 
 		DRAGON = scope:dream_chosen_dragon
 

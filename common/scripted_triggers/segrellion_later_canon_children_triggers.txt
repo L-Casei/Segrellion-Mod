@@ -5,10 +5,26 @@ iaf_later_canon_identity_exists_trigger = {
 			is_alive = yes
 		}
 		any_in_global_list = {
-			variable = agot_born_canon_children_scopes
+			variable = gl_dragon_variable_storage
+
+			var:dragon_id ?= scope:segrellion_dragon_to_initialize
+
+			has_variable = dragon_size_base
+			has_variable = dragon_size
+
 			OR = {
-				has_character_flag = is_$ID$
-				has_inactive_trait = is_$ID$
+				AND = {
+					scope:segrellion_dragon_to_initialize = {
+						age >= 1
+					}
+
+					var:dragon_size_base > 0
+					var:dragon_size > 0
+				}
+
+				scope:segrellion_dragon_to_initialize = {
+					age < 1
+				}
 			}
 		}
 	}
