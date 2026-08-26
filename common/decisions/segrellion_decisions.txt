@@ -1123,3 +1123,241 @@ segrellion_resume_legendary_relic_search_decision = {
 		base = 0
 	}
 }
+
+# =========================================================
+# ESTABLISH THE GREATER FLAMELANDS
+# =========================================================
+
+segrellion_establish_greater_flamelands_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/proclaim_paramountcy_of_the_flamelands_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_establish_greater_flamelands_decision_desc
+	selection_tooltip = segrellion_establish_greater_flamelands_decision_tooltip
+	confirm_text = segrellion_establish_greater_flamelands_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		# Available to anyone who holds the Paramountcy.
+		has_title = title:e_flamelands
+
+		# Can only ever be established once.
+		title:e_flamelands = {
+			NOT = {
+				has_variable = segrellion_greater_flamelands_established
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+
+		# -------------------------------------------------
+		# TERRITORIAL POWER
+		#
+		# EITHER:
+		#   Dragonstone + The Claw + Flamelands
+		#
+		# OR:
+		#   Paramountcy of the Flamelands
+		#   + Dragonstone OR The Claw
+		# -------------------------------------------------
+
+		OR = {
+
+			AND = {
+
+				custom_description = {
+					text = segrellion_greater_flamelands_dragonstone_requirement_tt
+					has_title = title:k_dragonstone
+				}
+
+				custom_description = {
+					text = segrellion_greater_flamelands_claw_requirement_tt
+					has_title = title:k_the_hook
+				}
+
+				custom_description = {
+					text = segrellion_greater_flamelands_flamelands_requirement_tt
+					has_title = title:k_flamelands
+				}
+			}
+
+
+			AND = {
+
+				custom_description = {
+					text = segrellion_greater_flamelands_paramountcy_requirement_tt
+					has_title = title:e_flamelands
+				}
+
+				OR = {
+
+					custom_description = {
+						text = segrellion_greater_flamelands_dragonstone_requirement_tt
+						has_title = title:k_dragonstone
+					}
+
+					custom_description = {
+						text = segrellion_greater_flamelands_claw_requirement_tt
+						has_title = title:k_the_hook
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# EXALTED AMONGST MEN
+		# -------------------------------------------------
+
+		prestige_level >= 4
+
+
+		# -------------------------------------------------
+		# IRON THRONE APPROVAL OR INDEPENDENCE
+		# -------------------------------------------------
+
+		OR = {
+
+			is_independent_ruler = yes
+
+			custom_description = {
+				text = segrellion_greater_flamelands_iron_throne_opinion_tt
+
+				AND = {
+
+					title:h_the_iron_throne = {
+						exists = holder
+					}
+
+					title:h_the_iron_throne.holder = {
+						opinion = {
+							target = root
+							value >= 100
+						}
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# PRESTIGE COST
+		# -------------------------------------------------
+
+		prestige >= 2500
+	}
+
+
+	# =====================================================
+	# EFFECTS
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_establish_greater_flamelands_effect_tt
+
+		hidden_effect = {
+
+			# ---------------------------------------------
+			# GREAT FOUNDER
+			# Permanent character modifier.
+			# ---------------------------------------------
+
+			add_character_modifier = {
+				modifier = segrellion_great_founder_modifier
+			}
+
+
+			# ---------------------------------------------
+			# MAXIMUM LEGITIMACY
+			# Only attempt this on characters with a valid
+			# legitimacy type.
+			# ---------------------------------------------
+
+			if = {
+				limit = {
+					has_legitimacy = yes
+				}
+
+				add_legitimacy = 1500
+			}
+
+
+			# ---------------------------------------------
+			# EXALTED AMONGST MEN -> LIVING LEGEND
+			#
+			# If already Living Legend, do nothing.
+			# ---------------------------------------------
+
+			if = {
+				limit = {
+					prestige_level = 4
+				}
+
+				add_prestige_level = 1
+			}
+
+
+			# ---------------------------------------------
+			# CROWN OF THE FLAMEKING
+			# ---------------------------------------------
+
+			segrellion_create_artifact_crown_of_the_flameking_effect = {
+				OWNER = this
+			}
+
+
+			# ---------------------------------------------
+			# THE GREATER FLAMELANDS NOW EXIST
+			# ---------------------------------------------
+
+			title:e_flamelands = {
+				set_variable = {
+					name = segrellion_greater_flamelands_established
+					value = yes
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+		prestige = 2500
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

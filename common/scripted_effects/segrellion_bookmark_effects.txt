@@ -474,46 +474,29 @@ segrellion_capture_stormflame_court_effect = {
 		save_scope_as = daemon_stormflame_judgement
 	}
 
-
-	# Leo himself.
-	character:Segrellion_36 ?= {
-
-		if = {
-			limit = {
-				is_alive = yes
-			}
-
-			add_character_flag = segrellion_stormflame_captive
-
-			scope:daemon_stormflame_judgement = {
-
-				imprison = {
-					target = character:Segrellion_36
-					type = dungeon
-				}
-			}
+	if = {
+		limit = {
+			exists = scope:daemon_stormflame_judgement
 		}
 
+		house:house_Stormflame = {
 
-		# Every Stormflame actually present in Leo's court.
-		every_courtier_or_guest = {
+			every_house_member = {
 
-			limit = {
+				limit = {
+					is_alive = yes
+				}
 
-				is_alive = yes
+				save_temporary_scope_as = stormflame_captive
 
-				house = house:house_Stormflame
-			}
+				add_character_flag = segrellion_stormflame_captive
 
-			save_temporary_scope_as = stormflame_captive
+				scope:daemon_stormflame_judgement = {
 
-			add_character_flag = segrellion_stormflame_captive
-
-			scope:daemon_stormflame_judgement = {
-
-				imprison = {
-					target = scope:stormflame_captive
-					type = dungeon
+					imprison = {
+						target = scope:stormflame_captive
+						type = dungeon
+					}
 				}
 			}
 		}

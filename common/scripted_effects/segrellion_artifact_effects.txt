@@ -2541,3 +2541,62 @@ segrellion_create_artifact_winterfell_vhalyrax_egg_effect = {
 		}
 	}
 }
+
+# =========================================================
+# CROWN OF THE FLAMEKING
+# =========================================================
+
+segrellion_create_artifact_crown_of_the_flameking_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+
+	create_artifact = {
+
+		name = segrellion_crown_of_the_flameking_name
+		description = segrellion_crown_of_the_flameking_desc
+
+		type = helmet
+
+		# Reuses Aenys Targaryen's crown model from AGOT.
+		visuals = aenys_crown_visuals
+
+		wealth = 100
+		quality = 100
+
+		template = segrellion_crown_of_the_flameking_template
+
+		modifier = segrellion_crown_of_the_flameking_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+
+	scope:newly_created_artifact ?= {
+
+		equip_artifact_to_owner_replace = yes
+
+		set_variable = {
+			name = segrellion_crown_of_the_flameking_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+
+		# The crown follows the Paramountcy itself.
+		set_variable = {
+			name = artifact_succession_title
+			value = title:e_flamelands
+		}
+	}
+}

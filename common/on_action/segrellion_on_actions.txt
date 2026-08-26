@@ -15,6 +15,7 @@ monthly_global_pulse = {
 		segrellion_historical_dragons_progression
 		segrellion_icebringer_monthly_event_pulse
 		segrellion_icebringer_historical_loss_progression
+		segrellion_unicorn_returns_beacon_arrival_fallback
 	}
 }
 
@@ -94,7 +95,7 @@ on_army_enter_province = {
 	}
 }
 
-on_army_combat_finished = {
+on_combat_end_winner = {
 	on_actions = {
 		segrellion_unicorn_returns_clifford_battle_check
 	}
@@ -667,52 +668,75 @@ vladwyn_8106_startup = {
 }
 
 # =========================================================
-# THE UNICORN RETURNS - CLIFFORD STORMFLAME
+# THE UNICORN RETURNS - FIRST VICTORIOUS BATTLE
+# CLIFFORD STORMFLAME
+# Root of on_combat_end_winner = combat_side
 # =========================================================
 
 segrellion_unicorn_returns_clifford_battle_check = {
 
-	trigger = {
-
-		this = character:Segrellion_60
-
-		scope:victory = yes
-
-		has_character_flag = segrellion_unicorn_returns_war_active
-
-		NOT = {
-			has_character_flag = segrellion_killed_clifford_event_done
-		}
-
-		character:Segrellion_53 ?= {
-			is_alive = yes
-		}
-
-		OR = {
-
-			any_in_list = {
-				list = commanders
-				this = character:Segrellion_53
-			}
-
-			any_in_list = {
-				list = knights
-				this = character:Segrellion_53
-			}
-		}
-	}
-
-
 	effect = {
 
-		add_character_flag = segrellion_killed_clifford_event_done
+		# Daemon is commanding the victorious army.
+		every_side_commander = {
 
-		trigger_event = {
-			id = segrellion_winds.0301
-			days = 1
+			if = {
+				limit = {
+
+					this = character:Segrellion_60
+
+					has_character_flag = segrellion_unicorn_returns_war_active
+
+					NOT = {
+						has_character_flag = segrellion_killed_clifford_event_done
+					}
+
+					character:Segrellion_53 ?= {
+						is_alive = yes
+					}
+				}
+
+				add_character_flag = segrellion_killed_clifford_event_done
+
+				trigger_event = {
+					id = segrellion_winds.0301
+					days = 1
+				}
+			}
+		}
+
+
+		# Fallback in case Daemon participates as a knight rather
+		# than as the army commander.
+		every_side_knight = {
+
+			if = {
+				limit = {
+
+					this = character:Segrellion_60
+
+					has_character_flag = segrellion_unicorn_returns_war_active
+
+					NOT = {
+						has_character_flag = segrellion_killed_clifford_event_done
+					}
+
+					character:Segrellion_53 ?= {
+						is_alive = yes
+					}
+				}
+
+				add_character_flag = segrellion_killed_clifford_event_done
+
+				trigger_event = {
+					id = segrellion_winds.0301
+					days = 1
+				}
+			}
 		}
 	}
 }
+
 
 # =========================================================
 # THE UNICORN RETURNS - ARRIVAL AT THE BEACON
@@ -724,19 +748,18 @@ segrellion_unicorn_returns_beacon_arrival_check = {
 
 		this = character:Segrellion_60
 
+		is_alive = yes
+
 		has_character_flag = segrellion_unicorn_returns_war_active
 
 		NOT = {
 			has_character_flag = segrellion_beacon_surrender_demanded
 		}
 
-		scope:army.location = title:b_castle_farring.title_province
+		location = title:b_castle_farring.title_province
 
 		character:Segrellion_36 ?= {
-
 			is_alive = yes
-
-			location = title:b_castle_farring.title_province
 		}
 	}
 
@@ -752,8 +775,56 @@ segrellion_unicorn_returns_beacon_arrival_check = {
 	}
 }
 
+
+# =========================================================
+# ARRIVAL AT THE BEACON - MONTHLY FAILSAFE
+#
+# on_army_enter_province can occasionally miss.
+# This guarantees the story continues while Daemon is
+# physically at the Beacon during the Unicorn Returns war.
+# =========================================================
+
+segrellion_unicorn_returns_beacon_arrival_fallback = {
+
+	trigger = {
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_unicorn_returns_war_active
+
+			NOT = {
+				has_character_flag = segrellion_beacon_surrender_demanded
+			}
+
+			location = title:b_castle_farring.title_province
+		}
+
+		character:Segrellion_36 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	effect = {
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_beacon_surrender_demanded
+
+			trigger_event = {
+				id = segrellion_winds.0401
+				days = 1
+			}
+		}
+	}
+}
+
+
 # =========================================================
 # THE BEACON FALLS AFTER LEO REFUSES
+# Root of on_siege_completion = character
 # =========================================================
 
 segrellion_unicorn_returns_beacon_siege_check = {
@@ -761,6 +832,8 @@ segrellion_unicorn_returns_beacon_siege_check = {
 	trigger = {
 
 		this = character:Segrellion_60
+
+		is_alive = yes
 
 		has_character_flag = segrellion_unicorn_returns_war_active
 
@@ -770,7 +843,7 @@ segrellion_unicorn_returns_beacon_siege_check = {
 			has_character_flag = segrellion_beacon_stormed_resolution
 		}
 
-		scope:barony = title:b_castle_farring
+		location = title:b_castle_farring.title_province
 	}
 
 
@@ -785,71 +858,9 @@ segrellion_unicorn_returns_beacon_siege_check = {
 			days = 1
 		}
 
-		scope:war ?= {
+		var:segrellion_unicorn_returns_war ?= {
 			end_war = attacker
 		}
-	}
-}
-
-# =========================================================
-# 0404 - THE BEACON TAKEN BY STORM
-# =========================================================
-
-segrellion_winds.0404 = {
-
-	type = character_event
-
-	title = segrellion_winds.0404.t
-	desc = segrellion_winds.0404.desc
-
-	override_background = {
-		reference = throne_room
-	}
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	left_portrait = root
-	right_portrait = character:Segrellion_36
-
-
-	# Kill them all.
-	option = {
-
-		name = segrellion_winds.0404.a
-
-		ai_chance = {
-			base = 50
-		}
-
-		segrellion_execute_all_stormflame_captives_effect = yes
-	}
-
-
-	# Leo dies, the rest are spared.
-	option = {
-
-		name = segrellion_winds.0404.b
-
-		ai_chance = {
-			base = 30
-		}
-
-		segrellion_execute_leo_spare_stormflame_family_effect = yes
-	}
-
-
-	# Mercy.
-	option = {
-
-		name = segrellion_winds.0404.c
-
-		ai_chance = {
-			base = 20
-		}
-
-		segrellion_spare_all_stormflame_captives_effect = yes
 	}
 }
 
