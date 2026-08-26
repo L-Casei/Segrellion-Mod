@@ -17,125 +17,179 @@ segrellion_the_unicorn_returns_decision = {
 
 
 	# =====================================================
+	# COST
+	# 500 Prestige normally.
+	# Free in debug for testing.
+	# =====================================================
+
+	cost = {
+		prestige = {
+			value = 0
+
+			if = {
+				limit = {
+					NOT = {
+						debug_only = yes
+					}
+				}
+
+				add = 500
+			}
+		}
+	}
+
+
+	# =====================================================
 	# VISIBILITY
 	# =====================================================
 
 	is_shown = {
 
+		# This storyline decision belongs specifically to Daemon.
 		this = character:Segrellion_60
 
-		current_date >= 8300.1.1
+		# In debug, ignore all storyline visibility restrictions.
+		trigger_if = {
+			limit = {
+				NOT = {
+					debug_only = yes
+				}
+			}
 
-		NOT = {
-			has_character_flag = segrellion_unicorn_returns_completed
-		}
+			current_date >= 8300.1.1
 
-		NOT = {
-			has_character_flag = segrellion_unicorn_returns_event_pending
-		}
+			NOT = {
+				has_character_flag = segrellion_unicorn_returns_completed
+			}
 
-		NOT = {
-			has_character_flag = segrellion_unicorn_returns_war_active
+			NOT = {
+				has_character_flag = segrellion_unicorn_returns_event_pending
+			}
+
+			NOT = {
+				has_character_flag = segrellion_unicorn_returns_war_active
+			}
 		}
 	}
 
 
 	# =====================================================
 	# REQUIREMENTS
+	# All bypassed while running in debug mode.
 	# =====================================================
 
 	is_valid = {
 
-		is_adult = yes
-		is_imprisoned = no
+		trigger_if = {
+			limit = {
+				NOT = {
+					debug_only = yes
+				}
+			}
 
 
-		# The Flamelands cannot already be ruled by House Segrellion.
-		custom_description = {
-			text = segrellion_unicorn_returns_not_segrellion_ruled_tt
+			is_adult = yes
+			is_imprisoned = no
 
-			title:e_flamelands = {
-				exists = holder
 
-				holder = {
-					NOT = {
-						house = house:house_Segrellion
+			# =================================================
+			# FLAMELANDS MUST NOT ALREADY BE SEGRELLION
+			# =================================================
+
+			custom_description = {
+				text = segrellion_unicorn_returns_not_segrellion_ruled_tt
+
+				title:e_flamelands = {
+
+					exists = holder
+
+					holder = {
+						NOT = {
+							house = house:house_Segrellion
+						}
 					}
 				}
 			}
-		}
 
 
-		# Daemon cannot already be fighting for either tier
-		# of the Flamelands.
-		custom_description = {
-			text = segrellion_unicorn_returns_not_at_war_tt
+			# =================================================
+			# DAEMON MUST NOT ALREADY BE FIGHTING FOR THEM
+			# =================================================
 
-			NOT = {
-				any_character_war = {
+			custom_description = {
+				text = segrellion_unicorn_returns_not_at_war_tt
 
-					casus_belli = {
+				NOT = {
+					any_character_war = {
 
-						any_target_title = {
+						casus_belli = {
 
-							OR = {
-								this = title:e_flamelands
-								this = title:k_flamelands
+							any_target_title = {
+
+								OR = {
+									this = title:e_flamelands
+									this = title:k_flamelands
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 
 
-		# =================================================
-		# THE RELICS
-		#
-		# Either:
-		#   Trueflame + Plate of Segrell
-		#
-		# OR:
-		#   Icebringer
-		# =================================================
+			# =================================================
+			# RELICS
+			#
+			# Either:
+			#   Trueflame + Plate of Segrell
+			#
+			# Or:
+			#   Icebringer
+			# =================================================
 
-		OR = {
+			OR = {
 
-			AND = {
+				AND = {
 
-				custom_description = {
-					text = segrellion_unicorn_returns_has_trueflame_tt
+					custom_description = {
+						text = segrellion_unicorn_returns_has_trueflame_tt
 
-					any_character_artifact = {
-						has_variable = segrellion_trueflame_artifact
+						any_character_artifact = {
+							has_variable = segrellion_trueflame_artifact
+						}
+					}
+
+					custom_description = {
+						text = segrellion_unicorn_returns_has_plate_tt
+
+						any_character_artifact = {
+							has_variable = segrellion_plate_of_segrell_artifact
+						}
 					}
 				}
 
+
 				custom_description = {
-					text = segrellion_unicorn_returns_has_plate_tt
+					text = segrellion_unicorn_returns_has_icebringer_tt
 
 					any_character_artifact = {
-						has_variable = segrellion_plate_of_segrell_artifact
+						has_variable = segrellion_icebringer_artifact
 					}
 				}
 			}
 
 
-			custom_description = {
-				text = segrellion_unicorn_returns_has_icebringer_tt
+			# =================================================
+			# ARMY
+			#
+			# Same structure used by vanilla
+			# Become a Great Conqueror.
+			# =================================================
 
-				any_character_artifact = {
-					has_variable = segrellion_icebringer_artifact
-				}
+			custom_tooltip = {
+				text = segrellion_unicorn_returns_host_ready_tt
+				current_military_strength >= 4000
 			}
-		}
-
-
-		# The Bastard Unicorns must actually be ready to invade.
-		custom_description = {
-			text = segrellion_unicorn_returns_host_ready_tt
-
-			current_military_strength >= 4000
 		}
 	}
 
@@ -146,22 +200,11 @@ segrellion_the_unicorn_returns_decision = {
 
 	effect = {
 
-		# =====================================================
-		# DISPLAYED EFFECTS
-		# =====================================================
-
 		custom_tooltip = segrellion_unicorn_returns_effect_war_tt
-
 		custom_tooltip = segrellion_unicorn_returns_effect_allies_tt
-
 		custom_tooltip = segrellion_unicorn_returns_effect_modifier_tt
-
 		custom_tooltip = segrellion_unicorn_returns_effect_riders_tt
 
-
-		# =====================================================
-		# ACTUAL EXECUTION
-		# =====================================================
 
 		hidden_effect = {
 
@@ -175,7 +218,10 @@ segrellion_the_unicorn_returns_decision = {
 	}
 
 
-	# Daemon AI should follow his canonical story when ready.
+	# =====================================================
+	# AI
+	# =====================================================
+
 	ai_check_interval = 7
 
 	ai_potential = {
@@ -206,66 +252,133 @@ segrellion_demand_plate_of_segrell_decision = {
 
 
 	# =====================================================
-	# COMPLETELY HIDDEN UNTIL HUGH ACTUALLY HAS THE PLATE
+	# COST
+	# 250 Prestige normally.
+	# Free in debug.
+	# =====================================================
+
+	cost = {
+		prestige = {
+			value = 0
+
+			if = {
+				limit = {
+					NOT = {
+						debug_only = yes
+					}
+				}
+
+				add = 250
+			}
+		}
+	}
+
+
+	# =====================================================
+	# VISIBILITY
+	# Normally hidden until Hugh possesses the Plate.
+	# Debug bypasses these restrictions.
 	# =====================================================
 
 	is_shown = {
 
 		this = character:Segrellion_60
 
-		current_date >= 8300.8.20
-
-		character:Segrellion_43 ?= {
-
-			is_alive = yes
-
-			any_character_artifact = {
-				has_variable = segrellion_plate_of_segrell_artifact
+		trigger_if = {
+			limit = {
+				NOT = {
+					debug_only = yes
+				}
 			}
-		}
 
-		NOT = {
-			has_character_flag = segrellion_plate_demand_pending
-		}
 
-		NOT = {
-			has_character_flag = segrellion_plate_demand_resolved
+			current_date >= 8300.8.20
+
+
+			character:Segrellion_43 ?= {
+
+				is_alive = yes
+
+				any_character_artifact = {
+					has_variable = segrellion_plate_of_segrell_artifact
+				}
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_plate_demand_pending
+			}
+
+			NOT = {
+				has_character_flag = segrellion_plate_demand_resolved
+			}
 		}
 	}
 
 
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
 	is_valid = {
 
-		is_adult = yes
-		is_imprisoned = no
+		trigger_if = {
+			limit = {
+				NOT = {
+					debug_only = yes
+				}
+			}
 
-		custom_description = {
 
-			text = segrellion_demand_plate_hugh_has_plate_tt
+			is_adult = yes
+			is_imprisoned = no
 
-			character:Segrellion_43 = {
 
-				any_character_artifact = {
-					has_variable = segrellion_plate_of_segrell_artifact
+			custom_description = {
+
+				text = segrellion_demand_plate_hugh_has_plate_tt
+
+				character:Segrellion_43 = {
+
+					any_character_artifact = {
+						has_variable = segrellion_plate_of_segrell_artifact
+					}
 				}
 			}
 		}
 	}
 
 
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
 	effect = {
 
-		add_character_flag = segrellion_plate_demand_pending
+		# Visible in the Effects section of the decision.
+		custom_tooltip = segrellion_demand_plate_effect_send_tt
+		custom_tooltip = segrellion_demand_plate_effect_response_tt
 
-		character:Segrellion_43 = {
 
-			trigger_event = {
-				id = segrellion_winds.0102
-				days = 1
+		# Internal execution should not clutter the UI.
+		hidden_effect = {
+
+			add_character_flag = segrellion_plate_demand_pending
+
+			character:Segrellion_43 = {
+
+				trigger_event = {
+					id = segrellion_winds.0102
+					days = 1
+				}
 			}
 		}
 	}
 
+
+	# =====================================================
+	# AI
+	# =====================================================
 
 	ai_check_interval = 7
 
