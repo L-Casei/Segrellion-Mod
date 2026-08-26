@@ -334,6 +334,71 @@ segrellion_spawn_nightdancer_from_egg_effect = {
 	}
 }
 
+# ============================================================
+# INITIALIZE CUSTOM HISTORICAL DRAGON
+#
+# Static history dragons do not pass through AGOT's normal
+# create_character hatchling initialization.
+#
+# This creates the dragon story storage and reconstructs
+# dragon size according to the dragon's current age.
+#
+# The check for dragon_size means dynamically-hatched dragons
+# are left completely untouched.
+# ============================================================
+
+segrellion_initialize_historical_dragon_effect = {
+
+	$DRAGON$ = {
+		save_scope_as = segrellion_dragon_to_initialize
+	}
+
+	scope:segrellion_dragon_to_initialize = {
+
+		if = {
+			limit = {
+				is_alive = yes
+				has_trait = dragon
+
+				NOT = {
+					has_variable = dragon_size
+				}
+			}
+
+
+			# AGOT dragon runtime storage.
+			create_story = story_dragon_alive
+
+
+			# Required internal dragon variables.
+			set_variable = {
+				name = dragon_age
+				value = age
+			}
+
+			set_variable = {
+				name = dragon_size
+				value = 0
+			}
+
+			set_variable = {
+				name = dragon_size_base
+				value = 0
+			}
+
+
+			# Reconstruct growth for every year already lived.
+			agot_back_apply_dragon_aging_effect = yes
+
+
+			# Push the variables into AGOT's dragon story storage.
+			agot_dragon_transfer_vars_to_story_cycle_effect = {
+				DRAGON = this
+			}
+		}
+	}
+}
+
 
 # ============================================================
 # ALL HISTORICAL / CANON DRAGON PROGRESSION
@@ -343,7 +408,56 @@ segrellion_spawn_nightdancer_from_egg_effect = {
 
 segrellion_historical_dragons_progression_effect = {
 
-		# ========================================================
+	# ========================================================
+	# INITIALIZE CUSTOM HISTORICAL DRAGONS
+	#
+	# Dynamic versions already have dragon_size and are skipped.
+	# Static history versions are initialized here.
+	# ========================================================
+
+	character:dragon_vhalyrax ?= {
+		segrellion_initialize_historical_dragon_effect = {
+			DRAGON = this
+		}
+	}
+
+	character:dragon_maenor ?= {
+		segrellion_initialize_historical_dragon_effect = {
+			DRAGON = this
+		}
+	}
+
+	character:dragon_nightdancer ?= {
+		segrellion_initialize_historical_dragon_effect = {
+			DRAGON = this
+		}
+	}
+
+	character:dragon_azuron ?= {
+		segrellion_initialize_historical_dragon_effect = {
+			DRAGON = this
+		}
+	}
+
+	character:dragon_rhaenyx ?= {
+		segrellion_initialize_historical_dragon_effect = {
+			DRAGON = this
+		}
+	}
+
+	character:dragon_valor ?= {
+		segrellion_initialize_historical_dragon_effect = {
+			DRAGON = this
+		}
+	}
+
+	character:dragon_aerox ?= {
+		segrellion_initialize_historical_dragon_effect = {
+			DRAGON = this
+		}
+	}
+
+	# ========================================================
 	# HISTORICAL CHARACTER BINDING
 	#
 	# If the bookmark begins after these dragons were born,
