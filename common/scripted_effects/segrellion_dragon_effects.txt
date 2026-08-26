@@ -360,25 +360,51 @@ segrellion_initialize_historical_dragon_effect = {
 		save_scope_as = segrellion_dragon_to_initialize
 	}
 
-
 	scope:segrellion_dragon_to_initialize = {
 
 		if = {
-
 			limit = {
-
-				is_alive = yes
 				has_trait = dragon
-
 				NOT = {
-					has_character_flag = segrellion_runtime_dna_initialized
+					any_in_global_list = {
+						variable = gl_dragon_variable_storage
+						var:dragon_id ?= scope:segrellion_dragon_to_initialize
+						has_variable = dragon_size_base
+						OR = {
+							var:dragon_size_base > 0
+							scope:segrellion_dragon_to_initialize = { age < 1 }
+						}
+					}
 				}
 			}
 
+			# Remove incomplete storage left by the old early-start setup.
+			# The canonical transfer below rebuilds one clean storage story.
+			every_in_global_list = {
+				variable = gl_dragon_variable_storage
+				limit = {
+					var:dragon_id ?= scope:segrellion_dragon_to_initialize
+				}
+				remove_list_global_variable = {
+					name = gl_dragon_variable_storage
+					target = this
+				}
+				end_story = yes
+			}
 
-			# Static history dragons do not pass through the
-			# normal AGOT hatchling creation pipeline.
-			create_story = story_dragon_alive
+			# AGOT already creates this story for every dragon in
+			# living_dragons. Only create it here when it is absent.
+			if = {
+				limit = {
+					is_alive = yes
+					NOT = {
+						any_owned_story = {
+							story_type = story_dragon_alive
+						}
+					}
+				}
+				create_story = story_dragon_alive
+			}
 
 
 			# =================================================
@@ -491,6 +517,29 @@ segrellion_initialize_historical_dragon_effect = {
 					DRAGON = this
 				}
 			}
+
+			# Keep living historical dragons in AGOT's canonical list.
+			if = {
+				limit = {
+					is_alive = yes
+					NOT = {
+						is_target_in_global_variable_list = {
+							name = living_dragons
+							target = scope:segrellion_dragon_to_initialize
+						}
+					}
+				}
+				add_to_global_variable_list = {
+					name = living_dragons
+					target = scope:segrellion_dragon_to_initialize
+				}
+			}
+
+			# Historical dead dragons need AGOT's dead-dragon setup too.
+			if = {
+				limit = { is_alive = no }
+				agot_dead_dragon_effect = yes
+			}
 		}
 	}
 }
@@ -507,8 +556,8 @@ segrellion_historical_dragons_progression_effect = {
 	# ========================================================
 	# INITIALIZE CUSTOM HISTORICAL DRAGONS
 	#
-	# Dynamic versions already have dragon_size and are skipped.
-	# Static history versions are initialized here.
+	# The real AGOT storage list is the source of truth. This also
+	# repairs saves where the old custom flag was set too early.
 	# ========================================================
 
 	character:dragon_vhalyrax ?= {

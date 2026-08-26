@@ -27,11 +27,11 @@ monthly_global_pulse = {
 
 on_game_start_after_lobby = {
     on_actions = {
-        segrellion_on_game_start_after_lobby
-        iaf_canon_children_on_game_start_after_lobby
-        vladwyn_8106_startup
-		segrellion_historical_dragons_progression
-    }
+		segrellion_on_game_start_after_lobby
+		iaf_canon_children_on_game_start_after_lobby
+		vladwyn_8106_startup
+		segrellion_historical_dragons_startup
+	}
 }
 
 on_player_select_destiny_confirmed = {
@@ -110,6 +110,16 @@ yearly_global_pulse = {
 segrellion_historical_dragons_progression = {
 	effect = {
 		segrellion_historical_dragons_progression_effect = yes
+	}
+}
+
+# AGOT builds living_dragons and its story storage during its own
+# game-start effect. Run our additions one day later so that setup is
+# complete regardless of merged on_action execution order.
+segrellion_historical_dragons_startup = {
+	on_actions = {
+		delay = { days = 1 }
+		segrellion_historical_dragons_progression
 	}
 }
 
