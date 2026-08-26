@@ -720,10 +720,6 @@ segrellion_search_for_legendary_relic_decision = {
 
 	decision_group_type = major
 
-	cooldown = {
-		years = 5
-	}
-
 	desc = segrellion_search_for_legendary_relic_decision_desc
 	selection_tooltip = segrellion_search_for_legendary_relic_decision_tooltip
 	confirm_text = segrellion_search_for_legendary_relic_decision_confirm
@@ -733,66 +729,90 @@ segrellion_search_for_legendary_relic_decision = {
 	# VISIBILITY
 	# =====================================================
 
-		is_shown = {
+	is_shown = {
 
-		is_adult = yes
+		OR = {
 
-		# El personaje debe pertenecer a la dinastía,
-		# o disponer de conocimiento histórico suficiente.
-		segrellion_can_search_legendary_relic_trigger = yes
+			# -------------------------------------------------
+			# DEBUG MODE
+			#
+			# Always visible. Ignores date, Icebringer,
+			# knowledge and active-search state.
+			# -------------------------------------------------
 
-		hidden_trigger = {
+			debug_only = yes
 
-			# La búsqueda no existe antes del final de 195 AC.
-			current_date >= 8196.1.1
 
-			# No mostrar la decisión mientras Icebringer exista.
-			NOT = {
-				segrellion_icebringer_exists_anywhere_trigger = yes
+			# -------------------------------------------------
+			# NORMAL GAME
+			# -------------------------------------------------
+
+			AND = {
+
+				is_adult = yes
+
+				segrellion_can_search_legendary_relic_trigger = yes
+
+				# Not before 196 AC.
+				current_date >= 8196.1.1
+
+				# The actual artifact must be lost.
+				NOT = {
+					segrellion_icebringer_exists_anywhere_trigger = yes
+				}
+
+				# Cannot start another search while one is active.
+				NOT = {
+					has_character_flag = segrellion_legendary_relic_search_active
+				}
 			}
-
-			# Tampoco después de que Icebringer haya despertado.
-			NOT = {
-				has_global_variable = segrellion_icebringer_has_awakened
-			}
-		}
-
-		NOT = {
-			has_character_flag = segrellion_legendary_relic_search_active
 		}
 	}
 
 
-	# =====================================================
+		# =====================================================
 	# REQUIREMENTS
 	# =====================================================
 
-		is_valid = {
+	is_valid = {
 
-		is_imprisoned = no
+		OR = {
 
-		NOT = {
-			has_trait = incapable
-		}
+			# DEBUG MODE:
+			# usable regardless of normal requirements.
+			debug_only = yes
 
-		custom_description = {
-			text = segrellion_search_relic_knowledge_requirement
-			segrellion_can_search_legendary_relic_trigger = yes
-		}
 
-		custom_description = {
-			text = segrellion_search_relic_icebringer_lost_requirement
+			# NORMAL GAME
+			AND = {
 
-			NOT = {
-				segrellion_icebringer_exists_anywhere_trigger = yes
-			}
-		}
+				is_imprisoned = no
 
-		custom_description = {
-			text = segrellion_search_relic_not_awakened_requirement
+				NOT = {
+					has_trait = incapable
+				}
 
-			NOT = {
-				has_global_variable = segrellion_icebringer_has_awakened
+				custom_description = {
+					text = segrellion_search_relic_knowledge_requirement
+
+					segrellion_can_search_legendary_relic_trigger = yes
+				}
+
+				custom_description = {
+					text = segrellion_search_relic_icebringer_lost_requirement
+
+					NOT = {
+						segrellion_icebringer_exists_anywhere_trigger = yes
+					}
+				}
+
+				custom_description = {
+					text = segrellion_search_relic_cooldown_requirement
+
+					NOT = {
+						has_character_flag = segrellion_legendary_relic_search_cooldown
+					}
+				}
 			}
 		}
 	}
@@ -884,7 +904,44 @@ segrellion_search_for_legendary_relic_decision = {
 		# Displayed as an actual effect before the cooldown notice.
 		custom_tooltip = segrellion_search_relic_multiple_journeys_effect_tt
 
+		# =====================================================
+		# DEBUG CLEANUP
+		#
+		# Allows restarting a broken search from scratch.
+		# =====================================================
+
+		if = {
+
+			limit = {
+				debug_only = yes
+			}
+
+			remove_character_flag = segrellion_legendary_relic_search_active
+			remove_character_flag = segrellion_legendary_relic_search_paused
+
+			remove_character_flag = segrellion_relic_route_tyrosh
+			remove_character_flag = segrellion_relic_route_oldtown
+			remove_character_flag = segrellion_relic_route_winterfell
+
+			remove_character_flag = segrellion_relic_winterfell_full_access
+
+			segrellion_clear_relic_pending_destination_effect = yes
+		}
+
+
+		# =====================================================
+		# BEGIN SEARCH
+		# =====================================================
+
 		add_character_flag = segrellion_legendary_relic_search_active
+
+		# Five-year cooldown.
+		# Debug ignores this because the Debug branch bypasses
+		# normal requirements.
+		add_character_flag = {
+			flag = segrellion_legendary_relic_search_cooldown
+			years = 5
+		}
 
 
 		# =====================================================

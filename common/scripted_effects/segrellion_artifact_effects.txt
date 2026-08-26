@@ -118,36 +118,6 @@ segrellion_find_icebringer_effect = {
 # LEGENDARY RELIC SEARCH
 # =========================================================
 
-segrellion_icebringer_exists_anywhere_trigger = {
-	OR = {
-		exists = global_var:segrellion_icebringer
-
-		any_artifact = {
-			has_variable = segrellion_icebringer_artifact
-		}
-	}
-}
-
-
-segrellion_can_search_legendary_relic_trigger = {
-	OR = {
-
-		# House Segrellion and its cadet houses.
-		dynasty = dynasty:dynn_Segrellion
-
-		# Segrellion historical knowledge.
-		AND = {
-			exists = var:segrellion_lore
-			var:segrellion_lore >= 5
-		}
-
-		# General draconic knowledge.
-		AND = {
-			exists = var:dragonlore
-			var:dragonlore >= 5
-		}
-	}
-}
 
 segrellion_refresh_icebringer_affinity_effect = {
 	segrellion_find_icebringer_effect = yes
@@ -1242,6 +1212,360 @@ segrellion_setup_throne_of_the_flamelands_history_effect = {
     }
 }
 
+# =========================================================
+# DEATHWISH
+# HISTORICAL VALYRIAN STEEL LONGSWORD
+#
+# Aeryn -> Aegon Dragonspear -> Elys -> Joffrey
+# =========================================================
+
+segrellion_create_artifact_deathwish_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 90
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 90
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+
+	create_artifact = {
+
+		name = segrellion_deathwish_name
+		description = segrellion_deathwish_desc
+
+		type = sword
+
+		visuals = segrellion_deathwish_visuals
+		template = segrellion_deathwish_template
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_deathwish_modifier
+
+		history = {
+			type = created_before_history
+			date = 7600.1.1
+		}
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+
+	scope:newly_created_artifact ?= {
+
+		equip_artifact_to_owner_replace = yes
+
+
+		# ---------------------------------------------
+		# GLOBAL REFERENCE
+		# ---------------------------------------------
+
+		set_global_variable = {
+			name = segrellion_deathwish
+			value = this
+		}
+
+
+		# ---------------------------------------------
+		# ARTIFACT FLAGS
+		# ---------------------------------------------
+
+		set_variable = {
+			name = valyrian_steel
+			value = yes
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = house:house_Segrellion
+		}
+
+		set_variable = {
+			name = segrellion_deathwish_artifact
+			value = yes
+		}
+
+
+		# =================================================
+		# HISTORICAL OWNERS
+		# =================================================
+
+
+		# -------------------------------------------------
+		# AERYN SEGRELLION
+		# Recorded bearer from his coming of age.
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8144.4.27
+			}
+
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8144.4.27
+				RECIPIENT = character:Segrellion_12
+			}
+		}
+
+
+		# -------------------------------------------------
+		# AEGON DRAGONSPEAR
+		# Inherits Deathwish after Aeryn's death.
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8168.6.13
+			}
+
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8168.6.13
+				RECIPIENT = character:Segrellion_21
+			}
+		}
+
+
+		# -------------------------------------------------
+		# ELYS SEGRELLION
+		# Inherits it after Dragonspear disappears.
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8205.9.24
+			}
+
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8205.9.24
+				RECIPIENT = character:Segrellion_26
+			}
+		}
+
+
+		# -------------------------------------------------
+		# JOFFREY SEGRELLION / STORMFLAME
+		#
+		# Elys dies in 218 AC.
+		# Joffrey inherits Deathwish at only two years old.
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8218.9.24
+			}
+
+			agot_add_artifact_history = {
+				ARTIFACT = this
+				TYPE = inherited
+				DATE = 8218.9.24
+				RECIPIENT = character:Segrellion_35
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DEATHWISH
+# VALYRIAN STEEL SWORD OF HOUSE VLADWYN
+#
+# Said to have been forged in Asshai-by-the-Shadow
+# from the heart of a necromancer.
+#
+# Hugh Vladwyn discovers it in Essos.
+# Hugh -> Addam -> Joffrey
+# =========================================================
+
+segrellion_create_artifact_deathwish_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 95
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 90
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+
+	create_artifact = {
+
+		name = segrellion_deathwish_name
+		description = segrellion_deathwish_desc
+
+		type = sword
+
+		visuals = segrellion_deathwish_visuals
+		template = segrellion_deathwish_template
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_deathwish_modifier
+
+
+		# =================================================
+		# CREATION
+		#
+		# Unlike a normal ancient artifact, Deathwish has
+		# a recorded legendary origin.
+		#
+		# The traditional date is deliberately ancient.
+		# =================================================
+
+		history = {
+			type = created
+			date = 7000.1.1
+		}
+
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+
+	scope:newly_created_artifact ?= {
+
+		equip_artifact_to_owner_replace = yes
+
+
+		# ---------------------------------------------
+		# GLOBAL REFERENCE
+		# ---------------------------------------------
+
+		set_global_variable = {
+			name = segrellion_deathwish
+			value = this
+		}
+
+
+		# ---------------------------------------------
+		# VALYRIAN STEEL / UNIQUE ARTIFACT
+		# ---------------------------------------------
+
+		set_variable = {
+			name = valyrian_steel
+			value = yes
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = house:house_Vladwyn
+		}
+
+		set_variable = {
+			name = segrellion_deathwish_artifact
+			value = yes
+		}
+
+
+		# =================================================
+		# HUGH VLADWYN DISCOVERS DEATHWISH
+		#
+		# 219 AC
+		#
+		# Hugh finds the weapon during his travels in Essos.
+		# Whatever place had concealed it had apparently
+		# remained undisturbed for centuries.
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8219.1.1
+			}
+
+			add_artifact_history = {
+				type = discovered
+				date = 8219.1.1
+				actor = character:Vladwyn_21
+				recipient = character:Vladwyn_21
+			}
+		}
+
+
+		# =================================================
+		# HUGH -> ADDAM
+		#
+		# Hugh dies in 250 AC.
+		# Deathwish passes to his eldest son Addam.
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8250.1.1
+			}
+
+			add_artifact_history = {
+				type = inherited
+				date = 8250.1.1
+				actor = character:Vladwyn_21
+				recipient = character:Vladwyn_22
+			}
+		}
+
+
+		# =================================================
+		# ADDAM -> JOFFREY
+		#
+		# Joffrey receives the ancestral blade while still
+		# a boy rather than waiting for Addam's death.
+		#
+		# Addam regards Deathwish as Joffrey's inheritance
+		# and formally places it in his son's keeping.
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8285.1.1
+			}
+
+			add_artifact_history = {
+				type = inherited
+				date = 8285.1.1
+				actor = character:Vladwyn_22
+				recipient = character:Vladwyn_5
+			}
+		}
+	}
+}
+
 
 
 segrellion_setup_historical_artifacts_effect = {
@@ -1251,6 +1575,7 @@ segrellion_setup_historical_artifacts_effect = {
     segrellion_setup_trueflame_history_effect = yes
     segrellion_setup_throne_of_the_flamelands_history_effect = yes
     segrellion_setup_dragonspear_lance_history_effect = yes
+	segrellion_setup_deathwish_history_effect = yes
 }
 
 # =========================================================
@@ -2597,6 +2922,205 @@ segrellion_create_artifact_crown_of_the_flameking_effect = {
 		set_variable = {
 			name = artifact_succession_title
 			value = title:e_flamelands
+		}
+	}
+}
+
+# =========================================================
+# DEATHWISH - HISTORICAL BOOKMARK SETUP
+# =========================================================
+
+segrellion_setup_deathwish_history_effect = {
+
+	if = {
+		limit = {
+
+			current_date >= 8219.1.1
+
+			NOT = {
+				exists = global_var:segrellion_deathwish
+			}
+		}
+
+
+		# =================================================
+		# 219 - 250 AC
+		# HUGH VLADWYN
+		# =================================================
+
+		if = {
+			limit = {
+
+				current_date < 8250.1.1
+
+				character:Vladwyn_21 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Vladwyn_21 = {
+
+				segrellion_create_artifact_deathwish_effect = {
+					OWNER = this
+				}
+			}
+		}
+
+
+		# =================================================
+		# 250 - 285 AC
+		# ADDAM VLADWYN
+		# =================================================
+
+		else_if = {
+			limit = {
+
+				current_date < 8285.1.1
+
+				character:Vladwyn_22 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Vladwyn_22 = {
+
+				segrellion_create_artifact_deathwish_effect = {
+					OWNER = this
+				}
+			}
+		}
+
+
+		# =================================================
+		# 285 AC+
+		# JOFFREY VLADWYN
+		# =================================================
+
+		else_if = {
+			limit = {
+
+				character:Vladwyn_5 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Vladwyn_5 = {
+
+				segrellion_create_artifact_deathwish_effect = {
+					OWNER = this
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# DEATHWISH - RUNTIME HISTORICAL PROGRESSION
+# =========================================================
+
+segrellion_deathwish_historical_progression_effect = {
+
+	# =====================================================
+	# FIND THE SWORD
+	#
+	# At 219 AC Hugh's Essosi journey has produced Deathwish.
+	# =====================================================
+
+	segrellion_setup_deathwish_history_effect = yes
+
+
+	if = {
+
+		limit = {
+			exists = global_var:segrellion_deathwish
+		}
+
+
+		# =================================================
+		# ADDAM -> JOFFREY
+		#
+		# Joffrey receives it at eight years old.
+		# Only enforce canon if Addam still owns it.
+		# =================================================
+
+		if = {
+			limit = {
+
+				current_date >= 8285.1.1
+
+				character:Vladwyn_5 ?= {
+					is_alive = yes
+				}
+
+				global_var:segrellion_deathwish = {
+
+					artifact_owner ?= {
+						this = character:Vladwyn_22
+					}
+				}
+			}
+
+			global_var:segrellion_deathwish = {
+
+				set_artifact_owner = {
+
+					target = character:Vladwyn_5
+
+					history = {
+						type = inherited
+						date = 8285.1.1
+						actor = character:Vladwyn_22
+						recipient = character:Vladwyn_5
+					}
+
+					generate_history = no
+				}
+
+				equip_artifact_to_owner_replace = yes
+			}
+		}
+
+
+		# =================================================
+		# HUGH -> ADDAM
+		# =================================================
+
+		else_if = {
+			limit = {
+
+				current_date >= 8250.1.1
+				current_date < 8285.1.1
+
+				character:Vladwyn_22 ?= {
+					is_alive = yes
+				}
+
+				global_var:segrellion_deathwish = {
+
+					artifact_owner ?= {
+						this = character:Vladwyn_21
+					}
+				}
+			}
+
+			global_var:segrellion_deathwish = {
+
+				set_artifact_owner = {
+
+					target = character:Vladwyn_22
+
+					history = {
+						type = inherited
+						date = 8250.1.1
+						actor = character:Vladwyn_21
+						recipient = character:Vladwyn_22
+					}
+
+					generate_history = no
+				}
+
+				equip_artifact_to_owner_replace = yes
+			}
 		}
 	}
 }
