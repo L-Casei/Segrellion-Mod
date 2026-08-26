@@ -115,6 +115,7 @@ yearly_global_pulse = {
 		segrellion_refresh_firstflame_dynasty_bonus
 		segrellion_refresh_icebringer_affinity
 		segrellion_refresh_heir_of_the_unicorn
+		segrellion_beacon_flavor_yearly_check
 	}
 }
 
@@ -849,5 +850,87 @@ segrellion_winds.0404 = {
 		}
 
 		segrellion_spare_all_stormflame_captives_effect = yes
+	}
+}
+
+# =========================================================
+# THE BEACON - YEARLY CASTLE FLAVOR
+# =========================================================
+
+segrellion_beacon_flavor_yearly_check = {
+
+	effect = {
+
+		title:c_farring_cross.holder ?= {
+
+			if = {
+				limit = {
+
+					is_alive = yes
+					is_adult = yes
+
+					title:b_castle_farring.title_province = {
+						has_building_or_higher = segrellion_beacon_01
+					}
+				}
+
+
+				# =================================================
+				# DRAGONSPEAR'S PLANS
+				#
+				# The plans remain useful to whoever controls the
+				# Beacon until the final expansion is completed.
+				# =================================================
+
+				if = {
+					limit = {
+
+						title:b_castle_farring.title_province = {
+
+							has_variable = segrellion_dragonspear_plans_studied
+
+							NOT = {
+								has_building_or_higher = segrellion_beacon_05
+							}
+						}
+
+						NOT = {
+							has_character_modifier = segrellion_dragonspear_plans_modifier
+						}
+					}
+
+					add_character_modifier = {
+						modifier = segrellion_dragonspear_plans_modifier
+						years = 2
+					}
+				}
+
+				else_if = {
+					limit = {
+
+						has_character_modifier = segrellion_dragonspear_plans_modifier
+
+						title:b_castle_farring.title_province = {
+							has_building_or_higher = segrellion_beacon_05
+						}
+					}
+
+					remove_character_modifier = segrellion_dragonspear_plans_modifier
+				}
+
+
+				# =================================================
+				# BEACON EVENT
+				#
+				# 35% yearly chance = roughly one every 2.8 years.
+				# =================================================
+
+				random = {
+					chance = 35
+
+					segrellion_beacon_flavor_pool_effect = yes
+				}
+			}
+		}
 	}
 }

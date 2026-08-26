@@ -1,0 +1,208 @@
+# =========================================================
+# THE BEACON - FLAVOR EVENT SYSTEM
+# =========================================================
+
+
+# =========================================================
+# REPEATABLE SEGRELLION LORE
+#
+# The existing segrellion_add_lore_effect also marks a POI
+# as visited. Castle events must not do that, so they use
+# this smaller repeatable helper instead.
+# =========================================================
+
+segrellion_beacon_add_lore_effect = {
+
+	if = {
+		limit = {
+			exists = var:segrellion_lore
+		}
+
+		change_variable = {
+			name = segrellion_lore
+			add = $AMOUNT$
+		}
+	}
+
+	else = {
+
+		set_variable = {
+			name = segrellion_lore
+			value = $AMOUNT$
+		}
+	}
+}
+
+
+# =========================================================
+# MAIN BEACON POOL
+#
+# MUNDANE             40
+# HISTORICAL          30
+# DISCOVERIES         20
+# STRANGE / AMBIGUOUS 10
+#
+# TOTAL              100
+# =========================================================
+
+segrellion_beacon_flavor_pool_effect = {
+
+	random_list = {
+
+
+		# =================================================
+		# MUNDANE CASTLE LIFE - 40%
+		# =================================================
+
+		10 = {
+			trigger_event = segrellion_beacon.1001
+			# The Blue Gardens
+		}
+
+		10 = {
+			trigger_event = segrellion_beacon.1004
+			# A Soldier's Name
+		}
+
+		10 = {
+			trigger_event = segrellion_beacon.1008
+			# The Beacon Fire
+		}
+
+		10 = {
+			trigger_event = segrellion_beacon.1009
+			# Petition of the Old Families
+		}
+
+
+		# =================================================
+		# HISTORICAL - 30%
+		# =================================================
+
+		10 = {
+			trigger_event = segrellion_beacon.1003
+			# The Old Unicorn
+		}
+
+		10 = {
+
+			# Dragonspear's plans physically exist only once.
+			# After their discovery, another historical Beacon
+			# event occupies this weight instead.
+
+			if = {
+				limit = {
+					NOT = {
+						has_global_variable = segrellion_beacon_dragonspear_plans_found
+					}
+				}
+
+				trigger_event = segrellion_beacon.1005
+			}
+
+			else = {
+				trigger_event = segrellion_beacon.1003
+			}
+		}
+
+		10 = {
+			trigger_event = segrellion_beacon.1006
+			# The Black Moon Story
+		}
+
+
+		# =================================================
+		# DISCOVERIES - 20%
+		# =================================================
+
+		10 = {
+			trigger_event = segrellion_beacon.1002
+			# Beneath the Beacon
+		}
+
+		10 = {
+			trigger_event = segrellion_beacon.1007
+			# The Forgotten Cellar
+		}
+
+
+		# =================================================
+		# STRANGE / AMBIGUOUS - 10%
+		# =================================================
+
+		5 = {
+			trigger_event = segrellion_beacon.1010
+			# A Sword Mark in Stone
+		}
+
+
+		# =================================================
+		# VERY RARE BEACON DISCOVERIES - 5%
+		#
+		# Because the entire Beacon pool itself only fires
+		# 35% yearly, any rare event appears approximately
+		# once every 57 years.
+		#
+		# An individual rare event is much rarer still.
+		# =================================================
+
+		5 = {
+
+			random_list = {
+
+				1 = {
+
+					if = {
+						limit = {
+							NOT = {
+								has_global_variable = segrellion_beacon_sealed_letter_found
+							}
+						}
+
+						trigger_event = segrellion_beacon.9001
+					}
+
+					else = {
+						trigger_event = segrellion_beacon.1010
+					}
+				}
+
+
+				1 = {
+
+					if = {
+						limit = {
+							NOT = {
+								has_global_variable = segrellion_beacon_child_compartment_found
+							}
+						}
+
+						trigger_event = segrellion_beacon.9002
+					}
+
+					else = {
+						trigger_event = segrellion_beacon.1010
+					}
+				}
+
+
+				1 = {
+
+					if = {
+						limit = {
+							NOT = {
+								has_global_variable = segrellion_beacon_empty_pedestal_found
+							}
+						}
+
+						trigger_event = segrellion_beacon.9003
+					}
+
+					else = {
+						trigger_event = segrellion_beacon.1010
+					}
+				}
+			}
+		}
+	}
+}
