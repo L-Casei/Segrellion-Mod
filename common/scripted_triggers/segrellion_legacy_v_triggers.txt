@@ -5,111 +5,112 @@
 
 
 # =========================================================
-# GREAT HOUSE TARGET
+# VALID GREAT HOUSE
+#
+# CALLER = character making the request
 # =========================================================
 
 segrellion_legacy_v_valid_great_house_target_trigger = {
 
-    is_alive = yes
-    is_adult = yes
-    is_ruler = yes
-    is_imprisoned = no
+	is_alive = yes
+	is_adult = yes
+	is_ruler = yes
+	is_imprisoned = no
 
-    NOT = {
-        this = root
-    }
+	highest_held_title_tier >= tier_kingdom
 
-    # Only major rulers / Lords Paramount / Kings / Emperors.
-    highest_held_title_tier >= tier_kingdom
+	NOT = {
+		this = $CALLER$
+	}
 
-    # Religious rulers are not considered Great Houses
-    # for the purposes of this legacy.
-    NOR = {
-        government_has_flag = government_is_theocracy
-        government_has_flag = government_is_holy_order
-        is_theocratic_lessee = yes
+	# Never ask someone who is currently fighting
+	# directly against the caller.
+	NOT = {
+		is_at_war_with = $CALLER$
+	}
 
-        faith.religious_head ?= this
-    }
+	NOR = {
+		government_has_flag = government_is_theocracy
+		government_has_flag = government_is_holy_order
+		is_theocratic_lessee = yes
+
+		faith.religious_head ?= this
+	}
 }
 
 
 # =========================================================
-# DOES THE HOUSE HEAD HAVE A VALID GREAT HOUSE TO CALL UPON?
-# =========================================================
-
-segrellion_legacy_v_has_valid_target_trigger = {
-
-    OR = {
-
-        # -------------------------------------------------
-        # VASSAL RULER
-        #
-        # Other great vassals beneath the same liege.
-        # This is the normal AGOT Lord Paramount situation.
-        # -------------------------------------------------
-
-        AND = {
-
-            exists = liege
-
-            liege = {
-
-                any_vassal = {
-
-                    segrellion_legacy_v_valid_great_house_target_trigger = yes
-                }
-            }
-        }
-
-
-        # -------------------------------------------------
-        # INDEPENDENT RULER
-        #
-        # Neighboring independent Kings / Emperors.
-        # -------------------------------------------------
-
-        AND = {
-
-            is_independent_ruler = yes
-
-            any_neighboring_top_liege_realm_owner = {
-
-                segrellion_legacy_v_valid_great_house_target_trigger = yes
-            }
-        }
-    }
-}
-
-
-# =========================================================
-# BASIC MARRIAGE CANDIDATE
-# =========================================================
-
-segrellion_legacy_v_free_marriage_candidate_trigger = {
-
-    is_alive = yes
-    is_imprisoned = no
-
-    is_married = no
-    is_betrothed = no
-    is_concubine = no
-
-    can_marry_trigger = yes
-}
-
-
-# =========================================================
-# CANDIDATE FROM THE OTHER COURT
+# CAN THIS LORD JOIN THIS WAR?
 #
-# Requires scope:segrellion_marriage_our_candidate.
+# Scope = WAR
+#
+# CALLER = Segrellion ruler
+# TARGET = Lord Paramount being asked
+#
+# A war is NOT eligible if:
+# - TARGET is already in it
+# - TARGET is fighting CALLER
+# - the opposing primary ruler is TARGET
+# - the opposing primary ruler is TARGET's vassal
 # =========================================================
 
-segrellion_legacy_v_valid_target_marriage_candidate_trigger = {
+segrellion_legacy_v_callable_war_trigger = {
 
-    segrellion_legacy_v_free_marriage_candidate_trigger = yes
+	OR = {
 
-    can_marry_character_trigger = {
-        CHARACTER = scope:segrellion_marriage_our_candidate
-    }
+		# -------------------------------------------------
+		# CALLER IS ON THE ATTACKING SIDE
+		# -------------------------------------------------
+
+		AND = {
+
+			is_attacker = $CALLER$
+
+			NOT = {
+				is_attacker = $TARGET$
+			}
+
+			NOT = {
+				is_defender = $TARGET$
+			}
+
+			primary_defender = {
+
+				NOR = {
+
+					this = $TARGET$
+
+					is_vassal_or_below_of = $TARGET$
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# CALLER IS ON THE DEFENDING SIDE
+		# -------------------------------------------------
+
+		AND = {
+
+			is_defender = $CALLER$
+
+			NOT = {
+				is_attacker = $TARGET$
+			}
+
+			NOT = {
+				is_defender = $TARGET$
+			}
+
+			primary_attacker = {
+
+				NOR = {
+
+					this = $TARGET$
+
+					is_vassal_or_below_of = $TARGET$
+				}
+			}
+		}
+	}
 }

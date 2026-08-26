@@ -45,3 +45,162 @@ segrellion_convert_inherited_unicorn_heir_effect = {
 		}
 	}
 }
+
+
+# =========================================================
+# LEGACY V
+# CALL UPON THE GREAT HOUSES
+# =========================================================
+
+segrellion_call_upon_great_houses_effect = {
+
+	save_scope_as = segrellion_great_house_caller
+
+
+	# =====================================================
+	# NORMAL WESTEROS
+	#
+	# If the Iron Throne exists, ask every major direct
+	# vassal of the Iron Throne.
+	#
+	# This naturally includes the Lords Paramount and also
+	# custom Paramountcies such as the Flamelands.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			title:h_the_iron_throne.holder ?= {
+				is_alive = yes
+			}
+		}
+
+		title:h_the_iron_throne.holder = {
+
+			every_vassal = {
+
+				limit = {
+
+					segrellion_legacy_v_valid_great_house_target_trigger = {
+						CALLER = scope:segrellion_great_house_caller
+					}
+				}
+
+				save_scope_as = segrellion_great_house_recipient
+
+
+				# Only send the letter if there is at least
+				# one current war this ruler could join.
+
+				if = {
+
+					limit = {
+
+						scope:segrellion_great_house_caller = {
+
+							any_character_war = {
+
+								segrellion_legacy_v_callable_war_trigger = {
+									CALLER = scope:segrellion_great_house_caller
+									TARGET = scope:segrellion_great_house_recipient
+								}
+							}
+						}
+					}
+
+					trigger_event = segrellion_legacy.5110
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# FALLBACK
+	#
+	# For shattered realms / Iron Throne destroyed.
+	# If the caller has a liege, call the other great
+	# vassals beneath that liege.
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			exists = liege
+		}
+
+		liege = {
+
+			every_vassal = {
+
+				limit = {
+
+					segrellion_legacy_v_valid_great_house_target_trigger = {
+						CALLER = scope:segrellion_great_house_caller
+					}
+				}
+
+				save_scope_as = segrellion_great_house_recipient
+
+				if = {
+
+					limit = {
+
+						scope:segrellion_great_house_caller = {
+
+							any_character_war = {
+
+								segrellion_legacy_v_callable_war_trigger = {
+									CALLER = scope:segrellion_great_house_caller
+									TARGET = scope:segrellion_great_house_recipient
+								}
+							}
+						}
+					}
+
+					trigger_event = segrellion_legacy.5110
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# INDEPENDENT / NO IRON THRONE
+	# =====================================================
+
+	else = {
+
+		every_neighboring_top_liege_realm_owner = {
+
+			limit = {
+
+				segrellion_legacy_v_valid_great_house_target_trigger = {
+					CALLER = scope:segrellion_great_house_caller
+				}
+			}
+
+			save_scope_as = segrellion_great_house_recipient
+
+			if = {
+
+				limit = {
+
+					scope:segrellion_great_house_caller = {
+
+						any_character_war = {
+
+							segrellion_legacy_v_callable_war_trigger = {
+								CALLER = scope:segrellion_great_house_caller
+								TARGET = scope:segrellion_great_house_recipient
+							}
+						}
+					}
+				}
+
+				trigger_event = segrellion_legacy.5110
+			}
+		}
+	}
+}

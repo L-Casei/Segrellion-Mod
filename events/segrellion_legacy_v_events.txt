@@ -2,2171 +2,56 @@ namespace = segrellion_legacy
 
 
 # ============================================================
-# 5000 - INTRODUCTION
-# ============================================================
-
-segrellion_legacy.5000 = {
-	type = character_event
-	title = segrellion_legacy.5000.t
-	desc = segrellion_legacy.5000.desc
-	theme = diplomacy
-
-	left_portrait = {
-		character = root
-		animation = personality_honorable
-	}
-
-	option = {
-		name = segrellion_legacy.5000.a
-		trigger_event = segrellion_legacy.5001
-	}
-
-	option = {
-		name = segrellion_legacy.5000.b
-	}
-}
-
-
-# ============================================================
-# 5001 - PEER SELECTION - PAGE 1
+# 5110
+# THE UNICORN CALLS
 #
-# Five characters displayed.
-# Sixth is only saved as a probe to determine whether
-# a Next Page button is necessary.
-# ============================================================
-
-segrellion_legacy.5001 = {
-	type = character_event
-	title = segrellion_legacy.5001.t
-	desc = segrellion_legacy.selector_blank
-	theme = diplomacy
-
-	immediate = {
-
-		# =====================================================
-		# VASSAL HOUSE HEAD
-		# Other Great Houses beneath the same liege
-		# =====================================================
-
-		if = {
-			limit = {
-				exists = liege
-			}
-
-			liege = {
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 0
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_1
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 1
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_2
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 2
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_3
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 3
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_4
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 4
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_5
-				}
-
-				# Probe for page 2
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 5
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_6_probe
-				}
-			}
-		}
-
-
-		# =====================================================
-		# INDEPENDENT HOUSE HEAD
-		# Neighboring independent Great Houses
-		# =====================================================
-
-		else_if = {
-			limit = {
-				is_independent_ruler = yes
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 0
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_1
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 1
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_2
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 2
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_3
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 3
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_4
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 4
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_5
-			}
-
-			# Probe for page 2
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 5
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_6_probe
-			}
-		}
-	}
-		left_portrait = {
-			character = scope:segrellion_peer_1
-		}
-
-		right_portrait = {
-			character = scope:segrellion_peer_2
-		}
-
-		lower_left_portrait = {
-			character = scope:segrellion_peer_3
-		}
-
-		lower_center_portrait = {
-			character = scope:segrellion_peer_4
-		}
-
-		lower_right_portrait = {
-			character = scope:segrellion_peer_5
-		}
-		option = {
-			trigger = {
-				exists = scope:segrellion_peer_1
-			}
-
-			name = segrellion_legacy.select_peer_1
-			highlight_portrait = scope:segrellion_peer_1
-
-			scope:segrellion_peer_1 = {
-				save_scope_as = segrellion_favor_target
-			}
-
-			trigger_event = segrellion_legacy.5010
-		}
-
-		option = {
-			trigger = {
-				exists = scope:segrellion_peer_2
-			}
-
-			name = segrellion_legacy.select_peer_2
-			highlight_portrait = scope:segrellion_peer_2
-
-			scope:segrellion_peer_2 = {
-				save_scope_as = segrellion_favor_target
-			}
-
-			trigger_event = segrellion_legacy.5010
-		}
-
-		option = {
-			trigger = {
-				exists = scope:segrellion_peer_3
-			}
-
-			name = segrellion_legacy.select_peer_3
-			highlight_portrait = scope:segrellion_peer_3
-
-			scope:segrellion_peer_3 = {
-				save_scope_as = segrellion_favor_target
-			}
-
-			trigger_event = segrellion_legacy.5010
-		}
-
-		option = {
-			trigger = {
-				exists = scope:segrellion_peer_4
-			}
-
-			name = segrellion_legacy.select_peer_4
-			highlight_portrait = scope:segrellion_peer_4
-
-			scope:segrellion_peer_4 = {
-				save_scope_as = segrellion_favor_target
-			}
-
-			trigger_event = segrellion_legacy.5010
-		}
-
-		option = {
-			trigger = {
-				exists = scope:segrellion_peer_5
-			}
-
-			name = segrellion_legacy.select_peer_5
-			highlight_portrait = scope:segrellion_peer_5
-
-			scope:segrellion_peer_5 = {
-				save_scope_as = segrellion_favor_target
-			}
-
-			trigger_event = segrellion_legacy.5010
-		}
-
-
-		option = {
-			trigger = {
-				exists = scope:segrellion_peer_6_probe
-			}
-
-			name = segrellion_legacy.next_page
-			trigger_event = segrellion_legacy.5002
-		}
-
-
-		option = {
-			name = segrellion_legacy.cancel
-		}
-}
-
-
-
-# ============================================================
-# 5002 - PEER SELECTION - PAGE 2
-# ============================================================
-
-segrellion_legacy.5002 = {
-	type = character_event
-	title = segrellion_legacy.5001.t
-	desc = segrellion_legacy.selector_blank
-	theme = diplomacy
-
-	immediate = {
-
-		# =====================================================
-		# VASSAL HOUSE HEAD
-		# Positions 5-10
-		# =====================================================
-
-		if = {
-			limit = {
-				exists = liege
-			}
-
-			liege = {
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 5
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_6
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 6
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_7
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 7
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_8
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 8
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_9
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 9
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_10
-				}
-
-				# Probe for page 3
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 10
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_11_probe
-				}
-			}
-		}
-
-
-		# =====================================================
-		# INDEPENDENT HOUSE HEAD
-		# Positions 5-10
-		# =====================================================
-
-		else_if = {
-			limit = {
-				is_independent_ruler = yes
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 5
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_6
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 6
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_7
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 7
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_8
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 8
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_9
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 9
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_10
-			}
-
-			# Probe for page 3
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 10
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_11_probe
-			}
-		}
-	}
-
-
-	left_portrait = {
-		character = scope:segrellion_peer_6
-	}
-
-	right_portrait = {
-		character = scope:segrellion_peer_7
-	}
-
-	lower_left_portrait = {
-		character = scope:segrellion_peer_8
-	}
-
-	lower_center_portrait = {
-		character = scope:segrellion_peer_9
-	}
-
-	lower_right_portrait = {
-		character = scope:segrellion_peer_10
-	}
-
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_6 }
-		name = segrellion_legacy.select_peer_6
-		highlight_portrait = scope:segrellion_peer_6
-
-		scope:segrellion_peer_6 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_7 }
-		name = segrellion_legacy.select_peer_7
-		highlight_portrait = scope:segrellion_peer_7
-
-		scope:segrellion_peer_7 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_8 }
-		name = segrellion_legacy.select_peer_8
-		highlight_portrait = scope:segrellion_peer_8
-
-		scope:segrellion_peer_8 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_9 }
-		name = segrellion_legacy.select_peer_9
-		highlight_portrait = scope:segrellion_peer_9
-
-		scope:segrellion_peer_9 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_10 }
-		name = segrellion_legacy.select_peer_10
-		highlight_portrait = scope:segrellion_peer_10
-
-		scope:segrellion_peer_10 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-
-	option = {
-		name = segrellion_legacy.previous_page
-		trigger_event = segrellion_legacy.5001
-	}
-
-	option = {
-		trigger = {
-			exists = scope:segrellion_peer_11_probe
-		}
-
-		name = segrellion_legacy.next_page
-		trigger_event = segrellion_legacy.5003
-	}
-}
-
-
-# ============================================================
-# 5003 - PEER SELECTION - PAGE 3
-# ============================================================
-
-segrellion_legacy.5003 = {
-	type = character_event
-	title = segrellion_legacy.5001.t
-	desc = segrellion_legacy.selector_blank
-	theme = diplomacy
-
-	immediate = {
-
-		# =====================================================
-		# VASSAL HOUSE HEAD
-		# Positions 10-14
-		# =====================================================
-
-		if = {
-			limit = {
-				exists = liege
-			}
-
-			liege = {
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 10
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_11
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 11
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_12
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 12
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_13
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 13
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_14
-				}
-
-				ordered_vassal = {
-					limit = {
-						segrellion_legacy_v_valid_great_house_target_trigger = yes
-					}
-					order_by = max_military_strength
-					position = 14
-					check_range_bounds = no
-					save_scope_as = segrellion_peer_15
-				}
-			}
-		}
-
-
-		# =====================================================
-		# INDEPENDENT HOUSE HEAD
-		# Positions 10-14
-		# =====================================================
-
-		else_if = {
-			limit = {
-				is_independent_ruler = yes
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 10
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_11
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 11
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_12
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 12
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_13
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 13
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_14
-			}
-
-			ordered_neighboring_top_liege_realm_owner = {
-				limit = {
-					segrellion_legacy_v_valid_great_house_target_trigger = yes
-				}
-				order_by = max_military_strength
-				position = 14
-				check_range_bounds = no
-				save_scope_as = segrellion_peer_15
-			}
-		}
-	}
-
-	left_portrait = {
-		character = scope:segrellion_peer_11
-	}
-
-	right_portrait = {
-		character = scope:segrellion_peer_12
-	}
-
-	lower_left_portrait = {
-		character = scope:segrellion_peer_13
-	}
-
-	lower_center_portrait = {
-		character = scope:segrellion_peer_14
-	}
-
-	lower_right_portrait = {
-		character = scope:segrellion_peer_15
-	}
-
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_11 }
-		name = segrellion_legacy.select_peer_11
-		highlight_portrait = scope:segrellion_peer_11
-
-		scope:segrellion_peer_11 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_12 }
-		name = segrellion_legacy.select_peer_12
-		highlight_portrait = scope:segrellion_peer_12
-
-		scope:segrellion_peer_12 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_13 }
-		name = segrellion_legacy.select_peer_13
-		highlight_portrait = scope:segrellion_peer_13
-
-		scope:segrellion_peer_13 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_14 }
-		name = segrellion_legacy.select_peer_14
-		highlight_portrait = scope:segrellion_peer_14
-
-		scope:segrellion_peer_14 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-	option = {
-		trigger = { exists = scope:segrellion_peer_15 }
-		name = segrellion_legacy.select_peer_15
-		highlight_portrait = scope:segrellion_peer_15
-
-		scope:segrellion_peer_15 = {
-			save_scope_as = segrellion_favor_target
-		}
-
-		trigger_event = segrellion_legacy.5010
-	}
-
-
-	option = {
-		name = segrellion_legacy.previous_page
-		trigger_event = segrellion_legacy.5002
-	}
-}
-
-
-# ============================================================
-# 5010 - CHOOSE THE FAVOR
-# ============================================================
-
-segrellion_legacy.5010 = {
-    type = character_event
-    title = segrellion_legacy.5010.t
-    desc = segrellion_legacy.5010.desc
-    theme = diplomacy
-
-    left_portrait = {
-        character = root
-        animation = personality_honorable
-    }
-
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
-
-
-    # ========================================================
-    # GOLD
-    # ========================================================
-
-    option = {
-        trigger = {
-            scope:segrellion_favor_target = {
-                gold > 0
-            }
-        }
-
-        name = segrellion_legacy.5010.gold
-
-        # The request is now formally sent.
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-
-        scope:segrellion_favor_target = {
-            trigger_event = segrellion_legacy.5100
-        }
-    }
-
-
-    # ========================================================
-    # WAR
-    #
-    # We no longer pick a war randomly.
-    # The player first chooses the war.
-    # ========================================================
-
-    option = {
-        trigger = {
-            any_character_war = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-        }
-
-        name = segrellion_legacy.5010.war
-
-        trigger_event = segrellion_legacy.5030
-    }
-
-
-    # ========================================================
-    # MARRIAGE
-    #
-    # We first choose someone from our own court.
-    # ========================================================
-
-    option = {
-        trigger = {
-
-            OR = {
-
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-
-                any_courtier = {
-                    segrellion_legacy_v_free_marriage_candidate_trigger = yes
-                }
-            }
-
-            scope:segrellion_favor_target = {
-
-                OR = {
-
-                    segrellion_legacy_v_free_marriage_candidate_trigger = yes
-
-                    any_courtier = {
-                        segrellion_legacy_v_free_marriage_candidate_trigger = yes
-                    }
-                }
-            }
-        }
-
-        name = segrellion_legacy.5010.marriage
-
-        trigger_event = segrellion_legacy.5040
-    }
-
-
-    option = {
-        name = segrellion_legacy.5010.back
-        trigger_event = segrellion_legacy.5001
-    }
-
-    option = {
-        name = segrellion_legacy.cancel
-    }
-}
-
-# ============================================================
-# 5030 - CHOOSE WAR - PAGE 1
-# ============================================================
-
-segrellion_legacy.5030 = {
-    type = character_event
-    title = segrellion_legacy.5030.t
-    desc = segrellion_legacy.5030.desc
-    theme = battle
-
-    left_portrait = {
-        character = root
-    }
-
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
-
-    immediate = {
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 0
-            check_range_bounds = no
-            save_scope_as = segrellion_war_1
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 1
-            check_range_bounds = no
-            save_scope_as = segrellion_war_2
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 2
-            check_range_bounds = no
-            save_scope_as = segrellion_war_3
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 3
-            check_range_bounds = no
-            save_scope_as = segrellion_war_4
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 4
-            check_range_bounds = no
-            save_scope_as = segrellion_war_5
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 5
-            check_range_bounds = no
-            save_scope_as = segrellion_war_6_probe
-        }
-    }
-
-
-    option = {
-        trigger = { exists = scope:segrellion_war_1 }
-        name = segrellion_legacy.select_war_1
-
-        scope:segrellion_war_1 = {
-            save_scope_as = segrellion_requested_war
-        }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-
-        scope:segrellion_favor_target = {
-            trigger_event = segrellion_legacy.5110
-        }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_2 }
-        name = segrellion_legacy.select_war_2
-
-        scope:segrellion_war_2 = {
-            save_scope_as = segrellion_requested_war
-        }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-
-        scope:segrellion_favor_target = {
-            trigger_event = segrellion_legacy.5110
-        }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_3 }
-        name = segrellion_legacy.select_war_3
-
-        scope:segrellion_war_3 = {
-            save_scope_as = segrellion_requested_war
-        }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-
-        scope:segrellion_favor_target = {
-            trigger_event = segrellion_legacy.5110
-        }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_4 }
-        name = segrellion_legacy.select_war_4
-
-        scope:segrellion_war_4 = {
-            save_scope_as = segrellion_requested_war
-        }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-
-        scope:segrellion_favor_target = {
-            trigger_event = segrellion_legacy.5110
-        }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_5 }
-        name = segrellion_legacy.select_war_5
-
-        scope:segrellion_war_5 = {
-            save_scope_as = segrellion_requested_war
-        }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-
-        scope:segrellion_favor_target = {
-            trigger_event = segrellion_legacy.5110
-        }
-    }
-
-    option = {
-        trigger = {
-            exists = scope:segrellion_war_6_probe
-        }
-
-        name = segrellion_legacy.next_page
-        trigger_event = segrellion_legacy.5031
-    }
-
-    option = {
-        name = segrellion_legacy.5010.back
-        trigger_event = segrellion_legacy.5010
-    }
-}
-
-
-# ============================================================
-# 5031 - CHOOSE WAR - PAGE 2
-# ============================================================
-
-segrellion_legacy.5031 = {
-    type = character_event
-    title = segrellion_legacy.5030.t
-    desc = segrellion_legacy.5030.desc
-    theme = battle
-
-    left_portrait = {
-        character = root
-    }
-
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
-
-    immediate = {
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 5
-            check_range_bounds = no
-            save_scope_as = segrellion_war_1
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 6
-            check_range_bounds = no
-            save_scope_as = segrellion_war_2
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 7
-            check_range_bounds = no
-            save_scope_as = segrellion_war_3
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 8
-            check_range_bounds = no
-            save_scope_as = segrellion_war_4
-        }
-
-        ordered_character_war = {
-            limit = {
-                OR = {
-                    primary_attacker = root
-                    primary_defender = root
-                }
-            }
-            order_by = 0
-            position = 9
-            check_range_bounds = no
-            save_scope_as = segrellion_war_5
-        }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_1 }
-        name = segrellion_legacy.select_war_1
-        scope:segrellion_war_1 = { save_scope_as = segrellion_requested_war }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-        scope:segrellion_favor_target = { trigger_event = segrellion_legacy.5110 }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_2 }
-        name = segrellion_legacy.select_war_2
-        scope:segrellion_war_2 = { save_scope_as = segrellion_requested_war }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-        scope:segrellion_favor_target = { trigger_event = segrellion_legacy.5110 }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_3 }
-        name = segrellion_legacy.select_war_3
-        scope:segrellion_war_3 = { save_scope_as = segrellion_requested_war }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-        scope:segrellion_favor_target = { trigger_event = segrellion_legacy.5110 }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_4 }
-        name = segrellion_legacy.select_war_4
-        scope:segrellion_war_4 = { save_scope_as = segrellion_requested_war }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-        scope:segrellion_favor_target = { trigger_event = segrellion_legacy.5110 }
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_war_5 }
-        name = segrellion_legacy.select_war_5
-        scope:segrellion_war_5 = { save_scope_as = segrellion_requested_war }
-
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-        scope:segrellion_favor_target = { trigger_event = segrellion_legacy.5110 }
-    }
-
-    option = {
-        name = segrellion_legacy.previous_page
-        trigger_event = segrellion_legacy.5030
-    }
-}
-
-
-# ============================================================
-# 5040 - OUR MARRIAGE CANDIDATE - PAGE 1
-# ============================================================
-
-segrellion_legacy.5040 = {
-    type = character_event
-    title = segrellion_legacy.5040.t
-    desc = segrellion_legacy.5040.desc
-    theme = diplomacy
-
-    immediate = {
-
-        ordered_courtier = {
-            limit = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-            order_by = age
-            position = 0
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_1
-        }
-
-        ordered_courtier = {
-            limit = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-            order_by = age
-            position = 1
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_2
-        }
-
-        ordered_courtier = {
-            limit = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-            order_by = age
-            position = 2
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_3
-        }
-
-        ordered_courtier = {
-            limit = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-            order_by = age
-            position = 3
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_4
-        }
-
-        ordered_courtier = {
-            limit = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-            order_by = age
-            position = 4
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_5
-        }
-
-        ordered_courtier = {
-            limit = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-            order_by = age
-            position = 5
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_6_probe
-        }
-    }
-
-    left_portrait = {
-        character = scope:segrellion_our_candidate_1
-    }
-
-    right_portrait = {
-        character = scope:segrellion_our_candidate_2
-    }
-
-    lower_left_portrait = {
-        character = scope:segrellion_our_candidate_3
-    }
-
-    lower_center_portrait = {
-        character = scope:segrellion_our_candidate_4
-    }
-
-    lower_right_portrait = {
-        character = scope:segrellion_our_candidate_5
-    }
-
-
-    # YOU YOURSELF ARE A VALID CANDIDATE
-    option = {
-        trigger = {
-            segrellion_legacy_v_free_marriage_candidate_trigger = yes
-        }
-
-        name = segrellion_legacy.marriage_myself
-
-        save_scope_as = segrellion_marriage_our_candidate
-
-        trigger_event = segrellion_legacy.5050
-    }
-
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_1 }
-        name = segrellion_legacy.select_our_candidate_1
-
-        scope:segrellion_our_candidate_1 = {
-            save_scope_as = segrellion_marriage_our_candidate
-        }
-
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_2 }
-        name = segrellion_legacy.select_our_candidate_2
-
-        scope:segrellion_our_candidate_2 = {
-            save_scope_as = segrellion_marriage_our_candidate
-        }
-
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_3 }
-        name = segrellion_legacy.select_our_candidate_3
-
-        scope:segrellion_our_candidate_3 = {
-            save_scope_as = segrellion_marriage_our_candidate
-        }
-
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_4 }
-        name = segrellion_legacy.select_our_candidate_4
-
-        scope:segrellion_our_candidate_4 = {
-            save_scope_as = segrellion_marriage_our_candidate
-        }
-
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_5 }
-        name = segrellion_legacy.select_our_candidate_5
-
-        scope:segrellion_our_candidate_5 = {
-            save_scope_as = segrellion_marriage_our_candidate
-        }
-
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = {
-            exists = scope:segrellion_our_candidate_6_probe
-        }
-
-        name = segrellion_legacy.next_page
-        trigger_event = segrellion_legacy.5041
-    }
-
-    option = {
-        name = segrellion_legacy.5010.back
-        trigger_event = segrellion_legacy.5010
-    }
-}
-
-# ============================================================
-# 5041 - OUR MARRIAGE CANDIDATE - PAGE 2
-# ============================================================
-
-segrellion_legacy.5041 = {
-    type = character_event
-    title = segrellion_legacy.5040.t
-    desc = segrellion_legacy.5040.desc
-    theme = diplomacy
-
-    immediate = {
-
-        ordered_courtier = {
-            limit = { segrellion_legacy_v_free_marriage_candidate_trigger = yes }
-            order_by = age
-            position = 5
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_1
-        }
-
-        ordered_courtier = {
-            limit = { segrellion_legacy_v_free_marriage_candidate_trigger = yes }
-            order_by = age
-            position = 6
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_2
-        }
-
-        ordered_courtier = {
-            limit = { segrellion_legacy_v_free_marriage_candidate_trigger = yes }
-            order_by = age
-            position = 7
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_3
-        }
-
-        ordered_courtier = {
-            limit = { segrellion_legacy_v_free_marriage_candidate_trigger = yes }
-            order_by = age
-            position = 8
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_4
-        }
-
-        ordered_courtier = {
-            limit = { segrellion_legacy_v_free_marriage_candidate_trigger = yes }
-            order_by = age
-            position = 9
-            check_range_bounds = no
-            save_scope_as = segrellion_our_candidate_5
-        }
-    }
-
-    left_portrait = {
-        character = scope:segrellion_our_candidate_1
-    }
-
-    right_portrait = {
-        character = scope:segrellion_our_candidate_2
-    }
-
-    lower_left_portrait = {
-        character = scope:segrellion_our_candidate_3
-    }
-
-    lower_center_portrait = {
-        character = scope:segrellion_our_candidate_4
-    }
-
-    lower_right_portrait = {
-        character = scope:segrellion_our_candidate_5
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_1 }
-        name = segrellion_legacy.select_our_candidate_1
-        scope:segrellion_our_candidate_1 = { save_scope_as = segrellion_marriage_our_candidate }
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_2 }
-        name = segrellion_legacy.select_our_candidate_2
-        scope:segrellion_our_candidate_2 = { save_scope_as = segrellion_marriage_our_candidate }
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_3 }
-        name = segrellion_legacy.select_our_candidate_3
-        scope:segrellion_our_candidate_3 = { save_scope_as = segrellion_marriage_our_candidate }
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_4 }
-        name = segrellion_legacy.select_our_candidate_4
-        scope:segrellion_our_candidate_4 = { save_scope_as = segrellion_marriage_our_candidate }
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_our_candidate_5 }
-        name = segrellion_legacy.select_our_candidate_5
-        scope:segrellion_our_candidate_5 = { save_scope_as = segrellion_marriage_our_candidate }
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        name = segrellion_legacy.previous_page
-        trigger_event = segrellion_legacy.5040
-    }
-}
-
-# ============================================================
-# 5050 - THEIR MARRIAGE CANDIDATE - PAGE 1
-# ============================================================
-
-segrellion_legacy.5050 = {
-    type = character_event
-    title = segrellion_legacy.5050.t
-    desc = segrellion_legacy.5050.desc
-    theme = diplomacy
-
-    immediate = {
-
-        scope:segrellion_favor_target = {
-
-            ordered_courtier = {
-                limit = {
-                    segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes
-                }
-                order_by = age
-                position = 0
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_1
-            }
-
-            ordered_courtier = {
-                limit = {
-                    segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes
-                }
-                order_by = age
-                position = 1
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_2
-            }
-
-            ordered_courtier = {
-                limit = {
-                    segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes
-                }
-                order_by = age
-                position = 2
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_3
-            }
-
-            ordered_courtier = {
-                limit = {
-                    segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes
-                }
-                order_by = age
-                position = 3
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_4
-            }
-
-            ordered_courtier = {
-                limit = {
-                    segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes
-                }
-                order_by = age
-                position = 4
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_5
-            }
-
-            ordered_courtier = {
-                limit = {
-                    segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes
-                }
-                order_by = age
-                position = 5
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_6_probe
-            }
-        }
-    }
-
-    left_portrait = {
-        character = scope:segrellion_their_candidate_1
-    }
-
-    right_portrait = {
-        character = scope:segrellion_their_candidate_2
-    }
-
-    lower_left_portrait = {
-        character = scope:segrellion_their_candidate_3
-    }
-
-    lower_center_portrait = {
-        character = scope:segrellion_their_candidate_4
-    }
-
-    lower_right_portrait = {
-        character = scope:segrellion_their_candidate_5
-    }
-
-
-    # The ruler personally.
-    option = {
-        trigger = {
-
-            scope:segrellion_favor_target = {
-
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-
-                can_marry_character_trigger = {
-                    CHARACTER = scope:segrellion_marriage_our_candidate
-                }
-            }
-        }
-
-        name = segrellion_legacy.marriage_target_self
-
-        scope:segrellion_favor_target = {
-            save_scope_as = segrellion_marriage_their_candidate
-        }
-
-        trigger_event = segrellion_legacy.5060
-    }
-
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_1 }
-        name = segrellion_legacy.select_their_candidate_1
-        scope:segrellion_their_candidate_1 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_2 }
-        name = segrellion_legacy.select_their_candidate_2
-        scope:segrellion_their_candidate_2 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_3 }
-        name = segrellion_legacy.select_their_candidate_3
-        scope:segrellion_their_candidate_3 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_4 }
-        name = segrellion_legacy.select_their_candidate_4
-        scope:segrellion_their_candidate_4 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_5 }
-        name = segrellion_legacy.select_their_candidate_5
-        scope:segrellion_their_candidate_5 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = {
-            exists = scope:segrellion_their_candidate_6_probe
-        }
-
-        name = segrellion_legacy.next_page
-        trigger_event = segrellion_legacy.5051
-    }
-
-    option = {
-        name = segrellion_legacy.choose_other_our_candidate
-        trigger_event = segrellion_legacy.5040
-    }
-}
-
-# ============================================================
-# 5051 - THEIR MARRIAGE CANDIDATE - PAGE 2
-# ============================================================
-
-segrellion_legacy.5051 = {
-    type = character_event
-    title = segrellion_legacy.5050.t
-    desc = segrellion_legacy.5050.desc
-    theme = diplomacy
-
-    immediate = {
-
-        scope:segrellion_favor_target = {
-
-            ordered_courtier = {
-                limit = { segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes }
-                order_by = age
-                position = 5
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_1
-            }
-
-            ordered_courtier = {
-                limit = { segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes }
-                order_by = age
-                position = 6
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_2
-            }
-
-            ordered_courtier = {
-                limit = { segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes }
-                order_by = age
-                position = 7
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_3
-            }
-
-            ordered_courtier = {
-                limit = { segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes }
-                order_by = age
-                position = 8
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_4
-            }
-
-            ordered_courtier = {
-                limit = { segrellion_legacy_v_valid_target_marriage_candidate_trigger = yes }
-                order_by = age
-                position = 9
-                check_range_bounds = no
-                save_scope_as = segrellion_their_candidate_5
-            }
-        }
-    }
-
-    left_portrait = {
-        character = scope:segrellion_their_candidate_1
-    }
-
-    right_portrait = {
-        character = scope:segrellion_their_candidate_2
-    }
-
-    lower_left_portrait = {
-        character = scope:segrellion_their_candidate_3
-    }
-
-    lower_center_portrait = {
-        character = scope:segrellion_their_candidate_4
-    }
-
-    lower_right_portrait = {
-        character = scope:segrellion_their_candidate_5
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_1 }
-        name = segrellion_legacy.select_their_candidate_1
-        scope:segrellion_their_candidate_1 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_2 }
-        name = segrellion_legacy.select_their_candidate_2
-        scope:segrellion_their_candidate_2 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_3 }
-        name = segrellion_legacy.select_their_candidate_3
-        scope:segrellion_their_candidate_3 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_4 }
-        name = segrellion_legacy.select_their_candidate_4
-        scope:segrellion_their_candidate_4 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        trigger = { exists = scope:segrellion_their_candidate_5 }
-        name = segrellion_legacy.select_their_candidate_5
-        scope:segrellion_their_candidate_5 = { save_scope_as = segrellion_marriage_their_candidate }
-        trigger_event = segrellion_legacy.5060
-    }
-
-    option = {
-        name = segrellion_legacy.previous_page
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        name = segrellion_legacy.choose_other_our_candidate
-        trigger_event = segrellion_legacy.5040
-    }
-}
-
-# ============================================================
-# 5060 - REVIEW MARRIAGE PROPOSAL
-# ============================================================
-
-segrellion_legacy.5060 = {
-    type = character_event
-    title = segrellion_legacy.5060.t
-    desc = segrellion_legacy.5060.desc
-    theme = diplomacy
-
-    left_portrait = {
-        character = scope:segrellion_marriage_our_candidate
-    }
-
-    right_portrait = {
-        character = scope:segrellion_marriage_their_candidate
-    }
-
-
-    option = {
-        trigger = {
-
-            scope:segrellion_marriage_our_candidate = {
-
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-
-                can_marry_character_trigger = {
-                    CHARACTER = scope:segrellion_marriage_their_candidate
-                }
-            }
-
-            scope:segrellion_marriage_their_candidate = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-        }
-
-        name = segrellion_legacy.5060.send
-
-        # NOW the two-year privilege is spent.
-        add_character_flag = {
-            flag = segrellion_great_house_favor_cooldown
-            years = 2
-        }
-
-        save_scope_as = segrellion_requester
-
-        scope:segrellion_favor_target = {
-            trigger_event = segrellion_legacy.5120
-        }
-    }
-
-
-    option = {
-        name = segrellion_legacy.5060.change_theirs
-        trigger_event = segrellion_legacy.5050
-    }
-
-    option = {
-        name = segrellion_legacy.5060.change_ours
-        trigger_event = segrellion_legacy.5040
-    }
-
-    option = {
-        name = segrellion_legacy.cancel
-    }
-}
-
-# ============================================================
-# 5100 - GOLD REQUEST
-#
-# ROOT = TARGET GREAT LORD
-# ============================================================
-
-segrellion_legacy.5100 = {
-    type = character_event
-    title = segrellion_legacy.5100.t
-    desc = segrellion_legacy.5100.desc
-    theme = diplomacy
-
-    immediate = {
-
-        save_scope_value_as = {
-            name = segrellion_gold_favor_amount
-
-            value = {
-                value = gold
-                multiply = 0.25
-            }
-        }
-    }
-
-    left_portrait = {
-        character = scope:segrellion_requester
-    }
-
-    right_portrait = {
-        character = root
-    }
-
-
-    option = {
-        trigger = {
-            gold > 0
-        }
-
-        name = segrellion_legacy.accept
-
-        add_gold = {
-            value = scope:segrellion_gold_favor_amount
-            multiply = -1
-        }
-
-        scope:segrellion_requester = {
-
-            add_gold = scope:segrellion_gold_favor_amount
-
-            set_variable = {
-                name = segrellion_last_great_house_gold
-                value = scope:segrellion_gold_favor_amount
-            }
-
-            trigger_event = segrellion_legacy.5200
-        }
-
-
-        ai_chance = {
-            base = 50
-
-            modifier = {
-                add = 60
-                opinion = {
-                    target = scope:segrellion_requester
-                    value >= 80
-                }
-            }
-
-            modifier = {
-                add = 30
-                opinion = {
-                    target = scope:segrellion_requester
-                    value >= 50
-                }
-            }
-
-            modifier = {
-                add = -30
-                opinion = {
-                    target = scope:segrellion_requester
-                    value < 0
-                }
-            }
-
-            modifier = {
-                add = -60
-                opinion = {
-                    target = scope:segrellion_requester
-                    value <= -50
-                }
-            }
-
-            modifier = {
-                add = 40
-                has_relation_friend = scope:segrellion_requester
-            }
-
-            modifier = {
-                add = 70
-                has_relation_best_friend = scope:segrellion_requester
-            }
-
-            modifier = {
-                add = -70
-                has_relation_rival = scope:segrellion_requester
-            }
-
-            modifier = {
-                factor = 0
-                has_relation_nemesis = scope:segrellion_requester
-            }
-
-
-            # Personality compatibility
-
-            modifier = {
-                add = 15
-                has_trait = just
-                scope:segrellion_requester = {
-                    has_trait = just
-                }
-            }
-
-            modifier = {
-                add = 10
-                has_trait = honest
-                scope:segrellion_requester = {
-                    has_trait = honest
-                }
-            }
-
-
-            # Money-specific personality
-
-            modifier = {
-                add = 35
-                has_trait = generous
-            }
-
-            modifier = {
-                add = -50
-                has_trait = greedy
-            }
-
-            modifier = {
-                add = 20
-                gold >= 1500
-            }
-
-            modifier = {
-                add = -25
-                gold < 700
-            }
-
-
-            # Requester's political weight
-
-            modifier = {
-                add = 15
-
-                scope:segrellion_requester = {
-                    diplomacy >= 15
-                }
-            }
-
-            modifier = {
-                add = 15
-
-                scope:segrellion_requester = {
-                    diplomacy >= 20
-                }
-            }
-
-            modifier = {
-                add = 20
-
-                scope:segrellion_requester = {
-                    legitimacy_level >= 5
-                }
-            }
-
-            modifier = {
-                add = 10
-                faith = scope:segrellion_requester.faith
-            }
-
-            modifier = {
-                add = 10
-                culture = scope:segrellion_requester.culture
-            }
-        }
-    }
-
-
-    option = {
-        name = segrellion_legacy.refuse
-
-        scope:segrellion_requester = {
-            trigger_event = segrellion_legacy.5201
-        }
-
-        ai_chance = {
-            base = 50
-        }
-    }
-}
-
-# ============================================================
-# 5110 - REQUEST SUPPORT IN THE CHOSEN WAR
-#
-# ROOT = TARGET GREAT LORD
-# scope:segrellion_requester = SEGRELLION HOUSE HEAD
-# scope:segrellion_requested_war = WAR CHOSEN BY PLAYER
+# ROOT = Lord Paramount receiving the request
+# scope:segrellion_great_house_caller = Segrellion House Head
 # ============================================================
 
 segrellion_legacy.5110 = {
+
 	type = character_event
+
 	title = segrellion_legacy.5110.t
 	desc = segrellion_legacy.5110.desc
+
 	theme = battle
 
+
+	trigger = {
+
+		is_alive = yes
+		is_ruler = yes
+
+		NOT = {
+			is_at_war_with = scope:segrellion_great_house_caller
+		}
+
+		scope:segrellion_great_house_caller ?= {
+
+			is_alive = yes
+			is_at_war = yes
+
+			any_character_war = {
+
+				segrellion_legacy_v_callable_war_trigger = {
+					CALLER = scope:segrellion_great_house_caller
+					TARGET = root
+				}
+			}
+		}
+	}
+
+
 	left_portrait = {
-		character = scope:segrellion_requester
+		character = scope:segrellion_great_house_caller
+		animation = personality_bold
 	}
 
 	right_portrait = {
 		character = root
+		animation = personality_rational
 	}
 
 
@@ -2175,59 +60,89 @@ segrellion_legacy.5110 = {
 	# ========================================================
 
 	option = {
-		name = segrellion_legacy.accept_war
+
+		name = segrellion_legacy.5110.accept
 
 
-		# ----------------------------------------------------
-		# JOIN THE SAME SIDE AS HOUSE SEGRELLION
-		# ----------------------------------------------------
+		# Keep this lord available for the response event.
+		save_scope_as = segrellion_answering_great_lord
 
-		scope:segrellion_requested_war = {
 
-			if = {
+		# ====================================================
+		# JOIN EVERY ELIGIBLE WAR
+		#
+		# If already in one of the wars, that war did not pass
+		# the callable trigger and is simply ignored.
+		# ====================================================
+
+		scope:segrellion_great_house_caller = {
+
+			every_character_war = {
+
 				limit = {
-					is_attacker = scope:segrellion_requester
+
+					segrellion_legacy_v_callable_war_trigger = {
+						CALLER = scope:segrellion_great_house_caller
+						TARGET = root
+					}
 				}
 
-				add_attacker = root
-			}
 
-			else_if = {
-				limit = {
-					is_defender = scope:segrellion_requester
+				# ---------------------------------------------
+				# CALLER IS AN ATTACKER
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+						is_attacker = scope:segrellion_great_house_caller
+					}
+
+					set_called_to = root
+					add_attacker = root
 				}
 
-				add_defender = root
+
+				# ---------------------------------------------
+				# CALLER IS A DEFENDER
+				# ---------------------------------------------
+
+				else_if = {
+
+					limit = {
+						is_defender = scope:segrellion_great_house_caller
+					}
+
+					set_called_to = root
+					add_defender = root
+				}
 			}
 		}
 
 
-		# ----------------------------------------------------
-		# INFORM THE REQUESTER
-		# ----------------------------------------------------
-
-		scope:segrellion_requester = {
-			trigger_event = segrellion_legacy.5210
+		scope:segrellion_great_house_caller = {
+			trigger_event = segrellion_legacy.5111
 		}
 
 
-		# ----------------------------------------------------
-		# AI ACCEPTANCE
-		# ----------------------------------------------------
+		# ====================================================
+		# AI
+		# ====================================================
 
 		ai_chance = {
-			base = 40
+
+			base = 50
 
 
 			# =================================================
-			# OPINION
+			# OPINION OF THE SEGRELLION CALLER
 			# =================================================
 
 			modifier = {
-				add = 60
+				add = 50
 
 				opinion = {
-					target = scope:segrellion_requester
+					target = scope:segrellion_great_house_caller
 					value >= 80
 				}
 			}
@@ -2236,52 +151,71 @@ segrellion_legacy.5110 = {
 				add = 30
 
 				opinion = {
-					target = scope:segrellion_requester
+					target = scope:segrellion_great_house_caller
 					value >= 50
 				}
 			}
 
 			modifier = {
-				add = -30
+				add = 15
 
 				opinion = {
-					target = scope:segrellion_requester
+					target = scope:segrellion_great_house_caller
+					value >= 25
+				}
+			}
+
+			modifier = {
+				add = -25
+
+				opinion = {
+					target = scope:segrellion_great_house_caller
 					value < 0
 				}
 			}
 
 			modifier = {
-				add = -60
+				add = -50
 
 				opinion = {
-					target = scope:segrellion_requester
+					target = scope:segrellion_great_house_caller
 					value <= -50
 				}
 			}
 
 
 			# =================================================
-			# PERSONAL RELATIONSHIP
+			# PERSONAL RELATIONSHIP WITH CALLER
 			# =================================================
 
 			modifier = {
-				add = 50
-				has_relation_friend = scope:segrellion_requester
+				add = 30
+				has_relation_friend = scope:segrellion_great_house_caller
 			}
 
 			modifier = {
-				add = 70
-				has_relation_best_friend = scope:segrellion_requester
+				add = 55
+				has_relation_best_friend = scope:segrellion_great_house_caller
 			}
 
 			modifier = {
-				add = -80
-				has_relation_rival = scope:segrellion_requester
+				add = 35
+				is_close_family_of = scope:segrellion_great_house_caller
 			}
 
 			modifier = {
-				factor = 0
-				has_relation_nemesis = scope:segrellion_requester
+				add = 30
+				is_allied_to = scope:segrellion_great_house_caller
+			}
+
+			modifier = {
+				add = -50
+				has_relation_rival = scope:segrellion_great_house_caller
+			}
+
+			modifier = {
+				factor = 0.10
+				has_relation_nemesis = scope:segrellion_great_house_caller
 			}
 
 
@@ -2290,133 +224,542 @@ segrellion_legacy.5110 = {
 			# =================================================
 
 			modifier = {
-				add = 30
+				add = 20
 				has_trait = brave
 			}
 
 			modifier = {
-				add = -50
+				add = -30
 				has_trait = craven
 			}
 
 			modifier = {
-				add = 15
+				add = 10
 				has_trait = ambitious
 			}
 
 			modifier = {
-				add = -15
+				add = -10
 				has_trait = content
 			}
 
-
-			# Similar courageous personalities.
-
 			modifier = {
 				add = 10
+				has_trait = loyal
+			}
+
+			modifier = {
+				add = -10
+				has_trait = paranoid
+			}
+
+
+			# =================================================
+			# SHARED PERSONALITY
+			# =================================================
+
+			modifier = {
+
+				add = 12
 
 				has_trait = brave
 
-				scope:segrellion_requester = {
+				scope:segrellion_great_house_caller = {
 					has_trait = brave
 				}
 			}
 
+			modifier = {
 
-			# A brave ruler may dislike being asked to fight
-			# for someone perceived as cowardly.
+				add = 10
+
+				has_trait = just
+
+				scope:segrellion_great_house_caller = {
+					has_trait = just
+				}
+			}
+
+			modifier = {
+
+				add = 8
+
+				has_trait = honest
+
+				scope:segrellion_great_house_caller = {
+					has_trait = honest
+				}
+			}
+
+			modifier = {
+
+				add = 8
+
+				has_trait = compassionate
+
+				scope:segrellion_great_house_caller = {
+					has_trait = compassionate
+				}
+			}
+
+			modifier = {
+
+				add = 8
+
+				has_trait = ambitious
+
+				scope:segrellion_great_house_caller = {
+					has_trait = ambitious
+				}
+			}
+
+
+			# =================================================
+			# DEFENDING HOUSE SEGRELLION
+			#
+			# Lords are more willing to intervene if at least
+			# one of the wars is defensive.
+			# =================================================
+
+			modifier = {
+
+				add = 25
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						is_defender = scope:segrellion_great_house_caller
+					}
+				}
+			}
+
+
+			# =================================================
+			# THE LORD IS ALREADY BUSY
+			# =================================================
 
 			modifier = {
 				add = -20
-
-				has_trait = brave
-
-				scope:segrellion_requester = {
-					has_trait = craven
-				}
-			}
-
-
-			# =================================================
-			# DEFENSIVE WAR
-			#
-			# Great Houses are considerably more likely to
-			# answer a defensive call.
-			# =================================================
-
-			modifier = {
-				add = 30
-
-				scope:segrellion_requested_war = {
-					primary_defender = scope:segrellion_requester
-				}
-			}
-
-
-			# =================================================
-			# TARGET ALREADY AT WAR
-			# =================================================
-
-			modifier = {
-				add = -30
 				is_at_war = yes
 			}
 
 
 			# =================================================
-			# REQUESTER DIPLOMACY
+			# CALLER'S DIPLOMACY
 			# =================================================
 
 			modifier = {
-				add = 15
 
-				scope:segrellion_requester = {
+				add = 10
+
+				scope:segrellion_great_house_caller = {
 					diplomacy >= 15
 				}
 			}
 
 			modifier = {
-				add = 15
 
-				scope:segrellion_requester = {
+				add = 10
+
+				scope:segrellion_great_house_caller = {
 					diplomacy >= 20
 				}
 			}
 
 
 			# =================================================
-			# REQUESTER LEGITIMACY
+			# CALLER'S LEGITIMACY
 			# =================================================
 
 			modifier = {
+
 				add = 10
 
-				scope:segrellion_requester = {
+				scope:segrellion_great_house_caller = {
 					legitimacy_level >= 4
 				}
 			}
 
 			modifier = {
-				add = 20
 
-				scope:segrellion_requester = {
+				add = 10
+
+				scope:segrellion_great_house_caller = {
 					legitimacy_level >= 5
 				}
 			}
 
 
 			# =================================================
-			# CULTURAL / RELIGIOUS AFFINITY
+			# CULTURE / FAITH
 			# =================================================
 
 			modifier = {
-				add = 10
-				faith = scope:segrellion_requester.faith
+				add = 5
+				culture = scope:segrellion_great_house_caller.culture
 			}
 
 			modifier = {
-				add = 10
-				culture = scope:segrellion_requester.culture
+				add = 5
+				faith = scope:segrellion_great_house_caller.faith
+			}
+
+
+			# =================================================
+			# ENEMY MILITARY STRENGTH
+			#
+			# If any eligible enemy is stronger than this
+			# Lord Paramount, intervention becomes less
+			# attractive.
+			# =================================================
+
+			modifier = {
+
+				add = -20
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+									current_military_strength > root.current_military_strength
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+									current_military_strength > root.current_military_strength
+								}
+							}
+						}
+					}
+				}
+			}
+
+
+			# Enemy at least ~50% stronger.
+			modifier = {
+
+				add = -30
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+									current_military_strength >= root.one_and_a_half_times_current_military_strength
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+									current_military_strength >= root.one_and_a_half_times_current_military_strength
+								}
+							}
+						}
+					}
+				}
+			}
+
+
+			# At least one enemy is weaker than the lord being called.
+			modifier = {
+
+				add = 12
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+									current_military_strength < root.current_military_strength
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+									current_military_strength < root.current_military_strength
+								}
+							}
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# FRIEND / FAMILY OF AN ENEMY
+			#
+			# Major reluctance.
+			# =================================================
+
+			modifier = {
+
+				factor = 0.25
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+
+									OR = {
+										has_relation_friend = root
+										has_relation_best_friend = root
+										has_relation_lover = root
+										has_relation_soulmate = root
+										is_close_family_of = root
+									}
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+
+									OR = {
+										has_relation_friend = root
+										has_relation_best_friend = root
+										has_relation_lover = root
+										has_relation_soulmate = root
+										is_close_family_of = root
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# ALLIED TO AN ENEMY
+			# =================================================
+
+			modifier = {
+
+				factor = 0.30
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+									is_allied_to = root
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+									is_allied_to = root
+								}
+							}
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# RIVAL / NEMESIS OF AN ENEMY
+			# =================================================
+
+			modifier = {
+
+				add = 50
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+									has_relation_rival = root
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+									has_relation_rival = root
+								}
+							}
+						}
+					}
+				}
+			}
+
+			modifier = {
+
+				add = 80
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+									has_relation_nemesis = root
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+									has_relation_nemesis = root
+								}
+							}
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# WAR AGAINST THEIR LIEGE
+			#
+			# Not mathematically impossible, but extremely
+			# unlikely.
+			# =================================================
+
+			modifier = {
+
+				factor = 0.08
+
+				root = {
+					exists = liege
+				}
+
+				scope:segrellion_great_house_caller = {
+
+					any_character_war = {
+
+						segrellion_legacy_v_callable_war_trigger = {
+							CALLER = scope:segrellion_great_house_caller
+							TARGET = root
+						}
+
+						OR = {
+
+							AND = {
+
+								is_attacker = scope:segrellion_great_house_caller
+
+								primary_defender = {
+									this = root.liege
+								}
+							}
+
+							AND = {
+
+								is_defender = scope:segrellion_great_house_caller
+
+								primary_attacker = {
+									this = root.liege
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -2427,480 +770,79 @@ segrellion_legacy.5110 = {
 	# ========================================================
 
 	option = {
-		name = segrellion_legacy.refuse_war
 
-		scope:segrellion_requester = {
-			trigger_event = segrellion_legacy.5211
+		name = segrellion_legacy.5110.refuse
+
+		save_scope_as = segrellion_answering_great_lord
+
+		scope:segrellion_great_house_caller = {
+			trigger_event = segrellion_legacy.5112
 		}
 
 		ai_chance = {
-			base = 60
+			base = 50
 		}
 	}
 }
 
 
-
 # ============================================================
-# 5120 - DYNASTIC MARRIAGE PROPOSAL
-#
-# ROOT = TARGET GREAT LORD
+# 5111
+# A GREAT HOUSE ACCEPTED
+# ROOT = Segrellion caller
 # ============================================================
 
-segrellion_legacy.5120 = {
-    type = character_event
-    title = segrellion_legacy.5120.t
-    desc = segrellion_legacy.5120.desc
-    theme = diplomacy
+segrellion_legacy.5111 = {
 
-    left_portrait = {
-        character = scope:segrellion_marriage_our_candidate
-    }
+	type = character_event
 
-    right_portrait = {
-        character = scope:segrellion_marriage_their_candidate
-    }
+	title = segrellion_legacy.5111.t
+	desc = segrellion_legacy.5111.desc
 
+	theme = battle
 
-    option = {
-        trigger = {
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
 
-            scope:segrellion_marriage_our_candidate = {
+	right_portrait = {
+		character = scope:segrellion_answering_great_lord
+		animation = personality_bold
+	}
 
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-
-                can_marry_character_trigger = {
-                    CHARACTER = scope:segrellion_marriage_their_candidate
-                }
-            }
-
-            scope:segrellion_marriage_their_candidate = {
-                segrellion_legacy_v_free_marriage_candidate_trigger = yes
-            }
-        }
-
-        name = segrellion_legacy.accept_marriage
-
-
-        # ====================================================
-        # ACTUAL MARRIAGE / BETROTHAL
-        # ====================================================
-
-        if = {
-            limit = {
-
-                scope:segrellion_marriage_our_candidate = {
-                    is_adult = yes
-                }
-
-                scope:segrellion_marriage_their_candidate = {
-                    is_adult = yes
-                }
-            }
-
-            scope:segrellion_marriage_our_candidate = {
-                marry = scope:segrellion_marriage_their_candidate
-            }
-
-            scope:segrellion_requester = {
-                trigger_event = segrellion_legacy.5220
-            }
-        }
-
-        else = {
-
-            scope:segrellion_marriage_our_candidate = {
-                create_betrothal = scope:segrellion_marriage_their_candidate
-            }
-
-            scope:segrellion_requester = {
-                trigger_event = segrellion_legacy.5222
-            }
-        }
-
-
-        ai_chance = {
-            base = 50
-
-
-            # =================================================
-            # OPINION
-            # =================================================
-
-            modifier = {
-                add = 60
-
-                opinion = {
-                    target = scope:segrellion_requester
-                    value >= 80
-                }
-            }
-
-            modifier = {
-                add = 30
-
-                opinion = {
-                    target = scope:segrellion_requester
-                    value >= 50
-                }
-            }
-
-            modifier = {
-                add = 15
-
-                opinion = {
-                    target = scope:segrellion_requester
-                    value >= 25
-                }
-            }
-
-            modifier = {
-                add = -30
-
-                opinion = {
-                    target = scope:segrellion_requester
-                    value < 0
-                }
-            }
-
-            modifier = {
-                add = -60
-
-                opinion = {
-                    target = scope:segrellion_requester
-                    value <= -50
-                }
-            }
-
-
-            # =================================================
-            # PERSONAL RELATIONSHIP
-            # =================================================
-
-            modifier = {
-                add = 50
-                has_relation_friend = scope:segrellion_requester
-            }
-
-            modifier = {
-                add = 70
-                has_relation_best_friend = scope:segrellion_requester
-            }
-
-            modifier = {
-                add = -80
-                has_relation_rival = scope:segrellion_requester
-            }
-
-            modifier = {
-                factor = 0
-                has_relation_nemesis = scope:segrellion_requester
-            }
-
-
-            # =================================================
-            # PERSONALITY
-            # =================================================
-
-            modifier = {
-                add = 15
-                has_trait = trusting
-            }
-
-            modifier = {
-                add = -25
-                has_trait = paranoid
-            }
-
-            modifier = {
-                add = 15
-                has_trait = compassionate
-            }
-
-            modifier = {
-                add = -15
-                has_trait = callous
-            }
-
-            modifier = {
-                add = 15
-
-                has_trait = just
-
-                scope:segrellion_requester = {
-                    has_trait = just
-                }
-            }
-
-            modifier = {
-                add = 10
-
-                has_trait = honest
-
-                scope:segrellion_requester = {
-                    has_trait = honest
-                }
-            }
-
-
-            # =================================================
-            # HOUSE SEGRELLION'S POLITICAL WEIGHT
-            # =================================================
-
-            modifier = {
-                add = 15
-
-                scope:segrellion_requester = {
-                    diplomacy >= 15
-                }
-            }
-
-            modifier = {
-                add = 15
-
-                scope:segrellion_requester = {
-                    diplomacy >= 20
-                }
-            }
-
-            modifier = {
-                add = 10
-
-                scope:segrellion_requester = {
-                    legitimacy_level >= 4
-                }
-            }
-
-            modifier = {
-                add = 15
-
-                scope:segrellion_requester = {
-                    legitimacy_level >= 5
-                }
-            }
-
-            modifier = {
-                add = 10
-                faith = scope:segrellion_requester.faith
-            }
-
-            modifier = {
-                add = 10
-                culture = scope:segrellion_requester.culture
-            }
-
-
-            # =================================================
-            # QUALITY OF THE PROPOSAL
-            # =================================================
-
-            # Offering the House Head personally carries weight.
-            modifier = {
-                add = 25
-
-                scope:segrellion_marriage_our_candidate = {
-                    this = scope:segrellion_requester
-                }
-            }
-
-            # Offering the Segrellion heir is prestigious.
-            modifier = {
-                add = 20
-
-                scope:segrellion_marriage_our_candidate = {
-                    this = scope:segrellion_requester.primary_heir
-                }
-            }
-
-            # Asking for THEIR primary heir is a much larger demand.
-            modifier = {
-                add = -50
-
-                scope:segrellion_marriage_their_candidate = {
-                    this = root.primary_heir
-                }
-            }
-
-            # A lowborn offered against noble blood is less attractive.
-            modifier = {
-                add = -30
-
-                scope:segrellion_marriage_our_candidate = {
-                    is_lowborn = yes
-                }
-
-                scope:segrellion_marriage_their_candidate = {
-                    is_lowborn = no
-                }
-            }
-        }
-    }
-
-
-    option = {
-        name = segrellion_legacy.refuse_marriage
-
-        scope:segrellion_requester = {
-            trigger_event = segrellion_legacy.5221
-        }
-
-        ai_chance = {
-            base = 50
-        }
-    }
+	option = {
+		name = segrellion_legacy.5111.a
+	}
 }
 
 
 # ============================================================
-# RESULT EVENTS
+# 5112
+# A GREAT HOUSE REFUSED
+# ROOT = Segrellion caller
 # ============================================================
 
+segrellion_legacy.5112 = {
 
-# ============================================================
-# 5200 - GOLD ACCEPTED
-# ============================================================
+	type = character_event
 
-segrellion_legacy.5200 = {
-    type = character_event
-    title = segrellion_legacy.5200.t
-    desc = segrellion_legacy.5200.desc
-    theme = diplomacy
+	title = segrellion_legacy.5112.t
+	desc = segrellion_legacy.5112.desc
 
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
+	theme = diplomacy
 
-    option = {
-        name = segrellion_legacy.result_gold_accepted
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
 
-        remove_variable = segrellion_last_great_house_gold
-    }
-}
+	right_portrait = {
+		character = scope:segrellion_answering_great_lord
+		animation = personality_dishonorable
+	}
 
-
-# ============================================================
-# 5201 - GOLD REFUSED
-# ============================================================
-
-segrellion_legacy.5201 = {
-    type = character_event
-    title = segrellion_legacy.5201.t
-    desc = segrellion_legacy.5201.desc
-    theme = diplomacy
-
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
-
-    option = {
-        name = segrellion_legacy.result_refused
-    }
-}
-
-
-# ============================================================
-# 5210 - WAR ACCEPTED
-# ============================================================
-
-segrellion_legacy.5210 = {
-    type = character_event
-    title = segrellion_legacy.5210.t
-    desc = segrellion_legacy.5210.desc
-    theme = battle
-
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
-
-    option = {
-        name = segrellion_legacy.result_war_accepted
-    }
-}
-
-
-# ============================================================
-# 5211 - WAR REFUSED
-# ============================================================
-
-segrellion_legacy.5211 = {
-    type = character_event
-    title = segrellion_legacy.5211.t
-    desc = segrellion_legacy.5211.desc
-    theme = battle
-
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
-
-    option = {
-        name = segrellion_legacy.result_refused
-    }
-}
-
-
-# ============================================================
-# 5220 - MARRIAGE ACCEPTED
-# ============================================================
-
-segrellion_legacy.5220 = {
-    type = character_event
-    title = segrellion_legacy.5220.t
-    desc = segrellion_legacy.5220.desc
-    theme = diplomacy
-
-    left_portrait = {
-        character = scope:segrellion_marriage_our_candidate
-    }
-
-    right_portrait = {
-        character = scope:segrellion_marriage_their_candidate
-    }
-
-    option = {
-        name = segrellion_legacy.result_marriage_accepted
-    }
-}
-
-
-# ============================================================
-# 5221 - MARRIAGE REFUSED
-# ============================================================
-
-segrellion_legacy.5221 = {
-    type = character_event
-    title = segrellion_legacy.5221.t
-    desc = segrellion_legacy.5221.desc
-    theme = diplomacy
-
-    right_portrait = {
-        character = scope:segrellion_favor_target
-    }
-
-    option = {
-        name = segrellion_legacy.result_refused
-    }
-}
-
-
-# ============================================================
-# 5222 - BETROTHAL ACCEPTED
-# ============================================================
-
-segrellion_legacy.5222 = {
-    type = character_event
-    title = segrellion_legacy.5222.t
-    desc = segrellion_legacy.5222.desc
-    theme = diplomacy
-
-    left_portrait = {
-        character = scope:segrellion_marriage_our_candidate
-    }
-
-    right_portrait = {
-        character = scope:segrellion_marriage_their_candidate
-    }
-
-    option = {
-        name = segrellion_legacy.result_betrothal_accepted
-    }
+	option = {
+		name = segrellion_legacy.5112.a
+	}
 }
