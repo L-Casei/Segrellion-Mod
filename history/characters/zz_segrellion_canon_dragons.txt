@@ -506,23 +506,43 @@ dragon_azuron = {
 	disallow_random_traits = yes
 
 
+	# ========================================================
+	# 130 A.C.
+	# Birth.
+	#
+	# Azuron is kept in the King's Landing Dragonpit from
+	# birth until Aegon Dragonspear claims him.
+	# ========================================================
+
 	8130.1.1 = {
 		birth = yes
 
 		add_character_flag = canon_status_canon
 		add_character_flag = agot_no_silly_name
 		add_character_flag = has_scripted_appearance
+
+		effect = {
+			agot_assign_dragon_to_pit_history_effect = {
+				DRAGONPIT_COUNTY = title:c_kings_landing
+			}
+		}
 	}
 
 
 	# ========================================================
 	# 167 A.C.
 	# Aegon Dragonspear claims Azuron.
-	# His only historical rider.
+	# His first and only historical rider.
 	# ========================================================
 
 	8167.1.1 = {
 		effect = {
+
+			agot_remove_from_dragonpit_no_event = {
+				DRAGON = ROOT
+				DRAGONPIT_COUNTY = title:c_kings_landing
+			}
+
 			agot_tame_dragon = {
 				TAMER = character:Segrellion_21
 				DRAGON = ROOT
@@ -530,7 +550,6 @@ dragon_azuron = {
 		}
 	}
 }
-
 
 # ============================================================
 # RHAENYX

@@ -545,6 +545,156 @@ segrellion_initialize_historical_dragon_effect = {
 	}
 }
 
+# ============================================================
+# HISTORICAL DRAGONS - ZERO TICK STORAGE SETUP
+#
+# Runs once after AGOT has completed its own game-start setup.
+#
+# Historical dragon storage is rebuilt exactly once here.
+# It is NEVER maintained by monthly progression.
+# ============================================================
+
+segrellion_rebuild_historical_dragon_storage_effect = {
+
+	$DRAGON$ = {
+		save_scope_as = segrellion_storage_target
+	}
+
+
+	# --------------------------------------------------------
+	# Remove every AGOT storage reference currently pointing
+	# at this historical dragon.
+	#
+	# This prevents duplicate dragon_id entries from making
+	# dragon_size_base resolve against an obsolete story.
+	# --------------------------------------------------------
+
+	every_in_global_list = {
+		variable = gl_dragon_variable_storage
+
+		limit = {
+			var:dragon_id ?= scope:segrellion_storage_target
+		}
+
+		remove_list_global_variable = {
+			name = gl_dragon_variable_storage
+			target = this
+		}
+	}
+
+
+	# --------------------------------------------------------
+	# Recreate one clean canonical AGOT storage.
+	# --------------------------------------------------------
+
+	segrellion_initialize_historical_dragon_effect = {
+		DRAGON = scope:segrellion_storage_target
+	}
+}
+
+
+# ============================================================
+# ALL CUSTOM HISTORICAL DRAGONS
+# ============================================================
+
+segrellion_historical_dragons_zero_tick_setup_effect = {
+
+	character:dragon_vhalyrax ?= {
+		if = {
+			limit = {
+				has_trait = dragon
+			}
+
+			segrellion_rebuild_historical_dragon_storage_effect = {
+				DRAGON = this
+			}
+		}
+	}
+
+
+	character:dragon_maenor ?= {
+		if = {
+			limit = {
+				has_trait = dragon
+			}
+
+			segrellion_rebuild_historical_dragon_storage_effect = {
+				DRAGON = this
+			}
+		}
+	}
+
+
+	character:dragon_nightdancer ?= {
+		if = {
+			limit = {
+				has_trait = dragon
+			}
+
+			segrellion_rebuild_historical_dragon_storage_effect = {
+				DRAGON = this
+			}
+		}
+	}
+
+
+	character:dragon_azuron ?= {
+		if = {
+			limit = {
+				has_trait = dragon
+			}
+
+			segrellion_rebuild_historical_dragon_storage_effect = {
+				DRAGON = this
+			}
+		}
+	}
+
+
+	character:dragon_rhaenyx ?= {
+		if = {
+			limit = {
+				has_trait = dragon
+			}
+
+			segrellion_rebuild_historical_dragon_storage_effect = {
+				DRAGON = this
+			}
+		}
+	}
+
+
+	character:dragon_valor ?= {
+		if = {
+			limit = {
+				has_trait = dragon
+			}
+
+			segrellion_rebuild_historical_dragon_storage_effect = {
+				DRAGON = this
+			}
+		}
+	}
+
+
+	character:dragon_aerox ?= {
+		if = {
+			limit = {
+				has_trait = dragon
+			}
+
+			segrellion_rebuild_historical_dragon_storage_effect = {
+				DRAGON = this
+			}
+		}
+	}
+
+
+	# Once storage exists, perform the normal canon bindings
+	# for the current bookmark date.
+	segrellion_historical_dragons_progression_effect = yes
+}
+
 
 # ============================================================
 # ALL HISTORICAL / CANON DRAGON PROGRESSION
@@ -561,54 +711,7 @@ segrellion_historical_dragons_progression_effect = {
 	# repairs saves where the old custom flag was set too early.
 	# ========================================================
 
-	character:dragon_vhalyrax ?= {
-		segrellion_initialize_historical_dragon_effect = {
-			DRAGON = this
-			DRAGON_AGE = character:dragon_vhalyrax.age
-		}
-	}
-
-	character:dragon_maenor ?= {
-		segrellion_initialize_historical_dragon_effect = {
-			DRAGON = this
-			DRAGON_AGE = character:dragon_maenor.age
-		}
-	}
-
-	character:dragon_nightdancer ?= {
-		segrellion_initialize_historical_dragon_effect = {
-			DRAGON = this
-			DRAGON_AGE = character:dragon_nightdancer.age
-		}
-	}
-
-	character:dragon_azuron ?= {
-		segrellion_initialize_historical_dragon_effect = {
-			DRAGON = this
-			DRAGON_AGE = character:dragon_azuron.age
-		}
-	}
-
-	character:dragon_rhaenyx ?= {
-		segrellion_initialize_historical_dragon_effect = {
-			DRAGON = this
-			DRAGON_AGE = character:dragon_rhaenyx.age
-		}
-	}
-
-	character:dragon_valor ?= {
-		segrellion_initialize_historical_dragon_effect = {
-			DRAGON = this
-			DRAGON_AGE = character:dragon_valor.age
-		}
-	}
-
-	character:dragon_aerox ?= {
-		segrellion_initialize_historical_dragon_effect = {
-			DRAGON = this
-			DRAGON_AGE = character:dragon_aerox.age
-		}
-	}
+	
 
 	# ========================================================
 	# HISTORICAL CHARACTER BINDING
