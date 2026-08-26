@@ -560,33 +560,6 @@ segrellion_rebuild_historical_dragon_storage_effect = {
 		save_scope_as = segrellion_storage_target
 	}
 
-
-	# --------------------------------------------------------
-	# Remove every AGOT storage reference currently pointing
-	# at this historical dragon.
-	#
-	# This prevents duplicate dragon_id entries from making
-	# dragon_size_base resolve against an obsolete story.
-	# --------------------------------------------------------
-
-	every_in_global_list = {
-		variable = gl_dragon_variable_storage
-
-		limit = {
-			var:dragon_id ?= scope:segrellion_storage_target
-		}
-
-		remove_list_global_variable = {
-			name = gl_dragon_variable_storage
-			target = this
-		}
-	}
-
-
-	# --------------------------------------------------------
-	# Recreate one clean canonical AGOT storage.
-	# --------------------------------------------------------
-
 	segrellion_initialize_historical_dragon_effect = {
 		DRAGON = scope:segrellion_storage_target
 	}
