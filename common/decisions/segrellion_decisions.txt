@@ -998,19 +998,33 @@ segrellion_search_for_legendary_relic_decision = {
 		# =====================================================
 
 		else_if = {
+
 			limit = {
 				scope:segrellion_relic_choice_winterfell = yes
 			}
 
+
 			add_character_flag = segrellion_relic_route_winterfell
+
+
 			segrellion_clear_relic_pending_destination_effect = yes
+
 			add_character_flag = segrellion_relic_pending_winterfell
 
+
 			start_travel_plan = {
+
 				destination = title:c_winterfell.title_province
 
-				on_arrival_event = segrellion_relic.0095
-				on_arrival_destinations = all
+				# The northern search continues from Winterfell.
+				# Do NOT automatically travel back home.
+				return_trip = no
+
+				# Directly call the actual Winterfell event.
+				on_arrival_event = segrellion_relic.3000
+
+				# This is a single outbound journey.
+				on_arrival_destinations = first
 
 				on_travel_planner_cancel_event = segrellion_relic.0090
 			}

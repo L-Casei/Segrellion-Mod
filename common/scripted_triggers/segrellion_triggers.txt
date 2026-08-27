@@ -366,8 +366,21 @@ segrellion_icebringer_exists_anywhere_trigger = {
 
 segrellion_can_search_legendary_relic_trigger = {
 
-	exists = var:segrellion_lore
-	var:segrellion_lore >= 15
+	OR = {
+
+		# House Segrellion always has access.
+		is_segrellion_dynasty = yes
+
+
+		# Outsiders require substantial knowledge
+		# of Segrellion history.
+		AND = {
+
+			exists = var:segrellion_lore
+
+			var:segrellion_lore >= 15
+		}
+	}
 }
 
 # =========================================================
