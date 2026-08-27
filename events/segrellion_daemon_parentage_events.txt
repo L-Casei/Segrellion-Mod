@@ -2,7 +2,8 @@ namespace = segrellion_daemon_parentage
 
 
 # =========================================================
-# 0001 - HUGH FINDS DAENA'S LETTER
+# 0001
+# HUGH FINDS DAENA'S LETTER AMONG SYMON'S PAPERS
 # =========================================================
 
 segrellion_daemon_parentage.0001 = {
@@ -13,23 +14,12 @@ segrellion_daemon_parentage.0001 = {
 	desc = segrellion_daemon_parentage.0001.desc
 
 	theme = intrigue
-	override_background = study
 
 	trigger = {
-
 		this = character:Segrellion_43
-
-		character:Segrellion_34 = {
-			is_alive = no
-		}
-
-		character:Segrellion_40 = {
-			is_alive = no
-		}
 
 		character:Segrellion_60 = {
 			is_alive = yes
-			is_adult = yes
 
 			NOT = {
 				has_character_flag = segrellion_daemon_parentage_known
@@ -37,29 +27,24 @@ segrellion_daemon_parentage.0001 = {
 		}
 	}
 
+	left_portrait = {
+		character = root
+		animation = contemplation
+	}
+
 	immediate = {
-
-		character:Segrellion_60 = {
-			save_scope_as = daemon
-		}
-
-		character:Segrellion_40 = {
-			save_scope_as = daena
-		}
-
-		character:Targaryen_1 = {
-			save_scope_as = aerys
-		}
+		add_character_flag = segrellion_daemon_letter_found
 	}
 
 
-	# ---------------------------------------------------------
-	# Give Daemon the letter WITHOUT reading it.
+	# =====================================================
+	# OPTION A
 	#
-	# Result:
-	# Daemon knows.
-	# Hugh does NOT know.
-	# ---------------------------------------------------------
+	# Hugh obeys Daena and Symon's wishes.
+	# He gives the letter to Daemon UNOPENED.
+	#
+	# Hugh never learns the actual secret.
+	# =====================================================
 
 	option = {
 
@@ -69,7 +54,7 @@ segrellion_daemon_parentage.0001 = {
 
 		ai_chance = {
 
-			base = 60
+			base = 50
 
 			modifier = {
 				add = 40
@@ -77,29 +62,17 @@ segrellion_daemon_parentage.0001 = {
 			}
 
 			modifier = {
-				add = 30
+				add = 25
 				has_trait = just
 			}
 
 			modifier = {
-				add = 25
+				add = 20
 				has_trait = compassionate
-			}
-
-			modifier = {
-				add = -25
-				has_trait = cynical
-			}
-
-			modifier = {
-				add = -20
-				has_trait = arbitrary
 			}
 		}
 
-		add_character_flag = segrellion_daena_letter_resolved
-
-		save_scope_as = hugh
+		add_character_flag = segrellion_daemon_letter_given_unopened
 
 		character:Segrellion_60 = {
 
@@ -111,13 +84,14 @@ segrellion_daemon_parentage.0001 = {
 	}
 
 
-	# ---------------------------------------------------------
-	# Hugh breaks the seal and reads the letter first.
+	# =====================================================
+	# OPTION B
 	#
-	# Result:
-	# Hugh knows.
-	# Daemon knows.
-	# ---------------------------------------------------------
+	# Hugh breaks the seal and reads Daena's letter.
+	# Then he tells Daemon.
+	#
+	# Both Hugh and Daemon know.
+	# =====================================================
 
 	option = {
 
@@ -127,7 +101,7 @@ segrellion_daemon_parentage.0001 = {
 
 		ai_chance = {
 
-			base = 40
+			base = 50
 
 			modifier = {
 				add = 40
@@ -135,25 +109,22 @@ segrellion_daemon_parentage.0001 = {
 			}
 
 			modifier = {
-				add = 25
+				add = 20
 				has_trait = cynical
 			}
 
 			modifier = {
-				add = 25
-				has_trait = deceitful
+				add = 10
+				has_trait = arbitrary
 			}
 
 			modifier = {
-				add = 20
-				has_trait = arbitrary
+				add = 15
+				has_trait = deceitful
 			}
 		}
 
-		add_character_flag = segrellion_daena_letter_resolved
 		add_character_flag = segrellion_hugh_read_daena_letter
-
-		save_scope_as = hugh
 
 		character:Segrellion_60 = {
 
@@ -167,9 +138,10 @@ segrellion_daemon_parentage.0001 = {
 
 
 # =========================================================
-# 0002 - DAEMON RECEIVES THE UNOPENED LETTER
+# 0002
+# DAEMON RECEIVES THE SEALED LETTER
 #
-# Only Daemon learns the secret.
+# ONLY DAEMON LEARNS THE TRUTH.
 # =========================================================
 
 segrellion_daemon_parentage.0002 = {
@@ -180,10 +152,8 @@ segrellion_daemon_parentage.0002 = {
 	desc = segrellion_daemon_parentage.0002.desc
 
 	theme = family
-	override_background = study
 
 	trigger = {
-
 		this = character:Segrellion_60
 
 		NOT = {
@@ -192,29 +162,23 @@ segrellion_daemon_parentage.0002 = {
 	}
 
 	left_portrait = {
-		character = scope:hugh
-	}
-
-	right_portrait = {
 		character = root
 		animation = shock
 	}
 
 	immediate = {
 
-		# =====================================================
-		# THIS IS THE IMPORTANT PART.
+		# -------------------------------------------------
+		# Create the actual CK3/AGOT heritage secret.
 		#
-		# This creates the same generic disputed-parentage
-		# secret that AGOT recognises for non-Jon royal bastards.
+		# Daemon's history already contains:
 		#
-		# Because Daemon has:
-		#
+		# father = Segrellion_39
 		# real_father = Targaryen_1
 		#
-		# and Aerys II historically held the Iron Throne,
-		# AGOT recognises this as a royal bastard secret.
-		# =====================================================
+		# AGOT recognises secret_disputed_heritage for
+		# non-Jon royal bastard claimants.
+		# -------------------------------------------------
 
 		add_secret = {
 			type = secret_disputed_heritage
@@ -222,22 +186,25 @@ segrellion_daemon_parentage.0002 = {
 		}
 
 		add_character_flag = segrellion_daemon_parentage_known
+		add_character_flag = segrellion_daemon_parentage_known_daemon_only
 	}
 
 	option = {
 
 		name = segrellion_daemon_parentage.0002.a
 
-		custom_tooltip = segrellion_daemon_parentage.knowledge_daemon_only_tt
-		custom_tooltip = segrellion_daemon_parentage.reveal_future_tt
+		custom_tooltip = segrellion_daemon_parentage.0002.a.tt
+		custom_tooltip = segrellion_daemon_parentage.reveal_tt
 	}
 }
 
 
 # =========================================================
-# 0003 - HUGH READ THE LETTER FIRST
+# 0003
+# HUGH READ THE LETTER FIRST
 #
-# Daemon learns the truth, and Hugh also knows the secret.
+# HUGH TELLS DAEMON.
+# BOTH KNOW THE SECRET.
 # =========================================================
 
 segrellion_daemon_parentage.0003 = {
@@ -248,11 +215,14 @@ segrellion_daemon_parentage.0003 = {
 	desc = segrellion_daemon_parentage.0003.desc
 
 	theme = family
-	override_background = study
 
 	trigger = {
-
 		this = character:Segrellion_60
+
+		character:Segrellion_43 = {
+			is_alive = yes
+			has_character_flag = segrellion_hugh_read_daena_letter
+		}
 
 		NOT = {
 			has_character_flag = segrellion_daemon_parentage_known
@@ -260,8 +230,8 @@ segrellion_daemon_parentage.0003 = {
 	}
 
 	left_portrait = {
-		character = scope:hugh
-		animation = sadness
+		character = character:Segrellion_43
+		animation = contemplation
 	}
 
 	right_portrait = {
@@ -271,41 +241,36 @@ segrellion_daemon_parentage.0003 = {
 
 	immediate = {
 
-		# Create the disputed heritage secret.
-		# Daemon automatically knows the secret because the secret
-		# is being created from his character scope.
-
+		# Create Daemon's disputed heritage secret.
 		add_secret = {
 			type = secret_disputed_heritage
 			target = root
 		}
 
 		add_character_flag = segrellion_daemon_parentage_known
+		add_character_flag = segrellion_daemon_parentage_known_with_hugh
 
 
-		# Hugh read the letter, so reveal the SAME secret to him.
+		# Hugh read the letter.
+		# Reveal the SAME secret to him.
 
 		random_known_secret = {
-
 			limit = {
-
 				secret_type = secret_disputed_heritage
-
 				secret_target = root
 			}
 
-			reveal_to = scope:hugh
+			reveal_to = character:Segrellion_43
 		}
 
 
-		scope:hugh = {
+		# Hugh has already told Daemon.
+		# Prevent AGOT from later offering Hugh a redundant
+		# "tell Daemon who he really is" interaction/event.
 
-			add_character_flag = segrellion_hugh_knows_daemon_parentage
-
-			# Hugh has already told Daemon.
-			# This prevents AGOT from later treating Hugh as though
-			# he still needs to reveal the secret TO Daemon.
+		character:Segrellion_43 = {
 			add_character_flag = told_true_parentage
+			add_character_flag = segrellion_hugh_knows_daemon_parentage
 		}
 	}
 
@@ -313,7 +278,7 @@ segrellion_daemon_parentage.0003 = {
 
 		name = segrellion_daemon_parentage.0003.a
 
-		custom_tooltip = segrellion_daemon_parentage.knowledge_hugh_daemon_tt
-		custom_tooltip = segrellion_daemon_parentage.reveal_future_tt
+		custom_tooltip = segrellion_daemon_parentage.0003.a.tt
+		custom_tooltip = segrellion_daemon_parentage.reveal_tt
 	}
 }

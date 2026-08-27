@@ -1071,38 +1071,29 @@ segrellion_daemon_arianne_children = {
 
 # =========================================================
 # DAEMON SEGRELLION - TRUE PARENTAGE
+# 300 AC BOOKMARK STARTUP
 # =========================================================
 
-segrellion_daemon_parentage_check = {
+segrellion_daemon_parentage_300_startup = {
+
 	effect = {
 
+		# This chain belongs specifically to the
+		# 300 AC - Winds of Winter bookmark.
 		if = {
 			limit = {
+				current_date >= 8300.8.20
+				current_date < 8300.8.21
 
-				# Symon can no longer fulfil Daena's request himself.
-				character:Segrellion_34 = {
-					is_alive = no
-				}
-
-				# Daena died before revealing the truth herself.
-				character:Segrellion_40 = {
-					is_alive = no
-				}
-
-				# Hugh inherited Symon's papers.
 				character:Segrellion_43 = {
 					is_alive = yes
-
 					NOT = {
-						has_character_flag = segrellion_daena_letter_discovery_scheduled
+						has_character_flag = segrellion_daemon_letter_event_scheduled
 					}
 				}
 
-				# Daemon must still be alive and old enough to receive the truth.
 				character:Segrellion_60 = {
 					is_alive = yes
-					is_adult = yes
-
 					NOT = {
 						has_character_flag = segrellion_daemon_parentage_known
 					}
@@ -1111,12 +1102,11 @@ segrellion_daemon_parentage_check = {
 
 			character:Segrellion_43 = {
 
-				# Prevent the monthly pulse from scheduling this twice.
-				add_character_flag = segrellion_daena_letter_discovery_scheduled
+				add_character_flag = segrellion_daemon_letter_event_scheduled
 
 				trigger_event = {
 					id = segrellion_daemon_parentage.0001
-					days = { 3 10 }
+					days = { 3 7 }
 				}
 			}
 		}
