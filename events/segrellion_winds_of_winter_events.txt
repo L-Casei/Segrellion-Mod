@@ -50,8 +50,10 @@ segrellion_winds.0001 = {
 
 
 # =========================================================
-# 0101 - THE PLATE RETURNS
-# Hugh Segrellion
+# 0101 - SOMETHING SURVIVED
+#
+# Hugh discovers documentary evidence that the Plate
+# survived the fall of House Segrellion.
 # =========================================================
 
 segrellion_winds.0101 = {
@@ -71,13 +73,21 @@ segrellion_winds.0101 = {
 
 	left_portrait = root
 
+
 	trigger = {
+
 		this = character:Segrellion_43
 
+		is_alive = yes
+
+		has_character_flag = segrellion_plate_story_stage_1_pending
+
 		NOT = {
-			any_character_artifact = {
-				has_variable = segrellion_plate_of_segrell_artifact
-			}
+			has_character_flag = segrellion_plate_story_stage_1_complete
+		}
+
+		NOT = {
+			segrellion_plate_recovery_blocked_trigger = yes
 		}
 	}
 
@@ -86,11 +96,204 @@ segrellion_winds.0101 = {
 
 		name = segrellion_winds.0101.a
 
+		remove_character_flag = segrellion_plate_story_stage_1_pending
+
+		add_character_flag = segrellion_plate_story_stage_1_complete
+		add_character_flag = segrellion_plate_story_stage_2_pending
+
+
+		trigger_event = {
+			id = segrellion_winds.0110
+			days = { 45 90 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - A TRAIL OF QUIET HANDS
+#
+# Hugh reconstructs the chain of people who protected
+# the armor after the Black Moon.
+# =========================================================
+
+segrellion_winds.0110 = {
+
+	type = character_event
+
+	title = segrellion_winds.0110.t
+	desc = segrellion_winds.0110.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = root
+
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		is_alive = yes
+
+		has_character_flag = segrellion_plate_story_stage_1_complete
+		has_character_flag = segrellion_plate_story_stage_2_pending
+
+		NOT = {
+			has_character_flag = segrellion_plate_story_stage_2_complete
+		}
+
+		NOT = {
+			segrellion_plate_recovery_blocked_trigger = yes
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winds.0110.a
+
+		remove_character_flag = segrellion_plate_story_stage_2_pending
+
+		add_character_flag = segrellion_plate_story_stage_2_complete
+		add_character_flag = segrellion_plate_story_stage_3_pending
+
+
+		trigger_event = {
+			id = segrellion_winds.0120
+			days = { 45 90 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - FOUND, BUT NOT YET HOME
+#
+# The Plate's present location is confirmed.
+#
+# No artifact is created here.
+# This only unlocks the recovery decision.
+# =========================================================
+
+segrellion_winds.0120 = {
+
+	type = character_event
+
+	title = segrellion_winds.0120.t
+	desc = segrellion_winds.0120.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = root
+
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		is_alive = yes
+
+		has_character_flag = segrellion_plate_story_stage_2_complete
+		has_character_flag = segrellion_plate_story_stage_3_pending
+
+		NOT = {
+			has_character_flag = segrellion_plate_story_stage_3_complete
+		}
+
+		NOT = {
+			segrellion_plate_recovery_blocked_trigger = yes
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winds.0120.a
+
+		remove_character_flag = segrellion_plate_story_stage_3_pending
+
+		add_character_flag = segrellion_plate_story_stage_3_complete
+
+		add_character_flag = segrellion_plate_recovery_ready
+
+		custom_tooltip = segrellion_plate_recovery_decision_unlocked_tt
+	}
+}
+
+
+# =========================================================
+# 0130 - THE PLATE COMES HOME
+#
+# Final delivery after Hugh has paid for the recovery.
+# =========================================================
+
+segrellion_winds.0130 = {
+
+	type = character_event
+
+	title = segrellion_winds.0130.t
+	desc = segrellion_winds.0130.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = root
+
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		is_alive = yes
+
+		has_character_flag = segrellion_plate_recovery_in_progress
+
+		NOT = {
+			segrellion_plate_recovery_blocked_trigger = yes
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winds.0130.a
+
+
 		segrellion_create_artifact_plate_of_segrell_effect = {
 			OWNER = root
 		}
 
+
+		remove_character_flag = segrellion_plate_recovery_in_progress
+
+		add_character_flag = segrellion_plate_recovery_complete
+
+		# Keep compatibility with the existing Daemon/Plate storyline.
 		add_character_flag = segrellion_plate_returned_by_sneakys_kin
+
+
+		set_global_variable = {
+			name = segrellion_plate_legitimately_recovered
+			value = yes
+		}
+
 
 		custom_tooltip = segrellion_plate_returns_to_hugh_tt
 	}

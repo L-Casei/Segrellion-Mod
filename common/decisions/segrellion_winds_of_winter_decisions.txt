@@ -238,6 +238,123 @@ segrellion_the_unicorn_returns_decision = {
 }
 
 # =========================================================
+# HUGH SEGRELLION
+# RECOVER THE PLATE OF SEGRELL
+# =========================================================
+
+segrellion_recover_plate_of_segrell_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/proclaim_paramountcy_of_the_flamelands_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_recover_plate_of_segrell_decision_desc
+	selection_tooltip = segrellion_recover_plate_of_segrell_decision_tooltip
+	confirm_text = segrellion_recover_plate_of_segrell_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Segrellion_43
+
+		has_character_flag = segrellion_plate_recovery_ready
+
+		NOT = {
+			has_character_flag = segrellion_plate_recovery_in_progress
+		}
+
+		NOT = {
+			has_character_flag = segrellion_plate_recovery_complete
+		}
+
+		NOT = {
+			segrellion_plate_recovery_blocked_trigger = yes
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+		gold >= 50
+
+
+		custom_description = {
+
+			text = segrellion_recover_plate_not_already_recovered_tt
+
+			NOT = {
+				segrellion_plate_recovery_blocked_trigger = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# COST
+	#
+	# This is NOT a purchase price.
+	# It covers couriers, guards, ships, wagons,
+	# harbour fees and secure transport.
+	# =====================================================
+
+	cost = {
+		gold = 50
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_recover_plate_transport_tt
+
+
+		hidden_effect = {
+
+			remove_character_flag = segrellion_plate_recovery_ready
+
+			add_character_flag = segrellion_plate_recovery_in_progress
+
+
+			trigger_event = {
+				id = segrellion_winds.0130
+				days = { 20 60 }
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_check_interval = 30
+
+	ai_potential = {
+		this = character:Segrellion_43
+	}
+
+	ai_will_do = {
+		base = 100
+	}
+}
+
+# =========================================================
 # DAEMON SEGRELLION
 # DEMAND THE PLATE OF SEGRELL
 # =========================================================

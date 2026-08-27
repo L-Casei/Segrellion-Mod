@@ -211,12 +211,21 @@ segrellion_setup_massey_defiance_effect = {
 }
 
 # =========================================================
-# 300 AC - THE RETURN OF THE PLATE OF SEGRELL
+# 300 AC - THE LOST PLATE OF SEGRELL
+#
+# Hugh does NOT begin with the artifact.
+#
+# Stage I   - Records prove that the Plate survived.
+# Stage II  - Its chain of keepers is reconstructed.
+# Stage III - Its current location is confirmed.
+#
+# Only then is the recovery decision unlocked.
 # =========================================================
 
 segrellion_setup_plate_return_story_effect = {
 
 	if = {
+
 		limit = {
 
 			current_date >= 8300.8.20
@@ -226,25 +235,28 @@ segrellion_setup_plate_return_story_effect = {
 			}
 
 			NOT = {
-				any_artifact = {
-					has_variable = segrellion_plate_of_segrell_artifact
-				}
+				segrellion_plate_recovery_blocked_trigger = yes
 			}
 
 			NOT = {
-				exists = global_var:segrellion_plate_return_story_started
+				has_global_variable = segrellion_plate_recovery_story_started
 			}
 		}
 
+
 		set_global_variable = {
-			name = segrellion_plate_return_story_started
+			name = segrellion_plate_recovery_story_started
 			value = yes
 		}
 
+
 		character:Segrellion_43 = {
+
+			add_character_flag = segrellion_plate_story_stage_1_pending
+
 			trigger_event = {
 				id = segrellion_winds.0101
-				days = 1
+				days = { 30 60 }
 			}
 		}
 	}
