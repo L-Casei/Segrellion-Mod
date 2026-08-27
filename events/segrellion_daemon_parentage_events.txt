@@ -129,16 +129,47 @@ segrellion_daemon_parentage.0002 = {
 
 	immediate = {
 
-		# Daemon learns a genuine disputed-heritage secret
-		# concerning himself.
-		#
-		# Because real_father = Targaryen_1, AGOT can then
-		# recognise him as a royal bastard claimant.
+		# Daemon himself discovers his hidden heritage.
 
 		add_secret = {
 			type = secret_disputed_heritage
 			target = root
 		}
+
+
+		# Explicitly ensure Daemon knows his own Secret.
+
+		random_known_secret = {
+
+			limit = {
+
+				secret_type = secret_disputed_heritage
+
+				secret_target = {
+					this = root
+				}
+			}
+
+			reveal_to = root
+		}
+
+
+		# =================================================
+		# AGOT ROYAL BASTARD STATE
+		#
+		# Normally these are established by
+		# agot_events_bastard.0900.
+		#
+		# In this route there is no external revealer:
+		# Daemon discovers the truth himself.
+		# =================================================
+
+		add_character_flag = royal_bastard
+
+		apply_bastard_bloodline_inheritance_effect = yes
+
+
+		# Our own narrative bookkeeping.
 
 		add_character_flag = segrellion_daemon_parentage_known
 		add_character_flag = segrellion_daemon_parentage_known_daemon_only
@@ -295,44 +326,22 @@ segrellion_daemon_parentage.0004 = {
 		remove_character_flag = segrellion_hugh_parentage_reveal_immediately
 
 
-		# Create the actual disputed heritage secret.
-		# Hugh becomes its initial knower.
+		option = {
 
-		add_secret = {
-			type = secret_disputed_heritage
-			target = character:Segrellion_60
-		}
+			name = segrellion_daemon_parentage.0004.a
 
-
-		# Explicitly teach the secret to Daemon.
-		# This is what allows AGOT's
-		# knows_self_royal_bastard_secret trigger to see it.
-
-		random_known_secret = {
-
-			limit = {
-
-				secret_type = secret_disputed_heritage
-
-				secret_target = {
-					this = character:Segrellion_60
-				}
+			trigger = {
+				has_character_flag = segrellion_hugh_parentage_reveal_immediately
 			}
 
-			reveal_to = character:Segrellion_60
-		}
+			custom_tooltip = segrellion_daemon_parentage.0004.a.tt
 
 
-		add_character_flag = told_true_parentage
-		add_character_flag = segrellion_hugh_revealed_daemon_parentage
+			remove_character_flag = segrellion_hugh_parentage_reveal_immediately
 
 
-		character:Segrellion_60 = {
-
-			trigger_event = {
-				id = segrellion_daemon_parentage.0003
-				days = 2
-			}
+			# Hand the entire revelation over to AGOT.
+			segrellion_reveal_daemon_parentage_through_agot_effect = yes
 		}
 	}
 
@@ -350,11 +359,44 @@ segrellion_daemon_parentage.0004 = {
 		}
 
 		custom_tooltip = segrellion_daemon_parentage.0004.b.tt
-		custom_tooltip = segrellion_daemon_parentage.reveal_decision_unlocked_tt
 
 
 		remove_character_flag = segrellion_hugh_parentage_withhold_intent
 
 		add_character_flag = segrellion_hugh_withholding_daemon_parentage
+
+
+		# =================================================
+		# PLAYER HUGH
+		#
+		# Give him the REAL secret immediately.
+		#
+		# AGOT's native "Expose True Parentage" decision
+		# can now detect Daemon.
+		# =================================================
+
+		if = {
+
+			limit = {
+				is_ai = no
+			}
+
+			segrellion_create_daemon_parentage_secret_effect = yes
+		}
+
+
+		# =================================================
+		# AI HUGH
+		#
+		# Do NOT create the Secret yet.
+		#
+		# Otherwise AGOT's own AI could decide to expose it
+		# before our intended 302 AC timing.
+		# =================================================
+
+		else = {
+
+			add_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+		}
 	}
 }

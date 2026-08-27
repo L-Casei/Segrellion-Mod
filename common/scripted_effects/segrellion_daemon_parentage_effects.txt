@@ -1,0 +1,95 @@
+# =========================================================
+# DAEMON SEGRELLION - ROYAL BASTARD SECRET
+# =========================================================
+
+
+# =========================================================
+# CREATE THE REAL CK3 HERITAGE SECRET
+#
+# Root = the character who learns the secret
+# Target = Daemon Segrellion
+#
+# We intentionally use secret_disputed_heritage.
+# AGOT explicitly supports this for non-Jon royal claimants.
+# =========================================================
+
+segrellion_create_daemon_parentage_secret_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+
+				any_known_secret = {
+
+					secret_type = secret_disputed_heritage
+
+					secret_target = {
+						this = character:Segrellion_60
+					}
+				}
+			}
+		}
+
+		add_secret = {
+			type = secret_disputed_heritage
+			target = character:Segrellion_60
+		}
+	}
+}
+
+
+# =========================================================
+# HAND THE REVELATION TO AGOT
+#
+# Root = Hugh
+#
+# Instead of manually telling Daemon, this invokes
+# AGOT's actual royal-bastard revelation system.
+# =========================================================
+
+segrellion_reveal_daemon_parentage_through_agot_effect = {
+
+	segrellion_create_daemon_parentage_secret_effect = yes
+
+
+	# AGOT's handler requires the actual Secret to be
+	# available as scope:heritage_secret.
+
+	random_known_secret = {
+
+		limit = {
+
+			secret_type = secret_disputed_heritage
+
+			secret_target = {
+				this = character:Segrellion_60
+			}
+		}
+
+		save_scope_as = heritage_secret
+	}
+
+
+	if = {
+
+		limit = {
+			exists = scope:heritage_secret
+		}
+
+		# Native AGOT state indicating that the knower has
+		# decided to reveal the parentage.
+
+		add_character_flag = told_true_parentage
+
+
+		# AGOT native handler for:
+		# Expose True Parentage
+
+		trigger_event = {
+			id = agot_events_bastard.0900
+			days = 1
+		}
+	}
+}
