@@ -333,3 +333,215 @@ segrellion_negotiate_reinforcements_decision = {
 		has_character_flag = segrellion_plate_demand_resolved
 	}
 }
+
+# =========================================================
+# REVEAL THE TRUTH
+# HUGH SEGRELLION -> DAEMON SEGRELLION
+#
+# Hugh has broken Daena's seal and learned Daemon's
+# true parentage, but deliberately kept the truth from him.
+# =========================================================
+
+segrellion_reveal_daemon_truth_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+
+	decision_group_type = major
+
+	sort_order = 150
+
+	desc = segrellion_reveal_daemon_truth_decision_desc
+
+	selection_tooltip = segrellion_reveal_daemon_truth_decision_tooltip
+
+	confirm_text = segrellion_reveal_daemon_truth_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Segrellion_43
+
+		has_character_flag = segrellion_hugh_withholding_daemon_parentage
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_known
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	#
+	# No prestige, gold or political requirement.
+	# Hugh can tell him whenever he decides the time is right.
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+
+		character:Segrellion_60 = {
+			is_alive = yes
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_reveal_daemon_truth_effect_tt
+
+
+		hidden_effect = {
+
+			# -------------------------------------------------
+			# TURN HUGH'S PRIVATE KNOWLEDGE INTO A REAL SECRET
+			# -------------------------------------------------
+
+			add_secret = {
+				type = secret_disputed_heritage
+				target = character:Segrellion_60
+			}
+
+
+			# -------------------------------------------------
+			# DAEMON LEARNS HIS OWN SECRET
+			# -------------------------------------------------
+
+			random_known_secret = {
+
+				limit = {
+
+					secret_type = secret_disputed_heritage
+
+					secret_target = {
+						this = character:Segrellion_60
+					}
+				}
+
+				reveal_to = character:Segrellion_60
+			}
+
+
+			# -------------------------------------------------
+			# HUGH HAS FINALLY KEPT DAENA'S PROMISE
+			# -------------------------------------------------
+
+			remove_character_flag = segrellion_hugh_withholding_daemon_parentage
+
+			add_character_flag = told_true_parentage
+			add_character_flag = segrellion_hugh_revealed_daemon_parentage
+
+
+			# -------------------------------------------------
+			# DAEMON REACTS
+			# -------------------------------------------------
+
+			character:Segrellion_60 = {
+
+				trigger_event = {
+					id = segrellion_daemon_parentage.0003
+					days = 2
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	#
+	# Hugh's AI categorically refuses to consider revealing
+	# the truth before 302 AC.
+	#
+	# From 302 onward he may reveal it.
+	# The pressure rises substantially in 303 and 304.
+	# =====================================================
+
+	ai_check_interval = 6
+
+
+	ai_potential = {
+
+		this = character:Segrellion_43
+
+		has_character_flag = segrellion_hugh_withholding_daemon_parentage
+
+		current_date >= 8302.1.1
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_known
+			}
+		}
+	}
+
+
+	ai_will_do = {
+
+		# 302 AC:
+		# Hugh has finally begun considering whether
+		# the silence has lasted long enough.
+
+		base = 15
+
+
+		# 303 AC:
+		# Keeping it buried becomes increasingly difficult.
+
+		modifier = {
+
+			add = 25
+
+			current_date >= 8303.1.1
+		}
+
+
+		# 304 AC onward:
+		# Hugh is now strongly inclined to tell Daemon.
+
+		modifier = {
+
+			add = 60
+
+			current_date >= 8304.1.1
+		}
+
+
+		# If Daemon has begun his restoration campaign,
+		# the political significance of his blood becomes
+		# considerably harder for Hugh to ignore.
+
+		modifier = {
+
+			add = 35
+
+			character:Segrellion_60 = {
+
+				OR = {
+
+					has_character_flag = segrellion_unicorn_returns_decision_taken
+					has_character_flag = segrellion_unicorn_returns_war_active
+					has_character_flag = segrellion_foreign_support_secured
+				}
+			}
+		}
+	}
+}
