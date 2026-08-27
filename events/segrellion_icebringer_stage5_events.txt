@@ -51,10 +51,13 @@ segrellion_icebringer.8000 = {
 
 
 # =========================================================
-# 8001 - TRUEST WARRIOR STAGE V ENTRY
+# 8100 - THE STORY BENEATH THE SNOW
+#
+# AZOR AHAI STAGE V
+# EVENT I
 # =========================================================
 
-segrellion_icebringer.8001 = {
+segrellion_icebringer.8100 = {
 	type = character_event
 
 	immediate = {
@@ -63,13 +66,13 @@ segrellion_icebringer.8001 = {
 		}
 	}
 
-	title = segrellion_icebringer.8001.t
-	desc = segrellion_icebringer.8001.desc
+	title = segrellion_icebringer.8100.t
+	desc = segrellion_icebringer.8100.desc
 
 	theme = learning
 
 	override_background = {
-		reference = segrellion_vhalerion_throne_room
+		reference = segrellion_beyond_the_wall_blizzard
 	}
 
 	left_portrait = {
@@ -78,21 +81,334 @@ segrellion_icebringer.8001 = {
 	}
 
 	option = {
-		name = segrellion_icebringer.8001.a
+		name = segrellion_icebringer.8100.a
+
+		trigger_event = segrellion_icebringer.8110
+	}
+}
+
+
+
+# =========================================================
+# 8110 - A NAME FOR THE DAWN
+#
+# AZOR AHAI STAGE V
+# EVENT II
+# =========================================================
+
+segrellion_icebringer.8110 = {
+	type = character_event
+
+	title = segrellion_icebringer.8110.t
+	desc = segrellion_icebringer.8110.desc
+
+	theme = learning
+
+	override_background = {
+		reference = segrellion_beyond_the_wall_blizzard
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_icebringer.8110.a
+
+		trigger_event = segrellion_icebringer.8120
+	}
+}
+
+
+
+# =========================================================
+# 8120 - THE PRICE OF LIGHT
+#
+# AZOR AHAI STAGE V
+# EVENT III
+# =========================================================
+
+segrellion_icebringer.8120 = {
+	type = character_event
+
+	title = segrellion_icebringer.8120.t
+	desc = segrellion_icebringer.8120.desc
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_beyond_the_wall_blizzard
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_icebringer.8120.a
+
+		trigger_event = segrellion_icebringer.8130
+	}
+}
+
+
+
+# =========================================================
+# 8130 - THE LAST TEMPERING
+#
+# AZOR AHAI STAGE V
+# EVENT IV
+#
+# THE FINAL CHOICE.
+# =========================================================
+
+segrellion_icebringer.8130 = {
+	type = character_event
+
+	immediate = {
+
+		# =================================================
+		# FIND THE PERSON ROOT LOVES MOST
+		#
+		# Priority:
+		# 1. Soulmate
+		# 2. Lover
+		# 3. Spouse
+		# =================================================
 
 		if = {
 			limit = {
-				NOT = {
-					has_trait = segrellion_truest_warrior_trait
+				any_relation = {
+					type = soulmate
+					is_alive = yes
 				}
 			}
 
-			add_trait = segrellion_truest_warrior_trait
+			random_relation = {
+				type = soulmate
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = azor_beloved
+			}
 		}
 
-		add_character_flag = segrellion_icebringer_stage5_entry_reached
+		else_if = {
+			limit = {
+				any_relation = {
+					type = lover
+					is_alive = yes
+				}
+			}
 
-		remove_character_flag = segrellion_icebringer_awakening_chain_active
+			random_relation = {
+				type = lover
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = azor_beloved
+			}
+		}
+
+		else_if = {
+			limit = {
+				any_spouse = {
+					is_alive = yes
+				}
+			}
+
+			random_spouse = {
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = azor_beloved
+			}
+		}
+	}
+
+	title = segrellion_icebringer.8130.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					exists = scope:azor_beloved
+				}
+
+				desc = segrellion_icebringer.8130.desc_beloved
+			}
+
+			desc = segrellion_icebringer.8130.desc_alone
+		}
+	}
+
+	theme = death
+
+	override_background = {
+		reference = segrellion_beyond_the_wall_blizzard
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+
+	# =====================================================
+	# SACRIFICE
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.8130.a
+
+		trigger = {
+			exists = scope:azor_beloved
+		}
+
+		custom_tooltip = segrellion_icebringer.8130.a.tt
+
+		hidden_effect = {
+
+			# ---------------------------------------------
+			# THE SACRIFICE
+			# ---------------------------------------------
+
+			scope:azor_beloved = {
+				death = {
+					death_reason = death_sacrificed_to_gods
+					killer = root
+				}
+			}
+
+
+			# Do this BEFORE receiving Azor Ahai,
+			# otherwise the trait's stress reduction
+			# would soften the price considerably.
+
+			add_stress = 250
+
+
+			# ---------------------------------------------
+			# IF LIGHTBRINGER WAS NOT ALREADY FOUND
+			#
+			# Finish Icebringer's transformation now.
+			# ---------------------------------------------
+
+			if = {
+				limit = {
+					NOT = {
+						has_character_flag = segrellion_azor_lightbringer_received
+					}
+				}
+
+				segrellion_transform_icebringer_into_lightbringer_effect = {
+					OWNER = root
+				}
+
+				add_character_flag = segrellion_azor_lightbringer_received
+			}
+
+
+			# ---------------------------------------------
+			# AZOR AHAI
+			# ---------------------------------------------
+
+			if = {
+				limit = {
+					NOT = {
+						has_trait = segrellion_azor_ahai_trait
+					}
+				}
+
+				add_trait = segrellion_azor_ahai_trait
+			}
+
+
+			# This is what actually allows Lightbringer's
+			# artifact modifier to function.
+
+			add_character_flag = segrellion_icebringer_stage5_azor_ahai
+
+
+			# ---------------------------------------------
+			# STAGE V COMPLETE
+			# ---------------------------------------------
+
+			add_character_flag = segrellion_icebringer_stage5_entry_reached
+
+			remove_character_flag = segrellion_icebringer_stage5_azor_locked
+			remove_character_flag = segrellion_icebringer_awakening_chain_active
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.8130.b
+
+		trigger = {
+			exists = scope:azor_beloved
+		}
+
+		custom_tooltip = segrellion_icebringer.8130.b.tt
+
+		hidden_effect = {
+
+			segrellion_icebringer_final_rejection_effect = yes
+
+			add_character_flag = segrellion_icebringer_stage5_entry_reached
+			add_character_flag = segrellion_icebringer_stage5_azor_rejected
+
+			remove_character_flag = segrellion_azor_lightbringer_received
+			remove_character_flag = segrellion_azor_lightbringer_walker_path
+
+			remove_character_flag = segrellion_icebringer_stage5_azor_locked
+			remove_character_flag = segrellion_icebringer_awakening_chain_active
+		}
+	}
+
+
+	# =====================================================
+	# NO BELOVED EXISTS
+	#
+	# Safety fallback so the chain can never break.
+	# =====================================================
+
+	option = {
+		name = segrellion_icebringer.8130.c
+
+		trigger = {
+			NOT = {
+				exists = scope:azor_beloved
+			}
+		}
+
+		custom_tooltip = segrellion_icebringer.8130.c.tt
+
+		hidden_effect = {
+
+			segrellion_icebringer_final_rejection_effect = yes
+
+			add_character_flag = segrellion_icebringer_stage5_entry_reached
+			add_character_flag = segrellion_icebringer_stage5_azor_rejected
+
+			remove_character_flag = segrellion_azor_lightbringer_received
+			remove_character_flag = segrellion_azor_lightbringer_walker_path
+
+			remove_character_flag = segrellion_icebringer_stage5_azor_locked
+			remove_character_flag = segrellion_icebringer_awakening_chain_active
+		}
 	}
 }
 
@@ -197,5 +513,66 @@ segrellion_icebringer.8100 = {
 		add_character_flag = segrellion_icebringer_stage5_entry_reached
 
 		remove_character_flag = segrellion_icebringer_awakening_chain_active
+	}
+}
+
+
+# =========================================================
+# FINAL REJECTION
+#
+# The bearer refused the final price.
+#
+# Icebringer / Lightbringer leaves the world with them.
+# =========================================================
+
+segrellion_icebringer_final_rejection_effect = {
+
+	# =====================================================
+	# DESTROY ICEBRINGER'S CURRENT FORM
+	# =====================================================
+
+	if = {
+		limit = {
+			exists = global_var:segrellion_icebringer
+		}
+
+		global_var:segrellion_icebringer = {
+			save_scope_as = rejected_icebringer
+		}
+
+		remove_global_variable = segrellion_icebringer
+
+		if = {
+			limit = {
+				exists = global_var:segrellion_lightbringer
+			}
+
+			remove_global_variable = segrellion_lightbringer
+		}
+
+		destroy_artifact = scope:rejected_icebringer
+	}
+
+	else_if = {
+		limit = {
+			exists = global_var:segrellion_lightbringer
+		}
+
+		global_var:segrellion_lightbringer = {
+			save_scope_as = rejected_lightbringer
+		}
+
+		remove_global_variable = segrellion_lightbringer
+
+		destroy_artifact = scope:rejected_lightbringer
+	}
+
+
+	# =====================================================
+	# THE WOUND LEFT BEHIND
+	# =====================================================
+
+	add_character_modifier = {
+		modifier = segrellion_forsaken_by_the_flame_modifier
 	}
 }

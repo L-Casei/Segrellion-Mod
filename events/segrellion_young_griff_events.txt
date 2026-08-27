@@ -35,20 +35,6 @@ segrellion_young_griff.1000 = {
 	}
 
 
-	immediate = {
-
-		# Daemon has chosen Stannis's cause.
-		# Their formal alliance cannot survive this.
-
-		segrellion_young_griff_break_daemon_alliance_effect = yes
-
-		add_opinion = {
-			target = character:Segrellion_60
-			modifier = segrellion_chose_stannis_over_young_griff_opinion
-		}
-	}
-
-
 	left_portrait = {
 		character = root
 		animation = thinking
@@ -248,21 +234,6 @@ segrellion_young_griff.2000 = {
 		character:Segrellion_60 ?= {
 			is_alive = yes
 			has_character_flag = segrellion_pledged_to_daenerys
-		}
-	}
-
-
-	immediate = {
-
-		# Daemon has backed another Targaryen claimant.
-		# The alliance ends, though this is not the outright
-		# political hostility created by the Stannis route.
-
-		segrellion_young_griff_break_daemon_alliance_effect = yes
-
-		add_opinion = {
-			target = character:Segrellion_60
-			modifier = segrellion_chose_daenerys_over_young_griff_opinion
 		}
 	}
 
@@ -492,6 +463,32 @@ segrellion_young_griff.3000 = {
 		}
 	}
 
+	option = {
+
+		name = segrellion_young_griff.3000.a
+
+		custom_tooltip = segrellion_young_griff_dorne_support_daemon_tt
+
+		ai_chance = {
+			base = 100
+		}
+
+		...
+	}
+
+	option = {
+
+		name = segrellion_young_griff.3000.b
+
+		custom_tooltip = segrellion_young_griff_dorne_abandon_daemon_tt
+
+		ai_chance = {
+			base = 0
+		}
+
+		...
+	}
+
 
 	# =====================================================
 	# ABANDON DAEMON
@@ -597,39 +594,6 @@ segrellion_young_griff.3100 = {
 				modifier = segrellion_young_griff_abandoned_daemon_opinion
 			}
 		}
-	}
-}
-
-# =========================================================
-# 4000 - THE DRAGON IS READY
-#
-# Hidden AI timing event.
-# Around 302-303 AC.
-# =========================================================
-
-segrellion_young_griff.4000 = {
-
-	hidden = yes
-
-	trigger = {
-
-		this = character:IAF_Young_Griff_1
-
-		is_alive = yes
-		is_ai = yes
-
-		NOT = {
-			has_title = title:h_the_iron_throne
-		}
-
-		NOT = {
-			has_character_flag = segrellion_young_griff_iron_throne_war_started
-		}
-	}
-
-	immediate = {
-
-		add_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
 	}
 }
 
