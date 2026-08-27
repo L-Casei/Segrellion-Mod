@@ -108,58 +108,58 @@ segrellion_take_iron_throne_decision = {
 	is_valid = {
 
 		is_adult = yes
+
 		is_imprisoned = no
 
 
-		# =================================================
-		# 25,000 SOLDIERS
-		# =================================================
+		# =====================================================
+		# MILITARY STRENGTH
+		# =====================================================
 
 		custom_description = {
-
 			text = segrellion_take_iron_throne_army_requirement_tt
-
 			current_military_strength >= 25000
 		}
 
 
-		# =================================================
+		# =====================================================
 		# POLITICAL SUPPORT
 		#
-		# Either:
-		# - one canonical Lord Paramount ally,
-		#
-		# or:
-		# - Daemon Segrellion AND Joffrey Vladwyn.
-		# =================================================
+		# At least one of these:
+		#   Allied with a Lord Paramount
+		#   All of these:
+		#       Allied with Daemon Segrellion
+		#       Allied with Joffrey Vladwyn
+		# =====================================================
 
-		custom_description = {
+		OR = {
 
-			text = segrellion_take_iron_throne_allies_requirement_tt
-
-			OR = {
-
+			custom_description = {
+				text = segrellion_take_iron_throne_paramount_ally_requirement_tt
 				segrellion_young_griff_has_paramount_ally_trigger = yes
+			}
 
+			AND = {
 
-				AND = {
-
+				custom_description = {
+					text = segrellion_take_iron_throne_daemon_ally_requirement_tt
 					is_allied_to = character:Segrellion_60
+				}
 
+				custom_description = {
+					text = segrellion_take_iron_throne_joffrey_ally_requirement_tt
 					is_allied_to = character:Vladwyn_5
 				}
 			}
 		}
 
 
-		# =================================================
-		# DISTINGUISHED OR HIGHER
-		# =================================================
+		# =====================================================
+		# LEVEL OF FAME
+		# =====================================================
 
 		custom_description = {
-
 			text = segrellion_take_iron_throne_fame_requirement_tt
-
 			prestige_level >= 2
 		}
 	}
