@@ -1,0 +1,56 @@
+# =========================================================
+# THE UNICORN RETURNS
+# DAEMON SEGRELLION VS CLIFFORD STORMFLAME
+# =========================================================
+
+segrellion_daemon_clifford_battle = {
+
+	type = commander
+
+	is_valid = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+		NOT = {
+			has_character_flag = segrellion_clifford_duel_triggered
+		}
+
+		NOT = {
+			has_character_flag = segrellion_killed_clifford_event_done
+		}
+
+		character:Stormflame_13 ?= {
+			is_alive = yes
+		}
+
+		# Clifford must ACTUALLY be fighting on the other side.
+		scope:combat_side.enemy_side = {
+
+			OR = {
+
+				any_side_commander = {
+					this = character:Stormflame_13
+				}
+
+				any_side_knight = {
+					this = character:Stormflame_13
+				}
+			}
+		}
+	}
+
+	chance = {
+		base = 1000000
+	}
+
+	effect = {
+
+		add_character_flag = segrellion_clifford_duel_triggered
+
+		trigger_event = {
+			id = segrellion_winds.0301
+		}
+	}
+}

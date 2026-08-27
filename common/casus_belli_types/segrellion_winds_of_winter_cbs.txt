@@ -84,6 +84,85 @@ segrellion_unicorn_returns_cb = {
 				value = scope:war
 			}
 
+			# =================================================
+			# THE STORMFLAME HOST
+			#
+			# Leo remains at the Beacon.
+			# Clifford commands the field army.
+			# =================================================
+
+			if = {
+				limit = {
+
+					scope:defender = character:Stormflame_3
+
+					character:Stormflame_3 ?= {
+						is_alive = yes
+					}
+
+					character:Stormflame_13 ?= {
+						is_alive = yes
+					}
+				}
+
+				# Leo is far too old to ride into battle himself.
+				character:Stormflame_3 = {
+					set_knight_status = forbid
+
+					# Keep his surviving sons at his court.
+					character:Stormflame_12 ?= {
+						set_employer = character:Stormflame_3
+					}
+
+					character:Stormflame_13 ?= {
+						set_employer = character:Stormflame_3
+					}
+
+					spawn_army = {
+
+						name = iaf_leo_stormflame_host
+
+						men_at_arms = {
+							type = armored_footmen
+							men = 800
+						}
+
+						men_at_arms = {
+							type = pikemen_unit
+							men = 600
+						}
+
+						men_at_arms = {
+							type = bowmen
+							men = 600
+						}
+
+						levies = 3000
+
+						inheritable = yes
+
+						location = title:c_farring_cross.title_province
+						origin = title:c_farring_cross.title_province
+
+						war = scope:war
+
+						save_scope_as = segrellion_stormflame_war_host
+					}
+				}
+
+				scope:segrellion_stormflame_war_host ?= {
+
+					assign_commander = character:Stormflame_13
+
+					character:Stormflame_3 = {
+						set_variable = {
+							name = segrellion_stormflame_war_host
+							value = scope:segrellion_stormflame_war_host
+						}
+					}
+				}
+			}
+
 
 			# ---------------------------------------------
 			# THE UNICORN UNBOUND

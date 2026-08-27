@@ -73,17 +73,84 @@ segrellion_uncover_lost_legacy = {
 
 	can_start_planning = {
 
-		dynasty = dynasty:dynn_Segrellion
-
-		is_adult = yes
-		is_imprisoned = no
+		# =====================================================
+		# THE AUTHORITY TO WRITE THE OFFICIAL HISTORY
+		# =====================================================
 
 		custom_description = {
-			text = segrellion_lost_legacy_dragonlore_requirement_tt
+			text = segrellion_lost_legacy_requirement_house_head_tt
 
-			exists = var:segrellion_lore
-			var:segrellion_lore >= 10
+			is_house_head = yes
 		}
+
+
+		# =====================================================
+		# ENOUGH POLITICAL WEIGHT TO MAINTAIN THE PROJECT
+		# =====================================================
+
+		custom_description = {
+			text = segrellion_lost_legacy_requirement_rank_tt
+
+			highest_held_title_tier >= tier_duchy
+		}
+
+
+		# =====================================================
+		# SUFFICIENT PERSONAL PRESTIGE
+		# =====================================================
+
+		custom_description = {
+			text = segrellion_lost_legacy_requirement_prestige_tt
+
+			prestige_level >= high_prestige_level
+		}
+
+
+		# =====================================================
+		# CONTROL A SEGRELLION HISTORICAL CENTER
+		#
+		# Vhal       = province:4427
+		# The Beacon = province:4373
+		# White Hall = province:4412
+		# =====================================================
+
+		custom_description = {
+			text = segrellion_lost_legacy_requirement_ancestral_seat_tt
+
+			any_held_county = {
+
+				title_province = {
+
+					OR = {
+						this = province:4427
+						this = province:4373
+						this = province:4412
+					}
+				}
+			}
+		}
+
+
+		# =====================================================
+		# STANDARD PERSONAL REQUIREMENTS
+		# =====================================================
+
+		custom_description = {
+			text = segrellion_lost_legacy_requirement_capable_tt
+
+			is_capable_adult = yes
+		}
+
+		custom_description = {
+			text = segrellion_lost_legacy_requirement_not_imprisoned_tt
+
+			is_imprisoned = no
+		}
+
+
+		# =====================================================
+		# UNIQUE PROJECT
+		# =====================================================
 
 		NOT = {
 			has_global_variable = segrellion_lost_legacy_completed
@@ -195,13 +262,49 @@ segrellion_uncover_lost_legacy = {
 
 	on_complete = {
 
+		# Keep the project scope available for Chronicle Quality.
 		scope:great_project = {
 			save_scope_as = segrellion_chronicle_project
 		}
 
+
 		scope:owner = {
 
-			custom_tooltip = segrellion_lost_legacy_completion_tt
+			# =================================================
+			# PERSONAL REWARD
+			# =================================================
+
+			add_prestige = 1000
+
+
+			# =================================================
+			# DYNASTIC REWARD
+			# =================================================
+
+			dynasty = {
+
+				add_dynasty_prestige = 750
+
+				add_dynasty_modifier = {
+					modifier = segrellion_legacy_reclaimed_modifier
+				}
+			}
+
+
+			# =================================================
+			# CHRONICLE
+			# =================================================
+
+			custom_tooltip = segrellion_lost_legacy_chronicle_reward_tt
+
+			custom_tooltip = segrellion_lost_legacy_chronicle_quality_reward_tt
+
+			custom_tooltip = segrellion_lost_legacy_future_knowledge_reward_tt
+
+
+			# =================================================
+			# ARTIFACT CREATION + FLAGS + FINAL EVENT
+			# =================================================
 
 			hidden_effect = {
 				segrellion_complete_lost_legacy_effect = yes

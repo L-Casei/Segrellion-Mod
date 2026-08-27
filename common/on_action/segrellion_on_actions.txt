@@ -699,71 +699,74 @@ vladwyn_8106_startup = {
     }
 }
 
+
 # =========================================================
-# THE UNICORN RETURNS - FIRST VICTORIOUS BATTLE
-# CLIFFORD STORMFLAME
-# Root of on_combat_end_winner = combat_side
+# THE UNICORN RETURNS
+# DAEMON VS CLIFFORD - SHORT BATTLE FAILSAFE
+#
+# Root = victorious combat side
 # =========================================================
 
 segrellion_unicorn_returns_clifford_battle_check = {
 
-	effect = {
+	trigger = {
 
-		# Daemon is commanding the victorious army.
-		every_side_commander = {
+		character:Segrellion_60 ?= {
 
-			if = {
-				limit = {
+			is_alive = yes
 
-					this = character:Segrellion_60
+			has_character_flag = segrellion_unicorn_returns_war_active
 
-					has_character_flag = segrellion_unicorn_returns_war_active
+			NOT = {
+				has_character_flag = segrellion_clifford_duel_triggered
+			}
 
-					NOT = {
-						has_character_flag = segrellion_killed_clifford_event_done
-					}
-
-					character:Stormflame_13 ?= {
-						is_alive = yes
-					}
-				}
-
-				add_character_flag = segrellion_killed_clifford_event_done
-
-				trigger_event = {
-					id = segrellion_winds.0301
-					days = 1
-				}
+			NOT = {
+				has_character_flag = segrellion_killed_clifford_event_done
 			}
 		}
 
+		character:Stormflame_13 ?= {
+			is_alive = yes
+		}
 
-		# Fallback in case Daemon participates as a knight rather
-		# than as the army commander.
-		every_side_knight = {
+		# Daemon must be on the victorious side.
+		OR = {
 
-			if = {
-				limit = {
+			any_side_commander = {
+				this = character:Segrellion_60
+			}
 
-					this = character:Segrellion_60
+			any_side_knight = {
+				this = character:Segrellion_60
+			}
+		}
 
-					has_character_flag = segrellion_unicorn_returns_war_active
+		# Clifford must really be on the defeated side.
+		enemy_side = {
 
-					NOT = {
-						has_character_flag = segrellion_killed_clifford_event_done
-					}
+			OR = {
 
-					character:Stormflame_13 ?= {
-						is_alive = yes
-					}
+				any_side_commander = {
+					this = character:Stormflame_13
 				}
 
-				add_character_flag = segrellion_killed_clifford_event_done
-
-				trigger_event = {
-					id = segrellion_winds.0301
-					days = 1
+				any_side_knight = {
+					this = character:Stormflame_13
 				}
+			}
+		}
+	}
+
+	effect = {
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_clifford_duel_triggered
+
+			trigger_event = {
+				id = segrellion_winds.0301
+				days = 1
 			}
 		}
 	}
@@ -771,38 +774,44 @@ segrellion_unicorn_returns_clifford_battle_check = {
 
 
 # =========================================================
-# THE UNICORN RETURNS - ARRIVAL AT THE BEACON
+# THE UNICORN RETURNS
+# AN ATTACKING ARMY REACHES THE BEACON
 # =========================================================
 
-segrellion_unicorn_returns_beacon_arrival_check = {
+segrellion_unicorn_returns_beacon_arrival_fallback = {
 
 	trigger = {
 
-		this = character:Segrellion_60
+		character:Segrellion_60 ?= {
 
-		is_alive = yes
+			is_alive = yes
 
-		has_character_flag = segrellion_unicorn_returns_war_active
+			has_character_flag = segrellion_unicorn_returns_war_active
 
-		NOT = {
-			has_character_flag = segrellion_beacon_surrender_demanded
+			NOT = {
+				has_character_flag = segrellion_beacon_surrender_demanded
+			}
+
+			any_army = {
+				location = title:b_castle_farring.title_province
+			}
 		}
-
-		location = title:b_castle_farring.title_province
 
 		character:Stormflame_3 ?= {
 			is_alive = yes
 		}
 	}
 
-
 	effect = {
 
-		add_character_flag = segrellion_beacon_surrender_demanded
+		character:Segrellion_60 = {
 
-		trigger_event = {
-			id = segrellion_winds.0401
-			days = 1
+			add_character_flag = segrellion_beacon_surrender_demanded
+
+			trigger_event = {
+				id = segrellion_winds.0401
+				days = 1
+			}
 		}
 	}
 }
@@ -863,35 +872,53 @@ segrellion_unicorn_returns_beacon_siege_check = {
 
 	trigger = {
 
-		this = character:Segrellion_60
+		location = title:b_castle_farring.title_province
 
-		is_alive = yes
+		character:Segrellion_60 ?= {
 
-		has_character_flag = segrellion_unicorn_returns_war_active
+			is_alive = yes
 
-		has_character_flag = segrellion_leo_refused_beacon_surrender
+			has_character_flag = segrellion_unicorn_returns_war_active
 
-		NOT = {
-			has_character_flag = segrellion_beacon_stormed_resolution
+			has_character_flag = segrellion_leo_refused_beacon_surrender
+
+			NOT = {
+				has_character_flag = segrellion_beacon_stormed_resolution
+			}
 		}
 
-		location = title:b_castle_farring.title_province
-	}
+		OR = {
 
+			this = character:Segrellion_60
+
+			is_at_war_with = character:Stormflame_3
+
+			liege ?= {
+				is_at_war_with = character:Stormflame_3
+			}
+
+			top_liege ?= {
+				is_at_war_with = character:Stormflame_3
+			}
+		}
+	}
 
 	effect = {
 
-		add_character_flag = segrellion_beacon_stormed_resolution
+		character:Segrellion_60 = {
 
-		segrellion_capture_stormflame_court_effect = yes
+			add_character_flag = segrellion_beacon_stormed_resolution
 
-		trigger_event = {
-			id = segrellion_winds.0404
-			days = 1
-		}
+			segrellion_capture_stormflame_court_effect = yes
 
-		var:segrellion_unicorn_returns_war ?= {
-			end_war = attacker
+			trigger_event = {
+				id = segrellion_winds.0404
+				days = 1
+			}
+
+			var:segrellion_unicorn_returns_war ?= {
+				end_war = attacker
+			}
 		}
 	}
 }
