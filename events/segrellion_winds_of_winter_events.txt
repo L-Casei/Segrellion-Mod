@@ -860,7 +860,6 @@ segrellion_winds.0401 = {
 
 			trigger_event = {
 				id = segrellion_winds.0402
-				days = 1
 			}
 		}
 	}
@@ -890,16 +889,22 @@ segrellion_winds.0402 = {
 	right_portrait = character:Segrellion_60
 
 
-	# Surrender.
+	# =====================================================
+	# SURRENDER
+	# Leo offers his own life in exchange for his family.
+	# =====================================================
+
 	option = {
 
 		name = segrellion_winds.0402.a
+
 
 		ai_chance = {
 
 			base = 30
 
 			modifier = {
+
 				add = 70
 
 				character:Segrellion_60 = {
@@ -908,19 +913,28 @@ segrellion_winds.0402 = {
 			}
 		}
 
-		segrellion_capture_stormflame_court_effect = yes
 
+		# Daemon's terms included mercy for Leo's family.
 		character:Segrellion_60 = {
 
 			add_character_flag = segrellion_leo_surrendered_beacon
 
+			add_character_flag = segrellion_promised_stormflame_family_mercy
+
+			remove_character_modifier = segrellion_beacon_awaits_modifier
+		}
+
+
+		# The gates open.
+		# Every surviving Stormflame passes into Daemon's custody.
+		segrellion_capture_stormflame_court_effect = yes
+
+
+		# Daemon now decides whether his word means anything.
+		character:Segrellion_60 = {
+
 			trigger_event = {
 				id = segrellion_winds.0403
-				days = 1
-			}
-
-			var:segrellion_unicorn_returns_war ?= {
-				end_war = attacker
 			}
 		}
 	}

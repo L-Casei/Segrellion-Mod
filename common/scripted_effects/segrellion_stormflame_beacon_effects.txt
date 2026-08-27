@@ -1,0 +1,212 @@
+# =========================================================
+# HOUSE STORMFLAME AT THE BEACON
+# =========================================================
+
+segrellion_gather_stormflames_at_beacon_effect = {
+
+	# Leo remains personally at the Beacon.
+	character:Stormflame_3 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			set_knight_status = forbid
+
+			set_location = title:b_castle_farring.title_province
+
+			# If CK3 somehow assigned Leo to an army,
+			# remove him immediately.
+			every_army = {
+
+				if = {
+					limit = {
+
+						army_commander ?= {
+							this = character:Stormflame_3
+						}
+					}
+
+					remove_commander = yes
+				}
+			}
+		}
+	}
+
+
+	# Gather the entire living Stormflame household.
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			# They are not to be randomly pulled out as knights.
+			set_knight_status = forbid
+
+			if = {
+				limit = {
+					is_ruler = no
+					this != character:Stormflame_13
+				}
+
+				set_employer = character:Stormflame_3
+				set_location = title:b_castle_farring.title_province
+			}
+		}
+	}
+
+
+	# Clifford is the deliberate exception.
+	# He rides out to command Leo's field army.
+	character:Stormflame_13 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			set_employer = character:Stormflame_3
+		}
+	}
+}
+
+
+# =========================================================
+# CAPTURE THE ENTIRE STORMFLAME HOUSEHOLD
+# =========================================================
+
+segrellion_capture_stormflame_court_effect = {
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+				is_alive = yes
+
+				NOT = {
+					is_imprisoned = yes
+				}
+			}
+
+			save_scope_as = segrellion_stormflame_capture_target
+
+			add_character_flag = {
+				flag = block_imprisonment_event
+				days = 1
+			}
+
+			character:Segrellion_60 = {
+
+				imprison = {
+					target = scope:segrellion_stormflame_capture_target
+					type = dungeon
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# BREAK THE PROMISE
+# DAEMON EXECUTES EVERY SURVIVING STORMFLAME
+# =========================================================
+
+segrellion_execute_all_stormflame_captives_effect = {
+
+	character:Segrellion_60 = {
+		add_character_flag = segrellion_broke_beacon_mercy_oath
+	}
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_execution
+				killer = character:Segrellion_60
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# HONOR THE PROMISE
+# LEO DIES, HIS FAMILY IS RELEASED
+# =========================================================
+
+segrellion_execute_leo_spare_stormflame_family_effect = {
+
+	character:Segrellion_60 = {
+		add_character_flag = segrellion_honored_beacon_mercy_oath
+	}
+
+
+	character:Stormflame_3 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_execution
+				killer = character:Segrellion_60
+			}
+		}
+	}
+
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+				is_alive = yes
+				this != character:Stormflame_3
+			}
+
+			add_character_flag = segrellion_spared_by_daemon_at_beacon
+
+			if = {
+				limit = {
+					is_imprisoned = yes
+				}
+
+				release_from_prison = yes
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# COMPLETE MERCY
+# Used by the post-siege branch if wanted.
+# =========================================================
+
+segrellion_spare_all_stormflame_captives_effect = {
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+				is_alive = yes
+				is_imprisoned = yes
+			}
+
+			release_from_prison = yes
+		}
+	}
+}

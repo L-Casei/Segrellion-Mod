@@ -21,6 +21,7 @@ monthly_global_pulse = {
 		segrellion_winds_300_aftermath_check
 		segrellion_black_moon_house_relation_progression
 		segrellion_exceptionalism_progression
+		segrellion_unicorn_returns_leo_beacon_lock
 	}
 }
 
@@ -158,6 +159,52 @@ on_combat_end_winner = {
 on_siege_completion = {
 	on_actions = {
 		segrellion_unicorn_returns_beacon_siege_check
+	}
+}
+
+# =========================================================
+# LEO NEVER LEAVES THE BEACON
+# =========================================================
+
+segrellion_unicorn_returns_leo_beacon_lock = {
+
+	trigger = {
+
+		character:Segrellion_60 ?= {
+			has_character_flag = segrellion_unicorn_returns_war_active
+		}
+
+		character:Stormflame_3 ?= {
+			is_alive = yes
+			NOT = {
+				is_imprisoned = yes
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Stormflame_3 = {
+
+			set_knight_status = forbid
+
+			set_location = title:b_castle_farring.title_province
+
+			every_army = {
+
+				if = {
+					limit = {
+
+						army_commander ?= {
+							this = character:Stormflame_3
+						}
+					}
+
+					remove_commander = yes
+				}
+			}
+		}
 	}
 }
 
@@ -775,49 +822,61 @@ segrellion_unicorn_returns_clifford_battle_check = {
 
 # =========================================================
 # THE UNICORN RETURNS
-# DAEMON'S ARMY REACHES THE BEACON
-#
-# on_army_enter_province:
-# root = owner of the army
-# scope:army = army
+# THE ATTACKING HOST REACHES THE BEACON
 # =========================================================
 
 segrellion_unicorn_returns_beacon_arrival_check = {
 
 	trigger = {
 
-		this = character:Segrellion_60
+		scope:army ?= {
+			location = title:b_castle_farring.title_province
+		}
 
-		is_alive = yes
+		character:Segrellion_60 ?= {
 
-		has_character_flag = segrellion_unicorn_returns_war_active
+			is_alive = yes
 
-		NOT = {
-			has_character_flag = segrellion_beacon_surrender_demanded
+			has_character_flag = segrellion_unicorn_returns_war_active
+
+			NOT = {
+				has_character_flag = segrellion_beacon_surrender_demanded
+			}
 		}
 
 		character:Stormflame_3 ?= {
 			is_alive = yes
 		}
 
-		scope:army ?= {
 
-			army_owner = character:Segrellion_60
+		# The army entering the Beacon must belong to
+		# Daemon or to his side of the war.
+		OR = {
 
-			location = title:b_castle_farring.title_province
+			this = character:Segrellion_60
+
+			is_at_war_with = character:Stormflame_3
+
+			liege ?= {
+				is_at_war_with = character:Stormflame_3
+			}
+
+			top_liege ?= {
+				is_at_war_with = character:Stormflame_3
+			}
 		}
 	}
 
 
 	effect = {
 
-		add_character_flag = segrellion_beacon_surrender_demanded
+		character:Segrellion_60 = {
 
-		remove_character_modifier = segrellion_beacon_awaits_modifier
+			add_character_flag = segrellion_beacon_surrender_demanded
 
-		trigger_event = {
-			id = segrellion_winds.0401
-			days = 1
+			trigger_event = {
+				id = segrellion_winds.0401
+			}
 		}
 	}
 }
@@ -873,15 +932,29 @@ segrellion_unicorn_returns_beacon_arrival_fallback = {
 
 
 # =========================================================
-# THE BEACON FALLS AFTER LEO REFUSES
-# Root of on_siege_completion = character
+# THE BEACON FALLS
+#
+# Fires whenever the actual Beacon holding is conquered
+# during The Unicorn Returns.
+#
+# This is also the absolute failsafe:
+# even if the surrender chain somehow never happened,
+# the Stormflames are captured when the Beacon falls.
 # =========================================================
 
 segrellion_unicorn_returns_beacon_siege_check = {
 
 	trigger = {
 
-		location = title:b_castle_farring.title_province
+		scope:barony ?= {
+			this = title:b_castle_farring
+		}
+
+
+		scope:war ?= {
+			is_attacker = character:Segrellion_60
+		}
+
 
 		character:Segrellion_60 ?= {
 
@@ -889,28 +962,12 @@ segrellion_unicorn_returns_beacon_siege_check = {
 
 			has_character_flag = segrellion_unicorn_returns_war_active
 
-			has_character_flag = segrellion_leo_refused_beacon_surrender
-
 			NOT = {
 				has_character_flag = segrellion_beacon_stormed_resolution
 			}
 		}
-
-		OR = {
-
-			this = character:Segrellion_60
-
-			is_at_war_with = character:Stormflame_3
-
-			liege ?= {
-				is_at_war_with = character:Stormflame_3
-			}
-
-			top_liege ?= {
-				is_at_war_with = character:Stormflame_3
-			}
-		}
 	}
+
 
 	effect = {
 
@@ -918,15 +975,23 @@ segrellion_unicorn_returns_beacon_siege_check = {
 
 			add_character_flag = segrellion_beacon_stormed_resolution
 
+			remove_character_modifier = segrellion_beacon_awaits_modifier
+
+
+			# No RNG.
+			# No normal siege capture chance.
+			# Every surviving Stormflame is taken.
 			segrellion_capture_stormflame_court_effect = yes
+
+
+			# The Beacon has fallen. The restoration war is won.
+			var:segrellion_unicorn_returns_war ?= {
+				end_war = attacker
+			}
+
 
 			trigger_event = {
 				id = segrellion_winds.0404
-				days = 1
-			}
-
-			var:segrellion_unicorn_returns_war ?= {
-				end_war = attacker
 			}
 		}
 	}
