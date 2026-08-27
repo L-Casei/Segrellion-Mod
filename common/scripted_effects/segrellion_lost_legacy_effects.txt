@@ -1,0 +1,438 @@
+# =========================================================
+# UNCOVER THE LOST LEGACY
+# =========================================================
+
+
+# =========================================================
+# ADD PROJECT QUALITY / RECORD CONTRIBUTION
+# =========================================================
+
+segrellion_chronicle_add_progress_effect = {
+
+	change_variable = {
+		name = segrellion_chronicle_quality
+		add = $AMOUNT$
+	}
+
+	set_variable = {
+		name = $VARIABLE$
+		value = yes
+	}
+}
+
+
+# =========================================================
+# COMPLETE THE GREAT PROJECT
+#
+# Mandatory chapters always provide 12 quality.
+#
+# 12-21 = Fragmentary
+# 22-31 = Reconstructed
+# 32-41 = Authoritative
+# 42+   = Complete
+# =========================================================
+
+segrellion_complete_lost_legacy_effect = {
+
+	remove_character_flag = segrellion_chronicle_tier_fragmentary
+	remove_character_flag = segrellion_chronicle_tier_reconstructed
+	remove_character_flag = segrellion_chronicle_tier_authoritative
+	remove_character_flag = segrellion_chronicle_tier_complete
+
+
+	# =====================================================
+	# COMPLETE
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			scope:segrellion_chronicle_project = {
+				var:segrellion_chronicle_quality >= 42
+			}
+		}
+
+		add_character_flag = segrellion_chronicle_tier_complete
+
+		segrellion_create_complete_chronicle_effect = {
+			OWNER = this
+		}
+	}
+
+
+	# =====================================================
+	# AUTHORITATIVE
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			scope:segrellion_chronicle_project = {
+				var:segrellion_chronicle_quality >= 32
+			}
+		}
+
+		add_character_flag = segrellion_chronicle_tier_authoritative
+
+		segrellion_create_authoritative_chronicle_effect = {
+			OWNER = this
+		}
+	}
+
+
+	# =====================================================
+	# RECONSTRUCTED
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			scope:segrellion_chronicle_project = {
+				var:segrellion_chronicle_quality >= 22
+			}
+		}
+
+		add_character_flag = segrellion_chronicle_tier_reconstructed
+
+		segrellion_create_reconstructed_chronicle_effect = {
+			OWNER = this
+		}
+	}
+
+
+	# =====================================================
+	# FRAGMENTARY
+	# =====================================================
+
+	else = {
+
+		add_character_flag = segrellion_chronicle_tier_fragmentary
+
+		segrellion_create_fragmentary_chronicle_effect = {
+			OWNER = this
+		}
+	}
+
+
+	# =====================================================
+	# DYNASTIC REWARD
+	# =====================================================
+
+	dynasty = {
+
+		add_dynasty_modifier = {
+			modifier = segrellion_legacy_reclaimed_modifier
+		}
+
+		add_dynasty_prestige = 1000
+	}
+
+
+	add_prestige = 1000
+
+
+	set_global_variable = {
+		name = segrellion_lost_legacy_completed
+		value = yes
+	}
+
+	if = {
+		limit = {
+			has_global_variable = segrellion_lost_legacy_project_active
+		}
+
+		remove_global_variable = segrellion_lost_legacy_project_active
+	}
+
+
+	add_character_flag = segrellion_lost_legacy_completed
+
+
+	trigger_event = {
+		id = segrellion_lost_legacy.1200
+		days = 1
+	}
+}
+
+
+# =========================================================
+# ARTIFACT - FRAGMENTARY
+# =========================================================
+
+segrellion_create_fragmentary_chronicle_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	set_artifact_rarity_common = yes
+
+	create_artifact = {
+
+		name = segrellion_chronicle_fragmentary_name
+		description = segrellion_chronicle_fragmentary_desc
+
+		type = journal
+
+		visuals = segrellion_chronicle_blue_flame_visuals
+		template = segrellion_chronicle_blue_flame_template
+
+		creator = scope:owner
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_chronicle_fragmentary_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+
+		set_global_variable = {
+			name = segrellion_chronicle_blue_flame
+			value = this
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_blue_flame_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_quality_tier
+			value = 1
+		}
+
+		equip_artifact_to_owner_replace = yes
+	}
+}
+
+
+# =========================================================
+# ARTIFACT - RECONSTRUCTED
+# =========================================================
+
+segrellion_create_reconstructed_chronicle_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	set_artifact_rarity_masterwork = yes
+
+	create_artifact = {
+
+		name = segrellion_chronicle_reconstructed_name
+		description = segrellion_chronicle_reconstructed_desc
+
+		type = journal
+
+		visuals = segrellion_chronicle_blue_flame_visuals
+		template = segrellion_chronicle_blue_flame_template
+
+		creator = scope:owner
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_chronicle_reconstructed_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+
+		set_global_variable = {
+			name = segrellion_chronicle_blue_flame
+			value = this
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_blue_flame_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_quality_tier
+			value = 2
+		}
+
+		equip_artifact_to_owner_replace = yes
+	}
+}
+
+
+# =========================================================
+# ARTIFACT - AUTHORITATIVE
+# =========================================================
+
+segrellion_create_authoritative_chronicle_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	set_artifact_rarity_famed = yes
+
+	create_artifact = {
+
+		name = segrellion_chronicle_blue_flame_name
+		description = segrellion_chronicle_blue_flame_desc
+
+		type = journal
+
+		visuals = segrellion_chronicle_blue_flame_visuals
+		template = segrellion_chronicle_blue_flame_template
+
+		creator = scope:owner
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_chronicle_authoritative_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+
+		set_global_variable = {
+			name = segrellion_chronicle_blue_flame
+			value = this
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_blue_flame_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_quality_tier
+			value = 3
+		}
+
+		# Future Icebringer / Guardian hook.
+		set_variable = {
+			name = segrellion_chronicle_guardian_research
+			value = yes
+		}
+
+		equip_artifact_to_owner_replace = yes
+	}
+}
+
+
+# =========================================================
+# ARTIFACT - COMPLETE
+# =========================================================
+
+segrellion_create_complete_chronicle_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+
+		name = segrellion_chronicle_complete_name
+		description = segrellion_chronicle_complete_desc
+
+		type = journal
+
+		visuals = segrellion_chronicle_blue_flame_visuals
+		template = segrellion_chronicle_blue_flame_template
+
+		creator = scope:owner
+
+		wealth = scope:wealth
+		quality = scope:quality
+
+		modifier = segrellion_chronicle_complete_modifier
+
+		save_scope_as = newly_created_artifact
+
+		decaying = no
+	}
+
+	scope:newly_created_artifact ?= {
+
+		set_global_variable = {
+			name = segrellion_chronicle_blue_flame
+			value = this
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = scope:owner.house
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_blue_flame_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_quality_tier
+			value = 4
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_guardian_research
+			value = yes
+		}
+
+		set_variable = {
+			name = segrellion_chronicle_guardian_research_complete
+			value = yes
+		}
+
+		equip_artifact_to_owner_replace = yes
+	}
+}

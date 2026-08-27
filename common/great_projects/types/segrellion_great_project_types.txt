@@ -1,0 +1,1202 @@
+# =========================================================
+# SEGRELLION GREAT PROJECTS
+# =========================================================
+
+@segrellion_lost_legacy_icon = "gfx/interface/icons/great_projects/segrellion_uncover_lost_legacy.dds"
+@segrellion_lost_legacy_illustration = "gfx/interface/illustrations/great_projects/segrellion_uncover_lost_legacy.dds"
+
+
+# =========================================================
+# UNCOVER THE LOST LEGACY
+# =========================================================
+
+segrellion_uncover_lost_legacy = {
+
+	icon = {
+		reference = @segrellion_lost_legacy_icon
+	}
+
+	illustration = {
+		reference = @segrellion_lost_legacy_illustration
+	}
+
+	name = {
+		desc = great_project_type_segrellion_uncover_lost_legacy
+	}
+
+	is_important = yes
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		dynasty = dynasty:dynn_Segrellion
+
+		exists = var:dragonlore
+		var:dragonlore >= 10
+
+		NOT = {
+			has_global_variable = segrellion_lost_legacy_completed
+		}
+
+		NOT = {
+			has_global_variable = segrellion_lost_legacy_project_active
+		}
+
+		NOT = {
+			is_planning_great_project = segrellion_uncover_lost_legacy
+		}
+	}
+
+
+	# =====================================================
+	# LOCATION
+	#
+	# The project is intellectually dynastic, but the Great
+	# Project framework requires a physical province.
+	# It is anchored to the founder's capital.
+	# =====================================================
+
+	province_filter = capital
+
+	is_location_valid = {
+		always = yes
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	can_start_planning = {
+
+		dynasty = dynasty:dynn_Segrellion
+
+		is_adult = yes
+		is_imprisoned = no
+
+		custom_description = {
+			text = segrellion_lost_legacy_dragonlore_requirement_tt
+
+			exists = var:dragonlore
+			var:dragonlore >= 10
+		}
+
+		NOT = {
+			has_global_variable = segrellion_lost_legacy_completed
+		}
+
+		NOT = {
+			has_global_variable = segrellion_lost_legacy_project_active
+		}
+	}
+
+
+	can_cancel = {
+		always = yes
+	}
+
+
+	# =====================================================
+	# OWNERSHIP
+	#
+	# Allows the project to remain connected to the founder's
+	# principal political position if succession occurs.
+	# =====================================================
+
+	owner = founder_primary_title_owner
+
+
+	is_valid = {
+
+		scope:owner ?= {
+			dynasty = dynasty:dynn_Segrellion
+		}
+	}
+
+
+	# =====================================================
+	# INITIAL COST
+	# =====================================================
+
+	cost = {
+		gold = 150
+		prestige = 250
+	}
+
+
+	# =====================================================
+	# BIND THE CHRONICLE
+	#
+	# Once all six mandatory chapters are funded, the actual
+	# construction phase represents editing, copying,
+	# illumination and binding.
+	# =====================================================
+
+	construction_time = 365
+
+	# No new historical sources may be added once binding begins.
+	contribution_threshold = 0
+
+	contributor_cooldown = 0
+
+
+	# =====================================================
+	# PROJECT PLANNED
+	# =====================================================
+
+	on_plan_build = {
+
+		set_global_variable = {
+			name = segrellion_lost_legacy_project_active
+			value = yes
+		}
+
+		scope:great_project = {
+
+			set_variable = {
+				name = segrellion_chronicle_quality
+				value = 0
+			}
+		}
+
+		scope:owner = {
+
+			trigger_event = {
+				id = segrellion_lost_legacy.1000
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# BINDING BEGINS
+	# =====================================================
+
+	on_start_build = {
+
+		scope:owner = {
+
+			trigger_event = {
+				id = segrellion_lost_legacy.1100
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# PROJECT COMPLETE
+	# =====================================================
+
+	on_complete = {
+
+		scope:great_project = {
+			save_scope_as = segrellion_chronicle_project
+		}
+
+		scope:owner = {
+
+			custom_tooltip = segrellion_lost_legacy_completion_tt
+
+			hidden_effect = {
+				segrellion_complete_lost_legacy_effect = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CANCELLED
+	# =====================================================
+
+	on_cancel = {
+
+		if = {
+			limit = {
+				has_global_variable = segrellion_lost_legacy_project_active
+			}
+
+			remove_global_variable = segrellion_lost_legacy_project_active
+		}
+	}
+
+
+	# =====================================================
+	# ONLY THE OWNER CONTRIBUTES
+	# =====================================================
+
+	allowed_contributor_filter = {
+		owner = yes
+	}
+
+
+	# =====================================================
+	# CONTRIBUTIONS
+	# =====================================================
+
+	project_contributions = {
+
+
+		# =================================================
+		# I - TRACE THE EXILES
+		# =================================================
+
+		trace_the_exiles = {
+
+			is_required = yes
+
+			contributor_is_valid = {
+				always = yes
+			}
+
+			cost = {
+				gold = 75
+			}
+
+			contributor_cooldown = 120
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_stage_trace_exiles
+					}
+				}
+
+				scope:owner = {
+
+					trigger_event = {
+						id = segrellion_lost_legacy.1001
+						days = 1
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# II - RECONSTRUCT THE RISE
+		# =================================================
+
+		reconstruct_the_rise = {
+
+			is_required = yes
+
+			contributor_is_valid = {
+
+				scope:great_project = {
+					exists = var:segrellion_chronicle_stage_trace_exiles
+				}
+			}
+
+			cost = {
+				gold = 100
+			}
+
+			contributor_cooldown = 120
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_stage_reconstruct_rise
+					}
+				}
+
+				scope:owner = {
+
+					trigger_event = {
+						id = segrellion_lost_legacy.1002
+						days = 1
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# III - RECORD THE LORDS OF THE FLAME
+		# =================================================
+
+		record_lords_of_flame = {
+
+			is_required = yes
+
+			contributor_is_valid = {
+
+				scope:great_project = {
+					exists = var:segrellion_chronicle_stage_reconstruct_rise
+				}
+			}
+
+			cost = {
+				gold = 100
+			}
+
+			contributor_cooldown = 120
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_stage_lords_flame
+					}
+				}
+
+				scope:owner = {
+
+					trigger_event = {
+						id = segrellion_lost_legacy.1003
+						days = 1
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# IV - FOLLOW THE DRAGONSPEAR
+		# =================================================
+
+		follow_the_dragonspear = {
+
+			is_required = yes
+
+			contributor_is_valid = {
+
+				scope:great_project = {
+					exists = var:segrellion_chronicle_stage_lords_flame
+				}
+			}
+
+			cost = {
+				gold = 125
+			}
+
+			contributor_cooldown = 120
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_stage_dragonspear
+					}
+				}
+
+				scope:owner = {
+
+					trigger_event = {
+						id = segrellion_lost_legacy.1004
+						days = 1
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# V - CHRONICLE THE FALL
+		# =================================================
+
+		chronicle_the_fall = {
+
+			is_required = yes
+
+			contributor_is_valid = {
+
+				scope:great_project = {
+					exists = var:segrellion_chronicle_stage_dragonspear
+				}
+			}
+
+			cost = {
+				gold = 125
+			}
+
+			contributor_cooldown = 120
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_stage_fall
+					}
+				}
+
+				scope:owner = {
+
+					trigger_event = {
+						id = segrellion_lost_legacy.1005
+						days = 1
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# VI - INTERPRET THE WARNINGS
+		# =================================================
+
+		interpret_the_warnings = {
+
+			is_required = yes
+
+			contributor_is_valid = {
+
+				scope:great_project = {
+					exists = var:segrellion_chronicle_stage_fall
+				}
+			}
+
+			cost = {
+				gold = 150
+			}
+
+			contributor_cooldown = 120
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_stage_warnings
+					}
+				}
+
+				scope:owner = {
+
+					trigger_event = {
+						id = segrellion_lost_legacy.1006
+						days = 1
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# PROJECT SOURCES
+		#
+		# All optional.
+		# All free once discovered.
+		# Their value lies in having found the evidence.
+		# =================================================
+
+
+		# -------------------------------------------------
+		# VHAL +5
+		# -------------------------------------------------
+
+		source_vhal = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_vhal
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_vhal
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 5
+						VARIABLE = segrellion_chronicle_source_vhal
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# THE BEACON +4
+		# -------------------------------------------------
+
+		source_beacon = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_beacon
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_beacon
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 4
+						VARIABLE = segrellion_chronicle_source_beacon
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# FIRSTFLAME +4
+		# -------------------------------------------------
+
+		source_firstflame = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					OR = {
+						exists = var:segrellion_firstflame_dragonlore_found
+						has_character_flag = segrellion_firstflame_dragonlore_found
+					}
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					OR = {
+						exists = var:segrellion_firstflame_dragonlore_found
+						has_character_flag = segrellion_firstflame_dragonlore_found
+					}
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 4
+						VARIABLE = segrellion_chronicle_source_firstflame
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# KINGSHOUSE, SKAGOS +3
+		# -------------------------------------------------
+
+		source_kingshouse = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_kingshouse
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_kingshouse
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 3
+						VARIABLE = segrellion_chronicle_source_kingshouse
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DEEPDOWN, SKAGOS +3
+		# -------------------------------------------------
+
+		source_deepdown = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_deepdown
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_deepdown
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 3
+						VARIABLE = segrellion_chronicle_source_deepdown
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# NIGHTFORT +3
+		# -------------------------------------------------
+
+		source_nightfort = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_nightfort
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_nightfort
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 3
+						VARIABLE = segrellion_chronicle_source_nightfort
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# PLATE OF SEGRELL +3
+		# -------------------------------------------------
+
+		source_plate_of_segrell = {
+
+			is_required = no
+
+			is_shown = {
+
+				scope:owner = {
+
+					OR = {
+
+						exists = var:segrellion_lore_plate_recovered
+
+						any_character_artifact = {
+							has_variable = segrellion_plate_of_segrell_artifact
+						}
+					}
+				}
+			}
+
+			contributor_is_valid = {
+
+				scope:owner = {
+
+					OR = {
+
+						exists = var:segrellion_lore_plate_recovered
+
+						any_character_artifact = {
+							has_variable = segrellion_plate_of_segrell_artifact
+						}
+					}
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 3
+						VARIABLE = segrellion_chronicle_source_plate
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# WHITE HALL +2
+		# -------------------------------------------------
+
+		source_white_hall = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_white_hall
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_white_hall
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_white_hall
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# TUMBLETON +2
+		# -------------------------------------------------
+
+		source_tumbleton = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_tumbleton
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_tumbleton
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_tumbleton
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DYRE DEN +2
+		# -------------------------------------------------
+
+		source_dyre_den = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_dyre_den
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_dyre_den
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_dyre_den
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# BLOODSTONE +2
+		# -------------------------------------------------
+
+		source_bloodstone = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_bloodstone
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_bloodstone
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_bloodstone
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# CASTLE BLACK +2
+		# -------------------------------------------------
+
+		source_castle_black = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_castle_black
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_castle_black
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_castle_black
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# SHADOW TOWER +2
+		# -------------------------------------------------
+
+		source_shadow_tower = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_shadow_tower
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_shadow_tower
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_shadow_tower
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# TRIDENT +2
+		# -------------------------------------------------
+
+		source_trident = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_trident
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_trident
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_trident
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DUSKENDALE +2
+		# -------------------------------------------------
+
+		source_duskendale = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_duskendale
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_duskendale
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 2
+						VARIABLE = segrellion_chronicle_source_duskendale
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# GULLTOWN +1
+		# -------------------------------------------------
+
+		source_gulltown = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_gulltown
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_gulltown
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 1
+						VARIABLE = segrellion_chronicle_source_gulltown
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# BLOODY GATE +1
+		# -------------------------------------------------
+
+		source_bloody_gate = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_bloody_gate
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_bloody_gate
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 1
+						VARIABLE = segrellion_chronicle_source_bloody_gate
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# LONELY LIGHT +1
+		# -------------------------------------------------
+
+		source_lonely_light = {
+
+			is_required = no
+
+			is_shown = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_lonely_light
+				}
+			}
+
+			contributor_is_valid = {
+				scope:owner = {
+					exists = var:segrellion_lore_visited_lonely_light
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 1
+						VARIABLE = segrellion_chronicle_source_lonely_light
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DEEP DRAGONLORE +3
+		#
+		# 20 Dragonlore represents enough comparative material
+		# to strengthen the final interpretative chapter.
+		# -------------------------------------------------
+
+		source_comparative_dragonlore = {
+
+			is_required = no
+
+			is_shown = {
+
+				scope:owner = {
+					exists = var:dragonlore
+					var:dragonlore >= 20
+				}
+			}
+
+			contributor_is_valid = {
+
+				scope:owner = {
+					exists = var:dragonlore
+					var:dragonlore >= 20
+				}
+			}
+
+			cost = {}
+
+			on_contribution_funded = {
+
+				scope:great_project = {
+
+					segrellion_chronicle_add_progress_effect = {
+						AMOUNT = 3
+						VARIABLE = segrellion_chronicle_source_deep_dragonlore
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	#
+	# Player-facing for now. We can later teach specific
+	# historical Segrellion AI characters to pursue it.
+	# =====================================================
+
+	ai_will_do = {
+		value = 0
+	}
+
+	ai_province_filter = capital
+	ai_check_interval = 100
+}
