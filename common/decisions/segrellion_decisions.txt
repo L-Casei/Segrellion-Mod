@@ -1422,3 +1422,78 @@ segrellion_establish_greater_flamelands_decision = {
 		base = 0
 	}
 }
+
+# =========================================================
+# A MOST REFINED CONVERSATION
+# Community meme decision
+# =========================================================
+
+segrellion_a_most_refined_conversation_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_knight_kneeling.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_a_most_refined_conversation_decision_desc
+	selection_tooltip = segrellion_a_most_refined_conversation_decision_tooltip
+
+	is_shown = {
+
+		OR = {
+			has_character_flag = is_Segrellion_60
+			this = character:Stark_7
+			has_nickname = nick_young_griff
+		}
+
+		is_adult = yes
+
+		NOT = {
+			has_character_flag = segrellion_mocked_myrcella_with_darkstar
+		}
+
+		character:Dayne_8 = {
+			is_alive = yes
+
+			opinion = {
+				target = root
+				value >= 100
+			}
+		}
+
+		character:Baratheon_6 = {
+			is_alive = yes
+		}
+	}
+
+	is_valid = {
+
+		is_imprisoned = no
+		is_incapable = no
+
+		custom_description = {
+			text = segrellion_darkstar_100_opinion_tt
+
+			character:Dayne_8 = {
+				opinion = {
+					target = root
+					value >= 100
+				}
+			}
+		}
+	}
+
+	effect = {
+
+		custom_tooltip = segrellion_a_most_refined_conversation_effect_tt
+
+		trigger_event = {
+			id = segrellion_meme.0001
+		}
+	}
+
+	ai_check_interval = 0
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
