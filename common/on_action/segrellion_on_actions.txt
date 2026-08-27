@@ -17,6 +17,7 @@ monthly_global_pulse = {
 		segrellion_icebringer_historical_loss_progression
 		segrellion_unicorn_returns_beacon_arrival_fallback
 		segrellion_deathwish_historical_progression
+		segrellion_winds_300_aftermath_check
 	}
 }
 
@@ -27,6 +28,12 @@ on_game_start_after_lobby = {
         iaf_canon_children_on_game_start_after_lobby
         vladwyn_8106_startup
     }
+}
+
+on_birth_child = {
+	on_actions = {
+		segrellion_daemon_arianne_children
+	}
 }
 
 on_player_select_destiny_confirmed = {
@@ -72,6 +79,12 @@ on_title_gain_inheritance = {
     }
 }
 
+on_title_gain = {
+	on_actions = {
+		segrellion_daemon_flamelands_title_gain
+	}
+}
+
 segrellion_dragonspear_lance_progression = {
     effect = {
         segrellion_setup_dragonspear_lance_history_effect = yes
@@ -87,6 +100,16 @@ segrellion_icebringer_monthly_event_pulse = {
 segrellion_icebringer_historical_loss_progression = {
 	effect = {
 		segrellion_process_icebringer_historical_loss_effect = yes
+	}
+}
+
+segrellion_winds_300_aftermath_check = {
+
+	effect = {
+
+		segrellion_check_vhal_reunification_effect = yes
+
+		segrellion_check_daenerys_marriage_effect = yes
 	}
 }
 
@@ -264,6 +287,7 @@ segrellion_on_game_start = {
 		segrellion_setup_winds_of_winter_hosts_effect = yes
 		segrellion_setup_massey_defiance_effect = yes
 		segrellion_setup_young_griff_300_effect = yes
+		segrellion_setup_daenerys_300_effect = yes
 		segrellion_setup_plate_return_story_effect = yes
 		segrellion_setup_stormflame_300_effect = yes
 		character:Segrellion_1 ?= {
@@ -949,6 +973,120 @@ segrellion_beacon_flavor_yearly_check = {
 
 					segrellion_beacon_flavor_pool_effect = yes
 				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# DAEMON GAINS THE FLAMELANDS
+# =========================================================
+
+segrellion_daemon_flamelands_title_gain = {
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		scope:title = {
+			this = title:e_flamelands
+		}
+	}
+
+	effect = {
+
+		segrellion_check_vhal_reunification_effect = yes
+
+		segrellion_check_daenerys_marriage_effect = yes
+	}
+}
+
+# =========================================================
+# DAEMON + ARIANNE DYNASTIC PACT
+#
+# First child: Segrellion
+# Second child: Martell
+# =========================================================
+
+segrellion_daemon_arianne_children = {
+
+	trigger = {
+
+		character:Segrellion_60 ?= {
+			has_character_flag = segrellion_daemon_arianne_dynastic_pact
+		}
+
+		character:Martell_9 ?= {
+			has_character_flag = segrellion_daemon_arianne_dynastic_pact
+		}
+
+		scope:father = {
+			this = character:Segrellion_60
+		}
+
+		scope:mother = {
+			this = character:Martell_9
+		}
+	}
+
+
+	effect = {
+
+		character:Martell_9 = {
+			house = {
+				save_scope_as = segrellion_arianne_house
+			}
+		}
+
+
+		# =================================================
+		# FIRST CHILD -> SEGRELLION
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Segrellion_60 = {
+
+					NOT = {
+						has_character_flag = segrellion_arianne_first_child_born
+					}
+				}
+			}
+
+			root = {
+				set_house = house:house_Segrellion
+			}
+
+			character:Segrellion_60 = {
+				add_character_flag = segrellion_arianne_first_child_born
+			}
+		}
+
+
+		# =================================================
+		# SECOND CHILD -> MARTELL
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				character:Segrellion_60 = {
+
+					NOT = {
+						has_character_flag = segrellion_arianne_second_child_born
+					}
+				}
+			}
+
+			root = {
+				set_house = scope:segrellion_arianne_house
+			}
+
+			character:Segrellion_60 = {
+				add_character_flag = segrellion_arianne_second_child_born
 			}
 		}
 	}

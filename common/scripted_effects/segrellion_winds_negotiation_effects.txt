@@ -1,0 +1,349 @@
+# =========================================================
+# WINDS OF WINTER - NEGOTIATION / ALLIANCE EFFECTS
+# =========================================================
+
+
+# =========================================================
+# DAENERYS - 300 AC STARTUP
+#
+# 10,000 total:
+# - 1,500 Dothraki Screamers
+# - 8,500 levies
+# =========================================================
+
+segrellion_setup_daenerys_300_effect = {
+
+	if = {
+		limit = {
+			current_date >= 8300.1.1
+			current_date < 8301.1.1
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_300_host_created
+				}
+			}
+		}
+
+		character:Targaryen_9 = {
+
+			# Place Daenerys at Ghoyan Drohe.
+			set_location = title:c_ghoyan_drohe.title_province
+
+			spawn_army = {
+
+				name = segrellion_daenerys_300_army
+
+				# 5 regiments of 300 = 1,500 Screamers.
+				men_at_arms = {
+					type = dothraki_screamers
+					men = 300
+				}
+
+				men_at_arms = {
+					type = dothraki_screamers
+					men = 300
+				}
+
+				men_at_arms = {
+					type = dothraki_screamers
+					men = 300
+				}
+
+				men_at_arms = {
+					type = dothraki_screamers
+					men = 300
+				}
+
+				men_at_arms = {
+					type = dothraki_screamers
+					men = 300
+				}
+
+				levies = 8500
+
+				inheritable = yes
+
+				location = title:c_ghoyan_drohe.title_province
+				origin = title:c_ghoyan_drohe.title_province
+			}
+
+			add_character_flag = segrellion_daenerys_300_host_created
+		}
+	}
+}
+
+
+# =========================================================
+# CLEAR CURRENT NEGOTIATION
+# =========================================================
+
+segrellion_clear_troop_negotiation_effect = {
+
+	remove_character_flag = segrellion_troop_negotiation_active
+
+	remove_character_flag = segrellion_negotiation_pending_stannis
+	remove_character_flag = segrellion_negotiation_pending_dorne
+	remove_character_flag = segrellion_negotiation_pending_daenerys
+}
+
+
+# =========================================================
+# STANNIS SUPPORT
+# 1,500 levies
+# =========================================================
+
+segrellion_grant_stannis_support_effect = {
+
+	spawn_army = {
+
+		name = segrellion_stannis_reinforcements
+
+		levies = 1500
+
+		inheritable = yes
+
+		location = title:c_dragonstone.title_province
+		origin = title:c_dragonstone.title_province
+	}
+
+	add_character_flag = segrellion_foreign_support_secured
+	add_character_flag = segrellion_pledged_to_stannis
+
+	segrellion_clear_troop_negotiation_effect = yes
+}
+
+
+# =========================================================
+# DORNE SUPPORT
+#
+# 5 x 400 Dornish Vipers = 2,000 MaA
+# + 2,600 levies
+# =========================================================
+
+segrellion_grant_dorne_support_effect = {
+
+	spawn_army = {
+
+		name = segrellion_dornish_reinforcements
+
+		men_at_arms = {
+			type = sun_spears
+			men = 400
+		}
+
+		men_at_arms = {
+			type = sun_spears
+			men = 400
+		}
+
+		men_at_arms = {
+			type = sun_spears
+			men = 400
+		}
+
+		men_at_arms = {
+			type = sun_spears
+			men = 400
+		}
+
+		men_at_arms = {
+			type = sun_spears
+			men = 400
+		}
+
+		levies = 2600
+
+		inheritable = yes
+
+		location = title:c_sunspear.title_province
+		origin = title:c_sunspear.title_province
+	}
+
+	add_character_flag = segrellion_foreign_support_secured
+	add_character_flag = segrellion_dorne_marriage_pact
+
+	segrellion_clear_troop_negotiation_effect = yes
+}
+
+
+# =========================================================
+# DAENERYS SUPPORT
+#
+# 6 x 100 Screamers = 600
+# + 3,000 levies
+# =========================================================
+
+segrellion_grant_daenerys_support_effect = {
+
+	spawn_army = {
+
+		name = segrellion_daenerys_reinforcements
+
+		men_at_arms = {
+			type = dothraki_screamers
+			men = 100
+		}
+
+		men_at_arms = {
+			type = dothraki_screamers
+			men = 100
+		}
+
+		men_at_arms = {
+			type = dothraki_screamers
+			men = 100
+		}
+
+		men_at_arms = {
+			type = dothraki_screamers
+			men = 100
+		}
+
+		men_at_arms = {
+			type = dothraki_screamers
+			men = 100
+		}
+
+		men_at_arms = {
+			type = dothraki_screamers
+			men = 100
+		}
+
+		levies = 3000
+
+		inheritable = yes
+
+		location = title:c_ghoyan_drohe.title_province
+		origin = title:c_ghoyan_drohe.title_province
+	}
+
+	add_character_flag = segrellion_foreign_support_secured
+	add_character_flag = segrellion_pledged_to_daenerys
+
+	segrellion_clear_troop_negotiation_effect = yes
+}
+
+
+# =========================================================
+# VHALERION REUNIFICATION CHECK
+# =========================================================
+
+segrellion_check_vhal_reunification_effect = {
+
+	if = {
+		limit = {
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+				has_title = title:e_flamelands
+			}
+
+			title:d_vhalerion = {
+				exists = holder
+			}
+
+			title:d_vhalerion.holder = {
+
+				NOT = {
+					has_character_flag = segrellion_vhal_reunification_resolved
+				}
+
+				NOT = {
+					liege = character:Segrellion_60
+				}
+			}
+		}
+
+		title:d_vhalerion.holder = {
+
+			add_character_flag = segrellion_vhal_reunification_event_pending
+
+			trigger_event = {
+				id = segrellion_support.5000
+				days = 2
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DAENERYS MARRIAGE AFTER DAEMON TAKES THE FLAMELANDS
+# =========================================================
+
+segrellion_check_daenerys_marriage_effect = {
+
+	if = {
+		limit = {
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+
+				has_title = title:e_flamelands
+
+				has_character_flag = segrellion_daenerys_marriage_promised
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_marriage_event_pending
+				}
+
+				is_married = no
+			}
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+				is_married = no
+			}
+		}
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daenerys_marriage_event_pending
+
+			trigger_event = {
+				id = segrellion_support.4000
+				days = 3
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# FUTURE HOOK
+#
+# Call this whenever Daemon explicitly chooses to support
+# Young Griff in a future event.
+# =========================================================
+
+segrellion_break_stannis_oath_for_young_griff_effect = {
+
+	if = {
+		limit = {
+
+			character:Segrellion_60 ?= {
+				has_character_flag = segrellion_pledged_to_stannis
+			}
+
+			character:Baratheon_3 ?= {
+				is_alive = yes
+			}
+		}
+
+		character:Baratheon_3 = {
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_broke_stannis_oath_opinion
+			}
+		}
+
+		character:Segrellion_60 = {
+			remove_character_flag = segrellion_pledged_to_stannis
+			add_character_flag = segrellion_broke_stannis_oath
+		}
+	}
+}

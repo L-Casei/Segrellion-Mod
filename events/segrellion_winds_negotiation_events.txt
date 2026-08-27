@@ -1,0 +1,809 @@
+namespace = segrellion_support
+
+
+# =========================================================
+# 0090 - JOURNEY CANCELLED
+# =========================================================
+
+segrellion_support.0090 = {
+
+	type = character_event
+
+	title = segrellion_support.0090.t
+	desc = segrellion_support.0090.desc
+
+	theme = travel
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	option = {
+
+		name = segrellion_support.0090.a
+
+		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1000 - STANNIS BARATHEON
+# =========================================================
+
+segrellion_support.1000 = {
+
+	type = character_event
+
+	title = segrellion_support.1000.t
+	desc = segrellion_support.1000.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_negotiation_pending_stannis
+
+		character:Baratheon_3 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Baratheon_3 = {
+			save_scope_as = support_stannis
+
+			any_child = {
+
+				limit = {
+					is_alive = yes
+					is_female = yes
+					is_married = no
+				}
+
+				save_scope_as = support_shireen
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:support_stannis
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.1000.a
+
+		trigger = {
+			exists = scope:support_shireen
+			is_married = no
+		}
+
+		marry = scope:support_shireen
+
+		segrellion_grant_stannis_support_effect = yes
+
+
+		# ---------------------------------------------
+		# YOUNG GRIFF BREAKS WITH DAEMON
+		# ---------------------------------------------
+
+		character:IAF_Young_Griff_1 ?= {
+
+			remove_character_flag = segrellion_young_griff_supports_daemon
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_chose_stannis_over_young_griff_opinion
+			}
+		}
+
+
+		# ---------------------------------------------
+		# STANNIS APPROVES
+		# ---------------------------------------------
+
+		scope:support_stannis = {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_swore_to_stannis_opinion
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.1000.b
+
+		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 2000 - DORNE
+# =========================================================
+
+segrellion_support.2000 = {
+
+	type = character_event
+
+	title = segrellion_support.2000.t
+	desc = segrellion_support.2000.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_negotiation_pending_dorne
+
+		character:Martell_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Martell_9 = {
+
+			save_scope_as = support_arianne
+
+			father ?= {
+				save_scope_as = support_doran
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:support_doran
+		animation = personality_rational
+	}
+
+	lower_right_portrait = {
+		character = scope:support_arianne
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.2000.a
+
+		trigger = {
+			is_married = no
+
+			scope:support_arianne = {
+				is_married = no
+			}
+		}
+
+		marry = scope:support_arianne
+
+		add_character_flag = segrellion_daemon_arianne_dynastic_pact
+
+		scope:support_arianne = {
+			add_character_flag = segrellion_daemon_arianne_dynastic_pact
+		}
+
+		segrellion_grant_dorne_support_effect = yes
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.2000.b
+
+		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 3000 - THE DRAGON QUEEN
+# =========================================================
+
+segrellion_support.3000 = {
+
+	type = character_event
+
+	title = segrellion_support.3000.t
+	desc = segrellion_support.3000.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_negotiation_pending_daenerys
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# SWEAR LOYALTY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3000.a
+
+		segrellion_grant_daenerys_support_effect = yes
+
+		character:Targaryen_9 = {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_swore_to_daenerys_opinion
+			}
+		}
+	}
+
+
+	# =====================================================
+	# SWEAR LOYALTY + PROPOSE MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3000.b
+
+		trigger = {
+
+			is_married = no
+
+			character:Targaryen_9 = {
+				is_married = no
+			}
+		}
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_support.3010
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3000.c
+
+		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 3010 - DAENERYS CONSIDERS THE MARRIAGE
+# Root = Daenerys
+# =========================================================
+
+segrellion_support.3010 = {
+
+	type = character_event
+
+	title = segrellion_support.3010.t
+	desc = segrellion_support.3010.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+		is_married = no
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# ACCEPT THE MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3010.a
+
+
+		ai_chance = {
+
+			base = 30
+
+
+			# -----------------------------------------
+			# OPINION
+			# -----------------------------------------
+
+			modifier = {
+				add = 35
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 75
+				}
+			}
+
+			modifier = {
+				add = 20
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 40
+				}
+			}
+
+			modifier = {
+				add = -30
+
+				opinion = {
+					target = character:Segrellion_60
+					value < 0
+				}
+			}
+
+
+			# -----------------------------------------
+			# SEXUAL ATTRACTION IS POSSIBLE
+			# -----------------------------------------
+
+			modifier = {
+				add = 15
+
+				is_attracted_to_gender_of = character:Segrellion_60
+			}
+
+
+			# -----------------------------------------
+			# DAEMON IS ATTRACTIVE
+			# -----------------------------------------
+
+			modifier = {
+
+				add = 15
+
+				character:Segrellion_60 = {
+
+					OR = {
+						has_trait = beauty_good_1
+						has_trait = beauty_good_2
+						has_trait = beauty_good_3
+					}
+				}
+			}
+
+
+			# -----------------------------------------
+			# SHARED AMBITION
+			# -----------------------------------------
+
+			modifier = {
+
+				add = 15
+
+				has_trait = ambitious
+
+				character:Segrellion_60 = {
+					has_trait = ambitious
+				}
+			}
+
+
+			# -----------------------------------------
+			# SHARED PATIENCE
+			# -----------------------------------------
+
+			modifier = {
+
+				add = 10
+
+				has_trait = patient
+
+				character:Segrellion_60 = {
+					has_trait = patient
+				}
+			}
+
+
+			# -----------------------------------------
+			# SHARED BOLD / COMMANDING CHARACTER
+			# -----------------------------------------
+
+			modifier = {
+
+				add = 10
+
+				has_trait = authoritative
+
+				character:Segrellion_60 = {
+					has_trait = authoritative
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			segrellion_grant_daenerys_support_effect = yes
+
+			add_character_flag = segrellion_daenerys_marriage_promised
+
+			trigger_event = {
+				id = segrellion_support.3020
+				days = 1
+			}
+		}
+
+		add_character_flag = segrellion_marriage_promised_to_daemon
+	}
+
+
+	# =====================================================
+	# REFUSE MARRIAGE, KEEP THE MILITARY PACT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3010.b
+
+		ai_chance = {
+			base = 50
+		}
+
+		character:Segrellion_60 = {
+
+			segrellion_grant_daenerys_support_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.3030
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3020 - MARRIAGE PROMISED
+# =========================================================
+
+segrellion_support.3020 = {
+
+	type = character_event
+
+	title = segrellion_support.3020.t
+	desc = segrellion_support.3020.desc
+
+	theme = marriage
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+	right_portrait = character:Targaryen_9
+
+	option = {
+		name = segrellion_support.3020.a
+	}
+}
+
+
+# =========================================================
+# 3030 - MARRIAGE REFUSED, ALLIANCE ACCEPTED
+# =========================================================
+
+segrellion_support.3030 = {
+
+	type = character_event
+
+	title = segrellion_support.3030.t
+	desc = segrellion_support.3030.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = root
+	right_portrait = character:Targaryen_9
+
+	option = {
+		name = segrellion_support.3030.a
+	}
+}
+
+
+# =========================================================
+# 4000 - THE PROMISE COMES DUE
+# Daemon has taken the Flamelands.
+# =========================================================
+
+segrellion_support.4000 = {
+
+	type = character_event
+
+	title = segrellion_support.4000.t
+	desc = segrellion_support.4000.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_title = title:e_flamelands
+
+		has_character_flag = segrellion_daenerys_marriage_promised
+
+		is_married = no
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_support.4000.a
+
+		marry = character:Targaryen_9
+
+		remove_character_flag = segrellion_daenerys_marriage_promised
+		remove_character_flag = segrellion_daenerys_marriage_event_pending
+
+		character:Targaryen_9 = {
+			remove_character_flag = segrellion_marriage_promised_to_daemon
+		}
+
+		add_character_flag = segrellion_married_daenerys_after_restoration
+	}
+}
+
+
+# =========================================================
+# 5000 - VHALERION'S CHOICE
+# =========================================================
+
+segrellion_support.5000 = {
+
+	type = character_event
+
+	title = segrellion_support.5000.t
+	desc = segrellion_support.5000.desc
+
+	theme = realm
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		has_character_flag = segrellion_vhal_reunification_event_pending
+
+		title:d_vhalerion = {
+			holder = root
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_title = title:e_flamelands
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# RETURN TO THE FLAMELANDS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5000.a
+
+		remove_character_flag = segrellion_vhal_reunification_event_pending
+
+		add_character_flag = segrellion_vhal_reunification_resolved
+		add_character_flag = segrellion_vhal_rejoined_flamelands
+
+
+		# Restore the historical de jure relationship.
+		title:d_vhalerion = {
+			set_de_jure_liege_title = title:k_flamelands
+		}
+
+
+		# Hugh / current Lord of Vhal becomes Daemon's vassal.
+		set_liege = character:Segrellion_60
+
+
+		character:Segrellion_60 = {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_vhal_returned_to_daemon_opinion
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REMAIN APART
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5000.b
+
+		remove_character_flag = segrellion_vhal_reunification_event_pending
+
+		add_character_flag = segrellion_vhal_reunification_resolved
+		add_character_flag = segrellion_vhal_refused_daemon
+
+
+		# Ensure Vhal remains outside the Flamelands.
+		title:d_vhalerion = {
+			set_de_jure_liege_title = title:h_the_iron_throne
+		}
+
+
+		# Daemon does NOT take this well.
+		character:Segrellion_60 = {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_vhal_refused_daemon_opinion
+			}
+		}
+	}
+}
