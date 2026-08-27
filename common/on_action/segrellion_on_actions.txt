@@ -190,9 +190,6 @@ segrellion_unicorn_returns_leo_beacon_lock = {
 
 			set_knight_status = forbid
 
-			# Leo must physically remain inside the Beacon.
-			set_location = title:b_castle_farring.title_province
-
 			# Never allow him to command the Stormflame field host.
 			var:segrellion_stormflame_war_host ?= {
 
@@ -838,16 +835,19 @@ segrellion_unicorn_returns_clifford_battle_check = {
 
 # =========================================================
 # THE UNICORN RETURNS
-# THE ATTACKING HOST REACHES THE BEACON
+# DAEMON REACHES THE BEACON
+#
+# IMPORTANT:
+# This does NOT depend on Leo's physical location.
+# It does NOT depend on scope:army either.
+#
+# If Daemon has an army at the Beacon during the war,
+# the confrontation happens.
 # =========================================================
 
 segrellion_unicorn_returns_beacon_arrival_check = {
 
 	trigger = {
-
-		scope:army ?= {
-			location = title:b_castle_farring.title_province
-		}
 
 		character:Segrellion_60 ?= {
 
@@ -858,27 +858,9 @@ segrellion_unicorn_returns_beacon_arrival_check = {
 			NOT = {
 				has_character_flag = segrellion_beacon_surrender_demanded
 			}
-		}
 
-		character:Stormflame_3 ?= {
-			is_alive = yes
-		}
-
-
-		# The army entering the Beacon must belong to
-		# Daemon or to his side of the war.
-		OR = {
-
-			this = character:Segrellion_60
-
-			is_at_war_with = character:Stormflame_3
-
-			liege ?= {
-				is_at_war_with = character:Stormflame_3
-			}
-
-			top_liege ?= {
-				is_at_war_with = character:Stormflame_3
+			any_army = {
+				location = title:b_castle_farring.title_province
 			}
 		}
 	}
@@ -890,8 +872,11 @@ segrellion_unicorn_returns_beacon_arrival_check = {
 
 			add_character_flag = segrellion_beacon_surrender_demanded
 
+			remove_character_modifier = segrellion_beacon_awaits_modifier
+
 			trigger_event = {
 				id = segrellion_winds.0401
+				days = 1
 			}
 		}
 	}
@@ -899,10 +884,13 @@ segrellion_unicorn_returns_beacon_arrival_check = {
 
 
 # =========================================================
-# THE BEACON ARRIVAL - MONTHLY FAILSAFE
+# THE BEACON - ABSOLUTE FAILSAFE
 #
-# If for any reason on_army_enter_province is skipped,
-# detect one of Daemon's armies physically at the Beacon.
+# Checked every month.
+#
+# If Daemon has somehow reached the Beacon without the
+# army-enter-province on_action firing correctly, force
+# the story forward.
 # =========================================================
 
 segrellion_unicorn_returns_beacon_arrival_fallback = {
@@ -922,10 +910,6 @@ segrellion_unicorn_returns_beacon_arrival_fallback = {
 			any_army = {
 				location = title:b_castle_farring.title_province
 			}
-		}
-
-		character:Stormflame_3 ?= {
-			is_alive = yes
 		}
 	}
 
