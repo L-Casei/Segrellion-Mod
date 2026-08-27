@@ -1,0 +1,185 @@
+# =========================================================
+# PETITION FOR SEGRELLION EXCEPTIONALISM
+# =========================================================
+
+segrellion_petition_exceptionalism_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_petition_exceptionalism_decision_desc
+	selection_tooltip = segrellion_petition_exceptionalism_decision_tooltip
+	confirm_text = segrellion_petition_exceptionalism_decision_confirm
+
+
+	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+		piety = 2000
+	}
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		house = house:house_Segrellion
+
+		is_house_head = yes
+
+		# After this date it becomes historical automatically.
+		current_date < 8196.1.1
+
+		dynasty:dynn_Segrellion = {
+			NOT = {
+				has_variable = agot_doctrine_of_exceptionalism_incest_exemption
+			}
+		}
+
+		NOT = {
+			has_character_flag = segrellion_exceptionalism_petition_pending
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+
+		# ---------------------------------------------
+		# GREAT PERSONAL PIETY
+		# ---------------------------------------------
+
+		custom_description = {
+			text = segrellion_exceptionalism_piety_level_requirement
+
+			piety_level >= very_high_piety_level
+		}
+
+
+		# ---------------------------------------------
+		# GREAT DYNASTIC PRESTIGE
+		# Splendor level 5+
+		# ---------------------------------------------
+
+		custom_description = {
+			text = segrellion_exceptionalism_splendor_requirement
+
+			dynasty = {
+				dynasty_prestige_level >= 5
+			}
+		}
+
+
+		# ---------------------------------------------
+		# HIGH SEPTON
+		# ---------------------------------------------
+
+		custom_description = {
+			text = segrellion_exceptionalism_high_septon_requirement
+
+			title:k_the_most_devout = {
+				exists = holder
+
+				holder = {
+					opinion = {
+						target = root
+						value >= 75
+					}
+				}
+			}
+		}
+
+
+		# ---------------------------------------------
+		# KING ON THE IRON THRONE
+		# ---------------------------------------------
+
+		custom_description = {
+			text = segrellion_exceptionalism_king_requirement
+
+			title:h_the_iron_throne = {
+				exists = holder
+
+				holder = {
+					opinion = {
+						target = root
+						value >= 60
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_petition_exceptionalism_effect_tt
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_exceptionalism_petition_pending
+
+			trigger_event = {
+				id = segrellion_exceptionalism.0001
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_check_interval = 30
+
+	ai_potential = {
+
+		house = house:house_Segrellion
+		is_house_head = yes
+
+		current_date < 8196.1.1
+	}
+
+	ai_will_do = {
+
+		base = 100
+
+		modifier = {
+			add = 30
+			has_trait = ambitious
+		}
+
+		modifier = {
+			add = 30
+			has_trait = zealous
+		}
+
+		modifier = {
+			add = -30
+			has_trait = cynical
+		}
+
+		modifier = {
+			add = -20
+			has_trait = humble
+		}
+	}
+}

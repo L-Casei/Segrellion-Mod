@@ -1,54 +1,58 @@
 # =========================================================
-# SEGRELLION DOCTRINE OF EXCEPTIONALISM
-#
-# From 196 AC onward House Segrellion is recognised
-# under the Doctrine of Exceptionalism.
+# HOUSE SEGRELLION - DOCTRINE OF EXCEPTIONALISM
+# =========================================================
+
+
+# =========================================================
+# GRANT EXCEPTIONALISM
+# Used both by the historical 196 AC progression and
+# by the early petition decision.
+# =========================================================
+
+segrellion_grant_exceptionalism_effect = {
+
+	dynasty:dynn_Segrellion = {
+
+		set_variable = agot_doctrine_of_exceptionalism_incest_exemption
+
+
+		# Mirror AGOT's treatment of House Targaryen:
+		# existing incest secrets cease to be treated as crimes.
+
+		every_dynasty_member = {
+
+			every_secret = {
+
+				limit = {
+					secret_type = secret_incest
+				}
+
+				remove_secret = yes
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# HISTORICAL PROGRESSION
+# Automatically recognised from 196 AC onward.
 # =========================================================
 
 segrellion_exceptionalism_progression_effect = {
 
 	if = {
-
 		limit = {
 
 			current_date >= 8196.1.1
 
 			dynasty:dynn_Segrellion = {
-
 				NOT = {
 					has_variable = agot_doctrine_of_exceptionalism_incest_exemption
 				}
 			}
 		}
 
-
-		dynasty:dynn_Segrellion = {
-
-			set_variable = agot_doctrine_of_exceptionalism_incest_exemption
-
-
-			# -------------------------------------------------
-			# Any incest secrets predating recognition are no
-			# longer considered crimes under Exceptionalism.
-			#
-			# This mirrors AGOT's own Targaryen setup.
-			# -------------------------------------------------
-
-			every_dynasty_member = {
-
-				limit = {
-					is_alive = yes
-				}
-
-				every_secret = {
-
-					limit = {
-						secret_type = secret_incest
-					}
-
-					remove_secret = yes
-				}
-			}
-		}
+		segrellion_grant_exceptionalism_effect = yes
 	}
 }
