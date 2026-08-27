@@ -12,9 +12,7 @@ segrellion_negotiate_reinforcements_decision = {
 	decision_group_type = major
 
 	desc = segrellion_negotiate_reinforcements_decision_desc
-
 	selection_tooltip = segrellion_negotiate_reinforcements_decision_tooltip
-
 	confirm_text = segrellion_negotiate_reinforcements_decision_confirm
 
 
@@ -27,10 +25,6 @@ segrellion_negotiate_reinforcements_decision = {
 		this = character:Segrellion_60
 
 		current_date >= 8300.8.20
-
-		NOT = {
-			has_title = title:e_flamelands
-		}
 
 		NOT = {
 			has_character_flag = segrellion_foreign_support_secured
@@ -48,16 +42,57 @@ segrellion_negotiate_reinforcements_decision = {
 
 	is_valid = {
 
-		is_alive = yes
 		is_adult = yes
 		is_imprisoned = no
 
-		NOT = {
-			exists = current_travel_plan
+
+		# =================================================
+		# DAEMON HAS NOT YET RECLAIMED THE FLAMELANDS
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_negotiate_reinforcements_no_flamelands_requirement
+
+			NOT = {
+				OR = {
+					has_title = title:k_flamelands
+					has_title = title:e_flamelands
+				}
+			}
 		}
 
-		NOT = {
-			has_character_flag = segrellion_unicorn_returns_war_active
+
+		# =================================================
+		# THE UNICORN RETURNS HAS NOT YET BEGUN
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_negotiate_reinforcements_before_unicorn_returns_requirement
+
+			NOT = {
+				OR = {
+					has_character_flag = segrellion_unicorn_returns_decision_taken
+					has_character_flag = segrellion_unicorn_returns_event_pending
+					has_character_flag = segrellion_unicorn_returns_war_active
+					has_character_flag = segrellion_unicorn_returns_completed
+				}
+			}
+		}
+
+
+		# =================================================
+		# NOT ALREADY TRAVELLING
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_negotiate_reinforcements_not_travelling_requirement
+
+			NOT = {
+				exists = current_travel_plan
+			}
 		}
 	}
 
@@ -125,7 +160,8 @@ segrellion_negotiate_reinforcements_decision = {
 
 			localization = segrellion_support_choice_dorne
 
-			icon = "gfx/interface/icons/message_feed/diplomacy.dds"
+			# Different from Stannis.
+			icon = "gfx/interface/icons/message_feed/intrigue.dds"
 
 			is_valid = {
 
@@ -174,91 +210,99 @@ segrellion_negotiate_reinforcements_decision = {
 
 
 	# =====================================================
-	# EFFECT
+	# EFFECTS
 	# =====================================================
 
 	effect = {
 
-		add_character_flag = segrellion_troop_negotiation_active
+		# Visible Effects section.
+		custom_tooltip = segrellion_negotiate_reinforcements_effect_journey_tt
+		custom_tooltip = segrellion_negotiate_reinforcements_effect_bargain_tt
+		custom_tooltip = segrellion_negotiate_reinforcements_effect_one_supporter_tt
 
 
-		# -------------------------------------------------
-		# STANNIS
-		# -------------------------------------------------
+		# Everything below is mechanical and should not
+		# clutter the Effects section.
+		hidden_effect = {
 
-		if = {
+			add_character_flag = segrellion_troop_negotiation_active
 
-			limit = {
-				scope:segrellion_support_choice_stannis = yes
+
+			# -------------------------------------------------
+			# STANNIS
+			# -------------------------------------------------
+
+			if = {
+
+				limit = {
+					scope:segrellion_support_choice_stannis = yes
+				}
+
+				add_character_flag = segrellion_negotiation_pending_stannis
+
+				start_travel_plan = {
+
+					destination = title:c_dragonstone.title_province
+
+					return_trip = no
+
+					on_arrival_event = segrellion_support.1000
+					on_arrival_destinations = first
+
+					on_travel_planner_cancel_event = segrellion_support.0090
+				}
 			}
 
-			add_character_flag = segrellion_negotiation_pending_stannis
 
-			start_travel_plan = {
+			# -------------------------------------------------
+			# DORNE
+			# -------------------------------------------------
 
-				destination = title:c_dragonstone.title_province
+			else_if = {
 
-				return_trip = no
+				limit = {
+					scope:segrellion_support_choice_dorne = yes
+				}
 
-				on_arrival_event = segrellion_support.1000
+				add_character_flag = segrellion_negotiation_pending_dorne
 
-				on_arrival_destinations = first
+				start_travel_plan = {
 
-				on_travel_planner_cancel_event = segrellion_support.0090
-			}
-		}
+					destination = title:c_sunspear.title_province
 
+					return_trip = no
 
-		# -------------------------------------------------
-		# DORNE
-		# -------------------------------------------------
+					on_arrival_event = segrellion_support.2000
+					on_arrival_destinations = first
 
-		else_if = {
-
-			limit = {
-				scope:segrellion_support_choice_dorne = yes
-			}
-
-			add_character_flag = segrellion_negotiation_pending_dorne
-
-			start_travel_plan = {
-
-				destination = title:c_sunspear.title_province
-
-				return_trip = no
-
-				on_arrival_event = segrellion_support.2000
-
-				on_arrival_destinations = first
-
-				on_travel_planner_cancel_event = segrellion_support.0090
-			}
-		}
-
-
-		# -------------------------------------------------
-		# DAENERYS
-		# -------------------------------------------------
-
-		else_if = {
-
-			limit = {
-				scope:segrellion_support_choice_daenerys = yes
+					on_travel_planner_cancel_event = segrellion_support.0090
+				}
 			}
 
-			add_character_flag = segrellion_negotiation_pending_daenerys
 
-			start_travel_plan = {
+			# -------------------------------------------------
+			# DAENERYS
+			# -------------------------------------------------
 
-				destination = title:c_ghoyan_drohe.title_province
+			else_if = {
 
-				return_trip = no
+				limit = {
+					scope:segrellion_support_choice_daenerys = yes
+				}
 
-				on_arrival_event = segrellion_support.3000
+				add_character_flag = segrellion_negotiation_pending_daenerys
 
-				on_arrival_destinations = first
+				start_travel_plan = {
 
-				on_travel_planner_cancel_event = segrellion_support.0090
+					destination = title:c_ghoyan_drohe.title_province
+
+					return_trip = no
+
+					on_arrival_event = segrellion_support.3000
+					on_arrival_destinations = first
+
+					on_travel_planner_cancel_event = segrellion_support.0090
+				}
 			}
 		}
 	}
