@@ -741,6 +741,7 @@ segrellion_support.3020 = {
 		name = segrellion_support.3020.b
 
 		trigger = {
+
 			character:Segrellion_60 = {
 				has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
 			}
@@ -761,17 +762,27 @@ segrellion_support.3020 = {
 			}
 		}
 
+
+		# Remember that Daenerys specifically rejected
+		# the proposed marriage, not Daemon's alliance.
+
+		add_character_flag = segrellion_daenerys_rejected_daemon_marriage
 		add_character_flag = segrellion_daenerys_supports_daemon
 
+
 		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daenerys_rejected_marriage
 
 			remove_character_flag = segrellion_daemon_offered_oath_to_daenerys
 			remove_character_flag = segrellion_daemon_offered_marriage_to_daenerys
 
+
 			segrellion_grant_daenerys_support_effect = yes
 
+
 			trigger_event = {
-				id = segrellion_support.3031
+				id = segrellion_support.3032
 				days = 1
 			}
 		}
@@ -931,6 +942,43 @@ segrellion_support.3031 = {
 
 	option = {
 		name = segrellion_support.3031.a
+	}
+}
+
+# =========================================================
+# 3032 - MARRIAGE REFUSED, ALLIANCE ACCEPTED
+#
+# Daemon offered oath + marriage.
+# Daenerys accepts the alliance but refuses the marriage.
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_support.3032 = {
+
+	type = character_event
+
+	title = segrellion_support.3032.t
+	desc = segrellion_support.3032.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_support.3032.a
 	}
 }
 
