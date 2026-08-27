@@ -1,0 +1,232 @@
+# =========================================================
+# YOUNG GRIFF
+# TAKE THE IRON THRONE
+# =========================================================
+
+segrellion_take_iron_throne_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_claim_iron_throne.dds"
+	}
+
+	decision_group_type = major
+
+	sort_order = 200
+
+	desc = segrellion_take_iron_throne_decision_desc
+
+	selection_tooltip = segrellion_take_iron_throne_decision_tooltip
+
+	confirm_text = segrellion_take_iron_throne_decision_confirm
+
+
+	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+		prestige = 1000
+	}
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:IAF_Young_Griff_1
+
+		current_date >= 8300.8.20
+
+		is_alive = yes
+
+		has_claim_on = title:h_the_iron_throne
+
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_iron_throne_war_started
+		}
+
+
+		title:h_the_iron_throne = {
+
+			exists = holder
+
+			holder = {
+				this != root
+			}
+		}
+
+
+		# =================================================
+		# AEGON IS FREE TO PURSUE HIS OWN CLAIM
+		#
+		# Either:
+		# - he already abandoned Daemon,
+		# - or The Unicorn Returns has ended.
+		# =================================================
+
+		OR = {
+
+			has_character_flag = segrellion_young_griff_free_for_iron_throne
+
+
+			character:Segrellion_60 ?= {
+
+				OR = {
+
+					has_character_flag = segrellion_unicorn_returns_completed
+
+
+					AND = {
+
+						has_character_flag = segrellion_unicorn_returns_decision_taken
+
+						NOT = {
+							has_character_flag = segrellion_unicorn_returns_event_pending
+						}
+
+						NOT = {
+							has_character_flag = segrellion_unicorn_returns_war_active
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+
+		# =================================================
+		# 25,000 SOLDIERS
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_take_iron_throne_army_requirement_tt
+
+			current_military_strength >= 25000
+		}
+
+
+		# =================================================
+		# POLITICAL SUPPORT
+		#
+		# Either:
+		# - one canonical Lord Paramount ally,
+		#
+		# or:
+		# - Daemon Segrellion AND Joffrey Vladwyn.
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_take_iron_throne_allies_requirement_tt
+
+			OR = {
+
+				segrellion_young_griff_has_paramount_ally_trigger = yes
+
+
+				AND = {
+
+					is_allied_to = character:Segrellion_60
+
+					is_allied_to = character:Vladwyn_5
+				}
+			}
+		}
+
+
+		# =================================================
+		# DISTINGUISHED OR HIGHER
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_take_iron_throne_fame_requirement_tt
+
+			prestige_level >= 2
+		}
+	}
+
+
+	# =====================================================
+	# EFFECTS
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_take_iron_throne_war_effect_tt
+		custom_tooltip = segrellion_take_iron_throne_paramounts_effect_tt
+		custom_tooltip = segrellion_take_iron_throne_stannis_effect_tt
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_iron_throne_war_started
+
+			remove_character_flag = segrellion_young_griff_waiting_for_daemon
+			remove_character_flag = segrellion_young_griff_free_for_iron_throne
+
+
+			title:h_the_iron_throne.holder = {
+				save_scope_as = young_griff_iron_throne_defender
+			}
+
+
+			# =================================================
+			# THE WAR FOR THE IRON THRONE
+			#
+			# Young Griff already possesses a pressed claim.
+			# Using the standard claim CB allows AGOT's native
+			# Mega War system to process the conflict.
+			# =================================================
+
+			start_war = {
+
+				cb = claim_cb
+
+				target = scope:young_griff_iron_throne_defender
+
+				claimant = root
+
+				target_title = title:h_the_iron_throne
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	#
+	# The instant all requirements are fulfilled, Aegon
+	# should strongly prioritize pressing his claim.
+	# =====================================================
+
+	ai_check_interval = 1
+
+	ai_potential = {
+
+		this = character:IAF_Young_Griff_1
+	}
+
+	ai_will_do = {
+
+		base = 10000
+	}
+}

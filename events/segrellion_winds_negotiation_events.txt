@@ -112,16 +112,26 @@ segrellion_support.1000 = {
 
 
 		# ---------------------------------------------
-		# YOUNG GRIFF BREAKS WITH DAEMON
+		# YOUNG GRIFF REACTS TO DAEMON CHOOSING STANNIS
 		# ---------------------------------------------
 
 		character:IAF_Young_Griff_1 ?= {
 
-			remove_character_flag = segrellion_young_griff_supports_daemon
+			if = {
 
-			add_opinion = {
-				target = root
-				modifier = segrellion_chose_stannis_over_young_griff_opinion
+				limit = {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_daemon_choice_resolved
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff.1000
+					days = 1
+				}
 			}
 		}
 
@@ -246,6 +256,33 @@ segrellion_support.2000 = {
 		}
 
 		segrellion_grant_dorne_support_effect = yes
+
+				segrellion_grant_dorne_support_effect = yes
+
+
+		# ---------------------------------------------
+		# YOUNG GRIFF REACTS TO THE DORNISH PACT
+		# ---------------------------------------------
+
+		character:IAF_Young_Griff_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_daemon_choice_resolved
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff.3000
+					days = 1
+				}
+			}
+		}
 	}
 
 

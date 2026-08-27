@@ -1,0 +1,71 @@
+# =========================================================
+# YOUNG GRIFF
+# DAEMON'S WAR / IRON THRONE STORYLINE
+# =========================================================
+
+
+# =========================================================
+# BREAK THE POLITICAL ALLIANCE WITH DAEMON
+# =========================================================
+
+segrellion_young_griff_break_daemon_alliance_effect = {
+
+	if = {
+		limit = {
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+
+			is_allied_to = character:Segrellion_60
+		}
+
+		break_alliance = character:Segrellion_60
+	}
+}
+
+
+# =========================================================
+# LEAVE DAEMON'S RESTORATION
+#
+# If The Unicorn Returns has not begun yet:
+# removing the support flag prevents Aegon from joining.
+#
+# If the war is already active:
+# Aegon is removed from the war immediately.
+# =========================================================
+
+segrellion_young_griff_leave_daemon_restoration_effect = {
+
+	remove_character_flag = segrellion_young_griff_supports_daemon
+	remove_character_flag = segrellion_young_griff_waiting_for_daemon
+
+	add_character_flag = segrellion_young_griff_free_for_iron_throne
+
+
+	# If Aegon is already participating in The Unicorn Returns,
+	# remove him from that war.
+
+	character:Segrellion_60 ?= {
+
+		var:segrellion_unicorn_returns_war ?= {
+
+			remove_participant = root
+		}
+	}
+}
+
+
+# =========================================================
+# REMAIN WITH DAEMON
+#
+# Aegon keeps his military commitment and therefore waits
+# for The Unicorn Returns to end before pursuing his throne.
+# =========================================================
+
+segrellion_young_griff_stay_with_daemon_restoration_effect = {
+
+	remove_character_flag = segrellion_young_griff_free_for_iron_throne
+
+	add_character_flag = segrellion_young_griff_supports_daemon
+	add_character_flag = segrellion_young_griff_waiting_for_daemon
+}

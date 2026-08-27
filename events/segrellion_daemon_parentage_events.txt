@@ -129,44 +129,10 @@ segrellion_daemon_parentage.0002 = {
 
 	immediate = {
 
-		# Daemon himself discovers his hidden heritage.
+		# Daemon reads Daena's letter himself and becomes
+		# the sole knower of his AGOT heritage secret.
 
-		add_secret = {
-			type = secret_disputed_heritage
-			target = root
-		}
-
-
-		# Explicitly ensure Daemon knows his own Secret.
-
-		random_known_secret = {
-
-			limit = {
-
-				secret_type = secret_disputed_heritage
-
-				secret_target = {
-					this = root
-				}
-			}
-
-			reveal_to = root
-		}
-
-
-		# =================================================
-		# AGOT ROYAL BASTARD STATE
-		#
-		# Normally these are established by
-		# agot_events_bastard.0900.
-		#
-		# In this route there is no external revealer:
-		# Daemon discovers the truth himself.
-		# =================================================
-
-		add_character_flag = royal_bastard
-
-		apply_bastard_bloodline_inheritance_effect = yes
+		segrellion_create_daemon_parentage_secret_effect = yes
 
 
 		# Our own narrative bookkeeping.
@@ -332,7 +298,7 @@ segrellion_daemon_parentage.0004 = {
 
 			limit = {
 
-				secret_type = secret_disputed_heritage
+				secret_type = secret_agot_disputed_heritage
 
 				secret_target = {
 					this = character:Segrellion_60
@@ -393,6 +359,7 @@ segrellion_daemon_parentage.0004 = {
 			}
 
 			segrellion_create_daemon_parentage_secret_effect = yes
+			custom_tooltip = segrellion_daemon_parentage.reveal_decision_unlocked_tt
 		}
 
 
@@ -408,6 +375,95 @@ segrellion_daemon_parentage.0004 = {
 		else = {
 
 			add_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+
+			# Start checking whether Hugh may hand the secret
+			# over to AGOT's native true-parentage system.
+			trigger_event = {
+				id = segrellion_daemon_parentage.0005
+				days = 1
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0005 - AI HUGH MAY REVEAL DAEMON'S PARENTAGE
+#
+# Hugh chose to keep Daena's secret.
+#
+# Before 302 AC:
+#   Hugh knows the truth narratively, but does NOT possess
+#   the actual AGOT heritage secret, preventing premature
+#   AI exposure.
+#
+# From 302 AC onward:
+#   Hugh receives the same AGOT heritage-secret type used
+#   by Howland Reed for Jon Snow.
+#
+# From that point onward AGOT's native
+# Expose True Parentage mechanics can handle the reveal.
+# =========================================================
+
+segrellion_daemon_parentage.0005 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		is_ai = yes
+
+		has_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_known
+			}
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# 302 AC OR LATER
+		#
+		# Hugh now becomes a REAL knower of Daemon's
+		# AGOT heritage secret, just as Howland Reed
+		# knows Jon Snow's.
+		# =================================================
+
+		if = {
+
+			limit = {
+				current_date >= 302.1.1
+			}
+
+			remove_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+
+			segrellion_create_daemon_parentage_secret_effect = yes
+		}
+
+
+		# =================================================
+		# BEFORE 302 AC
+		#
+		# Check again later.
+		# Only Hugh runs this, so this is negligible.
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_daemon_parentage.0005
+				days = 30
+			}
 		}
 	}
 }

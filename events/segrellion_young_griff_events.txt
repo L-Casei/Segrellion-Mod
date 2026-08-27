@@ -1,0 +1,573 @@
+namespace = segrellion_young_griff
+
+
+# =========================================================
+# 1000 - DAEMON CHOSE STANNIS
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.1000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.1000.t
+	desc = segrellion_young_griff.1000.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_daemon_choice_resolved
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_pledged_to_stannis
+		}
+	}
+
+
+	immediate = {
+
+		# Daemon has chosen Stannis's cause.
+		# Their formal alliance cannot survive this.
+
+		segrellion_young_griff_break_daemon_alliance_effect = yes
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_chose_stannis_over_young_griff_opinion
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# LEAVE DAEMON
+	#
+	# AI: 100%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.1000.a
+
+		ai_chance = {
+			base = 100
+		}
+
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+		add_character_flag = segrellion_young_griff_left_daemon_stannis
+
+		segrellion_young_griff_leave_daemon_restoration_effect = yes
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.1100
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# KEEP HIS WORD
+	#
+	# Player-only deviation.
+	# AI: 0%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.1000.b
+
+		ai_chance = {
+			base = 0
+		}
+
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+		add_character_flag = segrellion_young_griff_stayed_daemon_stannis
+
+		segrellion_young_griff_stay_with_daemon_restoration_effect = yes
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.1100
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1100 - DAEMON RECEIVES AEGON'S ANSWER
+# STANNIS ROUTE
+# Root = Daemon
+# =========================================================
+
+segrellion_young_griff.1100 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.1100.t
+
+	desc = {
+
+		triggered_desc = {
+
+			trigger = {
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_left_daemon_stannis
+				}
+			}
+
+			desc = segrellion_young_griff.1100.desc.leave
+		}
+
+		triggered_desc = {
+
+			trigger = {
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_stayed_daemon_stannis
+				}
+			}
+
+			desc = segrellion_young_griff.1100.desc.stay
+		}
+	}
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:IAF_Young_Griff_1
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.1100.a
+
+		if = {
+
+			limit = {
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_left_daemon_stannis
+				}
+			}
+
+			add_opinion = {
+				target = character:IAF_Young_Griff_1
+				modifier = segrellion_young_griff_abandoned_daemon_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 2000 - DAEMON CHOSE DAENERYS
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.2000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.2000.t
+	desc = segrellion_young_griff.2000.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_daemon_choice_resolved
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_pledged_to_daenerys
+		}
+	}
+
+
+	immediate = {
+
+		# Daemon has backed another Targaryen claimant.
+		# The alliance ends, though this is not the outright
+		# political hostility created by the Stannis route.
+
+		segrellion_young_griff_break_daemon_alliance_effect = yes
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_chose_daenerys_over_young_griff_opinion
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# LEAVE DAEMON
+	#
+	# AI: 80%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.2000.a
+
+		ai_chance = {
+			base = 80
+		}
+
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+		add_character_flag = segrellion_young_griff_left_daemon_daenerys
+
+		segrellion_young_griff_leave_daemon_restoration_effect = yes
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.2100
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REMAIN IN THE WAR
+	#
+	# AI: 20%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.2000.b
+
+		ai_chance = {
+			base = 20
+		}
+
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+		add_character_flag = segrellion_young_griff_stayed_daemon_daenerys
+
+		segrellion_young_griff_stay_with_daemon_restoration_effect = yes
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.2100
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 2100 - DAEMON RECEIVES AEGON'S ANSWER
+# DAENERYS ROUTE
+# Root = Daemon
+# =========================================================
+
+segrellion_young_griff.2100 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.2100.t
+
+	desc = {
+
+		triggered_desc = {
+
+			trigger = {
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_left_daemon_daenerys
+				}
+			}
+
+			desc = segrellion_young_griff.2100.desc.leave
+		}
+
+		triggered_desc = {
+
+			trigger = {
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_stayed_daemon_daenerys
+				}
+			}
+
+			desc = segrellion_young_griff.2100.desc.stay
+		}
+	}
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:IAF_Young_Griff_1
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.2100.a
+
+		if = {
+
+			limit = {
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_left_daemon_daenerys
+				}
+			}
+
+			add_opinion = {
+				target = character:IAF_Young_Griff_1
+				modifier = segrellion_young_griff_abandoned_daemon_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3000 - DAEMON CHOSE DORNE
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.3000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.3000.t
+	desc = segrellion_young_griff.3000.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_daemon_choice_resolved
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_dorne_marriage_pact
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# REMAIN WITH DAEMON
+	#
+	# AI: 100%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.3000.a
+
+		ai_chance = {
+			base = 100
+		}
+
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+		add_character_flag = segrellion_young_griff_stayed_daemon_dorne
+
+		segrellion_young_griff_stay_with_daemon_restoration_effect = yes
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.3100
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ABANDON DAEMON
+	#
+	# Player-only deviation.
+	# AI: 0%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.3000.b
+
+		ai_chance = {
+			base = 0
+		}
+
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+		add_character_flag = segrellion_young_griff_left_daemon_dorne
+
+		segrellion_young_griff_break_daemon_alliance_effect = yes
+		segrellion_young_griff_leave_daemon_restoration_effect = yes
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.3100
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3100 - DAEMON RECEIVES AEGON'S ANSWER
+# DORNE ROUTE
+# Root = Daemon
+# =========================================================
+
+segrellion_young_griff.3100 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.3100.t
+
+	desc = {
+
+		triggered_desc = {
+
+			trigger = {
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_left_daemon_dorne
+				}
+			}
+
+			desc = segrellion_young_griff.3100.desc.leave
+		}
+
+		triggered_desc = {
+
+			trigger = {
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_stayed_daemon_dorne
+				}
+			}
+
+			desc = segrellion_young_griff.3100.desc.stay
+		}
+	}
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:IAF_Young_Griff_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.3100.a
+
+		if = {
+
+			limit = {
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_left_daemon_dorne
+				}
+			}
+
+			add_opinion = {
+				target = character:IAF_Young_Griff_1
+				modifier = segrellion_young_griff_abandoned_daemon_opinion
+			}
+		}
+	}
+}
