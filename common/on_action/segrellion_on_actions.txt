@@ -775,7 +775,59 @@ segrellion_unicorn_returns_clifford_battle_check = {
 
 # =========================================================
 # THE UNICORN RETURNS
-# AN ATTACKING ARMY REACHES THE BEACON
+# DAEMON'S ARMY REACHES THE BEACON
+#
+# on_army_enter_province:
+# root = owner of the army
+# scope:army = army
+# =========================================================
+
+segrellion_unicorn_returns_beacon_arrival_check = {
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+		NOT = {
+			has_character_flag = segrellion_beacon_surrender_demanded
+		}
+
+		character:Stormflame_3 ?= {
+			is_alive = yes
+		}
+
+		scope:army ?= {
+
+			army_owner = character:Segrellion_60
+
+			location = title:b_castle_farring.title_province
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_beacon_surrender_demanded
+
+		remove_character_modifier = segrellion_beacon_awaits_modifier
+
+		trigger_event = {
+			id = segrellion_winds.0401
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# THE BEACON ARRIVAL - MONTHLY FAILSAFE
+#
+# If for any reason on_army_enter_province is skipped,
+# detect one of Daemon's armies physically at the Beacon.
 # =========================================================
 
 segrellion_unicorn_returns_beacon_arrival_fallback = {
@@ -802,57 +854,14 @@ segrellion_unicorn_returns_beacon_arrival_fallback = {
 		}
 	}
 
-	effect = {
-
-		character:Segrellion_60 = {
-
-			add_character_flag = segrellion_beacon_surrender_demanded
-
-			trigger_event = {
-				id = segrellion_winds.0401
-				days = 1
-			}
-		}
-	}
-}
-
-
-# =========================================================
-# ARRIVAL AT THE BEACON - MONTHLY FAILSAFE
-#
-# on_army_enter_province can occasionally miss.
-# This guarantees the story continues while Daemon is
-# physically at the Beacon during the Unicorn Returns war.
-# =========================================================
-
-segrellion_unicorn_returns_beacon_arrival_fallback = {
-
-	trigger = {
-
-		character:Segrellion_60 ?= {
-
-			is_alive = yes
-
-			has_character_flag = segrellion_unicorn_returns_war_active
-
-			NOT = {
-				has_character_flag = segrellion_beacon_surrender_demanded
-			}
-
-			location = title:b_castle_farring.title_province
-		}
-
-		character:Stormflame_3 ?= {
-			is_alive = yes
-		}
-	}
-
 
 	effect = {
 
 		character:Segrellion_60 = {
 
 			add_character_flag = segrellion_beacon_surrender_demanded
+
+			remove_character_modifier = segrellion_beacon_awaits_modifier
 
 			trigger_event = {
 				id = segrellion_winds.0401
