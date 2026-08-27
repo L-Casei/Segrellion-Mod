@@ -67,24 +67,34 @@ segrellion_young_griff.1000 = {
 	# =====================================================
 
 	option = {
+	name = segrellion_young_griff.1000.a
 
-		name = segrellion_young_griff.1000.a
+	custom_tooltip = segrellion_young_griff_stannis_abandon_daemon_tt
 
-		ai_chance = {
-			base = 100
-		}
+	hidden_effect = {
 
 		add_character_flag = segrellion_young_griff_daemon_choice_resolved
 		add_character_flag = segrellion_young_griff_left_daemon_stannis
 
-		segrellion_young_griff_leave_daemon_restoration_effect = yes
+		segrellion_young_griff_break_daemon_alliance_effect = yes
 
-		character:Segrellion_60 = {
-
-			trigger_event = {
-				id = segrellion_young_griff.1100
-				days = 1
+		add_opinion = {
+			modifier = segrellion_chose_stannis_over_young_griff_opinion
+		target = character:Segrellion_60
 			}
+
+			segrellion_young_griff_leave_daemon_restoration_effect = yes
+
+			character:Segrellion_60 = {
+				trigger_event = {
+					id = segrellion_young_griff.1100
+					days = 1
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 100
 		}
 	}
 
@@ -97,24 +107,36 @@ segrellion_young_griff.1000 = {
 	# =====================================================
 
 	option = {
-
 		name = segrellion_young_griff.1000.b
+
+		custom_tooltip = segrellion_young_griff_stannis_support_daemon_tt
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_daemon_choice_resolved
+			add_character_flag = segrellion_young_griff_stayed_daemon_stannis
+
+			# Political alliance still ends because Daemon chose Stannis.
+			segrellion_young_griff_break_daemon_alliance_effect = yes
+
+			add_opinion = {
+				modifier = segrellion_chose_stannis_over_young_griff_opinion
+				target = character:Segrellion_60
+			}
+
+			# But Aegon keeps his promise to fight for the Flamelands.
+			segrellion_young_griff_stay_with_daemon_restoration_effect = yes
+
+			character:Segrellion_60 = {
+				trigger_event = {
+					id = segrellion_young_griff.1100
+					days = 1
+				}
+			}
+		}
 
 		ai_chance = {
 			base = 0
-		}
-
-		add_character_flag = segrellion_young_griff_daemon_choice_resolved
-		add_character_flag = segrellion_young_griff_stayed_daemon_stannis
-
-		segrellion_young_griff_stay_with_daemon_restoration_effect = yes
-
-		character:Segrellion_60 = {
-
-			trigger_event = {
-				id = segrellion_young_griff.1100
-				days = 1
-			}
 		}
 	}
 }

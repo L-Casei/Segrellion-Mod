@@ -346,10 +346,9 @@ segrellion_daemon_parentage.0004 = {
 		# =================================================
 		# PLAYER HUGH
 		#
-		# Give him the REAL secret immediately.
-		#
-		# AGOT's native "Expose True Parentage" decision
-		# can now detect Daemon.
+		# The player receives the actual AGOT secret
+		# immediately and may use AGOT's native
+		# Expose True Parentage decision whenever desired.
 		# =================================================
 
 		if = {
@@ -376,8 +375,6 @@ segrellion_daemon_parentage.0004 = {
 
 			add_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
 
-			# Start checking whether Hugh may hand the secret
-			# over to AGOT's native true-parentage system.
 			trigger_event = {
 				id = segrellion_daemon_parentage.0005
 				days = 1
@@ -387,83 +384,82 @@ segrellion_daemon_parentage.0004 = {
 }
 
 # =========================================================
-# 0005 - AI HUGH MAY REVEAL DAEMON'S PARENTAGE
+# 0005 - AI HUGH MAY LEARN THE MECHANICAL SECRET
 #
-# Hugh chose to keep Daena's secret.
+# Hugh already knows the truth narratively.
 #
-# Before 302 AC:
-#   Hugh knows the truth narratively, but does NOT possess
-#   the actual AGOT heritage secret, preventing premature
-#   AI exposure.
+# However, AI Hugh only receives the actual AGOT
+# disputed-heritage secret if his opinion of Daemon
+# falls to -25 or lower.
 #
-# From 302 AC onward:
-#   Hugh receives the same AGOT heritage-secret type used
-#   by Howland Reed for Jon Snow.
-#
-# From that point onward AGOT's native
-# Expose True Parentage mechanics can handle the reveal.
+# Until then AGOT cannot independently expose it.
 # =========================================================
 
 segrellion_daemon_parentage.0005 = {
 
-	type = character_event
-	hidden = yes
+    type = character_event
+    hidden = yes
 
 
-	trigger = {
+    trigger = {
 
-		this = character:Segrellion_43
+        this = character:Segrellion_43
 
-		is_ai = yes
+        is_ai = yes
 
-		has_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+        has_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
 
-		character:Segrellion_60 ?= {
+        character:Segrellion_60 ?= {
 
-			is_alive = yes
+            is_alive = yes
 
-			NOT = {
-				has_character_flag = segrellion_daemon_parentage_known
-			}
-		}
-	}
-
-
-	immediate = {
-
-		# =================================================
-		# 302 AC OR LATER
-		#
-		# Hugh now becomes a REAL knower of Daemon's
-		# AGOT heritage secret, just as Howland Reed
-		# knows Jon Snow's.
-		# =================================================
-
-		if = {
-
-			limit = {
-				current_date >= 302.1.1
-			}
-
-			remove_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
-
-			segrellion_create_daemon_parentage_secret_effect = yes
-		}
+            NOT = {
+                has_character_flag = segrellion_daemon_parentage_known
+            }
+        }
+    }
 
 
-		# =================================================
-		# BEFORE 302 AC
-		#
-		# Check again later.
-		# Only Hugh runs this, so this is negligible.
-		# =================================================
+    immediate = {
 
-		else = {
+        # =================================================
+        # HUGH DISLIKES DAEMON ENOUGH
+        #
+        # Give Hugh the REAL AGOT heritage secret.
+        # From this point AGOT's native mechanics can
+        # treat Hugh like any other knower, such as
+        # Howland Reed with Jon Snow.
+        # =================================================
 
-			trigger_event = {
-				id = segrellion_daemon_parentage.0005
-				days = 30
-			}
-		}
-	}
+        if = {
+
+            limit = {
+
+                opinion = {
+                    target = character:Segrellion_60
+                    value <= -25
+                }
+            }
+
+            remove_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+
+            segrellion_create_daemon_parentage_secret_effect = yes
+        }
+
+
+        # =================================================
+        # HUGH STILL DOES NOT DISLIKE DAEMON ENOUGH
+        #
+        # Keep the knowledge narrative-only and check
+        # again later.
+        # =================================================
+
+        else = {
+
+            trigger_event = {
+                id = segrellion_daemon_parentage.0005
+                days = 30
+            }
+        }
+    }
 }
