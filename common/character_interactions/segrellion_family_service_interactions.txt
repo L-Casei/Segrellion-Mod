@@ -53,6 +53,9 @@ segrellion_ask_join_kingsguard_interaction = {
 
 	notification_text = REQUEST_VOWS_NOTIFICATION_TEXT
 
+	answer_accept_key = segrellion_kingsguard_answer_accept
+	answer_reject_key = segrellion_kingsguard_answer_reject
+
 	on_decline_summary = segrellion_kingsguard_family_decline_summary
 
 
@@ -507,8 +510,11 @@ segrellion_ask_join_kingsguard_interaction = {
 
 	on_accept = {
 
-		if = {
+		# =================================================
+		# HOOK
+		# =================================================
 
+		if = {
 			limit = {
 				scope:hook = yes
 			}
@@ -519,28 +525,62 @@ segrellion_ask_join_kingsguard_interaction = {
 		}
 
 
+		# =================================================
+		# BEGIN TRAINING FOR THE KINGSGUARD
+		#
+		# Mirrors AGOT's native Kingsguard ambition setup.
+		# =================================================
+
 		scope:recipient = {
 
-			add_character_modifier = {
-				modifier = training_for_kingsguard
+			if = {
+				limit = {
+					NOT = {
+						has_trait = refusing_marriage
+					}
+				}
+
+				add_trait = refusing_marriage
 			}
 
-			add_trait = refusing_marriage
+
+			if = {
+				limit = {
+					NOT = {
+						has_character_modifier = training_for_kingsguard
+					}
+				}
+
+				add_character_modifier = {
+					modifier = training_for_kingsguard
+				}
+			}
+
+
+			if = {
+				limit = {
+					NOT = {
+						has_character_flag = kingsguard_ambition
+					}
+				}
+
+				add_character_flag = kingsguard_ambition
+			}
+
+
+			add_prowess_skill = 1
 		}
 
 
+		# =================================================
+		# RESPONSE LETTER
+		# =================================================
+
 		scope:actor = {
 
-			send_interface_toast = {
-
-				type = event_toast_effect_good
-
-				title = segrellion_kingsguard_training_accepted_title
-
-				desc = segrellion_kingsguard_training_accepted_desc
-
-				left_icon = scope:actor
-				right_icon = scope:recipient
+			trigger_event = {
+				id = segrellion_family_service.0001
+				days = 1
 			}
 		}
 	}
@@ -555,9 +595,7 @@ segrellion_ask_join_kingsguard_interaction = {
 		scope:recipient = {
 
 			add_opinion = {
-
 				target = scope:actor
-
 				modifier = segrellion_asked_me_to_join_kingsguard_opinion
 			}
 		}
@@ -565,16 +603,9 @@ segrellion_ask_join_kingsguard_interaction = {
 
 		scope:actor = {
 
-			send_interface_toast = {
-
-				type = event_toast_effect_bad
-
-				title = segrellion_kingsguard_request_refused_title
-
-				desc = segrellion_kingsguard_training_refused_desc
-
-				left_icon = scope:actor
-				right_icon = scope:recipient
+			trigger_event = {
+				id = segrellion_family_service.0002
+				days = 1
 			}
 		}
 	}
@@ -626,6 +657,8 @@ segrellion_ask_take_black_interaction = {
 	greeting = negative
 
 	notification_text = REQUEST_VOWS_NOTIFICATION_TEXT
+	answer_accept_key = segrellion_nightswatch_answer_accept
+	answer_reject_key = segrellion_nightswatch_answer_reject
 
 	on_decline_summary = segrellion_nightswatch_family_decline_summary
 
@@ -1030,8 +1063,11 @@ segrellion_ask_take_black_interaction = {
 
 	on_accept = {
 
-		if = {
+		# =================================================
+		# HOOK
+		# =================================================
 
+		if = {
 			limit = {
 				scope:hook = yes
 			}
@@ -1042,32 +1078,33 @@ segrellion_ask_take_black_interaction = {
 		}
 
 
+		# =================================================
+		# JOIN THE NIGHT'S WATCH
+		# =================================================
+
 		scope:recipient = {
 
-			# Native AGOT effect.
 			agot_add_to_nightswatch_effect = yes
 
 
 			title:k_the_wall.holder = {
 
-				add_courtier = scope:recipient
-
 				trigger_event = agot_nights_watch.0100
+
+				add_courtier = scope:recipient
 			}
 		}
 
 
+		# =================================================
+		# RESPONSE LETTER
+		# =================================================
+
 		scope:actor = {
 
-			send_interface_toast = {
-
-				type = event_toast_effect_good
-
-				title = segrellion_nightswatch_request_accepted_title
-				desc = segrellion_nightswatch_request_accepted_desc
-
-				left_icon = scope:actor
-				right_icon = scope:recipient
+			trigger_event = {
+				id = segrellion_family_service.0101
+				days = 1
 			}
 		}
 	}
@@ -1096,15 +1133,9 @@ segrellion_ask_take_black_interaction = {
 
 		scope:actor = {
 
-			send_interface_toast = {
-
-				type = event_toast_effect_bad
-
-				title = segrellion_nightswatch_request_refused_title
-				desc = segrellion_nightswatch_request_refused_desc
-
-				left_icon = scope:actor
-				right_icon = scope:recipient
+			trigger_event = {
+				id = segrellion_family_service.0102
+				days = 1
 			}
 		}
 	}
