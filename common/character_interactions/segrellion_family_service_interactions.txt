@@ -10,7 +10,15 @@
 
 
 # =========================================================
-# ASK TO JOIN THE KINGSGUARD
+# ASK A CLOSE RELATIVE TO TRAIN FOR THE KINGSGUARD
+#
+# This does NOT appoint the character to the Kingsguard.
+#
+# If accepted:
+#   - training_for_kingsguard modifier
+#   - refusing_marriage trait
+#
+# AGOT's normal Kingsguard system can later recruit them.
 # =========================================================
 
 segrellion_ask_join_kingsguard_interaction = {
@@ -39,7 +47,7 @@ segrellion_ask_join_kingsguard_interaction = {
 	popup_on_receive = yes
 	pause_on_receive = yes
 
-	use_diplomatic_range = no
+	use_diplomatic_range = yes
 
 	greeting = negative
 
@@ -47,8 +55,13 @@ segrellion_ask_join_kingsguard_interaction = {
 
 	on_decline_summary = segrellion_kingsguard_family_decline_summary
 
-	cooldown_against_recipient = {
-		years = 5
+
+	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+		prestige = 500
 	}
 
 
@@ -58,55 +71,13 @@ segrellion_ask_join_kingsguard_interaction = {
 
 	is_shown = {
 
-		# -------------------------------------------------
-		# ACTOR
-		#
-		# Only the ruler whose primary title actually
-		# possesses a Kingsguard can appoint someone.
-		# -------------------------------------------------
-
 		scope:actor = {
 
-			ruler_primary_title_has_kingsguard_trigger = yes
-
-			NOT = {
-				has_character_flag = choosing_kingsguard
-			}
-
-
-			# At least one ordinary Kingsguard slot is empty.
-			NAND = {
-
-				primary_title = {
-					exists = var:kingsguard_1
-				}
-
-				primary_title = {
-					exists = var:kingsguard_2
-				}
-
-				primary_title = {
-					exists = var:kingsguard_3
-				}
-
-				primary_title = {
-					exists = var:kingsguard_4
-				}
-
-				primary_title = {
-					exists = var:kingsguard_5
-				}
-
-				primary_title = {
-					exists = var:kingsguard_6
-				}
-			}
+			is_alive = yes
+			is_adult = yes
+			is_imprisoned = no
 		}
 
-
-		# -------------------------------------------------
-		# RECIPIENT
-		# -------------------------------------------------
 
 		scope:recipient = {
 
@@ -116,17 +87,24 @@ segrellion_ask_join_kingsguard_interaction = {
 
 			is_close_family_of = scope:actor
 
-			top_liege = scope:actor
-
-			valid_kingsguard_gender_trigger = yes
+			is_alive = yes
 
 
 			NOR = {
+
 				has_trait = kingsguard
+
 				has_trait = lc_kingsguard
+
 				has_trait = nightswatch
+
 				has_trait = maester
+
 				has_trait = order_member
+
+				has_trait = devoted
+
+				has_character_modifier = training_for_kingsguard
 			}
 		}
 	}
@@ -138,37 +116,46 @@ segrellion_ask_join_kingsguard_interaction = {
 
 	is_valid_showing_failures_only = {
 
+		scope:actor = {
+
+			prestige >= 500
+		}
+
+
 		scope:recipient = {
+
+			# Can begin preparing while still young.
+			age >= 10
 
 			is_landed = no
 
-			is_married = no
-
-			is_capable_adult = yes
-
-			can_be_knight_trigger = {
-				ARMY_OWNER = scope:actor
-			}
-
-			agot_has_clergy_trait = no
+			valid_kingsguard_gender_trigger = yes
 
 
 			custom_description = {
 
-				text = segrellion_family_service_not_betrothed_tt
+				text = segrellion_kingsguard_not_married_tt
+
+				is_married = no
+			}
+
+
+			custom_description = {
+
+				text = segrellion_kingsguard_not_already_training_tt
 
 				NOT = {
-					exists = betrothed
+					has_character_modifier = training_for_kingsguard
 				}
 			}
 
 
 			custom_description = {
 
-				text = segrellion_family_service_not_heir_blocked_tt
+				text = segrellion_kingsguard_not_refusing_marriage_tt
 
 				NOT = {
-					has_character_flag = kingsguard_position_rejected
+					has_trait = refusing_marriage
 				}
 			}
 		}
@@ -176,21 +163,17 @@ segrellion_ask_join_kingsguard_interaction = {
 
 
 	# =====================================================
-	# USE HOOK
-	# Same presentation as Take the Vows.
+	# HOOK
 	# =====================================================
 
 	auto_accept = {
 
-		OR = {
+		AND = {
 
-			has_character_modifier = training_for_kingsguard
+			scope:hook = yes
 
-			AND = {
-				scope:hook = yes
-				scope:actor = {
-					has_strong_hook = scope:recipient
-				}
+			scope:actor = {
+				has_strong_hook = scope:recipient
 			}
 		}
 	}
@@ -227,12 +210,13 @@ segrellion_ask_join_kingsguard_interaction = {
 	# =====================================================
 	# ACCEPTANCE
 	#
-	# Based directly on AGOT's own Kingsguard invitation.
+	# A prestigious path, but one that means giving up
+	# marriage and potentially inheritance.
 	# =====================================================
 
 	ai_accept = {
 
-		base = 50
+		base = 0
 
 
 		# -------------------------------------------------
@@ -250,7 +234,7 @@ segrellion_ask_join_kingsguard_interaction = {
 
 
 		# -------------------------------------------------
-		# OPINION OF THE PERSON ASKING
+		# OPINION OF ACTOR
 		# -------------------------------------------------
 
 		opinion_modifier = {
@@ -266,23 +250,142 @@ segrellion_ask_join_kingsguard_interaction = {
 
 
 		# -------------------------------------------------
-		# TRAINED FOR THE KINGSGUARD
+		# HONOUR
 		# -------------------------------------------------
 
 		modifier = {
 
-			add = 100
-
-			scope:recipient = {
-				has_character_modifier = training_for_kingsguard
+			add = {
+				value = ai_honor
+				divide = 2
 			}
 
-			desc = ORDER_VOWS_AMBITION
+			scope:recipient = {
+				ai_honor > 0
+			}
+
+			desc = ORDER_VOWS_HONOR
 		}
 
 
 		# -------------------------------------------------
-		# BETROTHED
+		# BOLDNESS
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = {
+				value = ai_boldness
+				divide = 2
+			}
+
+			scope:recipient = {
+				ai_boldness > 0
+			}
+
+			desc = ORDER_VOWS_BOLD
+		}
+
+
+		modifier = {
+
+			add = {
+				value = ai_boldness
+			}
+
+			scope:recipient = {
+				ai_boldness < 0
+			}
+
+			desc = ORDER_VOWS_CRAVEN
+		}
+
+
+		# -------------------------------------------------
+		# BRAVE
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 25
+
+			scope:recipient = {
+				has_trait = brave
+			}
+
+			desc = segrellion_service_reason_brave
+		}
+
+
+		# -------------------------------------------------
+		# CRAVEN
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -25
+
+			scope:recipient = {
+				has_trait = craven
+			}
+
+			desc = segrellion_service_reason_craven
+		}
+
+
+		# -------------------------------------------------
+		# AMBITIOUS
+		#
+		# Ambitious characters may like the prestige,
+		# but dislike surrendering their own inheritance.
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -20
+
+			scope:recipient = {
+				has_trait = ambitious
+			}
+
+			desc = segrellion_service_reason_ambitious
+		}
+
+
+		# -------------------------------------------------
+		# CONTENT
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 20
+
+			scope:recipient = {
+				has_trait = content
+			}
+
+			desc = TAKE_THE_VOWS_CONTENT
+		}
+
+
+		# -------------------------------------------------
+		# CHASTE
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 25
+
+			scope:recipient = {
+				has_trait = chaste
+			}
+
+			desc = TAKE_THE_VOWS_CHASTE
+		}
+
+
+		# -------------------------------------------------
+		# LUSTFUL
 		# -------------------------------------------------
 
 		modifier = {
@@ -290,31 +393,15 @@ segrellion_ask_join_kingsguard_interaction = {
 			add = -50
 
 			scope:recipient = {
-				exists = betrothed
-			}
 
-			desc = ORDER_VOWS_MARRIED_OR_BETROTHED
-		}
-
-
-		# -------------------------------------------------
-		# DIFFERENT FAITH
-		# -------------------------------------------------
-
-		modifier = {
-
-			add = -100
-
-			scope:recipient = {
-
-				NOT = {
-					faith = scope:actor.faith
+				OR = {
+					has_trait = lustful
+					has_trait = lifestyle_reveler
+					has_trait = seducer
 				}
-
-				ai_zeal >= -30
 			}
 
-			desc = ORDER_VOWS_DIFFERENT_FAITH
+			desc = ORDER_VOWS_HORNY
 		}
 
 
@@ -352,7 +439,6 @@ segrellion_ask_join_kingsguard_interaction = {
 			add = -35
 
 			scope:recipient = {
-
 				any_heir_title = {
 					exists = this
 				}
@@ -363,107 +449,60 @@ segrellion_ask_join_kingsguard_interaction = {
 
 
 		# -------------------------------------------------
-		# HONOUR
+		# MARTIAL EDUCATION
 		# -------------------------------------------------
 
 		modifier = {
 
-			add = {
-				value = ai_honor
-				divide = 2
-			}
-
-			scope:recipient = {
-				ai_honor > 0
-			}
-
-			desc = ORDER_VOWS_HONOR
-		}
-
-
-		# -------------------------------------------------
-		# AMBITION / GREED
-		#
-		# Giving up inheritance is unattractive.
-		# -------------------------------------------------
-
-		modifier = {
-
-			add = {
-				value = ai_greed
-				multiply = -0.5
-			}
-
-			scope:recipient = {
-				ai_greed > 0
-			}
-
-			desc = TAKE_THE_VOWS_GREED
-		}
-
-
-		# -------------------------------------------------
-		# BOLDNESS
-		# -------------------------------------------------
-
-		modifier = {
-
-			add = {
-				value = ai_boldness
-				divide = 2
-				min = 10
-			}
-
-			scope:recipient = {
-				ai_boldness > 0
-			}
-
-			desc = ORDER_VOWS_BOLD
-		}
-
-
-		modifier = {
-
-			add = {
-				value = ai_boldness
-			}
-
-			scope:recipient = {
-				ai_boldness < 0
-			}
-
-			desc = ORDER_VOWS_CRAVEN
-		}
-
-
-		# -------------------------------------------------
-		# LUSTFUL / REVELER
-		#
-		# Celibacy is unattractive.
-		# -------------------------------------------------
-
-		modifier = {
-
-			add = -50
+			add = 25
 
 			scope:recipient = {
 
 				OR = {
-					has_trait = lustful
-					has_trait = lifestyle_reveler
-					has_trait = seducer
+
+					has_trait = education_martial_prowess_1
+					has_trait = education_martial_prowess_2
+					has_trait = education_martial_prowess_3
+					has_trait = education_martial_prowess_4
+					has_trait = education_martial_prowess_5
 				}
 			}
 
-			desc = ORDER_VOWS_HORNY
+			desc = segrellion_kingsguard_reason_martial_training
+		}
+
+
+		# -------------------------------------------------
+		# GOOD PROWESS
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 20
+
+			scope:recipient = {
+				prowess >= 15
+			}
+
+			desc = segrellion_kingsguard_reason_good_prowess
+		}
+
+
+		modifier = {
+
+			add = 20
+
+			scope:recipient = {
+				prowess >= 25
+			}
+
+			desc = segrellion_kingsguard_reason_great_prowess
 		}
 	}
 
 
 	# =====================================================
-	# ACCEPTED
-	#
-	# Uses AGOT's actual Kingsguard appointment chain.
+	# ACCEPT
 	# =====================================================
 
 	on_accept = {
@@ -482,36 +521,43 @@ segrellion_ask_join_kingsguard_interaction = {
 
 		scope:recipient = {
 
-			save_scope_as = kingsguard_candidate
+			add_character_modifier = {
+				modifier = training_for_kingsguard
+			}
+
+			add_trait = refusing_marriage
 		}
 
 
 		scope:actor = {
 
-			save_scope_as = king
+			send_interface_toast = {
 
-			trigger_event = {
-				id = agot_kingsguard.1005
+				type = event_toast_effect_good
+
+				title = segrellion_kingsguard_training_accepted_title
+
+				desc = segrellion_kingsguard_training_accepted_desc
+
+				left_icon = scope:actor
+				right_icon = scope:recipient
 			}
 		}
 	}
 
 
 	# =====================================================
-	# DECLINED
+	# DECLINE
 	# =====================================================
 
 	on_decline = {
 
 		scope:recipient = {
 
-			add_character_flag = {
-				flag = segrellion_refused_family_kingsguard_request
-				years = 5
-			}
-
 			add_opinion = {
+
 				target = scope:actor
+
 				modifier = segrellion_asked_me_to_join_kingsguard_opinion
 			}
 		}
@@ -524,7 +570,8 @@ segrellion_ask_join_kingsguard_interaction = {
 				type = event_toast_effect_bad
 
 				title = segrellion_kingsguard_request_refused_title
-				desc = segrellion_kingsguard_request_refused_desc
+
+				desc = segrellion_kingsguard_training_refused_desc
 
 				left_icon = scope:actor
 				right_icon = scope:recipient
@@ -582,6 +629,14 @@ segrellion_ask_take_black_interaction = {
 
 	on_decline_summary = segrellion_nightswatch_family_decline_summary
 
+	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+		prestige = 250
+	}
+
 	cooldown_against_recipient = {
 		years = 5
 	}
@@ -636,6 +691,10 @@ segrellion_ask_take_black_interaction = {
 
 	is_valid_showing_failures_only = {
 
+		scope:actor = {
+			prestige >= 250
+		}
+		
 		scope:recipient = {
 
 			is_capable_adult = yes
