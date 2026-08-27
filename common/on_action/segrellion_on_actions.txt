@@ -18,6 +18,7 @@ monthly_global_pulse = {
 		segrellion_unicorn_returns_beacon_arrival_fallback
 		segrellion_deathwish_historical_progression
 		segrellion_winds_300_aftermath_check
+		segrellion_black_moon_house_relation_progression
 	}
 }
 
@@ -165,38 +166,13 @@ segrellion_historical_dragons_progression = {
 
 segrellion_on_game_start = {
 	effect = {
-		dynasty:dynn_Segrellion = {
-			# Give later starts the renown and Level of Splendor earned by the
-			# dynasty in the intervening history. Renown remains unspent so the
-			# player can choose which legacy tracks that history produced.
-			if = {
-				limit = { current_date >= 8283.1.1 }
-				add_dynasty_prestige = 16000 # Eight legacies
-				while = {
-					limit = { dynasty_prestige_level < 8 } # Glorious
-					add_dynasty_prestige_level = 1
-				}
-			}
-			else_if = {
-				limit = { current_date >= 8216.1.1 }
-				add_dynasty_prestige = 9000 # Six legacies
-			}
-			else_if = {
-				limit = { current_date >= 8195.1.1 }
-				add_dynasty_prestige = 6250 # Five legacies
-			}
-			else_if = {
-				limit = { current_date >= 8165.1.1 }
-				add_dynasty_prestige = 2250 # Three legacies
-			}
-			else_if = {
-				limit = { current_date >= 8160.1.1 }
-				add_dynasty_prestige = 1000 # Two legacies
-			}
-			else = {
-				add_dynasty_prestige = 250 # One legacy
-			}
-		}
+		# Historical dynasty progression.
+		# Renown earned before the selected bookmark has already been
+		# invested into the dynasty's historical legacy trees.
+		
+		segrellion_set_historical_legacies_effect = yes
+		segrellion_set_historical_splendor_effect = yes
+		segrellion_black_moon_house_feud_effect = yes
 		dynasty:dynn_Segrellion = { add_dynasty_modifier = valyrian_heritage_dynasty_modifier }
 		title:b_castle_farring.title_province = {
 			if = {

@@ -221,3 +221,185 @@ segrellion_set_historical_splendor_effect = {
         }
     }
 }
+
+# =========================================================
+# HISTORICAL SEGRELLION DYNASTY LEGACIES
+#
+# Historical renown is considered already spent.
+#
+# 106 AC  = 1 Segrellion legacy
+# 160 AC  = 2 Segrellion legacies
+# 165 AC  = 3 Segrellion legacies
+# 195 AC  = full Segrellion tree
+# 216 AC  = + Dragonlords I
+# 283 AC  = + Dragonlords II-III
+#
+# By 300 AC:
+#   Segrellion 1-5
+#   Dragonlords 1-3
+# =========================================================
+
+segrellion_set_historical_legacies_effect = {
+
+	dynasty:dynn_Segrellion = {
+
+
+		# =================================================
+		# SEGRELLION I
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8106.4.18
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_1
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_1
+		}
+
+
+		# =================================================
+		# SEGRELLION II
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8160.1.1
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_2
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_2
+		}
+
+
+		# =================================================
+		# SEGRELLION III
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8165.1.1
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_3
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_3
+		}
+
+
+		# =================================================
+		# AEGON DRAGONSPEAR ERA
+		# THE SEGRELLION TREE IS COMPLETED
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8195.1.1
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_4
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_4
+		}
+
+		if = {
+			limit = {
+				current_date >= 8195.1.1
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_5
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_5
+		}
+
+
+		# =================================================
+		# DRAGONLORDS I
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8216.1.1
+				NOT = {
+					has_dynasty_perk = dragonrider_dynasty_legacy_1
+				}
+			}
+
+			add_dynasty_perk = dragonrider_dynasty_legacy_1
+		}
+
+
+		# =================================================
+		# DRAGONLORDS II-III
+		# =================================================
+
+		if = {
+			limit = {
+				current_date >= 8283.1.1
+				NOT = {
+					has_dynasty_perk = dragonrider_dynasty_legacy_2
+				}
+			}
+
+			add_dynasty_perk = dragonrider_dynasty_legacy_2
+		}
+
+		if = {
+			limit = {
+				current_date >= 8283.1.1
+				NOT = {
+					has_dynasty_perk = dragonrider_dynasty_legacy_3
+				}
+			}
+
+			add_dynasty_perk = dragonrider_dynasty_legacy_3
+		}
+	}
+}
+
+# =========================================================
+# THE BLACK MOON
+# HOUSE SEGRELLION - HOUSE STORMFLAME FEUD
+# =========================================================
+
+segrellion_black_moon_house_feud_effect = {
+
+	if = {
+
+		limit = {
+
+			current_date >= 8284.1.8
+
+			NOT = {
+				has_global_variable = segrellion_black_moon_house_feud_started
+			}
+		}
+
+
+		# Hugh represents the surviving main House Segrellion.
+		character:Segrellion_43.house = {
+
+			set_house_relation = {
+
+				target = character:Segrellion_36.house
+
+				level = feud
+
+				description = segrellion_house_relation_black_moon_desc
+			}
+		}
+
+
+		set_global_variable = {
+			name = segrellion_black_moon_house_feud_started
+			value = yes
+		}
+	}
+}
