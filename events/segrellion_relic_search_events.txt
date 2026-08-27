@@ -42,85 +42,6 @@ segrellion_relic.0090 = {
 }
 
 # =========================================================
-# 0095 - RELIC TRAVEL ARRIVAL DISPATCHER
-# =========================================================
-
-segrellion_relic.0095 = {
-
-	type = character_event
-	hidden = yes
-
-	trigger = {
-		has_character_flag = segrellion_legendary_relic_search_active
-	}
-
-	immediate = {
-
-		# =================================================
-		# IMPORTANT:
-		# Keep the arrival travel plan alive while the
-		# destination event chain is being processed.
-		# =================================================
-
-		current_travel_plan ?= {
-			pause_travel_plan = yes
-		}
-
-
-		if = {
-			limit = {
-				has_character_flag = segrellion_relic_pending_winterfell
-			}
-
-			trigger_event = {
-				id = segrellion_relic.3000
-			}
-		}
-
-		else_if = {
-			limit = {
-				has_character_flag = segrellion_relic_pending_castle_black
-			}
-
-			trigger_event = {
-				id = segrellion_relic.4000
-			}
-		}
-
-		else_if = {
-			limit = {
-				has_character_flag = segrellion_relic_pending_shadow_tower
-			}
-
-			trigger_event = {
-				id = segrellion_relic.6000
-			}
-		}
-
-		else_if = {
-			limit = {
-				has_character_flag = segrellion_relic_pending_skagos
-			}
-
-			trigger_event = {
-				id = segrellion_relic.7000
-			}
-		}
-
-		else_if = {
-			limit = {
-				has_character_flag = segrellion_relic_pending_nightfort
-			}
-
-			trigger_event = {
-				id = segrellion_relic.5000
-			}
-		}
-	}
-}
-
-
-# =========================================================
 # TYROSH
 # =========================================================
 
@@ -1766,6 +1687,7 @@ segrellion_relic.3010 = {
 
 			trigger_event = {
 				id = segrellion_relic.3900
+				days = 1
 			}
 		}
 	}
@@ -1822,6 +1744,7 @@ segrellion_relic.3020 = {
 
 		trigger_event = {
 			id = segrellion_relic.3900
+			days = 1
 		}
 	}
 }
@@ -1921,7 +1844,7 @@ segrellion_relic.3100 = {
 						75 = {
 							trigger_event = {
 								id = segrellion_relic.3900
-								
+								days = 1
 							}
 						}
 					}
@@ -1941,6 +1864,7 @@ segrellion_relic.3100 = {
 						95 = {
 							trigger_event = {
 								id = segrellion_relic.3900
+								days = 1
 								
 							}
 						}
@@ -1952,6 +1876,7 @@ segrellion_relic.3100 = {
 
 				trigger_event = {
 					id = segrellion_relic.3900
+					days = 1
 					
 				}
 			}
@@ -1994,6 +1919,7 @@ segrellion_relic.3130 = {
 
 		trigger_event = {
 			id = segrellion_relic.3900
+			days = 1
 			
 		}
 	}
@@ -2124,7 +2050,7 @@ segrellion_relic.3210 = {
 						75 = {
 							trigger_event = {
 								id = segrellion_relic.3900
-								
+								days = 1
 							}
 						}
 					}
@@ -2144,7 +2070,7 @@ segrellion_relic.3210 = {
 						95 = {
 							trigger_event = {
 								id = segrellion_relic.3900
-								
+								days = 1
 							}
 						}
 					}
@@ -2155,7 +2081,7 @@ segrellion_relic.3210 = {
 
 				trigger_event = {
 					id = segrellion_relic.3900
-					
+					days = 1
 				}
 			}
 		}
@@ -2197,7 +2123,7 @@ segrellion_relic.3230 = {
 
 		trigger_event = {
 			id = segrellion_relic.3900
-			
+			days = 1
 		}
 	}
 }
@@ -2237,16 +2163,14 @@ segrellion_relic.3900 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_castle_black
 
-		# The Winterfell journey is finished.
-		current_travel_plan ?= {
-			complete_travel_plan = yes
-		}
+		start_travel_plan = {
 
-		# Start the new journey only after the old travel plan
-		# has been completely disposed of.
-		trigger_event = {
-			id = segrellion_relic.3990
-			days = 1
+			destination = title:c_castle_black.title_province
+
+			on_arrival_event = segrellion_relic.4000
+			on_arrival_destinations = all_but_last
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
 		}
 	}
 
@@ -2262,13 +2186,14 @@ segrellion_relic.3900 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_shadow_tower
 
-		current_travel_plan ?= {
-			complete_travel_plan = yes
-		}
+		start_travel_plan = {
 
-		trigger_event = {
-			id = segrellion_relic.3990
-			days = 1
+			destination = title:c_the_shadow_tower.title_province
+
+			on_arrival_event = segrellion_relic.6000
+			on_arrival_destinations = all_but_last
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
 		}
 	}
 
@@ -2281,36 +2206,20 @@ segrellion_relic.3900 = {
 
 		name = segrellion_relic.3900.c
 
+		custom_tooltip = segrellion_relic.3900.c.chance_tt
+
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_skagos
 
-		current_travel_plan ?= {
-			complete_travel_plan = yes
+		start_travel_plan = {
+
+			destination = title:c_skane.title_province
+
+			on_arrival_event = segrellion_relic.7000
+			on_arrival_destinations = all_but_last
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
 		}
-
-		trigger_event = {
-			id = segrellion_relic.3990
-			days = 1
-		}
-	}
-}
-
-
-# =========================================================
-# 3990 - BEGIN NEXT RELIC JOURNEY
-# =========================================================
-
-segrellion_relic.3990 = {
-
-	type = character_event
-	hidden = yes
-
-	trigger = {
-		has_character_flag = segrellion_legendary_relic_search_active
-	}
-
-	immediate = {
-		segrellion_resume_relic_travel_effect = yes
 	}
 }
 
@@ -2407,14 +2316,14 @@ segrellion_relic.4010 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_nightfort
 
-		# Castle Black journey is now finished.
-		current_travel_plan ?= {
-			complete_travel_plan = yes
-		}
+		start_travel_plan = {
 
-		trigger_event = {
-			id = segrellion_relic.3990
-			days = 1
+			destination = title:b_the_nightfort.title_province
+
+			on_arrival_event = segrellion_relic.5000
+			on_arrival_destinations = all_but_last
+
+			on_travel_planner_cancel_event = segrellion_relic.0090
 		}
 	}
 }
