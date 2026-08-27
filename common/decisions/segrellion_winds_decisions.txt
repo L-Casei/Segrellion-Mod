@@ -442,64 +442,24 @@ segrellion_reveal_daemon_truth_decision = {
 
 	effect = {
 
-		custom_tooltip = segrellion_reveal_daemon_truth_effect_tt
+		random_known_secret = {
+			limit = {
 
+				secret_type = secret_agot_disputed_heritage
 
-		hidden_effect = {
-
-			# =====================================================
-			# ENSURE HUGH POSSESSES THE REAL SECRET
-			# =====================================================
-
-			segrellion_create_daemon_parentage_secret_effect = yes
-
-
-			# =====================================================
-			# TELL DAEMON PRIVATELY
-			#
-			# This is the crucial part for:
-			#
-			# knows_self_royal_bastard_secret = yes
-			# =====================================================
-
-			random_known_secret = {
-
-				limit = {
-
-					secret_type = secret_disputed_heritage
-
-					secret_target = {
-						this = character:Segrellion_60
-					}
+				secret_target = {
+					this = character:Segrellion_60
+					is_adult = yes
+					real_paternal_held_iron_throne_claim = yes
 				}
 
-				reveal_to = character:Segrellion_60
+				can_be_exposed_by = root
 			}
 
-
-			# =====================================================
-			# STORY STATE
-			# =====================================================
-
-			remove_character_flag = segrellion_hugh_withholding_daemon_parentage
-			remove_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
-
-			add_character_flag = told_true_parentage
-			add_character_flag = segrellion_hugh_revealed_daemon_parentage
-
-
-			# =====================================================
-			# DAEMON'S PERSONAL REACTION
-			# =====================================================
-
-			character:Segrellion_60 = {
-
-				trigger_event = {
-					id = segrellion_daemon_parentage.0003
-					days = 2
-				}
-			}
+			save_scope_as = heritage_secret
 		}
+
+		trigger_event = agot_events_bastard.0900
 	}
 
 
