@@ -71,6 +71,32 @@ segrellion_setup_daenerys_300_effect = {
 			}
 
 			add_character_flag = segrellion_daenerys_300_host_created
+
+			# =================================================
+			# THE QUEEN ACROSS THE SEA
+			# =================================================
+
+			if = {
+				limit = {
+
+					game_start_date = 8300.8.20
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_invasion_event_scheduled
+					}
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_invasion_abandoned
+					}
+				}
+
+				add_character_flag = segrellion_daenerys_invasion_event_scheduled
+
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0001
+					days = { 15 30 }
+				}
+			}
 		}
 	}
 }
@@ -222,6 +248,12 @@ segrellion_grant_daenerys_support_effect = {
 
 	add_character_flag = segrellion_foreign_support_secured
 	add_character_flag = segrellion_pledged_to_daenerys
+
+	add_character_flag = segrellion_daemon_supports_daenerys_claim
+
+	character:Targaryen_9 = {
+		add_character_flag = segrellion_daenerys_supports_daemon
+	}
 
 	segrellion_clear_troop_negotiation_effect = yes
 }

@@ -250,15 +250,48 @@ segrellion_support.2000 = {
 
 
 # =========================================================
-# 3000 - THE DRAGON QUEEN
+# 3000 - DAEMON ARRIVES BEFORE DAENERYS
+# Hidden routing event.
+# Root = Daemon
 # =========================================================
 
 segrellion_support.3000 = {
 
+	hidden = yes
+
+	trigger = {
+		has_character_flag = segrellion_negotiation_pending_daenerys
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_negotiation_pending_daenerys
+
+		add_character_flag = segrellion_waiting_for_daenerys_answer
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_support.3005
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3005 - THE BASTARD UNICORN
+# Daenerys decides whether she will even negotiate.
+# Root = Daenerys
+# =========================================================
+
+segrellion_support.3005 = {
+
 	type = character_event
 
-	title = segrellion_support.3000.t
-	desc = segrellion_support.3000.desc
+	title = segrellion_support.3005.t
+	desc = segrellion_support.3005.desc
 
 	theme = diplomacy
 
@@ -270,127 +303,16 @@ segrellion_support.3000 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-
-	trigger = {
-
-		has_character_flag = segrellion_negotiation_pending_daenerys
-	}
-
-
-	immediate = {
-
-		# We have arrived at Ghoyan Drohe.
-		remove_character_flag = segrellion_negotiation_pending_daenerys
-	}
-
-
-	left_portrait = {
-		character = root
-		animation = personality_rational
-	}
-
-	right_portrait = {
-		character = character:Targaryen_9
-		animation = personality_bold
-	}
-
-
-	# =====================================================
-	# SWEAR LOYALTY
-	# =====================================================
-
-	option = {
-
-		name = segrellion_support.3000.a
-
-		segrellion_grant_daenerys_support_effect = yes
-
-		character:Targaryen_9 = {
-
-			add_opinion = {
-				target = root
-				modifier = segrellion_swore_to_daenerys_opinion
-			}
-		}
-	}
-
-
-	# =====================================================
-	# SWEAR LOYALTY + PROPOSE MARRIAGE
-	# =====================================================
-
-	option = {
-
-		name = segrellion_support.3000.b
-
-		trigger = {
-
-			is_married = no
-
-			character:Targaryen_9 = {
-				is_married = no
-			}
-		}
-
-		character:Targaryen_9 = {
-
-			trigger_event = {
-				id = segrellion_support.3010
-				days = 1
-			}
-		}
-	}
-
-
-	# =====================================================
-	# REFUSE
-	# =====================================================
-
-	option = {
-
-		name = segrellion_support.3000.c
-
-		segrellion_clear_troop_negotiation_effect = yes
-	}
-}
-
-
-# =========================================================
-# 3010 - DAENERYS CONSIDERS THE MARRIAGE
-# Root = Daenerys
-# =========================================================
-
-segrellion_support.3010 = {
-
-	type = character_event
-
-	title = segrellion_support.3010.t
-	desc = segrellion_support.3010.desc
-
-	theme = marriage
-
-	override_background = {
-		reference = wilderness
-	}
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-
 	trigger = {
 
 		this = character:Targaryen_9
-
 		is_alive = yes
-		is_married = no
 
 		character:Segrellion_60 ?= {
 			is_alive = yes
-			is_married = no
+			has_character_flag = segrellion_waiting_for_daenerys_answer
 		}
 	}
-
 
 	left_portrait = {
 		character = root
@@ -404,22 +326,326 @@ segrellion_support.3010 = {
 
 
 	# =====================================================
-	# ACCEPT THE MARRIAGE
+	# HEAR HIM
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3005.a
+
+		ai_chance = {
+
+			base = 70
+
+			modifier = {
+				add = 25
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 25
+				has_character_flag = segrellion_daenerys_invasion_committed
+			}
+
+			modifier = {
+				add = 20
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 40
+				}
+			}
+
+			modifier = {
+				add = -40
+
+				opinion = {
+					target = character:Segrellion_60
+					value < 0
+				}
+			}
+
+			modifier = {
+				add = -50
+				has_character_flag = segrellion_daenerys_invasion_abandoned
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_heard_daemon
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_support.3010
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REJECT HIM
+	# This is ALWAYS available.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3005.b
+
+		ai_chance = {
+
+			base = 30
+
+			modifier = {
+				add = 50
+				has_character_flag = segrellion_daenerys_invasion_abandoned
+			}
+
+			modifier = {
+				add = 40
+
+				opinion = {
+					target = character:Segrellion_60
+					value < 0
+				}
+			}
+
+			modifier = {
+				add = -20
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_rejected_daemon
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_waiting_for_daenerys_answer
+
+			add_character_flag = segrellion_daenerys_refused_support
+
+			segrellion_clear_troop_negotiation_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.3090
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3010 - DAENERYS' TERMS
+# Root = Daemon
+# =========================================================
+
+segrellion_support.3010 = {
+
+	type = character_event
+
+	title = segrellion_support.3010.t
+	desc = segrellion_support.3010.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_waiting_for_daenerys_answer
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_daenerys_heard_daemon
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT HER TERMS
 	# =====================================================
 
 	option = {
 
 		name = segrellion_support.3010.a
 
+		remove_character_flag = segrellion_waiting_for_daenerys_answer
+
+		add_character_flag = segrellion_daemon_offered_oath_to_daenerys
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_support.3020
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT + OFFER MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3010.b
+
+		trigger = {
+
+			is_married = no
+
+			character:Targaryen_9 = {
+				is_married = no
+			}
+		}
+
+		remove_character_flag = segrellion_waiting_for_daenerys_answer
+
+		add_character_flag = segrellion_daemon_offered_oath_to_daenerys
+		add_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_support.3020
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE HER TERMS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3010.c
+
+		remove_character_flag = segrellion_waiting_for_daenerys_answer
+
+		add_character_flag = segrellion_daemon_refused_daenerys_terms
+
+		segrellion_clear_troop_negotiation_effect = yes
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_support.3080
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3020 - HIS ANSWER
+# Root = Daenerys
+# Final decision.
+# =========================================================
+
+segrellion_support.3020 = {
+
+	type = character_event
+
+	title = segrellion_support.3020.t
+
+	desc = {
+
+		triggered_desc = {
+
+			trigger = {
+				character:Segrellion_60 = {
+					has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+				}
+			}
+
+			desc = segrellion_support.3020.desc.marriage
+		}
+
+		triggered_desc = {
+
+			trigger = {
+				character:Segrellion_60 = {
+
+					has_character_flag = segrellion_daemon_offered_oath_to_daenerys
+
+					NOT = {
+						has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+					}
+				}
+			}
+
+			desc = segrellion_support.3020.desc.oath
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# ACCEPT MARRIAGE + OATH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3020.a
+
+		trigger = {
+
+			character:Segrellion_60 = {
+				has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+			}
+
+			is_married = no
+		}
 
 		ai_chance = {
 
-			base = 30
-
-
-			# -----------------------------------------
-			# OPINION
-			# -----------------------------------------
+			base = 35
 
 			modifier = {
 				add = 35
@@ -440,123 +666,30 @@ segrellion_support.3010 = {
 			}
 
 			modifier = {
-				add = -30
-
-				opinion = {
-					target = character:Segrellion_60
-					value < 0
-				}
-			}
-
-
-			# -----------------------------------------
-			# SEXUAL ATTRACTION IS POSSIBLE
-			# -----------------------------------------
-
-			modifier = {
 				add = 15
-
 				is_attracted_to_gender_of = character:Segrellion_60
 			}
 
-
-			# -----------------------------------------
-			# DAEMON IS ATTRACTIVE
-			# -----------------------------------------
-
 			modifier = {
-
 				add = 15
-
-				character:Segrellion_60 = {
-
-					OR = {
-						has_trait = beauty_good_1
-						has_trait = beauty_good_2
-						has_trait = beauty_good_3
-					}
-				}
-			}
-
-
-			# -----------------------------------------
-			# SHARED AMBITION
-			# -----------------------------------------
-
-			modifier = {
-
-				add = 15
-
 				has_trait = ambitious
-
-				character:Segrellion_60 = {
-					has_trait = ambitious
-				}
 			}
-
-
-			# -----------------------------------------
-			# SHARED PATIENCE
-			# -----------------------------------------
 
 			modifier = {
-
-				add = 10
-
-				has_trait = patient
-
-				character:Segrellion_60 = {
-					has_trait = patient
-				}
-			}
-
-
-			# -----------------------------------------
-			# SHARED BOLD / COMMANDING CHARACTER
-			# -----------------------------------------
-
-			modifier = {
-
-				add = 10
-
-				has_trait = authoritative
-
-				character:Segrellion_60 = {
-					has_trait = authoritative
-				}
-			}
-		}
-
-
-		character:Segrellion_60 = {
-
-			segrellion_grant_daenerys_support_effect = yes
-
-			add_character_flag = segrellion_daenerys_marriage_promised
-
-			trigger_event = {
-				id = segrellion_support.3020
-				days = 1
+				add = 15
+				has_character_flag = segrellion_daenerys_invasion_committed
 			}
 		}
 
 		add_character_flag = segrellion_marriage_promised_to_daemon
-	}
-
-
-	# =====================================================
-	# REFUSE MARRIAGE, KEEP THE MILITARY PACT
-	# =====================================================
-
-	option = {
-
-		name = segrellion_support.3010.b
-
-		ai_chance = {
-			base = 50
-		}
+		add_character_flag = segrellion_daenerys_supports_daemon
 
 		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daenerys_marriage_promised
+
+			remove_character_flag = segrellion_daemon_offered_oath_to_daenerys
+			remove_character_flag = segrellion_daemon_offered_marriage_to_daenerys
 
 			segrellion_grant_daenerys_support_effect = yes
 
@@ -566,37 +699,168 @@ segrellion_support.3010 = {
 			}
 		}
 	}
-}
 
 
-# =========================================================
-# 3020 - MARRIAGE PROMISED
-# =========================================================
-
-segrellion_support.3020 = {
-
-	type = character_event
-
-	title = segrellion_support.3020.t
-	desc = segrellion_support.3020.desc
-
-	theme = marriage
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	left_portrait = root
-	right_portrait = character:Targaryen_9
+	# =====================================================
+	# REFUSE MARRIAGE BUT ACCEPT HIS OATH
+	# =====================================================
 
 	option = {
-		name = segrellion_support.3020.a
+
+		name = segrellion_support.3020.b
+
+		trigger = {
+			character:Segrellion_60 = {
+				has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+			}
+		}
+
+		ai_chance = {
+
+			base = 50
+
+			modifier = {
+				add = 20
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 15
+				has_character_flag = segrellion_daenerys_invasion_committed
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_supports_daemon
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_offered_oath_to_daenerys
+			remove_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+
+			segrellion_grant_daenerys_support_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.3031
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT THE ORDINARY OATH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3020.c
+
+		trigger = {
+
+			character:Segrellion_60 = {
+
+				has_character_flag = segrellion_daemon_offered_oath_to_daenerys
+
+				NOT = {
+					has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+				}
+			}
+		}
+
+		ai_chance = {
+
+			base = 70
+
+			modifier = {
+				add = 25
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 20
+				has_character_flag = segrellion_daenerys_invasion_committed
+			}
+
+			modifier = {
+				add = 20
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 40
+				}
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_supports_daemon
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_offered_oath_to_daenerys
+
+			segrellion_grant_daenerys_support_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.3031
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REJECT EVERYTHING
+	# Always possible.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.3020.d
+
+		ai_chance = {
+
+			base = 25
+
+			modifier = {
+				add = 40
+
+				opinion = {
+					target = character:Segrellion_60
+					value < 0
+				}
+			}
+
+			modifier = {
+				add = 25
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 30
+				has_character_flag = segrellion_daenerys_invasion_abandoned
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_rejected_daemon
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_offered_oath_to_daenerys
+			remove_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+
+			segrellion_clear_troop_negotiation_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.3090
+				days = 1
+			}
+		}
 	}
 }
 
 
 # =========================================================
-# 3030 - MARRIAGE REFUSED, ALLIANCE ACCEPTED
+# 3030 - MARRIAGE PROMISED
+# Root = Daemon
 # =========================================================
 
 segrellion_support.3030 = {
@@ -606,17 +870,82 @@ segrellion_support.3030 = {
 	title = segrellion_support.3030.t
 	desc = segrellion_support.3030.desc
 
-	theme = diplomacy
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
+	theme = marriage
 
 	left_portrait = root
 	right_portrait = character:Targaryen_9
 
 	option = {
 		name = segrellion_support.3030.a
+	}
+}
+
+
+# =========================================================
+# 3031 - MILITARY PACT ACCEPTED
+# Root = Daemon
+# =========================================================
+
+segrellion_support.3031 = {
+
+	type = character_event
+
+	title = segrellion_support.3031.t
+	desc = segrellion_support.3031.desc
+
+	theme = diplomacy
+
+	left_portrait = root
+	right_portrait = character:Targaryen_9
+
+	option = {
+		name = segrellion_support.3031.a
+	}
+}
+
+
+# =========================================================
+# 3080 - DAEMON REFUSES DAENERYS' TERMS
+# Root = Daenerys
+# =========================================================
+
+segrellion_support.3080 = {
+
+	type = character_event
+
+	title = segrellion_support.3080.t
+	desc = segrellion_support.3080.desc
+
+	theme = diplomacy
+
+	left_portrait = root
+	right_portrait = character:Segrellion_60
+
+	option = {
+		name = segrellion_support.3080.a
+	}
+}
+
+
+# =========================================================
+# 3090 - DAENERYS REFUSES DAEMON
+# Root = Daemon
+# =========================================================
+
+segrellion_support.3090 = {
+
+	type = character_event
+
+	title = segrellion_support.3090.t
+	desc = segrellion_support.3090.desc
+
+	theme = diplomacy
+
+	left_portrait = root
+	right_portrait = character:Targaryen_9
+
+	option = {
+		name = segrellion_support.3090.a
 	}
 }
 

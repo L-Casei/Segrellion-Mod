@@ -1,0 +1,311 @@
+namespace = segrellion_daenerys_invasion
+
+
+# =========================================================
+# 0001 - THE QUEEN ACROSS THE SEA
+# =========================================================
+
+segrellion_daenerys_invasion.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0001.t
+	desc = segrellion_daenerys_invasion.0001.desc
+
+	theme = crown
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_invasion_abandoned
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# I WILL TAKE THE IRON THRONE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0001.a
+
+		custom_tooltip = segrellion_daenerys_invasion.0001.a.tt
+
+		ai_chance = {
+
+			base = 80
+
+			modifier = {
+				add = 30
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 20
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 15
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = 30
+				has_character_flag = segrellion_daenerys_supports_daemon
+			}
+		}
+
+		remove_character_flag = segrellion_daenerys_invasion_delayed
+
+		add_character_flag = segrellion_daenerys_invasion_committed
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0002
+			days = { 3 7 }
+		}
+	}
+
+
+	# =====================================================
+	# NOT YET
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0001.b
+
+		custom_tooltip = segrellion_daenerys_invasion.0001.b.tt
+
+		ai_chance = {
+
+			base = 18
+
+			modifier = {
+				add = 25
+				has_trait = patient
+			}
+
+			modifier = {
+				add = 15
+				has_trait = craven
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_invasion_delayed
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0001
+			days = { 180 360 }
+		}
+	}
+
+
+	# =====================================================
+	# ABANDON WESTEROS
+	# PERMANENT.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0001.c
+
+		custom_tooltip = segrellion_daenerys_invasion.0001.c.tt
+
+		ai_chance = {
+
+			base = 2
+
+			modifier = {
+				add = 25
+				has_trait = content
+			}
+
+			modifier = {
+				add = 15
+				has_trait = craven
+			}
+
+			modifier = {
+				add = -2
+				has_trait = ambitious
+			}
+		}
+
+		remove_character_flag = segrellion_daenerys_invasion_delayed
+		remove_character_flag = segrellion_daenerys_invasion_committed
+
+		add_character_flag = segrellion_daenerys_invasion_abandoned
+	}
+}
+
+# =========================================================
+# 0002 - THE PIECES ON THE BOARD
+# =========================================================
+
+segrellion_daenerys_invasion.0002 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0002.t
+
+	desc = {
+
+		desc = segrellion_daenerys_invasion.0002.desc
+
+
+		# -------------------------------------------------
+		# YOUNG GRIFF
+		# -------------------------------------------------
+
+		triggered_desc = {
+
+			trigger = {
+				character:IAF_Young_Griff_1 ?= {
+					is_alive = yes
+				}
+			}
+
+			desc = segrellion_daenerys_invasion.0002.griff
+		}
+
+
+		# -------------------------------------------------
+		# STANNIS
+		# -------------------------------------------------
+
+		triggered_desc = {
+
+			trigger = {
+				character:Baratheon_3 ?= {
+					is_alive = yes
+				}
+			}
+
+			desc = segrellion_daenerys_invasion.0002.stannis
+		}
+
+
+		# -------------------------------------------------
+		# DAEMON IS HER ALLY
+		# -------------------------------------------------
+
+		triggered_desc = {
+
+			trigger = {
+
+				character:Segrellion_60 ?= {
+					is_alive = yes
+					has_character_flag = segrellion_pledged_to_daenerys
+				}
+			}
+
+			desc = segrellion_daenerys_invasion.0002.daemon_ally
+		}
+
+
+		# -------------------------------------------------
+		# DAEMON CHOSE STANNIS
+		# -------------------------------------------------
+
+		triggered_desc = {
+
+			trigger = {
+
+				character:Segrellion_60 ?= {
+					is_alive = yes
+					has_character_flag = segrellion_pledged_to_stannis
+				}
+			}
+
+			desc = segrellion_daenerys_invasion.0002.daemon_stannis
+		}
+
+
+		# -------------------------------------------------
+		# DAEMON CHOSE DORNE
+		# -------------------------------------------------
+
+		triggered_desc = {
+
+			trigger = {
+
+				character:Segrellion_60 ?= {
+					is_alive = yes
+					has_character_flag = segrellion_dorne_marriage_pact
+				}
+			}
+
+			desc = segrellion_daenerys_invasion.0002.daemon_dorne
+		}
+
+
+		# -------------------------------------------------
+		# DAEMON HAS MADE NO PACT
+		# -------------------------------------------------
+
+		triggered_desc = {
+
+			trigger = {
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+
+					NOR = {
+						has_character_flag = segrellion_pledged_to_daenerys
+						has_character_flag = segrellion_pledged_to_stannis
+						has_character_flag = segrellion_dorne_marriage_pact
+					}
+				}
+			}
+
+			desc = segrellion_daenerys_invasion.0002.daemon_free
+		}
+	}
+
+	theme = crown
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0002.a
+
+		add_character_flag = segrellion_daenerys_westeros_assessed
+
+		custom_tooltip = segrellion_daenerys_invasion.0002.a.tt
+
+		# Landing selection will hook here once the Stannis
+		# northern restoration route is implemented.
+	}
+}
