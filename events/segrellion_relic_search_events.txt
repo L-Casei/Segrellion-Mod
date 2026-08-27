@@ -2214,7 +2214,6 @@ segrellion_relic.3900 = {
 		animation = personality_rational
 	}
 
-
 	# -----------------------------------------------------
 	# CASTLE BLACK
 	# -----------------------------------------------------
@@ -2226,12 +2225,11 @@ segrellion_relic.3900 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_castle_black
 
-		current_travel_plan = {
-			add_travel_waypoint = title:c_castle_black.title_province
-			resume_travel_plan = yes
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
 		}
 	}
-
 
 	# -----------------------------------------------------
 	# SHADOW TOWER
@@ -2244,12 +2242,11 @@ segrellion_relic.3900 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_shadow_tower
 
-		current_travel_plan = {
-			add_travel_waypoint = title:c_the_shadow_tower.title_province
-			resume_travel_plan = yes
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
 		}
 	}
-
 
 	# -----------------------------------------------------
 	# SKANE / SKAGOS
@@ -2262,10 +2259,29 @@ segrellion_relic.3900 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_skagos
 
-		current_travel_plan = {
-			add_travel_waypoint = title:c_skane.title_province
-			resume_travel_plan = yes
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
 		}
+	}
+}
+
+
+# =========================================================
+# 3990 - BEGIN NEXT RELIC JOURNEY
+# =========================================================
+
+segrellion_relic.3990 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+	}
+
+	immediate = {
+		segrellion_resume_relic_travel_effect = yes
 	}
 }
 
@@ -2330,6 +2346,7 @@ segrellion_relic.4000 = {
 }
 
 
+
 # =========================================================
 # 4010 - THE WATCH REMEMBERS
 # =========================================================
@@ -2361,9 +2378,9 @@ segrellion_relic.4010 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_nightfort
 
-		current_travel_plan = {
-			add_travel_waypoint = title:b_the_nightfort.title_province
-			resume_travel_plan = yes
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
 		}
 	}
 }
