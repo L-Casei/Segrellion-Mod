@@ -361,14 +361,31 @@ segrellion_recover_plate_of_segrell_decision = {
 	# AI
 	# =====================================================
 
-	ai_check_interval = 30
+	ai_check_interval = 7
 
 	ai_potential = {
+
 		this = character:Segrellion_43
+
+		has_character_flag = segrellion_plate_recovery_ready
+
+		NOT = {
+			has_character_flag = segrellion_plate_recovery_in_progress
+		}
+
+		NOT = {
+			has_character_flag = segrellion_plate_recovery_complete
+		}
+
+		NOT = {
+			segrellion_plate_recovery_blocked_trigger = yes
+		}
+
+		gold >= 50
 	}
 
 	ai_will_do = {
-		base = 100
+		base = 1000
 	}
 }
 

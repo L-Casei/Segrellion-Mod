@@ -7,6 +7,68 @@ namespace = segrellion_relic
 # =========================================================
 
 # =========================================================
+# 0089 - TRAVEL PLANNER CLOSED BEFORE DEPARTURE
+#
+# This is NOT an interrupted expedition.
+#
+# Initial search:
+#   completely undo the attempted search.
+#
+# Later search stage / resumed search:
+#   keep the search paused so it can still be resumed.
+# =========================================================
+
+segrellion_relic.0089 = {
+
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		# -------------------------------------------------
+		# THIS WAS A CONTINUATION OF AN EXISTING SEARCH
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_relic_continuation_planner
+			}
+
+			remove_character_flag = segrellion_relic_continuation_planner
+
+			add_character_flag = segrellion_legendary_relic_search_paused
+		}
+
+
+		# -------------------------------------------------
+		# THIS WAS THE INITIAL PLANNER
+		#
+		# The player never actually began the expedition.
+		# Pretend the decision was never taken.
+		# -------------------------------------------------
+
+		else = {
+
+			remove_character_flag = segrellion_legendary_relic_search_active
+			remove_character_flag = segrellion_legendary_relic_search_paused
+			remove_character_flag = segrellion_relic_journey_started
+
+			remove_character_flag = segrellion_relic_route_tyrosh
+			remove_character_flag = segrellion_relic_route_oldtown
+			remove_character_flag = segrellion_relic_route_winterfell
+
+			segrellion_clear_relic_pending_destination_effect = yes
+
+
+			# Do not punish the player with the cooldown
+			# for a journey that never began.
+			remove_character_flag = segrellion_legendary_relic_search_cooldown
+		}
+	}
+}
+
+# =========================================================
 # 0090 - TRAVEL CANCELLED
 # =========================================================
 

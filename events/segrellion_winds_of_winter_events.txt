@@ -305,6 +305,112 @@ segrellion_winds.0120 = {
 
 
 		custom_tooltip = segrellion_plate_recovery_decision_unlocked_tt
+
+		if = {
+
+			limit = {
+				is_ai = yes
+			}
+
+			trigger_event = {
+				id = segrellion_winds.0121
+				days = 10
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0121 - AI HUGH RECOVERS THE PLATE
+#
+# Safety net for the Winds of Winter storyline.
+#
+# The normal decision remains available and the AI can
+# take it first. This event only fires if Hugh still has
+# not acted ten days after locating the Plate.
+# =========================================================
+
+segrellion_winds.0121 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		is_ai = yes
+
+		has_character_flag = segrellion_plate_recovery_ready
+
+		NOT = {
+			has_character_flag = segrellion_plate_recovery_in_progress
+		}
+
+		NOT = {
+			has_character_flag = segrellion_plate_recovery_complete
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# THE PLATE CAN STILL BE RECOVERED
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					segrellion_plate_recovery_blocked_trigger = yes
+				}
+
+				gold >= 50
+			}
+
+
+			# Same cost as the player decision.
+			add_gold = -50
+
+
+			remove_character_flag = segrellion_plate_recovery_ready
+
+			add_character_flag = segrellion_plate_recovery_in_progress
+
+
+			trigger_event = {
+				id = segrellion_winds.0130
+				days = { 20 60 }
+			}
+		}
+
+
+		# =================================================
+		# HUGH TEMPORARILY CANNOT AFFORD THE TRANSPORT
+		#
+		# Try again rather than permanently breaking
+		# Daemon's storyline.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				NOT = {
+					segrellion_plate_recovery_blocked_trigger = yes
+				}
+
+				gold < 50
+			}
+
+			trigger_event = {
+				id = segrellion_winds.0121
+				days = 15
+			}
+		}
 	}
 }
 
