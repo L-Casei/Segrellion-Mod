@@ -16,6 +16,7 @@ monthly_global_pulse = {
 		segrellion_icebringer_monthly_event_pulse
 		segrellion_icebringer_historical_loss_progression
 		segrellion_unicorn_returns_beacon_arrival_fallback
+		segrellion_daemon_parentage_progression
 		segrellion_deathwish_historical_progression
 		segrellion_winds_300_aftermath_check
 		segrellion_black_moon_house_relation_progression
@@ -103,6 +104,14 @@ segrellion_dragonspear_lance_progression = {
     effect = {
         segrellion_setup_dragonspear_lance_history_effect = yes
     }
+}
+
+segrellion_daemon_parentage_progression = {
+
+	effect = {
+
+		segrellion_setup_daemon_parentage_story_effect = yes
+	}
 }
 
 segrellion_icebringer_monthly_event_pulse = {
@@ -278,6 +287,7 @@ segrellion_on_game_start = {
 		segrellion_setup_massey_defiance_effect = yes
 		segrellion_setup_young_griff_300_effect = yes
 		segrellion_setup_daenerys_300_effect = yes
+		segrellion_setup_daemon_parentage_story_effect = yes
 		segrellion_setup_plate_return_story_effect = yes
 		segrellion_setup_stormflame_300_effect = yes
 		character:Segrellion_1 ?= {
@@ -404,43 +414,6 @@ segrellion_on_game_start_after_lobby = {
 				trigger_event = {
 					id = segrellion_intro.0001
 					days = 3
-				}
-			}
-		}
-
-		# ====================================================
-		# 300 AC - DAENA'S LETTER
-		# ====================================================
-
-		if = {
-			limit = {
-
-				game_start_date = 8300.8.20
-
-				character:Segrellion_43 ?= {
-					is_alive = yes
-
-					NOT = {
-						has_character_flag = segrellion_daemon_letter_event_scheduled
-					}
-				}
-
-				character:Segrellion_60 ?= {
-					is_alive = yes
-
-					NOT = {
-						has_character_flag = segrellion_daemon_parentage_known
-					}
-				}
-			}
-
-			character:Segrellion_43 = {
-
-				add_character_flag = segrellion_daemon_letter_event_scheduled
-
-				trigger_event = {
-					id = segrellion_daemon_parentage.0001
-					days = 5
 				}
 			}
 		}

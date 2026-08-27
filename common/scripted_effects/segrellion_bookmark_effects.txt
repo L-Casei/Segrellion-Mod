@@ -211,6 +211,53 @@ segrellion_setup_massey_defiance_effect = {
 }
 
 # =========================================================
+# 300 AC - DAEMON'S TRUE PARENTAGE
+#
+# Hugh discovers the letter Daena entrusted to Symon.
+#
+# This setup is deliberately independent from the
+# Plate of Segrell storyline.
+# =========================================================
+
+segrellion_setup_daemon_parentage_story_effect = {
+
+	if = {
+
+		limit = {
+
+			current_date >= 8300.8.20
+
+			character:Segrellion_43 ?= {
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_daemon_parentage_story_initialized
+				}
+			}
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_daemon_parentage_known
+				}
+			}
+		}
+
+
+		character:Segrellion_43 = {
+
+			add_character_flag = segrellion_daemon_parentage_story_initialized
+
+			trigger_event = {
+				id = segrellion_daemon_parentage.0001
+				days = { 7 14 }
+			}
+		}
+	}
+}
+
+# =========================================================
 # 300 AC - THE LOST PLATE OF SEGRELL
 #
 # Hugh does NOT begin with the artifact.
