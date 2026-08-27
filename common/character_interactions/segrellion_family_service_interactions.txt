@@ -1,0 +1,1066 @@
+# =========================================================
+# HOUSE SERVICE INTERACTIONS
+#
+# Voluntarily ask a close family member to:
+#   - Join the Kingsguard
+#   - Take the Black
+#
+# Both use normal interaction acceptance logic.
+# =========================================================
+
+
+# =========================================================
+# ASK TO JOIN THE KINGSGUARD
+# =========================================================
+
+segrellion_ask_join_kingsguard_interaction = {
+
+	category = interaction_category_friendly
+
+	icon = segrellion_kingsguard_interaction
+
+	common_interaction = yes
+	interface_priority = 85
+
+	desc = segrellion_ask_join_kingsguard_interaction_desc
+
+
+	# =====================================================
+	# RESPONSE
+	# =====================================================
+
+	ai_maybe = yes
+
+	ai_min_reply_days = 4
+	ai_max_reply_days = 10
+
+	can_send_despite_rejection = yes
+
+	popup_on_receive = yes
+	pause_on_receive = yes
+
+	use_diplomatic_range = no
+
+	greeting = negative
+
+	notification_text = REQUEST_VOWS_NOTIFICATION_TEXT
+
+	on_decline_summary = segrellion_kingsguard_family_decline_summary
+
+	cooldown_against_recipient = {
+		years = 5
+	}
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		# -------------------------------------------------
+		# ACTOR
+		#
+		# Only the ruler whose primary title actually
+		# possesses a Kingsguard can appoint someone.
+		# -------------------------------------------------
+
+		scope:actor = {
+
+			ruler_primary_title_has_kingsguard_trigger = yes
+
+			NOT = {
+				has_character_flag = choosing_kingsguard
+			}
+
+
+			# At least one ordinary Kingsguard slot is empty.
+			NAND = {
+
+				primary_title = {
+					exists = var:kingsguard_1
+				}
+
+				primary_title = {
+					exists = var:kingsguard_2
+				}
+
+				primary_title = {
+					exists = var:kingsguard_3
+				}
+
+				primary_title = {
+					exists = var:kingsguard_4
+				}
+
+				primary_title = {
+					exists = var:kingsguard_5
+				}
+
+				primary_title = {
+					exists = var:kingsguard_6
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# RECIPIENT
+		# -------------------------------------------------
+
+		scope:recipient = {
+
+			NOT = {
+				this = scope:actor
+			}
+
+			is_close_family_of = scope:actor
+
+			is_human = yes
+
+			top_liege = scope:actor
+
+			valid_kingsguard_gender_trigger = yes
+
+
+			NOR = {
+				has_trait = kingsguard
+				has_trait = lc_kingsguard
+				has_trait = nightswatch
+				has_trait = maester
+				has_trait = order_member
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid_showing_failures_only = {
+
+		scope:recipient = {
+
+			is_landed = no
+
+			is_married = no
+
+			is_capable_adult = yes
+
+			can_be_knight_trigger = {
+				ARMY_OWNER = scope:actor
+			}
+
+			agot_has_clergy_trait = no
+
+
+			custom_description = {
+
+				text = segrellion_family_service_not_betrothed_tt
+
+				NOT = {
+					exists = betrothed
+				}
+			}
+
+
+			custom_description = {
+
+				text = segrellion_family_service_not_heir_blocked_tt
+
+				NOT = {
+					has_character_flag = kingsguard_position_rejected
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# USE HOOK
+	# Same presentation as Take the Vows.
+	# =====================================================
+
+	auto_accept = {
+
+		OR = {
+
+			has_character_modifier = training_for_kingsguard
+
+			AND = {
+				scope:hook = yes
+				scope:actor = {
+					has_strong_hook = scope:recipient
+				}
+			}
+		}
+	}
+
+
+	send_option = {
+
+		is_valid = {
+
+			scope:actor = {
+				has_usable_hook = scope:recipient
+			}
+		}
+
+		flag = hook
+
+		localization = SCHEME_HOOK
+	}
+
+
+	should_use_extra_icon = {
+
+		scope:actor = {
+			has_usable_hook = scope:recipient
+		}
+	}
+
+
+	extra_icon = "gfx/interface/icons/character_interactions/hook_icon.dds"
+
+	send_options_exclusive = no
+
+
+	# =====================================================
+	# ACCEPTANCE
+	#
+	# Based directly on AGOT's own Kingsguard invitation.
+	# =====================================================
+
+	ai_accept = {
+
+		base = 50
+
+
+		# -------------------------------------------------
+		# HOOK
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 50
+
+			scope:hook = yes
+
+			desc = SCHEME_WEAK_HOOK_USED
+		}
+
+
+		# -------------------------------------------------
+		# OPINION OF THE PERSON ASKING
+		# -------------------------------------------------
+
+		opinion_modifier = {
+
+			who = scope:recipient
+
+			opinion_target = scope:actor
+
+			multiplier = 0.25
+
+			desc = AI_SIMPLE_OPINION_REASON
+		}
+
+
+		# -------------------------------------------------
+		# TRAINED FOR THE KINGSGUARD
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 100
+
+			scope:recipient = {
+				has_character_modifier = training_for_kingsguard
+			}
+
+			desc = ORDER_VOWS_AMBITION
+		}
+
+
+		# -------------------------------------------------
+		# BETROTHED
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -50
+
+			scope:recipient = {
+				exists = betrothed
+			}
+
+			desc = ORDER_VOWS_MARRIED_OR_BETROTHED
+		}
+
+
+		# -------------------------------------------------
+		# DIFFERENT FAITH
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -100
+
+			scope:recipient = {
+
+				NOT = {
+					faith = scope:actor.faith
+				}
+
+				ai_zeal >= -30
+			}
+
+			desc = ORDER_VOWS_DIFFERENT_FAITH
+		}
+
+
+		# -------------------------------------------------
+		# PRIMARY HEIR
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -100
+
+			scope:recipient = {
+
+				any_heir_title = {
+
+					exists = this
+
+					place_in_line_of_succession = {
+						target = prev
+						value == 1
+					}
+				}
+			}
+
+			desc = ORDER_VOWS_HEIR_1
+		}
+
+
+		# -------------------------------------------------
+		# OTHER HEIR
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -35
+
+			scope:recipient = {
+
+				any_heir_title = {
+					exists = this
+				}
+			}
+
+			desc = ORDER_VOWS_HEIR_2
+		}
+
+
+		# -------------------------------------------------
+		# HONOUR
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = {
+				value = ai_honor
+				divide = 2
+			}
+
+			scope:recipient = {
+				ai_honor > 0
+			}
+
+			desc = ORDER_VOWS_HONOR
+		}
+
+
+		# -------------------------------------------------
+		# AMBITION / GREED
+		#
+		# Giving up inheritance is unattractive.
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = {
+				value = ai_greed
+				multiply = -0.5
+			}
+
+			scope:recipient = {
+				ai_greed > 0
+			}
+
+			desc = TAKE_THE_VOWS_GREED
+		}
+
+
+		# -------------------------------------------------
+		# BOLDNESS
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = {
+				value = ai_boldness
+				divide = 2
+				min = 10
+			}
+
+			scope:recipient = {
+				ai_boldness > 0
+			}
+
+			desc = ORDER_VOWS_BOLD
+		}
+
+
+		modifier = {
+
+			add = {
+				value = ai_boldness
+			}
+
+			scope:recipient = {
+				ai_boldness < 0
+			}
+
+			desc = ORDER_VOWS_CRAVEN
+		}
+
+
+		# -------------------------------------------------
+		# LUSTFUL / REVELER
+		#
+		# Celibacy is unattractive.
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -50
+
+			scope:recipient = {
+
+				OR = {
+					has_trait = lustful
+					has_trait = lifestyle_reveler
+					has_trait = seducer
+				}
+			}
+
+			desc = ORDER_VOWS_HORNY
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPTED
+	#
+	# Uses AGOT's actual Kingsguard appointment chain.
+	# =====================================================
+
+	on_accept = {
+
+		if = {
+
+			limit = {
+				scope:hook = yes
+			}
+
+			scope:actor = {
+				use_hook = scope:recipient
+			}
+		}
+
+
+		scope:recipient = {
+
+			save_scope_as = kingsguard_candidate
+		}
+
+
+		scope:actor = {
+
+			save_scope_as = king
+
+			trigger_event = {
+				id = agot_kingsguard.1005
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DECLINED
+	# =====================================================
+
+	on_decline = {
+
+		scope:recipient = {
+
+			add_character_flag = {
+				flag = segrellion_refused_family_kingsguard_request
+				years = 5
+			}
+
+			add_opinion = {
+				target = scope:actor
+				modifier = segrellion_asked_me_to_join_kingsguard_opinion
+			}
+		}
+
+
+		scope:actor = {
+
+			send_interface_toast = {
+
+				type = event_toast_effect_bad
+
+				title = segrellion_kingsguard_request_refused_title
+				desc = segrellion_kingsguard_request_refused_desc
+
+				left_icon = scope:actor
+				right_icon = scope:recipient
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_frequency = 0
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+# =========================================================
+# ASK TO TAKE THE BLACK
+# =========================================================
+
+segrellion_ask_take_black_interaction = {
+
+	category = interaction_category_friendly
+
+	icon = segrellion_nightswatch_interaction
+
+	common_interaction = yes
+	interface_priority = 84
+
+	desc = segrellion_ask_take_black_interaction_desc
+
+
+	# =====================================================
+	# RESPONSE
+	# =====================================================
+
+	ai_maybe = yes
+
+	ai_min_reply_days = 4
+	ai_max_reply_days = 10
+
+	can_send_despite_rejection = yes
+
+	popup_on_receive = yes
+	pause_on_receive = yes
+
+	use_diplomatic_range = yes
+
+	greeting = negative
+
+	notification_text = REQUEST_VOWS_NOTIFICATION_TEXT
+
+	on_decline_summary = segrellion_nightswatch_family_decline_summary
+
+	cooldown_against_recipient = {
+		years = 5
+	}
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		scope:actor = {
+
+			is_adult = yes
+			is_imprisoned = no
+		}
+
+
+		scope:recipient = {
+
+			NOT = {
+				this = scope:actor
+			}
+
+			is_close_family_of = scope:actor
+
+			is_alive = yes
+			is_human = yes
+			is_male = yes
+
+
+			NOR = {
+
+				has_trait = nightswatch
+
+				has_trait = kingsguard
+
+				has_trait = lc_kingsguard
+
+				has_trait = maester
+
+				has_trait = order_member
+
+				has_trait = devoted
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid_showing_failures_only = {
+
+		scope:recipient = {
+
+			is_capable_adult = yes
+
+			is_landed = no
+
+			is_married = no
+
+
+			custom_description = {
+
+				text = segrellion_nightswatch_wall_exists_tt
+
+				title:k_the_wall = {
+					exists = holder
+				}
+			}
+
+
+			custom_description = {
+
+				text = segrellion_family_service_not_betrothed_tt
+
+				NOT = {
+					exists = betrothed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HOOK
+	# =====================================================
+
+	auto_accept = {
+
+		AND = {
+
+			scope:hook = yes
+
+			scope:actor = {
+				has_strong_hook = scope:recipient
+			}
+		}
+	}
+
+
+	send_option = {
+
+		is_valid = {
+
+			scope:actor = {
+				has_usable_hook = scope:recipient
+			}
+		}
+
+		flag = hook
+
+		localization = SCHEME_HOOK
+	}
+
+
+	should_use_extra_icon = {
+
+		scope:actor = {
+			has_usable_hook = scope:recipient
+		}
+	}
+
+
+	extra_icon = "gfx/interface/icons/character_interactions/hook_icon.dds"
+
+	send_options_exclusive = no
+
+
+	# =====================================================
+	# ACCEPTANCE
+	#
+	# Built in the same spirit as Take the Vows.
+	# =====================================================
+
+	ai_accept = {
+
+		base = 0
+
+
+		# -------------------------------------------------
+		# HOOK
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 50
+
+			scope:hook = yes
+
+			desc = SCHEME_WEAK_HOOK_USED
+		}
+
+
+		# -------------------------------------------------
+		# OPINION
+		# -------------------------------------------------
+
+		opinion_modifier = {
+
+			who = scope:recipient
+
+			opinion_target = scope:actor
+
+			multiplier = 0.25
+
+			desc = AI_SIMPLE_OPINION_REASON
+		}
+
+
+		# -------------------------------------------------
+		# PRIMARY HEIR
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -100
+
+			scope:recipient = {
+
+				any_heir_title = {
+
+					exists = this
+
+					place_in_line_of_succession = {
+						target = prev
+						value == 1
+					}
+				}
+			}
+
+			desc = ORDER_VOWS_HEIR_1
+		}
+
+
+		# -------------------------------------------------
+		# OTHER HEIR
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -35
+
+			scope:recipient = {
+				any_heir_title = {
+					exists = this
+				}
+			}
+
+			desc = ORDER_VOWS_HEIR_2
+		}
+
+
+		# -------------------------------------------------
+		# AMBITIOUS
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -30
+
+			scope:recipient = {
+				has_trait = ambitious
+			}
+
+			desc = segrellion_service_reason_ambitious
+		}
+
+
+		# -------------------------------------------------
+		# CONTENT
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 25
+
+			scope:recipient = {
+				has_trait = content
+			}
+
+			desc = TAKE_THE_VOWS_CONTENT
+		}
+
+
+		# -------------------------------------------------
+		# HUMBLE
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 20
+
+			scope:recipient = {
+				has_trait = humble
+			}
+
+			desc = TAKE_THE_VOWS_HUMBLE
+		}
+
+
+		# -------------------------------------------------
+		# CHASTE
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 20
+
+			scope:recipient = {
+				has_trait = chaste
+			}
+
+			desc = TAKE_THE_VOWS_CHASTE
+		}
+
+
+		# -------------------------------------------------
+		# GREED
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = {
+				value = ai_greed
+				multiply = -1
+			}
+
+			scope:recipient = {
+				ai_greed > 0
+			}
+
+			desc = TAKE_THE_VOWS_GREED
+		}
+
+
+		# -------------------------------------------------
+		# HONOUR
+		#
+		# Taking the Black can be seen as honourable service.
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = {
+				value = ai_honor
+				divide = 2
+			}
+
+			scope:recipient = {
+				ai_honor > 0
+			}
+
+			desc = segrellion_service_reason_honorable
+		}
+
+
+		# -------------------------------------------------
+		# BRAVE
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 20
+
+			scope:recipient = {
+				has_trait = brave
+			}
+
+			desc = segrellion_service_reason_brave
+		}
+
+
+		# -------------------------------------------------
+		# CRAVEN
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -25
+
+			scope:recipient = {
+				has_trait = craven
+			}
+
+			desc = segrellion_service_reason_craven
+		}
+
+
+		# -------------------------------------------------
+		# JUST
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 15
+
+			scope:recipient = {
+				has_trait = just
+			}
+
+			desc = segrellion_service_reason_just
+		}
+
+
+		# -------------------------------------------------
+		# LUSTFUL
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -40
+
+			scope:recipient = {
+				has_trait = lustful
+			}
+
+			desc = segrellion_service_reason_lustful
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	on_accept = {
+
+		if = {
+
+			limit = {
+				scope:hook = yes
+			}
+
+			scope:actor = {
+				use_hook = scope:recipient
+			}
+		}
+
+
+		scope:recipient = {
+
+			# Native AGOT effect.
+			agot_add_to_nightswatch_effect = yes
+
+
+			title:k_the_wall.holder = {
+
+				add_courtier = scope:recipient
+
+				trigger_event = agot_nights_watch.0100
+			}
+		}
+
+
+		scope:actor = {
+
+			send_interface_toast = {
+
+				type = event_toast_effect_good
+
+				title = segrellion_nightswatch_request_accepted_title
+				desc = segrellion_nightswatch_request_accepted_desc
+
+				left_icon = scope:actor
+				right_icon = scope:recipient
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DECLINE
+	# =====================================================
+
+	on_decline = {
+
+		scope:recipient = {
+
+			add_character_flag = {
+				flag = segrellion_refused_family_nightswatch_request
+				years = 5
+			}
+
+
+			add_opinion = {
+				target = scope:actor
+				modifier = segrellion_asked_me_to_take_black_opinion
+			}
+		}
+
+
+		scope:actor = {
+
+			send_interface_toast = {
+
+				type = event_toast_effect_bad
+
+				title = segrellion_nightswatch_request_refused_title
+				desc = segrellion_nightswatch_request_refused_desc
+
+				left_icon = scope:actor
+				right_icon = scope:recipient
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_frequency = 0
+
+	ai_will_do = {
+		base = 0
+	}
+}
