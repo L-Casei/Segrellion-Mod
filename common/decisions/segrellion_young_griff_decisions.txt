@@ -41,8 +41,6 @@ segrellion_take_iron_throne_decision = {
 
 		is_alive = yes
 
-		has_claim_on = title:h_the_iron_throne
-
 
 		NOT = {
 			has_title = title:h_the_iron_throne
@@ -184,18 +182,23 @@ segrellion_take_iron_throne_decision = {
 			remove_character_flag = segrellion_young_griff_free_for_iron_throne
 
 
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_claim_on = title:h_the_iron_throne
+					}
+				}
+
+				add_pressed_claim = title:h_the_iron_throne
+			}
+
+
 			title:h_the_iron_throne.holder = {
 				save_scope_as = young_griff_iron_throne_defender
 			}
 
-
-			# =================================================
-			# THE WAR FOR THE IRON THRONE
-			#
-			# Young Griff already possesses a pressed claim.
-			# Using the standard claim CB allows AGOT's native
-			# Mega War system to process the conflict.
-			# =================================================
 
 			start_war = {
 
@@ -224,12 +227,10 @@ segrellion_take_iron_throne_decision = {
 
 		this = character:IAF_Young_Griff_1
 
-		OR = {
+		has_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
 
-			has_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
-
-			# Safety net for later starts/saves.
-			current_date >= 8303.1.1
+		NOT = {
+			has_game_rule = segrellion_young_griff_aggression_peaceful
 		}
 	}
 

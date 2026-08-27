@@ -802,3 +802,46 @@ segrellion_young_griff.5010 = {
 		name = segrellion_young_griff.5010.a
 	}
 }
+
+# =========================================================
+# 4000 - THE TIME HAS COME
+#
+# Hidden AI readiness event.
+#
+# The Game Rule determines when this fires.
+# =========================================================
+
+segrellion_young_griff.4000 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+		is_ai = yes
+
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_iron_throne_war_started
+		}
+
+		NOT = {
+			has_game_rule = segrellion_young_griff_aggression_peaceful
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_ai_throne_timing_scheduled
+
+		add_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
+	}
+}

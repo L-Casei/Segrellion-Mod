@@ -1,0 +1,287 @@
+# =========================================================
+# ICE AND FIRE
+# INVASION AGGRESSION GAME RULES
+# =========================================================
+
+
+# =========================================================
+# YOUNG GRIFF
+#
+# ROOT = Young Griff
+#
+# IMPORTANT:
+# His normal Iron Throne claim is temporarily removed from
+# AI control so CK3 cannot bypass our custom decision and
+# declare an ordinary claim war early.
+# =========================================================
+
+segrellion_initialize_young_griff_aggression_effect = {
+
+	if = {
+
+		limit = {
+
+			is_ai = yes
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_aggression_initialized
+			}
+		}
+
+		add_character_flag = segrellion_young_griff_aggression_initialized
+
+
+		# =================================================
+		# REMOVE THE MECHANICAL CLAIM FROM THE AI
+		#
+		# The custom Take the Iron Throne decision will add
+		# it again immediately before declaring the war.
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_claim_on = title:h_the_iron_throne
+			}
+
+			remove_claim = title:h_the_iron_throne
+		}
+
+
+		# =================================================
+		# PEACEFUL
+		# Never receives the ready flag.
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_game_rule = segrellion_young_griff_aggression_peaceful
+			}
+
+			add_character_flag = segrellion_young_griff_ai_throne_invasion_suppressed
+		}
+
+
+		# =================================================
+		# PASSIVE
+		# 7-12 years.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_game_rule = segrellion_young_griff_aggression_passive
+			}
+
+			add_character_flag = segrellion_young_griff_ai_throne_timing_scheduled
+
+			trigger_event = {
+				id = segrellion_young_griff.4000
+				days = { 2555 4380 }
+			}
+		}
+
+
+		# =================================================
+		# DEFAULT
+		# 2-5 years.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_game_rule = segrellion_young_griff_aggression_default
+			}
+
+			add_character_flag = segrellion_young_griff_ai_throne_timing_scheduled
+
+			trigger_event = {
+				id = segrellion_young_griff.4000
+				days = { 730 1825 }
+			}
+		}
+
+
+		# =================================================
+		# AGGRESSIVE
+		# Ready immediately.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_game_rule = segrellion_young_griff_aggression_aggressive
+			}
+
+			add_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
+		}
+
+
+		# =================================================
+		# SAFETY FALLBACK
+		# Behave as Default.
+		# =================================================
+
+		else = {
+
+			add_character_flag = segrellion_young_griff_ai_throne_timing_scheduled
+
+			trigger_event = {
+				id = segrellion_young_griff.4000
+				days = { 730 1825 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DAENERYS
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_initialize_daenerys_aggression_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_invasion_event_scheduled
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_invasion_abandoned
+			}
+		}
+
+
+		# =================================================
+		# PLAYER DAENERYS
+		#
+		# Game Rule controls AI only.
+		# Player receives the storyline normally.
+		# =================================================
+
+		if = {
+
+			limit = {
+				is_ai = no
+			}
+
+			add_character_flag = segrellion_daenerys_invasion_event_scheduled
+
+			trigger_event = {
+				id = segrellion_daenerys_invasion.0001
+				days = { 15 30 }
+			}
+		}
+
+
+		# =================================================
+		# AI DAENERYS
+		# =================================================
+
+		else = {
+
+			add_character_flag = segrellion_daenerys_invasion_event_scheduled
+
+
+			# ---------------------------------------------
+			# Remove mechanical Iron Throne claim while
+			# waiting, preventing an ordinary claim war.
+			# ---------------------------------------------
+
+			if = {
+
+				limit = {
+					has_claim_on = title:h_the_iron_throne
+				}
+
+				remove_claim = title:h_the_iron_throne
+			}
+
+
+			# =================================================
+			# PEACEFUL
+			# =================================================
+
+			if = {
+
+				limit = {
+					has_game_rule = segrellion_daenerys_aggression_peaceful
+				}
+
+				add_character_flag = segrellion_daenerys_ai_invasion_suppressed
+			}
+
+
+			# =================================================
+			# PASSIVE
+			# 7-12 years.
+			# =================================================
+
+			else_if = {
+
+				limit = {
+					has_game_rule = segrellion_daenerys_aggression_passive
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0001
+					days = { 2555 4380 }
+				}
+			}
+
+
+			# =================================================
+			# DEFAULT
+			# 2-5 years.
+			# =================================================
+
+			else_if = {
+
+				limit = {
+					has_game_rule = segrellion_daenerys_aggression_default
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0001
+					days = { 730 1825 }
+				}
+			}
+
+
+			# =================================================
+			# AGGRESSIVE
+			# =================================================
+
+			else_if = {
+
+				limit = {
+					has_game_rule = segrellion_daenerys_aggression_aggressive
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0001
+					days = { 1 7 }
+				}
+			}
+
+
+			# =================================================
+			# SAFETY FALLBACK
+			# =================================================
+
+			else = {
+
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0001
+					days = { 730 1825 }
+				}
+			}
+		}
+	}
+}
