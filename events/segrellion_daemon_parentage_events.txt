@@ -91,14 +91,12 @@ segrellion_daemon_parentage.0001 = {
 
 		add_character_flag = segrellion_hugh_read_daena_letter
 
-		character:Segrellion_60 = {
-
-			trigger_event = {
-				id = segrellion_daemon_parentage.0003
-				days = 2
-			}
+		trigger_event = {
+			id = segrellion_daemon_parentage.0004
+			days = 1
 		}
 	}
+
 }
 
 
@@ -132,6 +130,19 @@ segrellion_daemon_parentage.0002 = {
 		add_secret = {
 			type = secret_disputed_heritage
 			target = root
+		}
+
+		# Explicitly register Daemon as knowing
+		# the truth of his own birth.
+
+		every_secret = {
+
+			limit = {
+				secret_type = secret_disputed_heritage
+				secret_target = root
+			}
+
+			reveal_to = root
 		}
 
 		add_character_flag = segrellion_daemon_parentage_known
@@ -181,23 +192,8 @@ segrellion_daemon_parentage.0003 = {
 
 	immediate = {
 
-		add_secret = {
-			type = secret_disputed_heritage
-			target = root
-		}
-
 		add_character_flag = segrellion_daemon_parentage_known
 		add_character_flag = segrellion_daemon_parentage_known_with_hugh
-
-		random_known_secret = {
-
-			limit = {
-				secret_type = secret_disputed_heritage
-				secret_target = root
-			}
-
-			reveal_to = character:Segrellion_43
-		}
 
 		character:Segrellion_43 = {
 
@@ -212,5 +208,85 @@ segrellion_daemon_parentage.0003 = {
 
 		custom_tooltip = segrellion_daemon_parentage.0003.a.tt
 		custom_tooltip = segrellion_daemon_parentage.reveal_tt
+	}
+}
+
+# =========================================================
+# 0004 - HUGH BREAKS THE SEAL
+# HUGH LEARNS THE TRUTH
+# =========================================================
+
+segrellion_daemon_parentage.0004 = {
+
+	type = character_event
+
+	title = segrellion_daemon_parentage.0004.t
+	desc = segrellion_daemon_parentage.0004.desc
+
+	theme = family
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		has_character_flag = segrellion_hugh_read_daena_letter
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_known
+			}
+		}
+	}
+
+	left_portrait = root
+	right_portrait = character:Segrellion_60
+
+
+	immediate = {
+
+		# Hugh now owns the secret because he has actually
+		# discovered the contents of Daena's letter.
+
+		add_secret = {
+			type = secret_disputed_heritage
+			target = character:Segrellion_60
+		}
+
+
+		# Daemon is explicitly told the secret.
+		# This is the important part for AGOT's
+		# knows_self_royal_bastard_secret trigger.
+
+		every_secret = {
+
+			limit = {
+				secret_type = secret_disputed_heritage
+				secret_target = character:Segrellion_60
+			}
+
+			reveal_to = character:Segrellion_60
+		}
+
+
+		add_character_flag = segrellion_hugh_knows_daemon_parentage
+		add_character_flag = told_true_parentage
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0004.a
+
+		custom_tooltip = segrellion_daemon_parentage.0004.a.tt
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daemon_parentage.0003
+				days = 1
+			}
+		}
 	}
 }
