@@ -99,13 +99,22 @@ segrellion_relic.4010 = {
 
 		add_character_flag = segrellion_relic_pending_nightfort
 
+		if = {
+			limit = {
+				exists = current_travel_plan
+			}
 
-		# Wait until the Castle Black journey has
-		# completely finished before beginning another.
+			current_travel_plan = {
+				add_travel_waypoint = title:b_the_nightfort.title_province
+				resume_travel_plan = yes
+			}
+		}
 
-		trigger_event = {
-			id = segrellion_relic_bridge.0002
-			days = 1
+		else = {
+			trigger_event = {
+				id = segrellion_relic_bridge.0002
+				days = 1
+			}
 		}
 	}
 }

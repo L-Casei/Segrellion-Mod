@@ -32,13 +32,27 @@ segrellion_relic_bridge.0001 = {
 
 		name = segrellion_relic.3900.a
 
-		segrellion_clear_relic_pending_destination_effect = yes
+		custom_tooltip = segrellion_relic.3900.a.trail_tt
 
+		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_castle_black
 
-		trigger_event = {
-			id = segrellion_relic_bridge.0002
-			days = 1
+		if = {
+			limit = {
+				exists = current_travel_plan
+			}
+
+			current_travel_plan = {
+				add_travel_waypoint = title:c_castle_black.title_province
+				resume_travel_plan = yes
+			}
+		}
+
+		else = {
+			trigger_event = {
+				id = segrellion_relic_bridge.0002
+				days = 1
+			}
 		}
 	}
 
@@ -51,13 +65,27 @@ segrellion_relic_bridge.0001 = {
 
 		name = segrellion_relic.3900.b
 
-		segrellion_clear_relic_pending_destination_effect = yes
+		custom_tooltip = segrellion_relic.3900.b.trail_tt
 
+		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_shadow_tower
 
-		trigger_event = {
-			id = segrellion_relic_bridge.0002
-			days = 1
+		if = {
+			limit = {
+				exists = current_travel_plan
+			}
+
+			current_travel_plan = {
+				add_travel_waypoint = title:c_the_shadow_tower.title_province
+				resume_travel_plan = yes
+			}
+		}
+
+		else = {
+			trigger_event = {
+				id = segrellion_relic_bridge.0002
+				days = 1
+			}
 		}
 	}
 
@@ -70,15 +98,27 @@ segrellion_relic_bridge.0001 = {
 
 		name = segrellion_relic.3900.c
 
-		custom_tooltip = segrellion_relic.3900.c.chance_tt
+		custom_tooltip = segrellion_relic.3900.c.trail_tt
 
 		segrellion_clear_relic_pending_destination_effect = yes
-
 		add_character_flag = segrellion_relic_pending_skagos
 
-		trigger_event = {
-			id = segrellion_relic_bridge.0002
-			days = 1
+		if = {
+			limit = {
+				exists = current_travel_plan
+			}
+
+			current_travel_plan = {
+				add_travel_waypoint = title:c_skane.title_province
+				resume_travel_plan = yes
+			}
+		}
+
+		else = {
+			trigger_event = {
+				id = segrellion_relic_bridge.0002
+				days = 1
+			}
 		}
 	}
 }
@@ -108,5 +148,72 @@ segrellion_relic_bridge.0002 = {
 	immediate = {
 
 		segrellion_resume_relic_travel_effect = yes
+	}
+}
+
+# =========================================================
+# 0003 - NORTHERN ARRIVAL DISPATCHER
+# =========================================================
+
+segrellion_relic_bridge.0003 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+	}
+
+	immediate = {
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_relic_pending_winterfell
+			}
+
+			trigger_event = {
+				id = segrellion_relic.3000
+			}
+		}
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_relic_pending_castle_black
+			}
+
+			trigger_event = {
+				id = segrellion_relic.4000
+			}
+		}
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_relic_pending_shadow_tower
+			}
+
+			trigger_event = {
+				id = segrellion_relic.6000
+			}
+		}
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_relic_pending_skagos
+			}
+
+			trigger_event = {
+				id = segrellion_relic.7000
+			}
+		}
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_relic_pending_nightfort
+			}
+
+			trigger_event = {
+				id = segrellion_relic.5000
+			}
+		}
 	}
 }
