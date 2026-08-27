@@ -1,0 +1,98 @@
+# =========================================================
+# VLADWYN LEGACY V
+# RAISE THE TRUE SENTINELS
+# =========================================================
+
+vladwyn_raise_true_sentinels_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tristan_vladwyn_landless_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = vladwyn_raise_true_sentinels_decision_desc
+	selection_tooltip = vladwyn_raise_true_sentinels_decision_tooltip
+	confirm_text = vladwyn_raise_true_sentinels_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		dynasty = dynasty:dynn_Vladwyn
+
+		dynasty = {
+			has_dynasty_perk = vladwyn_legacy_5
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		custom_description = {
+			text = vladwyn_true_sentinels_adult_requirement
+			is_adult = yes
+		}
+
+		custom_description = {
+			text = vladwyn_true_sentinels_free_requirement
+			is_imprisoned = no
+		}
+
+		custom_description = {
+			text = vladwyn_true_sentinels_war_requirement
+			is_at_war = yes
+		}
+
+		custom_description = {
+			text = vladwyn_true_sentinels_cooldown_requirement
+
+			NOT = {
+				has_character_flag = vladwyn_true_sentinels_cooldown
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		# Select one of the ruler's current wars.
+		# The special host will be tied to this war.
+		random_character_war = {
+			save_temporary_scope_as = vladwyn_true_sentinels_war
+		}
+
+		add_character_flag = {
+			flag = vladwyn_true_sentinels_cooldown
+			years = 12
+		}
+
+		custom_tooltip = vladwyn_raise_true_sentinels_effect_tt
+
+		hidden_effect = {
+			vladwyn_raise_true_sentinel_veterans_effect = yes
+		}
+	}
+
+
+	# Don't let every AI Vladwyn repeatedly manufacture
+	# event armies until we decide how aggressive AI use should be.
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
