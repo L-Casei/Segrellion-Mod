@@ -167,6 +167,86 @@ segrellion_support.1000 = {
 	}
 }
 
+# =========================================================
+# 1990 - ARRIVAL AT SUNSPEAR
+# Hidden router.
+#
+# Checks whether Arianne's situation changed while Daemon
+# was travelling to Dorne.
+# =========================================================
+
+segrellion_support.1990 = {
+
+	hidden = yes
+
+	trigger = {
+		this = character:Segrellion_60
+		has_character_flag = segrellion_negotiation_pending_dorne
+	}
+
+	immediate = {
+
+		# ---------------------------------------------
+		# ARIANNE MARRIED WHILE DAEMON WAS TRAVELLING
+		# ---------------------------------------------
+
+		if = {
+
+			limit = {
+
+				character:Martell_9 ?= {
+					is_alive = yes
+					is_married = yes
+				}
+			}
+
+			remove_character_flag = segrellion_negotiation_pending_dorne
+
+			trigger_event = {
+				id = segrellion_support.2050
+				days = 1
+			}
+		}
+
+
+		# ---------------------------------------------
+		# ORIGINAL BARGAIN IS STILL POSSIBLE
+		# ---------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				character:Martell_9 ?= {
+					is_alive = yes
+					is_married = no
+				}
+			}
+
+			# 2000 will remove the pending flag itself.
+			trigger_event = {
+				id = segrellion_support.2000
+				days = 1
+			}
+		}
+
+
+		# ---------------------------------------------
+		# ARIANNE IS NO LONGER AVAILABLE AT ALL
+		# ---------------------------------------------
+
+		else = {
+
+			remove_character_flag = segrellion_negotiation_pending_dorne
+
+			trigger_event = {
+				id = segrellion_support.2051
+				days = 1
+			}
+		}
+	}
+}
+
 
 # =========================================================
 # 2000 - DORNE
@@ -257,8 +337,6 @@ segrellion_support.2000 = {
 
 		segrellion_grant_dorne_support_effect = yes
 
-				segrellion_grant_dorne_support_effect = yes
-
 
 		# ---------------------------------------------
 		# YOUNG GRIFF REACTS TO THE DORNISH PACT
@@ -299,6 +377,99 @@ segrellion_support.2000 = {
 		}
 
 		add_character_flag = segrellion_dorne_support_route_closed
+		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+# =========================================================
+# 2050 - A WASTED JOURNEY
+# Arianne married while Daemon was travelling to Sunspear.
+# =========================================================
+
+segrellion_support.2050 = {
+
+	type = character_event
+
+	title = segrellion_support.2050.t
+	desc = segrellion_support.2050.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+		this = character:Segrellion_60
+
+		character:Martell_9 ?= {
+			is_alive = yes
+			is_married = yes
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = character:Martell_9
+		animation = personality_content
+	}
+
+	option = {
+
+		name = segrellion_support.2050.a
+
+		add_character_flag = segrellion_dorne_support_route_closed
+
+		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 2051 - THE BARGAIN IS GONE
+# Safety fallback if Arianne became unavailable entirely.
+# =========================================================
+
+segrellion_support.2051 = {
+
+	type = character_event
+
+	title = segrellion_support.2051.t
+	desc = segrellion_support.2051.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+		this = character:Segrellion_60
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_support.2051.a
+
+		add_character_flag = segrellion_dorne_support_route_closed
+
 		segrellion_clear_troop_negotiation_effect = yes
 	}
 }
@@ -1258,6 +1429,537 @@ segrellion_support.5000 = {
 				target = root
 				modifier = segrellion_vhal_refused_daemon_opinion
 			}
+		}
+	}
+}
+
+# =========================================================
+# 6000 - ARRIVAL IN THE VALE
+# Hidden router.
+# Root = Daemon
+# =========================================================
+
+segrellion_support.6000 = {
+
+	hidden = yes
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_negotiation_pending_vale
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_negotiation_pending_vale
+
+		if = {
+
+			limit = {
+
+				title:e_the_vale = {
+
+					exists = holder
+
+					holder = {
+
+						is_alive = yes
+						has_active_diarchy = yes
+
+						diarch ?= {
+							is_alive = yes
+						}
+					}
+				}
+			}
+
+			add_character_flag = segrellion_waiting_for_vale_answer
+
+			title:e_the_vale.holder = {
+
+				diarch = {
+
+					trigger_event = {
+						id = segrellion_support.6010
+						days = 1
+					}
+				}
+			}
+		}
+
+		else = {
+
+			add_character_flag = segrellion_vale_support_route_closed
+
+			segrellion_clear_troop_negotiation_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.6091
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6010 - MYA STONE HEARS DAEMON
+#
+# Root = Robin Arryn's current regent.
+# In the bookmark this should be Mya Stone.
+# =========================================================
+
+segrellion_support.6010 = {
+
+	type = character_event
+
+	title = segrellion_support.6010.t
+	desc = segrellion_support.6010.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		is_alive = yes
+		is_diarch = yes
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+			has_character_flag = segrellion_waiting_for_vale_answer
+		}
+	}
+
+	immediate = {
+
+		# Preserve the exact regent who heard Daemon.
+		character:Segrellion_60 = {
+
+			set_variable = {
+				name = segrellion_vale_negotiator
+				value = root
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# HEAR DAEMON
+	# 95%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6010.a
+
+		ai_chance = {
+			base = 95
+		}
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_support.6020
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REJECT HIM
+	# 5%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6010.b
+
+		ai_chance = {
+			base = 5
+		}
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_waiting_for_vale_answer
+
+			remove_variable = segrellion_vale_negotiator
+
+			add_character_flag = segrellion_vale_support_route_closed
+
+			segrellion_clear_troop_negotiation_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.6090
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6020 - THE FALCON'S PRICE
+#
+# Root = Daemon
+#
+# Mya has agreed to use her influence over Robin.
+# Daemon chooses how to pay for 5,000 Valemen.
+# =========================================================
+
+segrellion_support.6020 = {
+
+	type = character_event
+
+	title = segrellion_support.6020.t
+	desc = segrellion_support.6020.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_waiting_for_vale_answer
+
+		has_variable = segrellion_vale_negotiator
+
+		var:segrellion_vale_negotiator ?= {
+			is_alive = yes
+		}
+
+		title:e_the_vale = {
+			exists = holder
+			holder = {
+				is_alive = yes
+			}
+		}
+	}
+
+	immediate = {
+
+		title:e_the_vale.holder = {
+			save_scope_as = support_robin
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = var:segrellion_vale_negotiator
+		animation = personality_rational
+	}
+
+	lower_right_portrait = {
+		character = scope:support_robin
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# MARRY MYA
+	#
+	# 5,000 soldiers.
+	# AI Daemon = 25%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6020.a
+
+		trigger = {
+
+			is_married = no
+
+			var:segrellion_vale_negotiator = {
+				is_alive = yes
+				is_married = no
+			}
+		}
+
+		custom_tooltip = segrellion_support.6020.marriage_tt
+
+		ai_chance = {
+			base = 25
+		}
+
+
+		marry = var:segrellion_vale_negotiator
+
+		add_character_flag = segrellion_vale_marriage_pact
+
+		remove_character_flag = segrellion_waiting_for_vale_answer
+
+		remove_variable = segrellion_vale_negotiator
+
+		segrellion_grant_vale_support_effect = yes
+	}
+
+
+	# =====================================================
+	# 1,500 GOLD DEBT + STRONG FAVOR TO ROBIN
+	#
+	# 8-year repayment period.
+	# AI Daemon = 60%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6020.b
+
+		custom_tooltip = segrellion_support.6020.debt_tt
+
+		ai_chance = {
+			base = 60
+		}
+
+
+		set_variable = {
+			name = segrellion_vale_debt
+			value = 1500
+		}
+
+		set_variable = {
+			name = segrellion_vale_creditor
+			value = scope:support_robin
+		}
+
+		add_character_flag = segrellion_vale_debt_active
+		add_character_flag = segrellion_vale_debt_pact
+
+
+		# Robin gains a STRONG FAVOR on Daemon.
+		scope:support_robin = {
+
+			add_hook = {
+				type = strong_favor_hook
+				target = root
+			}
+		}
+
+
+		remove_character_flag = segrellion_waiting_for_vale_answer
+
+		remove_variable = segrellion_vale_negotiator
+
+
+		# Debt becomes due exactly eight years later.
+		trigger_event = {
+			id = segrellion_support.6200
+			years = 8
+		}
+
+
+		segrellion_grant_vale_support_effect = yes
+	}
+
+
+	# =====================================================
+	# REFUSE
+	#
+	# AI Daemon = 15%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6020.c
+
+		ai_chance = {
+			base = 15
+		}
+
+
+		remove_character_flag = segrellion_waiting_for_vale_answer
+
+		remove_variable = segrellion_vale_negotiator
+
+		add_character_flag = segrellion_vale_support_route_closed
+
+		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 6090 - MYA REFUSES TO HEAR DAEMON
+# =========================================================
+
+segrellion_support.6090 = {
+
+	type = character_event
+
+	title = segrellion_support.6090.t
+	desc = segrellion_support.6090.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+		this = character:Segrellion_60
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = segrellion_support.6090.a
+	}
+}
+
+
+# =========================================================
+# 6091 - NO REGENCY / ROUTE NO LONGER POSSIBLE
+# =========================================================
+
+segrellion_support.6091 = {
+
+	type = character_event
+
+	title = segrellion_support.6091.t
+	desc = segrellion_support.6091.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+		this = character:Segrellion_60
+	}
+
+	option = {
+		name = segrellion_support.6091.a
+	}
+}
+
+
+# =========================================================
+# 6200 - EIGHT YEARS OF GRACE
+#
+# Remaining Vale debt becomes due.
+# =========================================================
+
+segrellion_support.6200 = {
+
+	type = character_event
+
+	title = segrellion_support.6200.t
+	desc = segrellion_support.6200.desc
+
+	theme = stewardship
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_variable = segrellion_vale_debt
+
+		var:segrellion_vale_debt > 0
+	}
+
+
+	# =====================================================
+	# PAY EVERYTHING THAT REMAINS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6200.a
+
+		trigger = {
+			gold >= var:segrellion_vale_debt
+		}
+
+		custom_tooltip = segrellion_support.6200.pay_tt
+
+
+		# Transfer the remaining gold to Robin if he still lives.
+		var:segrellion_vale_creditor ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_gold = root.var:segrellion_vale_debt
+			}
+		}
+
+
+		add_gold = {
+			value = var:segrellion_vale_debt
+			multiply = -1
+		}
+
+
+		segrellion_finish_vale_debt_effect = yes
+	}
+
+
+	# =====================================================
+	# CANNOT AFFORD THE REMAINING BALANCE
+	#
+	# No new interest. Another demand arrives next year.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6200.b
+
+		trigger = {
+			gold < var:segrellion_vale_debt
+		}
+
+		add_character_flag = segrellion_vale_debt_overdue
+
+		trigger_event = {
+			id = segrellion_support.6200
+			years = 1
 		}
 	}
 }

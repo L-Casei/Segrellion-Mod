@@ -1,0 +1,297 @@
+# =========================================================
+# REPAY THE VALE DEBT
+# =========================================================
+
+segrellion_repay_vale_debt_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_negotiate_for_reinforcements_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	sort_order = 180
+
+	desc = segrellion_repay_vale_debt_decision_desc
+	selection_tooltip = segrellion_repay_vale_debt_decision_tooltip
+	confirm_text = segrellion_repay_vale_debt_decision_confirm
+
+
+	is_shown = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_variable = segrellion_vale_debt
+
+		var:segrellion_vale_debt > 0
+	}
+
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+	}
+
+
+	widget = {
+
+		gui = "decision_view_widget_option_list_generic"
+
+		controller = decision_option_list_controller
+
+		decision_to_second_step_button = "segrellion_repay_vale_debt_next_step"
+
+
+		# -------------------------------------------------
+		# 100 GOLD
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_vale_repayment_100
+
+			current_description = segrellion_vale_repayment_100_desc
+
+			localization = segrellion_vale_repayment_100
+
+			icon = "gfx/interface/icons/message_feed/stewardship.dds"
+
+			is_valid = {
+
+				root = {
+					gold >= 100
+					var:segrellion_vale_debt >= 100
+				}
+			}
+
+			ai_chance = {
+				value = 0
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 250 GOLD
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_vale_repayment_250
+
+			current_description = segrellion_vale_repayment_250_desc
+
+			localization = segrellion_vale_repayment_250
+
+			icon = "gfx/interface/icons/message_feed/stewardship.dds"
+
+			is_valid = {
+
+				root = {
+					gold >= 250
+					var:segrellion_vale_debt >= 250
+				}
+			}
+
+			ai_chance = {
+				value = 0
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 500 GOLD
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_vale_repayment_500
+
+			current_description = segrellion_vale_repayment_500_desc
+
+			localization = segrellion_vale_repayment_500
+
+			icon = "gfx/interface/icons/message_feed/stewardship.dds"
+
+			is_valid = {
+
+				root = {
+					gold >= 500
+					var:segrellion_vale_debt >= 500
+				}
+			}
+
+			ai_chance = {
+				value = 0
+			}
+		}
+
+
+		# -------------------------------------------------
+		# FULL REMAINING BALANCE
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_vale_repayment_full
+
+			current_description = segrellion_vale_repayment_full_desc
+
+			localization = segrellion_vale_repayment_full
+
+			icon = "gfx/interface/icons/message_feed/stewardship.dds"
+
+			is_valid = {
+
+				root = {
+					gold >= var:segrellion_vale_debt
+				}
+			}
+
+			ai_chance = {
+				value = 0
+			}
+		}
+	}
+
+
+	effect = {
+
+		# =================================================
+		# 100
+		# =================================================
+
+		if = {
+
+			limit = {
+				scope:segrellion_vale_repayment_100 = yes
+			}
+
+			add_gold = -100
+
+			var:segrellion_vale_creditor ?= {
+
+				if = {
+					limit = { is_alive = yes }
+					add_gold = 100
+				}
+			}
+
+			change_variable = {
+				name = segrellion_vale_debt
+				subtract = 100
+			}
+		}
+
+
+		# =================================================
+		# 250
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_vale_repayment_250 = yes
+			}
+
+			add_gold = -250
+
+			var:segrellion_vale_creditor ?= {
+
+				if = {
+					limit = { is_alive = yes }
+					add_gold = 250
+				}
+			}
+
+			change_variable = {
+				name = segrellion_vale_debt
+				subtract = 250
+			}
+		}
+
+
+		# =================================================
+		# 500
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_vale_repayment_500 = yes
+			}
+
+			add_gold = -500
+
+			var:segrellion_vale_creditor ?= {
+
+				if = {
+					limit = { is_alive = yes }
+					add_gold = 500
+				}
+			}
+
+			change_variable = {
+				name = segrellion_vale_debt
+				subtract = 500
+			}
+		}
+
+
+		# =================================================
+		# FULL BALANCE
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_vale_repayment_full = yes
+			}
+
+			var:segrellion_vale_creditor ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					add_gold = root.var:segrellion_vale_debt
+				}
+			}
+
+			add_gold = {
+				value = var:segrellion_vale_debt
+				multiply = -1
+			}
+
+			set_variable = {
+				name = segrellion_vale_debt
+				value = 0
+			}
+		}
+
+
+		# =================================================
+		# DEBT COMPLETELY PAID
+		# =================================================
+
+		if = {
+
+			limit = {
+				var:segrellion_vale_debt <= 0
+			}
+
+			segrellion_finish_vale_debt_effect = yes
+		}
+	}
+
+
+	ai_check_interval = 0
+
+	ai_will_do = {
+		base = 0
+	}
+}

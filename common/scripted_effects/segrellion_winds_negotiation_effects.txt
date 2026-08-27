@@ -113,6 +113,9 @@ segrellion_clear_troop_negotiation_effect = {
 	remove_character_flag = segrellion_negotiation_pending_stannis
 	remove_character_flag = segrellion_negotiation_pending_dorne
 	remove_character_flag = segrellion_negotiation_pending_daenerys
+	remove_character_flag = segrellion_negotiation_pending_vale
+
+	remove_character_flag = segrellion_waiting_for_vale_answer
 }
 
 
@@ -404,4 +407,77 @@ segrellion_break_stannis_oath_for_young_griff_effect = {
 			add_character_flag = segrellion_broke_stannis_oath
 		}
 	}
+}
+
+# =========================================================
+# VALE SUPPORT
+#
+# 1,000 Knights of the Vale
+# + 4,000 levies
+# = 5,000 total
+# =========================================================
+
+segrellion_grant_vale_support_effect = {
+
+	spawn_army = {
+
+		name = segrellion_vale_reinforcements
+
+
+		# 5 x 200 armored horsemen = 1,000 Vale knights.
+
+		men_at_arms = {
+			type = armored_horsemen
+			men = 200
+		}
+
+		men_at_arms = {
+			type = armored_horsemen
+			men = 200
+		}
+
+		men_at_arms = {
+			type = armored_horsemen
+			men = 200
+		}
+
+		men_at_arms = {
+			type = armored_horsemen
+			men = 200
+		}
+
+		men_at_arms = {
+			type = armored_horsemen
+			men = 200
+		}
+
+
+		levies = 4000
+
+		inheritable = yes
+
+		location = title:e_the_vale.holder.capital_province
+		origin = title:e_the_vale.holder.capital_province
+	}
+
+
+	add_character_flag = segrellion_foreign_support_secured
+	add_character_flag = segrellion_vale_support_pact
+
+	segrellion_clear_troop_negotiation_effect = yes
+}
+
+# =========================================================
+# VALE DEBT - FINISHED
+# =========================================================
+
+segrellion_finish_vale_debt_effect = {
+
+	remove_variable = segrellion_vale_debt
+	remove_variable = segrellion_vale_creditor
+
+	remove_character_flag = segrellion_vale_debt_active
+	remove_character_flag = segrellion_vale_debt_overdue
+
+	add_character_flag = segrellion_vale_debt_repaid
 }

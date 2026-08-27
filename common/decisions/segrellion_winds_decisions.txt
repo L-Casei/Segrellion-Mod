@@ -47,6 +47,10 @@ segrellion_negotiate_reinforcements_decision = {
 			NOT = {
 				has_character_flag = segrellion_daenerys_support_route_closed
 			}
+
+			NOT = {
+				has_character_flag = segrellion_vale_support_route_closed
+			}
 		}
 	}
 
@@ -245,6 +249,59 @@ segrellion_negotiate_reinforcements_decision = {
 				value = 50
 			}
 		}
+
+		# -------------------------------------------------
+		# THE VALE
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_support_choice_vale
+
+			current_description = segrellion_support_choice_vale_desc
+
+			localization = segrellion_support_choice_vale
+
+			icon = "gfx/interface/icons/message_feed/diplomacy.dds"
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_vale_support_route_closed
+					}
+				}
+			}
+
+
+			is_valid = {
+
+				title:e_the_vale = {
+
+					exists = holder
+
+					holder = {
+
+						is_alive = yes
+
+						has_active_diarchy = yes
+
+						diarch ?= {
+							is_alive = yes
+						}
+					}
+				}
+			}
+
+			# Weight for choosing this ROUTE among the four.
+			# The 95/5 negotiation chance happens later.
+			ai_chance = {
+				value = 40
+
+			}
+		}
 	}
 
 
@@ -309,9 +366,9 @@ segrellion_negotiate_reinforcements_decision = {
 
 					destination = title:c_sunspear.title_province
 
-					return_trip = no
+					return_trip = yes
 
-					on_arrival_event = segrellion_support.2000
+					on_arrival_event = segrellion_support.1990
 					on_arrival_destinations = first
 
 					on_travel_planner_cancel_event = segrellion_support.0090
@@ -342,6 +399,34 @@ segrellion_negotiate_reinforcements_decision = {
 
 					on_travel_planner_cancel_event = segrellion_support.0090
 					
+				}
+			}
+
+			# -------------------------------------------------
+			# THE VALE
+			# -------------------------------------------------
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_support_choice_vale = yes
+				}
+
+				add_character_flag = segrellion_negotiation_pending_vale
+
+				start_travel_plan = {
+
+					# We use Robin's actual capital instead of hardcoding
+					# a possibly changing Eyrie province key.
+					destination = title:e_the_vale.holder.capital_province
+
+					# Daemon returns to his camp after negotiations.
+					return_trip = yes
+
+					on_arrival_event = segrellion_support.6000
+					on_arrival_destinations = first
+
+					on_travel_planner_cancel_event = segrellion_support.0090
 				}
 			}
 		}
@@ -544,5 +629,162 @@ segrellion_reveal_daemon_truth_decision = {
 				}
 			}
 		}
+	}
+}
+
+# =========================================================
+# DEBUG - DAEMON TRUE PARENTAGE
+# DELETE AFTER TESTING
+# =========================================================
+
+segrellion_debug_daemon_parentage_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_debug_daemon_parentage_decision_desc
+	selection_tooltip = segrellion_debug_daemon_parentage_decision_tooltip
+	confirm_text = segrellion_debug_daemon_parentage_decision_confirm
+
+	is_shown = {
+		this = character:Segrellion_60
+	}
+
+	is_valid = {
+
+		# 1. Is Aerys II actually stored as Daemon's real father?
+		custom_description = {
+			text = segrellion_debug_real_father
+			real_father = {
+				this = character:Targaryen_1
+			}
+		}
+
+		# 2. Does AGOT consider Daemon a hidden royal claimant?
+		custom_description = {
+			text = segrellion_debug_royal_paternal_claim
+			real_paternal_held_iron_throne_claim = yes
+		}
+
+		# 3. Does Daemon actually possess/know the AGOT secret?
+		custom_description = {
+			text = segrellion_debug_daemon_has_secret
+			any_known_secret = {
+				secret_type = secret_agot_disputed_heritage
+				secret_target = {
+					this = character:Segrellion_60
+				}
+			}
+		}
+
+		# 4. Does AGOT's own scripted trigger consider
+		# Daemon to know his royal bastard identity?
+		custom_description = {
+			text = segrellion_debug_knows_self
+			knows_self_royal_bastard_secret = yes
+		}
+
+		# 5. Sanity check
+		custom_description = {
+			text = segrellion_debug_is_ruler
+			is_ruler = yes
+		}
+
+		custom_description = {
+			text = segrellion_debug_is_adult
+			is_adult = yes
+		}
+
+		custom_description = {
+			text = segrellion_debug_legitimized_bastard
+			has_trait = legitimized_bastard
+		}
+	}
+
+	effect = {
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+# =========================================================
+# DEBUG - HUGH KNOWS DAEMON'S PARENTAGE
+# DELETE AFTER TESTING
+# =========================================================
+
+segrellion_debug_hugh_parentage_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_debug_hugh_parentage_decision_desc
+	selection_tooltip = segrellion_debug_hugh_parentage_decision_tooltip
+	confirm_text = segrellion_debug_hugh_parentage_decision_confirm
+
+	is_shown = {
+		this = character:Segrellion_43
+	}
+
+	is_valid = {
+
+		# Hugh actually knows the secret
+		custom_description = {
+			text = segrellion_debug_hugh_has_secret
+
+			any_known_secret = {
+				secret_type = secret_agot_disputed_heritage
+
+				secret_target = {
+					this = character:Segrellion_60
+				}
+			}
+		}
+
+		# Daemon satisfies AGOT's royal paternal trigger
+		custom_description = {
+			text = segrellion_debug_hugh_target_royal
+
+			character:Segrellion_60 = {
+				real_paternal_held_iron_throne_claim = yes
+			}
+		}
+
+		# Hugh is actually allowed to expose that secret
+		custom_description = {
+			text = segrellion_debug_hugh_can_expose
+
+			any_known_secret = {
+				secret_type = secret_agot_disputed_heritage
+
+				secret_target = {
+					this = character:Segrellion_60
+				}
+
+				can_be_exposed_by = root
+			}
+		}
+	}
+
+	effect = {
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
 	}
 }
