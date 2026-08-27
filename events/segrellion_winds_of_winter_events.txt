@@ -855,6 +855,32 @@ segrellion_winds.0301 = {
 				killer = root
 			}
 		}
+
+		# Clifford is dead. Eldon immediately takes command
+		# so CK3 cannot assign Leo to the field army.
+		character:Stormflame_3 = {
+
+			set_knight_status = forbid
+			set_location = title:b_castle_farring.title_province
+
+			var:segrellion_stormflame_war_host ?= {
+
+				if = {
+					limit = {
+						character:Stormflame_12 ?= {
+							is_alive = yes
+							is_imprisoned = no
+						}
+					}
+
+					assign_commander = character:Stormflame_12
+				}
+
+				else = {
+					remove_commander = yes
+				}
+			}
+		}
 	}
 }
 

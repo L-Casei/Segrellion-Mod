@@ -190,9 +190,11 @@ segrellion_unicorn_returns_leo_beacon_lock = {
 
 			set_knight_status = forbid
 
+			# Leo must physically remain inside the Beacon.
 			set_location = title:b_castle_farring.title_province
 
-			every_army = {
+			# Never allow him to command the Stormflame field host.
+			var:segrellion_stormflame_war_host ?= {
 
 				if = {
 					limit = {
@@ -202,7 +204,20 @@ segrellion_unicorn_returns_leo_beacon_lock = {
 						}
 					}
 
-					remove_commander = yes
+					if = {
+						limit = {
+							character:Stormflame_12 ?= {
+								is_alive = yes
+								is_imprisoned = no
+							}
+						}
+
+						assign_commander = character:Stormflame_12
+					}
+
+					else = {
+						remove_commander = yes
+					}
 				}
 			}
 		}
