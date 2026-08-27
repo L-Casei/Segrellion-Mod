@@ -56,6 +56,17 @@ segrellion_relic.0095 = {
 
 	immediate = {
 
+		# =================================================
+		# IMPORTANT:
+		# Keep the arrival travel plan alive while the
+		# destination event chain is being processed.
+		# =================================================
+
+		current_travel_plan ?= {
+			pause_travel_plan = yes
+		}
+
+
 		if = {
 			limit = {
 				has_character_flag = segrellion_relic_pending_winterfell
@@ -2214,6 +2225,7 @@ segrellion_relic.3900 = {
 		animation = personality_rational
 	}
 
+
 	# -----------------------------------------------------
 	# CASTLE BLACK
 	# -----------------------------------------------------
@@ -2225,11 +2237,19 @@ segrellion_relic.3900 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_castle_black
 
+		# The Winterfell journey is finished.
+		current_travel_plan ?= {
+			complete_travel_plan = yes
+		}
+
+		# Start the new journey only after the old travel plan
+		# has been completely disposed of.
 		trigger_event = {
 			id = segrellion_relic.3990
 			days = 1
 		}
 	}
+
 
 	# -----------------------------------------------------
 	# SHADOW TOWER
@@ -2242,14 +2262,19 @@ segrellion_relic.3900 = {
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_shadow_tower
 
+		current_travel_plan ?= {
+			complete_travel_plan = yes
+		}
+
 		trigger_event = {
 			id = segrellion_relic.3990
 			days = 1
 		}
 	}
 
+
 	# -----------------------------------------------------
-	# SKANE / SKAGOS
+	# SKAGOS
 	# -----------------------------------------------------
 
 	option = {
@@ -2258,6 +2283,10 @@ segrellion_relic.3900 = {
 
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_skagos
+
+		current_travel_plan ?= {
+			complete_travel_plan = yes
+		}
 
 		trigger_event = {
 			id = segrellion_relic.3990
@@ -2377,6 +2406,11 @@ segrellion_relic.4010 = {
 
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_nightfort
+
+		# Castle Black journey is now finished.
+		current_travel_plan ?= {
+			complete_travel_plan = yes
+		}
 
 		trigger_event = {
 			id = segrellion_relic.3990
