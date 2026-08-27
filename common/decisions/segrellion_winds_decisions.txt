@@ -459,14 +459,15 @@ segrellion_negotiate_reinforcements_decision = {
 }
 
 # =========================================================
-# REVEAL THE TRUTH
-# HUGH SEGRELLION -> DAEMON SEGRELLION
+# EXPOSE MY TRUE PARENTAGE
+# DAEMON SEGRELLION
 #
-# Hugh has broken Daena's seal and learned Daemon's
-# true parentage, but deliberately kept the truth from him.
+# Visibility is handled by us.
+# Public revelation is handled by AGOT's native
+# royal bastard system.
 # =========================================================
 
-segrellion_reveal_daemon_truth_decision = {
+segrellion_expose_my_true_parentage_decision = {
 
 	picture = {
 		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
@@ -474,67 +475,63 @@ segrellion_reveal_daemon_truth_decision = {
 
 	decision_group_type = major
 
-	sort_order = 150
+	sort_order = 151
 
-	desc = segrellion_reveal_daemon_truth_decision_desc
+	desc = agot_expose_my_true_parentage_decision_desc
 
-	selection_tooltip = segrellion_reveal_daemon_truth_decision_tooltip
+	selection_tooltip = agot_expose_my_true_parentage_decision_tooltip
 
-	confirm_text = segrellion_reveal_daemon_truth_decision_confirm
+	confirm_text = agot_expose_my_true_parentage_decision_confirm
 
-
-	# =====================================================
-	# VISIBILITY
-	# =====================================================
 
 	is_shown = {
 
-		this = character:Segrellion_43
+		this = character:Segrellion_60
 
-		has_character_flag = segrellion_hugh_withholding_daemon_parentage
+		is_adult = yes
+		is_ruler = yes
 
-		character:Segrellion_60 ?= {
+		NOT = {
+			has_character_flag = royal_bastard
+		}
 
-			is_alive = yes
+		knows_self_royal_bastard_secret = yes
 
-			NOT = {
-				has_character_flag = segrellion_daemon_parentage_known
+		any_known_secret = {
+
+			secret_type = secret_agot_disputed_heritage
+
+			secret_target = {
+
+				this = root
+
+				real_paternal_held_iron_throne_claim = yes
 			}
 		}
 	}
 
 
-	# =====================================================
-	# REQUIREMENTS
-	#
-	# No prestige, gold or political requirement.
-	# Hugh can tell him whenever he decides the time is right.
-	# =====================================================
-
 	is_valid = {
 
 		is_adult = yes
+		is_ruler = yes
 
-		character:Segrellion_60 = {
-			is_alive = yes
-		}
+		real_paternal_held_iron_throne_claim = yes
+
+		knows_self_royal_bastard_secret = yes
 	}
 
-
-	# =====================================================
-	# EFFECT
-	# =====================================================
 
 	effect = {
 
 		random_known_secret = {
+
 			limit = {
 
 				secret_type = secret_agot_disputed_heritage
 
 				secret_target = {
-					this = character:Segrellion_60
-					is_adult = yes
+					this = root
 					real_paternal_held_iron_throne_claim = yes
 				}
 
@@ -544,244 +541,22 @@ segrellion_reveal_daemon_truth_decision = {
 			save_scope_as = heritage_secret
 		}
 
-		trigger_event = agot_events_bastard.0900
+
+		# AGOT expects the person publicly revealing
+		# the parentage in scope:revealer.
+		save_scope_as = revealer
+
+
+		# Native AGOT handler for making the royal bastard
+		# revelation public and creating its story cycle.
+		trigger_event = agot_events_bastard.0950
 	}
 
 
-	# =====================================================
-	# AI
-	#
-	# Hugh's AI categorically refuses to consider revealing
-	# the truth before 302 AC.
-	#
-	# From 302 onward he may reveal it.
-	# The pressure rises substantially in 303 and 304.
-	# =====================================================
-
-	ai_check_interval = 6
-
+	ai_check_interval = 12
 
 	ai_potential = {
-
-		this = character:Segrellion_43
-
-		has_character_flag = segrellion_hugh_withholding_daemon_parentage
-
-		current_date >= 8302.1.1
-
-		character:Segrellion_60 ?= {
-
-			is_alive = yes
-
-			NOT = {
-				has_character_flag = segrellion_daemon_parentage_known
-			}
-		}
-	}
-
-
-	ai_will_do = {
-
-		# 302 AC:
-		# Hugh has finally begun considering whether
-		# the silence has lasted long enough.
-
-		base = 15
-
-
-		# 303 AC:
-		# Keeping it buried becomes increasingly difficult.
-
-		modifier = {
-
-			add = 25
-
-			current_date >= 8303.1.1
-		}
-
-
-		# 304 AC onward:
-		# Hugh is now strongly inclined to tell Daemon.
-
-		modifier = {
-
-			add = 60
-
-			current_date >= 8304.1.1
-		}
-
-
-		# If Daemon has begun his restoration campaign,
-		# the political significance of his blood becomes
-		# considerably harder for Hugh to ignore.
-
-		modifier = {
-
-			add = 35
-
-			character:Segrellion_60 = {
-
-				OR = {
-
-					has_character_flag = segrellion_unicorn_returns_decision_taken
-					has_character_flag = segrellion_unicorn_returns_war_active
-					has_character_flag = segrellion_foreign_support_secured
-				}
-			}
-		}
-	}
-}
-
-# =========================================================
-# DEBUG - DAEMON TRUE PARENTAGE
-# DELETE AFTER TESTING
-# =========================================================
-
-segrellion_debug_daemon_parentage_decision = {
-
-	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
-	}
-
-	decision_group_type = major
-
-	desc = segrellion_debug_daemon_parentage_decision_desc
-	selection_tooltip = segrellion_debug_daemon_parentage_decision_tooltip
-	confirm_text = segrellion_debug_daemon_parentage_decision_confirm
-
-	is_shown = {
 		this = character:Segrellion_60
-	}
-
-	is_valid = {
-
-		# 1. Is Aerys II actually stored as Daemon's real father?
-		custom_description = {
-			text = segrellion_debug_real_father
-			real_father = {
-				this = character:Targaryen_1
-			}
-		}
-
-		# 2. Does AGOT consider Daemon a hidden royal claimant?
-		custom_description = {
-			text = segrellion_debug_royal_paternal_claim
-			real_paternal_held_iron_throne_claim = yes
-		}
-
-		# 3. Does Daemon actually possess/know the AGOT secret?
-		custom_description = {
-			text = segrellion_debug_daemon_has_secret
-			any_known_secret = {
-				secret_type = secret_agot_disputed_heritage
-				secret_target = {
-					this = character:Segrellion_60
-				}
-			}
-		}
-
-		# 4. Does AGOT's own scripted trigger consider
-		# Daemon to know his royal bastard identity?
-		custom_description = {
-			text = segrellion_debug_knows_self
-			knows_self_royal_bastard_secret = yes
-		}
-
-		# 5. Sanity check
-		custom_description = {
-			text = segrellion_debug_is_ruler
-			is_ruler = yes
-		}
-
-		custom_description = {
-			text = segrellion_debug_is_adult
-			is_adult = yes
-		}
-
-		custom_description = {
-			text = segrellion_debug_legitimized_bastard
-			has_trait = legitimized_bastard
-		}
-	}
-
-	effect = {
-	}
-
-	ai_potential = {
-		always = no
-	}
-
-	ai_will_do = {
-		base = 0
-	}
-}
-
-# =========================================================
-# DEBUG - HUGH KNOWS DAEMON'S PARENTAGE
-# DELETE AFTER TESTING
-# =========================================================
-
-segrellion_debug_hugh_parentage_decision = {
-
-	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
-	}
-
-	decision_group_type = major
-
-	desc = segrellion_debug_hugh_parentage_decision_desc
-	selection_tooltip = segrellion_debug_hugh_parentage_decision_tooltip
-	confirm_text = segrellion_debug_hugh_parentage_decision_confirm
-
-	is_shown = {
-		this = character:Segrellion_43
-	}
-
-	is_valid = {
-
-		# Hugh actually knows the secret
-		custom_description = {
-			text = segrellion_debug_hugh_has_secret
-
-			any_known_secret = {
-				secret_type = secret_agot_disputed_heritage
-
-				secret_target = {
-					this = character:Segrellion_60
-				}
-			}
-		}
-
-		# Daemon satisfies AGOT's royal paternal trigger
-		custom_description = {
-			text = segrellion_debug_hugh_target_royal
-
-			character:Segrellion_60 = {
-				real_paternal_held_iron_throne_claim = yes
-			}
-		}
-
-		# Hugh is actually allowed to expose that secret
-		custom_description = {
-			text = segrellion_debug_hugh_can_expose
-
-			any_known_secret = {
-				secret_type = secret_agot_disputed_heritage
-
-				secret_target = {
-					this = character:Segrellion_60
-				}
-
-				can_be_exposed_by = root
-			}
-		}
-	}
-
-	effect = {
-	}
-
-	ai_potential = {
-		always = no
 	}
 
 	ai_will_do = {

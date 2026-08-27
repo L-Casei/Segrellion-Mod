@@ -383,83 +383,151 @@ segrellion_daemon_parentage.0004 = {
 	}
 }
 
+
+
 # =========================================================
-# 0005 - AI HUGH MAY LEARN THE MECHANICAL SECRET
+# 0005 - AI HUGH BREAKS HIS SILENCE
 #
-# Hugh already knows the truth narratively.
+# Hugh chose to keep Daena's secret.
 #
-# However, AI Hugh only receives the actual AGOT
-# disputed-heritage secret if his opinion of Daemon
-# falls to -25 or lower.
+# As long as his opinion of Daemon remains above -25,
+# he keeps the truth buried.
 #
-# Until then AGOT cannot independently expose it.
+# If his opinion falls to -25 or lower, Hugh deliberately
+# reveals Daemon's true parentage to the realm.
+#
+# The actual public revelation is handled through AGOT's
+# native royal bastard system.
 # =========================================================
 
 segrellion_daemon_parentage.0005 = {
 
-    type = character_event
-    hidden = yes
+	type = character_event
+	hidden = yes
 
 
-    trigger = {
+	trigger = {
 
-        this = character:Segrellion_43
+		this = character:Segrellion_43
 
-        is_ai = yes
+		is_ai = yes
 
-        has_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+		has_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
 
-        character:Segrellion_60 ?= {
-
-            is_alive = yes
-
-            NOT = {
-                has_character_flag = segrellion_daemon_parentage_known
-            }
-        }
-    }
+		character:Segrellion_60 ?= {
+			is_alive = yes
+		}
+	}
 
 
-    immediate = {
+	immediate = {
 
-        # =================================================
-        # HUGH DISLIKES DAEMON ENOUGH
-        #
-        # Give Hugh the REAL AGOT heritage secret.
-        # From this point AGOT's native mechanics can
-        # treat Hugh like any other knower, such as
-        # Howland Reed with Jon Snow.
-        # =================================================
+		# =================================================
+		# HUGH NOW DISLIKES DAEMON ENOUGH
+		# =================================================
 
-        if = {
+		if = {
 
-            limit = {
+			limit = {
 
-                opinion = {
-                    target = character:Segrellion_60
-                    value <= -25
-                }
-            }
-
-            remove_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
-
-            segrellion_create_daemon_parentage_secret_effect = yes
-        }
+				opinion = {
+					target = character:Segrellion_60
+					value <= -25
+				}
+			}
 
 
-        # =================================================
-        # HUGH STILL DOES NOT DISLIKE DAEMON ENOUGH
-        #
-        # Keep the knowledge narrative-only and check
-        # again later.
-        # =================================================
+			# Hugh now mechanically receives the real
+			# AGOT disputed-heritage secret.
 
-        else = {
+			segrellion_create_daemon_parentage_secret_effect = yes
 
-            trigger_event = {
-                id = segrellion_daemon_parentage.0005
-                days = 30
-            }
-        }
-    }
+
+			# Stop the waiting loop.
+
+			remove_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+
+			remove_character_flag = segrellion_hugh_withholding_daemon_parentage
+
+
+			# Prevent AGOT from later treating Hugh as though
+			# he had never acted on this knowledge.
+
+			add_character_flag = told_true_parentage
+
+			add_character_flag = segrellion_hugh_revealed_daemon_parentage
+
+
+			# Find the actual heritage secret and pass it
+			# into AGOT's native public-revelation handler.
+
+			random_known_secret = {
+
+				limit = {
+
+					secret_type = secret_agot_disputed_heritage
+
+					secret_target = {
+
+						this = character:Segrellion_60
+
+						real_paternal_held_iron_throne_claim = yes
+					}
+
+					can_be_exposed_by = root
+				}
+
+				save_scope_as = heritage_secret
+			}
+
+
+			# Hugh is the person publicly revealing it.
+
+			save_scope_as = revealer
+
+
+			# Our narrative bookkeeping for Daemon.
+
+			character:Segrellion_60 = {
+
+				add_character_flag = segrellion_daemon_parentage_known
+				add_character_flag = segrellion_daemon_parentage_known_with_hugh
+
+
+				# Same opinion penalty AGOT uses when someone
+				# exposes the royal secret without permission.
+
+				add_opinion = {
+					modifier = revealed_my_royal_secret_without
+					target = root
+				}
+
+
+				# AGOT native public royal-bastard reveal.
+				#
+				# This exposes the secret and creates the
+				# agot_royal_bastard_story.
+
+				trigger_event = {
+					id = agot_events_bastard.0950
+					days = 1
+				}
+			}
+		}
+
+
+		# =================================================
+		# HUGH STILL TOLERATES DAEMON
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_daemon_parentage.0005
+				days = 30
+			}
+		}
+	}
 }
+
+
