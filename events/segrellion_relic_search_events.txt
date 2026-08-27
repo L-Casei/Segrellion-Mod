@@ -2156,20 +2156,18 @@ segrellion_relic.3900 = {
 
 		name = segrellion_relic.3900.a
 
-		add_character_flag = segrellion_relic_knows_nightfort
-
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_castle_black
 
-		start_travel_plan = {
-			destination = title:c_castle_black.title_province
+		# Make absolutely sure the Winterfell travel plan
+		# has finished before another one is created.
+		current_travel_plan ?= {
+			complete_travel_plan = yes
+		}
 
-			return_trip = no
-
-			on_arrival_event = segrellion_relic.4000
-			on_arrival_destinations = all
-
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
 		}
 	}
 
@@ -2182,55 +2180,62 @@ segrellion_relic.3900 = {
 
 		name = segrellion_relic.3900.b
 
-		trigger = {
-			NOT = {
-				has_character_flag = segrellion_relic_visited_shadow_tower
-			}
-		}
-
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_shadow_tower
 
-		start_travel_plan = {
-			destination = title:c_the_shadow_tower.title_province
+		current_travel_plan ?= {
+			complete_travel_plan = yes
+		}
 
-			return_trip = no
-
-			on_arrival_event = segrellion_relic.6000
-			on_arrival_destinations = all
-
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
 		}
 	}
 
 
 	# -----------------------------------------------------
-	# SKAGOS
+	# SKANE / SKAGOS
 	# -----------------------------------------------------
 
 	option = {
 
 		name = segrellion_relic.3900.c
 
-		trigger = {
-			NOT = {
-				has_character_flag = segrellion_relic_visited_skagos
-			}
-		}
-
 		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_skagos
 
-		start_travel_plan = {
-			destination = title:c_skane.title_province
-
-			return_trip = no
-
-			on_arrival_event = segrellion_relic.7000
-			on_arrival_destinations = all
-
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		current_travel_plan ?= {
+			complete_travel_plan = yes
 		}
+
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 3990 - BEGIN THE NEXT NORTHERN JOURNEY
+#
+# Travel-plan bridge.
+# The previous journey is completely resolved before
+# another one is created.
+# =========================================================
+
+segrellion_relic.3990 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+		has_character_flag = segrellion_legendary_relic_search_active
+	}
+
+	immediate = {
+		segrellion_resume_relic_travel_effect = yes
 	}
 }
 
@@ -2321,20 +2326,22 @@ segrellion_relic.4010 = {
 
 		name = segrellion_relic.4010.a
 
-		segrellion_clear_relic_pending_destination_effect = yes
+		# NOW the character has actually learned
+		# that Vaenor travelled to the Nightfort.
+		add_character_flag = segrellion_relic_knows_nightfort
 
+		segrellion_clear_relic_pending_destination_effect = yes
 		add_character_flag = segrellion_relic_pending_nightfort
 
-		start_travel_plan = {
+		# Finish the Castle Black journey before
+		# constructing the next travel plan.
+		current_travel_plan ?= {
+			complete_travel_plan = yes
+		}
 
-			destination = title:b_the_nightfort.title_province
-
-			return_trip = no
-
-			on_arrival_event = segrellion_relic.5000
-			on_arrival_destinations = all
-
-			on_travel_planner_cancel_event = segrellion_relic.0090
+		trigger_event = {
+			id = segrellion_relic.3990
+			days = 1
 		}
 	}
 }
