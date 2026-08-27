@@ -28,6 +28,7 @@ on_game_start_after_lobby = {
         segrellion_on_game_start_after_lobby
         iaf_canon_children_on_game_start_after_lobby
         vladwyn_8106_startup
+		segrellion_daemon_parentage_check
     }
 }
 
@@ -1063,6 +1064,60 @@ segrellion_daemon_arianne_children = {
 
 			character:Segrellion_60 = {
 				add_character_flag = segrellion_arianne_second_child_born
+			}
+		}
+	}
+}
+
+# =========================================================
+# DAEMON SEGRELLION - TRUE PARENTAGE
+# =========================================================
+
+segrellion_daemon_parentage_check = {
+	effect = {
+
+		if = {
+			limit = {
+
+				# Symon can no longer fulfil Daena's request himself.
+				character:Segrellion_34 = {
+					is_alive = no
+				}
+
+				# Daena died before revealing the truth herself.
+				character:Segrellion_40 = {
+					is_alive = no
+				}
+
+				# Hugh inherited Symon's papers.
+				character:Segrellion_43 = {
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_daena_letter_discovery_scheduled
+					}
+				}
+
+				# Daemon must still be alive and old enough to receive the truth.
+				character:Segrellion_60 = {
+					is_alive = yes
+					is_adult = yes
+
+					NOT = {
+						has_character_flag = segrellion_daemon_parentage_known
+					}
+				}
+			}
+
+			character:Segrellion_43 = {
+
+				# Prevent the monthly pulse from scheduling this twice.
+				add_character_flag = segrellion_daena_letter_discovery_scheduled
+
+				trigger_event = {
+					id = segrellion_daemon_parentage.0001
+					days = { 3 10 }
+				}
 			}
 		}
 	}
