@@ -2431,73 +2431,9 @@ segrellion_create_artifact_silver_flame_pendant_effect = {
 		save_scope_as = owner
 	}
 
-	set_artifact_rarity_illustrious = yes
-
-	create_artifact = {
-
-		name = segrellion_silver_flame_pendant_name
-		description = segrellion_silver_flame_pendant_desc
-
-		type = necklace
-		visuals = necklace
-
-		wealth = scope:wealth
-		quality = scope:quality
-
-		template = segrellion_silver_flame_pendant_template
-
-		history = {
-			type = created_before_history
-			date = 7600.1.1
-		}
-
-		modifier = segrellion_silver_flame_pendant_modifier
-
-		save_scope_as = newly_created_artifact
-
-		decaying = no
-	}
-
-	scope:newly_created_artifact ?= {
-
-		equip_artifact_to_owner_replace = yes
-
-		set_global_variable = {
-			name = segrellion_silver_flame_pendant
-			value = this
-		}
-
-		set_variable = {
-			name = historical_unique_artifact
-			value = yes
-		}
-
-		set_variable = {
-			name = traditional_house_owner
-			value = scope:owner.house
-		}
-
-		set_variable = {
-			name = segrellion_silver_flame_pendant_artifact
-			value = yes
-		}
-	}
-}
-
-
-# =========================================================
-# PENDANT OF THE SILVER FLAME
-# =========================================================
-
-segrellion_create_artifact_silver_flame_pendant_effect = {
-
-	$OWNER$ = {
-		save_scope_as = owner
-	}
-
 	save_scope_value_as = {
 		name = quality
-		value = 80
+		value = 85
 	}
 
 	save_scope_value_as = {
@@ -2507,32 +2443,40 @@ segrellion_create_artifact_silver_flame_pendant_effect = {
 
 	set_artifact_rarity_illustrious = yes
 
-	create_artifact = {
+	scope:owner = {
 
-		name = segrellion_silver_flame_pendant_name
-		description = segrellion_silver_flame_pendant_desc
+		create_artifact = {
 
-		type = necklace
+			name = segrellion_silver_flame_pendant_name
+			description = segrellion_silver_flame_pendant_desc
 
-		visuals = segrellion_silver_flame_pendant_visuals
-		template = segrellion_silver_flame_pendant_template
+			type = miscellaneous
 
-		wealth = scope:wealth
-		quality = scope:quality
+			visuals = segrellion_silver_flame_pendant_visuals
+			template = segrellion_silver_flame_pendant_template
 
-		modifier = segrellion_silver_flame_pendant_modifier
+			wealth = scope:wealth
+			quality = scope:quality
 
-		history = {
-			type = created_before_history
-			date = 7600.1.1
+			modifier = segrellion_silver_flame_pendant_modifier
+
+			save_scope_as = newly_created_artifact
+
+			decaying = no
 		}
-
-		save_scope_as = newly_created_artifact
-
-		decaying = no
 	}
 
-	scope:newly_created_artifact ?= {
+	scope:newly_created_artifact = {
+
+		set_owner = {
+			target = scope:owner
+
+			history = {
+				type = discovered
+				actor = scope:owner
+				recipient = scope:owner
+			}
+		}
 
 		equip_artifact_to_owner_replace = yes
 
@@ -2547,13 +2491,13 @@ segrellion_create_artifact_silver_flame_pendant_effect = {
 		}
 
 		set_variable = {
-			name = traditional_house_owner
-			value = scope:owner.house
+			name = segrellion_silver_flame_pendant_artifact
+			value = yes
 		}
 
 		set_variable = {
-			name = segrellion_silver_flame_pendant_artifact
-			value = yes
+			name = traditional_house_owner
+			value = scope:owner.house
 		}
 	}
 }
@@ -2571,42 +2515,52 @@ segrellion_create_artifact_unicorn_codex_effect = {
 
 	save_scope_value_as = {
 		name = quality
-		value = 90
+		value = 95
 	}
 
 	save_scope_value_as = {
 		name = wealth
-		value = 80
+		value = 120
 	}
 
 	set_artifact_rarity_illustrious = yes
 
-	create_artifact = {
+	scope:owner = {
 
-		name = segrellion_unicorn_codex_name
-		description = segrellion_unicorn_codex_desc
+		create_artifact = {
 
-		type = book
+			name = segrellion_unicorn_codex_name
+			description = segrellion_unicorn_codex_desc
 
-		visuals = segrellion_unicorn_codex_book_visuals
-		template = segrellion_unicorn_codex_template
+			# Personal book artifact.
+			# Works for landed AND landless characters.
+			type = journal
 
-		wealth = scope:wealth
-		quality = scope:quality
+			visuals = segrellion_unicorn_codex_visuals
+			template = segrellion_unicorn_codex_template
 
-		modifier = segrellion_unicorn_codex_modifier
+			wealth = scope:wealth
+			quality = scope:quality
 
-		history = {
-			type = created_before_history
-			date = 7600.1.1
+			modifier = segrellion_unicorn_codex_modifier
+
+			save_scope_as = newly_created_artifact
+
+			decaying = no
 		}
-
-		save_scope_as = newly_created_artifact
-
-		decaying = no
 	}
 
-	scope:newly_created_artifact ?= {
+	scope:newly_created_artifact = {
+
+		set_owner = {
+			target = scope:owner
+
+			history = {
+				type = discovered
+				actor = scope:owner
+				recipient = scope:owner
+			}
+		}
 
 		equip_artifact_to_owner_replace = yes
 
@@ -2621,13 +2575,13 @@ segrellion_create_artifact_unicorn_codex_effect = {
 		}
 
 		set_variable = {
-			name = traditional_house_owner
-			value = scope:owner.house
+			name = segrellion_unicorn_codex_artifact
+			value = yes
 		}
 
 		set_variable = {
-			name = segrellion_unicorn_codex_artifact
-			value = yes
+			name = traditional_house_owner
+			value = scope:owner.house
 		}
 	}
 }
@@ -2645,42 +2599,50 @@ segrellion_create_artifact_dragonspear_black_gauntlet_effect = {
 
 	save_scope_value_as = {
 		name = quality
-		value = 85
+		value = 90
 	}
 
 	save_scope_value_as = {
 		name = wealth
-		value = 70
+		value = 80
 	}
 
-	set_artifact_rarity_famed = yes
+	set_artifact_rarity_illustrious = yes
 
-	create_artifact = {
+	scope:owner = {
 
-		name = segrellion_dragonspear_black_gauntlet_name
-		description = segrellion_dragonspear_black_gauntlet_desc
+		create_artifact = {
 
-		type = trinket
+			name = segrellion_dragonspear_black_gauntlet_name
+			description = segrellion_dragonspear_black_gauntlet_desc
 
-		visuals = segrellion_dragonspear_black_gauntlet_visuals
-		template = segrellion_dragonspear_black_gauntlet_template
+			type = miscellaneous
 
-		wealth = scope:wealth
-		quality = scope:quality
+			visuals = segrellion_dragonspear_black_gauntlet_visuals
+			template = segrellion_dragonspear_black_gauntlet_template
 
-		modifier = segrellion_dragonspear_black_gauntlet_modifier
+			wealth = scope:wealth
+			quality = scope:quality
 
-		history = {
-			type = created_before_history
-			date = 8195.1.1
+			modifier = segrellion_dragonspear_black_gauntlet_modifier
+
+			save_scope_as = newly_created_artifact
+
+			decaying = no
 		}
-
-		save_scope_as = newly_created_artifact
-
-		decaying = no
 	}
 
-	scope:newly_created_artifact ?= {
+	scope:newly_created_artifact = {
+
+		set_owner = {
+			target = scope:owner
+
+			history = {
+				type = discovered
+				actor = scope:owner
+				recipient = scope:owner
+			}
+		}
 
 		equip_artifact_to_owner_replace = yes
 
@@ -2695,13 +2657,13 @@ segrellion_create_artifact_dragonspear_black_gauntlet_effect = {
 		}
 
 		set_variable = {
-			name = traditional_house_owner
-			value = scope:owner.house
+			name = segrellion_dragonspear_black_gauntlet_artifact
+			value = yes
 		}
 
 		set_variable = {
-			name = segrellion_dragonspear_black_gauntlet_artifact
-			value = yes
+			name = traditional_house_owner
+			value = scope:owner.house
 		}
 	}
 }
@@ -2724,37 +2686,45 @@ segrellion_create_artifact_vaenors_compass_effect = {
 
 	save_scope_value_as = {
 		name = wealth
-		value = 60
+		value = 65
 	}
 
-	set_artifact_rarity_famed = yes
+	set_artifact_rarity_illustrious = yes
 
-	create_artifact = {
+	scope:owner = {
 
-		name = segrellion_vaenors_compass_name
-		description = segrellion_vaenors_compass_desc
+		create_artifact = {
 
-		type = trinket
+			name = segrellion_vaenors_compass_name
+			description = segrellion_vaenors_compass_desc
 
-		visuals = segrellion_vaenors_compass_visuals
-		template = segrellion_vaenors_compass_template
+			type = miscellaneous
 
-		wealth = scope:wealth
-		quality = scope:quality
+			visuals = segrellion_vaenors_compass_visuals
+			template = segrellion_vaenors_compass_template
 
-		modifier = segrellion_vaenors_compass_modifier
+			wealth = scope:wealth
+			quality = scope:quality
 
-		history = {
-			type = created_before_history
-			date = 7800.1.1
+			modifier = segrellion_vaenors_compass_modifier
+
+			save_scope_as = newly_created_artifact
+
+			decaying = no
 		}
-
-		save_scope_as = newly_created_artifact
-
-		decaying = no
 	}
 
-	scope:newly_created_artifact ?= {
+	scope:newly_created_artifact = {
+
+		set_owner = {
+			target = scope:owner
+
+			history = {
+				type = discovered
+				actor = scope:owner
+				recipient = scope:owner
+			}
+		}
 
 		equip_artifact_to_owner_replace = yes
 
@@ -2769,13 +2739,13 @@ segrellion_create_artifact_vaenors_compass_effect = {
 		}
 
 		set_variable = {
-			name = traditional_house_owner
-			value = scope:owner.house
+			name = segrellion_vaenors_compass_artifact
+			value = yes
 		}
 
 		set_variable = {
-			name = segrellion_vaenors_compass_artifact
-			value = yes
+			name = traditional_house_owner
+			value = scope:owner.house
 		}
 	}
 }
