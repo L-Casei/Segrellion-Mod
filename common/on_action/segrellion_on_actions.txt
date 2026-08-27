@@ -19,6 +19,7 @@ monthly_global_pulse = {
 		segrellion_deathwish_historical_progression
 		segrellion_winds_300_aftermath_check
 		segrellion_black_moon_house_relation_progression
+		segrellion_exceptionalism_progression
 	}
 }
 
@@ -84,6 +85,18 @@ on_title_gain_inheritance = {
 on_title_gain = {
 	on_actions = {
 		segrellion_daemon_flamelands_title_gain
+	}
+}
+
+# =========================================================
+# SEGRELLION EXCEPTIONALISM
+# =========================================================
+
+segrellion_exceptionalism_progression = {
+
+	effect = {
+
+		segrellion_exceptionalism_progression_effect = yes
 	}
 }
 
@@ -171,6 +184,7 @@ segrellion_on_game_start = {
 		# Renown earned before the selected bookmark has already been
 		# invested into the dynasty's historical legacy trees.
 		
+		segrellion_exceptionalism_progression_effect = yes
 		segrellion_set_historical_legacies_effect = yes
 		segrellion_set_historical_splendor_effect = yes
 		segrellion_black_moon_house_feud_effect = yes
@@ -391,6 +405,44 @@ segrellion_on_game_start_after_lobby = {
 				trigger_event = {
 					id = segrellion_intro.0001
 					days = 3
+				}
+			}
+		}
+
+		# ====================================================
+		# 300 AC - DAENA'S LETTER
+		# Hugh discovers the letter entrusted to Symon.
+		# ====================================================
+
+		if = {
+			limit = {
+
+				game_start_date = 8300.8.20
+
+				character:Segrellion_43 ?= {
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_daemon_letter_event_scheduled
+					}
+				}
+
+				character:Segrellion_60 ?= {
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_daemon_parentage_known
+					}
+				}
+			}
+
+			character:Segrellion_43 = {
+
+				add_character_flag = segrellion_daemon_letter_event_scheduled
+
+				trigger_event = {
+					id = segrellion_daemon_parentage.0001
+					days = 5
 				}
 			}
 		}
@@ -1069,46 +1121,3 @@ segrellion_daemon_arianne_children = {
 	}
 }
 
-# =========================================================
-# DAEMON SEGRELLION - TRUE PARENTAGE
-# 300 AC BOOKMARK STARTUP
-# =========================================================
-
-segrellion_daemon_parentage_300_startup = {
-
-	effect = {
-
-		# This chain belongs specifically to the
-		# 300 AC - Winds of Winter bookmark.
-		if = {
-			limit = {
-				current_date >= 8300.8.20
-				current_date < 8300.8.21
-
-				character:Segrellion_43 = {
-					is_alive = yes
-					NOT = {
-						has_character_flag = segrellion_daemon_letter_event_scheduled
-					}
-				}
-
-				character:Segrellion_60 = {
-					is_alive = yes
-					NOT = {
-						has_character_flag = segrellion_daemon_parentage_known
-					}
-				}
-			}
-
-			character:Segrellion_43 = {
-
-				add_character_flag = segrellion_daemon_letter_event_scheduled
-
-				trigger_event = {
-					id = segrellion_daemon_parentage.0001
-					days = { 3 7 }
-				}
-			}
-		}
-	}
-}

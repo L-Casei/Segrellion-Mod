@@ -1,0 +1,112 @@
+namespace = segrellion_relic_bridge
+
+
+# =========================================================
+# 0001 - THREE ROADS NORTH
+# =========================================================
+
+segrellion_relic_bridge.0001 = {
+
+	type = character_event
+
+	title = segrellion_relic.3900.t
+	desc = segrellion_relic.3900.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# CASTLE BLACK
+	# =====================================================
+
+	option = {
+
+		name = segrellion_relic.3900.a
+
+		segrellion_clear_relic_pending_destination_effect = yes
+
+		add_character_flag = segrellion_relic_pending_castle_black
+
+		trigger_event = {
+			id = segrellion_relic_bridge.0002
+			days = 1
+		}
+	}
+
+
+	# =====================================================
+	# SHADOW TOWER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_relic.3900.b
+
+		segrellion_clear_relic_pending_destination_effect = yes
+
+		add_character_flag = segrellion_relic_pending_shadow_tower
+
+		trigger_event = {
+			id = segrellion_relic_bridge.0002
+			days = 1
+		}
+	}
+
+
+	# =====================================================
+	# SKAGOS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_relic.3900.c
+
+		custom_tooltip = segrellion_relic.3900.c.chance_tt
+
+		segrellion_clear_relic_pending_destination_effect = yes
+
+		add_character_flag = segrellion_relic_pending_skagos
+
+		trigger_event = {
+			id = segrellion_relic_bridge.0002
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0002 - BEGIN NEXT NORTHERN JOURNEY
+# =========================================================
+
+segrellion_relic_bridge.0002 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+
+		has_character_flag = segrellion_legendary_relic_search_active
+
+		OR = {
+			has_character_flag = segrellion_relic_pending_castle_black
+			has_character_flag = segrellion_relic_pending_shadow_tower
+			has_character_flag = segrellion_relic_pending_skagos
+			has_character_flag = segrellion_relic_pending_nightfort
+		}
+	}
+
+	immediate = {
+
+		segrellion_resume_relic_travel_effect = yes
+	}
+}
