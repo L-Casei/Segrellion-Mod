@@ -3,6 +3,9 @@ namespace = segrellion_relic_bridge
 
 # =========================================================
 # 0001 - THREE ROADS NORTH
+#
+# Winterfell's journey is already over.
+# Never attempt to reuse its travel plan.
 # =========================================================
 
 segrellion_relic_bridge.0001 = {
@@ -34,21 +37,23 @@ segrellion_relic_bridge.0001 = {
 
 		custom_tooltip = segrellion_relic.3900.a.trail_tt
 
-		segrellion_clear_relic_pending_destination_effect = yes
-		add_character_flag = segrellion_relic_pending_castle_black
+		hidden_effect = {
 
-		if = {
-			limit = {
-				exists = current_travel_plan
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_castle_black
+
+			# The Winterfell journey has reached its destination.
+			# Explicitly kill that plan instead of trying to resume it.
+			if = {
+				limit = {
+					exists = current_travel_plan
+				}
+
+				current_travel_plan = {
+					complete_travel_plan = yes
+				}
 			}
 
-			current_travel_plan = {
-				add_travel_waypoint = title:c_castle_black.title_province
-				resume_travel_plan = yes
-			}
-		}
-
-		else = {
 			trigger_event = {
 				id = segrellion_relic_bridge.0002
 				days = 1
@@ -67,21 +72,21 @@ segrellion_relic_bridge.0001 = {
 
 		custom_tooltip = segrellion_relic.3900.b.trail_tt
 
-		segrellion_clear_relic_pending_destination_effect = yes
-		add_character_flag = segrellion_relic_pending_shadow_tower
+		hidden_effect = {
 
-		if = {
-			limit = {
-				exists = current_travel_plan
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_shadow_tower
+
+			if = {
+				limit = {
+					exists = current_travel_plan
+				}
+
+				current_travel_plan = {
+					complete_travel_plan = yes
+				}
 			}
 
-			current_travel_plan = {
-				add_travel_waypoint = title:c_the_shadow_tower.title_province
-				resume_travel_plan = yes
-			}
-		}
-
-		else = {
 			trigger_event = {
 				id = segrellion_relic_bridge.0002
 				days = 1
@@ -100,21 +105,21 @@ segrellion_relic_bridge.0001 = {
 
 		custom_tooltip = segrellion_relic.3900.c.trail_tt
 
-		segrellion_clear_relic_pending_destination_effect = yes
-		add_character_flag = segrellion_relic_pending_skagos
+		hidden_effect = {
 
-		if = {
-			limit = {
-				exists = current_travel_plan
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_skagos
+
+			if = {
+				limit = {
+					exists = current_travel_plan
+				}
+
+				current_travel_plan = {
+					complete_travel_plan = yes
+				}
 			}
 
-			current_travel_plan = {
-				add_travel_waypoint = title:c_skane.title_province
-				resume_travel_plan = yes
-			}
-		}
-
-		else = {
 			trigger_event = {
 				id = segrellion_relic_bridge.0002
 				days = 1
@@ -126,6 +131,13 @@ segrellion_relic_bridge.0001 = {
 
 # =========================================================
 # 0002 - BEGIN NEXT NORTHERN JOURNEY
+#
+# Starts a completely fresh travel plan.
+#
+# The explicit set_location is deliberate:
+# landless characters must begin the continuation from
+# Winterfell / Castle Black rather than snapping back
+# to their camp between the two journeys.
 # =========================================================
 
 segrellion_relic_bridge.0002 = {
@@ -145,7 +157,39 @@ segrellion_relic_bridge.0002 = {
 		}
 	}
 
+
 	immediate = {
+
+		# -------------------------------------------------
+		# WINTERFELL -> THREE NORTHERN ROADS
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				OR = {
+					has_character_flag = segrellion_relic_pending_castle_black
+					has_character_flag = segrellion_relic_pending_shadow_tower
+					has_character_flag = segrellion_relic_pending_skagos
+				}
+			}
+
+			set_location = title:c_winterfell.title_province
+		}
+
+
+		# -------------------------------------------------
+		# CASTLE BLACK -> NIGHTFORT
+		# -------------------------------------------------
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_relic_pending_nightfort
+			}
+
+			set_location = title:c_castle_black.title_province
+		}
+
 
 		segrellion_resume_relic_travel_effect = yes
 	}
