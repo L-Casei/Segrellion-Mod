@@ -335,7 +335,6 @@ segrellion_winds.0121 = {
 	type = character_event
 	hidden = yes
 
-
 	trigger = {
 
 		this = character:Segrellion_43
@@ -353,62 +352,28 @@ segrellion_winds.0121 = {
 		}
 	}
 
-
 	immediate = {
-
-		# =================================================
-		# THE PLATE CAN STILL BE RECOVERED
-		# =================================================
 
 		if = {
 
 			limit = {
-
 				NOT = {
 					segrellion_plate_recovery_blocked_trigger = yes
 				}
-
-				gold >= 50
 			}
 
+			# Hugh pays the full recovery cost even if
+			# doing so forces Vhal temporarily into debt.
 
-			# Same cost as the player decision.
-			add_gold = -50
-
+			add_gold = -200
 
 			remove_character_flag = segrellion_plate_recovery_ready
 
 			add_character_flag = segrellion_plate_recovery_in_progress
 
-
 			trigger_event = {
 				id = segrellion_winds.0130
 				days = { 20 60 }
-			}
-		}
-
-
-		# =================================================
-		# HUGH TEMPORARILY CANNOT AFFORD THE TRANSPORT
-		#
-		# Try again rather than permanently breaking
-		# Daemon's storyline.
-		# =================================================
-
-		else_if = {
-
-			limit = {
-
-				NOT = {
-					segrellion_plate_recovery_blocked_trigger = yes
-				}
-
-				gold < 50
-			}
-
-			trigger_event = {
-				id = segrellion_winds.0121
-				days = 15
 			}
 		}
 	}
@@ -527,7 +492,15 @@ segrellion_winds.0102 = {
 		reference = segrellion_vhalerion_throne_room
 	}
 
-	right_portrait = character:Segrellion_60
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
 
 	trigger = {
 
@@ -561,7 +534,7 @@ segrellion_winds.0102 = {
 		name = segrellion_winds.0102.a
 
 		ai_chance = {
-			base = 20
+			base = 15
 		}
 
 		segrellion_transfer_plate_to_daemon_effect = yes
@@ -591,7 +564,7 @@ segrellion_winds.0102 = {
 		name = segrellion_winds.0102.b
 
 		ai_chance = {
-			base = 70
+			base = 20
 		}
 
 		segrellion_transfer_plate_to_daemon_effect = yes
@@ -604,6 +577,36 @@ segrellion_winds.0102 = {
 			trigger_event = {
 				id = segrellion_winds.0104
 				days = 1
+			}
+		}
+	}
+
+	# =====================================================
+	# DEMAND REIMBURSEMENT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0102.d
+
+		trigger = {
+
+			character:Segrellion_60 = {
+				gold >= 200
+			}
+		}
+
+		ai_chance = {
+			base = 55
+		}
+
+		add_character_flag = segrellion_hugh_requested_payment_for_plate
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_winds.0106
+				days = 2
 			}
 		}
 	}
@@ -634,6 +637,8 @@ segrellion_winds.0102 = {
 			}
 		}
 	}
+
+	
 }
 
 
@@ -656,7 +661,15 @@ segrellion_winds.0103 = {
 		reference = segrellion_vhal_island
 	}
 
-	right_portrait = character:Segrellion_60
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Segrellion_43
+		animation = personality_content
+	}
 
 	option = {
 		name = segrellion_winds.0103.a
@@ -711,8 +724,15 @@ segrellion_winds.0105 = {
 		reference = segrellion_vhal_island
 	}
 
-	left_portrait = root
-	right_portrait = character:Segrellion_43
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = character:Segrellion_43
+		animation = personality_rational
+	}
 
 	option = {
 		name = segrellion_winds.0105.a
@@ -806,8 +826,15 @@ segrellion_winds.0301 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-	left_portrait = root
-	right_portrait = character:Stormflame_13
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Stormflame_13
+		animation = fear
+	}
 
 
 	option = {
@@ -1087,5 +1114,152 @@ segrellion_winds.0404 = {
 		}
 
 		segrellion_spare_all_stormflame_captives_effect = yes
+	}
+}
+
+# =========================================================
+# 0106 - HUGH NAMES HIS PRICE
+# Root = Daemon
+# =========================================================
+
+segrellion_winds.0106 = {
+
+	type = character_event
+
+	title = segrellion_winds.0106.t
+	desc = segrellion_winds.0106.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_43
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# PAY HUGH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0106.a
+
+		trigger = {
+			gold >= 200
+		}
+
+		ai_chance = {
+			base = 100
+		}
+
+		add_gold = -200
+
+		add_character_flag = segrellion_paid_hugh_for_plate
+
+		character:Segrellion_43 = {
+
+			add_gold = 200
+
+			remove_character_flag = segrellion_hugh_requested_payment_for_plate
+
+			add_character_flag = segrellion_hugh_reimbursed_for_plate
+
+			segrellion_transfer_plate_to_daemon_effect = yes
+		}
+
+		remove_character_flag = segrellion_plate_demand_pending
+
+		add_character_flag = segrellion_plate_demand_resolved
+
+		trigger_event = {
+			id = segrellion_winds.0107
+			days = 1
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE TO PAY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0106.b
+
+		ai_chance = {
+			base = 5
+		}
+
+		add_character_flag = segrellion_refused_hugh_plate_price
+
+		character:Segrellion_43 = {
+
+			remove_character_flag = segrellion_hugh_requested_payment_for_plate
+
+			add_character_flag = segrellion_hugh_kept_plate_after_price_refused
+		}
+
+		remove_character_flag = segrellion_plate_demand_pending
+
+		add_character_flag = segrellion_plate_demand_resolved
+
+		trigger_event = {
+			id = segrellion_winds.0108
+			days = 1
+		}
+	}
+}
+
+segrellion_winds.0107 = {
+
+	type = character_event
+
+	title = segrellion_winds.0107.t
+	desc = segrellion_winds.0107.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Segrellion_43
+		animation = personality_content
+	}
+
+	option = {
+		name = segrellion_winds.0107.a
+	}
+}
+
+segrellion_winds.0108 = {
+
+	type = character_event
+
+	title = segrellion_winds.0108.t
+	desc = segrellion_winds.0108.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Segrellion_43
+		animation = personality_rational
+	}
+
+	option = {
+		name = segrellion_winds.0108.a
 	}
 }
