@@ -33,10 +33,18 @@ segrellion_uncover_lost_legacy = {
 
 	is_shown = {
 
-		dynasty = dynasty:dynn_Segrellion
+		OR = {
 
-		exists = var:segrellion_lore
-		var:segrellion_lore >= 10
+			# House Segrellion always knows this legacy exists.
+			dynasty = dynasty:dynn_Segrellion
+
+			# Outsiders may discover enough of the lost history
+			# to realize that a reconstruction is possible.
+			AND = {
+				exists = var:segrellion_lore
+				var:segrellion_lore >= 10
+			}
+		}
 
 		NOT = {
 			has_global_variable = segrellion_lost_legacy_completed
