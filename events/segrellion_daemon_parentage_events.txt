@@ -232,7 +232,6 @@ segrellion_daemon_parentage.0003 = {
 
 		character:Segrellion_43 = {
 
-			add_character_flag = told_true_parentage
 			add_character_flag = segrellion_hugh_knows_daemon_parentage
 			add_character_flag = segrellion_hugh_revealed_daemon_parentage
 		}
@@ -307,7 +306,6 @@ segrellion_daemon_parentage.0004 = {
 		add_character_flag = segrellion_hugh_knows_daemon_parentage
 	}
 
-
 	# =====================================================
 	# TELL DAEMON NOW
 	# =====================================================
@@ -322,26 +320,39 @@ segrellion_daemon_parentage.0004 = {
 
 		custom_tooltip = segrellion_daemon_parentage.0004.a.tt
 
-
 		remove_character_flag = segrellion_hugh_parentage_reveal_immediately
 
 
-		option = {
+		# Hugh now possesses the REAL CK3 heritage secret.
+		segrellion_create_daemon_parentage_secret_effect = yes
 
-			name = segrellion_daemon_parentage.0004.a
 
-			trigger = {
-				has_character_flag = segrellion_hugh_parentage_reveal_immediately
+		# Daemon privately learns that same secret.
+		random_known_secret = {
+
+			limit = {
+
+				secret_type = secret_disputed_heritage
+
+				secret_target = {
+					this = character:Segrellion_60
+				}
 			}
 
-			custom_tooltip = segrellion_daemon_parentage.0004.a.tt
+			reveal_to = character:Segrellion_60
+		}
 
 
-			remove_character_flag = segrellion_hugh_parentage_reveal_immediately
+		add_character_flag = told_true_parentage
+		add_character_flag = segrellion_hugh_revealed_daemon_parentage
 
 
-			# Hand the entire revelation over to AGOT.
-			segrellion_reveal_daemon_parentage_through_agot_effect = yes
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daemon_parentage.0003
+				days = 2
+			}
 		}
 	}
 

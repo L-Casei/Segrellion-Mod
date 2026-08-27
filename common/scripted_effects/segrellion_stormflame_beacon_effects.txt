@@ -152,20 +152,15 @@ segrellion_execute_leo_spare_stormflame_family_effect = {
 	}
 
 
-	character:Stormflame_3 ?= {
-
-		if = {
-			limit = {
-				is_alive = yes
-			}
-
-			death = {
-				death_reason = death_execution
-				killer = character:Segrellion_60
-			}
-		}
-	}
-
+	# =====================================================
+	# SURVIVING STORMFLAMES
+	#
+	# Adult men take the black.
+	# Women and children are released.
+	#
+	# This happens BEFORE Leo dies so the adult men are
+	# removed from normal succession before his death.
+	# =====================================================
 
 	house:house_Stormflame = {
 
@@ -176,14 +171,90 @@ segrellion_execute_leo_spare_stormflame_family_effect = {
 				this != character:Stormflame_3
 			}
 
-			add_character_flag = segrellion_spared_by_daemon_at_beacon
+
+			# -------------------------------------------------
+			# ADULT MEN -> NIGHT'S WATCH
+			# -------------------------------------------------
 
 			if = {
+
 				limit = {
-					is_imprisoned = yes
+					is_male = yes
+					is_adult = yes
 				}
 
-				release_from_prison = yes
+
+				add_character_flag = segrellion_sent_to_wall_by_daemon
+
+
+				if = {
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+
+
+				if = {
+					limit = {
+						NOT = {
+							has_trait = nightswatch
+						}
+					}
+
+					add_trait = nightswatch
+				}
+
+
+				if = {
+					limit = {
+						is_ruler = no
+
+						title:k_the_wall.holder ?= {
+							is_alive = yes
+						}
+					}
+
+					set_employer = title:k_the_wall.holder
+				}
+			}
+
+
+			# -------------------------------------------------
+			# WOMEN AND CHILDREN -> RELEASED
+			# -------------------------------------------------
+
+			else = {
+
+				add_character_flag = segrellion_spared_by_daemon_at_beacon
+
+				if = {
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# LEO PAYS THE PRICE
+	# =====================================================
+
+	character:Stormflame_3 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_execution
+				killer = character:Segrellion_60
 			}
 		}
 	}
