@@ -69,9 +69,26 @@ segrellion_forge_the_flamelands_decision = {
 	selection_tooltip = segrellion_forge_the_flamelands_decision_tooltip
 
 	is_shown = {
+
 		dynasty = dynasty:dynn_Segrellion
-		NOT = { has_title = title:k_flamelands }
-		NOT = { has_global_variable = segrellion_flamelands_founded }
+
+		# The Kingdom of the Flamelands must not already exist.
+		title:k_flamelands = {
+			NOT = {
+				exists = holder
+			}
+		}
+
+		# Nor can the later Paramountcy already exist.
+		title:e_flamelands = {
+			NOT = {
+				exists = holder
+			}
+		}
+
+		NOT = {
+			has_global_variable = segrellion_flamelands_founded
+		}
 	}
 
 	is_valid = {
@@ -306,9 +323,16 @@ segrellion_uncover_the_lost_legacy_decision = {
 	}
 
 	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
 		custom_description = {
-			text = segrellion_decision_not_available_yet
-			always = no
+
+			text = segrellion_lost_legacy_requires_dragonlore_tt
+
+			has_variable = dragonlore
+			var:dragonlore >= 10
 		}
 	}
 

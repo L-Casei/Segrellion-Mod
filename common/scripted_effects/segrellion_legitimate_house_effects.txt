@@ -1,0 +1,53 @@
+# =========================================================
+# FLAMELANDS - LEGITIMATE HOUSE
+# =========================================================
+
+segrellion_initialize_flamelands_legitimate_house_effect = {
+
+	set_variable = {
+		name = legitimate_house_title
+		value = 1
+	}
+
+	set_variable = {
+		name = current_house
+		value = holder.house
+	}
+
+	set_variable = {
+		name = legitimate_house
+		value = house:house_Segrellion
+	}
+
+
+	# If House Segrellion itself currently holds the title,
+	# there is no competing-house progress to establish.
+	if = {
+
+		limit = {
+
+			holder = {
+				house = house:house_Segrellion
+			}
+		}
+
+		set_variable = {
+			name = new_house_progress
+			value = 100
+		}
+	}
+
+	else = {
+
+		set_variable = {
+			name = new_house_progress
+			value = 0
+		}
+	}
+
+
+	add_to_global_variable_list = {
+		name = legitimate_house_titles
+		target = this
+	}
+}
