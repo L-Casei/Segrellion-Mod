@@ -599,3 +599,206 @@ segrellion_young_griff.3100 = {
 		}
 	}
 }
+
+# =========================================================
+# 4000 - THE DRAGON IS READY
+#
+# Hidden AI timing event.
+# Around 302-303 AC.
+# =========================================================
+
+segrellion_young_griff.4000 = {
+
+	hidden = yes
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+		is_ai = yes
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_iron_throne_war_started
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
+	}
+}
+
+# =========================================================
+# 5000 - THE THREAD UNRAVELS
+# =========================================================
+
+segrellion_young_griff.5000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.5000.t
+	desc = segrellion_young_griff.5000.desc
+
+	theme = intrigue
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_young_griff_true_blackfyre
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_young_griff.5000.a
+
+		add_character_flag = segrellion_young_griff_blackfyre_truth_circulating
+
+		trigger_event = {
+			id = segrellion_young_griff.5010
+			days = { 30 90 }
+		}
+	}
+}
+
+# =========================================================
+# 5010 - THE BLACK DRAGON UNMASKED
+# =========================================================
+
+segrellion_young_griff.5010 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.5010.t
+	desc = segrellion_young_griff.5010.desc
+
+	theme = crown
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_true_blackfyre
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# TRUE PARENTAGE
+		# Uses AGOT's own Blackfyre fAegon parentage.
+		# =================================================
+
+		set_father = character:Mopatis_1
+		set_mother = character:Mopatis_hh_1
+
+		set_house = house:house_Blackfyre
+
+
+		# =================================================
+		# THE DISGUISE ENDS
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_modifier = shade_of_the_evening_hair_dye
+			}
+
+			remove_character_modifier = shade_of_the_evening_hair_dye
+		}
+
+
+		# =================================================
+		# THE TARGARYEN CLAIM WAS FALSE
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_claim_on = title:h_the_iron_throne
+			}
+
+			remove_claim = title:h_the_iron_throne
+		}
+
+
+		# =================================================
+		# POLITICAL CONSEQUENCES
+		# =================================================
+
+		add_legitimacy = -300
+
+		add_character_modifier = {
+			modifier = segrellion_exposed_blackfyre_pretender_modifier
+			years = 20
+		}
+
+
+		remove_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+		remove_character_flag = segrellion_young_griff_blackfyre_truth_circulating
+
+		add_character_flag = segrellion_young_griff_blackfyre_revealed
+
+
+		# Daenerys takes the deception particularly badly.
+		character:Targaryen_9 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_opinion = {
+					target = root
+					modifier = segrellion_exposed_blackfyre_to_daenerys_opinion
+				}
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.5010.a
+	}
+}

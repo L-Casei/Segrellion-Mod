@@ -305,7 +305,509 @@ segrellion_daenerys_invasion.0002 = {
 
 		custom_tooltip = segrellion_daenerys_invasion.0002.a.tt
 
-		# Landing selection will hook here once the Stannis
-		# northern restoration route is implemented.
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0003
+			days = { 3 7 }
+		}
+	}
+}
+
+# =========================================================
+# 0003 - WESTWARD
+#
+# Daenerys moves her entire camp to Pentos.
+# =========================================================
+
+segrellion_daenerys_invasion.0003 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0003.t
+	desc = segrellion_daenerys_invasion.0003.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_invasion_committed
+		has_character_flag = segrellion_daenerys_westeros_assessed
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_camped_at_pentos
+		}
+
+		NOT = {
+			exists = current_travel_plan
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0003.a
+
+		add_character_flag = segrellion_daenerys_travelling_to_pentos
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+
+		start_travel_plan = {
+
+			destination = title:c_pentos.title_province
+
+			return_trip = no
+
+			# CRITICAL:
+			# The adventurer camp moves with Daenerys.
+			travel_with_domicile = yes
+
+			on_arrival_event = segrellion_daenerys_invasion.0004
+
+			on_arrival_destinations = last
+
+			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0090
+		}
+	}
+}
+
+# =========================================================
+# 0004 - THE CAMP AT PENTOS
+# =========================================================
+
+segrellion_daenerys_invasion.0004 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0004.t
+	desc = segrellion_daenerys_invasion.0004.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_travelling_to_pentos
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_travelling_to_pentos
+
+		add_character_flag = segrellion_daenerys_camped_at_pentos
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+			}
+
+			remove_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+
+		# Safety fallback.
+		# travel_with_domicile should already have done this.
+		if = {
+
+			limit = {
+
+				has_domicile = yes
+
+				domicile = {
+
+					NOT = {
+						domicile_location = title:c_pentos.title_province
+					}
+				}
+			}
+
+			domicile = {
+				move_domicile = title:c_pentos.title_province
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0004.a
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0010
+			days = { 15 30 }
+		}
+	}
+}
+
+# =========================================================
+# 0010 - WHERE SHALL THE DRAGON LAND?
+# =========================================================
+
+segrellion_daenerys_invasion.0010 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0010.t
+	desc = segrellion_daenerys_invasion.0010.desc
+
+	theme = crown
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_camped_at_pentos
+
+		has_character_flag = segrellion_daenerys_invasion_committed
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_landing_chosen
+		}
+	}
+
+
+	# =====================================================
+	# DRAGONSTONE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0010.a
+
+		custom_tooltip = segrellion_daenerys_invasion.0010.a.tt
+
+		ai_chance = {
+			base = 70
+		}
+
+		add_character_flag = segrellion_daenerys_landing_chosen
+		add_character_flag = segrellion_daenerys_landing_dragonstone
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+		start_travel_plan = {
+
+			destination = title:c_dragonstone.title_province
+
+			return_trip = no
+			travel_with_domicile = yes
+
+			on_arrival_event = segrellion_daenerys_invasion.0020
+			on_arrival_destinations = last
+
+			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+		}
+	}
+
+
+	# =====================================================
+	# DORNE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0010.b
+
+		custom_tooltip = segrellion_daenerys_invasion.0010.b.tt
+
+		ai_chance = {
+			base = 20
+		}
+
+		add_character_flag = segrellion_daenerys_landing_chosen
+		add_character_flag = segrellion_daenerys_landing_dorne
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+		start_travel_plan = {
+
+			destination = title:c_sunspear.title_province
+
+			return_trip = no
+			travel_with_domicile = yes
+
+			on_arrival_event = segrellion_daenerys_invasion.0020
+			on_arrival_destinations = last
+
+			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+		}
+	}
+
+
+	# =====================================================
+	# THE FLAMELANDS
+	#
+	# Only if Daemon is already restored AND pledged to Dany.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0010.c
+
+		trigger = {
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_pledged_to_daenerys
+
+				OR = {
+					has_title = title:k_flamelands
+					has_title = title:e_flamelands
+				}
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_invasion.0010.c.tt
+
+		ai_chance = {
+			base = 100
+		}
+
+		add_character_flag = segrellion_daenerys_landing_chosen
+		add_character_flag = segrellion_daenerys_landing_flamelands
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+		start_travel_plan = {
+
+			destination = character:Segrellion_60.capital_province
+
+			return_trip = no
+			travel_with_domicile = yes
+
+			on_arrival_event = segrellion_daenerys_invasion.0020
+			on_arrival_destinations = last
+
+			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+		}
+	}
+}
+
+# =========================================================
+# 0020 - THE DRAGON LANDS
+# =========================================================
+
+segrellion_daenerys_invasion.0020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0020.t
+	desc = segrellion_daenerys_invasion.0020.desc
+
+	theme = crown
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_landing_chosen
+	}
+
+
+	immediate = {
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+			}
+
+			remove_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+		add_character_flag = segrellion_daenerys_landed_in_westeros
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0020.a
+
+		custom_tooltip = segrellion_daenerys_invasion.0020.a.tt
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_claim_on = title:h_the_iron_throne
+					}
+				}
+
+				add_pressed_claim = title:h_the_iron_throne
+			}
+
+
+			title:h_the_iron_throne.holder = {
+				save_scope_as = daenerys_iron_throne_defender
+			}
+
+
+			start_war = {
+
+				cb = claim_cb
+
+				target = scope:daenerys_iron_throne_defender
+
+				claimant = root
+
+				target_title = title:h_the_iron_throne
+			}
+
+
+			add_character_flag = segrellion_daenerys_iron_throne_war_started
+		}
+	}
+}
+
+# =========================================================
+# 0090 - JOURNEY TO PENTOS CANCELLED
+# =========================================================
+
+segrellion_daenerys_invasion.0090 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0090.t
+	desc = segrellion_daenerys_invasion.0090.desc
+
+	theme = travel
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_travelling_to_pentos
+
+		if = {
+			limit = {
+				has_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+			}
+			remove_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+	}
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0090.a
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0003
+			days = 7
+		}
+	}
+}
+
+
+# =========================================================
+# 0091 - CROSSING TO WESTEROS CANCELLED
+# =========================================================
+
+segrellion_daenerys_invasion.0091 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0091.t
+	desc = segrellion_daenerys_invasion.0091.desc
+
+	theme = travel
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_landing_chosen
+		remove_character_flag = segrellion_daenerys_landing_dragonstone
+		remove_character_flag = segrellion_daenerys_landing_dorne
+		remove_character_flag = segrellion_daenerys_landing_flamelands
+
+		if = {
+			limit = {
+				has_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+			}
+			remove_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+	}
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0091.a
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0010
+			days = 7
+		}
 	}
 }

@@ -416,6 +416,7 @@ segrellion_daemon_parentage.0005 = {
 
 		character:Segrellion_60 ?= {
 			is_alive = yes
+			is_adult = yes
 		}
 	}
 
@@ -441,6 +442,28 @@ segrellion_daemon_parentage.0005 = {
 			# AGOT disputed-heritage secret.
 
 			segrellion_create_daemon_parentage_secret_effect = yes
+
+
+			# Only continue if the secret exists and AGOT
+			# really permits Hugh to expose it.
+
+			if = {
+
+				limit = {
+
+					any_known_secret = {
+
+						secret_type = secret_agot_disputed_heritage
+
+						secret_target = {
+							this = character:Segrellion_60
+							is_adult = yes
+							real_paternal_held_iron_throne_claim = yes
+						}
+
+						can_be_exposed_by = root
+					}
+				}
 
 
 			# Stop the waiting loop.
@@ -470,6 +493,7 @@ segrellion_daemon_parentage.0005 = {
 					secret_target = {
 
 						this = character:Segrellion_60
+						is_adult = yes
 
 						real_paternal_held_iron_throne_claim = yes
 					}
@@ -489,6 +513,12 @@ segrellion_daemon_parentage.0005 = {
 			# Our narrative bookkeeping for Daemon.
 
 			character:Segrellion_60 = {
+
+				# .0900 normally establishes these before entering
+				# the non-parent .0903 branch. AI Hugh bypasses that
+				# choice, so reproduce only the required state.
+				add_character_flag = royal_bastard
+				add_character_flag = awaiting_bastardry_result
 
 				add_character_flag = segrellion_daemon_parentage_known
 				add_character_flag = segrellion_daemon_parentage_known_with_hugh
@@ -513,6 +543,17 @@ segrellion_daemon_parentage.0005 = {
 					days = 1
 				}
 			}
+		}
+
+
+		# If the secret was already exposed or ceased to be
+		# exposable, stop this custom loop instead of retrying
+		# forever.
+
+		else = {
+			remove_character_flag = segrellion_hugh_waiting_to_reveal_daemon_parentage
+			remove_character_flag = segrellion_hugh_withholding_daemon_parentage
+		}
 		}
 
 

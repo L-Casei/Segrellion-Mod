@@ -87,6 +87,7 @@ on_title_gain = {
 	on_actions = {
 		segrellion_daemon_flamelands_title_gain
 		segrellion_daenerys_iron_throne_fertility_restore
+		segrellion_young_griff_blackfyre_reveal_on_title_gain
 	}
 }
 
@@ -1213,6 +1214,43 @@ segrellion_daenerys_iron_throne_fertility_restore = {
 		remove_character_modifier = no_more_children_modifier
 
 		add_character_flag = segrellion_daenerys_childbearing_restored
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF TAKES THE IRON THRONE
+#
+# His true identity begins to unravel only after
+# the false dragon has actually won his crown.
+# =========================================================
+
+segrellion_young_griff_blackfyre_reveal_on_title_gain = {
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_young_griff_true_blackfyre
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
+		}
+	}
+
+	effect = {
+
+		add_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+
+		trigger_event = {
+			id = segrellion_young_griff.5000
+			days = { 180 365 }
+		}
 	}
 }
 

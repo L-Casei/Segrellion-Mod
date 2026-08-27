@@ -384,7 +384,82 @@ segrellion_setup_young_griff_300_effect = {
 
 			save_scope_as = iaf_young_griff
 
+			# =================================================
+			# TRUE IDENTITY
+			#
+			# Publicly Aegon Targaryen.
+			# In truth, the Blackfyre identity remains buried.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_true_blackfyre
+					}
+				}
+
+				add_character_flag = segrellion_young_griff_true_blackfyre
+			}
+
+			# =================================================
+			# STARTING FAME
+			# Young Griff begins at Distinguished.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_starting_fame_setup
+					}
+				}
+
+				if = {
+
+					limit = {
+						prestige_level < 2
+					}
+
+					# Established -> Distinguished.
+					# Also leaves him the prestige required for his claim.
+					add_prestige = 1000
+				}
+
+				add_character_flag = segrellion_young_griff_starting_fame_setup
+			}
+
 			#remove_character_modifier = shade_of_the_evening_hair_dye TO REVEAL WHITE HAIR
+
+			# =================================================
+			# AI IRON THRONE TIMING
+			#
+			# 500-900 days from 300.8.20 places the AI
+			# roughly between early 302 and early 303 AC.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					is_ai = yes
+
+					game_start_date = 8300.8.20
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_invasion_timing_scheduled
+					}
+				}
+
+				add_character_flag = segrellion_young_griff_invasion_timing_scheduled
+
+				trigger_event = {
+					id = segrellion_young_griff.4000
+					days = { 500 900 }
+				}
+			}
 
 			if = {
 				limit = {
