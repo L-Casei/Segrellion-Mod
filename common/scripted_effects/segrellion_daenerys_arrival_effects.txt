@@ -5,39 +5,48 @@
 
 segrellion_daenerys_announce_westeros_arrival_effect = {
 
-    if = {
+	if = {
 
-        limit = {
+		limit = {
 
-            this = character:Targaryen_9
+			this = character:Targaryen_9
 
-            is_alive = yes
+			is_alive = yes
 
-            has_character_flag = segrellion_daenerys_landed_in_westeros
+			has_character_flag = segrellion_daenerys_landed_in_westeros
 
-            NOT = {
-                has_character_flag = segrellion_daenerys_westeros_arrival_announced
-            }
-        }
-
-
-        add_character_flag = segrellion_daenerys_westeros_arrival_announced
+			NOT = {
+				has_character_flag = segrellion_daenerys_westeros_arrival_announced
+			}
+		}
 
 
-        every_player = {
+		# =================================================
+		# PERSIST DAENERYS INTO THE RECIPIENT EVENTS
+		# =================================================
 
-            limit = {
-
-                this != character:Targaryen_9
-            }
+		save_scope_as = daenerys
 
 
-            trigger_event = {
+		add_character_flag = segrellion_daenerys_westeros_arrival_announced
 
-                id = segrellion_daenerys_arrival.0001
 
-                days = 1
-            }
-        }
-    }
+		# =================================================
+		# HUMAN PLAYERS ONLY
+		# =================================================
+
+		every_player = {
+
+			limit = {
+				this != character:Targaryen_9
+			}
+
+			trigger_event = {
+
+				id = segrellion_daenerys_arrival.0001
+
+				days = 1
+			}
+		}
+	}
 }

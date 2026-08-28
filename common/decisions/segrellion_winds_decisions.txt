@@ -319,6 +319,7 @@ segrellion_negotiate_reinforcements_decision = {
 
 		# Everything below is mechanical and should not
 		# clutter the Effects section.
+
 		hidden_effect = {
 
 			add_character_flag = segrellion_troop_negotiation_active
@@ -375,7 +376,6 @@ segrellion_negotiate_reinforcements_decision = {
 				}
 			}
 
-
 			# -------------------------------------------------
 			# DAENERYS
 			# -------------------------------------------------
@@ -388,17 +388,55 @@ segrellion_negotiate_reinforcements_decision = {
 
 				add_character_flag = segrellion_negotiation_pending_daenerys
 
-				start_travel_plan = {
 
-					destination = title:c_ghoyan_drohe.title_province
+				# =================================================
+				# DAENERYS IS MOVING TO / ALREADY AT PENTOS
+				# =================================================
 
-					return_trip = no
+				if = {
 
-					on_arrival_event = segrellion_support.3000
-					on_arrival_destinations = first
+					limit = {
 
-					on_travel_planner_cancel_event = segrellion_support.0090
-					
+						character:Targaryen_9 = {
+
+							OR = {
+								has_character_flag = segrellion_daenerys_travelling_to_pentos
+								has_character_flag = segrellion_daenerys_camped_at_pentos
+							}
+						}
+					}
+
+					start_travel_plan = {
+
+						destination = title:c_pentos.title_province
+
+						return_trip = no
+
+						on_arrival_event = segrellion_support.3000
+						on_arrival_destinations = first
+
+						on_travel_planner_cancel_event = segrellion_support.0090
+					}
+				}
+
+
+				# =================================================
+				# DAENERYS IS STILL IN HER ORIGINAL EASTERN CAMP
+				# =================================================
+
+				else = {
+
+					start_travel_plan = {
+
+						destination = title:c_ghoyan_drohe.title_province
+
+						return_trip = no
+
+						on_arrival_event = segrellion_support.3000
+						on_arrival_destinations = first
+
+						on_travel_planner_cancel_event = segrellion_support.0090
+					}
 				}
 			}
 
