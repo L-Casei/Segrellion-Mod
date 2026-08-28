@@ -6,16 +6,19 @@
 # =========================================================
 # KINGSGUARD VACANCY
 #
-# Expected scope: the ruler who possesses the Kingsguard.
-#
-# Uses the same structure as AGOT's own appointment events.
+# Expected scope:
+# The ruler who possesses the Kingsguard.
 # =========================================================
 
 vladwyn_kingsguard_has_vacancy_trigger = {
 
 	ruler_has_kingsguard_trigger = yes
 
+
 	AND = {
+
+		# At least one of the six ordinary Kingsguard
+		# council positions is physically vacant.
 
 		OR = {
 
@@ -44,9 +47,20 @@ vladwyn_kingsguard_has_vacancy_trigger = {
 			}
 		}
 
+
+		# AGOT counts the six normal members plus
+		# the Lord Commander = seven total.
+		#
+		# IMPORTANT:
+		# PREV is the ruler from whose scope this
+		# any_living_kingsguard iterator was entered.
+		#
+		# ROOT would still be the original decision
+		# character when called from a decision.
+
 		any_living_kingsguard = {
 
-			top_liege = root
+			top_liege = prev
 
 			count < 7
 		}

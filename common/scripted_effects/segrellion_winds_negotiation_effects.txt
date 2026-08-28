@@ -639,22 +639,128 @@ segrellion_finish_vale_debt_effect = {
 
 segrellion_setup_daenerys_followers_effect = {
 
-	character:Targaryen_9 ?= {
+	if = {
 
-		if = {
+		limit = {
 
-			limit = {
+			game_start_date = 8300.8.20
 
+			character:Targaryen_9 ?= {
 				is_alive = yes
+			}
+		}
 
-				NOT = {
-					has_character_flag = segrellion_daenerys_followers_setup
+
+		character:Targaryen_9 = {
+
+
+			# TYRION
+			if = {
+				limit = {
+					character:Lannister_8 ?= {
+						is_alive = yes
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+				}
+
+				add_courtier = character:Lannister_8
+			}
+
+
+			# BARRISTAN
+			if = {
+				limit = {
+					character:Selmy_3 ?= {
+						is_alive = yes
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+				}
+
+				add_courtier = character:Selmy_3
+			}
+
+
+			# JORAH
+			if = {
+				limit = {
+					character:Mormont_3 ?= {
+						is_alive = yes
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+				}
+
+				add_courtier = character:Mormont_3
+			}
+
+
+			# MISSANDEI
+			if = {
+				limit = {
+					character:IAF_Missandei_1 ?= {
+						is_alive = yes
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+				}
+
+				add_courtier = character:IAF_Missandei_1
+			}
+
+
+			# TORGO NUDHO
+			if = {
+				limit = {
+					character:IAF_Torgo_Nudho_1 ?= {
+						is_alive = yes
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+				}
+
+				add_courtier = character:IAF_Torgo_Nudho_1
+			}
+
+
+			# TYRION = SECOND
+			if = {
+
+				limit = {
+
+					character:Lannister_8 ?= {
+						is_alive = yes
+						is_courtier_of = character:Targaryen_9
+					}
+
+					NOT = {
+						any_court_position_holder = {
+							type = second_camp_officer
+						}
+					}
+
+					is_valid_to_hire_court_position_type = second_camp_officer
+				}
+
+				appoint_court_position = {
+					recipient = character:Lannister_8
+					court_position = second_camp_officer
 				}
 			}
 
-			trigger_event = {
-				id = segrellion_daenerys_invasion.0098
-			}
+
+			add_character_flag = segrellion_daenerys_followers_setup
 		}
 	}
 }

@@ -31,40 +31,67 @@ vladwyn_take_white_cloak_decision = {
 
 	is_shown = {
 
-		# Vladwyn only.
+		# =================================================
+		# HOUSE VLADWYN
+		# =================================================
+
 		dynasty = dynasty:dynn_Vladwyn
 
 
-		# Tristan must have served in the Kingsguard.
+		# =================================================
+		# TRISTAN'S LEGACY
+		#
+		# Tristan only needs to HAVE SERVED.
+		# He does NOT need to be dead.
+		# =================================================
+
 		character:Vladwyn_1 = {
 
 			has_character_flag = vladwyn_tristan_served_kingsguard
-
-			is_alive = no
 		}
 
 
-		# Already wearing white.
+		# =================================================
+		# NOT ALREADY A KINGSGUARD
+		# =================================================
+
 		NOT = {
 			has_trait = kingsguard
 		}
 
 
-		# Cannot spam multiple ravens.
+		# =================================================
+		# NO REQUEST ALREADY PENDING
+		# =================================================
+
 		NOT = {
 			has_character_flag = vladwyn_kingsguard_request_pending
 		}
 
 
-		# This mechanic is for a landed Vladwyn surrendering
-		# his inheritance.
+		# =================================================
+		# MUST BE A LANDED VLADWYN WITH AN HEIR
+		#
+		# The entire point is surrendering your inheritance
+		# to take the White Cloak.
+		# =================================================
+
 		is_landed = yes
 
 		exists = primary_heir
 
 
-		# There must actually be a ruler with a Kingsguard.
-		top_liege = {
+		# =================================================
+		# THE IRON THRONE MUST CURRENTLY HAVE A KINGSGUARD
+		#
+		# Do NOT use top_liege here.
+		# A Vladwyn may belong to another realm, be
+		# independent, etc. The White Cloaks belong to
+		# the ruler of the Iron Throne.
+		# =================================================
+
+		title:h_the_iron_throne.holder ?= {
+
 			ruler_has_kingsguard_trigger = yes
 		}
 	}
@@ -120,7 +147,7 @@ vladwyn_take_white_cloak_decision = {
 
 			text = vladwyn_take_white_cloak_vacancy_requirement
 
-			top_liege = {
+			title:h_the_iron_throne.holder ?= {
 
 				vladwyn_kingsguard_has_vacancy_trigger = yes
 			}

@@ -27,7 +27,7 @@ vladwyn_kingsguard.1000 = {
 		# seven days ago in case the throne changed hands.
 		# =================================================
 
-		top_liege = {
+		title:h_the_iron_throne.holder ?= {
 			save_scope_as = vladwyn_kingsguard_king
 		}
 
@@ -243,20 +243,6 @@ vladwyn_kingsguard.1020 = {
 
 			vladwyn_surrender_titles_to_heir_effect = yes
 
-
-			# =================================================
-			# CHANGE PLAYER CHARACTER
-			#
-			# Scope character = old player.
-			# Target = heir.
-			# =================================================
-
-			root = {
-
-				set_player_character = scope:vladwyn_kingsguard_heir
-			}
-
-
 			# =================================================
 			# JOIN THE KINGSGUARD
 			#
@@ -307,15 +293,24 @@ vladwyn_kingsguard.1020 = {
 			# Memory, prestige, knighthood/celibacy handling.
 			# =================================================
 
+			scope:vladwyn_kingsguard_king = {
+
+				save_scope_as = king
+			}
+
 			trigger_event = {
-
 				id = agot_kingsguard.1012
-
 				days = 1
 			}
 
 
 			remove_character_flag = vladwyn_kingsguard_request_pending
+
+			
+			root = {
+
+				set_player_character = scope:vladwyn_kingsguard_heir
+			}
 		}
 	}
 }
