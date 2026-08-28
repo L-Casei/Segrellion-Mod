@@ -32,37 +32,119 @@ segrellion_setup_daenerys_300_effect = {
 			# Place Daenerys at Ghoyan Drohe.
 			set_location = title:c_ghoyan_drohe.title_province
 
+			# =================================================
+			# DAENERYS' GREAT CAMP
+			#
+			# She begins with a fully developed Great Pavilion
+			# and a strong military/logistical camp.
+			# =================================================
+
+			domicile ?= {
+
+				# ---------------------------------------------
+				# MAIN PAVILION
+				#
+				# Level I already exists on normal camps.
+				# Upgrade through II -> III.
+				# ---------------------------------------------
+
+				add_domicile_building = camp_main_02
+				add_domicile_building = camp_main_03
+
+
+				# ---------------------------------------------
+				# SUPPLY TENT
+				# Strong logistical infrastructure.
+				# ---------------------------------------------
+
+				add_domicile_building = supply_tent_01
+				add_domicile_building = supply_tent_02
+
+
+				# ---------------------------------------------
+				# PROVING GROUNDS
+				# Appropriate for an enormous professional host.
+				# ---------------------------------------------
+
+				add_domicile_building = proving_grounds_01
+				add_domicile_building = proving_grounds_02
+			}
+
+			# =================================================
+			# DAENERYS' MEN-AT-ARMS
+			#
+			# 2 Dothraki regiments
+			# 3 Unsullied regiments
+			#
+			# These are REAL permanent MaA regiments.
+			# =================================================
+
+
+			# -------------------------------------------------
+			# DOTHRAKI
+			# -------------------------------------------------
+
+			create_maa_regiment = {
+				type = dothraki_screamers
+				size = 7
+			}
+
+			create_maa_regiment = {
+				type = dothraki_screamers
+				size = 7
+			}
+
+
+			# -------------------------------------------------
+			# UNSULLIED
+			# -------------------------------------------------
+
+			create_maa_regiment = {
+				type = unsullied
+				size = 6
+			}
+
+			create_maa_regiment = {
+				type = unsullied
+				size = 6
+			}
+
+			create_maa_regiment = {
+				type = unsullied
+				size = 6
+			}
+
 			spawn_army = {
 
 				name = segrellion_daenerys_300_army
 
-				# 5 regiments of 300 = 1,500 Screamers.
+				# 5 regiments
 				men_at_arms = {
 					type = dothraki_screamers
-					men = 300
+					men = 600
 				}
 
 				men_at_arms = {
 					type = dothraki_screamers
-					men = 300
+					men = 600
 				}
 
 				men_at_arms = {
 					type = dothraki_screamers
-					men = 300
+					men = 600
 				}
 
 				men_at_arms = {
-					type = dothraki_screamers
-					men = 300
+					type = unsullied
+					men = 1000
 				}
 
 				men_at_arms = {
-					type = dothraki_screamers
-					men = 300
+					type = unsullied
+					men = 1000
 				}
 
-				levies = 8500
+				levies = 7500
 
 				inheritable = yes
 
@@ -187,6 +269,76 @@ segrellion_grant_dorne_support_effect = {
 	segrellion_clear_troop_negotiation_effect = yes
 }
 
+# =========================================================
+# DAENERYS TRANSFERS PART OF HER HOST TO DAEMON
+#
+# Daenerys' starting host:
+#   8,500 levies
+#   1,500 Dothraki (5 x 300)
+#
+# Transfer:
+#   -3,000 levies
+#   -600 Dothraki
+#
+# Remaining:
+#   5,500 levies
+#   900 Dothraki
+# =========================================================
+
+segrellion_daenerys_transfer_reinforcements_to_daemon_effect = {
+
+	character:Targaryen_9 = {
+
+		# -------------------------------------------------
+		# 3,000 LEVIES
+		#
+		# The special levy regiment uses 100 men per size.
+		# 30 sizes = 3,000 men.
+		# -------------------------------------------------
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -30
+				reinforce = no
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 600 DOTHRAKI
+		#
+		# Daenerys starts with five separate 300-man
+		# Dothraki regiments. Destroy two of them.
+		# -------------------------------------------------
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = dothraki_screamers
+			}
+
+			destroy_maa_regiment = yes
+		}
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = dothraki_screamers
+			}
+
+			destroy_maa_regiment = yes
+		}
+
+
+		add_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+	}
+}
+
 
 # =========================================================
 # DAENERYS SUPPORT
@@ -196,6 +348,14 @@ segrellion_grant_dorne_support_effect = {
 # =========================================================
 
 segrellion_grant_daenerys_support_effect = {
+
+	# =====================================================
+	# THESE TROOPS ARE NOT CREATED FROM NOTHING.
+	#
+	# Daenerys first loses them from her own host.
+	# =====================================================
+
+	segrellion_daenerys_transfer_reinforcements_to_daemon_effect = yes
 
 	spawn_army = {
 
@@ -231,7 +391,7 @@ segrellion_grant_daenerys_support_effect = {
 			men = 100
 		}
 
-		levies = 3000
+		levies = 2500
 
 		inheritable = yes
 

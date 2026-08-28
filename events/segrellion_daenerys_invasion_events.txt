@@ -5,22 +5,64 @@ namespace = segrellion_daenerys_invasion
 # 0001 - THE QUEEN ACROSS THE SEA
 # =========================================================
 
+# =========================================================
+# 0001 - THE QUEEN ACROSS THE SEA
+#
+# First major crossroads for Daenerys.
+#
+# FIRST APPEARANCE:
+#   A - Commit to Westeros.
+#   B - Wait and reconsider later.
+#   C - Reject Westeros and turn toward the Free Cities.
+#
+# SECOND APPEARANCE:
+#   A - Commit to Westeros.
+#   B - Abandon all special storylines and play freely.
+#   C - Reject Westeros and turn toward the Free Cities.
+# =========================================================
+
 segrellion_daenerys_invasion.0001 = {
 
 	type = character_event
 
 	title = segrellion_daenerys_invasion.0001.t
-	desc = segrellion_daenerys_invasion.0001.desc
+
+
+	# =====================================================
+	# DESCRIPTION
+	# Changes after Daenerys has already delayed once.
+	# =====================================================
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_invasion_delayed_once
+				}
+
+				desc = segrellion_daenerys_invasion.0001.desc_second
+			}
+
+			desc = segrellion_daenerys_invasion.0001.desc
+		}
+	}
+
 
 	theme = crown
 
+
 	override_background = {
-		reference = wilderness
+		reference = segrellion_daenerys_crossroads
 	}
+
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
+
 
 	trigger = {
 
@@ -28,10 +70,32 @@ segrellion_daenerys_invasion.0001 = {
 
 		is_alive = yes
 
+
+		# Westeros path already permanently abandoned.
 		NOT = {
 			has_character_flag = segrellion_daenerys_invasion_abandoned
 		}
 
+
+		# Player explicitly chose to abandon all special stories.
+		NOT = {
+			has_character_flag = segrellion_daenerys_special_story_abandoned
+		}
+
+
+		# Free Cities path has already been chosen.
+		NOT = {
+			has_character_flag = segrellion_daenerys_free_cities_path
+		}
+
+
+		# Westeros path has already begun.
+		NOT = {
+			has_character_flag = segrellion_daenerys_invasion_committed
+		}
+
+
+		# Peaceful AI never enters the special invasion storyline.
 		OR = {
 
 			is_ai = no
@@ -42,14 +106,18 @@ segrellion_daenerys_invasion.0001 = {
 		}
 	}
 
+
 	left_portrait = {
+
 		character = root
-		animation = personality_bold
+
+		animation = thinking
 	}
 
 
 	# =====================================================
-	# I WILL TAKE THE IRON THRONE
+	# OPTION A
+	# WESTEROS
 	# =====================================================
 
 	option = {
@@ -58,55 +126,123 @@ segrellion_daenerys_invasion.0001 = {
 
 		custom_tooltip = segrellion_daenerys_invasion.0001.a.tt
 
+
 		ai_chance = {
-
 			base = 100
-
-			modifier = {
-
-				factor = 0
-
-				has_game_rule = segrellion_daenerys_aggression_peaceful
-			}
 		}
 
+
 		remove_character_flag = segrellion_daenerys_invasion_delayed
+		remove_character_flag = segrellion_daenerys_invasion_delayed_once
 
 		add_character_flag = segrellion_daenerys_invasion_committed
 
+
 		trigger_event = {
+
 			id = segrellion_daenerys_invasion.0002
+
 			days = { 3 7 }
 		}
 	}
 
 
 	# =====================================================
-	# NOT YET
+	# OPTION B - FIRST APPEARANCE
+	#
+	# NOT YET.
+	#
+	# Daenerys remains completely free to wander.
+	# Event returns once after 6-12 months.
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_invasion.0001.b
 
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_invasion_delayed_once
+			}
+		}
+
 		custom_tooltip = segrellion_daenerys_invasion.0001.b.tt
 
+
+		# AI timing is already controlled by the Game Rule.
+		# This exists primarily for the player.
 		ai_chance = {
 			base = 0
 		}
 
+
 		add_character_flag = segrellion_daenerys_invasion_delayed
+		add_character_flag = segrellion_daenerys_invasion_delayed_once
+
 
 		trigger_event = {
+
 			id = segrellion_daenerys_invasion.0001
+
 			days = { 180 360 }
 		}
 	}
 
 
 	# =====================================================
-	# ABANDON WESTEROS
-	# PERMANENT.
+	# OPTION B - SECOND APPEARANCE
+	#
+	# NO SPECIAL STORY.
+	#
+	# Daenerys keeps her normal claims and can simply be
+	# played as a normal landless character.
+	# No more custom Westeros/Essos path events.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0001.b_second
+
+		trigger = {
+
+			has_character_flag = segrellion_daenerys_invasion_delayed_once
+		}
+
+		custom_tooltip = segrellion_daenerys_invasion.0001.b_second.tt
+
+
+		ai_chance = {
+			base = 0
+		}
+
+
+		remove_character_flag = segrellion_daenerys_invasion_delayed
+		remove_character_flag = segrellion_daenerys_invasion_delayed_once
+		remove_character_flag = segrellion_daenerys_invasion_committed
+
+
+		# Stops the Westeros special chain.
+		add_character_flag = segrellion_daenerys_invasion_abandoned
+
+
+		# More general flag.
+		# Future Daenerys story systems should respect this.
+		add_character_flag = segrellion_daenerys_special_story_abandoned
+
+
+		# Useful semantic flag for debugging/future content.
+		add_character_flag = segrellion_daenerys_wandering_freely
+	}
+
+
+	# =====================================================
+	# OPTION C
+	# REJECT WESTEROS
+	#
+	# Abandons Iron Throne ambitions permanently.
+	# Keeps Dragonstone.
+	# Sets up future Free Cities storyline.
 	# =====================================================
 
 	option = {
@@ -115,22 +251,50 @@ segrellion_daenerys_invasion.0001 = {
 
 		custom_tooltip = segrellion_daenerys_invasion.0001.c.tt
 
+
 		ai_chance = {
-
 			base = 0
+		}
 
-			modifier = {
 
-				add = 100
+		remove_character_flag = segrellion_daenerys_invasion_delayed
+		remove_character_flag = segrellion_daenerys_invasion_delayed_once
+		remove_character_flag = segrellion_daenerys_invasion_committed
 
-				has_game_rule = segrellion_daenerys_aggression_peaceful
+
+		# =================================================
+		# REMOVE EVERY CLAIM EXCEPT DRAGONSTONE
+		# =================================================
+
+		every_claim = {
+
+			limit = {
+
+				this != title:c_dragonstone
+			}
+
+			root = {
+				remove_claim = prev
 			}
 		}
 
-		remove_character_flag = segrellion_daenerys_invasion_delayed
-		remove_character_flag = segrellion_daenerys_invasion_committed
 
+		# Westeros is permanently rejected.
 		add_character_flag = segrellion_daenerys_invasion_abandoned
+		add_character_flag = segrellion_daenerys_westeros_rejected
+
+
+		# =================================================
+		# FUTURE FREE CITIES PATH
+		#
+		# Intentionally does NOTHING yet.
+		#
+		# When Essos is sufficiently implemented we can use
+		# these flags as the entry point to the next story.
+		# =================================================
+
+		add_character_flag = segrellion_daenerys_free_cities_path
+		add_character_flag = segrellion_daenerys_free_cities_path_pending
 	}
 }
 
@@ -560,56 +724,479 @@ segrellion_daenerys_invasion.0010 = {
 		}
 	}
 
-
 	# =====================================================
-	# THE FLAMELANDS
+	# MASSEY'S HOOK
 	#
-	# Only if Daemon is already restored AND pledged to Dany.
+	# Default eastern landing.
+	#
+	# Hidden if House Stormflame controls the duchy.
+	# Replaced by the Beacon option if Daemon controls
+	# the Flamelands.
 	# =====================================================
 
 	option = {
 
-		name = segrellion_daenerys_invasion.0010.c
+		name = segrellion_daenerys_invasion.0010.c_massey
+
 
 		trigger = {
 
-			character:Segrellion_60 ?= {
+			NOT = {
+				segrellion_daemon_controls_flamelands_trigger = yes
+			}
 
-				is_alive = yes
-
-				has_character_flag = segrellion_pledged_to_daenerys
-
-				OR = {
-					has_title = title:k_flamelands
-					has_title = title:e_flamelands
-				}
+			NOT = {
+				segrellion_stormflame_controls_masseys_hook_trigger = yes
 			}
 		}
 
-		custom_tooltip = segrellion_daenerys_invasion.0010.c.tt
+
+		custom_tooltip = segrellion_daenerys_invasion.0010.c_massey.tt
+
 
 		ai_chance = {
-			base = 100
+			base = 30
 		}
+
 
 		add_character_flag = segrellion_daenerys_landing_chosen
 		add_character_flag = segrellion_daenerys_landing_flamelands
+		add_character_flag = segrellion_daenerys_landing_masseys_hook
+
 
 		add_character_modifier = {
 			modifier = segrellion_daenerys_invasion_provisions_modifier
 		}
 
+
 		start_travel_plan = {
 
-			destination = character:Segrellion_60.capital_province
+			destination = title:c_stonedance.title_province
 
 			return_trip = no
 			travel_with_domicile = yes
 
 			on_arrival_event = segrellion_daenerys_invasion.0020
+
 			on_arrival_destinations = last
 
 			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+		}
+	}
+
+	# =====================================================
+	# THE BEACON
+	#
+	# If Daemon has restored the Flamelands, the normal
+	# Massey's Hook route becomes a direct voyage to him.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0010.c_beacon
+
+
+		trigger = {
+			segrellion_daemon_controls_flamelands_trigger = yes
+		}
+
+
+		custom_tooltip = segrellion_daenerys_invasion.0010.c_beacon.tt
+
+
+		ai_chance = {
+
+			base = 60
+
+			modifier = {
+
+				add = 100
+
+				character:Segrellion_60 = {
+					has_character_flag = segrellion_pledged_to_daenerys
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_landing_chosen
+		add_character_flag = segrellion_daenerys_landing_flamelands
+		add_character_flag = segrellion_daenerys_landing_beacon
+
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+
+		start_travel_plan = {
+
+			destination = title:c_farring_cross.title_province
+
+			return_trip = no
+			travel_with_domicile = yes
+
+			# IMPORTANT:
+			# Meeting with Daemon BEFORE the normal landing event.
+			on_arrival_event = segrellion_daenerys_invasion.0015
+
+			on_arrival_destinations = last
+
+			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+		}
+	}
+}
+
+# =========================================================
+# 0015 - THE DRAGON AT THE BEACON
+# =========================================================
+
+segrellion_daenerys_invasion.0015 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0015.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = segrellion_marriage_promised_to_daemon
+
+					character:Segrellion_60 = {
+						has_character_flag = segrellion_daenerys_marriage_promised
+					}
+				}
+
+				desc = segrellion_daenerys_invasion.0015.desc_promised
+			}
+
+			desc = segrellion_daenerys_invasion.0015.desc
+		}
+	}
+
+
+	theme = crown
+
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		has_character_flag = segrellion_daenerys_landing_beacon
+
+		segrellion_daemon_controls_flamelands_trigger = yes
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_honorable
+	}
+
+
+	# =====================================================
+	# MARRY NOW
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0015.a
+
+
+		trigger = {
+
+			is_married = no
+
+			has_character_flag = segrellion_marriage_promised_to_daemon
+
+			character:Segrellion_60 = {
+
+				is_alive = yes
+				is_married = no
+
+				has_character_flag = segrellion_daenerys_marriage_promised
+			}
+		}
+
+
+		custom_tooltip = segrellion_daenerys_invasion.0015.a.tt
+
+
+		character:Segrellion_60 = {
+
+			marry = character:Targaryen_9
+
+			remove_character_flag = segrellion_daenerys_marriage_promised
+			remove_character_flag = segrellion_daenerys_marriage_event_pending
+			remove_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+
+			add_character_flag = segrellion_daenerys_marriage_fulfilled
+		}
+
+
+		remove_character_flag = segrellion_marriage_promised_to_daemon
+		remove_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+
+		add_character_flag = segrellion_daenerys_marriage_fulfilled
+
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0020
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# =====================================================
+	# MARRY AFTER THE WAR
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0015.b
+
+
+		trigger = {
+
+			is_married = no
+
+			has_character_flag = segrellion_marriage_promised_to_daemon
+
+			character:Segrellion_60 = {
+
+				is_alive = yes
+				is_married = no
+
+				has_character_flag = segrellion_daenerys_marriage_promised
+			}
+		}
+
+
+		custom_tooltip = segrellion_daenerys_invasion.0015.b.tt
+
+
+		add_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daenerys_marriage_event_pending
+
+			add_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+		}
+
+
+		# Start checking after the invasion has begun.
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0016
+			days = 30
+		}
+
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0020
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# NO ACTIVE MARRIAGE PROMISE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0015.c
+
+
+		trigger = {
+
+			OR = {
+
+				is_married = yes
+
+				NOT = {
+					has_character_flag = segrellion_marriage_promised_to_daemon
+				}
+
+				character:Segrellion_60 = {
+
+					OR = {
+
+						is_married = yes
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_marriage_promised
+						}
+					}
+				}
+			}
+		}
+
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0020
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0016 - DEFERRED BEACON MARRIAGE CHECK
+#
+# Hidden monthly check.
+# Waits until both Daenerys and Daemon are at peace.
+# =========================================================
+
+segrellion_daenerys_invasion.0016 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		has_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+	}
+
+
+	immediate = {
+
+		# -------------------------------------------------
+		# BOTH ARE ALIVE, UNMARRIED, STILL PROMISED,
+		# AND BOTH ARE NOW AT PEACE.
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+				is_married = no
+				is_at_war = no
+
+				has_character_flag = segrellion_marriage_promised_to_daemon
+
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+					is_married = no
+					is_at_war = no
+
+					has_character_flag = segrellion_daenerys_marriage_promised
+				}
+			}
+
+
+			remove_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+
+
+			character:Segrellion_60 = {
+
+				remove_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+
+				add_character_flag = segrellion_daenerys_marriage_event_pending
+
+
+				trigger_event = {
+
+					id = segrellion_support.4000
+
+					days = { 3 7 }
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# STILL VALID, BUT WAR IS NOT OVER.
+		# CHECK AGAIN IN 30 DAYS.
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				is_alive = yes
+				is_married = no
+
+				has_character_flag = segrellion_marriage_promised_to_daemon
+
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+					is_married = no
+
+					has_character_flag = segrellion_daenerys_marriage_promised
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0016
+
+				days = 30
+			}
+		}
+
+
+		# -------------------------------------------------
+		# PROMISE CAN NO LONGER BE FULFILLED.
+		# -------------------------------------------------
+
+		else = {
+
+			remove_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+			remove_character_flag = segrellion_marriage_promised_to_daemon
+
+
+			character:Segrellion_60 ?= {
+
+				remove_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
+				remove_character_flag = segrellion_daenerys_marriage_event_pending
+				remove_character_flag = segrellion_daenerys_marriage_promised
+			}
 		}
 	}
 }
@@ -769,6 +1356,8 @@ segrellion_daenerys_invasion.0091 = {
 		remove_character_flag = segrellion_daenerys_landing_dragonstone
 		remove_character_flag = segrellion_daenerys_landing_dorne
 		remove_character_flag = segrellion_daenerys_landing_flamelands
+		remove_character_flag = segrellion_daenerys_landing_masseys_hook
+		remove_character_flag = segrellion_daenerys_landing_beacon
 
 		if = {
 			limit = {

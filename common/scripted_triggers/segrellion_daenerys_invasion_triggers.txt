@@ -1,0 +1,48 @@
+# =========================================================
+# DAENERYS INVASION
+# LANDING TRIGGERS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# DAEMON CONTROLS THE FLAMELANDS
+# ---------------------------------------------------------
+
+segrellion_daemon_controls_flamelands_trigger = {
+
+	character:Segrellion_60 ?= {
+
+		is_alive = yes
+
+		OR = {
+			has_title = title:k_flamelands
+			has_title = title:e_flamelands
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# STORMFLAME CONTROLS MASSEY'S HOOK
+#
+# Hidden check.
+#
+# Either:
+#   - a Stormflame directly holds the duchy
+#   - the holder of Massey's Hook is a vassal of Stormflame
+# ---------------------------------------------------------
+
+segrellion_stormflame_controls_masseys_hook_trigger = {
+
+	title:d_masseys_hook.holder ?= {
+
+		OR = {
+
+			house = house:house_Stormflame
+
+			liege ?= {
+				house = house:house_Stormflame
+			}
+		}
+	}
+}
