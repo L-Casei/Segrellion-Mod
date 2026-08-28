@@ -221,6 +221,57 @@ d_laamp_daenerys_targaryen = {
 				name = adventurer_creation_reason
 				value = flag:historical
 			}
+
+			# Build the camp roster from its owner, using the same effect
+			# vanilla uses for adventurer followers. The explicit checks
+			# avoid duplicating Missandei and Torgo's history employer.
+			holder ?= {
+				if = {
+					limit = {
+						character:Lannister_8 ?= {
+							is_alive = yes
+							NOT = { is_courtier_of = character:Targaryen_9 }
+						}
+					}
+					add_courtier = character:Lannister_8
+				}
+				if = {
+					limit = {
+						character:Selmy_3 ?= {
+							is_alive = yes
+							NOT = { is_courtier_of = character:Targaryen_9 }
+						}
+					}
+					add_courtier = character:Selmy_3
+				}
+				if = {
+					limit = {
+						character:Mormont_3 ?= {
+							is_alive = yes
+							NOT = { is_courtier_of = character:Targaryen_9 }
+						}
+					}
+					add_courtier = character:Mormont_3
+				}
+				if = {
+					limit = {
+						character:IAF_Missandei_1 ?= {
+							is_alive = yes
+							NOT = { is_courtier_of = character:Targaryen_9 }
+						}
+					}
+					add_courtier = character:IAF_Missandei_1
+				}
+				if = {
+					limit = {
+						character:IAF_Torgo_Nudho_1 ?= {
+							is_alive = yes
+							NOT = { is_courtier_of = character:Targaryen_9 }
+						}
+					}
+					add_courtier = character:IAF_Torgo_Nudho_1
+				}
+			}
 		}
 	}
 

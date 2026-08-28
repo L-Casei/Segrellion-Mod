@@ -22,6 +22,7 @@ monthly_global_pulse = {
 		segrellion_black_moon_house_relation_progression
 		segrellion_exceptionalism_progression
 		segrellion_unicorn_returns_leo_beacon_lock
+		segrellion_daenerys_followers_early_repair
 	}
 }
 
@@ -348,6 +349,8 @@ segrellion_on_game_start = {
 		segrellion_setup_massey_defiance_effect = yes
 		segrellion_setup_young_griff_300_effect = yes
 		segrellion_setup_daenerys_300_effect = yes
+		segrellion_setup_daenerys_followers_effect = yes
+		segrellion_setup_daenerys_dragons_300_effect = yes
 		segrellion_setup_daemon_parentage_story_effect = yes
 		segrellion_setup_plate_return_story_effect = yes
 		segrellion_setup_stormflame_300_effect = yes
@@ -451,6 +454,32 @@ segrellion_on_game_start_after_lobby = {
 
 		segrellion_apply_later_canon_supplied_appearances_effect = yes
 		segrellion_setup_daenerys_followers_effect = yes
+		segrellion_setup_daenerys_dragons_300_effect = yes
+
+		# Repeat the repair after initialization. AGOT's historical
+		# locations attach Tyrion and Jorah to the Second Sons during
+		# setup, so a single zero-tick transfer is not sufficient.
+		character:Targaryen_9 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					game_start_date >= 8300.8.20
+					game_start_date < 8301.1.1
+				}
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0098
+					days = 1
+				}
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0098
+					days = 3
+				}
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0098
+					days = 7
+				}
+			}
+		}
 
 
 		# ====================================================
@@ -479,6 +508,15 @@ segrellion_on_game_start_after_lobby = {
 				}
 			}
 		}
+	}
+}
+
+# Save-compatible fallback for the opening months of the 300 AC
+# bookmark. It also catches any later startup pass from another submod
+# that restores Illyrio or the Second Sons as employer.
+segrellion_daenerys_followers_early_repair = {
+	effect = {
+		segrellion_setup_daenerys_followers_effect = yes
 	}
 }
 

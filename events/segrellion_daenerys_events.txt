@@ -8,81 +8,15 @@ segrellion_daenerys_invasion.0098 = {
 	trigger = {
 		this = character:Targaryen_9
 		is_alive = yes
+		game_start_date >= 8300.8.20
+		game_start_date < 8301.1.1
 	}
 
 	immediate = {
-
-		# TYRION
-		character:Lannister_8 ?= {
-			if = {
-				limit = { is_alive = yes }
-
-				add_to_court_and_entourage_effect = yes
-			}
-		}
-
-
-		# BARRISTAN
-		character:Selmy_3 ?= {
-			if = {
-				limit = { is_alive = yes }
-
-				add_to_court_and_entourage_effect = yes
-			}
-		}
-
-
-		# JORAH
-		character:Mormont_3 ?= {
-			if = {
-				limit = { is_alive = yes }
-
-				add_to_court_and_entourage_effect = yes
-			}
-		}
-
-
-		# MISSANDEI
-		character:IAF_Missandei_1 ?= {
-			if = {
-				limit = { is_alive = yes }
-
-				add_to_court_and_entourage_effect = yes
-			}
-		}
-
-
-		# TORGO NUDHO
-		character:IAF_Torgo_Nudho_1 ?= {
-			if = {
-				limit = { is_alive = yes }
-
-				add_to_court_and_entourage_effect = yes
-			}
-		}
-
-
-		# TYRION = SECOND
-		if = {
-
-			limit = {
-
-				character:Lannister_8 ?= {
-					is_alive = yes
-					is_courtier_of = root
-				}
-
-				is_valid_to_hire_court_position_type = second_camp_officer
-			}
-
-			appoint_court_position = {
-				recipient = character:Lannister_8
-				court_position = second_camp_officer
-			}
-		}
-
-
-		add_character_flag = segrellion_daenerys_followers_setup
+		# Delayed, idempotent repair after every other game-start
+		# initializer has finished moving historical characters.
+		segrellion_setup_daenerys_followers_effect = yes
+		segrellion_setup_daenerys_dragons_300_effect = yes
 	}
 }
 

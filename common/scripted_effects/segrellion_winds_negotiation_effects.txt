@@ -87,11 +87,13 @@ segrellion_setup_daenerys_300_effect = {
 
 			create_maa_regiment = {
 				type = dothraki_screamers
+				check_can_recruit = no
 				size = 7
 			}
 
 			create_maa_regiment = {
 				type = dothraki_screamers
+				check_can_recruit = no
 				size = 7
 			}
 
@@ -102,16 +104,19 @@ segrellion_setup_daenerys_300_effect = {
 
 			create_maa_regiment = {
 				type = unsullied
+				check_can_recruit = no
 				size = 6
 			}
 
 			create_maa_regiment = {
 				type = unsullied
+				check_can_recruit = no
 				size = 6
 			}
 
 			create_maa_regiment = {
 				type = unsullied
+				check_can_recruit = no
 				size = 6
 			}
 
@@ -169,6 +174,89 @@ segrellion_setup_daenerys_300_effect = {
 				}
 
 				segrellion_initialize_daenerys_aggression_effect = yes
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DAENERYS - HISTORICAL DRAGONS AT THE 300 AC START
+#
+# AGOT's history leaves the location of Drogon, Rhaegal and
+# Viserion unresolved. Put all three in Daenerys' camp at zero
+# tick and restore Drogon's rider relation only if a submod has
+# prevented the historical relation from being applied.
+# =========================================================
+
+segrellion_setup_daenerys_dragons_300_effect = {
+
+	if = {
+		limit = {
+			game_start_date = 8300.8.20
+			character:Targaryen_9 ?= { is_alive = yes }
+		}
+
+		character:Targaryen_9 = {
+
+			if = {
+				limit = {
+					character:dragon_drogon ?= {
+						is_alive = yes
+						NOT = { is_courtier_of = character:Targaryen_9 }
+					}
+				}
+				add_courtier = character:dragon_drogon
+			}
+
+			if = {
+				limit = {
+					character:dragon_rhaegal ?= {
+						is_alive = yes
+						NOT = { is_courtier_of = character:Targaryen_9 }
+					}
+				}
+				add_courtier = character:dragon_rhaegal
+			}
+
+			if = {
+				limit = {
+					character:dragon_viserion ?= {
+						is_alive = yes
+						NOT = { is_courtier_of = character:Targaryen_9 }
+					}
+				}
+				add_courtier = character:dragon_viserion
+			}
+
+			if = {
+				limit = {
+					character:dragon_drogon ?= { is_alive = yes }
+					NOT = { has_relation_agot_dragon = character:dragon_drogon }
+				}
+				agot_tame_dragon = {
+					TAMER = character:Targaryen_9
+					DRAGON = character:dragon_drogon
+				}
+			}
+		}
+
+		character:dragon_drogon ?= {
+			if = {
+				limit = { is_alive = yes }
+				set_location = title:c_ghoyan_drohe.title_province
+			}
+		}
+		character:dragon_rhaegal ?= {
+			if = {
+				limit = { is_alive = yes }
+				set_location = title:c_ghoyan_drohe.title_province
+			}
+		}
+		character:dragon_viserion ?= {
+			if = {
+				limit = { is_alive = yes }
+				set_location = title:c_ghoyan_drohe.title_province
 			}
 		}
 	}
@@ -640,125 +728,105 @@ segrellion_finish_vale_debt_effect = {
 segrellion_setup_daenerys_followers_effect = {
 
 	if = {
-
 		limit = {
-
-			game_start_date = 8300.8.20
-
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+			current_date >= 8300.8.20
+			current_date < 8301.1.1
 			character:Targaryen_9 ?= {
 				is_alive = yes
+				has_title = title:d_laamp_daenerys_targaryen
 			}
 		}
 
-
+		# Camp followers are courtiers of the adventurer. Use the same
+		# court-owner-side effect as The Roads We Walk so that moving a
+		# character also updates the camp roster, not only their location.
 		character:Targaryen_9 = {
-
-
-			# TYRION
 			if = {
 				limit = {
 					character:Lannister_8 ?= {
 						is_alive = yes
-
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
+						NOT = { is_courtier_of = character:Targaryen_9 }
 					}
 				}
-
 				add_courtier = character:Lannister_8
 			}
 
-
-			# BARRISTAN
 			if = {
 				limit = {
 					character:Selmy_3 ?= {
 						is_alive = yes
-
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
+						NOT = { is_courtier_of = character:Targaryen_9 }
 					}
 				}
-
 				add_courtier = character:Selmy_3
 			}
 
-
-			# JORAH
 			if = {
 				limit = {
 					character:Mormont_3 ?= {
 						is_alive = yes
-
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
+						NOT = { is_courtier_of = character:Targaryen_9 }
 					}
 				}
-
 				add_courtier = character:Mormont_3
 			}
 
-
-			# MISSANDEI
 			if = {
 				limit = {
 					character:IAF_Missandei_1 ?= {
 						is_alive = yes
-
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
+						NOT = { is_courtier_of = character:Targaryen_9 }
 					}
 				}
-
 				add_courtier = character:IAF_Missandei_1
 			}
 
-
-			# TORGO NUDHO
 			if = {
 				limit = {
 					character:IAF_Torgo_Nudho_1 ?= {
 						is_alive = yes
-
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
+						NOT = { is_courtier_of = character:Targaryen_9 }
 					}
 				}
-
 				add_courtier = character:IAF_Torgo_Nudho_1
 			}
 
-
 			# TYRION = SECOND
 			if = {
-
 				limit = {
-
 					character:Lannister_8 ?= {
 						is_alive = yes
 						is_courtier_of = character:Targaryen_9
 					}
-
 					NOT = {
 						any_court_position_holder = {
 							type = second_camp_officer
 						}
 					}
-
 					is_valid_to_hire_court_position_type = second_camp_officer
 				}
-
 				appoint_court_position = {
 					recipient = character:Lannister_8
 					court_position = second_camp_officer
 				}
 			}
 
+			# Synchronize the physical location of every repaired follower
+			# with Daenerys' camp after their employer changes.
+			every_courtier = {
+				limit = {
+					OR = {
+						this = character:Lannister_8
+						this = character:Selmy_3
+						this = character:Mormont_3
+						this = character:IAF_Missandei_1
+						this = character:IAF_Torgo_Nudho_1
+					}
+				}
+				return_home = yes
+			}
 
 			add_character_flag = segrellion_daenerys_followers_setup
 		}
