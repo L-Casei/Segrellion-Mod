@@ -1,0 +1,246 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# THE DRAGON FLEET
+# =========================================================
+
+segrellion_daenerys_dragon_fleet = {
+
+	icon = {
+		reference = "gfx/interface/icons/great_projects/segrellion_daenerys_dragon_fleet.dds"
+	}
+
+
+	illustration = {
+		reference = "gfx/interface/illustrations/great_projects/segrellion_daenerys_dragon_fleet.dds"
+	}
+
+
+	name = {
+		desc = great_project_type_segrellion_daenerys_dragon_fleet
+	}
+
+
+	# Only Daenerys sees this project.
+	is_shown = {
+
+		this = character:Targaryen_9
+
+		has_character_flag = segrellion_daenerys_fleet_project_active
+	}
+
+
+	# The project is event-created.
+	can_start_planning = {
+		always = no
+	}
+
+
+	can_cancel = {
+		always = no
+	}
+
+
+	is_location_valid = {
+
+		scope:province = title:c_pentos.title_province
+	}
+
+
+	owner = founder_primary_title_owner
+
+
+	is_valid = {
+
+		scope:founder ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_daenerys_fleet_project_active
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+			}
+		}
+	}
+
+
+	cost = {
+		gold = 0
+	}
+
+
+	# Roughly 21 months.
+	construction_time = 640
+
+
+	# Optional troops may be bought during most of construction.
+	contribution_threshold = 80
+
+
+	contributor_cooldown = 0
+
+
+	allowed_contributor_filter = {
+		owner = yes
+	}
+
+
+	is_important = yes
+	show_in_list = yes
+
+
+	# =====================================================
+	# COMPLETION
+	# =====================================================
+
+	on_complete = {
+
+		scope:founder ?= {
+
+			remove_character_flag = segrellion_daenerys_fleet_project_active
+
+			add_character_flag = segrellion_daenerys_dragon_fleet_completed
+
+
+			trigger_event = {
+				id = segrellion_daenerys_invasion.0007
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CONTRIBUTIONS
+	# =====================================================
+
+	project_contributions = {
+
+
+		# =================================================
+		# 1. SHIPS
+		# 1000 GOLD
+		# =================================================
+
+		ships = {
+
+			is_required = yes
+
+
+			cost = {
+
+				gold = {
+
+					value = 0
+
+					if = {
+						limit = { is_ai = no }
+						add = 1000
+					}
+				}
+			}
+
+
+			ai_check_interval = 1
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+
+
+		# =================================================
+		# 2. SUPPLIES
+		# 250 GOLD
+		# =================================================
+
+		supplies = {
+
+			is_required = yes
+
+
+			cost = {
+
+				gold = {
+
+					value = 0
+
+					if = {
+						limit = { is_ai = no }
+						add = 250
+					}
+				}
+			}
+
+
+			ai_check_interval = 1
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+
+
+		# =================================================
+		# 3. ARMAMENTS
+		# 400 GOLD
+		# =================================================
+
+		armaments = {
+
+			is_required = yes
+
+
+			cost = {
+
+				gold = {
+
+					value = 0
+
+					if = {
+						limit = { is_ai = no }
+						add = 400
+					}
+				}
+			}
+
+
+			ai_check_interval = 1
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+
+
+		# =================================================
+		# OPTIONAL
+		# PENTOSHI REINFORCEMENTS
+		# 1250 GOLD
+		# =================================================
+
+		pentoshi_reinforcements = {
+
+			is_required = no
+
+
+			cost = {
+				gold = 1250
+			}
+
+
+			on_contribution_funded = {
+
+				scope:founder ?= {
+					add_character_flag = segrellion_daenerys_bought_pentoshi_reinforcements
+				}
+			}
+
+
+			# Don't automatically give the AI another 4k men.
+			ai_will_do = {
+				value = 0
+			}
+		}
+	}
+}

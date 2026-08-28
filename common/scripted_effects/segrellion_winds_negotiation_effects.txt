@@ -20,7 +20,7 @@ segrellion_setup_daenerys_300_effect = {
 
 			character:Targaryen_9 ?= {
 				is_alive = yes
-
+				
 				NOT = {
 					has_character_flag = segrellion_daenerys_300_host_created
 				}
@@ -29,7 +29,9 @@ segrellion_setup_daenerys_300_effect = {
 
 		character:Targaryen_9 = {
 
+			segrellion_setup_daenerys_followers_effect = yes
 			# Place Daenerys at Ghoyan Drohe.
+
 			set_location = title:c_ghoyan_drohe.title_province
 
 			# =================================================
@@ -630,4 +632,125 @@ segrellion_finish_vale_debt_effect = {
 	remove_character_flag = segrellion_vale_debt_overdue
 
 	add_character_flag = segrellion_vale_debt_repaid
+}
+
+# =========================================================
+# DAENERYS - HISTORICAL CAMP FOLLOWERS
+# =========================================================
+
+segrellion_setup_daenerys_followers_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_followers_setup
+			}
+		}
+
+
+		save_scope_as = daenerys_camp_owner
+
+
+		# =================================================
+		# TYRION LANNISTER
+		# =================================================
+
+		character:Lannister_8 ?= {
+
+			if = {
+				limit = { is_alive = yes }
+
+				set_employer = scope:daenerys_camp_owner
+				add_to_court_and_entourage_effect = yes
+			}
+		}
+
+
+		# =================================================
+		# SER BARRISTAN SELMY
+		# =================================================
+
+		character:Selmy_17 ?= {
+
+			if = {
+				limit = { is_alive = yes }
+
+				set_employer = scope:daenerys_camp_owner
+				add_to_court_and_entourage_effect = yes
+			}
+		}
+
+
+		# =================================================
+		# SER JORAH MORMONT
+		# =================================================
+
+		character:Mormont_8 ?= {
+
+			if = {
+				limit = { is_alive = yes }
+
+				set_employer = scope:daenerys_camp_owner
+				add_to_court_and_entourage_effect = yes
+			}
+		}
+
+
+		# =================================================
+		# MISSANDEI
+		# =================================================
+
+		character:IAF_Missandei_1 ?= {
+
+			if = {
+				limit = { is_alive = yes }
+
+				set_employer = scope:daenerys_camp_owner
+				add_to_court_and_entourage_effect = yes
+			}
+		}
+
+
+		# =================================================
+		# TORGO NUDHO
+		# =================================================
+
+		character:IAF_Torgo_Nudho_1 ?= {
+
+			if = {
+				limit = { is_alive = yes }
+
+				set_employer = scope:daenerys_camp_owner
+				add_to_court_and_entourage_effect = yes
+			}
+		}
+
+
+		# =================================================
+		# TYRION BECOMES THE SECOND
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Lannister_8 ?= {
+					is_alive = yes
+					employer = root
+				}
+			}
+
+			appoint_court_position = {
+				recipient = character:Lannister_8
+				court_position = second_camp_officer
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_followers_setup
+	}
 }

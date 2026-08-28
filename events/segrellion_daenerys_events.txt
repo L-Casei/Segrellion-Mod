@@ -614,8 +614,422 @@ segrellion_daenerys_invasion.0004 = {
 		name = segrellion_daenerys_invasion.0004.a
 
 		trigger_event = {
+			id = segrellion_daenerys_invasion.0005
+			days = { 2 5 }
+		}
+	}
+}
+
+# =========================================================
+# 0005 - THE FLEET WE DO NOT HAVE
+# =========================================================
+
+segrellion_daenerys_invasion.0005 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0005.t
+	desc = segrellion_daenerys_invasion.0005.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_camped_at_pentos
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_fleet_question_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Selmy_17
+		animation = personality_rational
+	}
+
+
+	lower_right_portrait = {
+
+		character = character:IAF_Torgo_Nudho_1
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0005.a
+
+		add_character_flag = segrellion_daenerys_fleet_question_resolved
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0006
+			days = { 1 3 }
+		}
+	}
+}
+
+# =========================================================
+# 0006 - THE COST OF THE CROSSING
+# =========================================================
+
+segrellion_daenerys_invasion.0006 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0006.t
+	desc = segrellion_daenerys_invasion.0006.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_camped_at_pentos
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_fleet_project_active
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_rushed_crossing
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Selmy_17
+		animation = personality_rational
+	}
+
+
+	lower_right_portrait = {
+		character = character:IAF_Torgo_Nudho_1
+		animation = personality_honorable
+	}
+
+
+	# =====================================================
+	# WAIT AND BUILD THE DRAGON FLEET
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0006.a
+
+		custom_tooltip = segrellion_daenerys_invasion.0006.a.tt
+
+
+		ai_chance = {
+
+			base = 100
+
+			modifier = {
+
+				factor = 0.05
+
+				has_game_rule = segrellion_daenerys_aggression_aggressive
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_fleet_project_active
+
+
+		title:c_pentos.title_province = {
+
+			plan_great_project = {
+
+				founder = root
+
+				great_project_type = segrellion_daenerys_dragon_fleet
+
+				save_scope_as = segrellion_daenerys_dragon_fleet_project
+			}
+		}
+	}
+
+
+	# =====================================================
+	# SAIL IMMEDIATELY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0006.b
+
+		custom_tooltip = segrellion_daenerys_invasion.0006.b.tt
+
+
+		ai_chance = {
+
+			base = 5
+
+			modifier = {
+
+				add = 500
+
+				has_game_rule = segrellion_daenerys_aggression_aggressive
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_rushed_crossing
+
+
+		segrellion_daenerys_abandon_army_for_early_crossing_effect = yes
+
+
+		trigger_event = {
 			id = segrellion_daenerys_invasion.0010
-			days = { 15 30 }
+			days = { 2 5 }
+		}
+	}
+}
+
+# =========================================================
+# 0007 - THE DRAGON FLEET
+# =========================================================
+
+segrellion_daenerys_invasion.0007 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0007.t
+	desc = segrellion_daenerys_invasion.0007.desc
+
+	theme = crown
+
+
+	override_background = {
+		reference = segrellion_dragon_fleet_ready
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_dragon_fleet_completed
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_dragon_fleet_rewards_received
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_dragon_fleet_rewards_received
+
+
+		# =================================================
+		# PRESTIGE / RENOWN
+		# =================================================
+
+		add_prestige = 750
+
+		dynasty = {
+			add_dynasty_prestige = 250
+		}
+
+
+		# =================================================
+		# DRAGON FLEET
+		# =================================================
+
+		add_character_modifier = {
+			modifier = segrellion_dragon_fleet_modifier
+		}
+
+
+		# =================================================
+		# OPTIONAL 4,000 PENTOSHI
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_bought_pentoshi_reinforcements
+			}
+
+
+			spawn_army = {
+
+				name = segrellion_pentoshi_first_host
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				inheritable = no
+
+				location = title:c_pentos.title_province
+				origin = title:c_pentos.title_province
+			}
+
+
+			spawn_army = {
+
+				name = segrellion_pentoshi_second_host
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				men_at_arms = {
+					type = segrellion_pentoshi_expeditionaries
+					men = 500
+				}
+
+				inheritable = no
+
+				location = title:c_pentos.title_province
+				origin = title:c_pentos.title_province
+			}
+
+
+			add_character_flag = segrellion_daenerys_pentoshi_reinforcements_received
+		}
+
+
+		# =================================================
+		# FLAGSHIP
+		# =================================================
+
+		hidden_effect_new_object = {
+
+			set_artifact_rarity_masterwork = yes
+
+
+			create_artifact = {
+
+				name = segrellion_daenerys_flagship_name
+
+				description = segrellion_daenerys_flagship_desc
+
+				creator = root
+
+				visuals = segrellion_daenerys_flagship_visuals
+
+				type = miscellaneous
+
+				wealth = 80
+				quality = 4
+
+				save_scope_as = segrellion_daenerys_flagship
+
+				history = {
+					type = created_before_history
+				}
+			}
+
+
+			scope:segrellion_daenerys_flagship = {
+
+				set_owner = {
+
+					target = root
+
+					history = {
+						type = created_before_history
+					}
+				}
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0007.a
+
+		trigger_event = {
+			id = segrellion_daenerys_invasion.0010
+			days = { 2 4 }
 		}
 	}
 }
@@ -681,7 +1095,7 @@ segrellion_daenerys_invasion.0010 = {
 			return_trip = no
 			travel_with_domicile = yes
 
-			on_arrival_event = segrellion_daenerys_invasion.0020
+			on_arrival_event = segrellion_daenerys_invasion.0018
 			on_arrival_destinations = last
 
 			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
@@ -717,7 +1131,7 @@ segrellion_daenerys_invasion.0010 = {
 			return_trip = no
 			travel_with_domicile = yes
 
-			on_arrival_event = segrellion_daenerys_invasion.0020
+			on_arrival_event = segrellion_daenerys_invasion.0018
 			on_arrival_destinations = last
 
 			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
@@ -776,7 +1190,7 @@ segrellion_daenerys_invasion.0010 = {
 			return_trip = no
 			travel_with_domicile = yes
 
-			on_arrival_event = segrellion_daenerys_invasion.0020
+			on_arrival_event = segrellion_daenerys_invasion.0018
 
 			on_arrival_destinations = last
 
@@ -838,7 +1252,7 @@ segrellion_daenerys_invasion.0010 = {
 
 			# IMPORTANT:
 			# Meeting with Daemon BEFORE the normal landing event.
-			on_arrival_event = segrellion_daenerys_invasion.0015
+			on_arrival_event = segrellion_daenerys_invasion.0018
 
 			on_arrival_destinations = last
 
@@ -1196,6 +1610,83 @@ segrellion_daenerys_invasion.0016 = {
 				remove_character_flag = segrellion_daenerys_marriage_deferred_at_beacon
 				remove_character_flag = segrellion_daenerys_marriage_event_pending
 				remove_character_flag = segrellion_daenerys_marriage_promised
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0018 - DAENERYS REACHES WESTEROS
+#
+# Common physical arrival point for EVERY landing route.
+# =========================================================
+
+segrellion_daenerys_invasion.0018 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_landing_chosen
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# GLOBAL ANNOUNCEMENT
+		#
+		# Existing fullscreen system.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_landed_in_westeros
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_landed_in_westeros
+
+
+			segrellion_daenerys_announce_westeros_arrival_effect = yes
+		}
+
+
+		# =================================================
+		# BEACON
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_landing_beacon
+			}
+
+			trigger_event = {
+				id = segrellion_daenerys_invasion.0015
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# ALL OTHER LANDINGS
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_daenerys_invasion.0020
+				days = 1
 			}
 		}
 	}
