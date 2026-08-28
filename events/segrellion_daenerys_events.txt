@@ -1203,137 +1203,109 @@ segrellion_daenerys_invasion.0016 = {
 
 # =========================================================
 # 0020 - THE DRAGON LANDS
-#
-# Daenerys has physically reached Westeros.
-# This is the common landing point for:
-#
-# - Dragonstone
-# - Dorne
-# - Massey's Hook
-# - The Beacon
 # =========================================================
 
 segrellion_daenerys_invasion.0020 = {
 
-	type = character_event
+    type = character_event
 
-	title = segrellion_daenerys_invasion.0020.t
-	desc = segrellion_daenerys_invasion.0020.desc
+    title = segrellion_daenerys_invasion.0020.t
+    desc = segrellion_daenerys_invasion.0020.desc
 
-	theme = crown
+    theme = crown
 
+    override_icon = {
+        reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+    }
 
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
+    trigger = {
 
+        this = character:Targaryen_9
 
-	trigger = {
+        is_alive = yes
 
-		this = character:Targaryen_9
-
-		is_alive = yes
-
-		has_character_flag = segrellion_daenerys_landing_chosen
-	}
+        has_character_flag = segrellion_daenerys_landing_chosen
+    }
 
 
-	# =====================================================
-	# ARRIVAL SETUP
-	# =====================================================
+    immediate = {
 
-	immediate = {
+        if = {
 
-		if = {
+            limit = {
+                has_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+            }
 
-			limit = {
-				has_character_modifier = segrellion_daenerys_invasion_provisions_modifier
-			}
+            remove_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+        }
 
-			remove_character_modifier = segrellion_daenerys_invasion_provisions_modifier
-		}
-
-
-		# Daenerys has now physically reached Westeros.
-		add_character_flag = segrellion_daenerys_landed_in_westeros
-	}
+        add_character_flag = segrellion_daenerys_landed_in_westeros
+    }
 
 
-	left_portrait = {
+    left_portrait = {
 
-		character = root
+        character = root
 
-		animation = personality_bold
-	}
-
-
-	# =====================================================
-	# BEGIN THE INVASION
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_invasion.0020.a
-
-		custom_tooltip = segrellion_daenerys_invasion.0020.a.tt
+        animation = personality_bold
+    }
 
 
-		hidden_effect = {
+    option = {
 
-			# =================================================
-			# CLAIM
-			# =================================================
+        name = segrellion_daenerys_invasion.0020.a
 
-			if = {
-
-				limit = {
-
-					NOT = {
-						has_claim_on = title:h_the_iron_throne
-					}
-				}
-
-				add_pressed_claim = title:h_the_iron_throne
-			}
+        custom_tooltip = segrellion_daenerys_invasion.0020.a.tt
 
 
-			# =================================================
-			# CURRENT HOLDER
-			# =================================================
+        hidden_effect = {
 
-			title:h_the_iron_throne.holder = {
-				save_scope_as = daenerys_iron_throne_defender
-			}
+            if = {
 
+                limit = {
 
-			# =================================================
-			# INVASION
-			# =================================================
+                    NOT = {
+                        has_claim_on = title:h_the_iron_throne
+                    }
+                }
 
-			start_war = {
-
-				cb = claim_cb
-
-				target = scope:daenerys_iron_throne_defender
-
-				claimant = root
-
-				target_title = title:h_the_iron_throne
-			}
+                add_pressed_claim = title:h_the_iron_throne
+            }
 
 
-			add_character_flag = segrellion_daenerys_iron_throne_war_started
+            title:h_the_iron_throne.holder = {
+                save_scope_as = daenerys_iron_throne_defender
+            }
 
 
-			# =================================================
-			# GLOBAL FULLSCREEN ANNOUNCEMENT
-			#
-			# Called AFTER the invasion state has been created.
-			# =================================================
+            start_war = {
 
-			segrellion_daenerys_announce_westeros_arrival_effect = yes
-		}
-	}
+                cb = claim_cb
+
+                target = scope:daenerys_iron_throne_defender
+
+                claimant = root
+
+                target_title = title:h_the_iron_throne
+            }
+
+
+            add_character_flag = segrellion_daenerys_iron_throne_war_started
+        }
+    }
+
+
+    # =====================================================
+    # IMPORTANT
+    #
+    # Do NOT try to open player fullscreen UI from inside
+    # the AI landing option / travel-arrival resolution.
+    # =====================================================
+
+    after = {
+
+        segrellion_daenerys_announce_westeros_arrival_effect = yes
+    }
 }
 
 # =========================================================

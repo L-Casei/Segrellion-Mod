@@ -3,53 +3,41 @@
 # GLOBAL WESTEROS ARRIVAL ANNOUNCEMENT
 # =========================================================
 
-
-# =========================================================
-# ANNOUNCE DAENERYS' ARRIVAL IN WESTEROS
-#
-# Expected scope: Daenerys Targaryen
-#
-# This effect can safely be called from ANY future landing
-# route. It will only ever announce her arrival once.
-# =========================================================
-
 segrellion_daenerys_announce_westeros_arrival_effect = {
 
-	if = {
+    if = {
 
-		limit = {
+        limit = {
 
-			this = character:Targaryen_9
+            this = character:Targaryen_9
 
-			is_alive = yes
+            is_alive = yes
 
-			has_character_flag = segrellion_daenerys_landed_in_westeros
+            has_character_flag = segrellion_daenerys_landed_in_westeros
 
-			NOT = {
-				has_character_flag = segrellion_daenerys_westeros_arrival_announced
-			}
-		}
-
-
-		# Prevent duplicate announcements if several
-		# landing systems call this effect.
-		add_character_flag = segrellion_daenerys_westeros_arrival_announced
+            NOT = {
+                has_character_flag = segrellion_daenerys_westeros_arrival_announced
+            }
+        }
 
 
-		# =================================================
-		# HUMAN PLAYERS ONLY
-		#
-		# Daenerys herself is explicitly excluded.
-		# =================================================
+        add_character_flag = segrellion_daenerys_westeros_arrival_announced
 
-		every_player = {
 
-			limit = {
+        every_player = {
 
-				this != character:Targaryen_9
-			}
+            limit = {
 
-			trigger_event = segrellion_daenerys_arrival.0001
-		}
-	}
+                this != character:Targaryen_9
+            }
+
+
+            trigger_event = {
+
+                id = segrellion_daenerys_arrival.0001
+
+                days = 1
+            }
+        }
+    }
 }
