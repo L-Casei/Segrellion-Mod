@@ -1,0 +1,243 @@
+# =========================================================
+# VLADWYN KINGSGUARD DECISIONS
+# =========================================================
+
+
+vladwyn_take_white_cloak_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/vladwyn_take_white_cloak_decision.dds"
+	}
+
+	decision_group_type = major
+
+
+	# =====================================================
+	# LOCALISATION
+	# =====================================================
+
+	desc = vladwyn_take_white_cloak_decision_desc
+
+	selection_tooltip = vladwyn_take_white_cloak_decision_tooltip
+
+	confirm_text = vladwyn_take_white_cloak_decision_confirm
+
+
+	# =====================================================
+	# HIDDEN VISIBILITY
+	#
+	# None of this appears as player-facing requirements.
+	# =====================================================
+
+	is_shown = {
+
+		# Vladwyn only.
+		dynasty = dynasty:dynn_Vladwyn
+
+
+		# Tristan must have served in the Kingsguard.
+		character:Vladwyn_1 = {
+
+			has_character_flag = vladwyn_tristan_served_kingsguard
+
+			is_alive = no
+		}
+
+
+		# Already wearing white.
+		NOT = {
+			has_trait = kingsguard
+		}
+
+
+		# Cannot spam multiple ravens.
+		NOT = {
+			has_character_flag = vladwyn_kingsguard_request_pending
+		}
+
+
+		# This mechanic is for a landed Vladwyn surrendering
+		# his inheritance.
+		is_landed = yes
+
+		exists = primary_heir
+
+
+		# There must actually be a ruler with a Kingsguard.
+		top_liege = {
+			ruler_has_kingsguard_trigger = yes
+		}
+	}
+
+
+	# =====================================================
+	# PLAYER-FACING REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		custom_description = {
+
+			text = vladwyn_take_white_cloak_adult_requirement
+
+			is_adult = yes
+		}
+
+
+		custom_description = {
+
+			text = vladwyn_take_white_cloak_free_requirement
+
+			is_imprisoned = no
+		}
+
+
+		custom_description = {
+
+			text = vladwyn_take_white_cloak_male_requirement
+
+			is_male = yes
+		}
+
+
+		custom_description = {
+
+			text = vladwyn_take_white_cloak_no_children_requirement
+
+			NOT = {
+
+				any_child = {
+
+					even_if_dead = yes
+
+					always = yes
+				}
+			}
+		}
+
+
+		custom_description = {
+
+			text = vladwyn_take_white_cloak_vacancy_requirement
+
+			top_liege = {
+
+				vladwyn_kingsguard_has_vacancy_trigger = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		save_scope_as = vladwyn_kingsguard_candidate
+
+		primary_heir = {
+			save_scope_as = vladwyn_kingsguard_heir
+		}
+
+
+		# =================================================
+		# MARRIAGE
+		# =================================================
+
+		if = {
+
+			limit = {
+				is_married = yes
+			}
+
+			primary_spouse = {
+				save_scope_as = vladwyn_kingsguard_partner
+			}
+
+			custom_tooltip = vladwyn_take_white_cloak_divorce_effect
+
+			hidden_effect = {
+
+				divorce = scope:vladwyn_kingsguard_partner
+			}
+		}
+
+
+		# =================================================
+		# BETROTHAL
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				is_betrothed = yes
+			}
+
+			betrothed = {
+				save_scope_as = vladwyn_kingsguard_partner
+			}
+
+			custom_tooltip = vladwyn_take_white_cloak_betrothal_effect
+
+			hidden_effect = {
+
+				break_betrothal = scope:vladwyn_kingsguard_partner
+			}
+		}
+
+
+		# =================================================
+		# RAVEN
+		# =================================================
+
+		custom_tooltip = vladwyn_take_white_cloak_raven_effect
+
+
+		# =================================================
+		# POSSIBLE ACCEPTANCE
+		# =================================================
+
+		custom_description_no_bullet = {
+			text = vladwyn_take_white_cloak_acceptance_header
+		}
+
+		custom_tooltip = vladwyn_take_white_cloak_titles_effect
+
+		custom_tooltip = vladwyn_take_white_cloak_kingsguard_effect
+
+		custom_tooltip = vladwyn_take_white_cloak_trait_effect
+
+		custom_tooltip = vladwyn_take_white_cloak_play_as_effect
+
+
+		# =================================================
+		# ACTUAL REQUEST
+		# =================================================
+
+		hidden_effect = {
+
+			add_character_flag = vladwyn_kingsguard_request_pending
+
+			trigger_event = {
+
+				id = vladwyn_kingsguard.1000
+
+				days = {
+					7
+					12
+				}
+			}
+		}
+	}
+
+
+	# Player-only bespoke narrative mechanic.
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

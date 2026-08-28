@@ -1,0 +1,77 @@
+# =========================================================
+# VLADWYN KINGSGUARD EFFECTS
+# =========================================================
+
+
+# =========================================================
+# SURRENDER ALL TITLES TO PRIMARY HEIR
+#
+# Expected scope: departing Vladwyn ruler.
+# =========================================================
+
+vladwyn_surrender_titles_to_heir_effect = {
+
+	primary_heir = {
+		save_scope_as = vladwyn_kingsguard_heir
+	}
+
+	primary_title = {
+		save_scope_as = vladwyn_kingsguard_primary_title
+	}
+
+
+	# =====================================================
+	# PREPARE TITLE TRANSFER
+	# =====================================================
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = vladwyn_kingsguard_title_change
+
+		add_claim_on_loss = no
+	}
+
+
+	# =====================================================
+	# PRIMARY TITLE + VASSALS
+	# =====================================================
+
+	scope:vladwyn_kingsguard_primary_title = {
+
+		change_title_holder_include_vassals = {
+
+			holder = scope:vladwyn_kingsguard_heir
+
+			change = scope:vladwyn_kingsguard_title_change
+		}
+	}
+
+
+	# =====================================================
+	# REMAINING PERSONALLY HELD TITLES
+	# =====================================================
+
+	every_held_title = {
+
+		limit = {
+
+			this != scope:vladwyn_kingsguard_primary_title
+		}
+
+		change_title_holder = {
+
+			holder = scope:vladwyn_kingsguard_heir
+
+			change = scope:vladwyn_kingsguard_title_change
+		}
+	}
+
+
+	# =====================================================
+	# RESOLVE TRANSFER
+	# =====================================================
+
+	resolve_title_and_vassal_change = scope:vladwyn_kingsguard_title_change
+}

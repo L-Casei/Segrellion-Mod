@@ -1,0 +1,393 @@
+namespace = vladwyn_kingsguard
+
+
+
+# =========================================================
+# 1000 - THE RAVEN ARRIVES
+#
+# Hidden routing event.
+#
+# Rechecks the vacancy after the travel time.
+# =========================================================
+
+vladwyn_kingsguard.1000 = {
+
+	hidden = yes
+
+
+	immediate = {
+
+		save_scope_as = vladwyn_kingsguard_candidate
+
+
+		# =================================================
+		# FIND CURRENT KING
+		#
+		# We deliberately calculate this NOW rather than
+		# seven days ago in case the throne changed hands.
+		# =================================================
+
+		top_liege = {
+			save_scope_as = vladwyn_kingsguard_king
+		}
+
+
+		# =================================================
+		# THE SEAT IS STILL OPEN
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				exists = scope:vladwyn_kingsguard_king
+
+				scope:vladwyn_kingsguard_king = {
+
+					vladwyn_kingsguard_has_vacancy_trigger = yes
+				}
+			}
+
+
+			scope:vladwyn_kingsguard_king = {
+
+				trigger_event = vladwyn_kingsguard.1010
+			}
+		}
+
+
+		# =================================================
+		# TOO LATE
+		#
+		# Somebody else has already been appointed.
+		#
+		# The king receives NOTHING.
+		# =================================================
+
+		else = {
+
+			add_character_flag = vladwyn_kingsguard_seat_filled
+
+			trigger_event = vladwyn_kingsguard.1030
+		}
+	}
+}
+
+
+
+# =========================================================
+# 1010 - A VLADWYN ASKS FOR THE WHITE CLOAK
+#
+# ROOT = KING
+# =========================================================
+
+vladwyn_kingsguard.1010 = {
+
+	type = letter_event
+
+	title = vladwyn_kingsguard.1010.t
+
+	opening = {
+		desc = vladwyn_kingsguard.1010.opening
+	}
+
+	desc = vladwyn_kingsguard.1010.desc
+
+	sender = scope:vladwyn_kingsguard_candidate
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_kingsguard.1010.a
+
+		trigger = {
+
+			vladwyn_kingsguard_has_vacancy_trigger = yes
+		}
+
+
+		custom_tooltip = vladwyn_kingsguard.1010.a.tt
+
+
+		scope:vladwyn_kingsguard_candidate = {
+
+			remove_character_flag = vladwyn_kingsguard_request_pending
+
+			save_scope_as = vladwyn_kingsguard_candidate
+
+			scope:vladwyn_kingsguard_king = {
+				save_scope_as = vladwyn_kingsguard_king
+			}
+
+			trigger_event = vladwyn_kingsguard.1020
+		}
+
+
+		ai_chance = {
+
+			base = 80
+
+			modifier = {
+				add = 20
+				scope:vladwyn_kingsguard_candidate = {
+					prowess >= 15
+				}
+			}
+
+			modifier = {
+				add = 30
+				scope:vladwyn_kingsguard_candidate = {
+					prowess >= 25
+				}
+			}
+
+			modifier = {
+				add = 30
+				scope:vladwyn_kingsguard_candidate = {
+					prowess >= 35
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REJECT
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_kingsguard.1010.b
+
+		scope:vladwyn_kingsguard_candidate = {
+
+			add_character_flag = vladwyn_kingsguard_rejected_by_king
+
+			remove_character_flag = vladwyn_kingsguard_request_pending
+
+			trigger_event = vladwyn_kingsguard.1030
+		}
+
+
+		ai_chance = {
+
+			base = 20
+		}
+	}
+}
+
+
+
+# =========================================================
+# 1020 - THE KING ACCEPTS
+#
+# ROOT = VLADWYN CANDIDATE
+# =========================================================
+
+vladwyn_kingsguard.1020 = {
+
+	type = letter_event
+
+	title = vladwyn_kingsguard.1020.t
+
+	opening = {
+		desc = vladwyn_kingsguard.1020.opening
+	}
+
+	desc = vladwyn_kingsguard.1020.desc
+
+	sender = scope:vladwyn_kingsguard_king
+
+
+	immediate = {
+
+		primary_heir = {
+			save_scope_as = vladwyn_kingsguard_heir
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_kingsguard.1020.a
+
+
+		custom_tooltip = vladwyn_kingsguard.1020.titles.tt
+
+		custom_tooltip = vladwyn_kingsguard.1020.kingsguard.tt
+
+		custom_tooltip = vladwyn_kingsguard.1020.play_as.tt
+
+
+		hidden_effect = {
+
+
+			# =================================================
+			# SAVE EVERYTHING BEFORE ROOT BECOMES UNLANDED
+			# =================================================
+
+			save_scope_as = vladwyn_kingsguard_candidate
+
+			primary_heir = {
+				save_scope_as = vladwyn_kingsguard_heir
+			}
+
+
+			# =================================================
+			# SURRENDER THE INHERITANCE
+			# =================================================
+
+			vladwyn_surrender_titles_to_heir_effect = yes
+
+
+			# =================================================
+			# CHANGE PLAYER CHARACTER
+			#
+			# Scope character = old player.
+			# Target = heir.
+			# =================================================
+
+			root = {
+
+				set_player_character = scope:vladwyn_kingsguard_heir
+			}
+
+
+			# =================================================
+			# JOIN THE KINGSGUARD
+			#
+			# Native AGOT effect.
+			# =================================================
+
+			agot_join_kingsguard_effect = {
+
+				KINGSGUARD = root
+
+				KING = scope:vladwyn_kingsguard_king
+			}
+
+
+			# =================================================
+			# KINGSGUARD TRAIT
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_trait = kingsguard
+					}
+				}
+
+				add_trait = kingsguard
+			}
+
+
+			# =================================================
+			# NATIVE KINGSGUARD EQUIPMENT
+			# =================================================
+
+			agot_create_artifact_kingsguard_armor_effect = {
+				OWNER = root
+			}
+
+			agot_create_artifact_kingsguard_sword_effect = {
+				OWNER = root
+			}
+
+
+			# =================================================
+			# NATIVE AGOT KINGSGUARD SETUP
+			#
+			# Memory, prestige, knighthood/celibacy handling.
+			# =================================================
+
+			trigger_event = {
+
+				id = agot_kingsguard.1012
+
+				days = 1
+			}
+
+
+			remove_character_flag = vladwyn_kingsguard_request_pending
+		}
+	}
+}
+
+
+
+# =========================================================
+# 1030 - REQUEST DENIED
+#
+# Handles BOTH:
+#
+# - King rejected you.
+# - The vacancy disappeared before the raven arrived.
+# =========================================================
+
+vladwyn_kingsguard.1030 = {
+
+	type = letter_event
+
+	title = vladwyn_kingsguard.1030.t
+
+
+	opening = {
+
+		desc = vladwyn_kingsguard.1030.opening
+	}
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = vladwyn_kingsguard_seat_filled
+				}
+
+				desc = vladwyn_kingsguard.1030.desc_seat_filled
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = vladwyn_kingsguard_rejected_by_king
+				}
+
+				desc = vladwyn_kingsguard.1030.desc_rejected
+			}
+
+
+			desc = vladwyn_kingsguard.1030.desc_fallback
+		}
+	}
+
+
+	sender = scope:vladwyn_kingsguard_king
+
+
+	option = {
+
+		name = vladwyn_kingsguard.1030.a
+
+
+		remove_character_flag = vladwyn_kingsguard_request_pending
+
+		remove_character_flag = vladwyn_kingsguard_seat_filled
+
+		remove_character_flag = vladwyn_kingsguard_rejected_by_king
+	}
+}
