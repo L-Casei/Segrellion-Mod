@@ -1,0 +1,228 @@
+namespace = segrellion_daenerys_arrival
+
+
+# =========================================================
+# 0001 - THE DRAGON QUEEN RETURNS
+#
+# Global fullscreen announcement shown to every HUMAN
+# player except Daenerys herself.
+#
+# Option A:
+#   Continue normally.
+#
+# Option B:
+#   Abandon current character and play as Daenerys.
+# =========================================================
+
+segrellion_daenerys_arrival.0001 = {
+
+	type = fullscreen_event
+
+	title = segrellion_daenerys_arrival.0001.t
+
+
+	# =====================================================
+	# DESCRIPTION
+	#
+	# Same event regardless of route, but the central
+	# paragraph identifies where Daenerys actually landed.
+	# =====================================================
+
+	desc = {
+
+		desc = segrellion_daenerys_arrival.0001.desc_opening
+
+
+		first_valid = {
+
+
+			# -------------------------------------------------
+			# DRAGONSTONE
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:daenerys = {
+						has_character_flag = segrellion_daenerys_landing_dragonstone
+					}
+				}
+
+				desc = segrellion_daenerys_arrival.0001.desc_dragonstone
+			}
+
+
+			# -------------------------------------------------
+			# DORNE
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:daenerys = {
+						has_character_flag = segrellion_daenerys_landing_dorne
+					}
+				}
+
+				desc = segrellion_daenerys_arrival.0001.desc_dorne
+			}
+
+
+			# -------------------------------------------------
+			# THE BEACON
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:daenerys = {
+						has_character_flag = segrellion_daenerys_landing_beacon
+					}
+				}
+
+				desc = segrellion_daenerys_arrival.0001.desc_beacon
+			}
+
+
+			# -------------------------------------------------
+			# MASSEY'S HOOK
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:daenerys = {
+						has_character_flag = segrellion_daenerys_landing_masseys_hook
+					}
+				}
+
+				desc = segrellion_daenerys_arrival.0001.desc_masseys_hook
+			}
+
+
+			# -------------------------------------------------
+			# FUTURE / UNKNOWN LANDING
+			# -------------------------------------------------
+
+			desc = segrellion_daenerys_arrival.0001.desc_fallback
+		}
+
+
+		desc = segrellion_daenerys_arrival.0001.desc_ending
+	}
+
+
+	theme = realm
+
+
+	override_background = {
+		reference = segrellion_daenerys_westeros_arrival_fullscreen
+	}
+
+
+	# =====================================================
+	# SAFETY TRIGGER
+	#
+	# Normally unnecessary because every_player already
+	# filters recipients, but I want the event itself
+	# protected as well.
+	# =====================================================
+
+	trigger = {
+
+		is_ai = no
+
+		this != character:Targaryen_9
+
+
+		character:Targaryen_9 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+	}
+
+
+	# =====================================================
+	# SETUP
+	# =====================================================
+
+	immediate = {
+
+		character:Targaryen_9 = {
+			save_scope_as = daenerys
+		}
+	}
+
+
+	# =====================================================
+	# OPTION A
+	# CONTINUE AS CURRENT CHARACTER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_arrival.0001.a
+	}
+
+
+	# =====================================================
+	# OPTION B
+	# PLAY AS DAENERYS
+	#
+	# Only available while Daenerys remains AI-controlled.
+	# This also prevents two players from deliberately
+	# trying to control the same character in multiplayer.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_arrival.0001.b
+
+
+		trigger = {
+
+			scope:daenerys = {
+
+				is_alive = yes
+
+				is_ai = yes
+
+				is_playable_character = yes
+			}
+		}
+
+
+		custom_tooltip = segrellion_daenerys_arrival.0001.b.tt
+
+
+		hidden_effect = {
+
+			# Recheck at the exact moment the button is clicked.
+			# Useful in multiplayer if another player has already
+			# selected Daenerys from their own announcement.
+
+			if = {
+
+				limit = {
+
+					scope:daenerys = {
+
+						is_alive = yes
+
+						is_ai = yes
+
+						is_playable_character = yes
+					}
+				}
+
+				set_player_character = scope:daenerys
+			}
+		}
+	}
+}

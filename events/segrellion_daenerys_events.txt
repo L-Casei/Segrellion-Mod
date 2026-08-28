@@ -1228,18 +1228,53 @@ segrellion_daenerys_invasion.0020 = {
 	}
 
 
-	immediate = {
+	option = {
 
-		if = {
+		name = segrellion_daenerys_invasion.0020.a
 
-			limit = {
-				has_character_modifier = segrellion_daenerys_invasion_provisions_modifier
+		custom_tooltip = segrellion_daenerys_invasion.0020.a.tt
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_claim_on = title:h_the_iron_throne
+					}
+				}
+
+				add_pressed_claim = title:h_the_iron_throne
 			}
 
-			remove_character_modifier = segrellion_daenerys_invasion_provisions_modifier
-		}
 
-		add_character_flag = segrellion_daenerys_landed_in_westeros
+			title:h_the_iron_throne.holder = {
+				save_scope_as = daenerys_iron_throne_defender
+			}
+
+
+			start_war = {
+
+				cb = claim_cb
+
+				target = scope:daenerys_iron_throne_defender
+
+				claimant = root
+
+				target_title = title:h_the_iron_throne
+			}
+
+
+			add_character_flag = segrellion_daenerys_iron_throne_war_started
+
+
+			# =================================================
+			# GLOBAL ANNOUNCEMENT
+			# =================================================
+
+			segrellion_daenerys_announce_westeros_arrival_effect = yes
+		}
 	}
 
 
