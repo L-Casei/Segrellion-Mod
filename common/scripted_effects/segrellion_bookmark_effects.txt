@@ -755,3 +755,151 @@ segrellion_spare_all_stormflame_captives_effect = {
 		}
 	}
 }
+
+# =========================================================
+# DAENERYS TARGARYEN - 300 AC CAMP SETUP
+#
+# Historical companions:
+#
+#   Tyrion Lannister  -> Second
+#   Barristan Selmy
+#   Jorah Mormont
+#   Missandei
+#   Torgo Nudho
+#
+# =========================================================
+
+segrellion_setup_daenerys_300_effect = {
+
+	# Safety check. Only run once.
+	if = {
+
+		limit = {
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_300_camp_setup_done
+				}
+			}
+		}
+
+
+		# =================================================
+		# TYRION LANNISTER
+		# =================================================
+
+		character:Lannister_8 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# BARRISTAN SELMY
+		# =================================================
+
+		character:Selmy_17 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# JORAH MORMONT
+		# =================================================
+
+		character:Mormont_8 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# MISSANDEI
+		# =================================================
+
+		character:IAF_Missandei_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# TORGO NUDHO
+		# =================================================
+
+		character:IAF_Torgo_Nudho_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# TYRION BECOMES THE SECOND
+		#
+		# "Second" is the native Roads to Power
+		# camp officer position.
+		# =================================================
+
+		character:Targaryen_9 = {
+
+			if = {
+
+				limit = {
+
+					character:Lannister_8 ?= {
+						is_alive = yes
+						employer = character:Targaryen_9
+					}
+				}
+
+
+				appoint_court_position = {
+
+					recipient = character:Lannister_8
+					court_position = second_camp_officer
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_300_camp_setup_done
+		}
+	}
+}
