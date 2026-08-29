@@ -98,7 +98,6 @@ on_title_gain = {
 		segrellion_young_griff_blackfyre_reveal_on_title_gain
 		segrellion_young_griff_daenerys_pact_title_gain
 		segrellion_north_story_title_gain_cleanup
-		segrellion_second_war_throne_settlement
 	}
 }
 
@@ -137,18 +136,6 @@ segrellion_icebringer_monthly_event_pulse = {
 segrellion_icebringer_historical_loss_progression = {
 	effect = {
 		segrellion_process_icebringer_historical_loss_effect = yes
-	}
-}
-
-# =========================================================
-# SECOND WAR - IRON THRONE SETTLEMENT
-# =========================================================
-
-segrellion_second_war_throne_settlement = {
-
-	effect = {
-
-		segrellion_second_war_throne_settlement_effect = yes
 	}
 }
 
@@ -245,11 +232,10 @@ on_war_started = {
 
 	on_actions = {
 
-		segrellion_second_war_register_contender
-
-		segrellion_stannis_iron_throne_war_setup
+		segrellion_stannis_jon_iron_throne_war_join
 	}
 }
+
 # =========================================================
 # LEO NEVER LEAVES THE BEACON
 # =========================================================
@@ -1800,177 +1786,6 @@ segrellion_stannis_jon_iron_throne_war_join = {
 		scope:war = {
 
 			add_attacker = character:Stark_7
-		}
-	}
-}
-
-# =========================================================
-# SECOND WAR OF THE FIVE KINGS
-# REGISTER NEW CLAIMANTS
-# =========================================================
-
-segrellion_second_war_register_contender = {
-
-	trigger = {
-
-		exists = scope:war
-
-
-		scope:war = {
-
-			casus_belli = {
-
-				any_target_title = {
-
-					this = title:h_the_iron_throne
-				}
-			}
-		}
-	}
-
-
-	effect = {
-
-		segrellion_second_war_register_contender_effect = yes
-	}
-}
-
-# =========================================================
-# STANNIS - IRON THRONE WAR SETUP
-#
-# Saves the actual war.
-# The ruler of the North joins Stannis.
-# The Vale is invited.
-# =========================================================
-
-segrellion_stannis_iron_throne_war_setup = {
-
-	trigger = {
-
-		exists = scope:war
-
-
-		scope:war = {
-
-			casus_belli = {
-
-				any_target_title = {
-
-					this = title:h_the_iron_throne
-				}
-			}
-
-
-			claimant ?= {
-
-				this = character:Baratheon_3
-			}
-		}
-	}
-
-
-	effect = {
-
-
-		# =================================================
-		# SAVE STANNIS' THRONE WAR
-		# =================================================
-
-		character:Baratheon_3 = {
-
-			set_variable = {
-
-				name = segrellion_stannis_iron_throne_war
-
-				value = scope:war
-			}
-		}
-
-
-		# =================================================
-		# THE NORTH
-		# =================================================
-
-		title:e_the_north.holder ?= {
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					this != character:Baratheon_3
-				}
-
-
-				save_scope_as = segrellion_stannis_north_ally
-			}
-		}
-
-
-		scope:segrellion_stannis_north_ally ?= {
-
-			add_character_flag = segrellion_north_supported_stannis_iron_throne
-
-
-			scope:war = {
-
-				if = {
-
-					limit = {
-
-						NOT = {
-							is_participant = scope:segrellion_stannis_north_ally
-						}
-					}
-
-
-					add_attacker = scope:segrellion_stannis_north_ally
-				}
-			}
-		}
-
-
-		# =================================================
-		# CALL THE VALE
-		# =================================================
-
-		character:Baratheon_3 = {
-
-			if = {
-
-				limit = {
-
-					NOT = {
-						has_character_flag = segrellion_stannis_vale_called
-					}
-				}
-
-
-				add_character_flag = segrellion_stannis_vale_called
-
-
-				title:e_the_vale.holder ?= {
-
-					if = {
-
-						limit = {
-
-							is_alive = yes
-
-							this != character:Baratheon_3
-						}
-
-
-						trigger_event = {
-
-							id = segrellion_stannis.2010
-
-							days = { 1 3 }
-						}
-					}
-				}
-			}
 		}
 	}
 }
