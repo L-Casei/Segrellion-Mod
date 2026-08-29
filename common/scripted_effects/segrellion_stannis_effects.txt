@@ -1509,3 +1509,83 @@ segrellion_transfer_stannis_prisoners_to_jon_effect = {
 		}
 	}
 }
+
+# =========================================================
+# STANNIS - MARCH FOR THE IRON THRONE
+# =========================================================
+
+segrellion_start_stannis_iron_throne_war_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Baratheon_3
+
+			is_alive = yes
+
+
+			NOT = {
+				has_character_flag = segrellion_stannis_iron_throne_war_started
+			}
+
+
+			title:h_the_iron_throne = {
+
+				exists = holder
+
+				holder = {
+
+					this != character:Baratheon_3
+				}
+			}
+		}
+
+
+		# =================================================
+		# CLAIM
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_claim_on = title:h_the_iron_throne
+				}
+			}
+
+
+			add_pressed_claim = title:h_the_iron_throne
+		}
+
+
+		# =================================================
+		# SAVE DEFENDER
+		# =================================================
+
+		title:h_the_iron_throne.holder = {
+
+			save_scope_as = segrellion_stannis_throne_defender
+		}
+
+
+		add_character_flag = segrellion_stannis_iron_throne_war_started
+
+
+		# =================================================
+		# WAR
+		# =================================================
+
+		start_war = {
+
+			cb = claim_cb
+
+			target = scope:segrellion_stannis_throne_defender
+
+			claimant = character:Baratheon_3
+
+			target_title = title:h_the_iron_throne
+		}
+	}
+}
