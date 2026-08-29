@@ -1,4 +1,4 @@
-namespace = segrellion_stannis
+﻿namespace = segrellion_stannis
 
 
 # =========================================================
@@ -70,7 +70,7 @@ segrellion_stannis.0001 = {
 
 
 	override_background = {
-		reference = castle
+		reference = segrellion_castle_black_great_hall
 	}
 
 
@@ -219,16 +219,6 @@ segrellion_stannis.0010 = {
 		title:e_the_north = {
 			exists = holder
 		}
-
-
-		title:c_white_harbor = {
-			exists = holder
-		}
-
-
-		title:c_deepwood_motte = {
-			exists = holder
-		}
 	}
 
 
@@ -239,13 +229,17 @@ segrellion_stannis.0010 = {
 		}
 
 
-		title:c_white_harbor.holder = {
+		title:c_white_harbor.holder ?= {
+
+			is_alive = yes
 
 			save_scope_as = stannis_manderly_lord
 		}
 
 
-		title:c_deepwood_motte.holder = {
+		title:c_deepwood.holder ?= {
+
+			is_alive = yes
 
 			save_scope_as = stannis_glover_lord
 		}
@@ -283,7 +277,20 @@ segrellion_stannis.0010 = {
 		custom_tooltip = segrellion_stannis.0010.a.tt
 
 
-		segrellion_setup_stannis_northern_campaign_effect = yes
+		add_character_flag = segrellion_stannis_northern_cb_authorized
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.0020
+
+			days = { 3 7 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }
 
