@@ -208,231 +208,70 @@ segrellion_setup_daenerys_dragons_300_effect = {
 
 	if = {
 		limit = {
-
 			game_start_date = 8300.8.20
-			current_date < 8301.1.1
-
-			character:Targaryen_9 ?= {
-				is_alive = yes
-			}
+			character:Targaryen_9 ?= { is_alive = yes }
 		}
-
-
-		# =====================================================
-		# DROGON
-		# =====================================================
-
-		character:dragon_drogon ?= {
-
-			if = {
-				limit = {
-					is_alive = yes
-				}
-
-				# ---------------------------------------------
-				# Canon dragon traits
-				# ---------------------------------------------
-
-				if = {
-					limit = {
-						NOT = {
-							has_trait = dragon_destined
-						}
-					}
-
-					add_trait = dragon_destined
-				}
-
-				# Drogon is canonically the strongest of the
-				# three: Tyrannic Leviathan.
-				if = {
-					limit = {
-						NOT = {
-							has_trait = dragon_physique_good_3
-						}
-					}
-
-					remove_trait = dragon_physique_good_1
-					remove_trait = dragon_physique_good_2
-					add_trait = dragon_physique_good_3
-				}
-
-
-				# ---------------------------------------------
-				# Daenerys' camp
-				# ---------------------------------------------
-
-				if = {
-					limit = {
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
-					}
-
-					set_variable = {
-						name = target_employer
-						value = character:Targaryen_9
-					}
-
-					set_employer = character:Targaryen_9
-					return_to_court = yes
-				}
-
-				set_location = title:c_ghoyan_drohe.title_province
-			}
-		}
-
-
-		# =====================================================
-		# RHAEGAL
-		# =====================================================
-
-		character:dragon_rhaegal ?= {
-
-			if = {
-				limit = {
-					is_alive = yes
-				}
-
-				# ---------------------------------------------
-				# Canon dragon traits
-				# ---------------------------------------------
-
-				if = {
-					limit = {
-						NOT = {
-							has_trait = dragon_destined
-						}
-					}
-
-					add_trait = dragon_destined
-				}
-
-				# Canonical physique tier for Rhaegal.
-				if = {
-					limit = {
-						NOR = {
-							has_trait = dragon_physique_good_2
-							has_trait = dragon_physique_good_3
-						}
-					}
-
-					remove_trait = dragon_physique_good_1
-					add_trait = dragon_physique_good_2
-				}
-
-
-				# ---------------------------------------------
-				# Daenerys' camp
-				# ---------------------------------------------
-
-				if = {
-					limit = {
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
-					}
-
-					set_variable = {
-						name = target_employer
-						value = character:Targaryen_9
-					}
-
-					set_employer = character:Targaryen_9
-					return_to_court = yes
-				}
-
-				set_location = title:c_ghoyan_drohe.title_province
-			}
-		}
-
-
-		# =====================================================
-		# VISERION
-		# =====================================================
-
-		character:dragon_viserion ?= {
-
-			if = {
-				limit = {
-					is_alive = yes
-				}
-
-				# ---------------------------------------------
-				# Canon dragon traits
-				# ---------------------------------------------
-
-				if = {
-					limit = {
-						NOT = {
-							has_trait = dragon_destined
-						}
-					}
-
-					add_trait = dragon_destined
-				}
-
-				# Canonical physique tier for Viserion.
-				if = {
-					limit = {
-						NOR = {
-							has_trait = dragon_physique_good_2
-							has_trait = dragon_physique_good_3
-						}
-					}
-
-					remove_trait = dragon_physique_good_1
-					add_trait = dragon_physique_good_2
-				}
-
-
-				# ---------------------------------------------
-				# Daenerys' camp
-				# ---------------------------------------------
-
-				if = {
-					limit = {
-						NOT = {
-							is_courtier_of = character:Targaryen_9
-						}
-					}
-
-					set_variable = {
-						name = target_employer
-						value = character:Targaryen_9
-					}
-
-					set_employer = character:Targaryen_9
-					return_to_court = yes
-				}
-
-				set_location = title:c_ghoyan_drohe.title_province
-			}
-		}
-
-
-		# =====================================================
-		# DROGON IS DAENERYS' RIDER DRAGON
-		# =====================================================
 
 		character:Targaryen_9 = {
 
 			if = {
 				limit = {
-
 					character:dragon_drogon ?= {
 						is_alive = yes
-					}
-
-					NOT = {
-						has_relation_agot_dragon = character:dragon_drogon
+						NOT = { is_courtier_of = character:Targaryen_9 }
 					}
 				}
+				add_courtier = character:dragon_drogon
+			}
 
+			if = {
+				limit = {
+					character:dragon_rhaegal ?= {
+						is_alive = yes
+						NOT = { is_courtier_of = character:Targaryen_9 }
+					}
+				}
+				add_courtier = character:dragon_rhaegal
+			}
+
+			if = {
+				limit = {
+					character:dragon_viserion ?= {
+						is_alive = yes
+						NOT = { is_courtier_of = character:Targaryen_9 }
+					}
+				}
+				add_courtier = character:dragon_viserion
+			}
+
+			if = {
+				limit = {
+					character:dragon_drogon ?= { is_alive = yes }
+					NOT = { has_relation_agot_dragon = character:dragon_drogon }
+				}
 				agot_tame_dragon = {
 					TAMER = character:Targaryen_9
 					DRAGON = character:dragon_drogon
 				}
+			}
+		}
+
+		character:dragon_drogon ?= {
+			if = {
+				limit = { is_alive = yes }
+				set_location = title:c_ghoyan_drohe.title_province
+			}
+		}
+		character:dragon_rhaegal ?= {
+			if = {
+				limit = { is_alive = yes }
+				set_location = title:c_ghoyan_drohe.title_province
+			}
+		}
+		character:dragon_viserion ?= {
+			if = {
+				limit = { is_alive = yes }
+				set_location = title:c_ghoyan_drohe.title_province
 			}
 		}
 	}
