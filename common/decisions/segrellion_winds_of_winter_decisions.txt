@@ -261,15 +261,29 @@ segrellion_the_unicorn_returns_decision = {
 		has_character_flag = segrellion_foreign_support_secured
 
 
-		# If Hugh is alive, Daemon waits until the Plate
-		# negotiation has actually been resolved.
+		# =====================================================
+		# PLATE OF SEGRELL
+		#
+		# Daemon only waits for the Plate negotiation if Hugh
+		# ALREADY possesses the Plate, meaning the demand can
+		# actually be made immediately.
+		#
+		# If Hugh has not yet recovered the Plate, the artifact
+		# storyline no longer blocks The Unicorn Returns.
+		# =====================================================
 
 		trigger_if = {
 
 			limit = {
 
 				character:Segrellion_43 ?= {
+
 					is_alive = yes
+
+					any_character_artifact = {
+
+						has_variable = segrellion_plate_of_segrell_artifact
+					}
 				}
 			}
 
