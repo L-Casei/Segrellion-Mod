@@ -546,3 +546,419 @@ segrellion_unicorn_returns_cb = {
 	max_defender_score_from_occupation = 150
 	max_attacker_score_from_occupation = 150
 }
+
+# =========================================================
+# STANNIS BARATHEON
+# THE NORTHERN CAMPAIGN
+#
+# Stannis is NOT claiming the North for himself.
+#
+# The purpose of this war is to destroy Bolton rule.
+# The political settlement happens through events after
+# victory.
+# =========================================================
+
+segrellion_stannis_northern_campaign_cb = {
+
+	icon = invasion
+
+	group = invasion
+
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+
+	mutually_exclusive_titles = {
+		always = yes
+	}
+
+
+	allow_hostages = no
+
+
+	# =====================================================
+	# STANNIS ONLY
+	# =====================================================
+
+	allowed_for_character = {
+
+		this = character:Baratheon_3
+
+		has_character_flag = segrellion_stannis_northern_cb_authorized
+	}
+
+
+	# =====================================================
+	# CURRENT LORD PARAMOUNT OF THE NORTH
+	# =====================================================
+
+	allowed_against_character = {
+
+		scope:defender = title:e_the_north.holder
+	}
+
+
+	target_titles = all
+
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+
+	# Do not automatically give the North to Stannis.
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:e_the_north
+		}
+	}
+
+
+	should_invalidate = {
+
+		OR = {
+
+			scope:attacker = {
+				is_alive = no
+			}
+
+			scope:defender = {
+
+				NOT = {
+					has_title = title:e_the_north
+				}
+			}
+		}
+	}
+
+
+	cost = {
+	}
+
+
+	# =====================================================
+	# WAR DECLARATION
+	# =====================================================
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_northern_cb_authorized
+			remove_character_flag = segrellion_stannis_preparing_northern_campaign
+
+			add_character_flag = segrellion_stannis_northern_campaign_started
+			add_character_flag = segrellion_stannis_northern_campaign_active
+
+
+			set_variable = {
+
+				name = segrellion_stannis_northern_war
+
+				value = scope:war
+			}
+
+
+			if = {
+
+				limit = {
+					has_character_modifier = segrellion_stannis_northern_story_ai_modifier
+				}
+
+				remove_character_modifier = segrellion_stannis_northern_story_ai_modifier
+			}
+
+
+			# =================================================
+			# STANNIS' NORTHERN HOST
+			#
+			# This is the army physically campaigning from
+			# Castle Black. Stannis remains Lord of Dragonstone
+			# but personally commands this force.
+			# =================================================
+
+			spawn_army = {
+
+				name = segrellion_stannis_northern_host
+
+
+				men_at_arms = {
+
+					type = armored_footmen
+
+					men = 800
+				}
+
+
+				men_at_arms = {
+
+					type = pikemen_unit
+
+					men = 600
+				}
+
+
+				men_at_arms = {
+
+					type = bowmen
+
+					men = 600
+				}
+
+
+				levies = 2000
+
+
+				inheritable = no
+
+
+				location = title:c_castle_black.title_province
+
+				origin = title:c_castle_black.title_province
+
+
+				war = scope:war
+
+
+				save_scope_as = segrellion_stannis_northern_host_army
+			}
+		}
+
+
+		# Stannis PERSONALLY leads the army.
+
+		scope:segrellion_stannis_northern_host_army ?= {
+
+			assign_commander = character:Baratheon_3
+		}
+
+
+		# =====================================================
+		# HOUSE MANDERLY
+		# =====================================================
+
+		title:c_white_harbor.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+				save_scope_as = stannis_manderly_supporter
+			}
+		}
+
+
+		scope:stannis_manderly_supporter ?= {
+
+			scope:war ?= {
+				add_attacker = scope:stannis_manderly_supporter
+			}
+		}
+
+
+		# =====================================================
+		# HOUSE GLOVER
+		# =====================================================
+
+		title:c_deepwood_motte.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+				save_scope_as = stannis_glover_supporter
+			}
+		}
+
+
+		scope:stannis_glover_supporter ?= {
+
+			scope:war ?= {
+				add_attacker = scope:stannis_glover_supporter
+			}
+		}
+	}
+
+
+	# =====================================================
+	# VICTORY
+	# =====================================================
+
+	on_victory_desc = {
+		desc = segrellion_stannis_northern_campaign_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_northern_campaign_active
+
+			add_character_flag = segrellion_stannis_northern_campaign_victory
+
+			remove_variable = segrellion_stannis_northern_war
+
+
+			# Ramsay / current Bolton ruler is taken alive
+			# when Winterfell falls.
+
+			if = {
+
+				limit = {
+					scope:defender = {
+						is_alive = yes
+					}
+				}
+
+				imprison = {
+
+					target = scope:defender
+
+					type = dungeon
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_stannis.1000
+
+				days = { 2 4 }
+			}
+		}
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	# =====================================================
+	# WHITE PEACE
+	# =====================================================
+
+	on_white_peace_desc = {
+		desc = segrellion_stannis_northern_campaign_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_northern_campaign_active
+
+			add_character_flag = segrellion_stannis_northern_campaign_failed
+
+			remove_variable = segrellion_stannis_northern_war
+
+
+			trigger_event = {
+
+				id = segrellion_stannis.0900
+
+				days = { 2 5 }
+			}
+		}
+
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	# =====================================================
+	# DEFEAT
+	# =====================================================
+
+	on_defeat_desc = {
+		desc = segrellion_stannis_northern_campaign_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_northern_campaign_active
+
+			add_character_flag = segrellion_stannis_northern_campaign_failed
+
+			remove_variable = segrellion_stannis_northern_war
+
+
+			trigger_event = {
+
+				id = segrellion_stannis.0900
+
+				days = { 2 5 }
+			}
+		}
+
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_invalidated = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_northern_cb_authorized
+			remove_character_flag = segrellion_stannis_northern_campaign_active
+
+			remove_variable = segrellion_stannis_northern_war
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_stannis_northern_campaign_war_name"
+	war_name_base = "segrellion_stannis_northern_campaign_war_name_base"
+
+	cb_name = "segrellion_stannis_northern_campaign_cb_name"
+
+
+	interface_priority = 100
+
+
+	use_de_jure_wargoal_only = yes
+
+
+	attacker_wargoal_percentage = 0.8
+
+
+	max_attacker_score_from_battles = 75
+
+	max_defender_score_from_occupation = 150
+	max_attacker_score_from_occupation = 150
+}

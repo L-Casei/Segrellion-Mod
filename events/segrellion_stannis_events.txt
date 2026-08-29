@@ -1,0 +1,725 @@
+namespace = segrellion_stannis
+
+
+# =========================================================
+# 0090 - STARTUP ROUTER
+#
+# One day after Roose's murder.
+# Gives CK3 enough time to resolve inheritance.
+# =========================================================
+
+segrellion_stannis.0090 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_north_story_initialized
+
+		NOT = {
+			has_character_flag = segrellion_stannis_northern_campaign_started
+		}
+	}
+
+
+	immediate = {
+
+		set_location = title:c_castle_black.title_province
+
+
+		title:e_the_north.holder ?= {
+
+			add_character_flag = segrellion_stannis_northern_enemy
+
+			save_scope_as = stannis_bolton_lord
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.0001
+
+			days = { 2 4 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0001 - THE WAR AFTER THE WAR
+#
+# Root = Stannis
+#
+# The wildling threat has been checked.
+# Now Stannis decides what the North requires.
+# =========================================================
+
+segrellion_stannis.0001 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0001.t
+	desc = segrellion_stannis.0001.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = castle
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_preparing_northern_campaign
+
+		character:Stark_7 ?= {
+			is_alive = yes
+		}
+
+		title:e_the_north = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		character:Stark_7 = {
+			save_scope_as = stannis_jon
+		}
+
+		title:e_the_north.holder = {
+			save_scope_as = stannis_bolton_lord
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_7
+
+		animation = personality_honorable
+	}
+
+
+	# =====================================================
+	# MARCH SOUTH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.0001.a
+
+		custom_tooltip = segrellion_stannis.0001.a.tt
+
+
+		add_character_flag = segrellion_stannis_northern_campaign_committed
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.0010
+
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# PLAYER DELAY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.0001.b
+
+		trigger = {
+			is_ai = no
+		}
+
+		custom_tooltip = segrellion_stannis.0001.b.tt
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.0001
+
+			days = { 30 60 }
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - THE NORTH REMEMBERS
+#
+# Root = Stannis
+#
+# Northern houses reveal that Bolton rule is far less
+# secure than Ramsay believes.
+# =========================================================
+
+segrellion_stannis.0010 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0010.t
+	desc = segrellion_stannis.0010.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = castle
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_campaign_committed
+
+		title:e_the_north = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		title:e_the_north.holder = {
+			save_scope_as = stannis_bolton_lord
+		}
+
+
+		title:c_white_harbor.holder ?= {
+
+			is_alive = yes
+
+			save_scope_as = stannis_manderly_lord
+		}
+
+
+		title:c_deepwood_motte.holder ?= {
+
+			is_alive = yes
+
+			save_scope_as = stannis_glover_lord
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:stannis_manderly_lord
+
+		animation = personality_rational
+	}
+
+
+	lower_right_portrait = {
+
+		character = scope:stannis_glover_lord
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0010.a
+
+		custom_tooltip = segrellion_stannis.0010.a.tt
+
+
+		add_character_flag = segrellion_stannis_northern_cb_authorized
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.0020
+
+			days = { 3 7 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - BEGIN THE NORTHERN WAR
+#
+# Hidden.
+# =========================================================
+
+segrellion_stannis.0020 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_cb_authorized
+
+		NOT = {
+			has_character_flag = segrellion_stannis_northern_campaign_started
+		}
+
+		title:e_the_north = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		title:e_the_north.holder = {
+			save_scope_as = stannis_north_defender
+		}
+
+
+		start_war = {
+
+			cb = segrellion_stannis_northern_campaign_cb
+
+			target = scope:stannis_north_defender
+
+			target_title = title:e_the_north
+		}
+	}
+}
+
+
+# =========================================================
+# 0900 - THE NORTH ENDURES
+#
+# Stannis failed to break the Boltons.
+# =========================================================
+
+segrellion_stannis.0900 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0900.t
+	desc = segrellion_stannis.0900.desc
+
+	theme = war
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_7
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0900.a
+	}
+}
+
+
+# =========================================================
+# 1000 - WINTERFELL HAS FALLEN
+#
+# Root = Stannis
+# =========================================================
+
+segrellion_stannis.1000 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1000.t
+	desc = segrellion_stannis.1000.desc
+
+	theme = crown
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_campaign_victory
+
+		character:Stark_7 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Stark_7 = {
+			save_scope_as = stannis_jon
+		}
+
+		title:e_the_north.holder ?= {
+			save_scope_as = stannis_defeated_bolton
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_7
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.1000.a
+
+		custom_tooltip = segrellion_stannis.1000.a.tt
+
+
+		character:Stark_7 = {
+
+			trigger_event = {
+
+				id = segrellion_stannis.1010
+
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 1010 - THE NAME OF STARK
+#
+# Root = Jon
+#
+# Stannis offers Jon release from his vows,
+# legitimacy, Winterfell and the North.
+# =========================================================
+
+segrellion_stannis.1010 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1010.t
+	desc = segrellion_stannis.1010.desc
+
+	theme = crown
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Stark_7
+
+		is_alive = yes
+
+		character:Baratheon_3 ?= {
+			is_alive = yes
+
+			has_character_flag = segrellion_stannis_northern_campaign_victory
+		}
+	}
+
+
+	immediate = {
+
+		character:Baratheon_3 = {
+			save_scope_as = jon_stannis
+		}
+
+		title:e_the_north.holder ?= {
+			save_scope_as = jon_bolton_lord
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_3
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1010.a
+
+		custom_tooltip = segrellion_stannis.1010.a.tt
+
+
+		segrellion_jon_accepts_north_effect = yes
+
+
+		character:Baratheon_3 = {
+
+			trigger_event = {
+
+				id = segrellion_stannis.1020
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	#
+	# Player-only alternate outcome.
+	# Canon AI Jon accepts in this timeline.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1010.b
+
+		trigger = {
+			is_ai = no
+		}
+
+		custom_tooltip = segrellion_stannis.1010.b.tt
+
+
+		add_character_flag = segrellion_jon_refused_north
+
+
+		character:Baratheon_3 = {
+
+			add_character_flag = segrellion_stannis_jon_refused_north
+
+			trigger_event = {
+
+				id = segrellion_stannis.1021
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+
+# =========================================================
+# 1020 - A STARK IN WINTERFELL
+#
+# Root = Stannis
+# =========================================================
+
+segrellion_stannis.1020 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1020.t
+	desc = segrellion_stannis.1020.desc
+
+	theme = crown
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_7
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.1020.a
+
+
+		add_character_flag = segrellion_stannis_ready_for_iron_throne
+
+
+		if = {
+
+			limit = {
+
+				is_ai = yes
+
+				NOT = {
+					has_character_modifier = segrellion_stannis_waiting_for_iron_throne_ai_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_stannis_waiting_for_iron_throne_ai_modifier
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1021 - THE LORD COMMANDER REFUSES
+#
+# Alternate player outcome.
+# =========================================================
+
+segrellion_stannis.1021 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1021.t
+	desc = segrellion_stannis.1021.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_7
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.1021.a
+	}
+}

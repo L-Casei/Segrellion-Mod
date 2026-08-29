@@ -1,0 +1,322 @@
+# =========================================================
+# STANNIS BARATHEON
+# THE NORTHERN CAMPAIGN
+# =========================================================
+
+
+# =========================================================
+# 300 AC STARTUP
+#
+# Stannis keeps Dragonstone.
+# He is personally placed at Castle Black after having
+# helped the Night's Watch defeat the wildling threat.
+#
+# Roose's current primary heir is used dynamically.
+# In the 300 AC setup this should be Ramsay.
+# This avoids hardcoding another AGOT historical character ID.
+# =========================================================
+
+segrellion_setup_stannis_northern_campaign_effect = {
+
+	if = {
+
+		limit = {
+
+			game_start_date = 8300.8.20
+
+			character:Baratheon_3 ?= {
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_stannis_north_story_initialized
+				}
+			}
+
+			character:Stark_7 ?= {
+				is_alive = yes
+			}
+
+			title:e_the_north = {
+				exists = holder
+			}
+		}
+
+
+		# =================================================
+		# ROOSE -> RAMSAY
+		#
+		# The current Lord Paramount's primary heir becomes
+		# the killer. This deliberately avoids relying upon
+		# Ramsay's historical character ID.
+		# =================================================
+
+		title:e_the_north.holder = {
+
+			save_scope_as = stannis_roose_bolton
+
+			primary_heir ?= {
+
+				is_alive = yes
+
+				save_scope_as = stannis_ramsay_bolton
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:stannis_roose_bolton
+				exists = scope:stannis_ramsay_bolton
+
+				scope:stannis_roose_bolton = {
+					is_alive = yes
+				}
+
+				scope:stannis_ramsay_bolton = {
+					is_alive = yes
+				}
+			}
+
+
+			scope:stannis_roose_bolton = {
+
+				death = {
+
+					death_reason = death_murder
+
+					killer = scope:stannis_ramsay_bolton
+
+					secret = no
+				}
+			}
+		}
+
+
+		# =================================================
+		# STANNIS AT CASTLE BLACK
+		# =================================================
+
+		character:Baratheon_3 = {
+
+			add_character_flag = segrellion_stannis_north_story_initialized
+			add_character_flag = segrellion_stannis_preparing_northern_campaign
+
+			set_location = title:c_castle_black.title_province
+
+
+			if = {
+
+				limit = {
+
+					is_ai = yes
+
+					NOT = {
+						has_character_modifier = segrellion_stannis_northern_story_ai_modifier
+					}
+				}
+
+				add_character_modifier = {
+					modifier = segrellion_stannis_northern_story_ai_modifier
+				}
+			}
+
+
+			# Let Roose's succession resolve first.
+			trigger_event = {
+
+				id = segrellion_stannis.0090
+
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# JON LEAVES THE NIGHT'S WATCH
+#
+# IMPORTANT:
+# Jon currently owns Night's Watch titles.
+# We cannot simply remove the trait and give him Winterfell.
+#
+# 1. Choose a Black Brother to succeed him.
+# 2. Transfer ALL Jon's current titles to that character.
+# 3. Remove Night's Watch status.
+# 4. Bring Jon into Stannis' sphere.
+# 5. Give him Winterfell and the North.
+# =========================================================
+
+segrellion_jon_accepts_north_effect = {
+
+	character:Stark_7 = {
+
+		# =================================================
+		# FIND A SUCCESSOR
+		#
+		# Pick a senior Black Brother from Jon's own court.
+		# Prowess is used as a simple deterministic ranking.
+		# =================================================
+
+		ordered_courtier = {
+
+			limit = {
+
+				is_alive = yes
+				is_adult = yes
+
+				has_trait = nightswatch
+
+				this != character:Stark_7
+			}
+
+			order_by = prowess
+
+			position = 0
+
+			check_range_bounds = no
+
+			save_scope_as = segrellion_new_lord_commander
+		}
+
+
+		# Save every Watch title Jon currently holds BEFORE
+		# we begin transferring them.
+
+		every_held_title = {
+			add_to_list = segrellion_jon_watch_titles
+		}
+	}
+
+
+	# =====================================================
+	# TRANSFER THE NIGHT'S WATCH
+	# =====================================================
+
+	if = {
+
+		limit = {
+			exists = scope:segrellion_new_lord_commander
+		}
+
+		every_in_list = {
+
+			list = segrellion_jon_watch_titles
+
+			grant_title = scope:segrellion_new_lord_commander
+		}
+	}
+
+
+	# =====================================================
+	# JON IS RELEASED FROM HIS VOWS
+	# =====================================================
+
+	character:Stark_7 = {
+
+		if = {
+
+			limit = {
+				has_trait = nightswatch
+			}
+
+			remove_trait = nightswatch
+		}
+
+
+		# Stannis recognizes Jon as Ned Stark's son and
+		# restores him to the Stark inheritance.
+
+		if = {
+
+			limit = {
+				has_trait = bastard
+			}
+
+			remove_trait = bastard
+
+			add_trait = legitimized_bastard
+		}
+
+
+		add_character_flag = segrellion_jon_left_nights_watch
+		add_character_flag = segrellion_jon_restored_to_winterfell
+	}
+
+
+	# =====================================================
+	# REMOVE THE BOLTON ORDER
+	# =====================================================
+
+	title:e_the_north.holder ?= {
+		save_scope_as = segrellion_defeated_bolton_lord
+	}
+
+
+	# =====================================================
+	# WINTERFELL FIRST
+	#
+	# Give the territorial core before the paramount title.
+	# =====================================================
+
+	title:c_winterfell = {
+		grant_title = character:Stark_7
+	}
+
+
+	title:d_winterfell = {
+		grant_title = character:Stark_7
+	}
+
+
+	title:e_the_north = {
+		grant_title = character:Stark_7
+	}
+
+
+	character:Stark_7 = {
+
+		set_realm_capital = title:c_winterfell
+
+		add_character_flag = segrellion_jon_lord_paramount_north
+	}
+
+
+	# =====================================================
+	# STANNIS + JON
+	# =====================================================
+
+	character:Baratheon_3 = {
+
+		add_character_flag = segrellion_stannis_restored_stark_north
+		add_character_flag = segrellion_stannis_north_secured
+
+		create_alliance = {
+
+			target = character:Stark_7
+
+			allied_through_owner = character:Baratheon_3
+			allied_through_target = character:Stark_7
+		}
+
+		add_opinion = {
+
+			target = character:Stark_7
+
+			modifier = segrellion_stannis_restored_jon_opinion
+		}
+	}
+
+
+	character:Stark_7 = {
+
+		add_opinion = {
+
+			target = character:Baratheon_3
+
+			modifier = segrellion_jon_grateful_to_stannis_opinion
+		}
+	}
+}
