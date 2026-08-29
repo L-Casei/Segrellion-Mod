@@ -644,7 +644,7 @@ segrellion_break_stannis_oath_for_young_griff_effect = {
 		character:Segrellion_60 = {
 			remove_character_flag = segrellion_pledged_to_stannis
 			add_character_flag = segrellion_broke_stannis_oath
-		}
+			}
 	}
 }
 
@@ -733,64 +733,96 @@ segrellion_setup_daenerys_followers_effect = {
 			game_start_date < 8301.1.1
 			current_date >= 8300.8.20
 			current_date < 8301.1.1
-			character:Targaryen_9 ?= {
-				is_alive = yes
-				has_title = title:d_laamp_daenerys_targaryen
-			}
+			character:Targaryen_9 ?= { is_alive = yes }
 		}
 
-		# Camp followers are courtiers of the adventurer. Use the same
-		# court-owner-side effect as The Roads We Walk so that moving a
-		# character also updates the camp roster, not only their location.
 		character:Targaryen_9 = {
-			if = {
-				limit = {
-					character:Lannister_8 ?= {
-						is_alive = yes
-						NOT = { is_courtier_of = character:Targaryen_9 }
+
+			save_scope_as = daenerys_camp_owner
+
+			# Keep the employer Tyrion had before we detach him. In AGOT's
+			# 300 AC setup this is the Second Sons. This also lets us support
+			# both Jorah history IDs seen across recent AGOT/mod revisions
+			# without blindly stealing an unrelated Mormont.
+			character:Lannister_8 ?= {
+				employer ?= {
+					if = {
+						limit = { this != scope:daenerys_camp_owner }
+						save_scope_as = daenerys_tyrion_previous_employer
 					}
 				}
-				add_courtier = character:Lannister_8
 			}
 
+			# JORAH MORMONT
+			# Mormont_3 is the current reference in the mod; Mormont_8 was
+			# used by the last known-working entourage implementation. Only
+			# transfer either candidate if he shares Tyrion's old employer.
 			if = {
-				limit = {
-					character:Selmy_3 ?= {
-						is_alive = yes
-						NOT = { is_courtier_of = character:Targaryen_9 }
+				limit = { exists = scope:daenerys_tyrion_previous_employer }
+
+				character:Mormont_3 ?= {
+					if = {
+						limit = {
+							is_alive = yes
+							employer = scope:daenerys_tyrion_previous_employer
+						}
+						set_employer = scope:daenerys_camp_owner
+						add_to_court_and_entourage_effect = yes
+						return_home = yes
 					}
 				}
-				add_courtier = character:Selmy_3
+
+				character:Mormont_8 ?= {
+					if = {
+						limit = {
+							is_alive = yes
+							employer = scope:daenerys_tyrion_previous_employer
+						}
+						set_employer = scope:daenerys_camp_owner
+						add_to_court_and_entourage_effect = yes
+						return_home = yes
+					}
+				}
 			}
 
-			if = {
-				limit = {
-					character:Mormont_3 ?= {
-						is_alive = yes
-						NOT = { is_courtier_of = character:Targaryen_9 }
-					}
+			# TYRION LANNISTER
+			character:Lannister_8 ?= {
+				if = {
+					limit = { is_alive = yes }
+					set_employer = scope:daenerys_camp_owner
+					add_to_court_and_entourage_effect = yes
+					return_home = yes
 				}
-				add_courtier = character:Mormont_3
 			}
 
-			if = {
-				limit = {
-					character:IAF_Missandei_1 ?= {
-						is_alive = yes
-						NOT = { is_courtier_of = character:Targaryen_9 }
-					}
+			# SER BARRISTAN SELMY
+			character:Selmy_3 ?= {
+				if = {
+					limit = { is_alive = yes }
+					set_employer = scope:daenerys_camp_owner
+					add_to_court_and_entourage_effect = yes
+					return_home = yes
 				}
-				add_courtier = character:IAF_Missandei_1
 			}
 
-			if = {
-				limit = {
-					character:IAF_Torgo_Nudho_1 ?= {
-						is_alive = yes
-						NOT = { is_courtier_of = character:Targaryen_9 }
-					}
+			# MISSANDEI
+			character:IAF_Missandei_1 ?= {
+				if = {
+					limit = { is_alive = yes }
+					set_employer = scope:daenerys_camp_owner
+					add_to_court_and_entourage_effect = yes
+					return_home = yes
 				}
-				add_courtier = character:IAF_Torgo_Nudho_1
+			}
+
+			# TORGO NUDHO
+			character:IAF_Torgo_Nudho_1 ?= {
+				if = {
+					limit = { is_alive = yes }
+					set_employer = scope:daenerys_camp_owner
+					add_to_court_and_entourage_effect = yes
+					return_home = yes
+				}
 			}
 
 			# TYRION = SECOND
@@ -798,7 +830,7 @@ segrellion_setup_daenerys_followers_effect = {
 				limit = {
 					character:Lannister_8 ?= {
 						is_alive = yes
-						is_courtier_of = character:Targaryen_9
+						employer = scope:daenerys_camp_owner
 					}
 					NOT = {
 						any_court_position_holder = {
@@ -811,21 +843,6 @@ segrellion_setup_daenerys_followers_effect = {
 					recipient = character:Lannister_8
 					court_position = second_camp_officer
 				}
-			}
-
-			# Synchronize the physical location of every repaired follower
-			# with Daenerys' camp after their employer changes.
-			every_courtier = {
-				limit = {
-					OR = {
-						this = character:Lannister_8
-						this = character:Selmy_3
-						this = character:Mormont_3
-						this = character:IAF_Missandei_1
-						this = character:IAF_Torgo_Nudho_1
-					}
-				}
-				return_home = yes
 			}
 
 			add_character_flag = segrellion_daenerys_followers_setup
