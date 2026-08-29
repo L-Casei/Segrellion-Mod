@@ -96,6 +96,7 @@ on_title_gain = {
 		segrellion_daenerys_iron_throne_fertility_restore
 		segrellion_young_griff_blackfyre_reveal_on_title_gain
 		segrellion_young_griff_daenerys_pact_title_gain
+		segrellion_north_story_title_gain_cleanup
 	}
 }
 
@@ -210,6 +211,14 @@ on_combat_end_winner = {
 on_siege_completion = {
 	on_actions = {
 		segrellion_unicorn_returns_beacon_siege_check
+	}
+}
+
+on_war_started = {
+
+	on_actions = {
+
+		segrellion_stannis_jon_iron_throne_war_join
 	}
 }
 
@@ -1465,10 +1474,12 @@ segrellion_young_griff_blackfyre_reveal_on_title_gain = {
 #
 # Root = victorious combat side
 #
-# Ramsay is only captured if:
-# - the Northern Campaign is active;
-# - Stannis personally fought on the victorious side;
-# - Ramsay personally fought on the defeated side.
+# Ramsay is captured if Stannis personally wins a battle
+# in the Northern Campaign while Ramsay is physically
+# present at the battle location.
+#
+# Commander / knight detection remains as the preferred
+# check, but physical location acts as the failsafe.
 # =========================================================
 
 segrellion_stannis_ramsay_battle_capture = {
@@ -1493,8 +1504,9 @@ segrellion_stannis_ramsay_battle_capture = {
 		}
 
 
-		# Make sure this combat belongs to Stannis'
-		# Northern Campaign.
+		# =================================================
+		# THIS MUST BE STANNIS' NORTHERN CAMPAIGN
+		# =================================================
 
 		combat = {
 
@@ -1505,33 +1517,57 @@ segrellion_stannis_ramsay_battle_capture = {
 		}
 
 
-		# Stannis must personally be on the victorious side.
+		# =================================================
+		# STANNIS PERSONALLY WON THE BATTLE
+		# =================================================
 
 		OR = {
 
 			any_side_commander = {
+
 				this = character:Baratheon_3
 			}
 
 			any_side_knight = {
+
 				this = character:Baratheon_3
 			}
 		}
 
 
-		# Ramsay must personally be on the defeated side.
+		# =================================================
+		# RAMSAY WAS PRESENT ON THE LOSING SIDE
+		#
+		# First try the normal combat-side checks.
+		#
+		# Failsafe:
+		# Ramsay's physical character location is the same
+		# province as Stannis, who is personally commanding
+		# the victorious army.
+		# =================================================
 
-		enemy_side = {
+		OR = {
 
-			OR = {
+			enemy_side = {
 
-				any_side_commander = {
-					this = title:e_the_north.holder
+				OR = {
+
+					any_side_commander = {
+
+						this = title:e_the_north.holder
+					}
+
+					any_side_knight = {
+
+						this = title:e_the_north.holder
+					}
 				}
+			}
 
-				any_side_knight = {
-					this = title:e_the_north.holder
-				}
+
+			title:e_the_north.holder = {
+
+				location = character:Baratheon_3.location
 			}
 		}
 	}
@@ -1559,6 +1595,183 @@ segrellion_stannis_ramsay_battle_capture = {
 		scope:segrellion_ramsay_battle_prisoner = {
 
 			add_character_flag = segrellion_ramsay_captured_by_stannis_in_battle
+		}
+	}
+}
+
+# =========================================================
+# NORTHERN STORY
+# NEW HOLDER OF THE NORTH
+#
+# Any ruler who receives e_the_north during Stannis'
+# Northern storyline must:
+#
+# 1. leave inherited wars for the Iron Throne;
+# 2. become fully independent.
+#
+# This protects Jon, Sansa, Rickon, Stannis or any other
+# future Northern settlement.
+# =========================================================
+
+segrellion_north_story_title_gain_cleanup = {
+
+	trigger = {
+
+		scope:title = {
+
+			this = title:e_the_north
+		}
+
+
+		character:Baratheon_3 ?= {
+
+			has_character_flag = segrellion_stannis_north_story_initialized
+		}
+	}
+
+
+	effect = {
+
+		save_scope_as = segrellion_new_north_holder
+
+
+		# =================================================
+		# LEAVE IRON THRONE WARS
+		# =================================================
+
+		every_character_war = {
+
+			limit = {
+
+
+				# This war actually targets the Iron Throne.
+
+				casus_belli = {
+
+					any_target_title = {
+
+						this = title:h_the_iron_throne
+					}
+				}
+
+
+				# Never try removing a primary war leader.
+
+				NOT = {
+
+					primary_attacker = scope:segrellion_new_north_holder
+				}
+
+				NOT = {
+
+					primary_defender = scope:segrellion_new_north_holder
+				}
+			}
+
+
+			remove_participant = scope:segrellion_new_north_holder
+		}
+
+
+		# =================================================
+		# THE NORTH MUST BE INDEPENDENT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+
+					is_independent_ruler = yes
+				}
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_north_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			becomes_independent = {
+
+				change = scope:segrellion_north_independence_change
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_north_independence_change
+		}
+	}
+}
+
+# =========================================================
+# JON ANSWERS STANNIS' CALL
+#
+# Whenever Stannis starts a war whose target is the
+# Iron Throne, a restored Jon joins immediately.
+#
+# This does NOT depend on normal AI call-to-war logic.
+# =========================================================
+
+segrellion_stannis_jon_iron_throne_war_join = {
+
+	trigger = {
+
+		scope:attacker ?= {
+
+			this = character:Baratheon_3
+		}
+
+
+		character:Stark_7 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_jon_restored_to_winterfell
+
+			has_character_flag = segrellion_jon_pledged_to_stannis_iron_throne
+
+			has_title = title:e_the_north
+
+			is_independent_ruler = yes
+		}
+
+
+		scope:war ?= {
+
+			casus_belli = {
+
+				any_target_title = {
+
+					this = title:h_the_iron_throne
+				}
+			}
+
+
+			NOT = {
+
+				is_attacker = character:Stark_7
+			}
+
+
+			NOT = {
+
+				is_defender = character:Stark_7
+			}
+		}
+	}
+
+
+	effect = {
+
+		scope:war = {
+
+			add_attacker = character:Stark_7
 		}
 	}
 }

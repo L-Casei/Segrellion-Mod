@@ -332,6 +332,41 @@ segrellion_setup_massey_defiance_effect = {
 
 segrellion_setup_daemon_parentage_story_effect = {
 
+	# =========================================================
+	# DAEMON'S HIDDEN BIOLOGICAL FATHER
+	#
+	# Public father remains Maegor the Meek.
+	# Biological father is Aerys II.
+	#
+	# Daenerys' father is Aerys II, so we use her father
+	# rather than hardcoding AGOT's Aerys character ID.
+	# =========================================================
+
+	character:Targaryen_9 ?= {
+
+		father ?= {
+			save_temporary_scope_as = segrellion_daemon_true_father
+		}
+	}
+
+
+	if = {
+		limit = {
+
+			current_date >= 8300.8.20
+
+			exists = scope:segrellion_daemon_true_father
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+		}
+
+		character:Segrellion_60 = {
+			set_real_father = scope:segrellion_daemon_true_father
+		}
+	}
+
 	if = {
 
 		limit = {

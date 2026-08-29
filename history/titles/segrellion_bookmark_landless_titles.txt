@@ -200,90 +200,80 @@ d_laamp_true_sentinels = {
 
 d_laamp_daenerys_targaryen = {
 
-	# One day before the 300 AC bookmark.
-	8300.8.19 = {
+    8300.8.1 = {
 
-		liege = 0
+        liege = 0
+        holder = Targaryen_9
 
-		holder = Targaryen_9
+        government = landless_adventurer_government
 
-		government = landless_adventurer_government
+        succession_laws = {
+            landless_adventurer_succession_law
+        }
 
-		succession_laws = {
-			landless_adventurer_succession_law
-		}
+        effect = {
 
-		effect = {
+            holder ?= {
 
-			create_landless_adventurer_title_history_effect = yes
+                if = {
+                    limit = {
+                        NOT = {
+                            has_realm_law = camp_purpose_legitimists
+                        }
+                    }
 
-			set_variable = {
-				name = adventurer_creation_reason
-				value = flag:historical
-			}
+                    add_realm_law_skip_effects = camp_purpose_legitimists
+                }
+            }
 
-			# Build the camp roster from its owner, using the same effect
-			# vanilla uses for adventurer followers. The explicit checks
-			# avoid duplicating Missandei and Torgo's history employer.
-			holder ?= {
-				if = {
-					limit = {
-						character:Lannister_8 ?= {
-							is_alive = yes
-							NOT = { is_courtier_of = character:Targaryen_9 }
-						}
-					}
-					add_courtier = character:Lannister_8
-				}
-				if = {
-					limit = {
-						character:Selmy_3 ?= {
-							is_alive = yes
-							NOT = { is_courtier_of = character:Targaryen_9 }
-						}
-					}
-					add_courtier = character:Selmy_3
-				}
-				if = {
-					limit = {
-						character:Mormont_3 ?= {
-							is_alive = yes
-							NOT = { is_courtier_of = character:Targaryen_9 }
-						}
-					}
-					add_courtier = character:Mormont_3
-				}
-				if = {
-					limit = {
-						character:IAF_Missandei_1 ?= {
-							is_alive = yes
-							NOT = { is_courtier_of = character:Targaryen_9 }
-						}
-					}
-					add_courtier = character:IAF_Missandei_1
-				}
-				if = {
-					limit = {
-						character:IAF_Torgo_Nudho_1 ?= {
-							is_alive = yes
-							NOT = { is_courtier_of = character:Targaryen_9 }
-						}
-					}
-					add_courtier = character:IAF_Torgo_Nudho_1
-				}
-			}
-		}
-	}
+            create_landless_adventurer_title_history_effect = yes
 
+            set_variable = {
+                name = adventurer_creation_reason
+                value = flag:historical
+            }
+        }
+    }
 
-	# Remove only when Roads to Power is unavailable.
-	8300.8.20 = {
+    8300.8.19 = {
 
-		effect = {
+        effect = {
 
-			destroy_landless_title_no_dlc_effect = {
-				DATE = 8300.8.20
-			}
-		}
-	}
+            # Tyrion Lannister
+            character:Lannister_8 ?= {
+                agot_safe_set_location_history_effect = {
+                    CASTLE = title:d_laamp_daenerys_targaryen
+                }
+            }
+
+            # Barristan Selmy
+            character:Selmy_3 ?= {
+                agot_safe_set_location_history_effect = {
+                    CASTLE = title:d_laamp_daenerys_targaryen
+                }
+            }
+
+            # Jorah Mormont
+            character:Mormont_3 ?= {
+                agot_safe_set_location_history_effect = {
+                    CASTLE = title:d_laamp_daenerys_targaryen
+                }
+            }
+
+            # Missandei
+            character:IAF_Missandei_1 ?= {
+                agot_safe_set_location_history_effect = {
+                    CASTLE = title:d_laamp_daenerys_targaryen
+                }
+            }
+
+            # Torgo Nudho
+            character:IAF_Torgo_Nudho_1 ?= {
+                agot_safe_set_location_history_effect = {
+                    CASTLE = title:d_laamp_daenerys_targaryen
+                }
+            }
+        }
+    }
 }
+

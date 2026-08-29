@@ -370,6 +370,22 @@ segrellion_unicorn_returns_cb = {
 
 			add_character_flag = segrellion_unicorn_returns_completed
 
+
+			# =================================================
+			# THE TRUE UNICORN
+			#
+			# Daemon has finally achieved the purpose that
+			# defined his exile.
+			# =================================================
+
+			add_stress = -100
+
+			add_character_modifier = {
+				modifier = segrellion_true_unicorn_modifier
+				years = 10
+			}
+
+
 			remove_variable = segrellion_unicorn_returns_war
 
 
@@ -697,9 +713,23 @@ segrellion_stannis_northern_campaign_cb = {
 
 					type = storm_knights
 
-					men = 500
+					men = 1000
 				}
 
+				men_at_arms = {
+
+					type = storm_knights
+
+					men = 1000
+				}
+
+
+				men_at_arms = {
+
+					type = stormlands_heavy_infantry
+
+					men = 1000
+				}
 
 				men_at_arms = {
 
@@ -717,7 +747,7 @@ segrellion_stannis_northern_campaign_cb = {
 				}
 
 
-				levies = 2000
+				levies = 5000
 
 
 				inheritable = no
@@ -883,16 +913,23 @@ segrellion_stannis_northern_campaign_cb = {
 			remove_variable = segrellion_stannis_northern_war
 
 
-			# Ramsay / current Bolton ruler is taken alive
-			# when Winterfell falls.
+						# =================================================
+			# RAMSAY / CURRENT NORTHERN RULER
+			# FINAL CAPTURE FAILSAFE
+			# =================================================
 
 			if = {
 
 				limit = {
+
 					scope:defender = {
+
 						is_alive = yes
+
+						is_imprisoned = no
 					}
 				}
+
 
 				imprison = {
 
@@ -902,6 +939,62 @@ segrellion_stannis_northern_campaign_cb = {
 				}
 			}
 
+
+			# =================================================
+			# REMOVE RAMSAY FROM UNRELATED WARS
+			#
+			# Example:
+			#
+			# Young Griff attacks the Iron Throne.
+			# Ramsay joins the Iron Throne's side.
+			#
+			# Without this cleanup CK3 can transfer that
+			# participation to the new Northern ruler when
+			# e_the_north changes hands.
+			#
+			# We do NOT touch this Northern Campaign itself.
+			# =================================================
+
+			scope:defender = {
+
+				every_character_war = {
+
+					limit = {
+
+						this != scope:war
+
+
+						# Do not attempt to remove him from
+						# a war where he is the actual main
+						# attacker or defender.
+
+						NOT = {
+							primary_attacker = scope:defender
+						}
+
+						NOT = {
+							primary_defender = scope:defender
+						}
+					}
+
+
+					remove_participant = scope:defender
+				}
+			}
+
+
+			# =================================================
+			# STANNIS TAKES TEMPORARY CUSTODY OF THE NORTH
+			#
+			# THIS WAS MISSING FROM THE ACTUAL CB.
+			# =================================================
+
+			segrellion_stannis_secure_north_after_victory_effect = yes
+
+
+			# =================================================
+			# CONTINUE TO THE POLITICAL SETTLEMENT
+			# =================================================
 
 			trigger_event = {
 
