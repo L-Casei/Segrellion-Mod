@@ -1089,15 +1089,28 @@ segrellion_daenerys_invasion.0007 = {
 	}
 
 
-	option = {
+		option = {
 
-		name = segrellion_daenerys_invasion.0007.a
+			name = segrellion_daenerys_invasion.0007.a
 
-		trigger_event = {
-			id = segrellion_daenerys_invasion.0010
-			days = { 2 4 }
+
+			# =====================================================
+			# PROVISIONS FOR THE CROSSING
+			# =====================================================
+
+			domicile ?= {
+
+				change_provisions = 10000
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0010
+
+				days = { 2 4 }
+			}
 		}
-	}
 }
 
 # =========================================================
@@ -1262,7 +1275,7 @@ segrellion_daenerys_invasion.0013 = {
 
 	immediate = {
 
-		title:c_pentos.holder ?= {
+		title:k_pentos.holder ?= {
 			save_scope_as = pentos_backer
 		}
 	}
@@ -1271,7 +1284,7 @@ segrellion_daenerys_invasion.0013 = {
 	left_portrait = {
 
 		character = root
-		animation = thinking
+		animation = personality_rational
 	}
 
 
@@ -1300,14 +1313,6 @@ segrellion_daenerys_invasion.0013 = {
 		add_character_flag = segrellion_daenerys_pentos_investment_accepted
 
 
-		trigger_event = {
-
-			id = segrellion_daenerys_invasion.0014
-
-			days = { 180 300 }
-		}
-
-
 		ai_chance = {
 			base = 100
 		}
@@ -1332,115 +1337,6 @@ segrellion_daenerys_invasion.0013 = {
 		add_character_flag = segrellion_daenerys_pentos_investment_refused
 
 
-		trigger_event = {
-
-			id = segrellion_daenerys_invasion.0014
-
-			days = { 180 300 }
-		}
-
-
-		ai_chance = {
-			base = 0
-		}
-	}
-}
-
-# =========================================================
-# 0014 - FRIENDS ACROSS THE NARROW SEA
-#
-# Merchants, exiles and lesser Westerosi supporters send
-# money to Daenerys while the fleet is being prepared.
-# =========================================================
-
-segrellion_daenerys_invasion.0014 = {
-
-	type = character_event
-
-	title = segrellion_daenerys_invasion.0014.t
-	desc = segrellion_daenerys_invasion.0014.desc
-
-	theme = intrigue
-
-	override_background = {
-		reference = segrellion_pentos_fleet_council
-	}
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-
-	trigger = {
-
-		this = character:Targaryen_9
-
-		is_alive = yes
-
-		has_character_flag = segrellion_daenerys_fleet_project_active
-
-		NOT = {
-			has_character_flag = segrellion_daenerys_westerosi_financing_resolved
-		}
-	}
-
-
-	left_portrait = {
-
-		character = root
-		animation = thinking
-	}
-
-
-	right_portrait = {
-
-		character = character:Selmy_3
-		animation = personality_rational
-	}
-
-
-	# =====================================================
-	# ACCEPT
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_invasion.0014.a
-
-		custom_tooltip = segrellion_daenerys_invasion.0014.a.tt
-
-
-		add_gold = 750
-
-
-		add_character_flag = segrellion_daenerys_westerosi_financing_resolved
-		add_character_flag = segrellion_daenerys_westerosi_support_accepted
-
-
-		ai_chance = {
-			base = 100
-		}
-	}
-
-
-	# =====================================================
-	# REFUSE
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_invasion.0014.b
-
-		custom_tooltip = segrellion_daenerys_invasion.0014.b.tt
-
-
-		add_prestige = 100
-
-
-		add_character_flag = segrellion_daenerys_westerosi_financing_resolved
-		add_character_flag = segrellion_daenerys_westerosi_support_refused
-
-
 		ai_chance = {
 			base = 0
 		}
@@ -1456,13 +1352,67 @@ segrellion_daenerys_invasion.0010 = {
 	type = character_event
 
 	title = segrellion_daenerys_invasion.0010.t
-	desc = segrellion_daenerys_invasion.0010.desc
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					segrellion_daemon_controls_flamelands_trigger = yes
+				}
+
+				desc = segrellion_daenerys_invasion.0010.desc_beacon
+			}
+
+			desc = segrellion_daenerys_invasion.0010.desc_massey
+		}
+	}
 
 	theme = crown
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
+
+	override_background = {
+		reference = segrellion_deciding_landmark
+	}
+	
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	
+	immediate = {
+		
+		title:d_masseys_hook.holder ?= {
+
+			save_scope_as = masseys_hook_lord
+
+		}
+
+
+		# Fallback in case the duchy itself has no direct holder.
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = scope:masseys_hook_lord
+				}
+			}
+
+			title:c_stonedance.holder ?= {
+
+				save_scope_as = masseys_hook_lord
+			}
+		}
+	}
+
+
 
 	trigger = {
 
@@ -2271,14 +2221,23 @@ segrellion_daenerys_invasion.0018 = {
 
 
 		# =================================================
-		# BEACON
+		# POST-LANDING EVENT ROUTER
 		# =================================================
+
+
+		# -------------------------------------------------
+		# THE BEACON
+		#
+		# Daenerys meets Daemon before the generic
+		# Westeros landing event.
+		# -------------------------------------------------
 
 		if = {
 
 			limit = {
 				has_character_flag = segrellion_daenerys_landing_beacon
 			}
+
 
 			trigger_event = {
 
@@ -2289,9 +2248,33 @@ segrellion_daenerys_invasion.0018 = {
 		}
 
 
-		# =================================================
-		# ALL OTHER LANDINGS
-		# =================================================
+		# -------------------------------------------------
+		# DRAGONSTONE
+		#
+		# Before the generic landing event, Daenerys
+		# reflects upon returning to the island where
+		# she was born.
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_landing_dragonstone
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0019
+
+				days = 1
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DORNE / MASSEY'S HOOK / OTHER LANDINGS
+		# -------------------------------------------------
 
 		else = {
 
@@ -2301,6 +2284,77 @@ segrellion_daenerys_invasion.0018 = {
 
 				days = 1
 			}
+		}
+	}
+}
+
+# =========================================================
+# 0019 - THE ISLAND OF MY BIRTH
+#
+# Fires only after Daenerys physically reaches Dragonstone.
+# =========================================================
+
+segrellion_daenerys_invasion.0019 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0019.t
+	desc = segrellion_daenerys_invasion.0019.desc
+
+	theme = crown
+
+
+	override_background = {
+
+		reference = segrellion_dragonstone_throne_room
+	}
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_landing_dragonstone
+
+		has_character_flag = segrellion_daenerys_landed_in_westeros
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_dragonstone_reflection_seen
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_dragonstone_reflection_seen
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0019.a
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0020
+
+			days = 1
 		}
 	}
 }

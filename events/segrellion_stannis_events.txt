@@ -374,11 +374,15 @@ segrellion_stannis.0900 = {
 	}
 }
 
-
 # =========================================================
 # 1000 - WINTERFELL HAS FALLEN
 #
-# Root = Stannis
+# If Jon lives:
+#     Stannis offers him the North.
+#
+# If Jon is dead:
+#     Stannis immediately begins searching for another
+#     Northern ruler.
 # =========================================================
 
 segrellion_stannis.1000 = {
@@ -386,17 +390,40 @@ segrellion_stannis.1000 = {
 	type = character_event
 
 	title = segrellion_stannis.1000.t
-	desc = segrellion_stannis.1000.desc
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Stark_7 ?= {
+						is_alive = yes
+					}
+				}
+
+				desc = segrellion_stannis.1000.desc
+			}
+
+			desc = segrellion_stannis.1000.desc_jon_dead
+		}
+	}
+
 
 	theme = crown
 
 
 	override_background = {
+
 		reference = segrellion_winterfell_great_hall
 	}
 
 
 	override_icon = {
+
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
@@ -408,20 +435,26 @@ segrellion_stannis.1000 = {
 		is_alive = yes
 
 		has_character_flag = segrellion_stannis_northern_campaign_victory
-
-		character:Stark_7 ?= {
-			is_alive = yes
-		}
 	}
 
 
 	immediate = {
 
-		character:Stark_7 = {
-			save_scope_as = stannis_jon
+		character:Stark_7 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = stannis_jon
+			}
 		}
 
+
 		title:e_the_north.holder ?= {
+
 			save_scope_as = stannis_defeated_bolton
 		}
 	}
@@ -435,22 +468,25 @@ segrellion_stannis.1000 = {
 	}
 
 
-	right_portrait = {
-
-		character = character:Stark_7
-
-		animation = personality_honorable
-	}
-
+	# =====================================================
+	# JON IS ALIVE
+	# =====================================================
 
 	option = {
 
 		name = segrellion_stannis.1000.a
 
+
+		trigger = {
+
+			exists = scope:stannis_jon
+		}
+
+
 		custom_tooltip = segrellion_stannis.1000.a.tt
 
 
-		character:Stark_7 = {
+		scope:stannis_jon = {
 
 			trigger_event = {
 
@@ -462,11 +498,46 @@ segrellion_stannis.1000 = {
 
 
 		ai_chance = {
+
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# JON IS DEAD
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1000.b_dead
+
+
+		trigger = {
+
+			NOT = {
+				exists = scope:stannis_jon
+			}
+		}
+
+
+		add_character_flag = segrellion_stannis_searching_northern_heir
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.1100
+
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+
 			base = 100
 		}
 	}
 }
-
 
 # =========================================================
 # 1010 - THE NAME OF STARK

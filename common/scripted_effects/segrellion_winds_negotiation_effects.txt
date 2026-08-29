@@ -179,6 +179,7 @@ segrellion_setup_daenerys_300_effect = {
 	}
 }
 
+
 # =========================================================
 # DAENERYS - HISTORICAL FOLLOWERS
 #
@@ -188,11 +189,125 @@ segrellion_setup_daenerys_300_effect = {
 # ROOT / THIS = Daenerys
 # =========================================================
 
-segrellion_setup_daenerys_historical_followers_effect = {
+# =========================================================
+# DAENERYS - MISSING HISTORICAL FOLLOWERS
+#
+# Missandei and Torgo Nudho already exist as historical
+# characters in the 300 AC bookmark, but can spawn without
+# a proper employer/camp.
+#
+# This effect repairs them and places both permanently in
+# Daenerys' landless court and entourage.
+#
+# It is safe to run repeatedly from the monthly fallback.
+# =========================================================
 
-	# Compatibility wrapper for saves or events created before the
-	# post-start follower repair was consolidated.
-	segrellion_setup_daenerys_followers_effect = yes
+segrellion_setup_daenerys_followers_effect = {
+
+	if = {
+
+		limit = {
+
+			game_start_date = 8300.8.20
+
+			current_date < 8301.1.1
+
+
+			character:Targaryen_9 ?= {
+
+				is_alive = yes
+			}
+		}
+
+
+		# =================================================
+		# DAENERYS
+		# =================================================
+
+		character:Targaryen_9 = {
+
+			save_scope_as = daenerys_camp_owner
+		}
+
+
+		# =================================================
+		# MISSANDEI
+		# =================================================
+
+		character:IAF_Missandei_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+
+					NOT = {
+
+						is_courtier_of = character:Targaryen_9
+					}
+				}
+
+
+				# Daenerys becomes Missandei's employer.
+
+				set_employer = scope:daenerys_camp_owner
+
+
+				# Roads to Power:
+				# explicitly register her in Daenerys'
+				# court / camp entourage.
+
+				add_to_court_and_entourage_effect = yes
+
+
+				# Physically move her back to Daenerys'
+				# current camp rather than leaving her
+				# stranded where AGOT created her.
+
+				return_home = yes
+			}
+		}
+
+
+		# =================================================
+		# TORGO NUDHO - GREY WORM
+		# =================================================
+
+		character:IAF_Torgo_Nudho_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+
+					NOT = {
+
+						is_courtier_of = character:Targaryen_9
+					}
+				}
+
+
+				# Daenerys becomes Torgo Nudho's employer.
+
+				set_employer = scope:daenerys_camp_owner
+
+
+				# Explicitly attach him to the camp
+				# entourage.
+
+				add_to_court_and_entourage_effect = yes
+
+
+				# Bring him physically to Daenerys.
+
+				return_home = yes
+			}
+		}
+	}
 }
 
 # =========================================================
@@ -214,6 +329,14 @@ segrellion_setup_daenerys_dragons_300_effect = {
 
 			character:Targaryen_9 ?= {
 				is_alive = yes
+			}
+		}
+
+		character:Targaryen_9 = {
+
+			location ?= {
+
+				save_scope_as = segrellion_daenerys_dragon_location
 			}
 		}
 
@@ -278,7 +401,14 @@ segrellion_setup_daenerys_dragons_300_effect = {
 					return_to_court = yes
 				}
 
-				set_location = title:c_ghoyan_drohe.title_province
+				if = {
+
+					limit = {
+						exists = scope:segrellion_daenerys_dragon_location
+					}
+
+					set_location = scope:segrellion_daenerys_dragon_location
+				}
 			}
 		}
 
@@ -288,6 +418,18 @@ segrellion_setup_daenerys_dragons_300_effect = {
 		# =====================================================
 
 		character:dragon_rhaegal ?= {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = owned_dragon
+					}
+				}
+
+				add_character_flag = owned_dragon
+			}
 
 			if = {
 				limit = {
@@ -352,6 +494,18 @@ segrellion_setup_daenerys_dragons_300_effect = {
 		# =====================================================
 
 		character:dragon_viserion ?= {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = owned_dragon
+					}
+				}
+
+				add_character_flag = owned_dragon
+			}
 
 			if = {
 				limit = {
