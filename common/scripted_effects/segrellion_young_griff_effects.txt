@@ -118,7 +118,7 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 				}
 
 				trigger_event = {
-					id = segrellion_young_griff.5000
+					id = segrellion_young_griff.7000
 					days = 1
 				}
 			}
@@ -154,30 +154,62 @@ segrellion_start_daenerys_throne_war_effect = {
 				is_alive = yes
 			}
 
+			title:h_the_iron_throne ?= {
+				exists = holder
+				holder = {
+					is_alive = yes
+				}
+			}
+
 			NOT = {
 				title:h_the_iron_throne.holder = character:Targaryen_9
 			}
+		}
 
-			can_start_war = {
-				target = title:h_the_iron_throne
-				casus_belli = claim_cb
-				claimant = character:Targaryen_9
+
+		# Daenerys' normal scripted invasion removes this claim
+		# to prevent vanilla wars. Restore it for Aegon's pact.
+
+		character:Targaryen_9 = {
+
+			if = {
+				limit = {
+					NOT = {
+						has_claim_on = title:h_the_iron_throne
+					}
+				}
+
+				add_pressed_claim = title:h_the_iron_throne
+			}
+
+			if = {
+				limit = {
+					has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+				}
+
+				remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
 			}
 		}
 
-		start_war = {
-			target = title:h_the_iron_throne
-			casus_belli = claim_cb
-			claimant = character:Targaryen_9
+
+		title:h_the_iron_throne.holder = {
+			save_scope_as = young_griff_daenerys_throne_defender
 		}
+
+
+		start_war = {
+			cb = claim_cb
+			target = scope:young_griff_daenerys_throne_defender
+			claimant = character:Targaryen_9
+			target_title = title:h_the_iron_throne
+		}
+
 
 		add_character_flag = segrellion_young_griff_fighting_for_daenerys
 	}
 
 
-	# She somehow already obtained the throne.
 	else_if = {
-
 		limit = {
 			title:h_the_iron_throne.holder = character:Targaryen_9
 		}

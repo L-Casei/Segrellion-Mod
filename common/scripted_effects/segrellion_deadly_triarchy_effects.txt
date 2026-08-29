@@ -4,6 +4,36 @@
 
 segrellion_form_deadly_triarchy_effect = {
 
+	# Older setup only recorded the Pentos compact on Young Griff.
+	# Repair the reciprocal flag before evaluating the triarchy so both
+	# new games and existing saves can enter the chain.
+	if = {
+		limit = {
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+
+			character:IAF_Young_Griff_1 ?= {
+				is_alive = yes
+				has_character_flag = segrellion_young_griff_supports_daemon
+			}
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+				NOT = {
+					has_character_flag = segrellion_daemon_supported_by_young_griff
+				}
+				NOR = {
+					has_character_flag = segrellion_pledged_to_stannis
+					has_character_flag = segrellion_pledged_to_daenerys
+				}
+			}
+		}
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_daemon_supported_by_young_griff
+		}
+	}
+
 	if = {
 		limit = {
 
@@ -15,6 +45,11 @@ segrellion_form_deadly_triarchy_effect = {
 				is_alive = yes
 
 				has_character_flag = segrellion_daemon_supported_by_young_griff
+
+				NOR = {
+					has_character_flag = segrellion_pledged_to_stannis
+					has_character_flag = segrellion_pledged_to_daenerys
+				}
 
 				NOT = {
 					has_character_flag = segrellion_deadly_triarchy_formed
@@ -28,7 +63,7 @@ segrellion_form_deadly_triarchy_effect = {
 				has_character_flag = segrellion_young_griff_supports_daemon
 			}
 
-			character:Vladwyn_10 ?= {
+			character:Vladwyn_5 ?= {
 				is_alive = yes
 			}
 
@@ -55,7 +90,7 @@ segrellion_form_deadly_triarchy_effect = {
 			}
 
 			add_opinion = {
-				target = character:Vladwyn_10
+				target = character:Vladwyn_5
 				modifier = segrellion_deadly_triarchy_opinion
 			}
 
@@ -70,7 +105,7 @@ segrellion_form_deadly_triarchy_effect = {
 		# JOFFREY
 		# =================================================
 
-		character:Vladwyn_10 = {
+		character:Vladwyn_5 = {
 
 			add_character_modifier = {
 				modifier = segrellion_deadly_triarchy_modifier
@@ -109,7 +144,7 @@ segrellion_form_deadly_triarchy_effect = {
 			}
 
 			add_opinion = {
-				target = character:Vladwyn_10
+				target = character:Vladwyn_5
 				modifier = segrellion_deadly_triarchy_opinion
 			}
 
