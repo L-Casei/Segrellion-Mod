@@ -23,6 +23,7 @@ monthly_global_pulse = {
 		segrellion_exceptionalism_progression
 		segrellion_unicorn_returns_leo_beacon_lock
 		segrellion_daenerys_followers_early_repair
+		segrellion_arianne_marriage_lock_progression
 	}
 }
 
@@ -74,6 +75,7 @@ on_war_invalidated = {
 on_marriage = {
 	on_actions = {
 		segrellion_daenerys_marriage_guard
+		segrellion_arianne_marriage_guard
 	}
 }
 
@@ -351,6 +353,7 @@ segrellion_on_game_start = {
 		segrellion_setup_daenerys_300_effect = yes
 		segrellion_setup_daenerys_followers_effect = yes
 		segrellion_setup_daenerys_dragons_300_effect = yes
+		segrellion_arianne_marriage_lock_effect = yes
 		segrellion_setup_daemon_parentage_story_effect = yes
 		segrellion_setup_plate_return_story_effect = yes
 		segrellion_setup_stormflame_300_effect = yes
@@ -410,6 +413,88 @@ segrellion_daenerys_marriage_guard = {
 	}
 }
 
+# Arianne is reserved for Daemon's or Young Griff's scripted proposal
+# during the opening five years of the 300 AC bookmark. The trait blocks
+# normal marriage interactions; this guard also reverses any unrelated
+# event marriage that bypasses the interaction checks.
+segrellion_arianne_marriage_guard = {
+	effect = {
+		if = {
+			limit = {
+				game_start_date >= 8300.8.20
+				game_start_date < 8301.1.1
+				current_date < 8305.8.20
+				OR = {
+					AND = {
+						this = character:Martell_9
+						scope:spouse != character:Segrellion_60
+						scope:spouse != character:IAF_Young_Griff_1
+					}
+					AND = {
+						scope:spouse = character:Martell_9
+						this != character:Segrellion_60
+						this != character:IAF_Young_Griff_1
+					}
+				}
+			}
+
+			if = {
+				limit = { this = character:Martell_9 }
+				divorce = scope:spouse
+			}
+			else = {
+				scope:spouse = { divorce = root }
+			}
+
+			character:Martell_9 = {
+				if = {
+					limit = { NOT = { has_trait = refusing_marriage } }
+					add_trait = refusing_marriage
+				}
+				add_character_flag = segrellion_arianne_marriage_lock_active
+			}
+		}
+		else_if = {
+			limit = {
+				game_start_date >= 8300.8.20
+				game_start_date < 8301.1.1
+				current_date < 8305.8.20
+				OR = {
+					AND = {
+						this = character:Martell_9
+						OR = {
+							scope:spouse = character:Segrellion_60
+							scope:spouse = character:IAF_Young_Griff_1
+						}
+					}
+					AND = {
+						scope:spouse = character:Martell_9
+						OR = {
+							this = character:Segrellion_60
+							this = character:IAF_Young_Griff_1
+						}
+					}
+				}
+			}
+
+			character:Martell_9 = {
+				if = {
+					limit = { has_trait = refusing_marriage }
+					remove_trait = refusing_marriage
+				}
+				remove_character_flag = segrellion_arianne_marriage_lock_active
+				add_character_flag = segrellion_arianne_event_marriage_completed
+			}
+		}
+	}
+}
+
+segrellion_arianne_marriage_lock_progression = {
+	effect = {
+		segrellion_arianne_marriage_lock_effect = yes
+	}
+}
+
 segrellion_refresh_icebringer_affinity = {
 	effect = {
 		segrellion_refresh_icebringer_affinity_effect = yes
@@ -455,6 +540,7 @@ segrellion_on_game_start_after_lobby = {
 		segrellion_apply_later_canon_supplied_appearances_effect = yes
 		segrellion_setup_daenerys_followers_effect = yes
 		segrellion_setup_daenerys_dragons_300_effect = yes
+		segrellion_arianne_marriage_lock_effect = yes
 
 		# Repeat the repair after initialization. AGOT's historical
 		# locations attach Tyrion and Jorah to the Second Sons during

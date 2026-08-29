@@ -3,6 +3,80 @@
 # HISTORICAL ADVENTURER HOSTS
 # =========================================================
 
+# Keep Arianne available for Daemon's and Young Griff's scripted
+# negotiations during the first five years of the 300 AC bookmark.
+# This is intentionally save-compatible and idempotent because AGOT
+# events can remove refusing_marriage for their own story routes.
+segrellion_arianne_marriage_lock_effect = {
+	# Repair saves in which an unrelated event or AI action already married
+	# Arianne before this protection was installed.
+	if = {
+		limit = {
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+			current_date < 8305.8.20
+			character:Martell_9 ?= {
+				is_alive = yes
+				any_spouse = {
+					this != character:Segrellion_60
+					this != character:IAF_Young_Griff_1
+				}
+			}
+		}
+
+		character:Martell_9 = {
+			every_spouse = {
+				limit = {
+					this != character:Segrellion_60
+					this != character:IAF_Young_Griff_1
+				}
+				divorce = prev
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+			current_date < 8305.8.20
+			character:Martell_9 ?= {
+				is_alive = yes
+				is_married = no
+				NOT = { has_character_flag = segrellion_arianne_event_marriage_completed }
+			}
+		}
+
+		character:Martell_9 = {
+			if = {
+				limit = { NOT = { has_trait = refusing_marriage } }
+				add_trait = refusing_marriage
+			}
+			add_character_flag = segrellion_arianne_marriage_lock_active
+		}
+	}
+
+	if = {
+		limit = {
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+			current_date >= 8305.8.20
+			character:Martell_9 ?= {
+				has_character_flag = segrellion_arianne_marriage_lock_active
+			}
+		}
+
+		character:Martell_9 = {
+			if = {
+				limit = { has_trait = refusing_marriage }
+				remove_trait = refusing_marriage
+			}
+			remove_character_flag = segrellion_arianne_marriage_lock_active
+			add_character_flag = segrellion_arianne_marriage_lock_expired
+		}
+	}
+}
+
 segrellion_setup_winds_of_winter_hosts_effect = {
 
 	if = {
