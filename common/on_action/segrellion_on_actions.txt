@@ -27,6 +27,7 @@ monthly_global_pulse = {
 		segrellion_daenerys_invasion_peace_guard
 		segrellion_young_griff_daenerys_pact_progression
 		segrellion_deadly_triarchy_progression
+		segrellion_daenerys_followers_progression
 	}
 }
 
@@ -181,6 +182,15 @@ segrellion_deadly_triarchy_progression = {
 
 	effect = {
 		segrellion_form_deadly_triarchy_effect = yes
+	}
+}
+
+# Save-compatible fallback for the first months of the 300 AC bookmark.
+# The scripted effect is idempotent and becomes a no-op after 1 January 301.
+segrellion_daenerys_followers_progression = {
+
+	effect = {
+		segrellion_setup_daenerys_followers_effect = yes
 	}
 }
 
@@ -590,8 +600,9 @@ segrellion_on_game_start_after_lobby = {
 		# ====================================================
 		# DAENERYS HISTORICAL FOLLOWERS
 		#
-		# MUST run AFTER the lobby, once AGOT has finished
-		# creating adventurer camps and assigning employers.
+		# Run once after the lobby, then again after time advances.
+		# AGOT's normal adventurer cleanup and "The Roads We Walk"
+		# are allowed to remain untouched.
 		# ====================================================
 
 		character:Targaryen_9 ?= {
@@ -603,7 +614,17 @@ segrellion_on_game_start_after_lobby = {
 					game_start_date = 8300.8.20
 				}
 
-				segrellion_setup_daenerys_historical_followers_effect = yes
+				segrellion_setup_daenerys_followers_effect = yes
+
+				trigger_event = {
+					id = segrellion_daenerys_followers.0001
+					days = 5
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_followers.0001
+					days = 15
+				}
 			}
 		}
 
