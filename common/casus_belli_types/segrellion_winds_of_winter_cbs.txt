@@ -680,9 +680,12 @@ segrellion_stannis_northern_campaign_cb = {
 			# =================================================
 			# STANNIS' NORTHERN HOST
 			#
-			# This is the army physically campaigning from
-			# Castle Black. Stannis remains Lord of Dragonstone
-			# but personally commands this force.
+			# 500 Storm Knights  = 10 x 50
+			# 1000 Antlermen     = 10 x 100
+			# 150 Mangonels      = 15 x 10
+			# 2000 Levies
+			#
+			# Stannis personally commands the host.
 			# =================================================
 
 			spawn_army = {
@@ -692,25 +695,25 @@ segrellion_stannis_northern_campaign_cb = {
 
 				men_at_arms = {
 
-					type = armored_footmen
+					type = storm_knights
 
-					men = 800
+					men = 500
 				}
 
 
 				men_at_arms = {
 
-					type = pikemen_unit
+					type = antlermen
 
-					men = 600
+					men = 1000
 				}
 
 
 				men_at_arms = {
 
-					type = bowmen
+					type = mangonel
 
-					men = 600
+					men = 150
 				}
 
 
@@ -787,6 +790,65 @@ segrellion_stannis_northern_campaign_cb = {
 				}
 
 				save_scope_as = stannis_glover_supporter
+			}
+		}
+
+		# =====================================================
+		# HOUSE UMBER
+		# =====================================================
+
+		title:c_last_hearth.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+				save_scope_as = stannis_umber_supporter
+			}
+		}
+
+
+		scope:stannis_umber_supporter ?= {
+
+			scope:war ?= {
+
+				add_attacker = scope:stannis_umber_supporter
+			}
+		}
+
+
+		# =====================================================
+		# HOUSE REED
+		# =====================================================
+
+		title:c_greywater_watch.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+				save_scope_as = stannis_reed_supporter
+			}
+		}
+
+
+		scope:stannis_reed_supporter ?= {
+
+			scope:war ?= {
+
+				add_attacker = scope:stannis_reed_supporter
 			}
 		}
 
