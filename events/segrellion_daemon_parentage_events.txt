@@ -129,13 +129,16 @@ segrellion_daemon_parentage.0002 = {
 
 	immediate = {
 
-		# Daemon reads Daena's letter himself and becomes
-		# the sole knower of his AGOT heritage secret.
-
-		segrellion_create_daemon_parentage_secret_effect = yes
-
-
-		# Our own narrative bookkeeping.
+		# Daemon now knows the truth personally.
+		#
+		# Do NOT create AGOT's disputed-heritage Secret yet.
+		# Creating it here exposes AGOT's generic
+		# "Expose True Parentage" decision, which contains
+		# requirements intended for several unrelated
+		# royal-bastard storylines.
+		#
+		# The mechanical Secret will only be created when
+		# Daemon actually chooses to reveal the truth publicly.
 
 		add_character_flag = segrellion_daemon_parentage_known
 		add_character_flag = segrellion_daemon_parentage_known_daemon_only
@@ -288,30 +291,8 @@ segrellion_daemon_parentage.0004 = {
 
 		remove_character_flag = segrellion_hugh_parentage_reveal_immediately
 
-
-		# Hugh now possesses the REAL CK3 heritage secret.
-		segrellion_create_daemon_parentage_secret_effect = yes
-
-
-		# Daemon privately learns that same secret.
-		random_known_secret = {
-
-			limit = {
-
-				secret_type = secret_agot_disputed_heritage
-
-				secret_target = {
-					this = character:Segrellion_60
-				}
-			}
-
-			reveal_to = character:Segrellion_60
-		}
-
-
 		add_character_flag = told_true_parentage
 		add_character_flag = segrellion_hugh_revealed_daemon_parentage
-
 
 		character:Segrellion_60 = {
 
@@ -357,7 +338,6 @@ segrellion_daemon_parentage.0004 = {
 				is_ai = no
 			}
 
-			segrellion_create_daemon_parentage_secret_effect = yes
 			custom_tooltip = segrellion_daemon_parentage.reveal_decision_unlocked_tt
 		}
 
