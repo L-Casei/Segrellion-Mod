@@ -562,6 +562,97 @@ segrellion_young_griff.3100 = {
 }
 
 # =========================================================
+# 3100 - THE VALE ANSWERS DAEMON
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.3200 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.3200.t
+	desc = segrellion_young_griff.3200.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_vale_response_resolved
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Segrellion_60 = {
+			save_scope_as = yg_daemon
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# SUPPORT HIM
+	# This is GOOD for Aegon.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.3200.a
+
+		ai_chance = {
+			base = 90
+		}
+
+		add_character_flag = segrellion_young_griff_vale_response_resolved
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_young_griff_approved_vale_support_opinion
+		}
+	}
+
+
+	# =====================================================
+	# BREAK THE COMPACT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.3200.b
+
+		custom_tooltip = segrellion_young_griff.3200.b.tt
+
+		ai_chance = {
+			base = 10
+		}
+
+		add_character_flag = segrellion_young_griff_vale_response_resolved
+
+		segrellion_break_young_griff_daemon_alliance_effect = yes
+	}
+}
+
+# =========================================================
 # 5000 - THE THREAD UNRAVELS
 # =========================================================
 
@@ -775,8 +866,8 @@ segrellion_young_griff.4000 = {
 }
 
 # =========================================================
-# 4100 - A CROWN NEEDS A QUEEN
-# Root = Young Griff
+# 4100 - A QUESTION OF QUEENS
+# Young Griff chooses whom to approach.
 # =========================================================
 
 segrellion_young_griff.4100 = {
@@ -786,54 +877,47 @@ segrellion_young_griff.4100 = {
 	title = segrellion_young_griff.4100.t
 	desc = segrellion_young_griff.4100.desc
 
-	theme = marriage
+	theme = diplomacy
 
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
 
 	trigger = {
 
 		this = character:IAF_Young_Griff_1
-
 		is_alive = yes
 		is_married = no
+
+		game_start_date >= 8300.8.20
+		game_start_date < 8301.1.1
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_marriage_pact_resolved
+		}
 	}
 
+
 	immediate = {
+
+		# These scopes are ONLY for this event.
+		# Never rely on them surviving a delayed event.
 
 		character:Targaryen_9 ?= {
 			save_scope_as = yg_daenerys
 		}
 
 		character:Martell_9 ?= {
-
 			save_scope_as = yg_arianne
-
-			father ?= {
-				save_scope_as = yg_doran
-			}
 		}
 	}
 
+
 	left_portrait = {
 		character = root
-		animation = thinking
-	}
-
-	right_portrait = {
-		character = character:Targaryen_9
-		animation = personality_rational
-	}
-
-	lower_right_portrait = {
-		character = character:Martell_9
 		animation = personality_bold
 	}
 
 
 	# =====================================================
-	# PROPOSE TO DAENERYS
+	# DAENERYS
 	# =====================================================
 
 	option = {
@@ -842,34 +926,30 @@ segrellion_young_griff.4100 = {
 
 		trigger = {
 
+			NOT = {
+				has_character_flag = segrellion_young_griff_daenerys_route_closed
+			}
+
 			character:Targaryen_9 ?= {
 				is_alive = yes
 				is_married = no
 			}
 		}
 
-		custom_tooltip = segrellion_young_griff.4100.a.tt
-
-		add_character_flag = segrellion_young_griff_proposed_daenerys
+		add_character_flag = segrellion_young_griff_daenerys_proposal_sent
 
 		character:Targaryen_9 = {
 
-			add_character_flag = segrellion_young_griff_daenerys_proposal_pending
-
 			trigger_event = {
 				id = segrellion_young_griff.4110
-				days = { 5 12 }
+				days = 3
 			}
-		}
-
-		ai_chance = {
-			base = 50
 		}
 	}
 
 
 	# =====================================================
-	# PROPOSE TO ARIANNE THROUGH DORAN
+	# ARIANNE
 	# =====================================================
 
 	option = {
@@ -879,68 +959,67 @@ segrellion_young_griff.4100 = {
 		trigger = {
 
 			character:Martell_9 ?= {
-
 				is_alive = yes
 				is_married = no
-
-				father ?= {
-					is_alive = yes
-				}
-			}
-
-			character:Segrellion_60 ?= {
-
-				NOR = {
-					has_character_flag = segrellion_negotiation_pending_dorne
-					has_character_flag = segrellion_dorne_marriage_pact
-				}
 			}
 		}
-
-		custom_tooltip = segrellion_young_griff.4100.b.tt
-
-		add_character_flag = segrellion_young_griff_proposed_arianne
 
 		character:Martell_9 = {
 
-			father = {
-
-				trigger_event = {
-					id = segrellion_young_griff.4120
-					days = { 5 12 }
-				}
+			trigger_event = {
+				id = segrellion_young_griff.4120
+				days = 3
 			}
 		}
+	}
 
-		ai_chance = {
-			base = 50
+
+	# =====================================================
+	# NOBODY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.4100.c
+
+		add_character_flag = segrellion_young_griff_marriage_pact_resolved
+
+		character:Martell_9 ?= {
+
+			if = {
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+
+			remove_character_flag = segrellion_arianne_marriage_lock_active
 		}
 	}
 }
 
 
 # =========================================================
-# 4110 - THE DRAGON QUEEN RECEIVES THE PROPOSAL
+# 4110 - A DRAGON'S PROPOSAL
 # Root = Daenerys
 # =========================================================
 
 segrellion_young_griff.4110 = {
 
-	type = letter_event
-
-	sender = character:IAF_Young_Griff_1
-
-	opening = segrellion_young_griff.4110.opening
+	type = character_event
 
 	title = segrellion_young_griff.4110.t
 	desc = segrellion_young_griff.4110.desc
 
-	theme = marriage
+	theme = diplomacy
+
 
 	trigger = {
 
 		this = character:Targaryen_9
 		is_alive = yes
+		is_married = no
 
 		character:IAF_Young_Griff_1 ?= {
 			is_alive = yes
@@ -948,14 +1027,14 @@ segrellion_young_griff.4110 = {
 		}
 	}
 
+
 	immediate = {
 
-		save_scope_as = yg_daenerys
-
-		character:IAF_Young_Griff_1 ?= {
-			save_scope_as = yg_aegon
+		character:IAF_Young_Griff_1 = {
+			save_scope_as = yg_suitor
 		}
 	}
+
 
 	left_portrait = {
 		character = root
@@ -969,103 +1048,60 @@ segrellion_young_griff.4110 = {
 
 
 	# =====================================================
-	# ACCEPT
+	# VERY RARE CONDITIONAL ACCEPTANCE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_young_griff.4110.a
 
-		trigger = {
-
-			is_married = no
-
-			NOT = {
-				has_character_flag = segrellion_marriage_promised_to_daemon
-			}
-
-			character:Segrellion_60 ?= {
-				NOT = {
-					has_character_flag = segrellion_daenerys_marriage_promised
-				}
-			}
+		ai_chance = {
+			base = 3
 		}
 
-		custom_tooltip = segrellion_young_griff.4110.a.tt
-
-		remove_character_flag = segrellion_young_griff_daenerys_proposal_pending
-
-		add_character_flag = segrellion_daenerys_accepted_young_griff_proposal
+		add_character_flag = segrellion_daenerys_counteroffer_sent
 
 		character:IAF_Young_Griff_1 = {
 
-			add_character_flag = segrellion_young_griff_daenerys_offer_accepted
+			add_character_flag = segrellion_young_griff_received_daenerys_counteroffer
 
 			trigger_event = {
 				id = segrellion_young_griff.4111
-				days = { 7 14 }
-			}
-		}
-
-		ai_chance = {
-
-			base = 10
-
-			modifier = {
-				add = 15
-
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value >= 50
-				}
-			}
-
-			modifier = {
-				add = 10
-				has_trait = ambitious
+				days = 3
 			}
 		}
 	}
 
 
 	# =====================================================
-	# REJECT
+	# NORMAL RESULT: NO
 	# =====================================================
 
 	option = {
 
 		name = segrellion_young_griff.4110.b
 
-		custom_tooltip = segrellion_young_griff.4110.b.tt
-
-		remove_character_flag = segrellion_young_griff_daenerys_proposal_pending
-
-		add_character_flag = segrellion_daenerys_rejected_young_griff_proposal
+		ai_chance = {
+			base = 97
+		}
 
 		character:IAF_Young_Griff_1 = {
 
-			add_character_flag = segrellion_young_griff_rejected_by_daenerys
+			add_character_flag = segrellion_young_griff_daenerys_route_closed
+			add_character_flag = segrellion_young_griff_daenerys_original_rejected
 
 			trigger_event = {
-				id = segrellion_young_griff.4111
-				days = { 7 14 }
+				id = segrellion_young_griff.4115
+				days = 3
 			}
-		}
-
-		ai_chance = {
-			base = 90
 		}
 	}
 }
 
 
 # =========================================================
-# 4111 - THE DRAGON QUEEN'S ANSWER
+# 4111 - THE DRAGON QUEEN'S TERMS
 # Root = Young Griff
-#
-# The answer has physically returned to Aegon.
-# Marriage is resolved HERE, not while the reply is
-# supposedly still crossing Essos.
 # =========================================================
 
 segrellion_young_griff.4111 = {
@@ -1073,116 +1109,270 @@ segrellion_young_griff.4111 = {
 	type = character_event
 
 	title = segrellion_young_griff.4111.t
+	desc = segrellion_young_griff.4111.desc
 
-	desc = {
+	theme = diplomacy
 
-		first_valid = {
-
-			triggered_desc = {
-
-				trigger = {
-					has_character_flag = segrellion_young_griff_married_daenerys
-				}
-
-				desc = segrellion_young_griff.4111.desc_accept
-			}
-
-			triggered_desc = {
-
-				trigger = {
-					has_character_flag = segrellion_young_griff_daenerys_offer_lost
-				}
-
-				desc = segrellion_young_griff.4111.desc_lost
-			}
-
-			desc = segrellion_young_griff.4111.desc_reject
-		}
-	}
-
-	theme = marriage
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
 
 	trigger = {
 
 		this = character:IAF_Young_Griff_1
 		is_alive = yes
+		is_married = no
+
+		has_character_flag = segrellion_young_griff_received_daenerys_counteroffer
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+			is_married = no
+		}
 	}
+
 
 	immediate = {
 
-		character:Targaryen_9 ?= {
+		# THIS fixes the broken localization scope.
+		character:Targaryen_9 = {
 			save_scope_as = yg_daenerys
 		}
-
-		# -------------------------------------------------
-		# SHE ACCEPTED AND THE MATCH IS STILL POSSIBLE
-		# -------------------------------------------------
-
-		if = {
-
-			limit = {
-
-				has_character_flag = segrellion_young_griff_daenerys_offer_accepted
-
-				is_married = no
-
-				character:Targaryen_9 ?= {
-
-					is_alive = yes
-					is_married = no
-
-					NOT = {
-						has_character_flag = segrellion_marriage_promised_to_daemon
-					}
-				}
-
-				character:Segrellion_60 ?= {
-
-					NOT = {
-						has_character_flag = segrellion_daenerys_marriage_promised
-					}
-				}
-			}
-
-			marry = character:Targaryen_9
-
-			add_character_flag = segrellion_young_griff_married_daenerys
-
-			character:Targaryen_9 = {
-
-				add_character_flag = segrellion_young_griff_married_daenerys
-
-				remove_character_flag = segrellion_daenerys_accepted_young_griff_proposal
-				remove_character_flag = segrellion_young_griff_daenerys_proposal_pending
-			}
-		}
-
-		# -------------------------------------------------
-		# SHE ACCEPTED, BUT SOMETHING CHANGED BEFORE
-		# THE ANSWER REACHED AEGON
-		# -------------------------------------------------
-
-		else_if = {
-
-			limit = {
-				has_character_flag = segrellion_young_griff_daenerys_offer_accepted
-			}
-
-			add_character_flag = segrellion_young_griff_daenerys_offer_lost
-
-			character:Targaryen_9 ?= {
-				remove_character_flag = segrellion_daenerys_accepted_young_griff_proposal
-				remove_character_flag = segrellion_young_griff_daenerys_proposal_pending
-			}
-		}
-
-		remove_character_flag = segrellion_young_griff_daenerys_offer_accepted
-		remove_character_flag = segrellion_young_griff_proposed_daenerys
 	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT HER TERMS
+	# AI: 5%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.4111.a
+
+		ai_chance = {
+			base = 5
+		}
+
+		remove_character_flag = segrellion_young_griff_received_daenerys_counteroffer
+
+		add_character_flag = segrellion_young_griff_accepted_daenerys_condition
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.4112
+				days = 3
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE CONDITION, BUT RENEW ORIGINAL OFFER
+	# AI: 95%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.4111.b
+
+		ai_chance = {
+			base = 95
+		}
+
+		remove_character_flag = segrellion_young_griff_received_daenerys_counteroffer
+
+		add_character_flag = segrellion_young_griff_rejected_daenerys_condition
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.4113
+				days = 3
+			}
+		}
+	}
+}
+
+# =========================================================
+# 4112 - A CROWN BEFORE A WEDDING
+# Root = Daenerys
+# =========================================================
+
+segrellion_young_griff.4112 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.4112.t
+	desc = segrellion_young_griff.4112.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+		is_alive = yes
+		is_married = no
+
+		character:IAF_Young_Griff_1 ?= {
+			is_alive = yes
+			is_married = no
+			has_character_flag = segrellion_young_griff_accepted_daenerys_condition
+		}
+	}
+
+
+	immediate = {
+
+		character:IAF_Young_Griff_1 = {
+			save_scope_as = yg_suitor
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:IAF_Young_Griff_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.4112.a
+
+		add_character_flag = segrellion_daenerys_young_griff_throne_pact
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_daenerys_throne_pact
+
+			trigger_event = {
+				id = segrellion_young_griff.4114
+				days = 3
+			}
+		}
+	}
+}
+
+# =========================================================
+# 4113 - NO CROWN, NO MARRIAGE
+# Root = Daenerys
+# =========================================================
+
+segrellion_young_griff.4113 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.4113.t
+	desc = segrellion_young_griff.4113.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+		is_alive = yes
+
+		character:IAF_Young_Griff_1 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_young_griff_rejected_daenerys_condition
+		}
+	}
+
+
+	immediate = {
+
+		character:IAF_Young_Griff_1 = {
+			save_scope_as = yg_suitor
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:IAF_Young_Griff_1
+		animation = personality_bold
+	}
+
+
+	# No AI roll.
+	# She ALWAYS refuses after he rejects her condition.
+
+	option = {
+
+		name = segrellion_young_griff.4113.a
+
+		character:IAF_Young_Griff_1 = {
+
+			remove_character_flag = segrellion_young_griff_rejected_daenerys_condition
+
+			add_character_flag = segrellion_young_griff_daenerys_route_closed
+			add_character_flag = segrellion_young_griff_daenerys_final_rejection
+
+			trigger_event = {
+				id = segrellion_young_griff.4115
+				days = 3
+			}
+		}
+	}
+}
+
+# =========================================================
+# 4114 - HER THRONE
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.4114 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.4114.t
+	desc = segrellion_young_griff.4114.desc
+
+	theme = crown
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_daenerys_throne_pact
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_daenerys_young_griff_throne_pact
+		}
+	}
+
+
+	immediate = {
+
+		character:Targaryen_9 = {
+			save_scope_as = yg_daenerys
+		}
+	}
+
 
 	left_portrait = {
 		character = root
@@ -1191,36 +1381,74 @@ segrellion_young_griff.4111 = {
 
 	right_portrait = {
 		character = character:Targaryen_9
-		animation = personality_rational
+		animation = personality_bold
 	}
 
 
 	option = {
 
-		name = segrellion_young_griff.4111.a
+		name = segrellion_young_griff.4114.a
 
-		trigger = {
-			has_character_flag = segrellion_young_griff_married_daenerys
+		add_character_flag = segrellion_young_griff_marriage_pact_resolved
+
+		segrellion_start_daenerys_throne_war_effect = yes
+	}
+}
+
+# =========================================================
+# 4115 - THE DRAGON QUEEN REFUSES
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.4115 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.4115.t
+	desc = segrellion_young_griff.4115.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_daenerys_route_closed
+	}
+
+
+	immediate = {
+
+		# Fresh scope for localization.
+		character:Targaryen_9 ?= {
+			save_scope_as = yg_daenerys
 		}
 	}
 
 
-	option = {
-
-		name = segrellion_young_griff.4111.b
-
-		trigger = {
-			has_character_flag = segrellion_young_griff_rejected_by_daenerys
-		}
+	left_portrait = {
+		character = root
+		animation = personality_bold
 	}
 
 
 	option = {
 
-		name = segrellion_young_griff.4111.c
+		name = segrellion_young_griff.4115.a
 
-		trigger = {
-			has_character_flag = segrellion_young_griff_daenerys_offer_lost
+		remove_character_flag = segrellion_young_griff_daenerys_proposal_sent
+		remove_character_flag = segrellion_young_griff_daenerys_original_rejected
+		remove_character_flag = segrellion_young_griff_daenerys_final_rejection
+
+		# IMPORTANT:
+		# DO NOT set marriage_pact_resolved.
+		# Arianne must become available again.
+
+		trigger_event = {
+			id = segrellion_young_griff.4100
+			days = 3
 		}
 	}
 }

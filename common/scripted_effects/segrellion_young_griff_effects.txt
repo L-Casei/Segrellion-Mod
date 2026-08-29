@@ -136,3 +136,92 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 		}
 	}
 }
+
+# =========================================================
+# YOUNG GRIFF FIGHTS FOR DAENERYS' THRONE
+# =========================================================
+
+segrellion_start_daenerys_throne_war_effect = {
+
+	if = {
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+			}
+
+			NOT = {
+				title:h_the_iron_throne.holder = character:Targaryen_9
+			}
+
+			can_start_war = {
+				target = title:h_the_iron_throne
+				casus_belli = claim_cb
+				claimant = character:Targaryen_9
+			}
+		}
+
+		start_war = {
+			target = title:h_the_iron_throne
+			casus_belli = claim_cb
+			claimant = character:Targaryen_9
+		}
+
+		add_character_flag = segrellion_young_griff_fighting_for_daenerys
+	}
+
+
+	# She somehow already obtained the throne.
+	else_if = {
+
+		limit = {
+			title:h_the_iron_throne.holder = character:Targaryen_9
+		}
+
+		segrellion_complete_young_griff_daenerys_pact_effect = yes
+	}
+}
+
+
+# =========================================================
+# MARRY ONLY AFTER DAENERYS HAS THE IRON THRONE
+# =========================================================
+
+segrellion_complete_young_griff_daenerys_pact_effect = {
+
+	if = {
+		limit = {
+
+			title:h_the_iron_throne.holder = character:Targaryen_9
+
+			character:IAF_Young_Griff_1 ?= {
+				is_alive = yes
+				is_married = no
+				has_character_flag = segrellion_young_griff_daenerys_throne_pact
+			}
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+				is_married = no
+				has_character_flag = segrellion_daenerys_young_griff_throne_pact
+			}
+		}
+
+		character:IAF_Young_Griff_1 = {
+
+			marry = character:Targaryen_9
+
+			add_character_flag = segrellion_young_griff_daenerys_pact_fulfilled
+			remove_character_flag = segrellion_young_griff_fighting_for_daenerys
+		}
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_young_griff_pact_fulfilled
+		}
+	}
+}

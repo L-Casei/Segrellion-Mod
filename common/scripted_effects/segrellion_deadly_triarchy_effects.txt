@@ -1,0 +1,122 @@
+# =========================================================
+# THE DEADLY TRIARCHY
+# =========================================================
+
+segrellion_form_deadly_triarchy_effect = {
+
+	if = {
+		limit = {
+
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_daemon_supported_by_young_griff
+
+				NOT = {
+					has_character_flag = segrellion_deadly_triarchy_formed
+				}
+			}
+
+			character:IAF_Young_Griff_1 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_supports_daemon
+			}
+
+			character:Vladwyn_10 ?= {
+				is_alive = yes
+			}
+
+			# Storm's End already secured.
+			title:e_the_stormlands.holder = character:IAF_Young_Griff_1
+		}
+
+
+		# =================================================
+		# DAEMON
+		# =================================================
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_deadly_triarchy_formed
+
+			add_character_modifier = {
+				modifier = segrellion_deadly_triarchy_modifier
+			}
+
+			add_opinion = {
+				target = character:IAF_Young_Griff_1
+				modifier = segrellion_deadly_triarchy_opinion
+			}
+
+			add_opinion = {
+				target = character:Vladwyn_10
+				modifier = segrellion_deadly_triarchy_opinion
+			}
+
+			trigger_event = {
+				id = segrellion_deadly_triarchy.0001
+				days = 3
+			}
+		}
+
+
+		# =================================================
+		# JOFFREY
+		# =================================================
+
+		character:Vladwyn_10 = {
+
+			add_character_modifier = {
+				modifier = segrellion_deadly_triarchy_modifier
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_deadly_triarchy_opinion
+			}
+
+			add_opinion = {
+				target = character:IAF_Young_Griff_1
+				modifier = segrellion_deadly_triarchy_opinion
+			}
+
+			trigger_event = {
+				id = segrellion_deadly_triarchy.0002
+				days = 3
+			}
+		}
+
+
+		# =================================================
+		# YOUNG GRIFF
+		# =================================================
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_modifier = {
+				modifier = segrellion_deadly_triarchy_modifier
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_deadly_triarchy_opinion
+			}
+
+			add_opinion = {
+				target = character:Vladwyn_10
+				modifier = segrellion_deadly_triarchy_opinion
+			}
+
+			trigger_event = {
+				id = segrellion_deadly_triarchy.0003
+				days = 3
+			}
+		}
+	}
+}

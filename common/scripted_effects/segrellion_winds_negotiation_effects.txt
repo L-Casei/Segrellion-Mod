@@ -717,6 +717,54 @@ segrellion_break_stannis_oath_for_young_griff_effect = {
 }
 
 # =========================================================
+# YOUNG GRIFF BREAKS THE PENTOS COMPACT
+# =========================================================
+
+segrellion_break_young_griff_daemon_alliance_effect = {
+
+	remove_character_flag = segrellion_young_griff_supports_daemon
+
+	add_character_modifier = {
+		modifier = segrellion_young_griff_oathbreaker_modifier
+		years = 10
+	}
+
+
+	if = {
+		limit = {
+			has_relation_friend = character:Segrellion_60
+		}
+
+		remove_relation_friend = character:Segrellion_60
+	}
+
+
+	character:Segrellion_60 ?= {
+
+		remove_character_flag = segrellion_daemon_supported_by_young_griff
+
+		remove_opinion = {
+			target = character:IAF_Young_Griff_1
+			modifier = segrellion_young_griff_pentos_compact_opinion
+		}
+
+		add_opinion = {
+			target = character:IAF_Young_Griff_1
+			modifier = segrellion_young_griff_broke_compact_opinion
+		}
+
+
+		if = {
+			limit = {
+				has_relation_friend = character:IAF_Young_Griff_1
+			}
+
+			remove_relation_friend = character:IAF_Young_Griff_1
+		}
+	}
+}
+
+# =========================================================
 # VALE SUPPORT
 #
 # 1,000 Knights of the Vale
@@ -772,6 +820,31 @@ segrellion_grant_vale_support_effect = {
 	add_character_flag = segrellion_vale_support_pact
 
 	segrellion_clear_troop_negotiation_effect = yes
+
+	# =====================================================
+	# YOUNG GRIFF REACTS TO DAEMON SECURING VALE SUPPORT
+	# =====================================================
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_supports_daemon
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_vale_response_resolved
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_young_griff.3200
+				days = 3
+			}
+		}
+	}
 }
 
 # =========================================================
