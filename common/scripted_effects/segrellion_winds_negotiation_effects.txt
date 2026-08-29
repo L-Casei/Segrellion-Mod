@@ -897,3 +897,79 @@ segrellion_setup_daenerys_followers_effect = {
 		}
 	}
 }
+
+
+# =========================================================
+# DAENERYS - RUSHED CROSSING
+#
+# No fleet means abandoning the Dothraki and most levies.
+# Unsullied are preserved.
+#
+# Target remaining force:
+# roughly 4,000 men.
+# =========================================================
+
+segrellion_daenerys_abandon_army_for_early_crossing_effect = {
+
+	# =====================================================
+	# ABANDON ALL DOTHRAKI
+	# =====================================================
+
+	every_maa_regiment = {
+
+		limit = {
+			is_maa_type = dothraki_screamers
+		}
+
+		destroy_maa_regiment = yes
+	}
+
+
+	# =====================================================
+	# REDUCE LEVIES
+	#
+	# Normal:
+	# 7,500 -> 2,000
+	#
+	# If she already gave Daemon troops:
+	# 5,500 -> 2,000
+	#
+	# Unsullied remain untouched.
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+		}
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -35
+				reinforce = no
+			}
+		}
+	}
+
+	else = {
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -55
+				reinforce = no
+			}
+		}
+	}
+
+	add_character_flag = segrellion_daenerys_rushed_crossing_army_reduced
+}
