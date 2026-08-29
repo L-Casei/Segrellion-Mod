@@ -725,125 +725,173 @@ segrellion_finish_vale_debt_effect = {
 # DAENERYS - HISTORICAL CAMP FOLLOWERS
 # =========================================================
 
+# =========================================================
+# DAENERYS - HISTORICAL FOLLOWERS
+#
+# Historical 300 AC camp:
+#
+#   Tyrion Lannister
+#   Barristan Selmy
+#   Jorah Mormont
+#   Missandei
+#   Torgo Nudho
+#
+# IMPORTANT:
+# Followers of a landless adventurer are tied to their
+# employer. We explicitly overwrite the employer because
+# AGOT's startup may place Tyrion/Jorah in the Second Sons.
+# =========================================================
+
 segrellion_setup_daenerys_followers_effect = {
 
 	if = {
 		limit = {
+
 			game_start_date >= 8300.8.20
 			game_start_date < 8301.1.1
+
 			current_date >= 8300.8.20
 			current_date < 8301.1.1
-			character:Targaryen_9 ?= { is_alive = yes }
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+			}
 		}
+
+
+		# =================================================
+		# TYRION LANNISTER
+		# =================================================
+
+		character:Lannister_8 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					NOT = {
+						employer = character:Targaryen_9
+					}
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# SER BARRISTAN SELMY
+		# =================================================
+
+		character:Selmy_3 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					NOT = {
+						employer = character:Targaryen_9
+					}
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# SER JORAH MORMONT
+		#
+		# IMPORTANT:
+		# The original working camp setup used Mormont_8.
+		# Do NOT change this back to Mormont_3.
+		# =================================================
+
+		character:Mormont_8 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					NOT = {
+						employer = character:Targaryen_9
+					}
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# MISSANDEI
+		# =================================================
+
+		character:IAF_Missandei_1 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					NOT = {
+						employer = character:Targaryen_9
+					}
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# TORGO NUDHO
+		# =================================================
+
+		character:IAF_Torgo_Nudho_1 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+
+					NOT = {
+						employer = character:Targaryen_9
+					}
+				}
+
+				set_employer = character:Targaryen_9
+			}
+		}
+
+
+		# =================================================
+		# TYRION = THE SECOND
+		# =================================================
 
 		character:Targaryen_9 = {
 
-			save_scope_as = daenerys_camp_owner
-
-			# Keep the employer Tyrion had before we detach him. In AGOT's
-			# 300 AC setup this is the Second Sons. This also lets us support
-			# both Jorah history IDs seen across recent AGOT/mod revisions
-			# without blindly stealing an unrelated Mormont.
-			character:Lannister_8 ?= {
-				employer ?= {
-					if = {
-						limit = { this != scope:daenerys_camp_owner }
-						save_scope_as = daenerys_tyrion_previous_employer
-					}
-				}
-			}
-
-			# JORAH MORMONT
-			# Mormont_3 is the current reference in the mod; Mormont_8 was
-			# used by the last known-working entourage implementation. Only
-			# transfer either candidate if he shares Tyrion's old employer.
-			if = {
-				limit = { exists = scope:daenerys_tyrion_previous_employer }
-
-				character:Mormont_3 ?= {
-					if = {
-						limit = {
-							is_alive = yes
-							employer = scope:daenerys_tyrion_previous_employer
-						}
-						set_employer = scope:daenerys_camp_owner
-						add_to_court_and_entourage_effect = yes
-						return_home = yes
-					}
-				}
-
-				character:Mormont_8 ?= {
-					if = {
-						limit = {
-							is_alive = yes
-							employer = scope:daenerys_tyrion_previous_employer
-						}
-						set_employer = scope:daenerys_camp_owner
-						add_to_court_and_entourage_effect = yes
-						return_home = yes
-					}
-				}
-			}
-
-			# TYRION LANNISTER
-			character:Lannister_8 ?= {
-				if = {
-					limit = { is_alive = yes }
-					set_employer = scope:daenerys_camp_owner
-					add_to_court_and_entourage_effect = yes
-					return_home = yes
-				}
-			}
-
-			# SER BARRISTAN SELMY
-			character:Selmy_3 ?= {
-				if = {
-					limit = { is_alive = yes }
-					set_employer = scope:daenerys_camp_owner
-					add_to_court_and_entourage_effect = yes
-					return_home = yes
-				}
-			}
-
-			# MISSANDEI
-			character:IAF_Missandei_1 ?= {
-				if = {
-					limit = { is_alive = yes }
-					set_employer = scope:daenerys_camp_owner
-					add_to_court_and_entourage_effect = yes
-					return_home = yes
-				}
-			}
-
-			# TORGO NUDHO
-			character:IAF_Torgo_Nudho_1 ?= {
-				if = {
-					limit = { is_alive = yes }
-					set_employer = scope:daenerys_camp_owner
-					add_to_court_and_entourage_effect = yes
-					return_home = yes
-				}
-			}
-
-			# TYRION = SECOND
 			if = {
 				limit = {
+
 					character:Lannister_8 ?= {
 						is_alive = yes
-						employer = scope:daenerys_camp_owner
+						employer = character:Targaryen_9
 					}
+
 					NOT = {
 						any_court_position_holder = {
 							type = second_camp_officer
 						}
 					}
+
 					is_valid_to_hire_court_position_type = second_camp_officer
 				}
+
 				appoint_court_position = {
 					recipient = character:Lannister_8
 					court_position = second_camp_officer
 				}
 			}
+
 
 			add_character_flag = segrellion_daenerys_followers_setup
 		}

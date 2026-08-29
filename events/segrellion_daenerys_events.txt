@@ -6,16 +6,33 @@ segrellion_daenerys_invasion.0098 = {
 	hidden = yes
 
 	trigger = {
+
 		this = character:Targaryen_9
 		is_alive = yes
+
 		game_start_date >= 8300.8.20
 		game_start_date < 8301.1.1
+
+		current_date < 8301.1.1
 	}
 
 	immediate = {
-		# Delayed, idempotent repair after every other game-start
-		# initializer has finished moving historical characters.
+
+		# =================================================
+		# REPAIR HISTORICAL CAMP
+		#
+		# AGOT may initially place Tyrion and Jorah in
+		# the Second Sons. Reassert Daenerys as employer
+		# after the normal startup passes have completed.
+		# =================================================
+
 		segrellion_setup_daenerys_followers_effect = yes
+
+
+		# =================================================
+		# DRAGONS
+		# =================================================
+
 		segrellion_setup_daenerys_dragons_300_effect = yes
 	}
 }
