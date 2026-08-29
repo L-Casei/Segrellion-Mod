@@ -99,8 +99,16 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 
 			# ---------------------------------------------
-			# Remove mechanical Iron Throne claim while
-			# waiting, preventing an ordinary claim war.
+			# REMOVE MECHANICAL WESTEROSI CLAIMS
+			#
+			# Daenerys must not bypass the scripted
+			# invasion by declaring ordinary claim wars
+			# from Essos.
+			#
+			# The Iron Throne claim was already removed,
+			# but her Dragonstone claim was still allowing
+			# vanilla / AGOT AI to attack Stannis directly
+			# from Pentos.
 			# ---------------------------------------------
 
 			if = {
@@ -111,6 +119,17 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 				remove_claim = title:h_the_iron_throne
 			}
+
+
+			if = {
+
+				limit = {
+					has_claim_on = title:c_dragonstone
+				}
+
+				remove_claim = title:c_dragonstone
+			}
+
 
 
 			# =================================================
@@ -191,6 +210,95 @@ segrellion_initialize_daenerys_aggression_effect = {
 					days = { 730 1825 }
 				}
 			}
+		}
+	}
+}
+
+# =========================================================
+# DAENERYS - SCRIPTED INVASION PEACE GUARD
+#
+# Save-compatible repair.
+#
+# While AI Daenerys has committed to Westeros but has not
+# physically landed there yet, she must not initiate normal
+# AI wars.
+# =========================================================
+
+segrellion_daenerys_invasion_peace_guard_effect = {
+
+	character:Targaryen_9 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+				is_ai = yes
+
+				has_character_flag = segrellion_daenerys_invasion_committed
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_landed_in_westeros
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_invasion_abandoned
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_special_story_abandoned
+				}
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+					}
+				}
+
+				add_character_modifier = {
+					modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+				}
+			}
+
+
+			# ---------------------------------------------
+			# Claims that can bypass the scripted route.
+			# ---------------------------------------------
+
+			if = {
+
+				limit = {
+					has_claim_on = title:h_the_iron_throne
+				}
+
+				remove_claim = title:h_the_iron_throne
+			}
+
+
+			if = {
+
+				limit = {
+					has_claim_on = title:c_dragonstone
+				}
+
+				remove_claim = title:c_dragonstone
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+			}
+
+			remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
 		}
 	}
 }

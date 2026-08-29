@@ -24,6 +24,7 @@ monthly_global_pulse = {
 		segrellion_unicorn_returns_leo_beacon_lock
 		segrellion_arianne_marriage_lock_progression
 		segrellion_young_griff_blackfyre_progression
+		segrellion_daenerys_invasion_peace_guard
 	}
 }
 
@@ -148,6 +149,14 @@ segrellion_deathwish_historical_progression = {
 
 	effect = {
 		segrellion_deathwish_historical_progression_effect = yes
+	}
+}
+
+segrellion_daenerys_invasion_peace_guard = {
+
+	effect = {
+
+		segrellion_daenerys_invasion_peace_guard_effect = yes
 	}
 }
 
@@ -545,36 +554,56 @@ segrellion_on_game_start_after_lobby = {
 	
 	effect = {
 
+		debug_log = "[SEGRELLION DANY DEBUG] AFTER_LOBBY FIRED"
+        debug_log_date = yes
+
+        character:Targaryen_9 ?= {
+
+            debug_log = "[SEGRELLION DANY DEBUG] DAENERYS SCOPE FOUND"
+
+            if = {
+                limit = {
+                    is_alive = yes
+                    current_date >= 8300.8.20
+                    current_date < 8301.1.1
+                }
+
+                debug_log = "[SEGRELLION DANY DEBUG] FOLLOWER EVENT SCHEDULED"
+
+                trigger_event = {
+                    id = segrellion_daenerys_followers.0001
+                    days = 10
+                }
+            }
+        }
+
 		segrellion_apply_later_canon_supplied_appearances_effect = yes
 		segrellion_setup_daenerys_followers_effect = yes
 		segrellion_setup_daenerys_dragons_300_effect = yes
 		segrellion_arianne_marriage_lock_effect = yes
 		segrellion_setup_young_griff_blackfyre_effect = yes
 
-		# Repeat the repair after initialization. AGOT's historical
-		# locations attach Tyrion and Jorah to the Second Sons during
-		# setup, so a single zero-tick transfer is not sufficient.
-		character:Targaryen_9 ?= {
-			if = {
-				limit = {
-					is_alive = yes
-					game_start_date >= 8300.8.20
-					game_start_date < 8301.1.1
-				}
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0098
-					days = 1
-				}
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0098
-					days = 3
-				}
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0098
-					days = 7
-				}
-			}
-		}
+		# ====================================================
+        # DAENERYS HISTORICAL FOLLOWERS
+        # ====================================================
+
+        character:Targaryen_9 ?= {
+
+            if = {
+                limit = {
+
+                    is_alive = yes
+
+                    current_date >= 8300.8.20
+                    current_date < 8301.1.1
+                }
+
+                trigger_event = {
+                    id = segrellion_daenerys_followers.0001
+                    days = 10
+                }
+            }
+        }
 
 
 		# ====================================================
