@@ -1326,166 +1326,396 @@ segrellion_support.4000 = {
 	}
 }
 
-
 # =========================================================
-# 5000 - VHALERION'S CHOICE
+# 4950 - VHAL AFTER THE RESTORATION
+#
+# Root = Daemon
+#
+# Daemon decides whether to invite Vhal back into the
+# restored Flamelands.
 # =========================================================
 
-segrellion_support.5000 = {
+segrellion_support.4950 = {
 
 	type = character_event
 
-	title = segrellion_support.5000.t
-	desc = segrellion_support.5000.desc
+	title = segrellion_support.4950.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			# Hugh fought for Daemon.
+
+			triggered_desc = {
+
+				trigger = {
+
+					title:d_vhalerion.holder ?= {
+
+						has_character_flag = segrellion_hugh_supported_unicorn_returns
+					}
+				}
+
+
+				desc = segrellion_support.4950.desc_helped
+			}
+
+
+			# Hugh stayed out of the restoration.
+
+			desc = segrellion_support.4950.desc_did_not_help
+		}
+	}
+
 
 	theme = realm
 
+
 	override_background = {
-		reference = segrellion_vhalerion_throne_room
+
+		reference = segrellion_the_beacon_throne_room
 	}
 
+
 	override_icon = {
+
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
 
 	trigger = {
 
-		has_character_flag = segrellion_vhal_reunification_event_pending
+		this = character:Segrellion_60
 
-		title:d_vhalerion = {
-			holder = root
-		}
+		is_alive = yes
 
-		character:Segrellion_60 ?= {
+		has_title = title:e_flamelands
+
+		has_character_flag = segrellion_vhal_submission_offer_pending
+
+
+		title:d_vhalerion.holder ?= {
+
 			is_alive = yes
-			has_title = title:e_flamelands
+
+			this != root
+
+
+			NOT = {
+				liege ?= root
+			}
 		}
 	}
 
+
 	immediate = {
 
-		character:Segrellion_60 = {
-			save_scope_as = restored_flamelands_lord
+		title:d_vhalerion.holder = {
+
+			save_scope_as = vhal_lord
 		}
 	}
 
 
 	left_portrait = {
-		character = root
-		animation = thinking
-	}
 
-	right_portrait = {
-		character = character:Segrellion_60
+		character = root
+
 		animation = personality_bold
 	}
 
 
+	right_portrait = {
+
+		character = scope:vhal_lord
+
+		animation = personality_rational
+	}
+
+
 	# =====================================================
-	# RETURN TO THE FLAMELANDS
+	# ASK VHAL TO SUBMIT PEACEFULLY
+	# AI DAEMON: 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.4950.a
+
+
+		remove_character_flag = segrellion_vhal_submission_offer_pending
+
+		add_character_flag = segrellion_vhal_submission_request_sent
+
+
+		scope:vhal_lord = {
+
+			add_character_flag = segrellion_vhal_reunification_event_pending
+
+
+			trigger_event = {
+
+				id = segrellion_support.5000
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# LET VHAL REMAIN INDEPENDENT
+	# AI DAEMON: 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.4950.b
+
+
+		remove_character_flag = segrellion_vhal_submission_offer_pending
+
+		add_character_flag = segrellion_vhal_submission_offer_resolved
+
+		add_character_flag = segrellion_vhal_independence_respected
+
+
+		scope:vhal_lord = {
+
+			add_character_flag = segrellion_vhal_reunification_resolved
+
+			add_character_flag = segrellion_vhal_independence_respected
+		}
+
+
+		ai_chance = {
+
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 5000 - THE UNICORN'S CALL
+#
+# Root = Lord of Vhal
+#
+# Daemon has formally invited Vhal to return.
+# =========================================================
+
+segrellion_support.5000 = {
+
+	type = letter_event
+
+
+	sender = character:Segrellion_60
+
+	opening = segrellion_support.5000.opening
+
+
+	title = segrellion_support.5000.t
+
+	desc = segrellion_support.5000.desc
+
+
+	theme = realm
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vhal_reunification_event_pending
+
+
+		title:d_vhalerion = {
+
+			holder = root
+		}
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			has_title = title:e_flamelands
+		}
+	}
+
+
+	immediate = {
+
+		character:Segrellion_60 = {
+
+			save_scope_as = restored_flamelands_lord
+		}
+	}
+
+
+	# =====================================================
+	# SWEAR FEALTY
+	#
+	# Base AI willingness: 40
+	# Opinion can push it significantly higher or lower.
 	# =====================================================
 
 	option = {
 
 		name = segrellion_support.5000.a
 
+
 		remove_character_flag = segrellion_vhal_reunification_event_pending
 
 		add_character_flag = segrellion_vhal_reunification_resolved
+
 		add_character_flag = segrellion_vhal_rejoined_flamelands
 
 
-		# Restore the historical de jure relationship.
+		# Restore Vhal's historical place in the realm.
+
 		title:d_vhalerion = {
+
 			set_de_jure_liege_title = title:k_flamelands
 		}
 
 
-		# Hugh / current Lord of Vhal becomes Daemon's vassal.
-		set_liege = character:Segrellion_60
+		# Real fealty transaction.
+
+		create_title_and_vassal_change = {
+
+			type = swear_fealty
+
+			save_scope_as = segrellion_vhal_submission_change
+
+			add_claim_on_loss = no
+		}
+
+
+		change_liege = {
+
+			liege = character:Segrellion_60
+
+			change = scope:segrellion_vhal_submission_change
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_vhal_submission_change
+
+
+		# Vhal appreciates Daemon's peaceful restoration.
+
+		add_opinion = {
+
+			target = character:Segrellion_60
+
+			modifier = segrellion_swore_fealty_to_daemon_opinion
+		}
 
 
 		character:Segrellion_60 = {
 
-			add_opinion = {
-				target = root
-				modifier = segrellion_vhal_returned_to_daemon_opinion
+			remove_character_flag = segrellion_vhal_submission_request_sent
+
+			add_character_flag = segrellion_vhal_submission_offer_resolved
+
+
+			trigger_event = {
+
+				id = segrellion_support.5001
+
+				days = 1
 			}
 		}
 
-			ai_chance = {
 
-			base = 25
+		ai_chance = {
+
+			base = 40
 
 
-			# Opinion 0-24 -> 35%
 			modifier = {
 
 				add = 10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 0
 				}
 			}
 
 
-			# Opinion 25-49 -> 45%
 			modifier = {
 
 				add = 10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 25
 				}
 			}
 
 
-			# Opinion 50-74 -> 60%
 			modifier = {
 
 				add = 15
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 50
 				}
 			}
 
 
-			# Opinion 75+ -> 80%
 			modifier = {
 
 				add = 20
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 75
 				}
 			}
 
 
-			# Opinion below -25 -> 15%
 			modifier = {
 
 				add = -10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value < -25
 				}
 			}
 
 
-			# Opinion below -50 -> 5%
 			modifier = {
 
 				add = -10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value < -50
 				}
 			}
@@ -1494,37 +1724,48 @@ segrellion_support.5000 = {
 
 
 	# =====================================================
-	# REMAIN APART
+	# REFUSE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_support.5000.b
 
+
 		remove_character_flag = segrellion_vhal_reunification_event_pending
 
 		add_character_flag = segrellion_vhal_reunification_resolved
+
 		add_character_flag = segrellion_vhal_refused_daemon
 
 
-		# Ensure Vhal remains outside the Flamelands.
+		# Vhal remains outside the restored Flamelands.
+
 		title:d_vhalerion = {
+
 			set_de_jure_liege_title = title:h_the_iron_throne
 		}
 
 
-		# Daemon does NOT take this well.
 		character:Segrellion_60 = {
 
-			add_opinion = {
-				target = root
-				modifier = segrellion_vhal_refused_daemon_opinion
+			remove_character_flag = segrellion_vhal_submission_request_sent
+
+			add_character_flag = segrellion_vhal_submission_offer_resolved
+
+
+			trigger_event = {
+
+				id = segrellion_support.5001
+
+				days = 1
 			}
 		}
 
-			ai_chance = {
 
-			base = 75
+		ai_chance = {
+
+			base = 60
 
 
 			modifier = {
@@ -1532,7 +1773,9 @@ segrellion_support.5000 = {
 				add = -10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 0
 				}
 			}
@@ -1543,7 +1786,9 @@ segrellion_support.5000 = {
 				add = -10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 25
 				}
 			}
@@ -1554,7 +1799,9 @@ segrellion_support.5000 = {
 				add = -15
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 50
 				}
 			}
@@ -1565,7 +1812,9 @@ segrellion_support.5000 = {
 				add = -20
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value >= 75
 				}
 			}
@@ -1576,7 +1825,9 @@ segrellion_support.5000 = {
 				add = 10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value < -25
 				}
 			}
@@ -1587,7 +1838,9 @@ segrellion_support.5000 = {
 				add = 10
 
 				opinion = {
+
 					target = character:Segrellion_60
+
 					value < -50
 				}
 			}
@@ -1595,41 +1848,351 @@ segrellion_support.5000 = {
 	}
 }
 
+
 # =========================================================
-# 5100 - MASSEY'S HOOK REMEMBERS
+# 5001 - VHAL'S ANSWER
 #
-# Root = current Lord of Massey's Hook
-#
-# House Massey openly resisted the Stormflame order.
-# With a legitimate Segrellion restored at the Beacon,
-# the old question of allegiance returns.
+# Root = Daemon
 # =========================================================
 
-segrellion_support.5100 = {
+segrellion_support.5001 = {
 
 	type = character_event
 
-	title = segrellion_support.5100.t
-	desc = segrellion_support.5100.desc
+	title = segrellion_support.5001.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					title:d_vhalerion.holder ?= {
+
+						has_character_flag = segrellion_vhal_rejoined_flamelands
+					}
+				}
+
+
+				desc = segrellion_support.5001.desc_accept
+			}
+
+
+			desc = segrellion_support.5001.desc_refuse
+		}
+	}
+
 
 	theme = realm
 
+
 	override_background = {
-		reference = throne_room
+
+		reference = segrellion_the_beacon_throne_room
 	}
 
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_title = title:e_flamelands
+
+
+		title:d_vhalerion.holder ?= {
+
+			is_alive = yes
+
+
+			OR = {
+
+				has_character_flag = segrellion_vhal_rejoined_flamelands
+
+				has_character_flag = segrellion_vhal_refused_daemon
+			}
+		}
+	}
+
+
+	immediate = {
+
+		title:d_vhalerion.holder = {
+
+			save_scope_as = vhal_lord
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:vhal_lord
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# VHAL ACCEPTED
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5001.a
+
+
+		trigger = {
+
+			scope:vhal_lord = {
+
+				has_character_flag = segrellion_vhal_rejoined_flamelands
+			}
+		}
+
+
+		add_legitimacy = 100
+
+
+		add_opinion = {
+
+			target = scope:vhal_lord
+
+			modifier = segrellion_vhal_returned_to_daemon_opinion
+		}
+	}
+
+
+	# =====================================================
+	# VHAL REFUSED
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5001.b
+
+
+		trigger = {
+
+			scope:vhal_lord = {
+
+				has_character_flag = segrellion_vhal_refused_daemon
+			}
+		}
+
+
+		add_legitimacy = -50
+
+
+		add_opinion = {
+
+			target = scope:vhal_lord
+
+			modifier = segrellion_submission_refused_daemon_opinion
+		}
+	}
+}
+
+
+# =========================================================
+# 5050 - THE LOYALTY OF MASSEY'S HOOK
+#
+# Root = Daemon
+#
+# House Massey fought against the Stormflames and stood
+# beside Daemon during the restoration.
+# =========================================================
+
+segrellion_support.5050 = {
+
+	type = character_event
+
+	title = segrellion_support.5050.t
+
+	desc = segrellion_support.5050.desc
+
+	theme = realm
+
+
+	override_background = {
+
+		reference = segrellion_the_beacon_throne_room
+	}
+
+
 	override_icon = {
+
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
 
 	trigger = {
 
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_title = title:e_flamelands
+
+		has_character_flag = segrellion_massey_submission_offer_pending
+
+
+		title:d_masseys_hook.holder ?= {
+
+			is_alive = yes
+
+			this != root
+
+
+			NOT = {
+				liege ?= root
+			}
+		}
+	}
+
+
+	immediate = {
+
+		title:d_masseys_hook.holder = {
+
+			save_scope_as = massey_lord
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:massey_lord
+
+		animation = personality_honorable
+	}
+
+
+	# =====================================================
+	# ASK MASSEY TO JOIN THE RESTORED REALM
+	# AI DAEMON: 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5050.a
+
+
+		remove_character_flag = segrellion_massey_submission_offer_pending
+
+		add_character_flag = segrellion_massey_submission_request_sent
+
+
+		scope:massey_lord = {
+
+			add_character_flag = segrellion_massey_reunification_event_pending
+
+
+			trigger_event = {
+
+				id = segrellion_support.5100
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# REWARD THEIR SERVICE WITH INDEPENDENCE
+	# AI DAEMON: 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5050.b
+
+
+		remove_character_flag = segrellion_massey_submission_offer_pending
+
+		add_character_flag = segrellion_massey_submission_offer_resolved
+
+		add_character_flag = segrellion_massey_independence_respected
+
+
+		scope:massey_lord = {
+
+			add_character_flag = segrellion_massey_reunification_resolved
+
+			add_character_flag = segrellion_massey_independence_respected
+		}
+
+
+		ai_chance = {
+
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 5100 - THE UNICORN RESTORED
+#
+# Root = Lord of Massey's Hook
+# =========================================================
+
+segrellion_support.5100 = {
+
+	type = letter_event
+
+
+	sender = character:Segrellion_60
+
+	opening = segrellion_support.5100.opening
+
+
+	title = segrellion_support.5100.t
+
+	desc = segrellion_support.5100.desc
+
+
+	theme = realm
+
+
+	trigger = {
+
+		is_alive = yes
+
 		has_character_flag = segrellion_massey_reunification_event_pending
 
+
 		title:d_masseys_hook = {
+
 			holder = root
 		}
+
 
 		character:Segrellion_60 ?= {
 
@@ -1640,10 +2203,194 @@ segrellion_support.5100 = {
 	}
 
 
-	immediate = {
+	# =====================================================
+	# SWEAR FEALTY
+	#
+	# AI Massey: 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5100.a
+
+
+		remove_character_flag = segrellion_massey_reunification_event_pending
+
+		add_character_flag = segrellion_massey_reunification_resolved
+
+		add_character_flag = segrellion_massey_rejoined_flamelands
+
+
+		create_title_and_vassal_change = {
+
+			type = swear_fealty
+
+			save_scope_as = segrellion_massey_submission_change
+
+			add_claim_on_loss = no
+		}
+
+
+		change_liege = {
+
+			liege = character:Segrellion_60
+
+			change = scope:segrellion_massey_submission_change
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_massey_submission_change
+
+
+		add_opinion = {
+
+			target = character:Segrellion_60
+
+			modifier = segrellion_swore_fealty_to_daemon_opinion
+		}
+
 
 		character:Segrellion_60 = {
-			save_scope_as = restored_flamelands_lord
+
+			remove_character_flag = segrellion_massey_submission_request_sent
+
+			add_character_flag = segrellion_massey_submission_offer_resolved
+
+
+			trigger_event = {
+
+				id = segrellion_support.5101
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	#
+	# AI Massey: 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5100.b
+
+
+		remove_character_flag = segrellion_massey_reunification_event_pending
+
+		add_character_flag = segrellion_massey_reunification_resolved
+
+		add_character_flag = segrellion_massey_refused_daemon
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_massey_submission_request_sent
+
+			add_character_flag = segrellion_massey_submission_offer_resolved
+
+
+			trigger_event = {
+
+				id = segrellion_support.5101
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 5101 - MASSEY'S ANSWER
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_support.5101 = {
+
+	type = character_event
+
+	title = segrellion_support.5101.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					title:d_masseys_hook.holder ?= {
+
+						has_character_flag = segrellion_massey_rejoined_flamelands
+					}
+				}
+
+
+				desc = segrellion_support.5101.desc_accept
+			}
+
+
+			desc = segrellion_support.5101.desc_refuse
+		}
+	}
+
+
+	theme = realm
+
+
+	override_background = {
+
+		reference = segrellion_the_beacon_throne_room
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_title = title:e_flamelands
+
+
+		title:d_masseys_hook.holder ?= {
+
+			is_alive = yes
+
+
+			OR = {
+
+				has_character_flag = segrellion_massey_rejoined_flamelands
+
+				has_character_flag = segrellion_massey_refused_daemon
+			}
+		}
+	}
+
+
+	immediate = {
+
+		title:d_masseys_hook.holder = {
+
+			save_scope_as = massey_lord
 		}
 	}
 
@@ -1652,88 +2399,78 @@ segrellion_support.5100 = {
 
 		character = root
 
-		animation = thinking
+		animation = personality_bold
 	}
 
 
 	right_portrait = {
 
-		character = character:Segrellion_60
+		character = scope:massey_lord
 
-		animation = personality_bold
+		animation = personality_honorable
 	}
 
 
 	# =====================================================
-	# SWEAR FEALTY
-	# 90% AI
+	# MASSEY ACCEPTED
 	# =====================================================
 
 	option = {
 
-		name = segrellion_support.5100.a
-
-		custom_tooltip = segrellion_support.5100.a.tt
-
-		remove_character_flag = segrellion_massey_reunification_event_pending
-
-		add_character_flag = segrellion_massey_reunification_resolved
-		add_character_flag = segrellion_massey_rejoined_flamelands
+		name = segrellion_support.5101.a
 
 
-		set_liege = character:Segrellion_60
+		trigger = {
 
+			scope:massey_lord = {
 
-		character:Segrellion_60 = {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_massey_returned_to_daemon_opinion
+				has_character_flag = segrellion_massey_rejoined_flamelands
 			}
 		}
 
 
-		ai_chance = {
-			base = 90
+		add_legitimacy = 100
+
+
+		add_opinion = {
+
+			target = scope:massey_lord
+
+			modifier = segrellion_massey_returned_to_daemon_opinion
 		}
 	}
 
 
 	# =====================================================
-	# REMAIN APART
-	# 10% AI
+	# MASSEY REFUSED
 	# =====================================================
 
 	option = {
 
-		name = segrellion_support.5100.b
-
-		custom_tooltip = segrellion_support.5100.b.tt
-
-		remove_character_flag = segrellion_massey_reunification_event_pending
-
-		add_character_flag = segrellion_massey_reunification_resolved
-		add_character_flag = segrellion_massey_refused_daemon
+		name = segrellion_support.5101.b
 
 
-		character:Segrellion_60 = {
+		trigger = {
 
-			add_opinion = {
+			scope:massey_lord = {
 
-				target = root
-
-				modifier = segrellion_massey_refused_daemon_opinion
+				has_character_flag = segrellion_massey_refused_daemon
 			}
 		}
 
 
-		ai_chance = {
-			base = 10
+		add_legitimacy = -50
+
+
+		add_opinion = {
+
+			target = scope:massey_lord
+
+			modifier = segrellion_submission_refused_daemon_opinion
 		}
 	}
 }
+
 
 # =========================================================
 # 6000 - ARRIVAL IN THE VALE

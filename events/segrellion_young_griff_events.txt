@@ -1960,6 +1960,15 @@ segrellion_young_griff.7020 = {
 
 # =========================================================
 # 6000 - THE DRAGON MOVES
+#
+# Young Griff invades regardless of Daemon's outcome.
+#
+# Narrative routes:
+#
+# 1. Daemon won and pledged to Aegon.
+# 2. Daemon won, but his support is uncertain.
+# 3. Daemon betrayed / rejected Aegon.
+# 4. Daemon lost and Leo still holds the Flamelands.
 # =========================================================
 
 segrellion_young_griff.6000 = {
@@ -1968,31 +1977,139 @@ segrellion_young_griff.6000 = {
 
 	title = segrellion_young_griff.6000.t
 
+
 	desc = {
 
 		first_valid = {
+
+
+			# =============================================
+			# POSITIVE:
+			# DAEMON WON AND WILL FIGHT FOR AEGON
+			# =============================================
 
 			triggered_desc = {
 
 				trigger = {
 
 					character:Segrellion_60 ?= {
-						has_character_flag = segrellion_unicorn_returns_completed
+
+						is_alive = yes
+
+						has_title = title:e_flamelands
+					}
+
+
+					OR = {
+
+						has_character_flag = segrellion_young_griff_daemon_oath_secured
+
+
+						character:Segrellion_60 ?= {
+
+							has_character_flag = segrellion_pledged_to_young_griff
+						}
 					}
 				}
 
-				desc = segrellion_young_griff.6000.desc_daemon_victory
+
+				desc = segrellion_young_griff.6000.desc_daemon_allied
 			}
 
-			desc = segrellion_young_griff.6000.desc_daemon_defeat
+
+			# =============================================
+			# NEGATIVE:
+			# DAEMON LOST AND LEO STILL HOLDS FLAMELANDS
+			# =============================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					title:e_flamelands.holder ?= {
+
+						this = character:Stormflame_3
+					}
+				}
+
+
+				desc = segrellion_young_griff.6000.desc_leo_holds_flamelands
+			}
+
+
+			# =============================================
+			# NEGATIVE:
+			# DAEMON HAS CHOSEN ANOTHER CAUSE OR REFUSED
+			# AEGON DIRECTLY
+			# =============================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+
+						character:Segrellion_60 ?= {
+
+							has_character_flag = segrellion_refused_young_griff_oath
+						}
+
+
+						character:Segrellion_60 ?= {
+
+							has_character_flag = segrellion_pledged_to_stannis
+						}
+
+
+						character:Segrellion_60 ?= {
+
+							has_character_flag = segrellion_pledged_to_daenerys
+						}
+					}
+				}
+
+
+				desc = segrellion_young_griff.6000.desc_daemon_traitor
+			}
+
+
+			# =============================================
+			# POSITIVE / UNCERTAIN:
+			# DAEMON WON, BUT AEGON DOES NOT HAVE A
+			# CONFIRMED OATH FROM HIM
+			# =============================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Segrellion_60 ?= {
+
+						is_alive = yes
+
+						has_title = title:e_flamelands
+					}
+				}
+
+
+				desc = segrellion_young_griff.6000.desc_daemon_uncertain
+			}
+
+
+			# Absolute narrative fallback.
+			desc = segrellion_young_griff.6000.desc_daemon_uncertain
 		}
 	}
 
+
 	theme = war
 
+
 	override_icon = {
+
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
+
 
 	trigger = {
 
@@ -2000,43 +2117,73 @@ segrellion_young_griff.6000 = {
 
 		is_alive = yes
 
+		is_imprisoned = no
+
+
 		has_character_flag = segrellion_young_griff_daemon_war_resolved
+
 
 		NOT = {
 			has_character_flag = segrellion_young_griff_iron_throne_war_started
 		}
 
+
 		NOT = {
 			has_title = title:h_the_iron_throne
 		}
 
+
 		title:h_the_iron_throne = {
+
 			exists = holder
+
 			holder = {
+
+				is_alive = yes
+
 				this != root
 			}
 		}
 	}
 
+
 	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_invasion_event_scheduled
+
 		add_character_flag = segrellion_young_griff_invasion_event_failed
 	}
 
+
 	left_portrait = {
+
 		character = root
+
 		animation = personality_bold
 	}
+
 
 	option = {
 
 		name = segrellion_young_griff.6000.a
 
+
+		remove_character_flag = segrellion_young_griff_invasion_event_scheduled
+
+		remove_character_flag = segrellion_young_griff_invasion_event_failed
+
+
 		add_character_flag = segrellion_young_griff_invasion_countdown_complete
-		add_character_flag = segrellion_young_griff_iron_throne_war_started
+
 
 		remove_character_flag = segrellion_young_griff_waiting_for_daemon
+
 		remove_character_flag = segrellion_young_griff_free_for_iron_throne
 
+
+		# =============================================
+		# ENSURE AEGON HAS THE CLAIM
+		# =============================================
 
 		if = {
 
@@ -2047,14 +2194,24 @@ segrellion_young_griff.6000 = {
 				}
 			}
 
+
 			add_pressed_claim = title:h_the_iron_throne
 		}
 
 
+		# =============================================
+		# CURRENT IRON THRONE HOLDER
+		# =============================================
+
 		title:h_the_iron_throne.holder = {
+
 			save_scope_as = young_griff_iron_throne_defender
 		}
 
+
+		# =============================================
+		# INVASION
+		# =============================================
 
 		start_war = {
 
@@ -2068,8 +2225,18 @@ segrellion_young_griff.6000 = {
 		}
 
 
+		# IMPORTANT:
+		#
+		# Do NOT claim that the war successfully exists yet.
+		# 6010 checks it on the next day.
+		#
+		# If creation somehow failed, the monthly failsafe
+		# will simply try again.
+
 		trigger_event = {
+
 			id = segrellion_young_griff.6010
+
 			days = 1
 		}
 	}
@@ -2078,13 +2245,19 @@ segrellion_young_griff.6000 = {
 
 # =========================================================
 # 6010 - THE BANNERS GATHER
-# Martells + Vladwyn + Daemon if pledged
+#
+# Also verifies that Aegon's Iron Throne war was actually
+# created.
+#
+# Martells + Vladwyn + Daemon if pledged.
 # =========================================================
 
 segrellion_young_griff.6010 = {
 
 	type = character_event
+
 	hidden = yes
+
 
 	trigger = {
 
@@ -2092,13 +2265,16 @@ segrellion_young_griff.6010 = {
 
 		is_alive = yes
 
-		has_character_flag = segrellion_young_griff_iron_throne_war_started
+		has_character_flag = segrellion_young_griff_daemon_war_resolved
 	}
+
 
 	immediate = {
 
 
-		# Find the Iron Throne claim war we just created.
+		# =================================================
+		# FIND THE ACTUAL WAR
+		# =================================================
 
 		random_character_war = {
 
@@ -2106,108 +2282,170 @@ segrellion_young_griff.6010 = {
 
 				attacker = root
 
+
 				casus_belli = {
 
 					any_target_title = {
+
 						this = title:h_the_iron_throne
 					}
 				}
 			}
 
+
 			save_scope_as = young_griff_iron_throne_war
 		}
 
 
-		# -------------------------------------------------
-		# DORAN MARTELL
-		# -------------------------------------------------
+		# =================================================
+		# WAR EXISTS
+		# =================================================
 
-		character:Martell_9 ?= {
+		if = {
 
-			father ?= {
+			limit = {
+
+				exists = scope:young_griff_iron_throne_war
+			}
+
+
+			add_character_flag = segrellion_young_griff_iron_throne_war_started
+
+			remove_character_flag = segrellion_young_griff_invasion_event_failed
+
+			remove_character_flag = segrellion_young_griff_invasion_event_scheduled
+
+
+			# =============================================
+			# DORAN MARTELL
+			# =============================================
+
+			character:Martell_9 ?= {
+
+				father ?= {
+
+					if = {
+
+						limit = {
+
+							is_alive = yes
+
+							this != title:h_the_iron_throne.holder
+						}
+
+
+						save_scope_as = young_griff_doran
+					}
+				}
+			}
+
+
+			# =============================================
+			# JOFFREY VLADWYN
+			# =============================================
+
+			character:Vladwyn_5 ?= {
 
 				if = {
 
 					limit = {
+
 						is_alive = yes
+
 						this != title:h_the_iron_throne.holder
 					}
 
-					save_scope_as = young_griff_doran
+
+					save_scope_as = young_griff_vladwyn
+				}
+			}
+
+
+			# =============================================
+			# DAEMON
+			#
+			# ONLY if he actually swore to Aegon.
+			# =============================================
+
+			character:Segrellion_60 ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						has_character_flag = segrellion_pledged_to_young_griff
+
+						this != title:h_the_iron_throne.holder
+					}
+
+
+					save_scope_as = young_griff_daemon
+				}
+			}
+
+
+			# =============================================
+			# ADD SUPPORTERS
+			# =============================================
+
+			scope:young_griff_iron_throne_war = {
+
+
+				if = {
+
+					limit = {
+
+						exists = scope:young_griff_doran
+					}
+
+
+					add_attacker = scope:young_griff_doran
+				}
+
+
+				if = {
+
+					limit = {
+
+						exists = scope:young_griff_vladwyn
+					}
+
+
+					add_attacker = scope:young_griff_vladwyn
+				}
+
+
+				if = {
+
+					limit = {
+
+						exists = scope:young_griff_daemon
+					}
+
+
+					add_attacker = scope:young_griff_daemon
 				}
 			}
 		}
 
 
-		# -------------------------------------------------
-		# JOFFREY VLADWYN / TRUE SENTINELS
-		# -------------------------------------------------
+		# =================================================
+		# WAR DID NOT MATERIALIZE
+		#
+		# Do NOT freeze the storyline.
+		#
+		# The monthly failsafe will try again.
+		# =================================================
 
-		character:Vladwyn_5 ?= {
+		else = {
 
-			if = {
+			remove_character_flag = segrellion_young_griff_iron_throne_war_started
 
-				limit = {
-					is_alive = yes
-					this != title:h_the_iron_throne.holder
-				}
+			remove_character_flag = segrellion_young_griff_invasion_event_scheduled
 
-				save_scope_as = young_griff_vladwyn
-			}
-		}
-
-
-		# -------------------------------------------------
-		# DAEMON, ONLY IF HE SWORE TO AEGON
-		# -------------------------------------------------
-
-		character:Segrellion_60 ?= {
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					has_character_flag = segrellion_pledged_to_young_griff
-
-					this != title:h_the_iron_throne.holder
-				}
-
-				save_scope_as = young_griff_daemon
-			}
-		}
-
-
-		# -------------------------------------------------
-		# ADD SUPPORTERS
-		# -------------------------------------------------
-
-		scope:young_griff_iron_throne_war ?= {
-
-			if = {
-				limit = {
-					exists = scope:young_griff_doran
-				}
-
-				add_attacker = scope:young_griff_doran
-			}
-
-			if = {
-				limit = {
-					exists = scope:young_griff_vladwyn
-				}
-
-				add_attacker = scope:young_griff_vladwyn
-			}
-
-			if = {
-				limit = {
-					exists = scope:young_griff_daemon
-				}
-
-				add_attacker = scope:young_griff_daemon
-			}
+			add_character_flag = segrellion_young_griff_invasion_event_failed
 		}
 	}
 }

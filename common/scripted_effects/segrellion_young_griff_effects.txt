@@ -72,9 +72,38 @@ segrellion_young_griff_stay_with_daemon_restoration_effect = {
 
 # =========================================================
 # THE UNICORN RETURNS HAS ENDED
+#
+# Called from Daemon's scope after every terminal outcome:
+#
+# - Victory
+# - Defeat
+# - White peace
+# - Invalidated war
+#
+# Young Griff is released from waiting regardless of
+# whether Daemon won or lost.
 # =========================================================
 
 segrellion_young_griff_after_unicorn_returns_effect = {
+
+
+	# Persistent marker on Daemon.
+	#
+	# This allows the monthly failsafe to reconstruct
+	# Aegon's state even if the original event scheduling
+	# was somehow lost.
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+		}
+
+
+		add_character_flag = segrellion_unicorn_returns_resolved
+	}
+
 
 	character:IAF_Young_Griff_1 ?= {
 
@@ -83,11 +112,8 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 			limit = {
 
 				is_alive = yes
-
-				NOT = {
-					has_character_flag = segrellion_young_griff_daemon_war_resolved
-				}
 			}
+
 
 			add_character_flag = segrellion_young_griff_daemon_war_resolved
 
@@ -96,16 +122,19 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 			add_character_flag = segrellion_young_griff_free_for_iron_throne
 
 
-			# -------------------------------------------------
-			# IF AEGON HELPED DAEMON AND DAEMON WON,
-			# ASK FOR THE DEBT TO BE REPAID.
-			# -------------------------------------------------
+			# =============================================
+			# DAEMON WON AND AEGON HELPED HIM
+			#
+			# Aegon may ask Daemon to repay the blood-debt
+			# before the invasion begins.
+			# =============================================
 
 			if = {
 
 				limit = {
 
 					has_character_flag = segrellion_young_griff_supports_daemon
+
 
 					character:Segrellion_60 ?= {
 
@@ -117,21 +146,158 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 					}
 				}
 
+
 				trigger_event = {
+
 					id = segrellion_young_griff.7000
+
 					days = 1
 				}
 			}
 
 
-			# -------------------------------------------------
-			# TEN DAYS AFTER THE WAR ENDS:
-			# AEGON MOVES FOR THE IRON THRONE.
-			# -------------------------------------------------
+			# =============================================
+			# THE IRON THRONE CANNOT WAIT
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_iron_throne_war_started
+					}
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_invasion_event_scheduled
+					}
+
+					NOT = {
+						has_title = title:h_the_iron_throne
+					}
+				}
+
+
+				add_character_flag = segrellion_young_griff_invasion_event_scheduled
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.6000
+
+					days = 10
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - IRON THRONE INVASION FAILSAFE
+#
+# Checked every month.
+#
+# The important rule:
+#
+# If Daemon's restoration war is over and Aegon has not
+# actually begun his Iron Throne war, try again.
+#
+# A single failed event can NEVER permanently freeze him.
+# =========================================================
+
+segrellion_young_griff_force_iron_throne_progression_effect = {
+
+
+	# =====================================================
+	# REPAIR AEGON'S STATE FROM DAEMON'S PERSISTENT FLAG
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Segrellion_60 ?= {
+
+				has_character_flag = segrellion_unicorn_returns_resolved
+			}
+
+
+			character:IAF_Young_Griff_1 ?= {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_daemon_war_resolved
+				}
+			}
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_daemon_war_resolved
+
+			remove_character_flag = segrellion_young_griff_waiting_for_daemon
+
+			add_character_flag = segrellion_young_griff_free_for_iron_throne
+		}
+	}
+
+
+	# =====================================================
+	# RETRY THE INVASION
+	# =====================================================
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_imprisoned = no
+
+
+				has_character_flag = segrellion_young_griff_daemon_war_resolved
+
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_iron_throne_war_started
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_invasion_event_scheduled
+				}
+
+				NOT = {
+					has_title = title:h_the_iron_throne
+				}
+
+
+				title:h_the_iron_throne ?= {
+
+					exists = holder
+
+					holder = {
+
+						is_alive = yes
+
+						this != character:IAF_Young_Griff_1
+					}
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_invasion_event_scheduled
+
 
 			trigger_event = {
+
 				id = segrellion_young_griff.6000
-				days = 10
+
+				days = 1
 			}
 		}
 	}

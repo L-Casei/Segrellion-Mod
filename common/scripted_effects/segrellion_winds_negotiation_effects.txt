@@ -702,9 +702,10 @@ segrellion_grant_daenerys_support_effect = {
 	segrellion_clear_troop_negotiation_effect = yes
 }
 
-
 # =========================================================
 # VHALERION REUNIFICATION CHECK
+#
+# The decision now belongs to Daemon FIRST.
 # =========================================================
 
 segrellion_check_vhal_reunification_effect = {
@@ -713,15 +714,30 @@ segrellion_check_vhal_reunification_effect = {
 
 		limit = {
 
+
 			character:Segrellion_60 ?= {
 
 				is_alive = yes
 
 				has_title = title:e_flamelands
+
+
+				NOT = {
+					has_character_flag = segrellion_vhal_submission_offer_pending
+				}
+
+				NOT = {
+					has_character_flag = segrellion_vhal_submission_offer_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_vhal_submission_request_sent
+				}
 			}
 
 
 			title:d_vhalerion = {
+
 				exists = holder
 			}
 
@@ -730,28 +746,31 @@ segrellion_check_vhal_reunification_effect = {
 
 				is_alive = yes
 
+				this != character:Segrellion_60
+
+
 				NOT = {
 					has_character_flag = segrellion_vhal_reunification_resolved
 				}
 
-				NOT = {
-					has_character_flag = segrellion_vhal_reunification_event_pending
-				}
 
 				NOT = {
-					liege = character:Segrellion_60
+					liege ?= character:Segrellion_60
 				}
 			}
 		}
 
 
-		title:d_vhalerion.holder = {
+		character:Segrellion_60 = {
 
-			add_character_flag = segrellion_vhal_reunification_event_pending
+			add_character_flag = segrellion_vhal_submission_offer_pending
+
 
 			trigger_event = {
-				id = segrellion_support.5000
-				days = 1
+
+				id = segrellion_support.4950
+
+				days = { 2 5 }
 			}
 		}
 	}
@@ -759,7 +778,9 @@ segrellion_check_vhal_reunification_effect = {
 
 
 # =========================================================
-# MASSEY'S HOOK - RESTORED FLAMELANDS LOYALTY CHECK
+# MASSEY'S HOOK REUNIFICATION CHECK
+#
+# The decision now belongs to Daemon FIRST.
 # =========================================================
 
 segrellion_check_massey_reunification_effect = {
@@ -768,15 +789,30 @@ segrellion_check_massey_reunification_effect = {
 
 		limit = {
 
+
 			character:Segrellion_60 ?= {
 
 				is_alive = yes
 
 				has_title = title:e_flamelands
+
+
+				NOT = {
+					has_character_flag = segrellion_massey_submission_offer_pending
+				}
+
+				NOT = {
+					has_character_flag = segrellion_massey_submission_offer_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_massey_submission_request_sent
+				}
 			}
 
 
 			title:d_masseys_hook = {
+
 				exists = holder
 			}
 
@@ -787,28 +823,29 @@ segrellion_check_massey_reunification_effect = {
 
 				this != character:Segrellion_60
 
+
 				NOT = {
 					has_character_flag = segrellion_massey_reunification_resolved
 				}
 
-				NOT = {
-					has_character_flag = segrellion_massey_reunification_event_pending
-				}
 
 				NOT = {
-					liege = character:Segrellion_60
+					liege ?= character:Segrellion_60
 				}
 			}
 		}
 
 
-		title:d_masseys_hook.holder = {
+		character:Segrellion_60 = {
 
-			add_character_flag = segrellion_massey_reunification_event_pending
+			add_character_flag = segrellion_massey_submission_offer_pending
+
 
 			trigger_event = {
-				id = segrellion_support.5100
-				days = 1
+
+				id = segrellion_support.5050
+
+				days = { 2 5 }
 			}
 		}
 	}
