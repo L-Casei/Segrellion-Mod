@@ -5,15 +5,212 @@
 
 
 # =========================================================
-# 300 AC STARTUP
+# 300 AC - JON SNOW STORY PROTECTION
 #
-# Stannis keeps Dragonstone.
-# He is personally placed at Castle Black after having
-# helped the Night's Watch defeat the wildling threat.
+# Jon is essential to the scripted Northern Campaign.
 #
-# Roose's current primary heir is used dynamically.
-# In the 300 AC setup this should be Ramsay.
-# This avoids hardcoding another AGOT historical character ID.
+# The modifier:
+# - makes murder schemes effectively impossible to complete;
+# - makes hostile schemes against him extremely difficult;
+# - protects him from an unlucky natural death during the
+#   opening chapter.
+#
+# It is TEMPORARY and is removed when Jon is restored to
+# Winterfell.
+# =========================================================
+
+segrellion_setup_jon_story_protection_effect = {
+
+	if = {
+
+		limit = {
+
+			game_start_date = 8300.8.20
+
+			character:Stark_7 ?= {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_modifier = segrellion_jon_northern_story_protection_modifier
+				}
+			}
+		}
+
+
+		character:Stark_7 = {
+
+			add_character_flag = segrellion_jon_northern_story_protected
+
+			add_character_modifier = {
+
+				modifier = segrellion_jon_northern_story_protection_modifier
+
+				years = 5
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 300 AC - RAMSAY TAKES THE NORTH
+#
+# ZERO-TICK SETUP.
+#
+# This is deliberately separated from Stannis and Jon.
+# Ramsay's takeover MUST happen regardless of whether any
+# later story event can fire.
+#
+# We use the current Lord Paramount's primary heir as Ramsay,
+# then explicitly ensure the heir receives:
+#
+# - Winterfell county
+# - Winterfell duchy
+# - The North
+#
+# This makes the Northern Campaign deterministic.
+# =========================================================
+
+segrellion_setup_ramsay_takeover_effect = {
+
+	if = {
+
+		limit = {
+
+			game_start_date = 8300.8.20
+
+			NOT = {
+				has_global_variable = segrellion_ramsay_takeover_completed
+			}
+
+			title:e_the_north = {
+				exists = holder
+			}
+
+			title:e_the_north.holder = {
+
+				is_alive = yes
+
+				primary_heir ?= {
+					is_alive = yes
+				}
+			}
+		}
+
+
+		# =================================================
+		# SAVE ROOSE AND RAMSAY BEFORE THE DEATH
+		# =================================================
+
+		title:e_the_north.holder = {
+
+			save_scope_as = segrellion_roose_bolton
+
+
+			primary_heir = {
+
+				save_scope_as = segrellion_ramsay_bolton
+
+				add_character_flag = segrellion_ramsay_northern_takeover
+			}
+		}
+
+
+		# =================================================
+		# RAMSAY MURDERS ROOSE
+		#
+		# This happens NOW, during game-start setup.
+		# No event. No delayed pulse. No day advancement.
+		# =================================================
+
+		scope:segrellion_roose_bolton = {
+
+			death = {
+
+				death_reason = death_murder
+
+				killer = scope:segrellion_ramsay_bolton
+
+				secret = no
+			}
+		}
+
+
+		# =================================================
+		# FORCE THE POLITICAL RESULT
+		#
+		# Normal inheritance should already do most of this,
+		# but the storyline must not depend on AGOT succession
+		# quirks.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:c_winterfell.holder != scope:segrellion_ramsay_bolton
+			}
+
+			title:c_winterfell = {
+
+				grant_title = scope:segrellion_ramsay_bolton
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				title:d_winterfell.holder != scope:segrellion_ramsay_bolton
+			}
+
+			title:d_winterfell = {
+
+				grant_title = scope:segrellion_ramsay_bolton
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				title:e_the_north.holder != scope:segrellion_ramsay_bolton
+			}
+
+			title:e_the_north = {
+
+				grant_title = scope:segrellion_ramsay_bolton
+			}
+		}
+
+
+		scope:segrellion_ramsay_bolton = {
+
+			add_character_flag = segrellion_ramsay_lord_of_winterfell
+			add_character_flag = segrellion_ramsay_lord_paramount_north
+		}
+
+
+		set_global_variable = {
+
+			name = segrellion_ramsay_takeover_completed
+
+			value = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 300 AC - STANNIS NORTHERN CAMPAIGN
+#
+# Ramsay's takeover has already been resolved separately.
+#
+# Stannis remains landed in Dragonstone but is personally
+# located at Castle Black.
 # =========================================================
 
 segrellion_setup_stannis_northern_campaign_effect = {
@@ -24,7 +221,11 @@ segrellion_setup_stannis_northern_campaign_effect = {
 
 			game_start_date = 8300.8.20
 
+			has_global_variable = segrellion_ramsay_takeover_completed
+
+
 			character:Baratheon_3 ?= {
+
 				is_alive = yes
 
 				NOT = {
@@ -32,64 +233,14 @@ segrellion_setup_stannis_northern_campaign_effect = {
 				}
 			}
 
+
 			character:Stark_7 ?= {
 				is_alive = yes
 			}
 
+
 			title:e_the_north = {
 				exists = holder
-			}
-		}
-
-
-		# =================================================
-		# ROOSE -> RAMSAY
-		#
-		# The current Lord Paramount's primary heir becomes
-		# the killer. This deliberately avoids relying upon
-		# Ramsay's historical character ID.
-		# =================================================
-
-		title:e_the_north.holder = {
-
-			save_scope_as = stannis_roose_bolton
-
-			primary_heir ?= {
-
-				is_alive = yes
-
-				save_scope_as = stannis_ramsay_bolton
-			}
-		}
-
-
-		if = {
-
-			limit = {
-
-				exists = scope:stannis_roose_bolton
-				exists = scope:stannis_ramsay_bolton
-
-				scope:stannis_roose_bolton = {
-					is_alive = yes
-				}
-
-				scope:stannis_ramsay_bolton = {
-					is_alive = yes
-				}
-			}
-
-
-			scope:stannis_roose_bolton = {
-
-				death = {
-
-					death_reason = death_murder
-
-					killer = scope:stannis_ramsay_bolton
-
-					secret = no
-				}
 			}
 		}
 
@@ -102,6 +253,7 @@ segrellion_setup_stannis_northern_campaign_effect = {
 
 			add_character_flag = segrellion_stannis_north_story_initialized
 			add_character_flag = segrellion_stannis_preparing_northern_campaign
+
 
 			set_location = title:c_castle_black.title_province
 
@@ -117,13 +269,21 @@ segrellion_setup_stannis_northern_campaign_effect = {
 					}
 				}
 
+
 				add_character_modifier = {
+
 					modifier = segrellion_stannis_northern_story_ai_modifier
 				}
 			}
 
 
-			# Let Roose's succession resolve first.
+			# One day is deliberately left here.
+			#
+			# Roose is ALREADY dead and Ramsay is ALREADY
+			# Lord of the North. This merely lets CK3 finish
+			# any zero-tick title / court recalculations before
+			# the visible Stannis storyline begins.
+
 			trigger_event = {
 
 				id = segrellion_stannis.0090
@@ -133,7 +293,6 @@ segrellion_setup_stannis_northern_campaign_effect = {
 		}
 	}
 }
-
 
 # =========================================================
 # JON LEAVES THE NIGHT'S WATCH
@@ -215,6 +374,27 @@ segrellion_jon_accepts_north_effect = {
 	# =====================================================
 
 	character:Stark_7 = {
+
+		# =====================================================
+		# THE SCRIPTED PROTECTION ENDS
+		#
+		# Jon has survived the vulnerable opening chapter.
+		# From this moment onward he is once again subject to
+		# normal CK3 dangers.
+		# =====================================================
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_jon_northern_story_protection_modifier
+			}
+
+			remove_character_modifier = segrellion_jon_northern_story_protection_modifier
+		}
+
+
+		remove_character_flag = segrellion_jon_northern_story_protected
+
 
 		if = {
 
