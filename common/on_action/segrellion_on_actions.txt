@@ -555,56 +555,41 @@ segrellion_on_game_start_after_lobby = {
 	
 	effect = {
 
-		debug_log = "[SEGRELLION DANY DEBUG] AFTER_LOBBY FIRED"
-        debug_log_date = yes
-
-        character:Targaryen_9 ?= {
-
-            debug_log = "[SEGRELLION DANY DEBUG] DAENERYS SCOPE FOUND"
-
-            if = {
-                limit = {
-                    is_alive = yes
-                    current_date >= 8300.8.20
-                    current_date < 8301.1.1
-                }
-
-                debug_log = "[SEGRELLION DANY DEBUG] FOLLOWER EVENT SCHEDULED"
-
-                trigger_event = {
-                    id = segrellion_daenerys_followers.0001
-                    days = 10
-                }
-            }
-        }
-
 		segrellion_apply_later_canon_supplied_appearances_effect = yes
-		segrellion_setup_daenerys_followers_effect = yes
 		segrellion_setup_daenerys_dragons_300_effect = yes
 		segrellion_arianne_marriage_lock_effect = yes
 		segrellion_setup_young_griff_blackfyre_effect = yes
 
+
 		# ====================================================
-        # DAENERYS HISTORICAL FOLLOWERS
-        # ====================================================
+		# DAENERYS HISTORICAL FOLLOWERS
+		#
+		# AGOT performs its normal adventurer initialization
+		# first. Ten days later we detach the historical
+		# followers from their starting employers and attach
+		# them to Daenerys.
+		# ====================================================
 
-        character:Targaryen_9 ?= {
+		character:Targaryen_9 ?= {
 
-            if = {
-                limit = {
+			if = {
+				limit = {
 
-                    is_alive = yes
+					is_alive = yes
 
-                    current_date >= 8300.8.20
-                    current_date < 8301.1.1
-                }
+					game_start_date = 8300.8.20
 
-                trigger_event = {
-                    id = segrellion_daenerys_followers.0001
-                    days = 10
-                }
-            }
-        }
+					NOT = {
+						has_character_flag = segrellion_daenerys_followers_delayed_completed
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_followers.0001
+					days = 10
+				}
+			}
+		}
 
 
 		# ====================================================
@@ -633,15 +618,6 @@ segrellion_on_game_start_after_lobby = {
 				}
 			}
 		}
-	}
-}
-
-# Save-compatible fallback for the opening months of the 300 AC
-# bookmark. It also catches any later startup pass from another submod
-# that restores Illyrio or the Second Sons as employer.
-segrellion_daenerys_followers_early_repair = {
-	effect = {
-		# segrellion_setup_daenerys_followers_effect = yes
 	}
 }
 
