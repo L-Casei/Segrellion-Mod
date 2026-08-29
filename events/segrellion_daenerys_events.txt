@@ -1491,7 +1491,27 @@ segrellion_daenerys_invasion.0010 = {
 		custom_tooltip = segrellion_daenerys_invasion.0010.a.tt
 
 		ai_chance = {
+
 			base = 70
+
+
+			# If Stannis is alive but personally absent from
+			# Dragonstone, AI Daenerys sees the island as the
+			# obvious landing point.
+
+			modifier = {
+
+				factor = 100
+
+				character:Baratheon_3 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						location = title:c_dragonstone.title_province
+					}
+				}
+			}
 		}
 
 		add_character_flag = segrellion_daenerys_landing_chosen
@@ -1527,7 +1547,23 @@ segrellion_daenerys_invasion.0010 = {
 		custom_tooltip = segrellion_daenerys_invasion.0010.b.tt
 
 		ai_chance = {
+
 			base = 20
+
+
+			modifier = {
+
+				factor = 0
+
+				character:Baratheon_3 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						location = title:c_dragonstone.title_province
+					}
+				}
+			}
 		}
 
 		add_character_flag = segrellion_daenerys_landing_chosen
@@ -1582,7 +1618,23 @@ segrellion_daenerys_invasion.0010 = {
 
 
 		ai_chance = {
+
 			base = 30
+
+
+			modifier = {
+
+				factor = 0
+
+				character:Baratheon_3 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						location = title:c_dragonstone.title_province
+					}
+				}
+			}
 		}
 
 
@@ -1635,12 +1687,32 @@ segrellion_daenerys_invasion.0010 = {
 
 			base = 60
 
+
 			modifier = {
 
 				add = 100
 
 				character:Segrellion_60 = {
+
 					has_character_flag = segrellion_pledged_to_daenerys
+				}
+			}
+
+
+			# Stannis being absent from Dragonstone overrides
+			# every alternative landing for AI Daenerys.
+
+			modifier = {
+
+				factor = 0
+
+				character:Baratheon_3 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						location = title:c_dragonstone.title_province
+					}
 				}
 			}
 		}
@@ -2083,6 +2155,118 @@ segrellion_daenerys_invasion.0018 = {
 
 
 			add_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+
+		# =================================================
+		# DRAGONSTONE
+		#
+		# Daenerys does not merely land on Dragonstone.
+		# She seizes the actual island and its political
+		# titles.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_landing_dragonstone
+			}
+
+
+			# Save Stannis' household before the title
+			# transfer can potentially leave him landless.
+
+			segrellion_snapshot_stannis_retinue_effect = yes
+
+
+			# Prepare landless Daenerys to become landed.
+
+			ep3_become_landed_warning_effect = {
+
+				TITLE_RECEIVER = character:Targaryen_9
+
+				TITLE = title:k_dragonstone
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = conquest
+
+				save_scope_as = segrellion_daenerys_dragonstone_change
+
+				add_claim_on_loss = no
+			}
+
+
+			# =============================================
+			# KINGDOM OF DRAGONSTONE
+			# =============================================
+
+			title:k_dragonstone = {
+
+				change_title_holder = {
+
+					holder = character:Targaryen_9
+
+					change = scope:segrellion_daenerys_dragonstone_change
+
+					government_base = character:Baratheon_3
+				}
+			}
+
+
+			# =============================================
+			# DUCHY OF DRAGONSTONE
+			# =============================================
+
+			title:d_dragonstone = {
+
+				change_title_holder = {
+
+					holder = character:Targaryen_9
+
+					change = scope:segrellion_daenerys_dragonstone_change
+				}
+			}
+
+
+			# =============================================
+			# COUNTY OF DRAGONSTONE
+			# =============================================
+
+			title:c_dragonstone = {
+
+				change_title_holder = {
+
+					holder = character:Targaryen_9
+
+					change = scope:segrellion_daenerys_dragonstone_change
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_daenerys_dragonstone_change
+
+
+			ep3_become_landed_cleanup_effect = yes
+
+
+			set_primary_title_to = title:k_dragonstone
+
+			set_realm_capital = title:c_dragonstone
+
+
+			add_character_flag = segrellion_daenerys_seized_dragonstone
+
+
+			# If Dragonstone was Stannis' final possession,
+			# he now becomes landless.
+			#
+			# If Jon refused and Stannis still holds the
+			# North, this does nothing for now.
+
+			segrellion_stannis_try_become_landless_effect = yes
 		}
 
 

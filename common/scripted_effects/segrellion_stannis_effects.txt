@@ -1000,6 +1000,76 @@ segrellion_jon_accepts_north_effect = {
 			add_character_flag = segrellion_jon_north_transfer_failed
 		}
 	}
+
+	# =========================================================
+	# SNAPSHOT STANNIS' HOUSEHOLD
+	#
+	# Called immediately before Stannis may lose Dragonstone.
+	#
+	# We preserve:
+	#
+	# - his courtiers;
+	# - his wife;
+	# - his living children;
+	#
+	# Melisandre requires no hardcoded ID if she is already
+	# part of Stannis' court.
+	# =========================================================
+
+	segrellion_snapshot_stannis_retinue_effect = {
+
+
+		character:Baratheon_3 ?= {
+
+
+			# =================================================
+			# COURTIERS
+			# =================================================
+
+			every_courtier = {
+
+				limit = {
+
+					is_alive = yes
+				}
+
+
+				add_to_list = segrellion_stannis_retinue
+			}
+
+
+			# =================================================
+			# WIFE
+			# =================================================
+
+			every_spouse = {
+
+				limit = {
+
+					is_alive = yes
+				}
+
+
+				add_to_list = segrellion_stannis_family
+			}
+
+
+			# =================================================
+			# CHILDREN
+			# =================================================
+
+			every_child = {
+
+				limit = {
+
+					is_alive = yes
+				}
+
+
+				add_to_list = segrellion_stannis_family
+			}
+		}
+	}
 }
 
 # =========================================================
@@ -1137,5 +1207,223 @@ segrellion_stannis_secure_north_after_victory_effect = {
 
 		remove_character_flag = segrellion_ramsay_lord_of_winterfell
 		remove_character_flag = segrellion_ramsay_lord_paramount_north
+	}
+}
+
+# =========================================================
+# STANNIS BECOMES LANDLESS
+#
+# This effect ONLY executes when Stannis genuinely has
+# no landed titles left.
+#
+# CASE A:
+#
+# Jon accepted the North
+# +
+# Daenerys takes Dragonstone
+#
+# -> Stannis becomes landless immediately.
+#
+#
+# CASE B:
+#
+# Jon refused
+# +
+# Stannis still controls the North
+# +
+# Daenerys takes Dragonstone
+#
+# -> Nothing happens yet because Stannis remains landed.
+#
+# Once Stannis eventually gives the North to Sansa,
+# Rickon or another Stark, call this effect again.
+# =========================================================
+
+segrellion_stannis_try_become_landless_effect = {
+
+
+	if = {
+
+		limit = {
+
+
+			character:Baratheon_3 ?= {
+
+				is_alive = yes
+
+				is_landed = no
+
+
+				NOT = {
+
+					has_government = landless_adventurer_government
+				}
+			}
+		}
+
+
+		# =================================================
+		# CREATE STANNIS' LANDLESS HOST
+		# =================================================
+
+		character:Baratheon_3 = {
+
+			create_landless_adventurer_title_effect = {
+
+				REASON = flag:voluntary
+
+				FLAVOR_CHAR = character:Baratheon_3
+			}
+
+
+			add_character_flag = segrellion_stannis_became_landless
+
+			add_character_flag = segrellion_stannis_claimant_host_active
+		}
+
+
+		# =================================================
+		# HIS COURTIERS FOLLOW HIM
+		# =================================================
+
+		every_in_list = {
+
+			list = segrellion_stannis_retinue
+
+
+			limit = {
+
+				is_alive = yes
+
+				is_landed = no
+			}
+
+
+			set_employer = character:Baratheon_3
+		}
+
+
+		# =================================================
+		# HIS FAMILY FOLLOWS HIM
+		# =================================================
+
+		every_in_list = {
+
+			list = segrellion_stannis_family
+
+
+			limit = {
+
+				is_alive = yes
+
+				is_landed = no
+			}
+
+
+			set_employer = character:Baratheon_3
+		}
+
+
+		# =================================================
+		# DAVOS SEAWORTH
+		#
+		# Davos relinquishes:
+		#
+		# d_the_drench
+		# c_rainshore
+		#
+		# to his primary heir.
+		#
+		# He then joins Stannis personally.
+		# =================================================
+
+		title:d_the_drench.holder ?= {
+
+			save_scope_as = segrellion_stannis_davos
+
+
+			primary_heir ?= {
+
+				save_scope_as = segrellion_davos_heir
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_stannis_davos
+
+				exists = scope:segrellion_davos_heir
+
+
+				scope:segrellion_stannis_davos = {
+
+					is_alive = yes
+				}
+
+
+				scope:segrellion_davos_heir = {
+
+					is_alive = yes
+				}
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = abdication
+
+				save_scope_as = segrellion_davos_abdication_change
+
+				add_claim_on_loss = no
+			}
+
+
+			# =============================================
+			# THE DRENCH
+			# =============================================
+
+			title:d_the_drench = {
+
+				change_title_holder_include_vassals = {
+
+					holder = scope:segrellion_davos_heir
+
+					change = scope:segrellion_davos_abdication_change
+				}
+			}
+
+
+			# =============================================
+			# RAINSHORE
+			# =============================================
+
+			title:c_rainshore = {
+
+				change_title_holder = {
+
+					holder = scope:segrellion_davos_heir
+
+					change = scope:segrellion_davos_abdication_change
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_davos_abdication_change
+
+
+			# =============================================
+			# DAVOS JOINS STANNIS
+			# =============================================
+
+			scope:segrellion_stannis_davos = {
+
+				set_employer = character:Baratheon_3
+
+				add_character_flag = segrellion_davos_joined_stannis_last_campaign
+			}
+		}
 	}
 }

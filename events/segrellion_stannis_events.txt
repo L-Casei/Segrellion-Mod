@@ -756,5 +756,305 @@ segrellion_stannis.1021 = {
 	option = {
 
 		name = segrellion_stannis.1021.a
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.1100
+
+			days = { 7 14 }
+		}
+	}
+}
+
+# =========================================================
+# 1100 - THE BLOOD OF WINTERFELL
+#
+# Jon Snow has refused Stannis' offer.
+#
+# Stannis therefore remains temporary custodian of
+# Winterfell and the North while a legitimate Northern
+# ruler is sought.
+#
+# Lord Manderly brings two pieces of information:
+#
+# - Alayne Baelish may actually be Sansa Stark.
+# - Rickon Stark may still be alive on Skagos.
+#
+# Stannis may also simply retain the North temporarily
+# and demand that the Northern lords help him take
+# the Iron Throne first.
+# =========================================================
+
+segrellion_stannis.1100 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1100.t
+	desc = segrellion_stannis.1100.desc
+
+	theme = crown
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_searching_northern_heir
+
+		has_title = title:e_the_north
+
+		has_title = title:c_winterfell
+	}
+
+
+	immediate = {
+
+		title:c_white_harbor.holder ?= {
+
+			save_scope_as = stannis_manderly
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:stannis_manderly
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# SANSA STARK / ALAYNE BAELISH
+	#
+	# AI: 80%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1100.a
+
+		custom_tooltip = segrellion_stannis.1100.a.tt
+
+
+		add_character_flag = segrellion_stannis_north_successor_sansa_path
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.1110
+
+			days = { 3 7 }
+		}
+
+
+		ai_chance = {
+
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# RICKON STARK / SKAGOS
+	#
+	# AI: 10%
+	#
+	# We only flag this route for now.
+	# The actual expedition to Skagos comes later.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1100.b
+
+		custom_tooltip = segrellion_stannis.1100.b.tt
+
+
+		add_character_flag = segrellion_stannis_north_successor_rickon_path
+
+		add_character_flag = segrellion_rickon_search_pending
+
+
+		ai_chance = {
+
+			base = 10
+		}
+	}
+
+
+	# =====================================================
+	# KEEP THE NORTH
+	#
+	# AI: 10%
+	#
+	# Stannis refuses to waste more time choosing a
+	# Northern ruler. He keeps temporary control and
+	# demands Northern support for his royal campaign.
+	#
+	# The large Northern opinion penalty and special
+	# negative modifier will be developed later.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1100.c
+
+		custom_tooltip = segrellion_stannis.1100.c.tt
+
+
+		add_character_flag = segrellion_stannis_keeps_north_until_iron_throne
+
+		remove_character_flag = segrellion_stannis_searching_northern_heir
+
+
+		ai_chance = {
+
+			base = 10
+		}
+	}
+}
+
+# =========================================================
+# 1110 - THE PRICE OF A WOLF
+#
+# Stannis has chosen to investigate the Sansa Stark route.
+#
+# Petyr Baelish proposes that Alayne, supposedly the true
+# Sansa Stark, be restored as Lady of Winterfell and the
+# North on the condition that Baelish marry her.
+#
+# Davos questions whether Stannis truly intends to trust
+# Littlefinger.
+# =========================================================
+
+segrellion_stannis.1110 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1110.t
+	desc = segrellion_stannis.1110.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_north_successor_sansa_path
+
+		has_title = title:e_the_north
+	}
+
+
+	immediate = {
+
+		title:d_the_drench.holder ?= {
+
+			save_scope_as = stannis_davos
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:stannis_davos
+
+		animation = thinking
+	}
+
+
+	# =====================================================
+	# ACCEPT SANSA, BUT BETRAY BAELISH
+	#
+	# Stannis accepts the proposal publicly.
+	#
+	# Once Baelish reaches Winterfell he will be arrested.
+	#
+	# AI: 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1110.a
+
+		custom_tooltip = segrellion_stannis.1110.a.tt
+
+
+		add_character_flag = segrellion_stannis_accepts_sansa
+
+		add_character_flag = segrellion_stannis_baelish_trap
+
+
+		remove_character_flag = segrellion_stannis_north_successor_sansa_path
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT BAELISH'S TERMS
+	#
+	# Stannis accepts both Sansa and the proposed marriage
+	# because he believes there is no better alternative.
+	#
+	# AI: 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1110.b
+
+		custom_tooltip = segrellion_stannis.1110.b.tt
+
+
+		add_character_flag = segrellion_stannis_accepts_sansa
+
+		add_character_flag = segrellion_stannis_accepts_baelish_terms
+
+
+		remove_character_flag = segrellion_stannis_north_successor_sansa_path
+
+
+		ai_chance = {
+
+			base = 10
+		}
 	}
 }
