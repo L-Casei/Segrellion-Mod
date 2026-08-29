@@ -897,184 +897,224 @@ segrellion_finish_vale_debt_effect = {
 
 segrellion_setup_daenerys_followers_effect = {
 
-	if = {
-		limit = {
+    if = {
+        limit = {
 
-			game_start_date >= 8300.8.20
-			game_start_date < 8301.1.1
+            game_start_date >= 8300.8.20
+            game_start_date < 8301.1.1
 
-			current_date >= 8300.8.20
-			current_date < 8301.1.1
+            current_date >= 8300.8.20
+            current_date < 8301.1.1
 
-			character:Targaryen_9 ?= {
-				is_alive = yes
-			}
-		}
-
-
-		# =================================================
-		# TYRION LANNISTER
-		# =================================================
-
-		character:Lannister_8 ?= {
-
-			if = {
-				limit = {
-					is_alive = yes
-
-					NOT = {
-						employer = character:Targaryen_9
-					}
-				}
-
-				set_employer = character:Targaryen_9
-			}
-		}
+            character:Targaryen_9 ?= {
+                is_alive = yes
+            }
+        }
 
 
-		# =================================================
-		# SER BARRISTAN SELMY
-		# =================================================
+        character:Targaryen_9 = {
 
-		character:Selmy_3 ?= {
+            # =================================================
+			# TYRION LANNISTER
+			# =================================================
 
-			if = {
-				limit = {
-					is_alive = yes
+			character:Lannister_8 ?= {
 
-					NOT = {
-						employer = character:Targaryen_9
-					}
-				}
-
-				set_employer = character:Targaryen_9
-			}
-		}
-
-
-		# =================================================
-		# SER JORAH MORMONT
-		#
-		# AGOT's canonical history ID for Jorah is Mormont_3.
-		# =================================================
-
-		character:Mormont_3 ?= {
-
-			if = {
-				limit = {
-					is_alive = yes
-
-					NOT = {
-						employer = character:Targaryen_9
-					}
-				}
-
-				set_employer = character:Targaryen_9
-			}
-		}
-
-
-		# =================================================
-		# MISSANDEI
-		# =================================================
-
-		character:IAF_Missandei_1 ?= {
-
-			if = {
-				limit = {
-					is_alive = yes
-
-					NOT = {
-						employer = character:Targaryen_9
-					}
-				}
-
-				set_employer = character:Targaryen_9
-			}
-		}
-
-
-		# =================================================
-		# TORGO NUDHO
-		# =================================================
-
-		character:IAF_Torgo_Nudho_1 ?= {
-
-			if = {
-				limit = {
-					is_alive = yes
-
-					NOT = {
-						employer = character:Targaryen_9
-					}
-				}
-
-				set_employer = character:Targaryen_9
-			}
-		}
-
-
-		# =================================================
-		# TYRION = THE SECOND
-		# =================================================
-
-		character:Targaryen_9 = {
-
-			if = {
-				limit = {
-
-					character:Lannister_8 ?= {
+				if = {
+					limit = {
 						is_alive = yes
-						employer = character:Targaryen_9
-					}
+						is_ruler = no
 
-					NOT = {
-						any_court_position_holder = {
-							type = second_camp_officer
+						NOT = {
+							is_courtier_of = character:Targaryen_9
 						}
 					}
 
-					is_valid_to_hire_court_position_type = second_camp_officer
-				}
+					set_variable = {
+						name = target_employer
+						value = character:Targaryen_9
+					}
 
-				appoint_court_position = {
-					recipient = character:Lannister_8
-					court_position = second_camp_officer
+					set_employer = character:Targaryen_9
+					return_to_court = yes
 				}
 			}
 
 
-			# Only report completion after all five historical
-			# followers really belong to Daenerys' camp.
-			if = {
-				limit = {
-					character:Lannister_8 ?= {
-						is_alive = yes
-						employer = character:Targaryen_9
-					}
-					character:Selmy_3 ?= {
-						is_alive = yes
-						employer = character:Targaryen_9
-					}
-					character:Mormont_3 ?= {
-						is_alive = yes
-						employer = character:Targaryen_9
-					}
-					character:IAF_Missandei_1 ?= {
-						is_alive = yes
-						employer = character:Targaryen_9
-					}
-					character:IAF_Torgo_Nudho_1 ?= {
-						is_alive = yes
-						employer = character:Targaryen_9
-					}
-				}
+            # =================================================
+			# SER BARRISTAN SELMY
+			# =================================================
 
-				add_character_flag = segrellion_daenerys_followers_setup
-				add_character_flag = segrellion_daenerys_followers_delayed_completed
+			character:Selmy_3 ?= {
+
+				if = {
+					limit = {
+						is_alive = yes
+						is_ruler = no
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+
+					set_variable = {
+						name = target_employer
+						value = character:Targaryen_9
+					}
+
+					set_employer = character:Targaryen_9
+					return_to_court = yes
+				}
 			}
-		}
-	}
+
+
+            # =================================================
+			# SER JORAH MORMONT
+			# =================================================
+
+			character:Mormont_3 ?= {
+
+				if = {
+					limit = {
+						is_alive = yes
+						is_ruler = no
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+
+					set_variable = {
+						name = target_employer
+						value = character:Targaryen_9
+					}
+
+					set_employer = character:Targaryen_9
+					return_to_court = yes
+				}
+			}
+
+
+			# =================================================
+			# MISSANDEI
+			# =================================================
+
+			character:IAF_Missandei_1 ?= {
+
+				if = {
+					limit = {
+						is_alive = yes
+						is_ruler = no
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+
+					set_variable = {
+						name = target_employer
+						value = character:Targaryen_9
+					}
+
+					set_employer = character:Targaryen_9
+					return_to_court = yes
+				}
+			}
+
+
+            # =================================================
+			# TORGO NUDHO
+			# =================================================
+
+			character:IAF_Torgo_Nudho_1 ?= {
+
+				if = {
+					limit = {
+						is_alive = yes
+						is_ruler = no
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+
+					set_variable = {
+						name = target_employer
+						value = character:Targaryen_9
+					}
+
+					set_employer = character:Targaryen_9
+					return_to_court = yes
+				}
+			}
+
+
+            # =============================================
+            # TYRION = THE SECOND
+            # =============================================
+
+            if = {
+                limit = {
+
+                    character:Lannister_8 ?= {
+                        is_alive = yes
+                        is_courtier_of = character:Targaryen_9
+                    }
+
+                    NOT = {
+                        any_court_position_holder = {
+                            type = second_camp_officer
+                        }
+                    }
+
+                    is_valid_to_hire_court_position_type = second_camp_officer
+                }
+
+                appoint_court_position = {
+                    recipient = character:Lannister_8
+                    court_position = second_camp_officer
+                }
+            }
+
+
+            # =============================================
+            # SETUP COMPLETED
+            # =============================================
+
+            if = {
+                limit = {
+
+                    character:Lannister_8 ?= {
+                        is_alive = yes
+                        is_courtier_of = character:Targaryen_9
+                    }
+
+                    character:Selmy_3 ?= {
+                        is_alive = yes
+                        is_courtier_of = character:Targaryen_9
+                    }
+
+                    character:Mormont_3 ?= {
+                        is_alive = yes
+                        is_courtier_of = character:Targaryen_9
+                    }
+
+                    character:IAF_Missandei_1 ?= {
+                        is_alive = yes
+                        is_courtier_of = character:Targaryen_9
+                    }
+
+                    character:IAF_Torgo_Nudho_1 ?= {
+                        is_alive = yes
+                        is_courtier_of = character:Targaryen_9
+                    }
+                }
+
+                add_character_flag = segrellion_daenerys_followers_setup
+                add_character_flag = segrellion_daenerys_followers_delayed_completed
+            }
+        }
+    }
 }
 
 

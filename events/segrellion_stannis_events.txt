@@ -486,6 +486,10 @@ segrellion_stannis.1000 = {
 #
 # Stannis offers Jon release from his vows,
 # legitimacy, Winterfell and the North.
+#
+# AI:
+# 90% - Accept
+# 10% - Refuse
 # =========================================================
 
 segrellion_stannis.1010 = {
@@ -515,6 +519,7 @@ segrellion_stannis.1010 = {
 		is_alive = yes
 
 		character:Baratheon_3 ?= {
+
 			is_alive = yes
 
 			has_character_flag = segrellion_stannis_northern_campaign_victory
@@ -552,6 +557,11 @@ segrellion_stannis.1010 = {
 
 	# =====================================================
 	# ACCEPT
+	#
+	# Jon leaves the Watch, is legitimized and receives
+	# Winterfell and the North.
+	#
+	# AI chance: 90%
 	# =====================================================
 
 	option = {
@@ -564,9 +574,8 @@ segrellion_stannis.1010 = {
 		segrellion_jon_accepts_north_effect = yes
 
 
-		# Only continue the storyline if the Watch was
-		# successfully transferred and Jon actually became
-		# Lord Paramount of the North.
+		# Only continue if the Night's Watch transfer
+		# succeeded and Jon genuinely received the North.
 
 		if = {
 
@@ -593,7 +602,8 @@ segrellion_stannis.1010 = {
 
 
 		ai_chance = {
-			base = 100
+
+			base = 90
 		}
 	}
 
@@ -601,17 +611,15 @@ segrellion_stannis.1010 = {
 	# =====================================================
 	# REFUSE
 	#
-	# Player-only alternate outcome.
-	# Canon AI Jon accepts in this timeline.
+	# Jon remains Lord Commander of the Night's Watch.
+	# Stannis keeps temporary custody of the North.
+	#
+	# AI chance: 10%
 	# =====================================================
 
 	option = {
 
 		name = segrellion_stannis.1010.b
-
-		trigger = {
-			is_ai = no
-		}
 
 		custom_tooltip = segrellion_stannis.1010.b.tt
 
@@ -619,9 +627,18 @@ segrellion_stannis.1010 = {
 		add_character_flag = segrellion_jon_refused_north
 
 
+		# Jon remains in the Watch.
+		# Nothing is transferred and his vows remain intact.
+
+		give_nickname = nick_segrellion_lord_snow
+
+
 		character:Baratheon_3 = {
 
 			add_character_flag = segrellion_stannis_jon_refused_north
+
+			add_character_flag = segrellion_stannis_searching_northern_heir
+
 
 			trigger_event = {
 
@@ -633,7 +650,8 @@ segrellion_stannis.1010 = {
 
 
 		ai_chance = {
-			base = 0
+
+			base = 10
 		}
 	}
 }

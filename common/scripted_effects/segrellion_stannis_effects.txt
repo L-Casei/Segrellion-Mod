@@ -389,18 +389,21 @@ segrellion_setup_stannis_northern_campaign_effect = {
 # =========================================================
 # JON ACCEPTS STANNIS' OFFER
 #
-# CRITICAL ORDER:
+# FINAL ORDER:
 #
-# 1. Find a valid new Lord Commander.
-# 2. Transfer EVERY title Jon currently holds.
-# 3. Confirm Jon is completely unlanded.
-# 4. Only then remove Night's Watch status.
+# 1. Find the next Lord Commander.
+# 2. Transfer the ENTIRE Night's Watch away from Jon.
+# 3. Verify Jon is completely unlanded.
+# 4. Only then release Jon from his vows.
 # 5. Legitimize Jon.
-# 6. Strip the North from Ramsay.
-# 7. Give Winterfell and the North to Jon.
+# 6. Save the Northern vassals.
+# 7. Transfer Winterfell and the North to Jon.
+# 8. Transfer ONLY Northern vassals to Jon.
+# 9. Make Jon independent.
+# 10. Ally Jon and Stannis.
 #
-# Under no circumstances do we remove the Night's Watch
-# trait while Jon still owns Wall titles.
+# IMPORTANT:
+# Davos must NOT follow Jon into the North.
 # =========================================================
 
 segrellion_jon_accepts_north_effect = {
@@ -408,16 +411,17 @@ segrellion_jon_accepts_north_effect = {
 
 	# =====================================================
 	# FIND THE NEXT LORD COMMANDER
-	#
-	# First search Jon's landed Night's Watch vassals.
-	# The old version only searched COURTIERS, which could
-	# leave the scope empty and destroy the Wall government.
 	# =====================================================
 
 	character:Stark_7 = {
 
 		remove_character_flag = segrellion_jon_north_transfer_failed
 
+
+		# -------------------------------------------------
+		# FIRST CHOICE:
+		# A landed Black Brother under Jon.
+		# -------------------------------------------------
 
 		ordered_vassal_or_below = {
 
@@ -441,9 +445,10 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 
-		# =================================================
-		# FALLBACK: UNLANDED BLACK BROTHER
-		# =================================================
+		# -------------------------------------------------
+		# FALLBACK:
+		# An unlanded Black Brother in Jon's court.
+		# -------------------------------------------------
 
 		if = {
 
@@ -478,12 +483,12 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 
-		# =================================================
-		# SNAPSHOT ALL TITLES BEFORE TRANSFER
+		# -------------------------------------------------
+		# SAVE EVERY TITLE JON CURRENTLY HOLDS.
 		#
-		# At this point Jon has not received Winterfell.
-		# Therefore everything he owns belongs to the Watch.
-		# =================================================
+		# At this point Jon has NOT received Winterfell,
+		# therefore everything here belongs to the Watch.
+		# -------------------------------------------------
 
 		if = {
 
@@ -502,9 +507,7 @@ segrellion_jon_accepts_north_effect = {
 
 
 	# =====================================================
-	# TRANSFER THE ENTIRE NIGHT'S WATCH
-	#
-	# Do it as ONE title/vassal transaction.
+	# ONLY CONTINUE IF WE FOUND A NEW LORD COMMANDER
 	# =====================================================
 
 	if = {
@@ -514,6 +517,17 @@ segrellion_jon_accepts_north_effect = {
 			exists = scope:segrellion_new_lord_commander
 		}
 
+
+		# =================================================
+		# TRANSFER THE NIGHT'S WATCH
+		#
+		# k_the_wall goes first and transfers its vassals.
+		#
+		# government_base = Jon is deliberate:
+		# Jon is STILL Lord Commander and STILL Night's
+		# Watch at this exact moment, so the successor
+		# inherits the proper Watch government.
+		# =================================================
 
 		create_title_and_vassal_change = {
 
@@ -525,9 +539,32 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 
+		title:k_the_wall = {
+
+			change_title_holder_include_vassals = {
+
+				holder = scope:segrellion_new_lord_commander
+
+				change = scope:segrellion_nights_watch_transfer
+
+				government_base = character:Stark_7
+			}
+		}
+
+
+		# =================================================
+		# TRANSFER EVERY OTHER WATCH TITLE JON HELD
+		# =================================================
+
 		every_in_list = {
 
 			list = segrellion_jon_watch_titles
+
+
+			limit = {
+
+				this != title:k_the_wall
+			}
 
 
 			change_title_holder = {
@@ -540,32 +577,56 @@ segrellion_jon_accepts_north_effect = {
 
 
 		resolve_title_and_vassal_change = scope:segrellion_nights_watch_transfer
+
+
+		# =================================================
+		# CASTLE BLACK REMAINS THE WATCH CAPITAL
+		# =================================================
+
+		scope:segrellion_new_lord_commander = {
+
+			set_realm_capital = title:c_castle_black
+		}
 	}
 
 
 	# =====================================================
 	# ABSOLUTE SAFETY GATE
 	#
-	# We DO NOT continue unless Jon has become completely
-	# unlanded.
+	# DO NOT REMOVE NIGHTSWATCH UNLESS JON OWNS NOTHING.
 	#
-	# If a single Wall holding failed to transfer, Jon keeps
-	# his vows and nothing below executes.
+	# This is the bit that prevents the Wall becoming
+	# fucking feudal again.
 	# =====================================================
 
 	if = {
 
 		limit = {
 
+			exists = scope:segrellion_new_lord_commander
+
+
 			character:Stark_7 = {
 
 				is_landed = no
+
+				NOT = {
+					has_title = title:k_the_wall
+				}
+
+				NOT = {
+					has_title = title:d_the_wall
+				}
+
+				NOT = {
+					has_title = title:c_castle_black
+				}
 			}
 		}
 
 
 		# =================================================
-		# JON IS RELEASED FROM THE NIGHT'S WATCH
+		# JON LEAVES THE NIGHT'S WATCH
 		# =================================================
 
 		character:Stark_7 = {
@@ -597,7 +658,7 @@ segrellion_jon_accepts_north_effect = {
 
 
 			# =============================================
-			# JON SNOW BECOMES LEGITIMATE
+			# LEGITIMIZE JON
 			# =============================================
 
 			if = {
@@ -618,54 +679,91 @@ segrellion_jon_accepts_north_effect = {
 
 
 		# =================================================
-		# SAVE RAMSAY BEFORE DISPOSSESSING HIM
+		# SAVE WHO CURRENTLY HOLDS THE NORTH
+		#
+		# Normally this should now be Stannis because he
+		# took temporary custody after defeating Ramsay.
+		#
+		# Saving the current holder makes this resistant
+		# to weird save-state situations.
 		# =================================================
 
 		title:e_the_north.holder ?= {
 
-			save_scope_as = segrellion_defeated_bolton_lord
+			save_scope_as = segrellion_north_holder_before_jon
 		}
 
 
 		# =================================================
-		# THE STARK RESTORATION
+		# SAVE ONLY NORTHERN VASSALS
 		#
-		# This is a REAL title-and-vassal transaction.
+		# This is CRITICAL.
 		#
-		# e_the_north changes holder WITH its vassals.
-		# Ramsay therefore cannot remain Lord Paramount.
+		# Stannis may also have Davos as his direct vassal.
+		# Davos holds d_the_drench, which is NOT part of
+		# e_the_north, so he is deliberately excluded.
+		# =================================================
+
+		scope:segrellion_north_holder_before_jon ?= {
+
+			every_vassal = {
+
+				limit = {
+
+					primary_title = {
+
+						empire ?= title:e_the_north
+					}
+				}
+
+				add_to_list = segrellion_northern_vassals_for_jon
+			}
+		}
+
+
+		# =================================================
+		# GIVE THE NORTH TO JON
+		#
+		# DO NOT use include_vassals here.
+		#
+		# We transfer the titles explicitly and move only
+		# the Northern vassals afterwards.
 		# =================================================
 
 		create_title_and_vassal_change = {
 
 			type = granted
 
-			save_scope_as = segrellion_stark_restoration_change
+			save_scope_as = segrellion_jon_north_restoration_change
 
 			add_claim_on_loss = no
 		}
 
 
-		# =================================================
+		# -------------------------------------------------
 		# THE NORTH
-		#
-		# Transfer the paramountcy and its vassal structure.
-		# =================================================
+		# -------------------------------------------------
 
 		title:e_the_north = {
 
-			change_title_holder_include_vassals = {
+			change_title_holder = {
 
 				holder = character:Stark_7
 
-				change = scope:segrellion_stark_restoration_change
+				change = scope:segrellion_jon_north_restoration_change
+
+				# Jon has just left the Night's Watch.
+				# His new landed government is based on
+				# Stannis, NOT on his old Watch government.
+
+				government_base = character:Baratheon_3
 			}
 		}
 
 
-		# =================================================
-		# WINTERFELL
-		# =================================================
+		# -------------------------------------------------
+		# WINTERFELL KINGDOM-TIER TITLE
+		# -------------------------------------------------
 
 		title:k_winterfell = {
 
@@ -673,9 +771,14 @@ segrellion_jon_accepts_north_effect = {
 
 				holder = character:Stark_7
 
-				change = scope:segrellion_stark_restoration_change
+				change = scope:segrellion_jon_north_restoration_change
 			}
 		}
+
+
+		# -------------------------------------------------
+		# WINTERFELL DUCHY
+		# -------------------------------------------------
 
 		title:d_winterfell = {
 
@@ -683,10 +786,14 @@ segrellion_jon_accepts_north_effect = {
 
 				holder = character:Stark_7
 
-				change = scope:segrellion_stark_restoration_change
+				change = scope:segrellion_jon_north_restoration_change
 			}
 		}
 
+
+		# -------------------------------------------------
+		# WINTERFELL COUNTY
+		# -------------------------------------------------
 
 		title:c_winterfell = {
 
@@ -694,16 +801,112 @@ segrellion_jon_accepts_north_effect = {
 
 				holder = character:Stark_7
 
-				change = scope:segrellion_stark_restoration_change
+				change = scope:segrellion_jon_north_restoration_change
 			}
 		}
 
 
-		resolve_title_and_vassal_change = scope:segrellion_stark_restoration_change
+		resolve_title_and_vassal_change = scope:segrellion_jon_north_restoration_change
 
 
 		# =================================================
-		# JON STARK, LORD PARAMOUNT OF THE NORTH
+		# MOVE THE NORTHERN LORDS TO JON
+		#
+		# Manderly, Glover, Umber, Reed, etc.
+		#
+		# DAVOS IS NOT IN THIS LIST.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				any_in_list = {
+
+					list = segrellion_northern_vassals_for_jon
+
+					always = yes
+				}
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = granted
+
+				save_scope_as = segrellion_northern_vassals_transfer
+
+				add_claim_on_loss = no
+			}
+
+
+			every_in_list = {
+
+				list = segrellion_northern_vassals_for_jon
+
+
+				change_liege = {
+
+					liege = character:Stark_7
+
+					change = scope:segrellion_northern_vassals_transfer
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_northern_vassals_transfer
+		}
+
+
+		# =================================================
+		# JON MUST BE INDEPENDENT
+		#
+		# No Tommen.
+		# No Young Griff.
+		# No Iron Throne.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Stark_7 = {
+
+					NOT = {
+						is_independent_ruler = yes
+					}
+				}
+			}
+
+
+			character:Stark_7 = {
+
+
+				create_title_and_vassal_change = {
+
+					type = independency
+
+					save_scope_as = segrellion_jon_independence_change
+
+					add_claim_on_loss = no
+				}
+
+
+				becomes_independent = {
+
+					change = scope:segrellion_jon_independence_change
+				}
+
+
+				resolve_title_and_vassal_change = scope:segrellion_jon_independence_change
+			}
+		}
+
+
+		# =================================================
+		# JON STARK
+		# LORD OF WINTERFELL
+		# LORD PARAMOUNT / FUTURE KING IN THE NORTH
 		# =================================================
 
 		character:Stark_7 = {
@@ -713,36 +916,45 @@ segrellion_jon_accepts_north_effect = {
 			set_realm_capital = title:c_winterfell
 
 			add_character_flag = segrellion_jon_restored_to_winterfell
+
 			add_character_flag = segrellion_jon_lord_paramount_north
+
+
+			# Requires:
+			# nick_segrellion_the_white_wolf = { }
+			#
+			# in common/nicknames/segrellion_nicknames.txt
+
+			give_nickname = nick_segrellion_the_white_wolf
 		}
 
 
 		# =================================================
-		# RAMSAY IS NO LONGER LORD OF THE NORTH
-		# =================================================
-
-		scope:segrellion_defeated_bolton_lord ?= {
-
-			remove_character_flag = segrellion_ramsay_lord_of_winterfell
-			remove_character_flag = segrellion_ramsay_lord_paramount_north
-		}
-
-
-		# =================================================
-		# STANNIS + JON
+		# STANNIS NO LONGER HOLDS THE NORTH IN TRUST
 		# =================================================
 
 		character:Baratheon_3 = {
 
+			remove_character_flag = segrellion_stannis_holds_north_in_trust
+
+			remove_character_flag = segrellion_stannis_searching_northern_heir
+
+
 			add_character_flag = segrellion_stannis_restored_stark_north
+
 			add_character_flag = segrellion_stannis_north_secured
 
+
+			# =============================================
+			# STANNIS + JON ALLIANCE
+			# =============================================
 
 			create_alliance = {
 
 				target = character:Stark_7
 
 				allied_through_owner = character:Baratheon_3
+
 				allied_through_target = character:Stark_7
 			}
 
@@ -769,11 +981,16 @@ segrellion_jon_accepts_north_effect = {
 
 
 	# =====================================================
-	# FAILSAFE
+	# FAILURE
 	#
-	# If Jon still owns land, DO NOT touch his government.
-	# This flag makes the failure immediately visible in
-	# debug instead of silently feudalizing the Wall.
+	# If the Watch transfer failed, STOP.
+	#
+	# Jon remains:
+	# - Lord Commander
+	# - Night's Watch
+	# - owner of whatever failed to transfer
+	#
+	# He does NOT receive Winterfell or the North.
 	# =====================================================
 
 	else = {
@@ -782,5 +999,143 @@ segrellion_jon_accepts_north_effect = {
 
 			add_character_flag = segrellion_jon_north_transfer_failed
 		}
+	}
+}
+
+# =========================================================
+# STANNIS SECURES THE NORTH
+#
+# Executed immediately after victory over Ramsay.
+#
+# Stannis does NOT intend to keep the North permanently.
+# He takes custody of it so Bolton rule ends immediately
+# and so the North cannot return to Tommen / Young Griff.
+# =========================================================
+
+segrellion_stannis_secure_north_after_victory_effect = {
+
+
+	# =====================================================
+	# SAVE THE DEFEATED BOLTON
+	# =====================================================
+
+	title:e_the_north.holder ?= {
+
+		save_scope_as = segrellion_defeated_bolton_lord
+	}
+
+
+	# =====================================================
+	# TRANSFER THE NORTHERN REALM TO STANNIS
+	#
+	# Ramsay only rules the Northern realm, so transferring
+	# his vassals here is safe.
+	# =====================================================
+
+	create_title_and_vassal_change = {
+
+		type = conquest
+
+		save_scope_as = segrellion_stannis_north_conquest_change
+
+		add_claim_on_loss = no
+	}
+
+
+	title:e_the_north = {
+
+		change_title_holder_include_vassals = {
+
+			holder = character:Baratheon_3
+
+			change = scope:segrellion_stannis_north_conquest_change
+		}
+	}
+
+
+	title:d_winterfell = {
+
+		change_title_holder = {
+
+			holder = character:Baratheon_3
+
+			change = scope:segrellion_stannis_north_conquest_change
+		}
+	}
+
+
+	title:c_winterfell = {
+
+		change_title_holder = {
+
+			holder = character:Baratheon_3
+
+			change = scope:segrellion_stannis_north_conquest_change
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_stannis_north_conquest_change
+
+
+	# =====================================================
+	# THE NORTH LEAVES THE IRON THRONE
+	#
+	# This is a real independence transaction.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Baratheon_3 = {
+
+				NOT = {
+					is_independent_ruler = yes
+				}
+			}
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = independency
+
+			save_scope_as = segrellion_stannis_north_independence_change
+
+			add_claim_on_loss = no
+		}
+
+
+		character:Baratheon_3 = {
+
+			becomes_independent = {
+
+				change = scope:segrellion_stannis_north_independence_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_stannis_north_independence_change
+	}
+
+
+	character:Baratheon_3 = {
+
+		set_primary_title_to = title:e_the_north
+
+		set_realm_capital = title:c_winterfell
+
+		set_location = title:c_winterfell.title_province
+
+		add_character_flag = segrellion_stannis_holds_north_in_trust
+		add_character_flag = segrellion_stannis_north_secured
+	}
+
+
+	scope:segrellion_defeated_bolton_lord ?= {
+
+		remove_character_flag = segrellion_ramsay_lord_of_winterfell
+		remove_character_flag = segrellion_ramsay_lord_paramount_north
 	}
 }
