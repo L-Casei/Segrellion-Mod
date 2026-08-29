@@ -154,16 +154,19 @@ segrellion_the_unicorn_returns_decision = {
 
 
 			# =================================================
-			# RELICS
+			# RESTORATION REQUIREMENT
 			#
-			# Either:
-			#   Trueflame + Plate of Segrell
-			#
-			# Or:
-			#   Icebringer
+			# AT LEAST ONE:
+			#   - Trueflame + Plate of Segrell
+			#   - Icebringer
+			#   - 4,000 soldiers
 			# =================================================
 
 			OR = {
+
+				# ---------------------------------------------
+				# TRUEFLAME + PLATE OF SEGRELL
+				# ---------------------------------------------
 
 				AND = {
 
@@ -185,6 +188,10 @@ segrellion_the_unicorn_returns_decision = {
 				}
 
 
+				# ---------------------------------------------
+				# ICEBRINGER
+				# ---------------------------------------------
+
 				custom_description = {
 					text = segrellion_unicorn_returns_has_icebringer_tt
 
@@ -192,20 +199,20 @@ segrellion_the_unicorn_returns_decision = {
 						has_variable = segrellion_icebringer_artifact
 					}
 				}
+
+
+				# ---------------------------------------------
+				# 3,000 SOLDIERS
+				# ---------------------------------------------
+
+				custom_description = {
+					text = segrellion_unicorn_returns_host_ready_tt
+
+					current_military_strength >= 3000
+				}
 			}
 
 
-			# =================================================
-			# ARMY
-			#
-			# Same structure used by vanilla
-			# Become a Great Conqueror.
-			# =================================================
-
-			custom_tooltip = {
-				text = segrellion_unicorn_returns_host_ready_tt
-				current_military_strength >= 3000
-			}
 		}
 	}
 
@@ -244,14 +251,34 @@ segrellion_the_unicorn_returns_decision = {
 	# AI
 	# =====================================================
 
-	ai_check_interval = 7
+	ai_check_interval = 1
 
 	ai_potential = {
+
 		this = character:Segrellion_60
+		is_ai = yes
+
+		has_character_flag = segrellion_foreign_support_secured
+
+
+		# If Hugh is alive, Daemon waits until the Plate
+		# negotiation has actually been resolved.
+
+		trigger_if = {
+
+			limit = {
+
+				character:Segrellion_43 ?= {
+					is_alive = yes
+				}
+			}
+
+			has_character_flag = segrellion_plate_demand_resolved
+		}
 	}
 
 	ai_will_do = {
-		base = 100
+		base = 10000
 	}
 }
 
@@ -464,10 +491,6 @@ segrellion_demand_plate_of_segrell_decision = {
 			NOT = {
 				has_character_flag = segrellion_plate_demand_pending
 			}
-
-			NOT = {
-				has_character_flag = segrellion_plate_demand_resolved
-			}
 		}
 	}
 
@@ -536,13 +559,17 @@ segrellion_demand_plate_of_segrell_decision = {
 	# AI
 	# =====================================================
 
-	ai_check_interval = 7
+	ai_check_interval = 1
 
 	ai_potential = {
+
 		this = character:Segrellion_60
+		is_ai = yes
+
+		has_character_flag = segrellion_foreign_support_secured
 	}
 
 	ai_will_do = {
-		base = 100
+		base = 10000
 	}
 }

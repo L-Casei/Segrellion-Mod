@@ -69,33 +69,10 @@ segrellion_take_iron_throne_decision = {
 		# - or The Unicorn Returns has ended.
 		# =================================================
 
-		OR = {
+		# Normal path is handled automatically by event 6000.
+		# The decision only exists as an emergency fallback.
 
-			has_character_flag = segrellion_young_griff_free_for_iron_throne
-
-
-			character:Segrellion_60 ?= {
-
-				OR = {
-
-					has_character_flag = segrellion_unicorn_returns_completed
-
-
-					AND = {
-
-						has_character_flag = segrellion_unicorn_returns_decision_taken
-
-						NOT = {
-							has_character_flag = segrellion_unicorn_returns_event_pending
-						}
-
-						NOT = {
-							has_character_flag = segrellion_unicorn_returns_war_active
-						}
-					}
-				}
-			}
-		}
+		has_character_flag = segrellion_young_griff_invasion_event_failed
 	}
 
 
@@ -227,10 +204,10 @@ segrellion_take_iron_throne_decision = {
 
 		this = character:IAF_Young_Griff_1
 
-		has_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
+		has_character_flag = segrellion_young_griff_invasion_event_failed
 
 		NOT = {
-			has_game_rule = segrellion_young_griff_aggression_peaceful
+			has_character_flag = segrellion_young_griff_iron_throne_war_started
 		}
 	}
 

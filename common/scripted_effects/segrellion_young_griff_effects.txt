@@ -69,3 +69,70 @@ segrellion_young_griff_stay_with_daemon_restoration_effect = {
 	add_character_flag = segrellion_young_griff_supports_daemon
 	add_character_flag = segrellion_young_griff_waiting_for_daemon
 }
+
+# =========================================================
+# THE UNICORN RETURNS HAS ENDED
+# =========================================================
+
+segrellion_young_griff_after_unicorn_returns_effect = {
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_daemon_war_resolved
+				}
+			}
+
+			add_character_flag = segrellion_young_griff_daemon_war_resolved
+
+			remove_character_flag = segrellion_young_griff_waiting_for_daemon
+
+			add_character_flag = segrellion_young_griff_free_for_iron_throne
+
+
+			# -------------------------------------------------
+			# IF AEGON HELPED DAEMON AND DAEMON WON,
+			# ASK FOR THE DEBT TO BE REPAID.
+			# -------------------------------------------------
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_young_griff_supports_daemon
+
+					character:Segrellion_60 ?= {
+
+						is_alive = yes
+
+						has_character_flag = segrellion_unicorn_returns_completed
+
+						has_title = title:e_flamelands
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff.5000
+					days = 1
+				}
+			}
+
+
+			# -------------------------------------------------
+			# TEN DAYS AFTER THE WAR ENDS:
+			# AEGON MOVES FOR THE IRON THRONE.
+			# -------------------------------------------------
+
+			trigger_event = {
+				id = segrellion_young_griff.6000
+				days = 10
+			}
+		}
+	}
+}

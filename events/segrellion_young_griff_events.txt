@@ -809,3 +809,781 @@ segrellion_young_griff.4000 = {
 		add_character_flag = segrellion_young_griff_ai_ready_for_iron_throne
 	}
 }
+
+# =========================================================
+# 4100 - A DRAGON'S BRIDE
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.4100 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.4100.t
+	desc = segrellion_young_griff.4100.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+		is_alive = yes
+		is_married = no
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	# DAENERYS
+	option = {
+
+		name = segrellion_young_griff.4100.a
+
+		trigger = {
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+				is_married = no
+			}
+		}
+
+		add_character_flag = segrellion_young_griff_proposed_daenerys
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.4110
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+
+	# ARIANNE
+	option = {
+
+		name = segrellion_young_griff.4100.b
+
+		trigger = {
+
+			character:Martell_9 ?= {
+				is_alive = yes
+				is_married = no
+			}
+
+			# Prevent Young Griff and Daemon both trying
+			# to marry Arianne at the same time.
+			character:Segrellion_60 = {
+
+				NOR = {
+					has_character_flag = segrellion_negotiation_pending_dorne
+					has_character_flag = segrellion_dorne_marriage_pact
+				}
+			}
+		}
+
+		add_character_flag = segrellion_young_griff_proposed_arianne
+
+		character:Martell_9 = {
+
+			father = {
+
+				trigger_event = {
+					id = segrellion_young_griff.4120
+					days = 1
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 50
+		}
+	}
+}
+
+
+# =========================================================
+# 4110 - DAENERYS RECEIVES THE PROPOSAL
+# =========================================================
+
+segrellion_young_griff.4110 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_young_griff.4110.opening
+
+	title = segrellion_young_griff.4110.t
+	desc = segrellion_young_griff.4110.desc
+
+	theme = diplomacy
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+		is_married = no
+
+		character:IAF_Young_Griff_1 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+
+	# ACCEPT - 10%
+	option = {
+
+		name = segrellion_young_griff.4110.a
+
+		# If she has promised herself to Daemon,
+		# acceptance disappears entirely.
+		trigger = {
+
+			character:Segrellion_60 = {
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_marriage_promised
+				}
+			}
+		}
+
+		character:IAF_Young_Griff_1 = {
+
+			marry = root
+
+			add_character_flag = segrellion_young_griff_married_daenerys
+
+			trigger_event = {
+				id = segrellion_young_griff.4111
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	# REJECT - 90%, or 100% if promised to Daemon
+	option = {
+
+		name = segrellion_young_griff.4110.b
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_rejected_by_daenerys
+
+			trigger_event = {
+				id = segrellion_young_griff.4111
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 90
+		}
+	}
+}
+
+
+# =========================================================
+# 4111 - DAENERYS'S ANSWER
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.4111 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.4111.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_married_daenerys
+				}
+
+				desc = segrellion_young_griff.4111.desc_accept
+			}
+
+			desc = segrellion_young_griff.4111.desc_reject
+		}
+	}
+
+	theme = diplomacy
+
+	option = {
+		name = segrellion_young_griff.4111.a
+	}
+}
+
+
+# =========================================================
+# 4120 - DORAN RECEIVES THE PROPOSAL
+# Root = Doran Martell
+# =========================================================
+
+segrellion_young_griff.4120 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_young_griff.4120.opening
+
+	title = segrellion_young_griff.4120.t
+	desc = segrellion_young_griff.4120.desc
+
+	theme = diplomacy
+
+	trigger = {
+
+		is_alive = yes
+
+		character:Martell_9 ?= {
+			is_alive = yes
+			is_married = no
+		}
+
+		character:IAF_Young_Griff_1 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+
+	# ACCEPT - 95%
+	option = {
+
+		name = segrellion_young_griff.4120.a
+
+		character:IAF_Young_Griff_1 = {
+
+			marry = character:Martell_9
+
+			add_character_flag = segrellion_young_griff_married_arianne
+
+			trigger_event = {
+				id = segrellion_young_griff.4121
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 95
+		}
+	}
+
+
+	# REFUSE - 5%
+	option = {
+
+		name = segrellion_young_griff.4120.b
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_rejected_by_dorne
+
+			trigger_event = {
+				id = segrellion_young_griff.4121
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+
+# =========================================================
+# 4121 - DORNE'S ANSWER
+# =========================================================
+
+segrellion_young_griff.4121 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.4121.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_married_arianne
+				}
+
+				desc = segrellion_young_griff.4121.desc_accept
+			}
+
+			desc = segrellion_young_griff.4121.desc_reject
+		}
+	}
+
+	theme = diplomacy
+
+	option = {
+		name = segrellion_young_griff.4121.a
+	}
+}
+
+# =========================================================
+# 5000 - A DEBT RETURNED
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.5000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.5000.t
+	desc = segrellion_young_griff.5000.desc
+
+	theme = diplomacy
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_supports_daemon
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_unicorn_returns_completed
+			has_title = title:e_flamelands
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	# ASK DAEMON
+	option = {
+
+		name = segrellion_young_griff.5000.a
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.5010
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	# DO NOT CALL IN THE DEBT
+	option = {
+
+		name = segrellion_young_griff.5000.b
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 5010 - THE DRAGON'S DUE
+# Root = Daemon
+# =========================================================
+
+segrellion_young_griff.5010 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_young_griff.5010.opening
+
+	title = segrellion_young_griff.5010.t
+	desc = segrellion_young_griff.5010.desc
+
+	theme = diplomacy
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+
+		character:IAF_Young_Griff_1 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	# ACCEPT
+	option = {
+
+		name = segrellion_young_griff.5010.a
+
+		# Impossible if Daemon has already sworn
+		# himself to Stannis or Daenerys.
+		trigger = {
+
+			NOR = {
+				has_character_flag = segrellion_pledged_to_stannis
+				has_character_flag = segrellion_pledged_to_daenerys
+			}
+		}
+
+		add_character_flag = segrellion_pledged_to_young_griff
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_daemon_oath_secured
+
+			trigger_event = {
+				id = segrellion_young_griff.5020
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# REFUSE
+	option = {
+
+		name = segrellion_young_griff.5010.b
+
+		add_character_flag = segrellion_refused_young_griff_oath
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+				id = segrellion_young_griff.5020
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+
+# =========================================================
+# 5020 - DAEMON'S ANSWER
+# =========================================================
+
+segrellion_young_griff.5020 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.5020.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_daemon_oath_secured
+				}
+
+				desc = segrellion_young_griff.5020.desc_accept
+			}
+
+			desc = segrellion_young_griff.5020.desc_reject
+		}
+	}
+
+	theme = diplomacy
+
+	option = {
+		name = segrellion_young_griff.5020.a
+	}
+}
+
+# =========================================================
+# 6000 - THE DRAGON MOVES
+# =========================================================
+
+segrellion_young_griff.6000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.6000.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Segrellion_60 ?= {
+						has_character_flag = segrellion_unicorn_returns_completed
+					}
+				}
+
+				desc = segrellion_young_griff.6000.desc_daemon_victory
+			}
+
+			desc = segrellion_young_griff.6000.desc_daemon_defeat
+		}
+	}
+
+	theme = war
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_daemon_war_resolved
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_iron_throne_war_started
+		}
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+		title:h_the_iron_throne = {
+			exists = holder
+			holder = {
+				this != root
+			}
+		}
+	}
+
+	on_trigger_fail = {
+		add_character_flag = segrellion_young_griff_invasion_event_failed
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_young_griff.6000.a
+
+		add_character_flag = segrellion_young_griff_invasion_countdown_complete
+		add_character_flag = segrellion_young_griff_iron_throne_war_started
+
+		remove_character_flag = segrellion_young_griff_waiting_for_daemon
+		remove_character_flag = segrellion_young_griff_free_for_iron_throne
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_claim_on = title:h_the_iron_throne
+				}
+			}
+
+			add_pressed_claim = title:h_the_iron_throne
+		}
+
+
+		title:h_the_iron_throne.holder = {
+			save_scope_as = young_griff_iron_throne_defender
+		}
+
+
+		start_war = {
+
+			cb = claim_cb
+
+			target = scope:young_griff_iron_throne_defender
+
+			claimant = root
+
+			target_title = title:h_the_iron_throne
+		}
+
+
+		trigger_event = {
+			id = segrellion_young_griff.6010
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 6010 - THE BANNERS GATHER
+# Martells + Vladwyn + Daemon if pledged
+# =========================================================
+
+segrellion_young_griff.6010 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_iron_throne_war_started
+	}
+
+	immediate = {
+
+
+		# Find the Iron Throne claim war we just created.
+
+		random_character_war = {
+
+			limit = {
+
+				attacker = root
+
+				casus_belli = {
+
+					any_target_title = {
+						this = title:h_the_iron_throne
+					}
+				}
+			}
+
+			save_scope_as = young_griff_iron_throne_war
+		}
+
+
+		# -------------------------------------------------
+		# DORAN MARTELL
+		# -------------------------------------------------
+
+		character:Martell_9 ?= {
+
+			father ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+						this != title:h_the_iron_throne.holder
+					}
+
+					save_scope_as = young_griff_doran
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# JOFFREY VLADWYN / TRUE SENTINELS
+		# -------------------------------------------------
+
+		character:Vladwyn_5 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+					this != title:h_the_iron_throne.holder
+				}
+
+				save_scope_as = young_griff_vladwyn
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DAEMON, ONLY IF HE SWORE TO AEGON
+		# -------------------------------------------------
+
+		character:Segrellion_60 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_pledged_to_young_griff
+
+					this != title:h_the_iron_throne.holder
+				}
+
+				save_scope_as = young_griff_daemon
+			}
+		}
+
+
+		# -------------------------------------------------
+		# ADD SUPPORTERS
+		# -------------------------------------------------
+
+		scope:young_griff_iron_throne_war ?= {
+
+			if = {
+				limit = {
+					exists = scope:young_griff_doran
+				}
+
+				add_attacker = scope:young_griff_doran
+			}
+
+			if = {
+				limit = {
+					exists = scope:young_griff_vladwyn
+				}
+
+				add_attacker = scope:young_griff_vladwyn
+			}
+
+			if = {
+				limit = {
+					exists = scope:young_griff_daemon
+				}
+
+				add_attacker = scope:young_griff_daemon
+			}
+		}
+	}
+}

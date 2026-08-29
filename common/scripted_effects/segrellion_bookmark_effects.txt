@@ -74,6 +74,9 @@ segrellion_setup_winds_of_winter_hosts_effect = {
 					}
 				}
 
+				# Enough prestige to execute his scripted 300 AC route.
+				add_prestige = 1000
+
 
 				# -------------------------------------------------
 				# PERMANENT CAMP MEN-AT-ARMS
@@ -466,36 +469,30 @@ segrellion_setup_young_griff_300_effect = {
 			}
 		}
 
-			# =================================================
-			# ARIANNE MARTELL
-			# One year after the 300 AC start.
-			# =================================================
+		# =================================================
+		# YOUNG GRIFF - DYNASTIC MARRIAGE
+		# =================================================
 
-			if = {
-				limit = {
+		if = {
 
-					current_date < 8301.1.1
+			limit = {
 
-					NOT = {
-						has_character_flag = segrellion_arianne_marriage_event_scheduled
-					}
+				game_start_date = 8300.8.20
 
-					is_married = no
+				is_married = no
 
-					character:Martell_9 ?= {
-						is_alive = yes
-						is_married = no
-					}
-				}
-
-				add_character_flag = segrellion_arianne_marriage_event_scheduled
-
-				trigger_event = {
-					id = segrellion_winds.0201
-					days = 365
+				NOT = {
+					has_character_flag = segrellion_young_griff_marriage_path_started
 				}
 			}
 
+			add_character_flag = segrellion_young_griff_marriage_path_started
+
+			trigger_event = {
+				id = segrellion_young_griff.4100
+				days = { 5 10 }
+			}
+		}
 
 		# Prevent AGOT's normal dynamic Faegon invasion
 		# from creating a second Young Griff.
