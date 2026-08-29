@@ -444,6 +444,71 @@ segrellion_transfer_plate_to_daemon_effect = {
 # 300 AC - HISTORICAL YOUNG GRIFF
 # =========================================================
 
+# AGOT keeps Blackfyre hidden with Illyrio after 281 AC and normally
+# materializes it through the standard fAegon invasion. Our historical
+# Young Griff uses a custom route, so give him that same unique artifact
+# directly and clear the hidden-artifact state to prevent a later duplicate.
+segrellion_setup_young_griff_blackfyre_effect = {
+	if = {
+		limit = {
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+			character:IAF_Young_Griff_1 ?= { is_alive = yes }
+		}
+
+		if = {
+			limit = {
+				character:IAF_Young_Griff_1 = {
+					NOT = { has_character_flag = segrellion_young_griff_blackfyre_setup }
+				}
+			}
+
+			if = {
+				limit = {
+					any_artifact = {
+						count >= 1
+						has_artifact_modifier = vs_blackfyre_modifier
+					}
+				}
+
+				random_artifact = {
+					limit = { has_artifact_modifier = vs_blackfyre_modifier }
+					set_owner = character:IAF_Young_Griff_1
+					equip_artifact_to_owner_replace = yes
+				}
+			}
+			else = {
+				agot_create_artifact_vs_blackfyre_effect = {
+					OWNER = character:IAF_Young_Griff_1
+				}
+			}
+
+			character:IAF_Young_Griff_1 = {
+				add_character_flag = segrellion_young_griff_blackfyre_setup
+			}
+		}
+
+		# AGOT's scenario-artifact setup may run after our zero-tick effect.
+		# Repeat this cleanup after the lobby and on the monthly fallback.
+		if = {
+			limit = { exists = global_var:blackfyre_hidden }
+			remove_global_variable = blackfyre_hidden
+		}
+
+		character:Mopatis_1 ?= {
+			if = {
+				limit = {
+					any_secret = { secret_type = secret_agot_hidden_artifact }
+				}
+				random_secret = {
+					limit = { secret_type = secret_agot_hidden_artifact }
+					remove_secret = yes
+				}
+			}
+		}
+	}
+}
+
 segrellion_setup_young_griff_300_effect = {
 
 	if = {
@@ -462,6 +527,7 @@ segrellion_setup_young_griff_300_effect = {
 			save_scope_as = iaf_young_griff
 
 			segrellion_initialize_young_griff_aggression_effect = yes
+			segrellion_setup_young_griff_blackfyre_effect = yes
 
 			# =================================================
 			# TRUE IDENTITY

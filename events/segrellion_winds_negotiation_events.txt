@@ -1363,6 +1363,13 @@ segrellion_support.5000 = {
 		}
 	}
 
+	immediate = {
+
+		character:Segrellion_60 = {
+			save_scope_as = restored_flamelands_lord
+		}
+	}
+
 
 	left_portrait = {
 		character = root
@@ -1406,6 +1413,83 @@ segrellion_support.5000 = {
 				modifier = segrellion_vhal_returned_to_daemon_opinion
 			}
 		}
+
+			ai_chance = {
+
+			base = 25
+
+
+			# Opinion 0-24 -> 35%
+			modifier = {
+
+				add = 10
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 0
+				}
+			}
+
+
+			# Opinion 25-49 -> 45%
+			modifier = {
+
+				add = 10
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 25
+				}
+			}
+
+
+			# Opinion 50-74 -> 60%
+			modifier = {
+
+				add = 15
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+
+
+			# Opinion 75+ -> 80%
+			modifier = {
+
+				add = 20
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 75
+				}
+			}
+
+
+			# Opinion below -25 -> 15%
+			modifier = {
+
+				add = -10
+
+				opinion = {
+					target = character:Segrellion_60
+					value < -25
+				}
+			}
+
+
+			# Opinion below -50 -> 5%
+			modifier = {
+
+				add = -10
+
+				opinion = {
+					target = character:Segrellion_60
+					value < -50
+				}
+			}
+		}
 	}
 
 
@@ -1436,6 +1520,217 @@ segrellion_support.5000 = {
 				target = root
 				modifier = segrellion_vhal_refused_daemon_opinion
 			}
+		}
+
+			ai_chance = {
+
+			base = 75
+
+
+			modifier = {
+
+				add = -10
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 0
+				}
+			}
+
+
+			modifier = {
+
+				add = -10
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = -15
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				add = -20
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 75
+				}
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				opinion = {
+					target = character:Segrellion_60
+					value < -25
+				}
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				opinion = {
+					target = character:Segrellion_60
+					value < -50
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# 5100 - MASSEY'S HOOK REMEMBERS
+#
+# Root = current Lord of Massey's Hook
+#
+# House Massey openly resisted the Stormflame order.
+# With a legitimate Segrellion restored at the Beacon,
+# the old question of allegiance returns.
+# =========================================================
+
+segrellion_support.5100 = {
+
+	type = character_event
+
+	title = segrellion_support.5100.t
+	desc = segrellion_support.5100.desc
+
+	theme = realm
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		has_character_flag = segrellion_massey_reunification_event_pending
+
+		title:d_masseys_hook = {
+			holder = root
+		}
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			has_title = title:e_flamelands
+		}
+	}
+
+
+	immediate = {
+
+		character:Segrellion_60 = {
+			save_scope_as = restored_flamelands_lord
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# SWEAR FEALTY
+	# 90% AI
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5100.a
+
+		custom_tooltip = segrellion_support.5100.a.tt
+
+		remove_character_flag = segrellion_massey_reunification_event_pending
+
+		add_character_flag = segrellion_massey_reunification_resolved
+		add_character_flag = segrellion_massey_rejoined_flamelands
+
+
+		set_liege = character:Segrellion_60
+
+
+		character:Segrellion_60 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_massey_returned_to_daemon_opinion
+			}
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# REMAIN APART
+	# 10% AI
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.5100.b
+
+		custom_tooltip = segrellion_support.5100.b.tt
+
+		remove_character_flag = segrellion_massey_reunification_event_pending
+
+		add_character_flag = segrellion_massey_reunification_resolved
+		add_character_flag = segrellion_massey_refused_daemon
+
+
+		character:Segrellion_60 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_massey_refused_daemon_opinion
+			}
+		}
+
+
+		ai_chance = {
+			base = 10
 		}
 	}
 }
