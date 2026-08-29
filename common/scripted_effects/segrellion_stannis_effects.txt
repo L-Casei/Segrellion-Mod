@@ -980,6 +980,35 @@ segrellion_jon_accepts_north_effect = {
 		}
 	}
 
+	segrellion_transfer_stannis_prisoners_to_jon_effect = yes
+
+
+	# Ramsay's reckoning.
+	title:e_the_north.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this = character:Stark_7
+
+
+				any_prisoner = {
+
+					has_character_flag = segrellion_ramsay_northern_takeover
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_stannis.1030
+
+				days = { 2 5 }
+			}
+		}
+	}
+
 
 	# =====================================================
 	# FAILURE
@@ -1424,6 +1453,58 @@ segrellion_stannis_try_become_landless_effect = {
 				set_employer = character:Baratheon_3
 
 				add_character_flag = segrellion_davos_joined_stannis_last_campaign
+			}
+		}
+	}
+}
+
+# =========================================================
+# STANNIS -> JON
+# TRANSFER THE NORTHERN CAMPAIGN PRISONERS
+#
+# User-facing rule:
+# All current prisoners of Stannis pass into Jon's custody
+# when Jon assumes rule of the North.
+# =========================================================
+
+segrellion_transfer_stannis_prisoners_to_jon_effect = {
+
+	
+
+	character:Baratheon_3 = {
+
+		every_prisoner = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			add_to_list = segrellion_stannis_prisoners_for_jon
+		}
+	}
+
+
+	every_in_list = {
+
+		list = segrellion_stannis_prisoners_for_jon
+
+
+		add_character_flag = {
+			flag = block_imprisonment_event
+			days = 2
+		}
+
+
+		release_from_prison = yes
+
+
+		character:Stark_7 = {
+
+			imprison = {
+
+				target = prev
+
+				type = dungeon
 			}
 		}
 	}

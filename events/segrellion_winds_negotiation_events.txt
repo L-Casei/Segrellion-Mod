@@ -1327,6 +1327,134 @@ segrellion_support.4000 = {
 }
 
 # =========================================================
+# 4940 - RESTORATION POLITICAL SETTLEMENT
+#
+# Hidden postwar router.
+# Root = Daemon
+#
+# Gives title changes one day to settle, then starts the
+# Vhal and Massey's Hook submission storylines.
+# =========================================================
+
+segrellion_support.4940 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_title = title:e_flamelands
+
+		has_character_flag = segrellion_unicorn_returns_completed
+	}
+
+
+	immediate = {
+
+
+		# =================================================
+		# REPAIR LEGACY VHAL STATE
+		#
+		# Old versions could resolve the lord's answer
+		# invisibly. If Vhal is still outside Daemon's realm,
+		# permit the new visible political chain once.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_vhal_visible_submission_initialized
+				}
+
+
+				title:d_vhalerion.holder ?= {
+
+					is_alive = yes
+
+					NOT = {
+						liege ?= root
+					}
+				}
+			}
+
+
+			title:d_vhalerion.holder = {
+
+				remove_character_flag = segrellion_vhal_reunification_event_pending
+				remove_character_flag = segrellion_vhal_reunification_resolved
+				remove_character_flag = segrellion_vhal_refused_daemon
+				remove_character_flag = segrellion_vhal_rejoined_flamelands
+			}
+
+
+			remove_character_flag = segrellion_vhal_submission_offer_pending
+			remove_character_flag = segrellion_vhal_submission_offer_resolved
+			remove_character_flag = segrellion_vhal_submission_request_sent
+
+
+			add_character_flag = segrellion_vhal_visible_submission_initialized
+		}
+
+
+		# =================================================
+		# REPAIR LEGACY MASSEY STATE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_massey_visible_submission_initialized
+				}
+
+
+				title:d_masseys_hook.holder ?= {
+
+					is_alive = yes
+
+					NOT = {
+						liege ?= root
+					}
+				}
+			}
+
+
+			title:d_masseys_hook.holder = {
+
+				remove_character_flag = segrellion_massey_reunification_event_pending
+				remove_character_flag = segrellion_massey_reunification_resolved
+				remove_character_flag = segrellion_massey_refused_daemon
+				remove_character_flag = segrellion_massey_rejoined_flamelands
+			}
+
+
+			remove_character_flag = segrellion_massey_submission_offer_pending
+			remove_character_flag = segrellion_massey_submission_offer_resolved
+			remove_character_flag = segrellion_massey_submission_request_sent
+
+
+			add_character_flag = segrellion_massey_visible_submission_initialized
+		}
+
+
+		# =================================================
+		# START BOTH CHAINS
+		# =================================================
+
+		segrellion_check_vhal_reunification_effect = yes
+
+		segrellion_check_massey_reunification_effect = yes
+	}
+}
+
+# =========================================================
 # 4950 - VHAL AFTER THE RESTORATION
 #
 # Root = Daemon

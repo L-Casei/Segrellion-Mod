@@ -76,34 +76,118 @@ segrellion_gather_stormflames_at_beacon_effect = {
 
 
 # =========================================================
-# CAPTURE THE ENTIRE STORMFLAME HOUSEHOLD
+# CAPTURE LEO STORMFLAME AND HIS IMMEDIATE FAMILY
+#
+# Daemon takes:
+# - Leo
+# - every living child of Leo
+# - Clifford explicitly, if still alive
 # =========================================================
 
 segrellion_capture_stormflame_court_effect = {
 
-	house:house_Stormflame = {
 
-		every_house_member = {
+	# =====================================================
+	# LEO
+	# =====================================================
+
+	character:Stormflame_3 ?= {
+
+		if = {
 
 			limit = {
+
 				is_alive = yes
 
-				NOT = {
-					is_imprisoned = yes
-				}
+				is_imprisoned = no
 			}
 
-			save_scope_as = segrellion_stormflame_capture_target
 
 			add_character_flag = {
 				flag = block_imprisonment_event
-				days = 1
+				days = 2
 			}
+
 
 			character:Segrellion_60 = {
 
 				imprison = {
-					target = scope:segrellion_stormflame_capture_target
+
+					target = character:Stormflame_3
+
+					type = dungeon
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# LEO'S CHILDREN
+	# =====================================================
+
+	character:Stormflame_3 ?= {
+
+		every_child = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_imprisoned = no
+			}
+
+
+			save_scope_as = segrellion_stormflame_child_capture
+
+
+			add_character_flag = {
+				flag = block_imprisonment_event
+				days = 2
+			}
+
+
+			character:Segrellion_60 = {
+
+				imprison = {
+
+					target = scope:segrellion_stormflame_child_capture
+
+					type = dungeon
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CLIFFORD - EXPLICIT FAILSAFE
+	# =====================================================
+
+	character:Stormflame_13 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_imprisoned = no
+			}
+
+
+			add_character_flag = {
+				flag = block_imprisonment_event
+				days = 2
+			}
+
+
+			character:Segrellion_60 = {
+
+				imprison = {
+
+					target = character:Stormflame_13
+
 					type = dungeon
 				}
 			}

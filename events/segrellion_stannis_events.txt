@@ -185,11 +185,6 @@ segrellion_stannis.0001 = {
 
 # =========================================================
 # 0010 - THE NORTH REMEMBERS
-#
-# Root = Stannis
-#
-# Northern houses reveal that Bolton rule is far less
-# secure than Ramsay believes.
 # =========================================================
 
 segrellion_stannis.0010 = {
@@ -203,7 +198,7 @@ segrellion_stannis.0010 = {
 
 
 	override_background = {
-		reference = castle
+		reference = segrellion_castle_black_great_hall
 	}
 
 
@@ -220,7 +215,18 @@ segrellion_stannis.0010 = {
 
 		has_character_flag = segrellion_stannis_northern_campaign_committed
 
+
 		title:e_the_north = {
+			exists = holder
+		}
+
+
+		title:c_white_harbor = {
+			exists = holder
+		}
+
+
+		title:c_deepwood_motte = {
 			exists = holder
 		}
 	}
@@ -233,17 +239,13 @@ segrellion_stannis.0010 = {
 		}
 
 
-		title:c_white_harbor.holder ?= {
-
-			is_alive = yes
+		title:c_white_harbor.holder = {
 
 			save_scope_as = stannis_manderly_lord
 		}
 
 
-		title:c_deepwood.holder ?= {
-
-			is_alive = yes
+		title:c_deepwood_motte.holder = {
 
 			save_scope_as = stannis_glover_lord
 		}
@@ -281,20 +283,7 @@ segrellion_stannis.0010 = {
 		custom_tooltip = segrellion_stannis.0010.a.tt
 
 
-		add_character_flag = segrellion_stannis_northern_cb_authorized
-
-
-		trigger_event = {
-
-			id = segrellion_stannis.0020
-
-			days = { 3 7 }
-		}
-
-
-		ai_chance = {
-			base = 100
-		}
+		segrellion_setup_stannis_northern_campaign_effect = yes
 	}
 }
 
@@ -764,6 +753,170 @@ segrellion_stannis.1021 = {
 
 			days = { 7 14 }
 		}
+	}
+}
+
+# =========================================================
+# 1030 - THE PINK LETTER'S PROMISE
+#
+# Root = Jon
+# =========================================================
+
+segrellion_stannis.1030 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1030.t
+	desc = segrellion_stannis.1030.desc
+
+	theme = vengeance
+
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Stark_7
+
+		is_alive = yes
+
+		has_title = title:e_the_north
+
+
+		any_prisoner = {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_ramsay_northern_takeover
+		}
+	}
+
+
+	immediate = {
+
+		random_prisoner = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_ramsay_northern_takeover
+			}
+
+
+			save_scope_as = jon_ramsay
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:jon_ramsay
+
+		animation = fear
+	}
+
+
+	# =====================================================
+	# THE HEART
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1030.a
+
+		custom_tooltip = segrellion_stannis.1030.a.tt
+
+
+		scope:jon_ramsay = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_trait = lunatic
+				}
+			}
+
+
+			add_trait = lunatic_1
+		}
+
+
+		add_character_flag = segrellion_jon_ramsay_heart_execution
+	}
+
+
+	# =====================================================
+	# HIS OWN HOUNDS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1030.b
+
+		custom_tooltip = segrellion_stannis.1030.b.tt
+
+
+		scope:jon_ramsay = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_ramsay_hounds_execution
+	}
+
+
+	# =====================================================
+	# KEEP HIM
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1030.c
+
+		custom_tooltip = segrellion_stannis.1030.c.tt
+
+
+		scope:jon_ramsay = {
+
+			change_prison_type = dungeon
+		}
+
+
+		add_character_flag = segrellion_jon_kept_ramsay_alive
 	}
 }
 

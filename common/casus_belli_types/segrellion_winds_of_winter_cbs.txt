@@ -41,8 +41,9 @@ segrellion_unicorn_returns_cb = {
 
 	target_de_jure_regions_above = no
 
-	# We handle title transfer using the landless invasion
-	# effects below.
+	# Title transfer is handled explicitly in on_victory.
+	# This prevents the normal CB transfer from stripping
+	# unrelated Flamelands lords of their domains.
 	ignore_effect = change_title_holder
 
 
@@ -300,10 +301,20 @@ segrellion_unicorn_returns_cb = {
 		# as holder of the Stormlands.
 		# =================================================
 
-		title:e_the_stormlands.holder ?= {
+		# =================================================
+		# YOUNG GRIFF
+		#
+		# If Aegon still honors the Pentos Compact, he joins
+		# Daemon directly. His participation does not depend
+		# on already possessing the Stormlands.
+		# =================================================
+
+		character:IAF_Young_Griff_1 ?= {
 
 			if = {
+
 				limit = {
+
 					is_alive = yes
 
 					has_character_flag = segrellion_young_griff_supports_daemon
@@ -311,11 +322,15 @@ segrellion_unicorn_returns_cb = {
 					this != scope:defender
 				}
 
-				save_scope_as = unicorn_returns_young_griff
+
+				scope:war ?= {
+
+					add_attacker = character:IAF_Young_Griff_1
+				}
 			}
 		}
 
-				# =================================================
+		# =================================================
 		# STORMFLAME ALLIES
 		# =================================================
 
@@ -399,93 +414,212 @@ segrellion_unicorn_returns_cb = {
 			remove_variable = segrellion_unicorn_returns_war
 
 
-			# Identify e_flamelands from the war target list.
-			ordered_in_list = {
-				list = target_titles
-				order_by = tier
-				save_scope_as = target
-			}
-
-
-			# Standard Roads to Power warning / preparation
-			# for a landless character becoming landed.
 			ep3_become_landed_warning_effect = {
+
 				TITLE_RECEIVER = scope:attacker
-				TITLE = scope:target
+				TITLE = title:e_flamelands
 			}
 
+			# =========================================================
+			# ABSOLUTE BEACON JUDGMENT FAILSAFE
+			#
+			# The siege/arrival events provide flavor, but victory
+			# itself guarantees that Leo and his family are captured
+			# and judged.
+			# =========================================================
 
-			# Collect the titles belonging to the conquered
-			# Flamelands realm.
-			scope:defender = {
+			if = {
 
-				every_held_title = {
+				limit = {
 
-					limit = {
-						empire ?= scope:target
+					NOT = {
+						has_character_flag = segrellion_beacon_final_judgment_resolved
 					}
 
-					add_to_list = target_titles
+					NOT = {
+						has_character_flag = segrellion_beacon_final_judgment_pending
+					}
 				}
 
 
-				# Make sure at least the capital county and
-				# directly-held counties are included.
-				if = {
-
-					limit = {
-
-						NOT = {
-							any_in_list = {
-								list = target_titles
-								tier = tier_county
-							}
-						}
-					}
+				segrellion_capture_stormflame_court_effect = yes
 
 
-					every_sub_realm_county = {
+				add_character_flag = segrellion_beacon_final_judgment_pending
 
-						limit = {
 
-							OR = {
+				trigger_event = {
 
-								AND = {
-									empire = scope:target
-									holder = scope:target.holder
-								}
+					id = segrellion_winds.0404
 
-								scope:target.title_capital_county = this
-							}
-						}
-
-						add_to_list = target_titles
-					}
+					days = 1
 				}
 			}
 
 
-			# Transfer the conquered realm to Daemon using
-			# the vanilla adventurer-invasion machinery.
-			ep3_landless_invasion_titles_taken_effect = {
+			# =========================================================
+			# RESTORE THE FLAMELANDS WITHOUT DESTROYING ITS LORDS
+			#
+			# Daemon takes:
+			#
+			# - Paramountcy of the Flamelands
+			# - Kingdom/Lordship of the Flamelands
+			# - The Beacon
+			# - White Point / White Hall
+			# - Lion's Tail
+			#
+			# Existing landed lords otherwise remain landed and simply
+			# pass beneath the restored ruler.
+			# =========================================================
 
-				TITLE_GIVER = scope:defender
-				TITLE_RECEIVER = scope:attacker
-				TITLE = scope:target
-				TITLE_LIST = target_titles
+			create_title_and_vassal_change = {
+
+				type = conquest
+
+				save_scope_as = segrellion_flamelands_restoration_change
+
+				add_claim_on_loss = no
 			}
 
 
-			# The Beacon becomes Daemon's capital.
+			# =====================================================
+			# PARAMOUNTCY + EXISTING VASSALS
+			# =====================================================
+
+			title:e_flamelands = {
+
+				change_title_holder_include_vassals = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+
+					government_base = scope:defender
+				}
+			}
+
+
+			# =====================================================
+			# PRINCIPAL FLAMELANDS TITLE
+			# =====================================================
+
+			title:k_flamelands = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+				}
+			}
+
+
+			# =====================================================
+			# THE BEACON
+			# =====================================================
+
+			title:d_wendwater_forest = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+				}
+			}
+
+
 			title:c_farring_cross = {
-				save_temporary_scope_as = unicorn_returns_new_capital
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+				}
 			}
 
-			set_realm_capital = scope:unicorn_returns_new_capital
+
+			title:b_castle_farring = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+				}
+			}
 
 
-			# Daemon ceases to be a landless adventurer.
+			# =====================================================
+			# WHITE POINT / WHITE HALL
+			# =====================================================
+
+			title:c_winded_glade = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+				}
+			}
+
+
+			title:b_benthill_dale = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+				}
+			}
+
+
+			# =====================================================
+			# LION'S TAIL
+			#
+			# Current AGOT history in the mod identifies the Manning
+			# county here as c_stripeharbor.
+			# =====================================================
+
+			title:c_stripeharbor = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:segrellion_flamelands_restoration_change
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_flamelands_restoration_change
+
+
+			# =====================================================
+			# DAEMON'S CAPITAL
+			# =====================================================
+
+			set_realm_capital = title:c_farring_cross
+
 			ep3_become_landed_cleanup_effect = yes
+
+			# =====================================================
+			# POSTWAR POLITICAL SETTLEMENT
+			#
+			# Give the title transfer a moment to settle, then begin
+			# the Vhal and Massey's Hook reunification storylines.
+			# =====================================================
+
+			trigger_event = {
+
+				id = segrellion_support.4940
+
+				days = 2
+			}
+
 			segrellion_young_griff_after_unicorn_returns_effect = yes
 			
 		}
@@ -818,7 +952,7 @@ segrellion_stannis_northern_campaign_cb = {
 		# HOUSE GLOVER
 		# =====================================================
 
-		title:c_deepwood.holder ?= {
+		title:c_deepwood_motte.holder ?= {
 
 			if = {
 
