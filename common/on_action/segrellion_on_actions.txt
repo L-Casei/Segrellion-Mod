@@ -30,6 +30,7 @@ monthly_global_pulse = {
 		segrellion_daenerys_followers_progression
 		segrellion_young_griff_iron_throne_invasion_failsafe
 		segrellion_jon_resurrection_progression
+		segrellion_stannis_opening_recovery
 		segrellion_jon_body_in_ice_failsafe
 	}
 }
@@ -655,6 +656,19 @@ segrellion_on_game_start_after_lobby = {
 		segrellion_setup_young_griff_blackfyre_effect = yes
 		segrellion_form_deadly_triarchy_effect = yes
 
+		# Player ownership and game rules are only reliable after the
+		# lobby. Schedule Daenerys' opening route here, never at zero tick.
+		character:Targaryen_9 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					game_start_date = 8300.8.20
+				}
+
+				segrellion_initialize_daenerys_aggression_effect = yes
+			}
+		}
+
 		# ====================================================
 		# DAENERYS HISTORICAL FOLLOWERS
 		#
@@ -736,7 +750,29 @@ segrellion_stannis_opening_after_lobby = {
 
         segrellion_setup_ramsay_takeover_effect = yes
         segrellion_setup_stannis_northern_campaign_effect = yes
+		segrellion_schedule_stannis_opening_effect = yes
     }
+}
+
+
+# If a delayed opening is ever lost, retry after its short scheduling
+# guard expires. The political setup itself remains strictly one-shot.
+segrellion_stannis_opening_recovery = {
+
+	trigger = {
+		game_start_date = 8300.8.20
+
+		character:Baratheon_3 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_stannis_north_story_initialized
+			NOT = { has_character_flag = segrellion_stannis_opening_seen }
+			NOT = { has_character_flag = segrellion_stannis_northern_campaign_started }
+		}
+	}
+
+	effect = {
+		segrellion_schedule_stannis_opening_effect = yes
+	}
 }
 
 segrellion_intro_on_player_select_destiny_confirmed = {

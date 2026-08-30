@@ -284,6 +284,41 @@ segrellion_remove_stannis_pre_winterfell_modifiers_effect = {
 
 
 # =========================================================
+# STANNIS - SAFE OPENING SCHEDULER
+#
+# Political setup may run at zero tick, but visible events are queued
+# only after the lobby, when the game is ready to retain them.
+# =========================================================
+
+segrellion_schedule_stannis_opening_effect = {
+
+	character:Baratheon_3 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+				has_character_flag = segrellion_stannis_north_story_initialized
+				NOT = { has_character_flag = segrellion_stannis_opening_seen }
+				NOT = { has_character_flag = segrellion_stannis_opening_scheduled }
+				NOT = { has_character_flag = segrellion_stannis_northern_campaign_started }
+			}
+
+			add_character_flag = {
+				flag = segrellion_stannis_opening_scheduled
+				days = 45
+			}
+
+			trigger_event = {
+				id = segrellion_stannis.0090
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
 # 300 AC - STANNIS NORTHERN CAMPAIGN
 #
 # Ramsay's takeover has already been resolved separately.
@@ -439,16 +474,6 @@ segrellion_setup_stannis_northern_campaign_effect = {
 
 					modifier = segrellion_stannis_northern_story_ai_modifier
 				}
-			}
-
-
-			# =================================================
-			# STANNIS STARTUP ROUTER
-			# =================================================
-
-			trigger_event = {
-				id = segrellion_stannis.0090
-				days = 1
 			}
 		}
 	}
