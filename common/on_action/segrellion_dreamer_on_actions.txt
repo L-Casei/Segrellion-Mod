@@ -1,0 +1,130 @@
+# =========================================================
+# DREAMER FLAVOR ON ACTIONS
+# =========================================================
+
+
+yearly_global_pulse = {
+
+	on_actions = {
+
+		segrellion_dreamer_flavor_yearly_check
+	}
+}
+
+
+# =========================================================
+# DREAM FREQUENCY
+#
+# LEVEL 0: 45% yearly
+# LEVEL 1: 50% yearly
+# LEVEL 2: 55% yearly
+# LEVEL 3: 60% yearly
+#
+# Roughly around one dream every two years overall,
+# becoming gradually more frequent as Dreamer deepens.
+# =========================================================
+
+segrellion_dreamer_flavor_yearly_check = {
+
+	effect = {
+
+		every_player = {
+
+			limit = {
+
+				is_alive = yes
+				is_human = yes
+				is_adult = yes
+
+				has_trait = segrellion_dreamer_trait
+
+				NOT = {
+					has_trait = incapable
+				}
+
+				# Do not throw a random flavor dream into the
+				# middle of the Icebringer awakening chain.
+				NOT = {
+					has_character_flag = segrellion_icebringer_awakening_chain_active
+				}
+			}
+
+
+			# =================================================
+			# LEVEL 3
+			# =================================================
+
+			if = {
+				limit = {
+
+					has_trait_xp = {
+						trait = segrellion_dreamer_trait
+						value >= 50
+					}
+				}
+
+				random = {
+					chance = 60
+
+					segrellion_dreamer_flavor_pool_effect = yes
+				}
+			}
+
+
+			# =================================================
+			# LEVEL 2
+			# =================================================
+
+			else_if = {
+				limit = {
+
+					has_trait_xp = {
+						trait = segrellion_dreamer_trait
+						value >= 25
+					}
+				}
+
+				random = {
+					chance = 55
+
+					segrellion_dreamer_flavor_pool_effect = yes
+				}
+			}
+
+
+			# =================================================
+			# LEVEL 1
+			# =================================================
+
+			else_if = {
+				limit = {
+
+					has_trait_xp = {
+						trait = segrellion_dreamer_trait
+						value >= 10
+					}
+				}
+
+				random = {
+					chance = 50
+
+					segrellion_dreamer_flavor_pool_effect = yes
+				}
+			}
+
+
+			# =================================================
+			# LEVEL 0
+			# =================================================
+
+			else = {
+
+				random = {
+					chance = 45
+
+					segrellion_dreamer_flavor_pool_effect = yes
+				}
+			}
+		}
+	}
+}

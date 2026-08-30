@@ -1,9 +1,5 @@
 # =========================================================
 # DREAMER EXPERIENCE
-#
-# Every dream / vision grants exactly 1 XP.
-# If the character somehow reaches a Dreamer event without
-# the trait, the trait is granted automatically.
 # =========================================================
 
 segrellion_gain_dreamer_xp_effect = {
@@ -22,5 +18,141 @@ segrellion_gain_dreamer_xp_effect = {
 	add_trait_xp = {
 		trait = segrellion_dreamer_trait
 		value = 1
+	}
+}
+
+
+# =========================================================
+# DREAMER FLAVOR
+#
+# LEVEL 0
+# Small, strange, mostly harmless dreams.
+# =========================================================
+
+segrellion_dreamer_level_0_flavor_pool_effect = {
+
+	random_list = {
+
+		10 = {
+			trigger_event = segrellion_dreamer.0001
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0002
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0003
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0004
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0005
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0006
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0007
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0008
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0009
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0010
+		}
+	}
+}
+
+
+# =========================================================
+# DREAMER FLAVOR
+#
+# LEVEL 1+
+# Dreams begin to feel less random.
+# =========================================================
+
+segrellion_dreamer_level_1_plus_flavor_pool_effect = {
+
+	random_list = {
+
+		10 = {
+			trigger_event = segrellion_dreamer.0101
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0102
+		}
+
+		12 = {
+			trigger_event = segrellion_dreamer.0103
+		}
+
+		8 = {
+			trigger_event = segrellion_dreamer.0104
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0105
+		}
+
+		7 = {
+			trigger_event = segrellion_dreamer.0106
+		}
+
+		8 = {
+			trigger_event = segrellion_dreamer.0107
+		}
+
+		10 = {
+			trigger_event = segrellion_dreamer.0108
+		}
+
+		12 = {
+			trigger_event = segrellion_dreamer.0109
+		}
+	}
+}
+
+
+# =========================================================
+# DREAMER FLAVOR DISPATCHER
+#
+# Level 0 -> only small dreams.
+# Level 1+ -> medium dreams.
+#
+# Later:
+# Level 2 can mix Medium + Major.
+# Level 3 can mix Medium + Major + Prophetic.
+# =========================================================
+
+segrellion_dreamer_flavor_pool_effect = {
+
+	if = {
+		limit = {
+
+			has_trait_xp = {
+				trait = segrellion_dreamer_trait
+				value >= 10
+			}
+		}
+
+		segrellion_dreamer_level_1_plus_flavor_pool_effect = yes
+	}
+
+	else = {
+
+		segrellion_dreamer_level_0_flavor_pool_effect = yes
 	}
 }
