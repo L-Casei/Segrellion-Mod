@@ -76,7 +76,7 @@ segrellion_jon_resurrection.0001 = {
 
             id = segrellion_jon_resurrection.0010
 
-            days = { 7 21 }
+            days = { 5 10 }
         }
 
 
@@ -92,7 +92,12 @@ segrellion_jon_resurrection.0001 = {
 #
 # Jon is genuinely killed.
 #
-# From this point onward character:Stark_7 is DEAD.
+# This event is now THE canonical source of Jon's death
+# for the Segrellion 300 AC storyline.
+#
+# Before killing Jon, Melisandre is given a delayed hidden
+# router. Therefore the resurrection chain no longer
+# depends exclusively on title succession on_actions.
 # =========================================================
 
 segrellion_jon_resurrection.0010 = {
@@ -102,7 +107,7 @@ segrellion_jon_resurrection.0010 = {
     title = segrellion_jon_resurrection.0010.t
     desc = segrellion_jon_resurrection.0010.desc
 
-    theme = betrayal
+    theme = death
 
 
     override_background = {
@@ -126,6 +131,9 @@ segrellion_jon_resurrection.0010 = {
         has_character_flag = segrellion_jon_mutiny_pending
 
 
+        has_global_variable = segrellion_jon_resurrection_story_enabled
+
+
         NOT = {
             has_global_variable = segrellion_resurrected_jon
         }
@@ -135,13 +143,14 @@ segrellion_jon_resurrection.0010 = {
     immediate = {
 
         # =================================================
-        # CHOOSE ONE OF JON'S SWORN BROTHERS AS THE
-        # REPRESENTATIVE KILLER.
+        # FIND A REPRESENTATIVE MUTINEER
         #
-        # The event itself describes a group attack.
+        # Prefer a landed/member-of-the-Watch character.
+        # The actual event represents several brothers
+        # attacking Jon.
         # =================================================
 
-        random_courtier = {
+        ordered_vassal_or_below = {
 
             limit = {
 
@@ -153,8 +162,46 @@ segrellion_jon_resurrection.0010 = {
                 this != root
             }
 
+            order_by = intrigue
+
+            position = 0
+
+            check_range_bounds = no
 
             save_scope_as = jon_mutineer
+        }
+
+
+        if = {
+
+            limit = {
+
+                NOT = {
+                    exists = scope:jon_mutineer
+                }
+            }
+
+
+            ordered_courtier = {
+
+                limit = {
+
+                    is_alive = yes
+                    is_adult = yes
+
+                    has_trait = nightswatch
+
+                    this != root
+                }
+
+                order_by = intrigue
+
+                position = 0
+
+                check_range_bounds = no
+
+                save_scope_as = jon_mutineer
+            }
         }
     }
 
@@ -167,58 +214,204 @@ segrellion_jon_resurrection.0010 = {
     }
 
 
-    right_portrait = {
-
-        character = scope:jon_mutineer
-
-        animation = rage
-    }
-
-
     option = {
 
         name = segrellion_jon_resurrection.0010.a
 
 
-        hidden_effect = {
+        # =================================================
+        # MARK THE STORY BEFORE DEATH
+        # =================================================
 
-            # This distinguishes our scripted mutiny from
-            # any unrelated murder if we need it later.
-
-            add_character_flag = segrellion_jon_murdered_by_watch
-
-
-            if = {
-
-                limit = {
-                    exists = scope:jon_mutineer
-                }
+        add_character_flag = segrellion_jon_murdered_by_watch
 
 
-                death = {
+        set_global_variable = {
 
-                    death_reason = death_murder
+            name = segrellion_jon_resurrection_pending
 
-                    killer = scope:jon_mutineer
+            value = yes
+        }
 
-                    secret = no
-                }
+
+        # =================================================
+        # START THE RESURRECTION ROUTER BEFORE JON DIES
+        #
+        # Root of 0090 will be Melisandre, so Jon's death
+        # cannot invalidate the queued event.
+        # =================================================
+
+        character:Melisandre_1 ?= {
+
+            trigger_event = {
+
+                id = segrellion_jon_resurrection.0090
+
+                days = 2
+            }
+        }
+
+
+        # =================================================
+        # JON DIES
+        # =================================================
+
+        if = {
+
+            limit = {
+                exists = scope:jon_mutineer
             }
 
 
-            else = {
+            death = {
 
-                death = {
+                death_reason = death_murder
 
-                    death_reason = death_murder
-
-                    secret = no
-                }
+                killer = scope:jon_mutineer
             }
+        }
+
+
+        else = {
+
+            death = {
+
+                death_reason = death_murder
+            }
+        }
+
+
+        ai_chance = {
+            base = 100
         }
     }
 }
 
+
+
+# =========================================================
+# 0090 - RESURRECTION HANDOFF
+#
+# HIDDEN
+#
+# ROOT = Melisandre
+#
+# This event waits until CK3 has finished Night's Watch
+# succession and then gives the resurrection storyline
+# directly to the new Lord Commander.
+#
+# If succession has not resolved yet, it retries.
+# =========================================================
+
+segrellion_jon_resurrection.0090 = {
+
+    hidden = yes
+
+
+    trigger = {
+
+        this = character:Melisandre_1
+
+        is_alive = yes
+
+
+        character:Stark_7 = {
+
+            is_alive = no
+
+            has_character_flag = segrellion_jon_murdered_by_watch
+        }
+
+
+        has_global_variable = segrellion_jon_resurrection_pending
+
+
+        NOT = {
+            has_global_variable = segrellion_jon_resurrection_chain_handed_off
+        }
+
+
+        NOT = {
+            has_global_variable = segrellion_resurrected_jon
+        }
+    }
+
+
+    immediate = {
+
+        # =================================================
+        # A NEW LORD COMMANDER EXISTS
+        # =================================================
+
+        if = {
+
+            limit = {
+
+                title:k_the_wall = {
+                    exists = holder
+                }
+
+
+                title:k_the_wall.holder = {
+
+                    is_alive = yes
+
+                    this != character:Stark_7
+                }
+            }
+
+
+            title:k_the_wall.holder = {
+
+                add_character_flag = segrellion_jon_resurrection_chain_started
+
+
+                save_scope_as = resurrected_jon_lord_commander
+
+
+                trigger_event = {
+
+                    id = segrellion_jon_resurrection.0100
+
+                    days = 1
+                }
+            }
+
+
+            set_global_variable = {
+
+                name = segrellion_jon_resurrection_chain_handed_off
+
+                value = yes
+            }
+
+
+            set_global_variable = {
+
+                name = segrellion_jon_resurrection_lord_commander
+
+                value = scope:resurrected_jon_lord_commander
+            }
+        }
+
+
+        # =================================================
+        # SUCCESSION HAS NOT FINISHED
+        #
+        # Try again shortly.
+        # =================================================
+
+        else = {
+
+            trigger_event = {
+
+                id = segrellion_jon_resurrection.0090
+
+                days = 2
+            }
+        }
+    }
+}
 
 # =========================================================
 # 0100 - THE BODY IN THE ICE
@@ -247,7 +440,6 @@ segrellion_jon_resurrection.0100 = {
         reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
     }
 
-
     trigger = {
 
         this = title:k_the_wall.holder
@@ -255,8 +447,14 @@ segrellion_jon_resurrection.0100 = {
         is_alive = yes
 
 
+        has_character_flag = segrellion_jon_resurrection_chain_started
+
+
         character:Stark_7 = {
+
             is_alive = no
+
+            has_character_flag = segrellion_jon_murdered_by_watch
         }
 
 
@@ -266,6 +464,8 @@ segrellion_jon_resurrection.0100 = {
 
 
         has_global_variable = segrellion_jon_resurrection_story_enabled
+
+        has_global_variable = segrellion_jon_resurrection_pending
 
 
         NOT = {

@@ -29,6 +29,7 @@ monthly_global_pulse = {
 		segrellion_deadly_triarchy_progression
 		segrellion_daenerys_followers_progression
 		segrellion_young_griff_iron_throne_invasion_failsafe
+		segrellion_jon_resurrection_progression
 	}
 }
 
@@ -2211,11 +2212,12 @@ segrellion_stannis_iron_throne_war_setup = {
 }
 
 # =========================================================
-# JON SNOW - NIGHT'S WATCH SUCCESSION
+# JON SNOW - NIGHT'S WATCH SUCCESSION FAILSAFE
 #
-# root = new holder of k_the_wall
-# scope:title = k_the_wall
-# scope:previous_holder = dead Jon
+# Primary handoff:
+#   Melisandre -> 0090 -> new Lord Commander
+#
+# This on_action exists ONLY as a second safety net.
 # =========================================================
 
 segrellion_jon_watch_succession_resurrection_start = {
@@ -2231,31 +2233,22 @@ segrellion_jon_watch_succession_resurrection_start = {
 
             is_alive = no
 
-
-            OR = {
-
-                # Organic AGOT murder scheme.
-
-                death_reason = death_murder
-
-
-                # Our own canonical fallback mutiny.
-
-                has_character_flag = segrellion_jon_murdered_by_watch
-            }
+            has_character_flag = segrellion_jon_murdered_by_watch
         }
 
 
         has_global_variable = segrellion_jon_resurrection_story_enabled
 
+        has_global_variable = segrellion_jon_resurrection_pending
+
 
         NOT = {
-            has_global_variable = segrellion_resurrected_jon
+            has_global_variable = segrellion_jon_resurrection_chain_handed_off
         }
 
 
         NOT = {
-            has_character_flag = segrellion_jon_resurrection_chain_started
+            has_global_variable = segrellion_resurrected_jon
         }
     }
 
@@ -2273,11 +2266,139 @@ segrellion_jon_watch_succession_resurrection_start = {
         }
 
 
+        set_global_variable = {
+
+            name = segrellion_jon_resurrection_chain_handed_off
+
+            value = yes
+        }
+
+
         trigger_event = {
 
             id = segrellion_jon_resurrection.0100
 
-            days = { 2 5 }
+            days = 1
+        }
+    }
+}
+
+
+# =========================================================
+# JON SNOW - RESURRECTION FAILSAFE
+#
+# Guarantees two things:
+#
+# 1. If the scheduled mutiny event was lost during startup,
+#    Whispers in the Snow is rescheduled.
+#
+# 2. If the post-death handoff event was lost, Melisandre
+#    restarts it.
+# =========================================================
+
+segrellion_jon_resurrection_progression = {
+
+    effect = {
+
+        # =================================================
+        # JON IS STILL ALIVE
+        # =================================================
+
+        character:Stark_7 ?= {
+
+            if = {
+
+                limit = {
+
+                    game_start_date = 8300.8.20
+
+                    is_alive = yes
+
+                    has_title = title:k_the_wall
+
+
+                    has_global_variable = segrellion_jon_resurrection_story_enabled
+
+
+                    NOT = {
+                        has_global_variable = segrellion_resurrected_jon
+                    }
+
+
+                    NOT = {
+                        has_character_flag = segrellion_jon_mutiny_pending
+                    }
+
+
+                    NOT = {
+                        has_character_flag = segrellion_jon_mutiny_fallback_scheduled
+                    }
+                }
+
+
+                # Prevent another monthly duplicate while
+                # the replacement event is queued.
+
+                add_character_flag = {
+
+                    flag = segrellion_jon_mutiny_fallback_scheduled
+
+                    days = 30
+                }
+
+
+                trigger_event = {
+
+                    id = segrellion_jon_resurrection.0001
+
+                    days = 1
+                }
+            }
+        }
+
+
+        # =================================================
+        # JON IS DEAD BUT THE HANDOFF WAS LOST
+        # =================================================
+
+        character:Melisandre_1 ?= {
+
+            if = {
+
+                limit = {
+
+                    is_alive = yes
+
+
+                    character:Stark_7 = {
+
+                        is_alive = no
+
+                        has_character_flag = segrellion_jon_murdered_by_watch
+                    }
+
+
+                    has_global_variable = segrellion_jon_resurrection_pending
+
+
+                    NOT = {
+                        has_global_variable = segrellion_jon_resurrection_chain_handed_off
+                    }
+
+
+                    NOT = {
+                        has_global_variable = segrellion_resurrected_jon
+                    }
+                }
+
+
+                trigger_event = {
+
+                    id = segrellion_jon_resurrection.0090
+
+                    days = 1
+                }
+            }
         }
     }
 }

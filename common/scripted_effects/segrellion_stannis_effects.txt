@@ -5,14 +5,19 @@
 
 
 # =========================================================
-# 300 AC - JON SNOW RESURRECTION STORY
+# 300 AC - JON SNOW
+# FOR THE WATCH / RESURRECTION STORY
 #
-# Jon is NO LONGER protected from murder schemes.
+# Our own event chain is responsible for Jon's death.
 #
-# Organic AGOT murder schemes are allowed to kill him.
+# Normal timing:
+#   Whispers in the Snow = 35-50 days
+#   For the Watch        = +5-10 days
 #
-# If they fail to do so, a delayed canonical mutiny acts
-# as a fallback while Jon remains Lord Commander.
+# Jon therefore normally dies around 40-60 days after
+# the bookmark begins.
+#
+# A monthly failsafe exists separately.
 # =========================================================
 
 segrellion_setup_jon_resurrection_story_effect = {
@@ -29,10 +34,6 @@ segrellion_setup_jon_resurrection_story_effect = {
         }
 
 
-        # =================================================
-        # ENABLE THE STORY
-        # =================================================
-
         set_global_variable = {
             name = segrellion_jon_resurrection_story_enabled
             value = yes
@@ -41,9 +42,9 @@ segrellion_setup_jon_resurrection_story_effect = {
 
         character:Stark_7 = {
 
-            # ---------------------------------------------
-            # REMOVE OLD STORY PROTECTION
-            # ---------------------------------------------
+            # =================================================
+            # REMOVE THE OLD ARTIFICIAL PROTECTION
+            # =================================================
 
             if = {
 
@@ -58,19 +59,20 @@ segrellion_setup_jon_resurrection_story_effect = {
             remove_character_flag = segrellion_jon_northern_story_protected
 
 
-            # ---------------------------------------------
-            # FALLBACK MUTINY
+            # =================================================
+            # SCHEDULE OUR MUTINY
             #
-            # AGOT's normal murder schemes get several
-            # months to resolve naturally first.
-            #
-            # If Jon is still alive and Lord Commander,
-            # the canonical mutiny begins.
-            # ---------------------------------------------
+            # The temporary scheduling flag also allows the
+            # monthly failsafe to detect a lost event.
+            # =================================================
 
             if = {
 
                 limit = {
+
+                    NOT = {
+                        has_character_flag = segrellion_jon_mutiny_pending
+                    }
 
                     NOT = {
                         has_character_flag = segrellion_jon_mutiny_fallback_scheduled
@@ -78,19 +80,25 @@ segrellion_setup_jon_resurrection_story_effect = {
                 }
 
 
-                add_character_flag = segrellion_jon_mutiny_fallback_scheduled
+                add_character_flag = {
+
+                    flag = segrellion_jon_mutiny_fallback_scheduled
+
+                    days = 50
+                }
 
 
                 trigger_event = {
 
                     id = segrellion_jon_resurrection.0001
 
-                    days = { 240 360 }
+                    days = { 35 50 }
                 }
             }
         }
     }
 }
+
 
 
 # =========================================================
