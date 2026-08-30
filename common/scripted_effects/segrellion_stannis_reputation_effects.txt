@@ -1,0 +1,207 @@
+# =========================================================
+# STANNIS BARATHEON - THE ONE TRUE KING
+#
+# Root / this = Stannis Baratheon.
+#
+# The visible character modifier is deliberately flavor-only.
+# The real reputation correction is applied here as opinion
+# modifiers to characters who have a reason to respect Stannis
+# during the 300 AC Northern campaign.
+#
+# This is deliberately NOT a global opinion bonus:
+# - The current Lord Paramount of the North is excluded.
+# - The current Lord Paramount of the Stormlands is excluded.
+# - Lannisters and unrelated hostile courts are untouched.
+# =========================================================
+
+segrellion_apply_one_true_king_reputation_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Baratheon_3
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_one_true_king_reputation_applied
+			}
+		}
+
+
+		add_character_flag = segrellion_one_true_king_reputation_applied
+
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_character_modifier = segrellion_the_one_true_king_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_the_one_true_king_modifier
+			}
+		}
+
+
+		hidden_effect = {
+
+			# =================================================
+			# STANNIS' OWN SWORN MEN AND HOUSEHOLD
+			# =================================================
+
+			every_vassal_or_below = {
+
+				limit = {
+					is_alive = yes
+					is_adult = yes
+					this != root
+				}
+
+				add_opinion = {
+					target = root
+					modifier = segrellion_one_true_king_support_opinion
+				}
+			}
+
+
+			every_courtier = {
+
+				limit = {
+					is_alive = yes
+					is_adult = yes
+					this != root
+				}
+
+				add_opinion = {
+					target = root
+					modifier = segrellion_one_true_king_support_opinion
+				}
+			}
+
+
+			# =================================================
+			# THE NIGHT'S WATCH
+			# =================================================
+
+			title:k_the_wall.holder ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					add_opinion = {
+						target = root
+						modifier = segrellion_one_true_king_support_opinion
+					}
+
+
+					every_vassal_or_below = {
+
+						limit = {
+							is_alive = yes
+							is_adult = yes
+						}
+
+						add_opinion = {
+							target = root
+							modifier = segrellion_one_true_king_support_opinion
+						}
+					}
+
+
+					every_courtier = {
+
+						limit = {
+							is_alive = yes
+							is_adult = yes
+						}
+
+						add_opinion = {
+							target = root
+							modifier = segrellion_one_true_king_support_opinion
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# NORTHERN LORDS
+			#
+			# The holder himself is deliberately excluded.
+			# In the 300 AC setup this keeps Ramsay hostile while
+			# allowing the lords beneath him to judge Stannis more
+			# fairly despite his vanilla / AGOT trait penalties.
+			# =================================================
+
+			title:e_the_north.holder ?= {
+
+				every_vassal_or_below = {
+
+					limit = {
+						is_alive = yes
+						is_adult = yes
+					}
+
+					add_opinion = {
+						target = root
+						modifier = segrellion_one_true_king_support_opinion
+					}
+				}
+			}
+
+
+			# =================================================
+			# STORMLANDER LORDS
+			#
+			# The current Stormlands holder is deliberately excluded.
+			# In the 300 AC setup this means Young Griff receives no
+			# artificial sympathy while his Stormlander vassals may.
+			# =================================================
+
+			title:e_the_stormlands.holder ?= {
+
+				every_vassal_or_below = {
+
+					limit = {
+						is_alive = yes
+						is_adult = yes
+					}
+
+					add_opinion = {
+						target = root
+						modifier = segrellion_one_true_king_support_opinion
+					}
+				}
+			}
+
+
+			# =================================================
+			# JON SNOW
+			#
+			# Explicit fallback so Jon receives the reputation
+			# correction even if his title / court situation changes.
+			# =================================================
+
+			character:Stark_7 ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					add_opinion = {
+						target = root
+						modifier = segrellion_one_true_king_support_opinion
+					}
+				}
+			}
+		}
+	}
+}
