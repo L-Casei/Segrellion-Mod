@@ -430,29 +430,18 @@ segrellion_setup_stannis_northern_campaign_effect = {
 
 
 			# =================================================
-			# STANNIS OPENING EVENT
+			# STANNIS STARTUP ROUTER
 			#
-			# Five to ten days after game start. A temporary scheduling
-			# flag lets the monthly fallback retry if the queued event is
-			# ever lost during startup or save conversion.
-			#
-			# The opening event then hands control back to the
-			# existing Northern Campaign router.
+			# Preserve the original, proven startup order: first let CK3
+			# finish the zero-tick title and court recalculations, then let
+			# the hidden router launch the visible event chain.
 			# =================================================
-
-			add_character_flag = {
-
-				flag = segrellion_stannis_opening_scheduled
-
-				days = 30
-			}
-
 
 			trigger_event = {
 
-				id = segrellion_stannis.0000
+				id = segrellion_stannis.0090
 
-				days = { 5 10 }
+				days = 1
 			}
 		}
 	}
@@ -1504,7 +1493,7 @@ segrellion_stannis_try_become_landless_effect = {
 
 			create_title_and_vassal_change = {
 
-				type = abdication
+				type = granted
 
 				save_scope_as = segrellion_davos_abdication_change
 

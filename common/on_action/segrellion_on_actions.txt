@@ -29,7 +29,6 @@ monthly_global_pulse = {
 		segrellion_deadly_triarchy_progression
 		segrellion_daenerys_followers_progression
 		segrellion_young_griff_iron_throne_invasion_failsafe
-		segrellion_stannis_northern_campaign_progression
 	}
 }
 
@@ -633,12 +632,6 @@ segrellion_on_game_start_after_lobby = {
 	
 	effect = {
 
-		# Repeat the guarded Northern setup after the lobby. This
-		# avoids relying on the ordering of zero-tick title changes
-		# during on_game_start; both effects are idempotent.
-		segrellion_setup_ramsay_takeover_effect = yes
-		segrellion_setup_stannis_northern_campaign_effect = yes
-
 		segrellion_apply_later_canon_supplied_appearances_effect = yes
 		segrellion_setup_daenerys_dragons_300_effect = yes
 		segrellion_arianne_marriage_lock_effect = yes
@@ -700,80 +693,6 @@ segrellion_on_game_start_after_lobby = {
 				trigger_event = {
 					id = segrellion_intro.0001
 					days = 3
-				}
-			}
-		}
-	}
-}
-
-
-# =========================================================
-# STANNIS - NORTHERN CAMPAIGN STARTUP FALLBACK
-#
-# Rebuilds the guarded setup if startup ordering prevented it,
-# and reschedules 0000 if a queued opening event was lost.
-# =========================================================
-
-segrellion_stannis_northern_campaign_progression = {
-
-	trigger = {
-
-		game_start_date = 8300.8.20
-
-		character:Baratheon_3 ?= {
-
-			is_alive = yes
-
-			NOR = {
-				has_character_flag = segrellion_stannis_northern_campaign_started
-				has_character_flag = segrellion_stannis_northern_campaign_victory
-				has_character_flag = segrellion_stannis_northern_campaign_failed
-			}
-		}
-	}
-
-
-	effect = {
-
-		segrellion_setup_ramsay_takeover_effect = yes
-		segrellion_setup_stannis_northern_campaign_effect = yes
-
-
-		character:Baratheon_3 ?= {
-
-			if = {
-
-				limit = {
-
-					has_character_flag = segrellion_stannis_north_story_initialized
-
-					NOT = {
-						has_character_flag = segrellion_stannis_opening_seen
-					}
-
-					NOT = {
-						has_character_flag = segrellion_stannis_opening_scheduled
-					}
-
-					NOT = {
-						has_character_flag = segrellion_stannis_northern_campaign_committed
-					}
-				}
-
-
-				add_character_flag = {
-
-					flag = segrellion_stannis_opening_scheduled
-
-					days = 30
-				}
-
-
-				trigger_event = {
-
-					id = segrellion_stannis.0000
-
-					days = { 5 10 }
 				}
 			}
 		}

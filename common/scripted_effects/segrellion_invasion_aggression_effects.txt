@@ -97,6 +97,20 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 			add_character_flag = segrellion_daenerys_invasion_event_scheduled
 
+			# Keep AI Daenerys completely out of ordinary wars while her
+			# game-rule delay and scripted Westerosi invasion are pending.
+			# Claims alone are not sufficient because AGOT supplies other CBs.
+			if = {
+				limit = {
+					NOT = {
+						has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+					}
+				}
+				add_character_modifier = {
+					modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+				}
+			}
+
 
 			# ---------------------------------------------
 			# REMOVE MECHANICAL WESTEROSI CLAIMS
@@ -177,7 +191,8 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
-					days = { 3 7 }
+					# Default is intentionally two to five years.
+					days = { 730 1825 }
 				}
 			}
 
@@ -235,7 +250,7 @@ segrellion_daenerys_invasion_peace_guard_effect = {
 				is_alive = yes
 				is_ai = yes
 
-				has_character_flag = segrellion_daenerys_invasion_committed
+				has_character_flag = segrellion_daenerys_invasion_event_scheduled
 
 				NOT = {
 					has_character_flag = segrellion_daenerys_landed_in_westeros
