@@ -30,7 +30,6 @@ monthly_global_pulse = {
 		segrellion_daenerys_followers_progression
 		segrellion_young_griff_iron_throne_invasion_failsafe
 		segrellion_jon_resurrection_progression
-		segrellion_stannis_opening_recovery
 		segrellion_jon_body_in_ice_failsafe
 	}
 }
@@ -724,56 +723,20 @@ segrellion_on_game_start_after_lobby = {
 
 segrellion_stannis_opening_after_lobby = {
 
-	trigger = {
+    trigger = {
 
-		game_start_date = 8300.8.20
+        game_start_date = 8300.8.20
 
-		character:Baratheon_3 ?= {
-			is_alive = yes
-		}
-	}
+        character:Baratheon_3 ?= {
+            is_alive = yes
+        }
+    }
 
+    effect = {
 
-	effect = {
-
-		# These setup effects are guarded and only repair a setup that
-		# genuinely failed before the lobby finished loading.
-		segrellion_setup_ramsay_takeover_effect = yes
-		segrellion_setup_stannis_northern_campaign_effect = yes
-
-		segrellion_schedule_stannis_opening_effect = yes
-	}
-}
-
-
-# Save-compatible recovery only. It never repeats Ramsay's takeover or
-# Stannis' political setup; it solely restores a lost opening event.
-segrellion_stannis_opening_recovery = {
-
-	trigger = {
-
-		game_start_date = 8300.8.20
-
-		character:Baratheon_3 ?= {
-
-			is_alive = yes
-
-			has_character_flag = segrellion_stannis_north_story_initialized
-
-			NOT = {
-				has_character_flag = segrellion_stannis_opening_seen
-			}
-
-			NOT = {
-				has_character_flag = segrellion_stannis_northern_campaign_started
-			}
-		}
-	}
-
-
-	effect = {
-		segrellion_schedule_stannis_opening_effect = yes
-	}
+        segrellion_setup_ramsay_takeover_effect = yes
+        segrellion_setup_stannis_northern_campaign_effect = yes
+    }
 }
 
 segrellion_intro_on_player_select_destiny_confirmed = {

@@ -284,58 +284,6 @@ segrellion_remove_stannis_pre_winterfell_modifiers_effect = {
 
 
 # =========================================================
-# STANNIS - SAFE OPENING SCHEDULER
-#
-# The visible chain must not be queued during zero-tick title
-# changes. This guarded effect is called after the lobby and
-# by a minimal monthly recovery pulse for old/broken saves.
-# =========================================================
-
-segrellion_schedule_stannis_opening_effect = {
-
-	character:Baratheon_3 ?= {
-
-		if = {
-
-			limit = {
-
-				is_alive = yes
-
-				has_character_flag = segrellion_stannis_north_story_initialized
-
-				NOT = {
-					has_character_flag = segrellion_stannis_opening_seen
-				}
-
-				NOT = {
-					has_character_flag = segrellion_stannis_opening_scheduled
-				}
-
-				NOT = {
-					has_character_flag = segrellion_stannis_northern_campaign_started
-				}
-			}
-
-
-			add_character_flag = {
-
-				flag = segrellion_stannis_opening_scheduled
-
-				days = 45
-			}
-
-
-			trigger_event = {
-
-				id = segrellion_stannis.0090
-				
-			}
-		}
-	}
-}
-
-
-# =========================================================
 # 300 AC - STANNIS NORTHERN CAMPAIGN
 #
 # Ramsay's takeover has already been resolved separately.
@@ -494,9 +442,14 @@ segrellion_setup_stannis_northern_campaign_effect = {
 			}
 
 
-			# The opening is deliberately scheduled after the lobby by
-			# segrellion_schedule_stannis_opening_effect. Queuing it here,
-			# amid zero-tick title changes, intermittently loses the event.
+			# =================================================
+			# STANNIS STARTUP ROUTER
+			# =================================================
+
+			trigger_event = {
+				id = segrellion_stannis.0090
+				days = 1
+			}
 		}
 	}
 }
