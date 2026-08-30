@@ -1,0 +1,579 @@
+segrellion_proclaim_lordship_of_vhalerion_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_proclaim_lordship_of_vhalerion_decision_desc
+	selection_tooltip = segrellion_proclaim_lordship_of_vhalerion_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		has_title = title:c_blackmark
+		NOT = { has_title = title:d_vhalerion }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		gold >= 300
+		prestige >= 500
+		prestige_level >= 2
+		completely_controls = title:c_blackmark
+		title:c_blackmark = { holder = root }
+		title:b_berryport = { holder = root }
+		OR = {
+			title:d_dragonstone.holder = {
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+			title:d_driftmark.holder = {
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = segrellion_proclaim_lordship_effect_tt
+		trigger_event = segrellion_decision.0001
+	}
+
+	cost = {
+		gold = 300
+		prestige = 500
+	}
+
+	ai_check_interval = 120
+
+	ai_potential = {
+		dynasty = dynasty:dynn_Segrellion
+	}
+
+	ai_will_do = {
+		base = 25
+	}
+}
+
+segrellion_forge_the_flamelands_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/forge_the_flamelands_decision_background.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_forge_the_flamelands_decision_desc
+	selection_tooltip = segrellion_forge_the_flamelands_decision_tooltip
+
+	is_shown = {
+
+		dynasty = dynasty:dynn_Segrellion
+
+		# The Kingdom of the Flamelands must not already exist.
+		title:k_flamelands = {
+			NOT = {
+				exists = holder
+			}
+		}
+
+		# Nor can the later Paramountcy already exist.
+		title:e_flamelands = {
+			NOT = {
+				exists = holder
+			}
+		}
+
+		NOT = {
+			has_global_variable = segrellion_flamelands_founded
+		}
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		custom_description = {
+			text = segrellion_flamelands_has_vhal_tt
+			segrellion_holds_vhal_trigger = yes
+		}
+		OR = {
+			custom_description = {
+				text = segrellion_flamelands_control_half_hook_tt
+				title:k_the_hook = {
+					any_de_jure_county = {
+						count >= 8
+						holder.top_liege = root
+					}
+				}
+			}
+			custom_description = {
+				text = segrellion_flamelands_has_four_hook_vassals_tt
+				any_vassal = {
+					count >= 4
+					any_realm_county = {
+						de_jure_liege.de_jure_liege = title:k_the_hook
+					}
+				}
+			}
+		}
+		custom_description = {
+			text = segrellion_flamelands_has_founding_relic_tt
+			segrellion_has_founding_relic_trigger = yes
+		}
+		gold >= 500
+		prestige_level >= 3
+		piety_level >= 2
+		OR = {
+			custom_description = {
+				text = segrellion_flamelands_follows_fourteen_flames_tt
+				faith = { has_doctrine = special_doctrine_agot_is_flames_faith }
+			}
+			custom_description = {
+				text = segrellion_flamelands_iron_throne_opinion_tt
+				AND = {
+					title:h_the_iron_throne = { exists = holder }
+					title:h_the_iron_throne.holder = {
+						opinion = {
+							target = root
+							value >= 75
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = segrellion_forge_flamelands_effect_tt
+		trigger_event = segrellion_decision.0002
+	}
+
+	cost = {
+		gold = 500
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_establish_the_beacon_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_establish_the_beacon_decision_desc
+	selection_tooltip = segrellion_establish_the_beacon_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		has_global_variable = segrellion_flamelands_founded
+		NOT = { has_character_flag = segrellion_established_the_beacon }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		has_title = title:k_flamelands
+		has_title = title:c_farring_cross
+		title:b_castle_farring = { holder = root }
+		prestige_level >= 3
+		sub_realm_size >= 10
+		gold >= 1000
+		prestige >= 500
+	}
+
+	effect = {
+		custom_tooltip = segrellion_establish_beacon_effect_tt
+		trigger_event = segrellion_decision.0004
+	}
+
+	cost = {
+		gold = 1000
+		prestige = 500
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_proclaim_paramountcy_of_the_flamelands_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/proclaim_paramountcy_of_the_flamelands_decision_background.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_proclaim_paramountcy_of_the_flamelands_decision_desc
+	selection_tooltip = segrellion_proclaim_paramountcy_of_the_flamelands_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		has_title = title:k_flamelands
+		title:k_flamelands = { holder = root }
+		NOT = { has_title = title:e_flamelands }
+		title:e_flamelands = { NOT = { exists = holder } }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		has_title = title:k_flamelands
+		gold >= 1000
+		prestige >= 2000
+		piety >= 500
+		custom_description = {
+			text = segrellion_paramountcy_flamelands_50_years_tt
+			title:k_flamelands = {
+				NOT = { has_variable = segrellion_flamelands_less_than_50_years_old }
+			}
+		}
+		custom_description = {
+			text = segrellion_paramountcy_beacon_established_tt
+			has_character_flag = segrellion_established_the_beacon
+		}
+		custom_description = {
+			text = segrellion_paramountcy_owns_beacon_tt
+			title:b_castle_farring = { holder = root }
+		}
+		OR = {
+			AND = {
+				prestige_level >= 4
+				piety_level >= 4
+			}
+			custom_description = {
+				text = segrellion_paramountcy_realm_size_tt
+				sub_realm_size >= 30
+			}
+		}
+		custom_description = {
+			text = segrellion_paramountcy_iron_throne_opinion_tt
+			title:h_the_iron_throne = { exists = holder }
+			title:h_the_iron_throne.holder = {
+				opinion = {
+					target = root
+					value >= 100
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = segrellion_proclaim_paramountcy_effect_tt
+		trigger_event = segrellion_decision.0006
+	}
+
+	cost = {
+		gold = 1000
+		prestige = 2000
+		piety = 500
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+segrellion_claim_the_iron_throne_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_claim_iron_throne.dds"
+	}
+	decision_group_type = major
+
+	desc = segrellion_claim_the_iron_throne_decision_desc
+	selection_tooltip = segrellion_claim_the_iron_throne_decision_tooltip
+
+	is_shown = {
+		dynasty = dynasty:dynn_Segrellion
+		NOT = { has_title = title:h_the_iron_throne }
+		NOT = { has_character_flag = segrellion_claimed_iron_throne_right }
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_adult = yes
+		prestige >= 3000
+		custom_description = {
+			text = segrellion_claim_three_dragonriders_tt
+			segrellion_house_has_three_active_dragonriders_trigger = yes
+		}
+		custom_description = {
+			text = segrellion_claim_no_iron_throne_claim_tt
+			NOT = { has_claim_on = title:h_the_iron_throne }
+		}
+		custom_description = {
+			text = segrellion_claim_iron_throne_exists_tt
+			title:h_the_iron_throne = {
+				exists = holder
+			}
+		}
+		OR = {
+			has_title = title:k_flamelands
+			AND = {
+				has_title = title:d_vhalerion
+				custom_description = {
+					text = segrellion_claim_has_kingdom_or_higher_tt
+					highest_held_title_tier >= tier_kingdom
+				}
+				custom_description = {
+					text = segrellion_claim_has_10000_soldiers_tt
+					current_military_strength >= 10000
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = segrellion_claim_iron_throne_effect_tt
+		trigger_event = segrellion_decision.0005
+	}
+
+	cost = {
+		prestige = 3000
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+# =========================================================
+# ESTABLISH THE GREATER FLAMELANDS
+# =========================================================
+
+segrellion_establish_greater_flamelands_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/proclaim_paramountcy_of_the_flamelands_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_establish_greater_flamelands_decision_desc
+	selection_tooltip = segrellion_establish_greater_flamelands_decision_tooltip
+	confirm_text = segrellion_establish_greater_flamelands_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		# Available to anyone who holds the Paramountcy.
+		has_title = title:e_flamelands
+
+		# Can only ever be established once.
+		title:e_flamelands = {
+			NOT = {
+				has_variable = segrellion_greater_flamelands_established
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+
+		# -------------------------------------------------
+		# TERRITORIAL POWER
+		#
+		# EITHER:
+		#   Dragonstone + The Claw + Flamelands
+		#
+		# OR:
+		#   Paramountcy of the Flamelands
+		#   + Dragonstone OR The Claw
+		# -------------------------------------------------
+
+		OR = {
+
+			AND = {
+
+				custom_description = {
+					text = segrellion_greater_flamelands_dragonstone_requirement_tt
+					has_title = title:k_dragonstone
+				}
+
+				custom_description = {
+					text = segrellion_greater_flamelands_claw_requirement_tt
+					has_title = title:k_the_hook
+				}
+
+				custom_description = {
+					text = segrellion_greater_flamelands_flamelands_requirement_tt
+					has_title = title:k_flamelands
+				}
+			}
+
+
+			AND = {
+
+				custom_description = {
+					text = segrellion_greater_flamelands_paramountcy_requirement_tt
+					has_title = title:e_flamelands
+				}
+
+				OR = {
+
+					custom_description = {
+						text = segrellion_greater_flamelands_dragonstone_requirement_tt
+						has_title = title:k_dragonstone
+					}
+
+					custom_description = {
+						text = segrellion_greater_flamelands_claw_requirement_tt
+						has_title = title:k_the_hook
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# EXALTED AMONGST MEN
+		# -------------------------------------------------
+
+		prestige_level >= 4
+
+
+		# -------------------------------------------------
+		# IRON THRONE APPROVAL OR INDEPENDENCE
+		# -------------------------------------------------
+
+		OR = {
+
+			is_independent_ruler = yes
+
+			custom_description = {
+				text = segrellion_greater_flamelands_iron_throne_opinion_tt
+
+				AND = {
+
+					title:h_the_iron_throne = {
+						exists = holder
+					}
+
+					title:h_the_iron_throne.holder = {
+						opinion = {
+							target = root
+							value >= 100
+						}
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# PRESTIGE COST
+		# -------------------------------------------------
+
+		prestige >= 2500
+	}
+
+
+	# =====================================================
+	# EFFECTS
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_establish_greater_flamelands_effect_tt
+
+		hidden_effect = {
+
+			# ---------------------------------------------
+			# GREAT FOUNDER
+			# Permanent character modifier.
+			# ---------------------------------------------
+
+			add_character_modifier = {
+				modifier = segrellion_great_founder_modifier
+			}
+
+
+			# ---------------------------------------------
+			# MAXIMUM LEGITIMACY
+			# Only attempt this on characters with a valid
+			# legitimacy type.
+			# ---------------------------------------------
+
+			if = {
+				limit = {
+					has_legitimacy = yes
+				}
+
+				add_legitimacy = 1500
+			}
+
+
+			# ---------------------------------------------
+			# EXALTED AMONGST MEN -> LIVING LEGEND
+			#
+			# If already Living Legend, do nothing.
+			# ---------------------------------------------
+
+			if = {
+				limit = {
+					prestige_level = 4
+				}
+
+				add_prestige_level = 1
+			}
+
+
+			# ---------------------------------------------
+			# CROWN OF THE FLAMEKING
+			# ---------------------------------------------
+
+			segrellion_create_artifact_crown_of_the_flameking_effect = {
+				OWNER = this
+			}
+
+
+			# ---------------------------------------------
+			# THE GREATER FLAMELANDS NOW EXIST
+			# ---------------------------------------------
+
+			title:e_flamelands = {
+				set_variable = {
+					name = segrellion_greater_flamelands_established
+					value = yes
+				}
+			}
+		}
+	}
+
+	trigger_event = {
+		id = segrellion_decision.0007
+	}
+
+
+	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+		prestige = 2500
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+

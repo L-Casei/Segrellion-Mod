@@ -1,0 +1,360 @@
+segrellion_attempt_to_awaken_icebringer_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/awaken_icebringer_decision_background.dds"
+	}
+
+	desc = segrellion_attempt_to_awaken_icebringer_decision_desc
+	selection_tooltip = segrellion_attempt_to_awaken_icebringer_decision_tooltip
+
+
+		# =========================================================
+		# VISIBILITY
+		#
+		# If you do not personally possess Icebringer,
+		# the decision does not exist for you.
+		# =========================================================
+
+		is_shown = {
+			OR = {
+				debug_only = yes
+
+				AND = {
+
+					any_character_artifact = {
+						has_variable = segrellion_icebringer_artifact
+					}
+
+					NOT = {
+						has_global_variable = segrellion_icebringer_has_awakened
+					}
+
+					NOT = {
+						has_character_flag = segrellion_icebringer_awakening_chain_active
+					}
+
+					NOT = {
+						has_character_flag = segrellion_icebringer_awakening_succeeded
+					}
+					NOT = {
+						has_character_flag = segrellion_icebringer_awaken_path_closed
+					}
+					NOT = {
+						has_character_flag = segrellion_icebringer_stage5_entry_reached
+					}
+				}
+			}
+		}
+
+
+		# =========================================================
+		# ONLY REQUIREMENTS
+		# =========================================================
+
+		is_valid = {
+
+			OR = {
+				debug_only = yes
+
+				AND = {
+					is_adult = yes
+
+					custom_description = {
+						text = segrellion_icebringer_equipped_tt
+
+						hidden_trigger = {
+							any_equipped_character_artifact = {
+								has_variable = segrellion_icebringer_artifact
+							}
+						}
+					}
+
+					NOT = {
+						has_character_flag = segrellion_icebringer_decision_cooldown
+					}
+				}
+			}
+
+			# ---------------------------------------------------------
+			# YOU PERSONALLY HOLD ICEBRINGER
+			# ---------------------------------------------------------
+
+			custom_description = {
+				text = segrellion_icebringer_holder_requirement
+
+				global_var:segrellion_icebringer = {
+					artifact_owner = root
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# ICEBRINGER HAS CHOSEN YOU
+			# ---------------------------------------------------------
+
+			custom_description = {
+				text = segrellion_icebringer_chosen_desc
+				segrellion_icebringer_chosen_trigger = yes
+			}
+		}
+
+
+		effect = {
+
+			add_character_flag = {
+				flag = segrellion_icebringer_decision_cooldown
+				years = 1
+			}
+
+			# =========================================================
+			# WARNING
+			# =========================================================
+
+			custom_tooltip = segrellion_awaken_icebringer_danger_tt
+
+
+			# =========================================================
+			# CROSS THE WAKING VEIL
+			# =========================================================
+
+			add_character_modifier = {
+				modifier = segrellion_beyond_waking_veil_modifier
+				days = 30
+			}
+
+
+			# =========================================================
+			# BEGIN / RESUME AWAKENING V2
+			# =========================================================
+
+			add_character_flag = segrellion_icebringer_awakening_chain_active
+
+
+			# =========================================================
+			# RESUME AWAKENING
+			#
+			# Route locks always take priority.
+			# =========================================================
+
+
+			# ---------------------------------------------------------
+			# STAGE IV - GUARDIAN
+			# ---------------------------------------------------------
+
+			if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_stage4_guardian_locked
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.7000
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE IV - AZOR AHAI
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_stage4_azor_locked
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.7100
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE IV - DARKNESS
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_stage4_darkness_locked
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.7200
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# LEGACY / SAFETY REPAIR
+			#
+			# A save from the old system might have Stage III passed
+			# without possessing one of the new route locks.
+			#
+			# Send that character back to Stage III.
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_v2_stage_three_passed
+				}
+
+				remove_character_flag = segrellion_icebringer_v2_stage_three_passed
+
+				trigger_event = {
+					id = segrellion_icebringer.6500
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE II COMPLETED
+			# Resume Stage III
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_v2_stage_two_passed
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.6500
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# STAGE I COMPLETED
+			# Resume Stage II
+			# ---------------------------------------------------------
+
+			else_if = {
+				limit = {
+					has_character_flag = segrellion_icebringer_v2_stage_one_passed
+				}
+
+				trigger_event = {
+					id = segrellion_icebringer.6400
+					days = 1
+				}
+			}
+
+
+			# ---------------------------------------------------------
+			# NO PROGRESS
+			# Begin Stage I
+			# ---------------------------------------------------------
+
+			else = {
+
+				trigger_event = {
+					id = segrellion_icebringer.6000
+					days = 1
+				}
+			}
+		}
+
+
+		ai_check_interval = 0
+
+		ai_potential = {
+			always = no
+		}
+
+		ai_will_do = {
+			base = 0
+		
+		}
+}
+
+
+# =========================================================
+# PERFECT MY SKILL WITH ICEBRINGER
+# =========================================================
+
+segrellion_master_icebringer_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/master_icebringer_decision_background.dds"
+	}
+
+	desc = segrellion_master_icebringer_decision_desc
+	selection_tooltip = segrellion_master_icebringer_decision_tooltip
+
+	confirm_text = segrellion_master_icebringer_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+		has_trait = segrellion_icebringer_bearer_trait
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		custom_description = {
+			text = segrellion_master_icebringer_adult_tt
+			is_adult = yes
+		}
+
+		custom_description = {
+			text = segrellion_master_icebringer_not_imprisoned_tt
+			is_imprisoned = no
+		}
+
+		custom_description = {
+			text = segrellion_master_icebringer_equipped_tt
+
+			any_equipped_character_artifact = {
+				has_variable = segrellion_icebringer_artifact
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_master_icebringer_effect_tt
+
+		trigger_event = {
+			id = segrellion_icebringer.8500
+		}
+	}
+
+
+	# =====================================================
+	# SIX MONTH COOLDOWN
+	# =====================================================
+
+	cooldown = {
+		months = 6
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+

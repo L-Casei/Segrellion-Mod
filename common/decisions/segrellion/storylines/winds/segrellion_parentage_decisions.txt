@@ -1,0 +1,273 @@
+# =========================================================
+# EXPOSE DAEMON'S TRUE PARENTAGE
+# HUGH SEGRELLION -> DAEMON SEGRELLION
+#
+# This is only an entry point.
+# AGOT handles the actual parentage-reveal chain through
+# agot_events_bastard.0900 and its downstream events.
+# =========================================================
+
+segrellion_reveal_daemon_truth_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+
+	decision_group_type = major
+	sort_order = 150
+
+	desc = segrellion_reveal_daemon_truth_decision_desc
+	selection_tooltip = segrellion_reveal_daemon_truth_decision_tooltip
+	confirm_text = segrellion_reveal_daemon_truth_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Segrellion_43
+
+		has_character_flag = segrellion_hugh_withholding_daemon_parentage
+
+		# If Hugh previously opened AGOT's reveal chain and
+		# backed out in .0903.c, AGOT removes this flag again.
+		NOT = {
+			has_character_flag = told_true_parentage
+		}
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+			is_adult = yes
+
+			real_paternal_held_iron_throne_claim = yes
+
+			NOT = {
+				has_character_flag = awaiting_bastardry_result
+			}
+		}
+
+		any_known_secret = {
+
+			secret_type = secret_agot_disputed_heritage
+
+			secret_target = {
+				this = character:Segrellion_60
+			}
+
+			can_be_exposed_by = root
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+
+		any_known_secret = {
+
+			secret_type = secret_agot_disputed_heritage
+
+			secret_target = {
+
+				this = character:Segrellion_60
+				is_alive = yes
+				is_adult = yes
+
+				real_paternal_held_iron_throne_claim = yes
+
+				NOT = {
+					has_character_flag = awaiting_bastardry_result
+				}
+			}
+
+			can_be_exposed_by = root
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	#
+	# Feed AGOT exactly the scope expected by .0900.
+	# =====================================================
+
+	effect = {
+
+		random_known_secret = {
+
+			limit = {
+
+				secret_type = secret_agot_disputed_heritage
+
+				secret_target = {
+
+					this = character:Segrellion_60
+
+					is_adult = yes
+					real_paternal_held_iron_throne_claim = yes
+
+					NOT = {
+						has_character_flag = awaiting_bastardry_result
+					}
+				}
+
+				can_be_exposed_by = root
+			}
+
+			save_scope_as = heritage_secret
+		}
+
+
+		# AGOT uses this state throughout the "tell them"
+		# flow. If Hugh chooses .0903.c ("I shall not"),
+		# AGOT removes the flag itself, allowing him to
+		# reconsider later.
+
+		add_character_flag = told_true_parentage
+
+
+		# Native AGOT handler:
+		#
+		# parent   -> .0901
+		# employer -> .0912
+		# other    -> .0903
+		#
+		# Hugh is normally the generic non-parent branch.
+
+		trigger_event = agot_events_bastard.0900
+	}
+
+
+	# AI Hugh is controlled exclusively by .0005.
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+# =========================================================
+# EXPOSE MY TRUE PARENTAGE
+# DAEMON SEGRELLION
+#
+# Thin compatibility entry point into AGOT's native
+# royal-bastard public-revelation handler.
+#
+# The self-reveal pattern follows the same scope contract
+# used by agot_events_bastard.0920:
+#
+#   heritage_secret
+#   revealer = self
+#   -> agot_events_bastard.0950
+# =========================================================
+
+segrellion_expose_my_true_parentage_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+
+	decision_group_type = major
+
+	sort_order = 151
+
+	desc = segrellion_expose_my_true_parentage_decision_desc
+
+	selection_tooltip = segrellion_expose_my_true_parentage_decision_tooltip
+
+	confirm_text = segrellion_expose_my_true_parentage_decision_confirm
+
+
+	is_shown = {
+
+		this = character:Segrellion_60
+
+		is_adult = yes
+		is_ruler = yes
+
+		knows_self_royal_bastard_secret = yes
+
+		any_known_secret = {
+
+			secret_type = secret_agot_disputed_heritage
+
+			secret_target = {
+
+				this = root
+
+				real_paternal_held_iron_throne_claim = yes
+			}
+
+			can_be_exposed_by = root
+		}
+	}
+
+
+	is_valid = {
+
+		is_adult = yes
+		is_ruler = yes
+
+		real_paternal_held_iron_throne_claim = yes
+
+		knows_self_royal_bastard_secret = yes
+
+		any_known_secret = {
+
+			secret_type = secret_agot_disputed_heritage
+
+			secret_target = {
+				this = root
+			}
+
+			can_be_exposed_by = root
+		}
+	}
+
+
+	effect = {
+
+		random_known_secret = {
+
+			limit = {
+
+				secret_type = secret_agot_disputed_heritage
+
+				secret_target = {
+					this = root
+					real_paternal_held_iron_throne_claim = yes
+				}
+
+				can_be_exposed_by = root
+			}
+
+			save_scope_as = heritage_secret
+		}
+
+
+		save_scope_as = revealer
+
+		trigger_event = {
+			id = agot_events_bastard.0950
+			days = { 7 14 }
+		}
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

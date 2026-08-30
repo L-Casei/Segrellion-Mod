@@ -1,0 +1,422 @@
+# =========================================================
+# SEARCH FOR A LEGENDARY RELIC
+# =========================================================
+
+segrellion_search_for_legendary_relic_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_search_legendary_relic_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_search_for_legendary_relic_decision_desc
+	selection_tooltip = segrellion_search_for_legendary_relic_decision_tooltip
+	confirm_text = segrellion_search_for_legendary_relic_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		OR = {
+
+			# -------------------------------------------------
+			# DEBUG MODE
+			#
+			# Always visible. Ignores date, Icebringer,
+			# knowledge and active-search state.
+			# -------------------------------------------------
+
+			debug_only = yes
+
+
+			# -------------------------------------------------
+			# NORMAL GAME
+			# -------------------------------------------------
+
+			AND = {
+
+				is_adult = yes
+
+				segrellion_can_search_legendary_relic_trigger = yes
+
+				# Not before 196 AC.
+				current_date >= 8196.1.1
+
+				# The actual artifact must be lost.
+				NOT = {
+					segrellion_icebringer_exists_anywhere_trigger = yes
+				}
+
+				# Cannot start another search while one is active.
+				NOT = {
+					has_character_flag = segrellion_legendary_relic_search_active
+				}
+			}
+		}
+	}
+
+
+		# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		OR = {
+
+			# DEBUG MODE:
+			# usable regardless of normal requirements.
+			debug_only = yes
+
+
+			# NORMAL GAME
+			AND = {
+
+				is_imprisoned = no
+
+				NOT = {
+					has_trait = incapable
+				}
+
+				custom_description = {
+					text = segrellion_search_relic_knowledge_requirement
+
+					segrellion_can_search_legendary_relic_trigger = yes
+				}
+
+				custom_description = {
+					text = segrellion_search_relic_icebringer_lost_requirement
+
+					NOT = {
+						segrellion_icebringer_exists_anywhere_trigger = yes
+					}
+				}
+
+				custom_description = {
+					text = segrellion_search_relic_cooldown_requirement
+
+					NOT = {
+						has_character_flag = segrellion_legendary_relic_search_cooldown
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CHOOSE THE FIRST TRAIL
+	# =====================================================
+
+	widget = {
+		gui = "decision_view_widget_option_list_generic"
+		controller = decision_option_list_controller
+		decision_to_second_step_button = "segrellion_search_for_legendary_relic_decision_next_step"
+
+
+		# =====================================================
+		# TYROSH
+		# =====================================================
+
+		item = {
+			value = segrellion_relic_choice_tyrosh
+
+			current_description = segrellion_relic_choice_tyrosh_desc
+			localization = segrellion_relic_choice_tyrosh
+
+			icon = "gfx/interface/icons/message_feed/intrigue.dds"
+
+			is_valid = {
+				always = yes
+			}
+
+			ai_chance = {
+				value = 30
+			}
+		}
+
+
+		# =====================================================
+		# OLDTOWN
+		# =====================================================
+
+		item = {
+			value = segrellion_relic_choice_oldtown
+
+			current_description = segrellion_relic_choice_oldtown_desc
+			localization = segrellion_relic_choice_oldtown
+
+			icon = "gfx/interface/icons/message_feed/learning.dds"
+
+			is_valid = {
+				always = yes
+			}
+
+			ai_chance = {
+				value = 30
+			}
+		}
+
+
+		# =====================================================
+		# WINTERFELL
+		# =====================================================
+
+		item = {
+			value = segrellion_relic_choice_winterfell
+
+			current_description = segrellion_relic_choice_winterfell_desc
+			localization = segrellion_relic_choice_winterfell
+
+			icon = "gfx/interface/icons/message_feed/martial.dds"
+
+			is_valid = {
+				always = yes
+			}
+
+			ai_chance = {
+				value = 40
+			}
+		}
+	}
+
+
+	# =====================================================
+	# BEGIN SEARCH
+	# =====================================================
+
+	effect = {
+
+		# Displayed as an actual effect before the cooldown notice.
+		custom_tooltip = segrellion_search_relic_multiple_journeys_effect_tt
+
+		# =====================================================
+		# DEBUG CLEANUP
+		#
+		# Allows restarting a broken search from scratch.
+		# =====================================================
+
+		if = {
+
+			limit = {
+				debug_only = yes
+			}
+
+			remove_character_flag = segrellion_legendary_relic_search_active
+			remove_character_flag = segrellion_legendary_relic_search_paused
+
+			remove_character_flag = segrellion_relic_route_tyrosh
+			remove_character_flag = segrellion_relic_route_oldtown
+			remove_character_flag = segrellion_relic_route_winterfell
+
+			remove_character_flag = segrellion_relic_winterfell_full_access
+
+			segrellion_clear_relic_pending_destination_effect = yes
+		}
+
+
+		# =====================================================
+		# BEGIN SEARCH
+		# =====================================================
+
+		add_character_flag = segrellion_legendary_relic_search_active
+
+		# Five-year cooldown.
+		# Debug ignores this because the Debug branch bypasses
+		# normal requirements.
+		add_character_flag = {
+			flag = segrellion_legendary_relic_search_cooldown
+			years = 2
+		}
+
+
+		# =====================================================
+		# TYROSH
+		# =====================================================
+
+		if = {
+			limit = {
+				scope:segrellion_relic_choice_tyrosh = yes
+			}
+
+			add_character_flag = segrellion_relic_route_tyrosh
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_tyrosh
+
+			start_travel_plan = {
+				destination = title:c_tyrosh.title_province
+
+				on_arrival_event = segrellion_relic.1000
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_relic.0090
+			}
+		}
+
+
+		# =====================================================
+		# OLDTOWN
+		# =====================================================
+
+		else_if = {
+			limit = {
+				scope:segrellion_relic_choice_oldtown = yes
+			}
+
+			add_character_flag = segrellion_relic_route_oldtown
+
+			segrellion_clear_relic_pending_destination_effect = yes
+			add_character_flag = segrellion_relic_pending_oldtown
+
+			start_travel_plan = {
+				destination = title:c_oldtown.title_province
+
+				on_arrival_event = segrellion_relic.2000
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_relic.0090
+			}
+		}
+
+
+		# =====================================================
+		# WINTERFELL
+		# =====================================================
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_relic_choice_winterfell = yes
+			}
+
+
+			add_character_flag = segrellion_relic_route_winterfell
+
+
+			segrellion_clear_relic_pending_destination_effect = yes
+
+			add_character_flag = segrellion_relic_pending_winterfell
+
+
+			start_travel_plan = {
+
+				destination = title:c_winterfell.title_province
+
+				# The northern search continues from Winterfell.
+				# Do NOT automatically travel back home.
+				return_trip = no
+
+				# Directly call the actual Winterfell event.
+				on_arrival_event = segrellion_relic.3000
+
+				# This is a single outbound journey.
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_relic.0090
+			}
+		}
+	}
+
+
+	ai_check_interval = 0
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+# =========================================================
+# RESUME THE SEARCH FOR A LEGENDARY RELIC
+# =========================================================
+
+segrellion_resume_legendary_relic_search_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_search_legendary_relic_decision_background.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_resume_legendary_relic_search_decision_desc
+	selection_tooltip = segrellion_resume_legendary_relic_search_decision_tooltip
+	confirm_text = segrellion_resume_legendary_relic_search_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		has_character_flag = segrellion_legendary_relic_search_active
+		has_character_flag = segrellion_legendary_relic_search_paused
+
+		# Internal route information.
+		# Never display these flags as requirements.
+		hidden_trigger = {
+
+			OR = {
+				has_character_flag = segrellion_relic_pending_tyrosh
+				has_character_flag = segrellion_relic_pending_oldtown
+				has_character_flag = segrellion_relic_pending_winterfell
+				has_character_flag = segrellion_relic_pending_castle_black
+				has_character_flag = segrellion_relic_pending_shadow_tower
+				has_character_flag = segrellion_relic_pending_skagos
+				has_character_flag = segrellion_relic_pending_nightfort
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		custom_description = {
+			text = segrellion_resume_relic_not_imprisoned_tt
+			is_imprisoned = no
+		}
+
+		custom_description = {
+			text = segrellion_resume_relic_not_travelling_tt
+
+			NOT = {
+				exists = current_travel_plan
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_resume_relic_effect_tt
+
+		hidden_effect = {
+			segrellion_resume_relic_travel_effect = yes
+		}
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
