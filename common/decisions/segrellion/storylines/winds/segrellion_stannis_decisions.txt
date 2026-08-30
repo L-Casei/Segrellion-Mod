@@ -35,18 +35,33 @@ segrellion_play_as_jon_snow_decision = {
 		# Jon must actually have accepted Stannis' offer
 		# and become ruler of the North.
 
-		character:Stark_7 ?= {
+		OR = {
 
-			is_alive = yes
+			AND = {
 
-			is_ai = yes
+				has_global_variable = segrellion_resurrected_jon
 
-			is_playable_character = yes
+				global_var:segrellion_resurrected_jon ?= {
 
-			has_character_flag = segrellion_jon_restored_to_winterfell
+					is_alive = yes
+					is_ai = yes
+					is_playable_character = yes
+					has_character_flag = segrellion_jon_restored_to_winterfell
+					has_title = title:e_the_north
+					has_title = title:c_winterfell
+				}
+			}
 
-			has_title = title:e_the_north
-			has_title = title:c_winterfell
+
+			character:Stark_7 ?= {
+
+				is_alive = yes
+				is_ai = yes
+				is_playable_character = yes
+				has_character_flag = segrellion_jon_restored_to_winterfell
+				has_title = title:e_the_north
+				has_title = title:c_winterfell
+			}
 		}
 	}
 
@@ -57,18 +72,33 @@ segrellion_play_as_jon_snow_decision = {
 
 	is_valid = {
 
-		character:Stark_7 ?= {
+		OR = {
 
-			is_alive = yes
+			AND = {
 
-			is_ai = yes
+				has_global_variable = segrellion_resurrected_jon
 
-			is_playable_character = yes
+				global_var:segrellion_resurrected_jon ?= {
 
-			has_character_flag = segrellion_jon_restored_to_winterfell
+					is_alive = yes
+					is_ai = yes
+					is_playable_character = yes
+					has_character_flag = segrellion_jon_restored_to_winterfell
+					has_title = title:e_the_north
+					has_title = title:c_winterfell
+				}
+			}
 
-			has_title = title:e_the_north
-			has_title = title:c_winterfell
+
+			character:Stark_7 ?= {
+
+				is_alive = yes
+				is_ai = yes
+				is_playable_character = yes
+				has_character_flag = segrellion_jon_restored_to_winterfell
+				has_title = title:e_the_north
+				has_title = title:c_winterfell
+			}
 		}
 	}
 
@@ -83,7 +113,19 @@ segrellion_play_as_jon_snow_decision = {
 
 		hidden_effect = {
 
-			set_player_character = character:Stark_7
+			if = {
+
+				limit = {
+					has_global_variable = segrellion_resurrected_jon
+				}
+
+				set_player_character = global_var:segrellion_resurrected_jon
+			}
+
+
+			else = {
+				set_player_character = character:Stark_7
+			}
 		}
 	}
 }

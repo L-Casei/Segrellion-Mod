@@ -64,7 +64,23 @@ segrellion_stannis.0001 = {
 	type = character_event
 
 	title = segrellion_stannis.0001.t
-	desc = segrellion_stannis.0001.desc
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					exists = scope:stannis_jon
+				}
+
+				desc = segrellion_stannis.0001.desc
+			}
+
+
+			desc = segrellion_stannis.0001.desc_jon_dead
+		}
+	}
 
 	theme = war
 
@@ -87,10 +103,6 @@ segrellion_stannis.0001 = {
 
 		has_character_flag = segrellion_stannis_preparing_northern_campaign
 
-		character:Stark_7 ?= {
-			is_alive = yes
-		}
-
 		title:e_the_north = {
 			exists = holder
 		}
@@ -99,11 +111,47 @@ segrellion_stannis.0001 = {
 
 	immediate = {
 
-		character:Stark_7 = {
-			save_scope_as = stannis_jon
+		if = {
+
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
+			}
+
+			global_var:segrellion_resurrected_jon ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					save_scope_as = stannis_jon
+				}
+			}
 		}
 
+
+		else_if = {
+
+			limit = {
+				character:Stark_7 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Stark_7 = {
+				save_scope_as = stannis_jon
+			}
+		}
+
+		title:k_the_wall.holder ?= {
+
+			save_scope_as = stannis_wall_commander
+		}
+
+
 		title:e_the_north.holder = {
+
 			save_scope_as = stannis_bolton_lord
 		}
 	}
@@ -119,7 +167,7 @@ segrellion_stannis.0001 = {
 
 	right_portrait = {
 
-		character = character:Stark_7
+		character = scope:stannis_wall_commander
 
 		animation = personality_honorable
 	}
@@ -359,6 +407,43 @@ segrellion_stannis.0900 = {
 	theme = war
 
 
+	immediate = {
+
+		if = {
+
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
+			}
+
+			global_var:segrellion_resurrected_jon ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					save_scope_as = stannis_jon
+				}
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				character:Stark_7 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Stark_7 = {
+				save_scope_as = stannis_jon
+			}
+		}
+	}
+
+
 	left_portrait = {
 
 		character = root
@@ -369,7 +454,7 @@ segrellion_stannis.0900 = {
 
 	right_portrait = {
 
-		character = character:Stark_7
+		character = scope:stannis_jon
 
 		animation = personality_honorable
 	}
@@ -406,10 +491,7 @@ segrellion_stannis.1000 = {
 			triggered_desc = {
 
 				trigger = {
-
-					character:Stark_7 ?= {
-						is_alive = yes
-					}
+					exists = scope:stannis_jon
 				}
 
 				desc = segrellion_stannis.1000.desc
@@ -447,14 +529,35 @@ segrellion_stannis.1000 = {
 
 	immediate = {
 
-		character:Stark_7 ?= {
+		if = {
 
-			if = {
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
+			}
 
-				limit = {
+			global_var:segrellion_resurrected_jon ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					save_scope_as = stannis_jon
+				}
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				character:Stark_7 ?= {
 					is_alive = yes
 				}
+			}
 
+			character:Stark_7 = {
 				save_scope_as = stannis_jon
 			}
 		}
@@ -581,7 +684,12 @@ segrellion_stannis.1010 = {
 
 	trigger = {
 
-		this = character:Stark_7
+		OR = {
+
+			this = character:Stark_7
+
+			has_character_flag = segrellion_canonical_current_jon
+		}
 
 		is_alive = yes
 
@@ -745,6 +853,29 @@ segrellion_stannis.1020 = {
 	}
 
 
+	immediate = {
+
+		if = {
+
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
+			}
+
+			global_var:segrellion_resurrected_jon ?= {
+				save_scope_as = stannis_jon
+			}
+		}
+
+
+		else = {
+
+			character:Stark_7 = {
+				save_scope_as = stannis_jon
+			}
+		}
+	}
+
+
 	left_portrait = {
 
 		character = root
@@ -755,7 +886,7 @@ segrellion_stannis.1020 = {
 
 	right_portrait = {
 
-		character = character:Stark_7
+		character = scope:stannis_jon
 
 		animation = personality_honorable
 	}
@@ -811,6 +942,29 @@ segrellion_stannis.1021 = {
 	theme = diplomacy
 
 
+	immediate = {
+
+		if = {
+
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
+			}
+
+			global_var:segrellion_resurrected_jon ?= {
+				save_scope_as = stannis_jon
+			}
+		}
+
+
+		else = {
+
+			character:Stark_7 = {
+				save_scope_as = stannis_jon
+			}
+		}
+	}
+
+
 	left_portrait = {
 
 		character = root
@@ -821,7 +975,7 @@ segrellion_stannis.1021 = {
 
 	right_portrait = {
 
-		character = character:Stark_7
+		character = scope:stannis_jon
 
 		animation = personality_honorable
 	}
@@ -869,7 +1023,12 @@ segrellion_stannis.1030 = {
 
 	trigger = {
 
-		this = character:Stark_7
+		OR = {
+
+			this = character:Stark_7
+
+			has_character_flag = segrellion_canonical_current_jon
+		}
 
 		is_alive = yes
 

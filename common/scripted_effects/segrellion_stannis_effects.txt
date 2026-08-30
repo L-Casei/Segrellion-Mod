@@ -5,51 +5,91 @@
 
 
 # =========================================================
-# 300 AC - JON SNOW STORY PROTECTION
+# 300 AC - JON SNOW RESURRECTION STORY
 #
-# Jon is essential to the scripted Northern Campaign.
+# Jon is NO LONGER protected from murder schemes.
 #
-# The modifier:
-# - makes murder schemes effectively impossible to complete;
-# - makes hostile schemes against him extremely difficult;
-# - protects him from an unlucky natural death during the
-#   opening chapter.
+# Organic AGOT murder schemes are allowed to kill him.
 #
-# It is TEMPORARY and is removed when Jon is restored to
-# Winterfell.
+# If they fail to do so, a delayed canonical mutiny acts
+# as a fallback while Jon remains Lord Commander.
 # =========================================================
 
-segrellion_setup_jon_story_protection_effect = {
+segrellion_setup_jon_resurrection_story_effect = {
 
-	if = {
+    if = {
 
-		limit = {
+        limit = {
 
-			game_start_date = 8300.8.20
+            game_start_date = 8300.8.20
 
-			character:Stark_7 ?= {
-
-				is_alive = yes
-
-				NOT = {
-					has_character_modifier = segrellion_jon_northern_story_protection_modifier
-				}
-			}
-		}
+            character:Stark_7 ?= {
+                is_alive = yes
+            }
+        }
 
 
-		character:Stark_7 = {
+        # =================================================
+        # ENABLE THE STORY
+        # =================================================
 
-			add_character_flag = segrellion_jon_northern_story_protected
+        set_global_variable = {
+            name = segrellion_jon_resurrection_story_enabled
+            value = yes
+        }
 
-			add_character_modifier = {
 
-				modifier = segrellion_jon_northern_story_protection_modifier
+        character:Stark_7 = {
 
-				years = 5
-			}
-		}
-	}
+            # ---------------------------------------------
+            # REMOVE OLD STORY PROTECTION
+            # ---------------------------------------------
+
+            if = {
+
+                limit = {
+                    has_character_modifier = segrellion_jon_northern_story_protection_modifier
+                }
+
+                remove_character_modifier = segrellion_jon_northern_story_protection_modifier
+            }
+
+
+            remove_character_flag = segrellion_jon_northern_story_protected
+
+
+            # ---------------------------------------------
+            # FALLBACK MUTINY
+            #
+            # AGOT's normal murder schemes get several
+            # months to resolve naturally first.
+            #
+            # If Jon is still alive and Lord Commander,
+            # the canonical mutiny begins.
+            # ---------------------------------------------
+
+            if = {
+
+                limit = {
+
+                    NOT = {
+                        has_character_flag = segrellion_jon_mutiny_fallback_scheduled
+                    }
+                }
+
+
+                add_character_flag = segrellion_jon_mutiny_fallback_scheduled
+
+
+                trigger_event = {
+
+                    id = segrellion_jon_resurrection.0001
+
+                    days = { 240 360 }
+                }
+            }
+        }
+    }
 }
 
 
@@ -233,12 +273,6 @@ segrellion_setup_stannis_northern_campaign_effect = {
 				}
 			}
 
-
-			character:Stark_7 ?= {
-				is_alive = yes
-			}
-
-
 			title:e_the_north = {
 				exists = holder
 			}
@@ -413,7 +447,7 @@ segrellion_jon_accepts_north_effect = {
 	# FIND THE NEXT LORD COMMANDER
 	# =====================================================
 
-	character:Stark_7 = {
+	root = {
 
 		remove_character_flag = segrellion_jon_north_transfer_failed
 
@@ -432,7 +466,7 @@ segrellion_jon_accepts_north_effect = {
 
 				has_trait = nightswatch
 
-				this != character:Stark_7
+				this != root
 			}
 
 			order_by = prowess
@@ -469,7 +503,7 @@ segrellion_jon_accepts_north_effect = {
 
 					has_trait = nightswatch
 
-					this != character:Stark_7
+					this != root
 				}
 
 				order_by = prowess
@@ -547,7 +581,7 @@ segrellion_jon_accepts_north_effect = {
 
 				change = scope:segrellion_nights_watch_transfer
 
-				government_base = character:Stark_7
+				government_base = root
 			}
 		}
 
@@ -603,10 +637,39 @@ segrellion_jon_accepts_north_effect = {
 
 		limit = {
 
-			exists = scope:segrellion_new_lord_commander
+			OR = {
+
+				exists = scope:segrellion_new_lord_commander
 
 
-			character:Stark_7 = {
+				# Resurrected Jon is already free of the Watch:
+				# his death ended the vows and succession has
+				# already installed a new Lord Commander.
+
+				AND = {
+
+					NOT = {
+						has_trait = nightswatch
+					}
+
+					is_landed = no
+
+					NOT = {
+						has_title = title:k_the_wall
+					}
+
+					NOT = {
+						has_title = title:d_the_wall
+					}
+
+					NOT = {
+						has_title = title:c_castle_black
+					}
+				}
+			}
+
+
+			root = {
 
 				is_landed = no
 
@@ -629,7 +692,7 @@ segrellion_jon_accepts_north_effect = {
 		# JON LEAVES THE NIGHT'S WATCH
 		# =================================================
 
-		character:Stark_7 = {
+		root = {
 
 
 			if = {
@@ -748,7 +811,7 @@ segrellion_jon_accepts_north_effect = {
 
 			change_title_holder = {
 
-				holder = character:Stark_7
+				holder = root
 
 				change = scope:segrellion_jon_north_restoration_change
 
@@ -769,7 +832,7 @@ segrellion_jon_accepts_north_effect = {
 
 			change_title_holder = {
 
-				holder = character:Stark_7
+				holder = root
 
 				change = scope:segrellion_jon_north_restoration_change
 			}
@@ -784,7 +847,7 @@ segrellion_jon_accepts_north_effect = {
 
 			change_title_holder = {
 
-				holder = character:Stark_7
+				holder = root
 
 				change = scope:segrellion_jon_north_restoration_change
 			}
@@ -799,7 +862,7 @@ segrellion_jon_accepts_north_effect = {
 
 			change_title_holder = {
 
-				holder = character:Stark_7
+				holder = root
 
 				change = scope:segrellion_jon_north_restoration_change
 			}
@@ -847,7 +910,7 @@ segrellion_jon_accepts_north_effect = {
 
 				change_liege = {
 
-					liege = character:Stark_7
+					liege = root
 
 					change = scope:segrellion_northern_vassals_transfer
 				}
@@ -870,7 +933,7 @@ segrellion_jon_accepts_north_effect = {
 
 			limit = {
 
-				character:Stark_7 = {
+				root = {
 
 					NOT = {
 						is_independent_ruler = yes
@@ -879,7 +942,7 @@ segrellion_jon_accepts_north_effect = {
 			}
 
 
-			character:Stark_7 = {
+			root = {
 
 
 				create_title_and_vassal_change = {
@@ -909,7 +972,7 @@ segrellion_jon_accepts_north_effect = {
 		# LORD PARAMOUNT / FUTURE KING IN THE NORTH
 		# =================================================
 
-		character:Stark_7 = {
+		root = {
 
 			set_primary_title_to = title:e_the_north
 
@@ -951,24 +1014,24 @@ segrellion_jon_accepts_north_effect = {
 
 			create_alliance = {
 
-				target = character:Stark_7
+				target = root
 
 				allied_through_owner = character:Baratheon_3
 
-				allied_through_target = character:Stark_7
+				allied_through_target = root
 			}
 
 
 			add_opinion = {
 
-				target = character:Stark_7
+				target = root
 
 				modifier = segrellion_stannis_restored_jon_opinion
 			}
 		}
 
 
-		character:Stark_7 = {
+		root = {
 
 			add_opinion = {
 
@@ -990,7 +1053,7 @@ segrellion_jon_accepts_north_effect = {
 
 			limit = {
 
-				this = character:Stark_7
+				this = root
 
 
 				any_prisoner = {
@@ -1025,7 +1088,7 @@ segrellion_jon_accepts_north_effect = {
 
 	else = {
 
-		character:Stark_7 = {
+		root = {
 
 			add_character_flag = segrellion_jon_north_transfer_failed
 		}
@@ -1498,7 +1561,7 @@ segrellion_transfer_stannis_prisoners_to_jon_effect = {
 		release_from_prison = yes
 
 
-		character:Stark_7 = {
+		root = {
 
 			imprison = {
 

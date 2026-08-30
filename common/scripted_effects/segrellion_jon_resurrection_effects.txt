@@ -1,0 +1,336 @@
+# =========================================================
+# JON SNOW - RESURRECTION
+#
+# The historical Stark_7 remains dead.
+#
+# A new runtime character is created as the resurrected
+# continuation of Jon Snow.
+# =========================================================
+
+segrellion_create_resurrected_jon_effect = {
+
+
+    # =====================================================
+    # ABSOLUTE SAFETY
+    # =====================================================
+
+    if = {
+
+        limit = {
+
+            character:Stark_7 = {
+                is_alive = no
+            }
+
+
+            NOT = {
+                has_global_variable = segrellion_resurrected_jon
+            }
+        }
+
+
+        # =================================================
+        # CREATE JON
+        #
+        # We deliberately start from the original Jon's
+        # inheritable appearance.
+        #
+        # Therefore AGOT / AGOT+ alterations already present
+        # on Stark_7 can carry into this body.
+        # =================================================
+
+        create_character = {
+
+            name = "Jon"
+
+            age = 17
+
+            gender = male
+
+
+            faith = character:Stark_7.faith
+
+            culture = character:Stark_7.culture
+
+
+            father = character:Stark_7.father
+
+            real_father = character:Stark_7.real_father
+
+            mother = character:Stark_7.mother
+
+
+            dynasty_house = character:Stark_7.house
+
+
+            location = title:c_castle_black.title_province
+
+
+            random_traits = no
+
+
+            # Post-resurrection baseline.
+            #
+            # Traits copied below still contribute their own
+            # attribute bonuses.
+
+            diplomacy = 8
+            martial = 14
+            stewardship = 8
+            intrigue = 10
+            learning = 9
+            prowess = 15
+
+
+            save_scope_as = resurrected_jon
+
+
+            after_creation = {
+
+
+                # =========================================
+                # SAME FACE / GENETIC APPEARANCE
+                # =========================================
+
+                copy_inheritable_appearance_from = character:Stark_7
+
+
+                # =========================================
+                # SAME EXISTING TRAITS
+                # =========================================
+
+                copy_traits = character:Stark_7
+
+
+                set_house = character:Stark_7.house
+
+                set_sexuality = heterosexual
+
+
+                add_character_flag = canon_status_canon
+
+                add_character_flag = segrellion_resurrected_jon
+
+                add_character_flag = segrellion_canonical_current_jon
+
+                add_character_flag = segrellion_jon_watch_ended_in_death
+
+                add_character_flag = segrellion_resurrected_jon_appearance
+
+                add_character_flag = has_scripted_appearance
+
+
+                # =========================================
+                # THE NIGHT'S WATCH VOW ENDED WITH DEATH
+                # =========================================
+
+                if = {
+
+                    limit = {
+                        has_trait = nightswatch
+                    }
+
+                    remove_trait = nightswatch
+                }
+
+
+                # =========================================
+                # REMOVE THE WOUNDS THAT KILLED HIM
+                # =========================================
+
+                if = {
+                    limit = { has_trait = wounded_1 }
+                    remove_trait = wounded_1
+                }
+
+                if = {
+                    limit = { has_trait = wounded_2 }
+                    remove_trait = wounded_2
+                }
+
+                if = {
+                    limit = { has_trait = wounded_3 }
+                    remove_trait = wounded_3
+                }
+
+
+                # =========================================
+                # DEATH CHANGED HIM
+                #
+                # We don't wipe his entire personality.
+                # Jon is still Jon.
+                #
+                # But compassion/trust have been badly
+                # damaged by what his brothers did.
+                # =========================================
+
+                if = {
+                    limit = { has_trait = compassionate }
+                    remove_trait = compassionate
+                }
+
+                if = {
+                    limit = { has_trait = forgiving }
+                    remove_trait = forgiving
+                }
+
+                if = {
+                    limit = { has_trait = trusting }
+                    remove_trait = trusting
+                }
+
+
+                if = {
+
+                    limit = {
+                        NOT = {
+                            has_trait = callous
+                        }
+                    }
+
+                    add_trait = callous
+                }
+
+
+                if = {
+
+                    limit = {
+                        NOT = {
+                            has_trait = cynical
+                        }
+                    }
+
+                    add_trait = cynical
+                }
+
+
+                # =========================================
+                # PHYSICAL CHANGE
+                #
+                # AGOT uses inactive appearance traits for
+                # strong-seed hair/eye colours.
+                #
+                # White/silver hair is confirmed in current
+                # AGOT-derived scripts.
+                # =========================================
+
+                make_trait_inactive = cool_silver_hair
+
+                make_trait_inactive = blue_eyes
+
+
+                # =========================================
+                # RETURNED FROM DEATH
+                # =========================================
+
+                add_trait = segrellion_resurrected_trait
+
+
+                # =========================================
+                # JON-SPECIFIC CONSEQUENCES
+                # =========================================
+
+                add_character_modifier = {
+                    modifier = segrellion_jon_returned_from_death_modifier
+                }
+
+                # =========================================
+                # CLAIMS
+                #
+                # Whatever happened to Stannis/Winterfell,
+                # resurrected Jon has a route back into the
+                # Northern struggle.
+                # =========================================
+
+                add_pressed_claim = title:e_the_north
+
+                add_pressed_claim = title:c_winterfell
+            }
+        }
+
+
+        # =================================================
+        # STORE THE RUNTIME CHARACTER PERMANENTLY
+        #
+        # character:Stark_7 is now the corpse.
+        #
+        # Everything involving resurrected Jon should use:
+        #
+        # global_var:segrellion_resurrected_jon
+        # =================================================
+
+        set_global_variable = {
+
+            name = segrellion_resurrected_jon
+
+            value = scope:resurrected_jon
+        }
+
+
+        set_global_variable = {
+
+            name = segrellion_jon_resurrection_completed
+
+            value = yes
+        }
+
+
+        # =================================================
+        # MAKE JON A PLAYABLE LANDLESS ADVENTURER
+        #
+        # This gives him a valid playable title/domicile
+        # instead of creating an unusable courtier.
+        # =================================================
+
+        scope:resurrected_jon = {
+
+            create_landless_adventurer_title_effect = {
+
+                REASON = flag:voluntary
+
+                FLAVOR_CHAR = scope:resurrected_jon
+            }
+
+
+            if = {
+
+                limit = {
+
+                    NOT = {
+                        has_realm_law = camp_purpose_legitimists
+                    }
+                }
+
+
+                add_realm_law_skip_effects = camp_purpose_legitimists
+            }
+
+
+            set_location = title:c_castle_black.title_province
+        }
+
+
+        # =================================================
+        # ANNOUNCE TO EVERY HUMAN PLAYER
+        #
+        # Same system already used by your global
+        # Daenerys arrival event.
+        # =================================================
+
+        every_player = {
+
+            limit = {
+
+                this != scope:resurrected_jon
+            }
+
+
+            trigger_event = {
+
+                id = segrellion_jon_resurrection.0200
+
+                days = 1
+            }
+        }
+    }
+}

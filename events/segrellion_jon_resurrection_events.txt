@@ -1,0 +1,578 @@
+namespace = segrellion_jon_resurrection
+
+
+# =========================================================
+# 0001 - WHISPERS IN THE SNOW
+#
+# Fallback event.
+#
+# Organic AGOT murder schemes have already had several
+# months to kill Jon.
+#
+# If Jon is STILL Lord Commander, the canonical mutiny
+# begins.
+# =========================================================
+
+segrellion_jon_resurrection.0001 = {
+
+    type = character_event
+
+    title = segrellion_jon_resurrection.0001.t
+    desc = segrellion_jon_resurrection.0001.desc
+
+    theme = intrigue
+
+
+    override_background = {
+        reference = segrellion_castle_black_great_hall
+    }
+
+
+    override_icon = {
+        reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+    }
+
+
+    trigger = {
+
+        this = character:Stark_7
+
+        is_alive = yes
+
+        has_title = title:k_the_wall
+
+
+        has_global_variable = segrellion_jon_resurrection_story_enabled
+
+
+        NOT = {
+            has_global_variable = segrellion_resurrected_jon
+        }
+
+
+        NOT = {
+            has_character_flag = segrellion_jon_mutiny_pending
+        }
+    }
+
+
+    left_portrait = {
+
+        character = root
+
+        animation = thinking
+    }
+
+
+    option = {
+
+        name = segrellion_jon_resurrection.0001.a
+
+
+        add_character_flag = segrellion_jon_mutiny_pending
+
+
+        trigger_event = {
+
+            id = segrellion_jon_resurrection.0010
+
+            days = { 7 21 }
+        }
+
+
+        ai_chance = {
+            base = 100
+        }
+    }
+}
+
+
+# =========================================================
+# 0010 - FOR THE WATCH
+#
+# Jon is genuinely killed.
+#
+# From this point onward character:Stark_7 is DEAD.
+# =========================================================
+
+segrellion_jon_resurrection.0010 = {
+
+    type = character_event
+
+    title = segrellion_jon_resurrection.0010.t
+    desc = segrellion_jon_resurrection.0010.desc
+
+    theme = betrayal
+
+
+    override_background = {
+        reference = segrellion_castle_black_great_hall
+    }
+
+
+    override_icon = {
+        reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+    }
+
+
+    trigger = {
+
+        this = character:Stark_7
+
+        is_alive = yes
+
+        has_title = title:k_the_wall
+
+        has_character_flag = segrellion_jon_mutiny_pending
+
+
+        NOT = {
+            has_global_variable = segrellion_resurrected_jon
+        }
+    }
+
+
+    immediate = {
+
+        # =================================================
+        # CHOOSE ONE OF JON'S SWORN BROTHERS AS THE
+        # REPRESENTATIVE KILLER.
+        #
+        # The event itself describes a group attack.
+        # =================================================
+
+        random_courtier = {
+
+            limit = {
+
+                is_alive = yes
+                is_adult = yes
+
+                has_trait = nightswatch
+
+                this != root
+            }
+
+
+            save_scope_as = jon_mutineer
+        }
+    }
+
+
+    left_portrait = {
+
+        character = root
+
+        animation = shock
+    }
+
+
+    right_portrait = {
+
+        character = scope:jon_mutineer
+
+        animation = rage
+    }
+
+
+    option = {
+
+        name = segrellion_jon_resurrection.0010.a
+
+
+        hidden_effect = {
+
+            # This distinguishes our scripted mutiny from
+            # any unrelated murder if we need it later.
+
+            add_character_flag = segrellion_jon_murdered_by_watch
+
+
+            if = {
+
+                limit = {
+                    exists = scope:jon_mutineer
+                }
+
+
+                death = {
+
+                    death_reason = death_murder
+
+                    killer = scope:jon_mutineer
+
+                    secret = no
+                }
+            }
+
+
+            else = {
+
+                death = {
+
+                    death_reason = death_murder
+
+                    secret = no
+                }
+            }
+        }
+    }
+}
+
+
+# =========================================================
+# 0100 - THE BODY IN THE ICE
+#
+# ROOT = the NEW Lord Commander.
+#
+# Fired after succession of k_the_wall.
+# =========================================================
+
+segrellion_jon_resurrection.0100 = {
+
+    type = character_event
+
+    title = segrellion_jon_resurrection.0100.t
+    desc = segrellion_jon_resurrection.0100.desc
+
+    theme = death
+
+
+    override_background = {
+        reference = segrellion_castle_black_great_hall
+    }
+
+
+    override_icon = {
+        reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+    }
+
+
+    trigger = {
+
+        this = title:k_the_wall.holder
+
+        is_alive = yes
+
+
+        character:Stark_7 = {
+            is_alive = no
+        }
+
+
+        character:Melisandre_1 ?= {
+            is_alive = yes
+        }
+
+
+        has_global_variable = segrellion_jon_resurrection_story_enabled
+
+
+        NOT = {
+            has_global_variable = segrellion_resurrected_jon
+        }
+    }
+
+
+    immediate = {
+
+        character:Stark_7 = {
+            save_scope_as = dead_jon
+        }
+
+
+        character:Melisandre_1 = {
+
+            set_location = title:c_castle_black.title_province
+
+            save_scope_as = melisandre
+        }
+    }
+
+
+    left_portrait = {
+
+        character = root
+
+        animation = thinking
+    }
+
+
+    right_portrait = {
+
+        character = scope:melisandre
+
+        animation = personality_rational
+    }
+
+
+    option = {
+
+        name = segrellion_jon_resurrection.0100.a
+
+        custom_tooltip = segrellion_jon_resurrection.0100.a.tt
+
+
+        trigger_event = {
+
+            id = segrellion_jon_resurrection.0110
+
+            days = { 1 3 }
+        }
+
+
+        ai_chance = {
+            base = 100
+        }
+    }
+}
+
+
+# =========================================================
+# 0110 - THE KISS OF FIRE
+#
+# ROOT = Lord Commander.
+# =========================================================
+
+segrellion_jon_resurrection.0110 = {
+
+    type = character_event
+
+    title = segrellion_jon_resurrection.0110.t
+    desc = segrellion_jon_resurrection.0110.desc
+
+    theme = faith
+
+
+    override_background = {
+        reference = segrellion_darkness
+    }
+
+
+    override_icon = {
+        reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+    }
+
+
+    trigger = {
+
+        this = title:k_the_wall.holder
+
+        is_alive = yes
+
+
+        character:Stark_7 = {
+            is_alive = no
+        }
+
+
+        character:Melisandre_1 ?= {
+            is_alive = yes
+        }
+
+
+        NOT = {
+            has_global_variable = segrellion_resurrected_jon
+        }
+    }
+
+
+    immediate = {
+
+        character:Stark_7 = {
+            save_scope_as = dead_jon
+        }
+
+
+        character:Melisandre_1 = {
+            save_scope_as = melisandre
+        }
+    }
+
+
+    left_portrait = {
+
+        character = scope:melisandre
+
+        animation = personality_rational
+    }
+
+
+    option = {
+
+        name = segrellion_jon_resurrection.0110.a
+
+
+        hidden_effect = {
+
+            trigger_event = {
+
+                id = segrellion_jon_resurrection.0120
+
+                days = 1
+            }
+        }
+
+
+        ai_chance = {
+            base = 100
+        }
+    }
+}
+
+
+# =========================================================
+# 0120 - RESURRECTION ROUTER
+#
+# Hidden.
+# Actually recreates Jon.
+# =========================================================
+
+segrellion_jon_resurrection.0120 = {
+
+    hidden = yes
+
+
+    trigger = {
+
+        character:Stark_7 = {
+            is_alive = no
+        }
+
+
+        NOT = {
+            has_global_variable = segrellion_resurrected_jon
+        }
+    }
+
+
+    immediate = {
+
+        segrellion_create_resurrected_jon_effect = yes
+    }
+}
+
+
+# =========================================================
+# 0200 - THE WOLF OPENS HIS EYES
+#
+# GLOBAL PLAYER EVENT.
+#
+# Every human player can continue normally or switch
+# immediately to the resurrected Jon.
+# =========================================================
+
+segrellion_jon_resurrection.0200 = {
+
+    type = character_event
+
+    title = segrellion_jon_resurrection.0200.t
+    desc = segrellion_jon_resurrection.0200.desc
+
+    theme = faith
+
+
+    override_background = {
+        reference = segrellion_castle_black_great_hall
+    }
+
+
+    override_icon = {
+        reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+    }
+
+
+    trigger = {
+
+        is_ai = no
+
+        has_global_variable = segrellion_resurrected_jon
+
+
+        global_var:segrellion_resurrected_jon ?= {
+
+            is_alive = yes
+
+            is_playable_character = yes
+        }
+    }
+
+
+    immediate = {
+
+        global_var:segrellion_resurrected_jon = {
+            save_scope_as = resurrected_jon
+        }
+
+
+        title:k_the_wall.holder ?= {
+            save_scope_as = resurrected_jon_lord_commander
+        }
+
+
+        character:Melisandre_1 ?= {
+            save_scope_as = melisandre
+        }
+    }
+
+
+    left_portrait = {
+
+        character = scope:resurrected_jon
+
+        animation = thinking
+    }
+
+
+    right_portrait = {
+
+        character = scope:melisandre
+
+        animation = personality_rational
+    }
+
+
+    # =====================================================
+    # CONTINUE CURRENT GAME
+    # =====================================================
+
+    option = {
+
+        name = segrellion_jon_resurrection.0200.a
+    }
+
+
+    # =====================================================
+    # PLAY AS JON
+    # =====================================================
+
+    option = {
+
+        name = segrellion_jon_resurrection.0200.b
+
+
+        trigger = {
+
+            scope:resurrected_jon = {
+
+                is_alive = yes
+
+                is_ai = yes
+
+                is_playable_character = yes
+            }
+        }
+
+
+        custom_tooltip = segrellion_jon_resurrection.0200.b.tt
+
+
+        hidden_effect = {
+
+            root = {
+
+                set_player_character = scope:resurrected_jon
+            }
+        }
+    }
+}
