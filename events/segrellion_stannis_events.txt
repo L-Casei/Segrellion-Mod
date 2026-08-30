@@ -31,6 +31,11 @@ segrellion_stannis.0090 = {
 
 		set_location = title:c_castle_black.title_province
 
+		# Apply Stannis' 300 AC narrative reputation package.
+		# The visible modifier contains only flavor; selective
+		# opinion corrections are handled inside the effect.
+		segrellion_apply_one_true_king_reputation_effect = yes
+
 
 		title:e_the_north.holder ?= {
 
@@ -71,6 +76,7 @@ segrellion_stannis.0001 = {
 			triggered_desc = {
 
 				trigger = {
+
 					exists = scope:stannis_jon
 				}
 
@@ -328,11 +334,127 @@ segrellion_stannis.0010 = {
 		add_character_flag = segrellion_stannis_northern_cb_authorized
 
 
+		# Give Stannis and Davos one final private moment before
+		# the army is committed. If Davos is unavailable, never
+		# allow the flavor interlude to block the actual campaign.
+		if = {
+
+			limit = {
+
+				title:d_the_drench.holder ?= {
+					is_alive = yes
+				}
+			}
+
+			trigger_event = {
+
+				id = segrellion_stannis.0015
+
+				days = { 3 5 }
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_stannis.0020
+
+				days = { 3 7 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0015 - ONLY FORWARD
+#
+# Root = Stannis
+#
+# A quiet war-tent conversation with Davos immediately
+# before the army begins the march on Winterfell.
+# =========================================================
+
+segrellion_stannis.0015 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0015.t
+	desc = segrellion_stannis.0015.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_cb_authorized
+
+		NOT = {
+			has_character_flag = segrellion_stannis_northern_campaign_started
+		}
+
+		title:d_the_drench.holder ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		title:d_the_drench.holder ?= {
+			save_scope_as = stannis_davos
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:stannis_davos
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0015.a
+
+		add_character_flag = segrellion_stannis_only_forward
+
+
 		trigger_event = {
 
 			id = segrellion_stannis.0020
 
-			days = { 3 7 }
+			days = { 5 10 }
 		}
 
 
@@ -628,7 +750,6 @@ segrellion_stannis.1000 = {
 			NOT = {
 				exists = scope:stannis_jon
 			}
-		}
 
 
 		add_character_flag = segrellion_stannis_searching_northern_heir
