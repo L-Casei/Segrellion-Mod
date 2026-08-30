@@ -1,5 +1,74 @@
 ﻿namespace = segrellion_stannis
 
+
+# =========================================================
+# 0090 - STARTUP ROUTER
+#
+# One day after Roose's murder. This is the stable startup
+# anchor: it prepares all scopes and then launches 0091.
+# =========================================================
+
+segrellion_stannis.0090 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_north_story_initialized
+
+		NOT = {
+			has_character_flag = segrellion_stannis_opening_seen
+		}
+
+		NOT = {
+			has_character_flag = segrellion_stannis_opening_scheduled
+		}
+
+		NOT = {
+			has_character_flag = segrellion_stannis_northern_campaign_started
+		}
+	}
+
+
+	immediate = {
+
+		immediate = {
+
+		add_character_flag = {
+			flag = segrellion_stannis_opening_scheduled
+			days = 45
+		}
+
+		set_location = title:c_castle_black.title_province
+
+		# Apply Stannis' 300 AC narrative reputation package.
+		# The visible modifier contains only flavor; selective
+		# opinion corrections are handled inside the effect.
+		segrellion_apply_one_true_king_reputation_effect = yes
+
+
+		title:e_the_north.holder ?= {
+
+			add_character_flag = segrellion_stannis_northern_enemy
+
+			save_scope_as = stannis_bolton_lord
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.0091
+
+			days = { 5 10 }
+		}
+	}
+}
+
 # =========================================================
 # 0091 - FURY BURNS
 #
@@ -76,60 +145,6 @@ segrellion_stannis.0091 = {
 
 		ai_chance = {
 			base = 100
-		}
-	}
-}
-
-
-# =========================================================
-# 0090 - STARTUP ROUTER
-#
-# One day after Roose's murder. This is the stable startup
-# anchor: it prepares all scopes and then launches 0091.
-# =========================================================
-
-segrellion_stannis.0090 = {
-
-	hidden = yes
-
-
-	trigger = {
-
-		this = character:Baratheon_3
-
-		is_alive = yes
-
-		has_character_flag = segrellion_stannis_north_story_initialized
-
-		NOT = {
-			has_character_flag = segrellion_stannis_northern_campaign_started
-		}
-	}
-
-
-	immediate = {
-
-		set_location = title:c_castle_black.title_province
-
-		# Apply Stannis' 300 AC narrative reputation package.
-		# The visible modifier contains only flavor; selective
-		# opinion corrections are handled inside the effect.
-		segrellion_apply_one_true_king_reputation_effect = yes
-
-
-		title:e_the_north.holder ?= {
-
-			add_character_flag = segrellion_stannis_northern_enemy
-
-			save_scope_as = stannis_bolton_lord
-		}
-
-
-		trigger_event = {
-
-			id = segrellion_stannis.0091
-
-			days = { 5 10 }
 		}
 	}
 }

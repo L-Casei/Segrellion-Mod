@@ -286,8 +286,15 @@ segrellion_remove_stannis_pre_winterfell_modifiers_effect = {
 # =========================================================
 # STANNIS - SAFE OPENING SCHEDULER
 #
-# Political setup may run at zero tick, but visible events are queued
-# only after the lobby, when the game is ready to retain them.
+# This scheduler may safely be called both during zero-tick
+# setup and after the lobby.
+#
+# IMPORTANT:
+# Do NOT set segrellion_stannis_opening_scheduled here.
+#
+# A pre-lobby delayed event can theoretically be discarded.
+# The scheduling guard is therefore only created once the
+# hidden router actually executes.
 # =========================================================
 
 segrellion_schedule_stannis_opening_effect = {
@@ -297,20 +304,25 @@ segrellion_schedule_stannis_opening_effect = {
 		if = {
 
 			limit = {
+
 				is_alive = yes
+
 				has_character_flag = segrellion_stannis_north_story_initialized
-				NOT = { has_character_flag = segrellion_stannis_opening_seen }
-				NOT = { has_character_flag = segrellion_stannis_opening_scheduled }
-				NOT = { has_character_flag = segrellion_stannis_northern_campaign_started }
+
+				NOT = {
+					has_character_flag = segrellion_stannis_opening_seen
+				}
+
+				NOT = {
+					has_character_flag = segrellion_stannis_northern_campaign_started
+				}
 			}
 
-			add_character_flag = {
-				flag = segrellion_stannis_opening_scheduled
-				days = 45
-			}
 
 			trigger_event = {
+
 				id = segrellion_stannis.0090
+
 				days = 1
 			}
 		}
@@ -476,6 +488,19 @@ segrellion_setup_stannis_northern_campaign_effect = {
 				}
 			}
 		}
+
+
+		# =================================================
+		# OPENING EVENT
+		#
+		# Schedule once from the actual political setup.
+		# The after-lobby hook schedules it again as a
+		# redundant second entry point.
+		#
+		# The hidden router itself prevents duplication.
+		# =================================================
+
+		segrellion_schedule_stannis_opening_effect = yes
 	}
 }
 
