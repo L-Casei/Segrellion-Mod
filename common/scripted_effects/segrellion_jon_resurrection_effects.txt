@@ -35,6 +35,14 @@ segrellion_create_resurrected_jon_effect = {
 			save_scope_as = interim_lord_commander
 		}
 
+		# =========================================================
+		# THE MAN CURRENTLY COMMANDING THE WATCH
+		# =========================================================
+
+		root = {
+			save_scope_as = interim_lord_commander
+		}
+
 
 		# =================================================
 		# CREATE THE RETURNED JON
@@ -350,16 +358,17 @@ segrellion_create_resurrected_jon_effect = {
 		}
 
 
-		# =================================================
+		# =========================================================
 		# LONGCLAW RETURNS TO JON
 		#
-		# It may currently belong to fake Arya.
-		# We transfer the SAME artifact.
-		# =================================================
+		# Arya / fake Arya may have inherited it after Jon's death.
+		# We take the SAME artifact object back.
+		# =========================================================
 
 		if = {
 
 			limit = {
+
 				has_global_variable = segrellion_jon_longclaw_artifact
 			}
 
@@ -370,7 +379,13 @@ segrellion_create_resurrected_jon_effect = {
 
 					target = scope:resurrected_jon
 
-					generate_history = yes
+
+					history = {
+
+						type = inherited
+
+						recipient = scope:resurrected_jon
+					}
 				}
 
 
@@ -588,46 +603,11 @@ segrellion_jon_leave_watch_for_winterfell_effect = {
 		# JON'S VOWS ENDED WITH HIS FIRST DEATH
 		# =================================================
 
-		if = {
-
-			limit = {
-				has_trait = nightswatch
-			}
-
-			remove_trait = nightswatch
-		}
-
 
 		add_character_flag = segrellion_jon_watch_ended_in_death
 
 		add_character_flag = segrellion_jon_left_nights_watch
 
-
-		# =================================================
-		# JON NOW BECOMES A LANDLESS CLAIMANT
-		#
-		# ONLY NOW.
-		# =================================================
-
-		if = {
-
-			limit = {
-				NOT = {
-					is_landless_adventurer = yes
-				}
-			}
-
-
-			move_to_pool = yes
-
-
-			create_landless_adventurer_title_effect = {
-
-				REASON = flag:voluntary
-
-				FLAVOR_CHAR = root
-			}
-		}
 
 
 		if = {

@@ -31,6 +31,7 @@ monthly_global_pulse = {
 		segrellion_young_griff_iron_throne_invasion_failsafe
 		segrellion_jon_resurrection_progression
 		segrellion_stannis_opening_recovery
+		segrellion_jon_body_in_ice_failsafe
 	}
 }
 
@@ -2472,4 +2473,76 @@ segrellion_stannis_northern_battle_loser = {
 			}
 		}
 	}
+}
+
+# =========================================================
+# JON SNOW - BODY IN THE ICE FAILSAFE
+#
+# If the direct delayed event somehow disappears,
+# the current Lord Commander receives it on the next pulse.
+# =========================================================
+
+segrellion_jon_body_in_ice_failsafe = {
+
+    trigger = {
+
+        has_global_variable = segrellion_jon_resurrection_pending
+
+
+        character:Stark_7 ?= {
+
+            is_alive = no
+
+            has_character_flag = segrellion_jon_murdered_by_watch
+        }
+
+
+        title:k_the_wall = {
+            exists = holder
+        }
+
+
+        title:k_the_wall.holder = {
+
+            is_alive = yes
+
+            NOT = {
+                has_character_flag = segrellion_body_in_ice_seen
+            }
+
+            NOT = {
+                has_character_flag = segrellion_body_in_ice_queued
+            }
+        }
+
+
+        NOT = {
+            has_global_variable = segrellion_resurrected_jon
+        }
+    }
+
+
+    effect = {
+
+        title:k_the_wall.holder = {
+
+            add_character_flag = segrellion_jon_resurrection_chain_started
+
+
+            add_character_flag = {
+
+                flag = segrellion_body_in_ice_queued
+
+                days = 10
+            }
+
+
+            trigger_event = {
+
+                id = segrellion_jon_resurrection.0100
+
+                days = 1
+            }
+        }
+    }
 }

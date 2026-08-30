@@ -90,14 +90,17 @@ segrellion_jon_resurrection.0001 = {
 # =========================================================
 # 0010 - FOR THE WATCH
 #
-# Jon is genuinely killed.
+# Jon is genuinely murdered.
 #
-# This event is now THE canonical source of Jon's death
-# for the Segrellion 300 AC storyline.
+# BEFORE his death:
 #
-# Before killing Jon, Melisandre is given a delayed hidden
-# router. Therefore the resurrection chain no longer
-# depends exclusively on title succession on_actions.
+# 1. Save Longclaw.
+# 2. Choose a Black Brother favourable to Jon.
+# 3. Mark the mutineers.
+# 4. Give the Watch temporarily to the loyal successor.
+# 5. DIRECTLY schedule The Body in the Ice on him.
+#
+# Melisandre never becomes event root.
 # =========================================================
 
 segrellion_jon_resurrection.0010 = {
@@ -130,9 +133,7 @@ segrellion_jon_resurrection.0010 = {
 
         has_character_flag = segrellion_jon_mutiny_pending
 
-
         has_global_variable = segrellion_jon_resurrection_story_enabled
-
 
         NOT = {
             has_global_variable = segrellion_resurrected_jon
@@ -143,11 +144,43 @@ segrellion_jon_resurrection.0010 = {
     immediate = {
 
         # =================================================
-        # FIND A REPRESENTATIVE MUTINEER
+        # SAVE LONGCLAW
         #
-        # Prefer a landed/member-of-the-Watch character.
-        # The actual event represents several brothers
-        # attacking Jon.
+        # We save Jon's equipped weapon itself.
+        # When he dies CK3 may give it to his heir.
+        # The global variable continues pointing to the
+        # exact same artifact object.
+        # =================================================
+
+        random_equipped_character_artifact = {
+
+            limit = {
+                artifact_slot_type = primary_armament
+            }
+
+
+            set_global_variable = {
+
+                name = segrellion_jon_longclaw_artifact
+
+                value = this
+            }
+        }
+
+
+        # =================================================
+        # SAVE EVERY WATCH TITLE JON HOLDS
+        # =================================================
+
+        every_held_title = {
+            add_to_list = segrellion_jon_watch_titles
+        }
+
+
+        # =================================================
+        # CHOOSE TEMPORARY LORD COMMANDER
+        #
+        # Prefer someone who actually likes Jon.
         # =================================================
 
         ordered_vassal_or_below = {
@@ -160,13 +193,215 @@ segrellion_jon_resurrection.0010 = {
                 has_trait = nightswatch
 
                 this != root
+
+
+                opinion = {
+                    target = root
+                    value >= 25
+                }
             }
+
+
+            order_by = diplomacy
+
+            position = 0
+
+            check_range_bounds = no
+
+
+            save_scope_as = jon_loyal_successor
+        }
+
+
+        # Courtier fallback.
+
+        if = {
+
+            limit = {
+
+                NOT = {
+                    exists = scope:jon_loyal_successor
+                }
+            }
+
+
+            ordered_courtier = {
+
+                limit = {
+
+                    is_alive = yes
+                    is_adult = yes
+
+                    has_trait = nightswatch
+
+                    this != root
+
+
+                    opinion = {
+                        target = root
+                        value >= 25
+                    }
+                }
+
+
+                order_by = diplomacy
+
+                position = 0
+
+                check_range_bounds = no
+
+
+                save_scope_as = jon_loyal_successor
+            }
+        }
+
+
+        # Neutral fallback.
+
+        if = {
+
+            limit = {
+
+                NOT = {
+                    exists = scope:jon_loyal_successor
+                }
+            }
+
+
+            ordered_vassal_or_below = {
+
+                limit = {
+
+                    is_alive = yes
+                    is_adult = yes
+
+                    has_trait = nightswatch
+
+                    this != root
+                }
+
+
+                order_by = diplomacy
+
+                position = 0
+
+                check_range_bounds = no
+
+
+                save_scope_as = jon_loyal_successor
+            }
+        }
+
+
+        if = {
+
+            limit = {
+
+                NOT = {
+                    exists = scope:jon_loyal_successor
+                }
+            }
+
+
+            ordered_courtier = {
+
+                limit = {
+
+                    is_alive = yes
+                    is_adult = yes
+
+                    has_trait = nightswatch
+
+                    this != root
+                }
+
+
+                order_by = diplomacy
+
+                position = 0
+
+                check_range_bounds = no
+
+
+                save_scope_as = jon_loyal_successor
+            }
+        }
+
+
+        # =================================================
+        # MARK MUTINEERS
+        #
+        # These characters will later be executed by Jon.
+        # =================================================
+
+        every_vassal_or_below = {
+
+            limit = {
+
+                is_alive = yes
+                is_adult = yes
+
+                has_trait = nightswatch
+
+                this != root
+                this != scope:jon_loyal_successor
+
+
+                opinion = {
+                    target = root
+                    value <= -10
+                }
+            }
+
+
+            add_character_flag = segrellion_jon_mutineer
+        }
+
+
+        every_courtier = {
+
+            limit = {
+
+                is_alive = yes
+                is_adult = yes
+
+                has_trait = nightswatch
+
+                this != root
+                this != scope:jon_loyal_successor
+
+
+                opinion = {
+                    target = root
+                    value <= -10
+                }
+            }
+
+
+            add_character_flag = segrellion_jon_mutineer
+        }
+
+
+        # =================================================
+        # REPRESENTATIVE KILLER
+        # =================================================
+
+        ordered_vassal_or_below = {
+
+            limit = {
+
+                is_alive = yes
+
+                has_character_flag = segrellion_jon_mutineer
+            }
+
 
             order_by = intrigue
 
             position = 0
 
             check_range_bounds = no
+
 
             save_scope_as = jon_mutineer
         }
@@ -187,18 +422,22 @@ segrellion_jon_resurrection.0010 = {
                 limit = {
 
                     is_alive = yes
-                    is_adult = yes
 
                     has_trait = nightswatch
 
                     this != root
+                    this != scope:jon_loyal_successor
                 }
+
 
                 order_by = intrigue
 
                 position = 0
 
                 check_range_bounds = no
+
+
+                add_character_flag = segrellion_jon_mutineer
 
                 save_scope_as = jon_mutineer
             }
@@ -219,10 +458,6 @@ segrellion_jon_resurrection.0010 = {
         name = segrellion_jon_resurrection.0010.a
 
 
-        # =================================================
-        # MARK THE STORY BEFORE DEATH
-        # =================================================
-
         add_character_flag = segrellion_jon_murdered_by_watch
 
 
@@ -235,17 +470,98 @@ segrellion_jon_resurrection.0010 = {
 
 
         # =================================================
-        # START THE RESURRECTION ROUTER BEFORE JON DIES
-        #
-        # Root of 0090 will be Melisandre, so Jon's death
-        # cannot invalidate the queued event.
+        # SAVE TEMPORARY LORD COMMANDER
         # =================================================
 
-        character:Melisandre_1 ?= {
+        set_global_variable = {
+
+            name = segrellion_jon_loyal_lord_commander
+
+            value = scope:jon_loyal_successor
+        }
+
+
+        # =================================================
+        # TRANSFER NIGHT'S WATCH
+        # =================================================
+
+        create_title_and_vassal_change = {
+
+            type = granted
+
+            save_scope_as = jon_watch_transfer
+
+            add_claim_on_loss = no
+        }
+
+
+        title:k_the_wall = {
+
+            change_title_holder_include_vassals = {
+
+                holder = scope:jon_loyal_successor
+
+                change = scope:jon_watch_transfer
+
+                government_base = root
+            }
+        }
+
+
+        every_in_list = {
+
+            list = segrellion_jon_watch_titles
+
+
+            limit = {
+                this != title:k_the_wall
+            }
+
+
+            change_title_holder = {
+
+                holder = scope:jon_loyal_successor
+
+                change = scope:jon_watch_transfer
+            }
+        }
+
+
+        resolve_title_and_vassal_change = scope:jon_watch_transfer
+
+
+        # =================================================
+        # ABSOLUTELY FORCE NIGHT'S WATCH GOVERNMENT
+        #
+        # Do not let CK3 infer Feudal.
+        # =================================================
+
+        scope:jon_loyal_successor = {
+
+            change_government = nights_watch_government
+
+            set_realm_capital = title:c_castle_black
+
+            add_character_flag = segrellion_jon_resurrection_chain_started
+
+
+            add_character_flag = {
+
+                flag = segrellion_body_in_ice_queued
+
+                days = 10
+            }
+
+
+            # =============================================
+            # DIRECT EVENT HANDOFF
+            #
+            # THIS is the important fix.
+            # =============================================
 
             trigger_event = {
 
-                id = segrellion_jon_resurrection.0090
+                id = segrellion_jon_resurrection.0100
 
                 days = 2
             }
@@ -275,7 +591,6 @@ segrellion_jon_resurrection.0010 = {
         else = {
 
             death = {
-
                 death_reason = death_murder
             }
         }
@@ -287,131 +602,6 @@ segrellion_jon_resurrection.0010 = {
     }
 }
 
-
-
-# =========================================================
-# 0090 - RESURRECTION HANDOFF
-#
-# HIDDEN
-#
-# ROOT = Melisandre
-#
-# This event waits until CK3 has finished Night's Watch
-# succession and then gives the resurrection storyline
-# directly to the new Lord Commander.
-#
-# If succession has not resolved yet, it retries.
-# =========================================================
-
-segrellion_jon_resurrection.0090 = {
-
-    hidden = yes
-
-
-    trigger = {
-
-        this = character:Melisandre_1
-
-        is_alive = yes
-
-
-        character:Stark_7 = {
-
-            is_alive = no
-
-            has_character_flag = segrellion_jon_murdered_by_watch
-        }
-
-
-        has_global_variable = segrellion_jon_resurrection_pending
-
-
-        NOT = {
-            has_global_variable = segrellion_jon_resurrection_chain_handed_off
-        }
-
-
-        NOT = {
-            has_global_variable = segrellion_resurrected_jon
-        }
-    }
-
-
-    immediate = {
-
-        # =================================================
-        # A NEW LORD COMMANDER EXISTS
-        # =================================================
-
-        if = {
-
-            limit = {
-
-                title:k_the_wall = {
-                    exists = holder
-                }
-
-
-                title:k_the_wall.holder = {
-
-                    is_alive = yes
-
-                    this != character:Stark_7
-                }
-            }
-
-
-            title:k_the_wall.holder = {
-
-                add_character_flag = segrellion_jon_resurrection_chain_started
-
-
-                save_scope_as = resurrected_jon_lord_commander
-
-
-                trigger_event = {
-
-                    id = segrellion_jon_resurrection.0100
-
-                    days = 1
-                }
-            }
-
-
-            set_global_variable = {
-
-                name = segrellion_jon_resurrection_chain_handed_off
-
-                value = yes
-            }
-
-
-            set_global_variable = {
-
-                name = segrellion_jon_resurrection_lord_commander
-
-                value = scope:resurrected_jon_lord_commander
-            }
-        }
-
-
-        # =================================================
-        # SUCCESSION HAS NOT FINISHED
-        #
-        # Try again shortly.
-        # =================================================
-
-        else = {
-
-            trigger_event = {
-
-                id = segrellion_jon_resurrection.0090
-
-                days = 2
-            }
-        }
-    }
-}
 
 # =========================================================
 # 0100 - THE BODY IN THE ICE
@@ -472,6 +662,10 @@ segrellion_jon_resurrection.0100 = {
 
 
     immediate = {
+
+		remove_character_flag = segrellion_body_in_ice_queued
+
+		add_character_flag = segrellion_body_in_ice_seen
 
         character:Stark_7 = {
             save_scope_as = dead_jon
