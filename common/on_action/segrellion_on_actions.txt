@@ -100,7 +100,6 @@ on_title_gain = {
 		segrellion_young_griff_daenerys_pact_title_gain
 		segrellion_north_story_title_gain_cleanup
 		segrellion_second_war_throne_settlement
-		segrellion_jon_watch_succession_resurrection_start
 	}
 }
 
@@ -2209,78 +2208,6 @@ segrellion_stannis_iron_throne_war_setup = {
 			}
 		}
 	}
-}
-
-# =========================================================
-# JON SNOW - NIGHT'S WATCH SUCCESSION FAILSAFE
-#
-# Primary handoff:
-#   Melisandre -> 0090 -> new Lord Commander
-#
-# This on_action exists ONLY as a second safety net.
-# =========================================================
-
-segrellion_jon_watch_succession_resurrection_start = {
-
-    trigger = {
-
-        scope:title = title:k_the_wall
-
-
-        scope:previous_holder ?= {
-
-            this = character:Stark_7
-
-            is_alive = no
-
-            has_character_flag = segrellion_jon_murdered_by_watch
-        }
-
-
-        has_global_variable = segrellion_jon_resurrection_story_enabled
-
-        has_global_variable = segrellion_jon_resurrection_pending
-
-
-        NOT = {
-            has_global_variable = segrellion_jon_resurrection_chain_handed_off
-        }
-
-
-        NOT = {
-            has_global_variable = segrellion_resurrected_jon
-        }
-    }
-
-
-    effect = {
-
-        add_character_flag = segrellion_jon_resurrection_chain_started
-
-
-        set_global_variable = {
-
-            name = segrellion_jon_resurrection_lord_commander
-
-            value = root
-        }
-
-
-        set_global_variable = {
-
-            name = segrellion_jon_resurrection_chain_handed_off
-
-            value = yes
-        }
-
-
-        trigger_event = {
-
-            id = segrellion_jon_resurrection.0100
-
-            days = 1
-        }
-    }
 }
 
 

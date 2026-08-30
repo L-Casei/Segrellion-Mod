@@ -22,81 +22,86 @@
 
 segrellion_setup_jon_resurrection_story_effect = {
 
-    if = {
+	if = {
 
-        limit = {
+		limit = {
 
-            game_start_date = 8300.8.20
+			game_start_date = 8300.8.20
 
-            character:Stark_7 ?= {
-                is_alive = yes
-            }
-        }
-
-
-        set_global_variable = {
-            name = segrellion_jon_resurrection_story_enabled
-            value = yes
-        }
+			character:Stark_7 ?= {
+				is_alive = yes
+			}
+		}
 
 
-        character:Stark_7 = {
-
-            # =================================================
-            # REMOVE THE OLD ARTIFICIAL PROTECTION
-            # =================================================
-
-            if = {
-
-                limit = {
-                    has_character_modifier = segrellion_jon_northern_story_protection_modifier
-                }
-
-                remove_character_modifier = segrellion_jon_northern_story_protection_modifier
-            }
+		set_global_variable = {
+			name = segrellion_jon_resurrection_story_enabled
+			value = yes
+		}
 
 
-            remove_character_flag = segrellion_jon_northern_story_protected
+		character:Stark_7 = {
+
+			# =================================================
+			# REMOVE OLD LONG-TERM PROTECTION
+			# =================================================
+
+			if = {
+
+				limit = {
+					has_character_modifier = segrellion_jon_northern_story_protection_modifier
+				}
+
+				remove_character_modifier = segrellion_jon_northern_story_protection_modifier
+			}
+
+			remove_character_flag = segrellion_jon_northern_story_protected
 
 
-            # =================================================
-            # SCHEDULE OUR MUTINY
-            #
-            # The temporary scheduling flag also allows the
-            # monthly failsafe to detect a lost event.
-            # =================================================
+			# =================================================
+			# VERY SHORT STORY LOCK
+			#
+			# Jon must die to OUR For the Watch event.
+			# This only protects him during the opening weeks.
+			# =================================================
 
-            if = {
+			if = {
 
-                limit = {
+				limit = {
+					NOT = {
+						has_character_modifier = segrellion_jon_for_the_watch_story_lock_modifier
+					}
+				}
 
-                    NOT = {
-                        has_character_flag = segrellion_jon_mutiny_pending
-                    }
-
-                    NOT = {
-                        has_character_flag = segrellion_jon_mutiny_fallback_scheduled
-                    }
-                }
-
-
-                add_character_flag = {
-
-                    flag = segrellion_jon_mutiny_fallback_scheduled
-
-                    days = 50
-                }
+				add_character_modifier = {
+					modifier = segrellion_jon_for_the_watch_story_lock_modifier
+					days = 90
+				}
+			}
 
 
-                trigger_event = {
+			# =================================================
+			# SCHEDULE THE MUTINY
+			# =================================================
 
-                    id = segrellion_jon_resurrection.0001
+			if = {
 
-                    days = { 35 50 }
-                }
-            }
-        }
-    }
+				limit = {
+					NOT = {
+						has_character_flag = segrellion_jon_mutiny_fallback_scheduled
+					}
+				}
+
+				add_character_flag = segrellion_jon_mutiny_fallback_scheduled
+
+
+				trigger_event = {
+					id = segrellion_jon_resurrection.0001
+					days = { 35 60 }
+				}
+			}
+		}
+	}
 }
 
 

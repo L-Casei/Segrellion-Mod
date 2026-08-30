@@ -1226,6 +1226,42 @@ segrellion_stannis_northern_campaign_cb = {
 
 	on_invalidated = {
 
+		if = {
+
+			limit = {
+
+				character:Baratheon_3 = {
+					is_alive = no
+				}
+
+
+				has_global_variable = segrellion_resurrected_jon
+
+
+				global_var:segrellion_resurrected_jon ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_jon_joined_stannis_northern_war
+
+					NOT = {
+						has_title = title:e_the_north
+					}
+				}
+			}
+
+
+			global_var:segrellion_resurrected_jon = {
+
+				trigger_event = {
+
+					id = segrellion_jon_resurrection.0500
+
+					days = { 3 7 }
+				}
+			}
+		}
+
 		scope:attacker = {
 
 			remove_character_flag = segrellion_stannis_northern_cb_authorized
