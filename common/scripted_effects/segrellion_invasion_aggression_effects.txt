@@ -97,6 +97,23 @@ segrellion_initialize_daenerys_aggression_effect = {
 			add_character_flag = segrellion_daenerys_invasion_event_scheduled
 
 
+			# Apply the war lock immediately. Waiting for the first monthly
+			# pulse leaves enough time for AGOT's AI to attack Dragonstone.
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+					}
+				}
+
+				add_character_modifier = {
+					modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+				}
+			}
+
+
 			# Prevent vanilla / AGOT claim wars from
 			# bypassing the scripted invasion route.
 
@@ -144,8 +161,8 @@ segrellion_initialize_daenerys_aggression_effect = {
 			# =============================================
 			# PASSIVE
 			#
-			# Same Westeros route, but the fleet is
-			# deliberately prepared much more slowly.
+			# 7-12 years, matching the game-rule description.
+			# Do not replace this with the short internal event delays.
 			# =============================================
 
 			else_if = {
@@ -158,13 +175,16 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
-					days = { 15 30 }
+					days = { 2555 4380 }
 				}
 			}
 
 
 			# =============================================
 			# DEFAULT
+			#
+			# 2-5 years, matching the game-rule description.
+			# This is the strategic invasion delay, not flavor pacing.
 			# =============================================
 
 			else_if = {
@@ -177,7 +197,7 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
-					days = { 15 30 }
+					days = { 730 1825 }
 				}
 			}
 
@@ -202,14 +222,14 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 
 			# =============================================
-			# FALLBACK = DEFAULT
+			# FALLBACK = DEFAULT (2-5 years)
 			# =============================================
 
 			else = {
 
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
-					days = { 15 30 }
+					days = { 730 1825 }
 				}
 			}
 		}
