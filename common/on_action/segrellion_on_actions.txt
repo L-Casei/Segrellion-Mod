@@ -161,6 +161,8 @@ segrellion_winds_300_aftermath_check = {
 		segrellion_check_massey_reunification_effect = yes
 
 		segrellion_check_daenerys_marriage_effect = yes
+
+		segrellion_check_mya_deferred_marriage_effect = yes
 	}
 }
 
@@ -1490,7 +1492,7 @@ segrellion_young_griff_blackfyre_reveal_on_title_gain = {
 
 		trigger_event = {
 			id = segrellion_young_griff.5000
-			days = { 180 365 }
+			days = { 30 180 }
 		}
 	}
 }
@@ -1838,9 +1840,19 @@ segrellion_second_war_register_contender = {
 # =========================================================
 # STANNIS - IRON THRONE WAR SETUP
 #
-# Saves the actual war.
-# The ruler of the North joins Stannis.
-# The Vale is invited.
+# The North and the Vale are committed to Stannis'
+# campaign for the Iron Throne.
+#
+# Whoever currently rules either realm joins him,
+# together with their direct great bannermen.
+#
+# This is deliberately dynamic:
+# Jon, Sansa, Rickon or another Northern ruler all work.
+# The same applies to the current ruler of the Vale.
+#
+# If AGOT's megawar system initially places one of these
+# rulers on the Iron Throne's side, remove them from that
+# side first and force them onto Stannis' side.
 # =========================================================
 
 segrellion_stannis_iron_throne_war_setup = {
@@ -1852,18 +1864,15 @@ segrellion_stannis_iron_throne_war_setup = {
 
 		scope:war = {
 
+			primary_attacker = character:Baratheon_3
+
+
 			casus_belli = {
 
 				any_target_title = {
 
 					this = title:h_the_iron_throne
 				}
-			}
-
-
-			claimant ?= {
-
-				this = character:Baratheon_3
 			}
 		}
 	}
@@ -1873,7 +1882,7 @@ segrellion_stannis_iron_throne_war_setup = {
 
 
 		# =================================================
-		# SAVE STANNIS' THRONE WAR
+		# SAVE STANNIS' IRON THRONE WAR
 		# =================================================
 
 		character:Baratheon_3 = {
@@ -1884,14 +1893,22 @@ segrellion_stannis_iron_throne_war_setup = {
 
 				value = scope:war
 			}
+
+
+			add_character_flag = segrellion_stannis_iron_throne_war_started
 		}
 
 
 		# =================================================
 		# THE NORTH
+		#
+		# Whoever currently holds e_the_north joins.
 		# =================================================
 
 		title:e_the_north.holder ?= {
+
+			save_scope_as = segrellion_stannis_north_ally
+
 
 			if = {
 
@@ -1903,73 +1920,224 @@ segrellion_stannis_iron_throne_war_setup = {
 				}
 
 
-				save_scope_as = segrellion_stannis_north_ally
-			}
-		}
+				scope:war = {
 
 
-		scope:segrellion_stannis_north_ally ?= {
-
-			add_character_flag = segrellion_north_supported_stannis_iron_throne
-
-
-			scope:war = {
-
-				if = {
-
-					limit = {
-
-						NOT = {
-							is_participant = scope:segrellion_stannis_north_ally
-						}
-					}
-
-
-					add_attacker = scope:segrellion_stannis_north_ally
-				}
-			}
-		}
-
-
-		# =================================================
-		# CALL THE VALE
-		# =================================================
-
-		character:Baratheon_3 = {
-
-			if = {
-
-				limit = {
-
-					NOT = {
-						has_character_flag = segrellion_stannis_vale_called
-					}
-				}
-
-
-				add_character_flag = segrellion_stannis_vale_called
-
-
-				title:e_the_vale.holder ?= {
+					# If the megawar system placed the
+					# Northern ruler against Stannis,
+					# remove that participation first.
 
 					if = {
 
 						limit = {
 
-							is_alive = yes
-
-							this != character:Baratheon_3
+							is_defender = scope:segrellion_stannis_north_ally
 						}
 
 
-						trigger_event = {
+						remove_participant = scope:segrellion_stannis_north_ally
+					}
 
-							id = segrellion_stannis.2010
 
-							days = { 1 3 }
+					# Force the ruler of the North
+					# onto Stannis' side.
+
+					if = {
+
+						limit = {
+
+							NOT = {
+
+								is_attacker = scope:segrellion_stannis_north_ally
+							}
 						}
+
+
+						add_attacker = scope:segrellion_stannis_north_ally
 					}
 				}
+
+
+				add_character_flag = segrellion_north_supported_stannis_iron_throne
+			}
+
+
+			# =================================================
+			# NORTHERN GREAT LORDS
+			#
+			# Direct vassals of the current ruler of the North.
+			#
+			# This naturally catches the major houses:
+			# Manderly, Glover, Umber, etc., without tying
+			# the storyline to individual character IDs.
+			# =================================================
+
+			every_vassal = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					this != character:Baratheon_3
+				}
+
+
+				save_temporary_scope_as = segrellion_stannis_northern_bannerlord
+
+
+				scope:war = {
+
+
+					if = {
+
+						limit = {
+
+							is_defender = scope:segrellion_stannis_northern_bannerlord
+						}
+
+
+						remove_participant = scope:segrellion_stannis_northern_bannerlord
+					}
+
+
+					if = {
+
+						limit = {
+
+							NOT = {
+
+								is_attacker = scope:segrellion_stannis_northern_bannerlord
+							}
+						}
+
+
+						add_attacker = scope:segrellion_stannis_northern_bannerlord
+					}
+				}
+
+
+				add_character_flag = segrellion_northern_bannerlord_supported_stannis
+			}
+		}
+
+
+		# =================================================
+		# THE VALE
+		#
+		# No invitation and no AI choice.
+		#
+		# Whoever currently holds e_the_vale joins Stannis.
+		# =================================================
+
+		title:e_the_vale.holder ?= {
+
+			save_scope_as = segrellion_stannis_vale_ally
+
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != character:Baratheon_3
+				}
+
+
+				scope:war = {
+
+
+					if = {
+
+						limit = {
+
+							is_defender = scope:segrellion_stannis_vale_ally
+						}
+
+
+						remove_participant = scope:segrellion_stannis_vale_ally
+					}
+
+
+					if = {
+
+						limit = {
+
+							NOT = {
+
+								is_attacker = scope:segrellion_stannis_vale_ally
+							}
+						}
+
+
+						add_attacker = scope:segrellion_stannis_vale_ally
+					}
+				}
+
+
+				add_character_flag = segrellion_vale_supported_stannis_iron_throne
+			}
+
+
+			# =================================================
+			# VALE GREAT LORDS
+			#
+			# Direct vassals of the current ruler of the Vale.
+			#
+			# Royce, Corbray and the other principal Vale
+			# lords are therefore taken from the actual
+			# current political setup.
+			# =================================================
+
+			every_vassal = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					this != character:Baratheon_3
+				}
+
+
+				save_temporary_scope_as = segrellion_stannis_vale_bannerlord
+
+
+				scope:war = {
+
+
+					if = {
+
+						limit = {
+
+							is_defender = scope:segrellion_stannis_vale_bannerlord
+						}
+
+
+						remove_participant = scope:segrellion_stannis_vale_bannerlord
+					}
+
+
+					if = {
+
+						limit = {
+
+							NOT = {
+
+								is_attacker = scope:segrellion_stannis_vale_bannerlord
+							}
+						}
+
+
+						add_attacker = scope:segrellion_stannis_vale_bannerlord
+					}
+				}
+
+
+				add_character_flag = segrellion_vale_bannerlord_supported_stannis
 			}
 		}
 	}

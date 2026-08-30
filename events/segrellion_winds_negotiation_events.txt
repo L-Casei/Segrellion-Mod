@@ -2866,30 +2866,104 @@ segrellion_support.6020 = {
 
 		name = segrellion_support.6020.a
 
+
 		trigger = {
 
 			is_married = no
 
+
 			var:segrellion_vale_negotiator = {
+
 				is_alive = yes
+
 				is_married = no
 			}
 		}
 
+
 		custom_tooltip = segrellion_support.6020.marriage_tt
 
+
 		ai_chance = {
+
 			base = 25
 		}
 
 
-		marry = var:segrellion_vale_negotiator
+		# =================================================
+		# THE MARRIAGE IS PROMISED, NOT IMMEDIATE
+		#
+		# Mya remains in the Vale while Robin requires
+		# her regency.
+		# =================================================
 
 		add_character_flag = segrellion_vale_marriage_pact
+
+		add_character_flag = segrellion_mya_marriage_deferred
+
+
+		# Preserve Mya after the temporary negotiation
+		# variable is removed.
+
+		set_variable = {
+
+			name = segrellion_mya_promised_bride
+
+			value = var:segrellion_vale_negotiator
+		}
+
+
+		# Preserve the current Lord of the Vale.
+		#
+		# Normally this is Robin Arryn.
+		# His adulthood, death or a change of regent can
+		# all make the marriage promise come due.
+
+		set_variable = {
+
+			name = segrellion_mya_regency_ward
+
+			value = scope:support_robin
+		}
+
+
+		# =================================================
+		# PROTECT MYA FROM AN AI MARRIAGE
+		# =================================================
+
+		var:segrellion_vale_negotiator = {
+
+			add_character_flag = segrellion_mya_promised_to_daemon_after_regency
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						has_trait = refusing_marriage
+					}
+				}
+
+
+				add_trait = refusing_marriage
+
+				add_character_flag = segrellion_mya_pact_added_refusing_marriage
+			}
+		}
+
+
+		# =================================================
+		# VALE SUPPORT IS IMMEDIATE
+		#
+		# The marriage is deferred, not the military pact.
+		# =================================================
 
 		remove_character_flag = segrellion_waiting_for_vale_answer
 
 		remove_variable = segrellion_vale_negotiator
+
 
 		segrellion_grant_vale_support_effect = yes
 	}

@@ -1,0 +1,89 @@
+# =========================================================
+# STANNIS BARATHEON
+# PLAY AS JON SNOW
+#
+# Available only after Jon has accepted Winterfell
+# and become ruler of the North.
+# =========================================================
+
+segrellion_play_as_jon_snow_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_dynasty_house.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_play_as_jon_snow_decision_desc
+
+	selection_tooltip = segrellion_play_as_jon_snow_decision_tooltip
+
+	confirm_text = segrellion_play_as_jon_snow_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		# This option belongs specifically to a human Stannis.
+		this = character:Baratheon_3
+		is_ai = no
+
+
+		# Jon must actually have accepted Stannis' offer
+		# and become ruler of the North.
+
+		character:Stark_7 ?= {
+
+			is_alive = yes
+
+			is_ai = yes
+
+			is_playable_character = yes
+
+			has_character_flag = segrellion_jon_restored_to_winterfell
+
+			has_title = title:e_the_north
+			has_title = title:c_winterfell
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		character:Stark_7 ?= {
+
+			is_alive = yes
+
+			is_ai = yes
+
+			is_playable_character = yes
+
+			has_character_flag = segrellion_jon_restored_to_winterfell
+
+			has_title = title:e_the_north
+			has_title = title:c_winterfell
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_play_as_jon_snow_decision_effect_tt
+
+		hidden_effect = {
+
+			set_player_character = character:Stark_7
+		}
+	}
+}

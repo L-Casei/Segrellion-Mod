@@ -1046,6 +1046,313 @@ segrellion_check_daenerys_marriage_effect = {
 	}
 }
 
+# =========================================================
+# MYA STONE - DEFERRED MARRIAGE
+#
+# Mya remains in the Vale while she serves as regent.
+#
+# The promise comes due if:
+#
+# - Robin reaches adulthood;
+# - Robin dies;
+# - Mya ceases to be Robin's regent.
+#
+# If Daemon has restored the Flamelands when that happens,
+# Mya travels to him and the marriage is completed.
+#
+# Otherwise the marriage pact is broken.
+#
+# The Robin death condition is intentionally handled
+# silently as a failsafe.
+# =========================================================
+
+segrellion_check_mya_deferred_marriage_effect = {
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_mya_marriage_deferred
+
+				has_variable = segrellion_mya_promised_bride
+			}
+
+
+			# Preserve Mya as a proper scope for this check.
+
+			var:segrellion_mya_promised_bride = {
+
+				save_scope_as = segrellion_mya_deferred_bride
+			}
+
+
+			# =================================================
+			# THE PROMISE HAS BECOME IMPOSSIBLE
+			#
+			# Daemon died, married somebody else,
+			# or Mya died / married somebody else.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					OR = {
+
+						is_alive = no
+
+						is_married = yes
+
+
+						scope:segrellion_mya_deferred_bride = {
+
+							is_alive = no
+						}
+
+
+						scope:segrellion_mya_deferred_bride = {
+
+							is_married = yes
+						}
+					}
+				}
+
+
+				scope:segrellion_mya_deferred_bride = {
+
+					remove_character_flag = segrellion_mya_promised_to_daemon_after_regency
+
+
+					if = {
+
+						limit = {
+
+							has_character_flag = segrellion_mya_pact_added_refusing_marriage
+						}
+
+
+						if = {
+
+							limit = {
+
+								has_trait = refusing_marriage
+							}
+
+
+							remove_trait = refusing_marriage
+						}
+
+
+						remove_character_flag = segrellion_mya_pact_added_refusing_marriage
+					}
+				}
+
+
+				remove_character_flag = segrellion_mya_marriage_deferred
+
+				remove_character_flag = segrellion_vale_marriage_pact
+
+				add_character_flag = segrellion_mya_marriage_pact_broken
+
+
+				remove_variable = segrellion_mya_promised_bride
+
+				remove_variable = segrellion_mya_regency_ward
+			}
+
+
+			# =================================================
+			# CHECK WHETHER MYA'S REGENCY IS OVER
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					OR = {
+
+
+						# Old-save safety:
+						# if the ward reference vanished,
+						# resolve the pact rather than
+						# leaving it frozen forever.
+
+						NOT = {
+
+							has_variable = segrellion_mya_regency_ward
+						}
+
+
+						# Robin / the Vale ruler died.
+
+						var:segrellion_mya_regency_ward ?= {
+
+							is_alive = no
+						}
+
+
+						# Robin has reached adulthood.
+
+						var:segrellion_mya_regency_ward ?= {
+
+							is_adult = yes
+						}
+
+
+						# Mya is no longer the regent of
+						# the ruler she promised to remain
+						# in the Vale for.
+
+						var:segrellion_mya_regency_ward ?= {
+
+							NOT = {
+
+								diarch = {
+
+									this = scope:segrellion_mya_deferred_bride
+								}
+							}
+						}
+					}
+				}
+
+
+				# =================================================
+				# DAEMON RESTORED THE FLAMELANDS
+				#
+				# The promise is fulfilled.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						is_married = no
+
+						has_title = title:e_flamelands
+
+
+						scope:segrellion_mya_deferred_bride = {
+
+							is_alive = yes
+
+							is_married = no
+						}
+					}
+
+
+					scope:segrellion_mya_deferred_bride = {
+
+						remove_character_flag = segrellion_mya_promised_to_daemon_after_regency
+
+
+						if = {
+
+							limit = {
+
+								has_character_flag = segrellion_mya_pact_added_refusing_marriage
+							}
+
+
+							if = {
+
+								limit = {
+
+									has_trait = refusing_marriage
+								}
+
+
+								remove_trait = refusing_marriage
+							}
+
+
+							remove_character_flag = segrellion_mya_pact_added_refusing_marriage
+						}
+
+
+						# Mya leaves the Vale and joins
+						# Daemon's court / camp.
+
+						set_employer = character:Segrellion_60
+
+						return_to_court = yes
+
+						set_location = character:Segrellion_60.location
+					}
+
+
+					# Complete the promised marriage.
+
+					marry = scope:segrellion_mya_deferred_bride
+
+
+					add_character_flag = segrellion_mya_marriage_completed
+				}
+
+
+				# =================================================
+				# DAEMON FAILED TO RESTORE THE FLAMELANDS
+				#
+				# Mya owes a restored lord a marriage,
+				# not a permanent exile.
+				# =================================================
+
+				else = {
+
+					scope:segrellion_mya_deferred_bride = {
+
+						remove_character_flag = segrellion_mya_promised_to_daemon_after_regency
+
+
+						if = {
+
+							limit = {
+
+								has_character_flag = segrellion_mya_pact_added_refusing_marriage
+							}
+
+
+							if = {
+
+								limit = {
+
+									has_trait = refusing_marriage
+								}
+
+
+								remove_trait = refusing_marriage
+							}
+
+
+							remove_character_flag = segrellion_mya_pact_added_refusing_marriage
+						}
+					}
+
+
+					remove_character_flag = segrellion_vale_marriage_pact
+
+					add_character_flag = segrellion_mya_marriage_pact_broken
+				}
+
+
+				# =================================================
+				# CLEANUP
+				# =================================================
+
+				remove_character_flag = segrellion_mya_marriage_deferred
+
+				remove_variable = segrellion_mya_promised_bride
+
+				remove_variable = segrellion_mya_regency_ward
+			}
+		}
+	}
+}
+
 
 # =========================================================
 # FUTURE HOOK
