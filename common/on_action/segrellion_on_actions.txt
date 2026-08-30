@@ -244,6 +244,21 @@ on_siege_completion = {
 	}
 }
 
+on_combat_end_winner = {
+
+	on_actions = {
+		segrellion_stannis_northern_battle_winner
+	}
+}
+
+
+on_combat_end_loser = {
+
+	on_actions = {
+		segrellion_stannis_northern_battle_loser
+	}
+}
+
 on_war_started = {
 
 	on_actions = {
@@ -2265,4 +2280,87 @@ segrellion_jon_watch_succession_resurrection_start = {
             days = { 2 5 }
         }
     }
+}
+
+# =========================================================
+# STANNIS - SCRIPTED BATTLE DEATH
+# =========================================================
+
+segrellion_stannis_northern_battle_winner = {
+
+	effect = {
+
+		every_side_commander = {
+
+			limit = {
+
+				this = character:Baratheon_3
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stannis_northern_campaign_active
+
+				NOT = {
+					has_character_flag = segrellion_stannis_battle_death_pending
+				}
+			}
+
+
+			random = {
+
+				chance = 10
+
+
+				add_character_flag = segrellion_stannis_battle_death_pending
+
+
+				trigger_event = {
+
+					id = segrellion_stannis.0080
+
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+segrellion_stannis_northern_battle_loser = {
+
+	effect = {
+
+		every_side_commander = {
+
+			limit = {
+
+				this = character:Baratheon_3
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stannis_northern_campaign_active
+
+				NOT = {
+					has_character_flag = segrellion_stannis_battle_death_pending
+				}
+			}
+
+
+			random = {
+
+				chance = 65
+
+
+				add_character_flag = segrellion_stannis_battle_death_pending
+
+
+				trigger_event = {
+
+					id = segrellion_stannis.0080
+
+					days = 1
+				}
+			}
+		}
+	}
 }

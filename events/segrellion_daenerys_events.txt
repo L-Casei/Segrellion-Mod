@@ -116,17 +116,6 @@ segrellion_daenerys_invasion.0001 = {
 		NOT = {
 			has_character_flag = segrellion_daenerys_invasion_committed
 		}
-
-
-		# Peaceful AI never enters the special invasion storyline.
-		OR = {
-
-			is_ai = no
-
-			NOT = {
-				has_game_rule = segrellion_daenerys_aggression_peaceful
-			}
-		}
 	}
 
 
@@ -151,7 +140,15 @@ segrellion_daenerys_invasion.0001 = {
 
 
 		ai_chance = {
+
 			base = 100
+
+			modifier = {
+
+				factor = 0
+
+				has_game_rule = segrellion_daenerys_aggression_peaceful
+			}
 		}
 
 
@@ -306,7 +303,15 @@ segrellion_daenerys_invasion.0001 = {
 
 
 		ai_chance = {
+
 			base = 0
+
+			modifier = {
+
+				add = 100
+
+				has_game_rule = segrellion_daenerys_aggression_peaceful
+			}
 		}
 
 
@@ -818,45 +823,63 @@ segrellion_daenerys_invasion.0006 = {
 
 		ai_chance = {
 
-			base = 0
+			base = 100
 
 			modifier = {
-				add = 100
-				has_game_rule = segrellion_daenerys_aggression_passive
-			}
 
-			modifier = {
-				add = 100
-				has_game_rule = segrellion_daenerys_aggression_default
-			}
+				factor = 0
 
-			modifier = {
-				add = 30
 				has_game_rule = segrellion_daenerys_aggression_aggressive
 			}
 		}
 
 
-		add_character_flag = segrellion_daenerys_fleet_project_active
+		if = {
+
+			limit = {
+
+				is_ai = yes
+
+				has_game_rule = segrellion_daenerys_aggression_passive
+			}
 
 
-		title:c_pentos.title_province = {
+			add_character_flag = segrellion_daenerys_passive_fleet_preparation
 
-			plan_great_project = {
 
-				founder = root
+			trigger_event = {
 
-				great_project_type = segrellion_daenerys_dragon_fleet
+				id = segrellion_daenerys_invasion.0014
 
-				save_scope_as = segrellion_daenerys_dragon_fleet_project
+				days = { 365 540 }
 			}
 		}
 
-		trigger_event = {
 
-			id = segrellion_daenerys_invasion.0013
+		else = {
 
-			days = { 7 14 }
+			add_character_flag = segrellion_daenerys_fleet_project_active
+
+
+			title:c_pentos.title_province = {
+
+				plan_great_project = {
+
+					founder = root
+
+					great_project_type = segrellion_daenerys_dragon_fleet
+
+					save_scope_as = segrellion_daenerys_dragon_fleet_project
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0013
+
+				days = { 7 14 }
+			}
 		}
 	}
 
@@ -877,7 +900,9 @@ segrellion_daenerys_invasion.0006 = {
 			base = 0
 
 			modifier = {
-				add = 70
+
+				add = 100
+
 				has_game_rule = segrellion_daenerys_aggression_aggressive
 			}
 		}
@@ -1925,6 +1950,71 @@ segrellion_daenerys_invasion.0015 = {
 		}
 	}
 }
+
+
+# =========================================================
+# 0014 - PASSIVE FLEET PREPARATION
+#
+# Daenerys has chosen Westeros, but her preparations
+# proceed cautiously and slowly.
+# =========================================================
+
+segrellion_daenerys_invasion.0014 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_passive_fleet_preparation
+
+		has_character_flag = segrellion_daenerys_camped_at_pentos
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_fleet_project_active
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_passive_fleet_preparation
+
+		add_character_flag = segrellion_daenerys_fleet_project_active
+
+
+		title:c_pentos.title_province = {
+
+			plan_great_project = {
+
+				founder = root
+
+				great_project_type = segrellion_daenerys_dragon_fleet
+
+				save_scope_as = segrellion_daenerys_dragon_fleet_project
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0013
+
+			days = { 7 14 }
+		}
+	}
+}
+
+
+
 
 # =========================================================
 # 0016 - DEFERRED BEACON MARRIAGE CHECK

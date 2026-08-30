@@ -68,10 +68,9 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 
 		# =================================================
-		# PLAYER DAENERYS
+		# PLAYER
 		#
-		# Game Rule controls AI only.
-		# Player receives the storyline normally.
+		# Game Rule controls AI behavior only.
 		# =================================================
 
 		if = {
@@ -90,40 +89,16 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 
 		# =================================================
-		# AI DAENERYS
+		# AI
 		# =================================================
 
 		else = {
 
 			add_character_flag = segrellion_daenerys_invasion_event_scheduled
 
-			# Keep AI Daenerys completely out of ordinary wars while her
-			# game-rule delay and scripted Westerosi invasion are pending.
-			# Claims alone are not sufficient because AGOT supplies other CBs.
-			if = {
-				limit = {
-					NOT = {
-						has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
-					}
-				}
-				add_character_modifier = {
-					modifier = segrellion_daenerys_preparing_invasion_ai_modifier
-				}
-			}
 
-
-			# ---------------------------------------------
-			# REMOVE MECHANICAL WESTEROSI CLAIMS
-			#
-			# Daenerys must not bypass the scripted
-			# invasion by declaring ordinary claim wars
-			# from Essos.
-			#
-			# The Iron Throne claim was already removed,
-			# but her Dragonstone claim was still allowing
-			# vanilla / AGOT AI to attack Stannis directly
-			# from Pentos.
-			# ---------------------------------------------
+			# Prevent vanilla / AGOT claim wars from
+			# bypassing the scripted invasion route.
 
 			if = {
 
@@ -145,10 +120,11 @@ segrellion_initialize_daenerys_aggression_effect = {
 			}
 
 
-
-			# =================================================
+			# =============================================
 			# PEACEFUL
-			# =================================================
+			#
+			# Daenerys consciously rejects Westeros.
+			# =============================================
 
 			if = {
 
@@ -156,14 +132,21 @@ segrellion_initialize_daenerys_aggression_effect = {
 					has_game_rule = segrellion_daenerys_aggression_peaceful
 				}
 
-				add_character_flag = segrellion_daenerys_ai_invasion_suppressed
+				add_character_flag = segrellion_daenerys_ai_free_cities_route
+
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0001
+					days = { 15 30 }
+				}
 			}
 
 
-			# =================================================
+			# =============================================
 			# PASSIVE
-			# 7-12 years.
-			# =================================================
+			#
+			# Same Westeros route, but the fleet is
+			# deliberately prepared much more slowly.
+			# =============================================
 
 			else_if = {
 
@@ -171,17 +154,18 @@ segrellion_initialize_daenerys_aggression_effect = {
 					has_game_rule = segrellion_daenerys_aggression_passive
 				}
 
+				add_character_flag = segrellion_daenerys_ai_slow_fleet
+
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
-					days = { 2555 4380 }
+					days = { 15 30 }
 				}
 			}
 
 
-			# =================================================
+			# =============================================
 			# DEFAULT
-			# 2-5 years.
-			# =================================================
+			# =============================================
 
 			else_if = {
 
@@ -189,23 +173,26 @@ segrellion_initialize_daenerys_aggression_effect = {
 					has_game_rule = segrellion_daenerys_aggression_default
 				}
 
+				add_character_flag = segrellion_daenerys_ai_standard_fleet
+
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
-					# Default is intentionally two to five years.
-					days = { 730 1825 }
+					days = { 15 30 }
 				}
 			}
 
 
-			# =================================================
+			# =============================================
 			# AGGRESSIVE
-			# =================================================
+			# =============================================
 
 			else_if = {
 
 				limit = {
 					has_game_rule = segrellion_daenerys_aggression_aggressive
 				}
+
+				add_character_flag = segrellion_daenerys_ai_rush_crossing
 
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
@@ -214,15 +201,15 @@ segrellion_initialize_daenerys_aggression_effect = {
 			}
 
 
-			# =================================================
-			# SAFETY FALLBACK
-			# =================================================
+			# =============================================
+			# FALLBACK = DEFAULT
+			# =============================================
 
 			else = {
 
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0001
-					days = { 730 1825 }
+					days = { 15 30 }
 				}
 			}
 		}

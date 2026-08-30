@@ -684,9 +684,97 @@ segrellion_stannis.0017 = {
 
 		trigger_event = {
 
-			id = segrellion_stannis.0020
+			id = segrellion_stannis.0018
 
 			days = { 5 10 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0018 - THE ROAD TO WINTERFELL
+#
+# Root = Stannis
+#
+# The Northern host has crossed the country from the Wall
+# through the mountain clans and reached Deepwood Motte.
+#
+# From here, the campaign against the Boltons truly begins.
+# =========================================================
+
+segrellion_stannis.0018 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0018.t
+	desc = segrellion_stannis.0018.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_cb_authorized
+
+		NOT = {
+			has_character_flag = segrellion_stannis_northern_campaign_started
+		}
+
+		NOT = {
+			has_character_flag = segrellion_stannis_reached_deepwood
+		}
+	}
+
+
+	immediate = {
+
+		set_location = title:c_deepwood.title_province
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0018.a
+
+		custom_tooltip = segrellion_stannis.0018.a.tt
+
+
+		add_character_flag = segrellion_stannis_reached_deepwood
+
+
+		trigger_event = {
+
+			id = segrellion_stannis.0020
+
+			days = 1
 		}
 
 
@@ -715,6 +803,7 @@ segrellion_stannis.0020 = {
 		is_alive = yes
 
 		has_character_flag = segrellion_stannis_northern_cb_authorized
+		has_character_flag = segrellion_stannis_reached_deepwood
 
 		NOT = {
 			has_character_flag = segrellion_stannis_northern_campaign_started
@@ -2168,5 +2257,74 @@ segrellion_stannis.2020 = {
 	option = {
 
 		name = segrellion_stannis.2020.a
+	}
+}
+
+# =========================================================
+# 0080 - THE LAST BATTLE
+#
+# Stannis has been mortally wounded while commanding
+# the Northern Campaign.
+# =========================================================
+
+segrellion_stannis.0080 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0080.t
+	desc = segrellion_stannis.0080.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_battle_death_pending
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0080.a
+
+
+		add_character_flag = segrellion_stannis_died_in_northern_battle
+
+		add_character_flag = segrellion_stannis_northern_campaign_failed
+
+
+		hidden_effect = {
+
+			death = {
+				death_reason = death_battle
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }
