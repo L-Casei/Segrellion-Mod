@@ -96,6 +96,26 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 			add_character_flag = segrellion_daenerys_invasion_event_scheduled
 
+			# =================================================
+			# HARD WAR LOCK
+			#
+			# ai_war_chance only influences AI willingness.
+			# sworn_peace actually blocks the standard
+			# declare-war interaction.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = sworn_peace
+					}
+				}
+
+				add_character_flag = sworn_peace
+			}
+
 
 			# Apply the war lock immediately. Waiting for the first monthly
 			# pulse leaves enough time for AGOT's AI to attack Dragonstone.
@@ -239,11 +259,8 @@ segrellion_initialize_daenerys_aggression_effect = {
 # =========================================================
 # DAENERYS - SCRIPTED INVASION PEACE GUARD
 #
-# Save-compatible repair.
-#
-# While AI Daenerys has committed to Westeros but has not
-# physically landed there yet, she must not initiate normal
-# AI wars.
+# Prevent AI Daenerys from declaring ordinary wars while
+# waiting for the scripted Westerosi invasion.
 # =========================================================
 
 segrellion_daenerys_invasion_peace_guard_effect = {
@@ -277,6 +294,28 @@ segrellion_daenerys_invasion_peace_guard_effect = {
 			}
 
 
+			# =================================================
+			# HARD WAR LOCK
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = sworn_peace
+					}
+				}
+
+				add_character_flag = sworn_peace
+			}
+
+
+			# =================================================
+			# AI WAR DISCOURAGEMENT
+			# Secondary protection.
+			# =================================================
+
 			if = {
 
 				limit = {
@@ -292,9 +331,9 @@ segrellion_daenerys_invasion_peace_guard_effect = {
 			}
 
 
-			# ---------------------------------------------
-			# Claims that can bypass the scripted route.
-			# ---------------------------------------------
+			# =================================================
+			# REMOVE BYPASS CLAIMS
+			# =================================================
 
 			if = {
 
@@ -317,14 +356,28 @@ segrellion_daenerys_invasion_peace_guard_effect = {
 		}
 
 
-		else_if = {
+		else = {
 
-			limit = {
+			# Story lock is no longer required.
 
-				has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+			if = {
+
+				limit = {
+					has_character_flag = sworn_peace
+				}
+
+				remove_character_flag = sworn_peace
 			}
 
-			remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+
+			if = {
+
+				limit = {
+					has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+				}
+
+				remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+			}
 		}
 	}
 }
