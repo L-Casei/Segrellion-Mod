@@ -1,5 +1,101 @@
 ﻿namespace = segrellion_stannis
 
+# =========================================================
+# 0000 - FURY BURNS
+#
+# Root = Stannis Baratheon
+#
+# Opening event for Stannis in the 300 AC bookmark.
+# A retrospective of the Blackwater, Dragonstone,
+# the Wall and the war against the wildlings.
+#
+# This is the first visible event of his storyline.
+# =========================================================
+
+segrellion_stannis.0000 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0000.t
+	desc = segrellion_stannis.0000.desc
+
+	theme = crown
+
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_north_story_initialized
+
+		NOT = {
+			has_character_flag = segrellion_stannis_opening_seen
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_stannis_opening_seen
+		remove_character_flag = segrellion_stannis_opening_scheduled
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0000.a
+
+		custom_tooltip = segrellion_stannis.0000.a.tt
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_character_modifier = segrellion_stannis_fury_burns_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_stannis_fury_burns_modifier
+			}
+		}
+
+
+		# Hand control back to the original startup router. The
+		# router itself adds the 5-10 day pause before 0001.
+		trigger_event = {
+
+			id = segrellion_stannis.0090
+
+			days = 1
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
 
 # =========================================================
 # 0090 - STARTUP ROUTER
@@ -49,7 +145,7 @@ segrellion_stannis.0090 = {
 
 			id = segrellion_stannis.0001
 
-			days = { 2 4 }
+			days = { 5 10 }
 		}
 	}
 }
@@ -197,7 +293,7 @@ segrellion_stannis.0001 = {
 
 			id = segrellion_stannis.0010
 
-			days = { 2 5 }
+			days = { 5 10 }
 		}
 
 
@@ -350,7 +446,7 @@ segrellion_stannis.0010 = {
 
 				id = segrellion_stannis.0015
 
-				days = { 3 5 }
+				days = { 5 10 }
 			}
 		}
 
@@ -360,7 +456,7 @@ segrellion_stannis.0010 = {
 
 				id = segrellion_stannis.0020
 
-				days = { 3 7 }
+				days = { 5 10 }
 			}
 		}
 
@@ -447,7 +543,144 @@ segrellion_stannis.0015 = {
 
 		name = segrellion_stannis.0015.a
 
+		custom_tooltip = segrellion_stannis.0015.a.tt
+
 		add_character_flag = segrellion_stannis_only_forward
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_character_modifier = segrellion_stannis_only_forward_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_stannis_only_forward_modifier
+			}
+		}
+
+		# The second interlude happens while the host is already
+		# struggling south through the snow.
+		trigger_event = {
+
+			id = segrellion_stannis.0017
+
+			days = { 5 10 }
+		}
+
+
+		# Late campaign-start failsafe. Normally 0017 schedules the
+		# war first; this copy only matters if Davos dies before the
+		# second interlude can fire.
+		trigger_event = {
+
+			id = segrellion_stannis.0020
+
+			days = { 15 20 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0017 - THE KING WHO RAN
+#
+# Root = Stannis
+#
+# The march has begun to consume men and horses, but Stannis
+# refuses to let the host mistake hardship for defeat.
+# =========================================================
+
+segrellion_stannis.0017 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0017.t
+	desc = segrellion_stannis.0017.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_cb_authorized
+
+		has_character_flag = segrellion_stannis_only_forward
+
+		NOT = {
+			has_character_flag = segrellion_stannis_northern_campaign_started
+		}
+
+		title:d_the_drench.holder ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		title:d_the_drench.holder ?= {
+			save_scope_as = stannis_davos
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:stannis_davos
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0017.a
+
+		custom_tooltip = segrellion_stannis.0017.a.tt
+
+		add_character_flag = segrellion_stannis_kings_resolve
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_character_modifier = segrellion_stannis_kings_resolve_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_stannis_kings_resolve_modifier
+			}
+		}
 
 
 		trigger_event = {
@@ -724,7 +957,7 @@ segrellion_stannis.1000 = {
 
 				id = segrellion_stannis.1010
 
-				days = { 2 5 }
+				days = { 5 10 }
 			}
 		}
 
@@ -750,6 +983,7 @@ segrellion_stannis.1000 = {
 			NOT = {
 				exists = scope:stannis_jon
 			}
+		}
 
 
 		add_character_flag = segrellion_stannis_searching_northern_heir
@@ -759,7 +993,7 @@ segrellion_stannis.1000 = {
 
 			id = segrellion_stannis.1100
 
-			days = { 2 5 }
+			days = { 5 10 }
 		}
 
 
@@ -891,7 +1125,7 @@ segrellion_stannis.1010 = {
 
 					id = segrellion_stannis.1020
 
-					days = { 2 4 }
+					days = { 5 10 }
 				}
 			}
 		}
@@ -940,7 +1174,7 @@ segrellion_stannis.1010 = {
 
 				id = segrellion_stannis.1021
 
-				days = { 2 4 }
+				days = { 5 10 }
 			}
 		}
 
@@ -1041,7 +1275,7 @@ segrellion_stannis.1020 = {
 
 			id = segrellion_stannis.2000
 
-			days = { 3 7 }
+			days = { 5 10 }
 		}
 	}
 }
@@ -1111,7 +1345,7 @@ segrellion_stannis.1021 = {
 
 			id = segrellion_stannis.1100
 
-			days = { 7 14 }
+			days = { 5 10 }
 		}
 	}
 }
@@ -1378,7 +1612,7 @@ segrellion_stannis.1100 = {
 
 			id = segrellion_stannis.1110
 
-			days = { 3 7 }
+			days = { 5 10 }
 		}
 
 
@@ -1413,7 +1647,7 @@ segrellion_stannis.1100 = {
 
 			id = segrellion_stannis.2000
 
-			days = { 3 7 }
+			days = { 5 10 }
 		}
 
 
@@ -1452,7 +1686,7 @@ segrellion_stannis.1100 = {
 
 			id = segrellion_stannis.2000
 
-			days = { 3 7 }
+			days = { 5 10 }
 		}
 
 
@@ -1556,7 +1790,7 @@ segrellion_stannis.1110 = {
 
 			id = segrellion_stannis.2000
 
-			days = { 3 7 }
+			days = { 5 10 }
 		}
 
 
@@ -1594,7 +1828,7 @@ segrellion_stannis.1110 = {
 
 			id = segrellion_stannis.2000
 
-			days = { 3 7 }
+			days = { 5 10 }
 		}
 
 
@@ -1829,7 +2063,7 @@ segrellion_stannis.2010 = {
 
 				id = segrellion_stannis.2020
 
-				days = 1
+				days = { 5 10 }
 			}
 		}
 

@@ -245,6 +245,32 @@ segrellion_setup_ramsay_takeover_effect = {
 
 
 # =========================================================
+# STANNIS - PRE-WINTERFELL MODIFIER CLEANUP
+# =========================================================
+
+segrellion_remove_stannis_pre_winterfell_modifiers_effect = {
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_stannis_only_forward_modifier
+		}
+
+		remove_character_modifier = segrellion_stannis_only_forward_modifier
+	}
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_stannis_kings_resolve_modifier
+		}
+
+		remove_character_modifier = segrellion_stannis_kings_resolve_modifier
+	}
+}
+
+
+# =========================================================
 # 300 AC - STANNIS NORTHERN CAMPAIGN
 #
 # Ramsay's takeover has already been resolved separately.
@@ -403,18 +429,30 @@ segrellion_setup_stannis_northern_campaign_effect = {
 			}
 
 
-			# One day is deliberately left here.
+			# =================================================
+			# STANNIS OPENING EVENT
 			#
-			# Roose is ALREADY dead and Ramsay is ALREADY
-			# Lord of the North. This merely lets CK3 finish
-			# any zero-tick title / court recalculations before
-			# the visible Stannis storyline begins.
+			# Five to ten days after game start. A temporary scheduling
+			# flag lets the monthly fallback retry if the queued event is
+			# ever lost during startup or save conversion.
+			#
+			# The opening event then hands control back to the
+			# existing Northern Campaign router.
+			# =================================================
+
+			add_character_flag = {
+
+				flag = segrellion_stannis_opening_scheduled
+
+				days = 30
+			}
+
 
 			trigger_event = {
 
-				id = segrellion_stannis.0090
+				id = segrellion_stannis.0000
 
-				days = 1
+				days = { 5 10 }
 			}
 		}
 	}
@@ -1067,7 +1105,7 @@ segrellion_jon_accepts_north_effect = {
 
 				id = segrellion_stannis.1030
 
-				days = { 2 5 }
+				days = { 5 10 }
 			}
 		}
 	}
