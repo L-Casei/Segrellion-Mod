@@ -277,37 +277,58 @@ segrellion_reveal_black_unicorn_identity_effect = {
 }
 
 # =========================================================
-# RETURN TO THE BEACON
+# RETURN TO DAEMON'S ORIGINAL CAMP
+#
+# Uses the province stored before the Skagos expedition.
 # =========================================================
 
-segrellion_black_unicorn_return_to_beacon_effect = {
+segrellion_black_unicorn_return_to_daemon_camp_effect = {
+
+
+	# Save wherever Daemon physically is when the return begins.
+
+	location = {
+
+		save_scope_as = black_unicorn_return_start
+	}
 
 
 	if = {
 
 		limit = {
+
+			exists = scope:black_unicorn_return_start
+		}
+
+
+		set_variable = {
+
+			name = segrellion_black_unicorn_return_start
+
+			value = scope:black_unicorn_return_start
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
 			exists = current_travel_plan
 		}
 
+
 		current_travel_plan = {
+
 			complete_travel_plan = yes
 		}
 	}
 
 
-	set_location = title:b_cold_peaks.title_province
+	trigger_event = {
 
+		id = segrellion_black_unicorn.0195
 
-	start_travel_plan = {
-
-		destination = title:c_farring_cross.title_province
-
-		return_trip = no
-
-		on_arrival_event = segrellion_black_unicorn.0190
-
-		on_arrival_destinations = first
-
-		on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+		days = 1
 	}
 }

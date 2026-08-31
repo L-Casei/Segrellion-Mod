@@ -34,31 +34,77 @@ segrellion_black_unicorn_startup = {
 				}
 
 
+				# =================================================
+				# BASIC STORY FLAGS
+				# =================================================
+
 				add_character_flag = segrellion_black_unicorn_mysterious_woman
 				add_character_flag = segrellion_icebringer_authorized
-
 				add_character_flag = segrellion_black_unicorn_skagos_outfit
-
 				add_character_flag = segrellion_black_unicorn_lock_camp_skagos
 
+
+				# =================================================
+				# REAL STARTING LOCATION
+				# =================================================
 
 				set_location = title:b_cold_peaks.title_province
 
 
-				domicile ?= {
+				# =================================================
+				# CREATE A REAL LANDLESS ADVENTURER
+				#
+				# The vanilla effect creates:
+				# - adventurer title
+				# - adventurer government
+				# - camp domicile
+				# - succession law
+				# =================================================
 
-					if = {
+				if = {
 
-						limit = {
+					limit = {
 
-							domicile_location != title:b_cold_peaks.title_province
+						NOT = {
+							has_government = landless_adventurer_government
 						}
+					}
 
 
-						move_domicile = title:b_cold_peaks.title_province
+					create_landless_adventurer_title_effect = {
+
+						REASON = flag:voluntary
+
+						FLAVOR_CHAR = this
 					}
 				}
 
+
+				# =================================================
+				# RED UNICORN CAMP NAME + COA
+				# =================================================
+
+				primary_title ?= {
+
+					set_title_name = d_laamp_red_unicorn
+
+					set_coa = title:d_laamp_red_unicorn
+				}
+
+
+				# =================================================
+				# FORCE CAMP TO COLD PEAKS
+				# =================================================
+
+				domicile ?= {
+
+					move_domicile = title:b_cold_peaks.title_province
+				}
+
+
+				# =================================================
+				# PERSONAL ARMY
+				# =================================================
 
 				if = {
 
@@ -114,6 +160,10 @@ segrellion_black_unicorn_startup = {
 				}
 
 
+				# =================================================
+				# PREVENT WANDERING
+				# =================================================
+
 				if = {
 
 					limit = {
@@ -136,11 +186,21 @@ segrellion_black_unicorn_startup = {
 				}
 
 
+				# =================================================
+				# GLOBAL CHARACTER REFERENCE
+				# =================================================
+
 				set_global_variable = {
+
 					name = segrellion_black_unicorn_woman
+
 					value = this
 				}
 
+
+				# =================================================
+				# ICEBRINGER
+				# =================================================
 
 				if = {
 
@@ -153,11 +213,12 @@ segrellion_black_unicorn_startup = {
 
 
 					segrellion_create_artifact_icebringer_effect = {
+
 						OWNER = this
 					}
 				}
 			}
-		}
+}
 
 
 		# =================================================

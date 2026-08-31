@@ -451,7 +451,7 @@ segrellion_black_unicorn.0030 = {
 
 
 	override_background = {
-		reference = segrellion_the_beacon
+		reference = army_camp
 	}
 
 
@@ -1019,18 +1019,6 @@ segrellion_black_unicorn.0075 = {
 		hidden_effect = {
 
 
-			root = {
-
-				segrellion_black_unicorn_snapshot_duel_injuries_effect = yes
-			}
-
-
-			character:Black_Unicorn_1 = {
-
-				segrellion_black_unicorn_snapshot_duel_injuries_effect = yes
-			}
-
-
 			configure_start_single_combat_effect = {
 
 				SC_INITIATOR = root
@@ -1039,7 +1027,7 @@ segrellion_black_unicorn.0075 = {
 
 				SC_DEFENDER = character:Black_Unicorn_1
 
-				FATALITY = no
+				FATALITY = practice
 
 				FIXED = no
 
@@ -1056,47 +1044,53 @@ segrellion_black_unicorn.0075 = {
 
 # =========================================================
 # 0080 - DUEL RESULT
-#
-# STORY CURRENTLY STOPS HERE.
 # =========================================================
 
 segrellion_black_unicorn.0080 = {
 
 	type = character_event
+
 	window = duel_event
 
 	title = segrellion_black_unicorn.0080.t
+
 
 	desc = {
 
 		first_valid = {
 
+
 			triggered_desc = {
 
 				trigger = {
-					scope:actor = scope:sc_victor
+
+					root = scope:sc_victor
 				}
 
 				desc = segrellion_black_unicorn.0080.desc_daemon_wins
 			}
 
+
 			desc = segrellion_black_unicorn.0080.desc_woman_wins
 		}
 	}
+
 
 	theme = war
 
 
 	left_portrait = {
 
-		character = scope:actor
+		character = root
+
 		animation = personality_bold
 	}
 
 
 	right_portrait = {
 
-		character = scope:recipient
+		character = character:Black_Unicorn_1
+
 		animation = personality_bold
 	}
 
@@ -1104,34 +1098,90 @@ segrellion_black_unicorn.0080 = {
 	immediate = {
 
 
-		scope:actor ?= {
+		character:Black_Unicorn_1 = {
 
-			segrellion_black_unicorn_restore_duel_injuries_effect = yes
+			save_scope_as = black_unicorn_woman
 		}
 
 
-		scope:recipient ?= {
+		# =================================================
+		# DEFENSIVE CLEANUP
+		#
+		# This duel must never leave permanent wounds.
+		# FATALITY = practice already prevents them, but this
+		# also cleans old-test residue.
+		# =================================================
 
-			segrellion_black_unicorn_restore_duel_injuries_effect = yes
+		character:Black_Unicorn_1 = {
+
+			remove_trait = wounded_1
+			remove_trait = wounded_2
+			remove_trait = wounded_3
 		}
 
+
+		# =================================================
+		# REMOVE DUEL GRUDGE
+		# =================================================
 
 		if = {
 
 			limit = {
-				scope:actor = scope:sc_victor
+
+				has_relation_grudge = character:Black_Unicorn_1
+			}
+
+			remove_relation_grudge = character:Black_Unicorn_1
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			if = {
+
+				limit = {
+
+					has_relation_grudge = root
+				}
+
+				remove_relation_grudge = root
+			}
+		}
+
+
+		# =================================================
+		# CLEAN OLD RESULT FLAGS
+		# =================================================
+
+		remove_character_flag = segrellion_black_unicorn_daemon_won_duel
+		remove_character_flag = segrellion_black_unicorn_daemon_lost_duel
+
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_black_unicorn_woman_won_duel
+			remove_character_flag = segrellion_black_unicorn_woman_lost_duel
+		}
+
+
+		# =================================================
+		# DAEMON WON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = scope:sc_victor
 			}
 
 
-			scope:actor = {
+			add_prestige = 250
 
-				add_prestige = 250
-
-				add_character_flag = segrellion_black_unicorn_daemon_won_duel
-			}
+			add_character_flag = segrellion_black_unicorn_daemon_won_duel
 
 
-			scope:recipient = {
+			character:Black_Unicorn_1 = {
 
 				add_prestige = 75
 
@@ -1140,54 +1190,38 @@ segrellion_black_unicorn.0080 = {
 		}
 
 
+		# =================================================
+		# VISENYA WON
+		# =================================================
+
 		else = {
 
 
-			scope:recipient = {
+			add_prestige = 75
+
+			add_character_flag = segrellion_black_unicorn_daemon_lost_duel
+
+
+			character:Black_Unicorn_1 = {
 
 				add_prestige = 250
 
 				add_character_flag = segrellion_black_unicorn_woman_won_duel
 			}
-
-
-			scope:actor = {
-
-				add_prestige = 75
-
-				add_character_flag = segrellion_black_unicorn_daemon_lost_duel
-			}
 		}
 
 
-		character:Segrellion_60 ?= {
-
-			add_character_flag = segrellion_black_unicorn_duel_resolved
-		}
+		add_character_flag = segrellion_black_unicorn_duel_resolved
 	}
+
 
 	option = {
 
 		name = segrellion_black_unicorn.0080.a
 
-
 		trigger = {
 
-			character:Segrellion_60 = {
-
-				has_character_flag = segrellion_black_unicorn_daemon_won_duel
-			}
-		}
-
-
-		character:Segrellion_60 = {
-
-			trigger_event = {
-
-				id = segrellion_black_unicorn.0100
-
-				days = 1
-			}
+			has_character_flag = segrellion_black_unicorn_daemon_won_duel
 		}
 	}
 
@@ -1196,17 +1230,46 @@ segrellion_black_unicorn.0080 = {
 
 		name = segrellion_black_unicorn.0080.b
 
-
 		trigger = {
 
-			character:Segrellion_60 = {
+			has_character_flag = segrellion_black_unicorn_daemon_lost_duel
+		}
+	}
 
-				has_character_flag = segrellion_black_unicorn_daemon_lost_duel
+
+	# =====================================================
+	# CONTINUE AFTER CLOSING DUEL WINDOW
+	#
+	# Much more reliable than firing from the duel option.
+	# =====================================================
+
+	after = {
+
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_daemon_won_duel
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0100
+
+				days = 1
 			}
 		}
 
 
-		character:Segrellion_60 = {
+		else_if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_daemon_lost_duel
+			}
+
 
 			trigger_event = {
 
@@ -1216,9 +1279,8 @@ segrellion_black_unicorn.0080 = {
 			}
 		}
 	}
-
-
 }
+
 
 # =========================================================
 # 0100 - DOES IT BURN?
@@ -1243,14 +1305,14 @@ segrellion_black_unicorn.0100 = {
 	left_portrait = {
 
 		character = root
-		animation = shock
+		animation = personality_bold
 	}
 
 
 	right_portrait = {
 
 		character = character:Black_Unicorn_1
-		animation = personality_bold
+		animation = shock
 	}
 
 
@@ -1337,7 +1399,9 @@ segrellion_black_unicorn.0105 = {
 		add_character_flag = segrellion_black_unicorn_future_beacon_ambush
 
 
-		segrellion_black_unicorn_return_to_beacon_effect = yes
+		set_location = title:b_cold_peaks.title_province
+
+		segrellion_black_unicorn_return_to_daemon_camp_effect = yes
 	}
 }
 
@@ -1378,6 +1442,7 @@ segrellion_black_unicorn.0110 = {
 
 		name = segrellion_black_unicorn.0110.a
 
+		custom_tooltip = segrellion_black_unicorn.0110.a.tt
 
 		trigger_event = {
 
@@ -1425,6 +1490,7 @@ segrellion_black_unicorn.0120 = {
 
 		name = segrellion_black_unicorn.0120.a
 
+		custom_tooltip = segrellion_black_unicorn.0120.a.tt
 
 		add_character_flag = segrellion_black_unicorn_daemon_revealed_identity
 
@@ -1442,6 +1508,7 @@ segrellion_black_unicorn.0120 = {
 
 		name = segrellion_black_unicorn.0120.b
 
+		custom_tooltip = segrellion_black_unicorn.0120.b.tt
 
 		add_character_flag = segrellion_black_unicorn_daemon_concealed_identity
 
@@ -1488,6 +1555,7 @@ segrellion_black_unicorn.0125 = {
 
 		name = segrellion_black_unicorn.0125.a
 
+		custom_tooltip = segrellion_black_unicorn.0125.a.tt
 
 		remove_character_flag = segrellion_black_unicorn_daemon_concealed_identity
 
@@ -1535,6 +1603,28 @@ segrellion_black_unicorn.0130 = {
 		animation = laugh
 	}
 
+	immediate = {
+
+		character:Segrellion_55 = {
+
+			save_scope_as = aegon_reborn
+		}
+
+
+		character:Segrellion_59 = {
+
+			save_scope_as = rhae_segrellion
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = black_unicorn_woman
+		}
+	}
+
+	custom_tooltip = segrellion_black_unicorn.0130.a.tt
+	custom_tooltip = segrellion_black_unicorn.0130.a.tt
 
 	option = {
 
@@ -1627,14 +1717,26 @@ segrellion_black_unicorn.0135 = {
 	left_portrait = {
 
 		character = root
-		animation = personality_bold
+
+		animation = shock
 	}
 
 
 	right_portrait = {
 
 		character = character:Black_Unicorn_1
-		animation = personality_bold
+
+		animation = flirtation_left
+	}
+
+	immediate = {
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = black_unicorn_woman
+
+			add_character_flag = is_naked
+		}
 	}
 
 
@@ -1646,6 +1748,7 @@ segrellion_black_unicorn.0135 = {
 
 		name = segrellion_black_unicorn.0135.a
 
+		custom_tooltip = segrellion_black_unicorn.0135.a.tt
 
 		trigger = {
 
@@ -1670,7 +1773,6 @@ segrellion_black_unicorn.0135 = {
 	option = {
 
 		name = segrellion_black_unicorn.0135.b
-
 
 		trigger = {
 
@@ -1697,6 +1799,8 @@ segrellion_black_unicorn.0135 = {
 
 		name = segrellion_black_unicorn.0135.c
 
+		custom_tooltip = segrellion_black_unicorn.0135.b.tt
+
 
 		trigger = {
 
@@ -1711,6 +1815,14 @@ segrellion_black_unicorn.0135 = {
 			id = segrellion_black_unicorn.0150
 
 			days = 1
+		}
+	}
+
+	after = {
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = is_naked
 		}
 	}
 }
@@ -1786,13 +1898,32 @@ segrellion_black_unicorn.0140 = {
 	}
 
 
-	left_portrait = root
+	left_portrait = {
+
+		character = root
+
+		animation = admiration
+	}
 
 
 	right_portrait = {
 
 		character = character:Black_Unicorn_1
-		animation = personality_bold
+
+		animation = flirtation_left
+	}
+
+	immediate = {
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = black_unicorn_woman
+
+			add_character_flag = is_naked
+		}
+
+
+		add_character_flag = is_naked
 	}
 
 
@@ -1800,6 +1931,7 @@ segrellion_black_unicorn.0140 = {
 
 		name = segrellion_black_unicorn.0140.a
 
+		custom_tooltip = segrellion_black_unicorn.0140.a.tt
 
 		add_character_flag = segrellion_black_unicorn_shared_night
 
@@ -1809,6 +1941,17 @@ segrellion_black_unicorn.0140 = {
 			id = segrellion_black_unicorn.0150
 
 			days = 1
+		}
+	}
+
+	after = {
+
+		remove_character_flag = is_naked
+
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = is_naked
 		}
 	}
 }
@@ -1855,6 +1998,7 @@ segrellion_black_unicorn.0146 = {
 
 		name = segrellion_black_unicorn.0146.a
 
+		custom_tooltip = segrellion_black_unicorn.0146.a.tt
 
 		trigger_event = {
 
@@ -1902,13 +2046,16 @@ segrellion_black_unicorn.0147 = {
 
 		name = segrellion_black_unicorn.0147.a
 
+		custom_tooltip = segrellion_black_unicorn.0147.a.tt
 
 		add_character_flag = segrellion_black_unicorn_left_without_truth
 
 		add_character_flag = segrellion_black_unicorn_future_beacon_ambush
 
 
-		segrellion_black_unicorn_return_to_beacon_effect = yes
+		set_location = title:b_cold_peaks.title_province
+
+		segrellion_black_unicorn_return_to_daemon_camp_effect = yes
 	}
 }
 
@@ -1944,20 +2091,34 @@ segrellion_black_unicorn.0150 = {
 		animation = personality_rational
 	}
 
+	immediate = {
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = black_unicorn_woman
+		}
+	}
+
 
 	option = {
 
 		name = segrellion_black_unicorn.0150.a
 
+		custom_tooltip = segrellion_black_unicorn.0150.a.tt
 
-		segrellion_reveal_black_unicorn_identity_effect = yes
+
+		hidden_effect = {
 
 
-		trigger_event = {
+			segrellion_reveal_black_unicorn_identity_effect = yes
 
-			id = segrellion_black_unicorn.0151
 
-			days = 1
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0151
+
+				days = 1
+			}
 		}
 	}
 }
@@ -1999,21 +2160,42 @@ segrellion_black_unicorn.0151 = {
 
 		name = segrellion_black_unicorn.0151.a
 
+		custom_tooltip = segrellion_black_unicorn.0151.a.tt
 
-		add_character_flag = segrellion_black_unicorn_waiting_for_visenya
+
+		hidden_effect = {
 
 
-		start_travel_plan = {
+			add_character_flag = segrellion_black_unicorn_waiting_for_visenya
 
-			destination = title:b_bitter_dryn.title_province
 
-			return_trip = no
+			if = {
 
-			on_arrival_event = segrellion_black_unicorn.0152
+				limit = {
 
-			on_arrival_destinations = first
+					exists = current_travel_plan
+				}
 
-			on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+
+				current_travel_plan = {
+
+					complete_travel_plan = yes
+				}
+			}
+
+
+			# We are physically still at Cold Peaks.
+			# Never allow the next journey to originate from camp.
+
+			set_location = title:b_cold_peaks.title_province
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0153
+
+				days = 1
+			}
 		}
 	}
 }
@@ -2074,6 +2256,56 @@ segrellion_black_unicorn.0152 = {
 	}
 }
 
+# =========================================================
+# 0153 - COLD PEAKS -> BITTER DRYNN
+# =========================================================
+
+segrellion_black_unicorn.0153 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	immediate = {
+
+
+		if = {
+
+			limit = {
+
+				exists = current_travel_plan
+			}
+
+
+			current_travel_plan = {
+
+				complete_travel_plan = yes
+			}
+		}
+
+
+		# Critical for a landless Daemon:
+		# force the origin of the NEW journey.
+
+		set_location = title:b_cold_peaks.title_province
+
+
+		start_travel_plan = {
+
+			destination = title:b_bitter_dryn.title_province
+
+			return_trip = no
+
+			on_arrival_event = segrellion_black_unicorn.0152
+
+			on_arrival_destinations = first
+
+			on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+		}
+	}
+}
+
 
 # =========================================================
 # 0160 - SHE CAME
@@ -2114,11 +2346,37 @@ segrellion_black_unicorn.0160 = {
 
 		character:Black_Unicorn_1 = {
 
+
 			add_character_flag = segrellion_black_unicorn_visenya_chose_daemon
 
 
-			set_location = root.location
+			remove_character_flag = segrellion_black_unicorn_lock_camp_skagos
 
+
+			primary_title ?= {
+
+				save_scope_as = red_unicorn_camp_title
+			}
+		}
+
+
+		# She abandons the Red Unicorn camp.
+
+		if = {
+
+			limit = {
+
+				exists = scope:red_unicorn_camp_title
+			}
+
+
+			destroy_title = scope:red_unicorn_camp_title
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			set_location = root.location
 
 			set_employer = root
 		}
@@ -2129,19 +2387,18 @@ segrellion_black_unicorn.0160 = {
 
 		name = segrellion_black_unicorn.0160.a
 
+		custom_tooltip = segrellion_black_unicorn.0160.a.tt
 
-		start_travel_plan = {
 
-			destination = title:c_farring_cross.title_province
+		add_character_flag = segrellion_black_unicorn_return_with_visenya
 
-			return_trip = no
 
-			on_arrival_event = segrellion_black_unicorn.0170
+		# We are currently waiting in Bitter Drynn.
 
-			on_arrival_destinations = first
+		set_location = title:b_bitter_dryn.title_province
 
-			on_travel_planner_cancel_event = segrellion_black_unicorn.0090
-		}
+
+		segrellion_black_unicorn_return_to_daemon_camp_effect = yes
 	}
 }
 
@@ -2187,19 +2444,16 @@ segrellion_black_unicorn.0161 = {
 
 		name = segrellion_black_unicorn.0161.a
 
+		custom_tooltip = segrellion_black_unicorn.0161.a.tt
 
-		start_travel_plan = {
 
-			destination = title:c_farring_cross.title_province
+		add_character_flag = segrellion_black_unicorn_return_alone
 
-			return_trip = no
 
-			on_arrival_event = segrellion_black_unicorn.0171
+		set_location = title:b_bitter_dryn.title_province
 
-			on_arrival_destinations = first
 
-			on_travel_planner_cancel_event = segrellion_black_unicorn.0090
-		}
+		segrellion_black_unicorn_return_to_daemon_camp_effect = yes
 	}
 }
 
@@ -2218,7 +2472,7 @@ segrellion_black_unicorn.0170 = {
 	theme = dynasty
 
 	override_background = {
-		reference = segrellion_the_beacon
+		reference = army_camp
 	}
 
 
@@ -2234,29 +2488,13 @@ segrellion_black_unicorn.0170 = {
 
 	immediate = {
 
-
-		if = {
-
-			limit = {
-				exists = current_travel_plan
-			}
-
-			current_travel_plan = {
-				complete_travel_plan = yes
-			}
-		}
-
-
-		set_location = title:c_farring_cross.title_province
-
-
 		character:Black_Unicorn_1 = {
 
-			set_location = title:c_farring_cross.title_province
+			set_location = root.location
 		}
 
 
-		add_character_flag = segrellion_black_unicorn_visenya_returned_to_beacon
+		add_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
 	}
 
 
@@ -2314,7 +2552,7 @@ segrellion_black_unicorn.0171 = {
 	theme = dynasty
 
 	override_background = {
-		reference = segrellion_the_beacon
+		reference = army_camp
 	}
 
 
@@ -2322,24 +2560,7 @@ segrellion_black_unicorn.0171 = {
 
 
 	immediate = {
-
-
-		if = {
-
-			limit = {
-				exists = current_travel_plan
-			}
-
-			current_travel_plan = {
-				complete_travel_plan = yes
-			}
-		}
-
-
-		set_location = title:c_farring_cross.title_province
-
-
-		add_character_flag = segrellion_black_unicorn_visenya_future_beacon_arrival
+		add_character_flag = segrellion_black_unicorn_returned_to_camp_without_visenya
 	}
 
 
@@ -2374,7 +2595,7 @@ segrellion_black_unicorn.0180 = {
 
 
 	override_background = {
-		reference = segrellion_the_beacon_throne_room
+		reference = army_camp
 	}
 
 
@@ -2467,12 +2688,13 @@ segrellion_black_unicorn.0180 = {
 
 
 # =========================================================
-# 0190 - RETURN COMPLETE
+# 0190 - RETURN TO DAEMON'S CAMP COMPLETE
 # =========================================================
 
 segrellion_black_unicorn.0190 = {
 
 	type = character_event
+
 	hidden = yes
 
 
@@ -2482,19 +2704,151 @@ segrellion_black_unicorn.0190 = {
 		if = {
 
 			limit = {
+
 				exists = current_travel_plan
 			}
 
+
 			current_travel_plan = {
+
 				complete_travel_plan = yes
 			}
 		}
 
 
-		set_location = title:c_farring_cross.title_province
+		var:segrellion_black_unicorn_origin ?= {
+
+			save_scope_as = black_unicorn_return_destination
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:black_unicorn_return_destination
+			}
+
+
+			set_location = scope:black_unicorn_return_destination
+		}
 
 
 		add_character_flag = segrellion_black_unicorn_skagos_visit_complete
+
+
+		# =================================================
+		# VISENYA CAME WITH DAEMON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_return_with_visenya
+			}
+
+
+			remove_character_flag = segrellion_black_unicorn_return_with_visenya
+
+
+			character:Black_Unicorn_1 = {
+
+				set_location = root.location
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0170
+
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# VISENYA REMAINED ON SKAGOS
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_return_alone
+			}
+
+
+			remove_character_flag = segrellion_black_unicorn_return_alone
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0171
+
+				days = 1
+			}
+		}
+
+
+		remove_variable = segrellion_black_unicorn_return_start
+	}
+}
+
+
+# =========================================================
+# 0195 - BEGIN RETURN TO DAEMON'S CAMP
+# =========================================================
+
+segrellion_black_unicorn.0195 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	immediate = {
+
+
+		var:segrellion_black_unicorn_return_start ?= {
+
+			save_scope_as = black_unicorn_return_start
+		}
+
+
+		var:segrellion_black_unicorn_origin ?= {
+
+			save_scope_as = black_unicorn_return_destination
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:black_unicorn_return_start
+
+				exists = scope:black_unicorn_return_destination
+			}
+
+
+			# Landless characters otherwise begin from their camp.
+			set_location = scope:black_unicorn_return_start
+
+
+			start_travel_plan = {
+
+				destination = scope:black_unicorn_return_destination
+
+				return_trip = no
+
+				on_arrival_event = segrellion_black_unicorn.0190
+
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+			}
+		}
 	}
 }
 

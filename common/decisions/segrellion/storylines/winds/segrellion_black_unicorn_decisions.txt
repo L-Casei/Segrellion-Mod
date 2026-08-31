@@ -38,11 +38,13 @@ segrellion_investigate_black_unicorn_decision = {
 		this = character:Segrellion_60
 
 
-		# =================================================
-		# NORMAL GAME
-		#
-		# Debug bypasses every storyline requirement.
-		# =================================================
+		# Once Daemon commits to The Unicorn Returns,
+		# this version of the Black Unicorn storyline disappears.
+		NOT = {
+
+			has_character_flag = segrellion_unicorn_returns_decision_taken
+		}
+
 
 		trigger_if = {
 
@@ -57,20 +59,14 @@ segrellion_investigate_black_unicorn_decision = {
 			has_character_flag = segrellion_black_unicorn_decision_unlocked
 
 
-			has_character_flag = segrellion_unicorn_returns_completed
-
-
-			title:c_farring_cross = {
-				holder = root
-			}
-
-
 			NOT = {
+
 				has_character_flag = segrellion_black_unicorn_expedition_committed
 			}
 
 
 			NOT = {
+
 				has_character_flag = segrellion_black_unicorn_duel_resolved
 			}
 		}
@@ -83,12 +79,6 @@ segrellion_investigate_black_unicorn_decision = {
 	is_valid = {
 
 
-		# =================================================
-		# NORMAL GAME
-		#
-		# Debug bypasses ALL requirements.
-		# =================================================
-
 		trigger_if = {
 
 			limit = {
@@ -99,8 +89,8 @@ segrellion_investigate_black_unicorn_decision = {
 			}
 
 
-			is_alive = yes
 			is_adult = yes
+
 			is_imprisoned = no
 
 
@@ -108,9 +98,7 @@ segrellion_investigate_black_unicorn_decision = {
 
 				text = segrellion_black_unicorn_not_travelling_requirement
 
-				NOT = {
-					exists = current_travel_plan
-				}
+				is_travelling = no
 			}
 
 
@@ -119,6 +107,7 @@ segrellion_investigate_black_unicorn_decision = {
 				text = segrellion_black_unicorn_woman_alive_requirement
 
 				character:Black_Unicorn_1 ?= {
+
 					is_alive = yes
 				}
 			}
@@ -126,18 +115,11 @@ segrellion_investigate_black_unicorn_decision = {
 
 			custom_description = {
 
-				text = segrellion_black_unicorn_unicorn_returns_requirement
+				text = segrellion_black_unicorn_unicorn_returns_not_made_requirement
 
-				has_character_flag = segrellion_unicorn_returns_completed
-			}
+				NOT = {
 
-
-			custom_description = {
-
-				text = segrellion_black_unicorn_beacon_requirement
-
-				title:c_farring_cross = {
-					holder = root
+					has_character_flag = segrellion_unicorn_returns_decision_taken
 				}
 			}
 		}
@@ -205,8 +187,6 @@ segrellion_investigate_black_unicorn_decision = {
 		this = character:Segrellion_60
 
 		is_ai = yes
-
-		has_character_flag = segrellion_unicorn_returns_completed
 
 		has_character_flag = segrellion_black_unicorn_decision_unlocked
 	}
