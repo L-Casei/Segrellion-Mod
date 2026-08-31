@@ -577,6 +577,8 @@ segrellion_black_unicorn.0030 = {
 
 		custom_tooltip = segrellion_black_unicorn.0030.c.tt
 
+		remove_character_flag = segrellion_black_unicorn_storyline_active
+
 
 		add_gold = 150
 
@@ -903,6 +905,8 @@ segrellion_black_unicorn.0310 = {
 
 				add_character_flag = segrellion_black_unicorn_letter_received
 
+				remove_character_flag = segrellion_black_unicorn_storyline_active
+
 
 				trigger_event = {
 
@@ -924,6 +928,8 @@ segrellion_black_unicorn.0310 = {
 				add_character_flag = segrellion_black_unicorn_trail_gone_cold
 
 				add_character_flag = segrellion_black_unicorn_future_post_war_return
+
+				remove_character_flag = segrellion_black_unicorn_storyline_active
 			}
 		}
 	}
@@ -982,6 +988,8 @@ segrellion_black_unicorn.0311 = {
 
 				add_character_flag = segrellion_black_unicorn_letter_received
 
+				remove_character_flag = segrellion_black_unicorn_storyline_active
+
 
 				trigger_event = {
 
@@ -1003,6 +1011,8 @@ segrellion_black_unicorn.0311 = {
 				add_character_flag = segrellion_black_unicorn_trail_gone_cold
 
 				add_character_flag = segrellion_black_unicorn_future_post_war_return
+
+				remove_character_flag = segrellion_black_unicorn_storyline_active
 			}
 		}
 	}
@@ -1062,6 +1072,8 @@ segrellion_black_unicorn.0312 = {
 
 				add_character_flag = segrellion_black_unicorn_letter_received
 
+				remove_character_flag = segrellion_black_unicorn_storyline_active
+
 
 				trigger_event = {
 
@@ -1083,6 +1095,8 @@ segrellion_black_unicorn.0312 = {
 				add_character_flag = segrellion_black_unicorn_trail_gone_cold
 
 				add_character_flag = segrellion_black_unicorn_future_post_war_return
+
+				remove_character_flag = segrellion_black_unicorn_storyline_active
 			}
 		}
 	}
@@ -1152,6 +1166,7 @@ segrellion_black_unicorn.0320 = {
 
 		add_character_flag = segrellion_black_unicorn_daemon_will_follow_warning
 		add_character_flag = segrellion_black_unicorn_warning_personal_route_ready
+		add_character_flag = segrellion_black_unicorn_storyline_active
 
 
 		ai_chance = {
@@ -3448,6 +3463,24 @@ segrellion_black_unicorn.0180 = {
 			break_betrothal = betrothed
 		}
 
+		# =========================================================
+		# DAENERYS
+		#
+		# Remember whether Daemon was already married to Daenerys
+		# before marrying Visenya.
+		# =========================================================
+
+		if = {
+
+			limit = {
+
+				is_spouse_of = character:Targaryen_9
+			}
+
+
+			add_character_flag = segrellion_daemon_was_married_to_daenerys_before_visenya
+		}
+
 
 		every_spouse = {
 			divorce = root
@@ -3510,6 +3543,47 @@ segrellion_black_unicorn.0180 = {
 
 
 		remove_character_flag = segrellion_black_unicorn_wedding_planned
+
+		# =========================================================
+		# DAENERYS LEARNS WHAT HAPPENED
+		# =========================================================
+
+		if = {
+
+			limit = {
+
+				character:Targaryen_9 ?= {
+					is_alive = yes
+				}
+
+
+				OR = {
+
+					has_character_flag = segrellion_pledged_to_daenerys
+
+					has_character_flag = segrellion_daemon_was_married_to_daenerys_before_visenya
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_promise_reckoning_started
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_promise_reckoning_started
+
+
+			character:Targaryen_9 = {
+
+				trigger_event = {
+
+					id = segrellion_daenerys.1000
+
+					days = { 3 8 }
+				}
+			}
+		}
 	}
 
 
@@ -3664,6 +3738,8 @@ segrellion_black_unicorn.0190 = {
 
 
 	immediate = {
+
+		remove_character_flag = segrellion_black_unicorn_storyline_active
 
 
 		if = {
@@ -4353,6 +4429,8 @@ segrellion_black_unicorn.0090 = {
 	option = {
 
 		name = segrellion_black_unicorn.0090.a
+
+		remove_character_flag = segrellion_black_unicorn_storyline_active
 
 		add_character_flag = segrellion_black_unicorn_travel_cancelled
 	}

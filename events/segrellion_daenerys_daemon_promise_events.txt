@@ -1,0 +1,1065 @@
+namespace = segrellion_daenerys
+
+
+# =========================================================
+# 1000 - A PROMISE REMEMBERED
+#
+# POV: DAENERYS
+# =========================================================
+
+segrellion_daenerys.1000 = {
+
+	type = character_event
+
+	title = segrellion_daenerys.1000.t
+	desc = segrellion_daenerys.1000.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+
+			OR = {
+
+				has_character_flag = segrellion_pledged_to_daenerys
+
+				has_character_flag = segrellion_daemon_was_married_to_daenerys_before_visenya
+			}
+		}
+
+
+		character:Black_Unicorn_1 ?= {
+
+			is_alive = yes
+
+			is_spouse_of = character:Segrellion_60
+		}
+	}
+
+
+	immediate = {
+
+
+		character:Segrellion_60 = {
+
+			save_scope_as = daemon
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = visenya
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = scope:daemon
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# A - FURY
+	# HIGH PROBABILITY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1000.a
+
+		custom_tooltip = segrellion_daenerys.1000.a.tt
+
+
+		add_opinion = {
+
+			target = scope:daemon
+
+			modifier = segrellion_daenerys_betrayed_promise_opinion
+		}
+
+
+		add_character_flag = segrellion_daenerys_denounced_daemon
+
+
+		scope:daemon = {
+
+			remove_character_flag = segrellion_pledged_to_daenerys
+
+			add_character_flag = segrellion_daenerys_betrayal_public
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_daenerys_public_denunciation_modifier
+
+				years = 5
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys.1001
+
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# B - ONE WARNING
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1000.b
+
+		custom_tooltip = segrellion_daenerys.1000.b.tt
+
+
+		add_character_flag = segrellion_daenerys_final_warning
+
+
+		scope:daemon = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys.1010
+
+				days = { 3 7 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 15
+		}
+	}
+
+
+	# =====================================================
+	# C - HEAR HIM FIRST
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1000.c
+
+		custom_tooltip = segrellion_daenerys.1000.c.tt
+
+
+		add_character_flag = segrellion_daenerys_will_hear_daemon
+
+
+		scope:daemon = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys.1010
+
+				days = { 3 7 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 5
+		}
+	}
+}
+
+
+# =========================================================
+# 1001 - TRAITOR
+#
+# POV: DAEMON
+# Daenerys chose not to negotiate.
+# =========================================================
+
+segrellion_daenerys.1001 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys.1001.opening
+
+	title = segrellion_daenerys.1001.t
+	desc = segrellion_daenerys.1001.desc
+
+
+	immediate = {
+
+
+		character:Targaryen_9 = {
+
+			save_scope_as = daenerys
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = visenya
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys.1001.a
+
+		custom_tooltip = segrellion_daenerys.1001.a.tt
+	}
+}
+
+
+# =========================================================
+# 1010 - A DRAGON'S LETTER
+#
+# POV: DAEMON
+# =========================================================
+
+segrellion_daenerys.1010 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys.1010.opening
+
+	title = segrellion_daenerys.1010.t
+	desc = segrellion_daenerys.1010.desc
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+
+		character:Black_Unicorn_1 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+
+		character:Targaryen_9 = {
+
+			save_scope_as = daenerys
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = visenya
+		}
+	}
+
+
+	# =====================================================
+	# 1. KEEP VISENYA
+	# MOST LIKELY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1010.a
+
+		custom_tooltip = segrellion_daenerys.1010.a.tt
+
+
+		remove_character_flag = segrellion_pledged_to_daenerys
+
+
+		add_character_flag = segrellion_daemon_supports_daenerys_claim_without_marriage
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_broke_daenerys_marriage_promise_modifier
+
+			years = 10
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_refused_marriage_opinion
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 65
+		}
+	}
+
+
+	# =====================================================
+	# 2. CHOOSE DAENERYS
+	# VERY LOW PROBABILITY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1010.b
+
+		trigger = {
+
+			character:Black_Unicorn_1 = {
+
+				is_spouse_of = root
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys.1010.b.tt
+
+
+		remove_character_flag = segrellion_pledged_to_daenerys
+
+
+		add_character_flag = segrellion_daemon_cast_out_visenya_for_daenerys
+
+
+		# =================================================
+		# END RELATIONSHIP WITH VISENYA
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_relation_soulmate = character:Black_Unicorn_1
+			}
+
+			remove_relation_soulmate = character:Black_Unicorn_1
+		}
+
+
+		if = {
+
+			limit = {
+
+				has_relation_lover = character:Black_Unicorn_1
+			}
+
+			remove_relation_lover = character:Black_Unicorn_1
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_visenya_cast_aside_opinion
+			}
+
+
+			divorce = root
+
+
+			add_character_flag = segrellion_visenya_cast_out_by_daemon
+
+
+			set_location = title:b_cold_peaks.title_province
+
+			move_to_pool = yes
+		}
+
+
+		# =================================================
+		# MARRY DAENERYS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_spouse_of = character:Targaryen_9
+				}
+			}
+
+
+			marry = character:Targaryen_9
+		}
+
+
+		add_character_flag = segrellion_daemon_married_daenerys_after_visenya
+
+
+		character:Targaryen_9 = {
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_chosen_over_visenya_opinion
+			}
+
+
+			add_character_flag = segrellion_daenerys_daemon_chose_me
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_cast_out_visenya_modifier
+
+			years = 10
+		}
+
+
+		ai_chance = {
+
+			base = 5
+		}
+	}
+
+
+	# =====================================================
+	# 3. AEGON, VISENYA AND RHAENYS
+	# ARROGANT ONLY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1010.c
+
+		trigger = {
+
+			has_trait = arrogant
+		}
+
+		trait = arrogant
+
+		custom_tooltip = segrellion_daenerys.1010.c.tt
+
+
+		add_character_flag = segrellion_daemon_offered_daenerys_second_wife
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys.1020
+
+				days = { 3 7 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 30
+		}
+	}
+}
+
+
+# =========================================================
+# 1020 - THE THIRD HEAD
+#
+# POV: DAENERYS
+# =========================================================
+
+segrellion_daenerys.1020 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_60
+
+	opening = segrellion_daenerys.1020.opening
+
+	title = segrellion_daenerys.1020.t
+	desc = segrellion_daenerys.1020.desc
+
+
+	immediate = {
+
+
+		character:Segrellion_60 = {
+
+			save_scope_as = daemon
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = visenya
+		}
+	}
+
+
+	# =====================================================
+	# 99% - INSULTED
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1020.a
+
+		custom_tooltip = segrellion_daenerys.1020.a.tt
+
+
+		add_opinion = {
+
+			target = scope:daemon
+
+			modifier = segrellion_daenerys_second_wife_insult_opinion
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_relation_rival = scope:daemon
+				}
+			}
+
+
+			set_relation_rival = {
+
+				target = scope:daemon
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_rejected_second_wife_offer
+
+
+		scope:daemon = {
+
+			remove_character_flag = segrellion_pledged_to_daenerys
+
+			add_character_flag = segrellion_daenerys_second_wife_offer_failed
+		}
+
+
+		ai_chance = {
+
+			base = 99
+		}
+	}
+
+
+	# =====================================================
+	# 1% - ACCEPT, BUT ONLY FOR THE IRON THRONE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1020.b
+
+		custom_tooltip = segrellion_daenerys.1020.b.tt
+
+
+		add_character_flag = segrellion_daenerys_accepts_second_wife_conditionally
+
+
+		scope:daemon = {
+
+			add_character_flag = segrellion_daenerys_throne_offer_pending_visenya
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys.1030
+
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1030 - TWO WIVES
+#
+# POV: VISENYA
+# =========================================================
+
+segrellion_daenerys.1030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys.1030.t
+	desc = segrellion_daenerys.1030.desc
+
+	theme = marriage
+
+
+	immediate = {
+
+
+		character:Segrellion_60 = {
+
+			save_scope_as = daemon
+		}
+
+
+		character:Targaryen_9 = {
+
+			save_scope_as = daenerys
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = scope:daemon
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# 75% - ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1030.a
+
+		custom_tooltip = segrellion_daenerys.1030.a.tt
+
+
+		add_character_flag = segrellion_visenya_accepted_daenerys_second_wife
+
+
+		scope:daemon = {
+
+			add_character_flag = segrellion_visenya_accepted_daenerys_second_wife
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys.1040
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 75
+		}
+	}
+
+
+	# =====================================================
+	# 25% - REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1030.b
+
+		custom_tooltip = segrellion_daenerys.1030.b.tt
+
+
+		add_character_flag = segrellion_visenya_rejected_daenerys_second_wife
+
+
+		scope:daemon = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys.1031
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 25
+		}
+	}
+}
+
+
+# =========================================================
+# 1031 - ONE WIFE TOO MANY
+#
+# POV: DAEMON
+# =========================================================
+
+segrellion_daenerys.1031 = {
+
+	type = character_event
+
+	title = segrellion_daenerys.1031.t
+	desc = segrellion_daenerys.1031.desc
+
+	theme = marriage
+
+
+	immediate = {
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = visenya
+		}
+
+
+		character:Targaryen_9 = {
+
+			save_scope_as = daenerys
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:visenya
+
+		animation = anger
+	}
+
+
+	# =====================================================
+	# 99% - BACK DOWN
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1031.a
+
+		custom_tooltip = segrellion_daenerys.1031.a.tt
+
+
+		remove_character_flag = segrellion_daenerys_throne_offer_pending_visenya
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_accepts_second_wife_conditionally
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_throne_pact_abandoned_opinion
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_chose_visenya_over_two_wives
+
+
+		ai_chance = {
+
+			base = 99
+		}
+	}
+
+
+	# =====================================================
+	# 1% - CHOOSE THE PACT, LOSE VISENYA
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys.1031.b
+
+		custom_tooltip = segrellion_daenerys.1031.b.tt
+
+
+		add_character_flag = segrellion_daemon_chose_daenerys_over_visenya_ultimatum
+
+
+		if = {
+
+			limit = {
+
+				has_relation_soulmate = character:Black_Unicorn_1
+			}
+
+			remove_relation_soulmate = character:Black_Unicorn_1
+		}
+
+
+		if = {
+
+			limit = {
+
+				has_relation_lover = character:Black_Unicorn_1
+			}
+
+			remove_relation_lover = character:Black_Unicorn_1
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_visenya_cast_aside_opinion
+			}
+
+
+			divorce = root
+
+
+			add_character_flag = segrellion_visenya_left_daemon_over_daenerys
+
+
+			set_location = title:b_cold_peaks.title_province
+
+			move_to_pool = yes
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_cast_out_visenya_modifier
+
+			years = 10
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys.1040
+
+			days = 1
+		}
+
+
+		ai_chance = {
+
+			base = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1040 - THE PRICE OF A DRAGON
+#
+# POV: DAEMON
+# =========================================================
+
+segrellion_daenerys.1040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys.1040.t
+	desc = segrellion_daenerys.1040.desc
+
+	theme = war
+
+
+	immediate = {
+
+
+		character:Targaryen_9 = {
+
+			save_scope_as = daenerys
+		}
+
+
+		character:Black_Unicorn_1 ?= {
+
+			save_scope_as = visenya
+		}
+
+
+		remove_character_flag = segrellion_daenerys_throne_offer_pending_visenya
+
+
+		add_character_flag = segrellion_daenerys_throne_pact_active
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_waiting_for_throne_war
+		}
+
+
+		# =================================================
+		# TWO YEAR DEADLINE
+		# =================================================
+
+		trigger_event = {
+
+			id = segrellion_daenerys.1050
+
+			days = 730
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys.1040.a
+
+		custom_tooltip = segrellion_daenerys.1040.a.tt
+	}
+}
+
+
+# =========================================================
+# 1050 - THE PROMISE EXPIRES
+#
+# Only fires if Daemon never declared the war.
+# =========================================================
+
+segrellion_daenerys.1050 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys.1050.opening
+
+	title = segrellion_daenerys.1050.t
+	desc = segrellion_daenerys.1050.desc
+
+
+	trigger = {
+
+		has_character_flag = segrellion_daenerys_throne_pact_active
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_throne_war_declared
+		}
+	}
+
+
+	immediate = {
+
+
+		remove_character_flag = segrellion_daenerys_throne_pact_active
+
+
+		add_character_flag = segrellion_daenerys_throne_pact_failed
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_failed_daenerys_throne_promise_modifier
+
+			years = 10
+		}
+
+
+		character:Targaryen_9 = {
+
+
+			remove_character_flag = segrellion_daenerys_waiting_for_throne_war
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_throne_promise_failed_opinion
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_relation_rival = root
+					}
+				}
+
+
+				set_relation_rival = {
+
+					target = root
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys.1050.a
+	}
+}

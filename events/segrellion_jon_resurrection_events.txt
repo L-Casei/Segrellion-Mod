@@ -314,8 +314,6 @@ segrellion_jon_resurrection.0010 = {
 
         name = segrellion_jon_resurrection.0010.a
 
-        custom_tooltip = segrellion_jon_resurrection.0010.a.tt
-
 
         hidden_effect = {
 
@@ -449,34 +447,128 @@ segrellion_jon_resurrection.0010 = {
                     set_player_character = character:Mallister_6
                 }
             }
+        }
+
+		# =================================================
+        # EVERYTHING BEFORE DEATH REMAINS HIDDEN
+        # =================================================
+
+        hidden_effect = {
+
+            add_character_flag = segrellion_jon_murdered_by_watch
 
 
-            # =================================================
-            # JON DIES
-            # =================================================
+            set_global_variable = {
+
+                name = segrellion_jon_resurrection_pending
+
+                value = yes
+            }
+
+
+            set_global_variable = {
+
+                name = segrellion_jon_loyal_lord_commander
+
+                value = character:Mallister_6
+            }
+
+
+            create_title_and_vassal_change = {
+
+                type = granted
+
+                save_scope_as = jon_watch_transfer
+
+                add_claim_on_loss = no
+            }
+
+
+            title:k_the_wall = {
+
+                change_title_holder_include_vassals = {
+
+                    holder = character:Mallister_6
+
+                    change = scope:jon_watch_transfer
+
+                    government_base = root
+                }
+            }
+
+
+            every_in_list = {
+
+                list = segrellion_jon_watch_titles
+
+                limit = {
+                    this != title:k_the_wall
+                }
+
+                change_title_holder = {
+
+                    holder = character:Mallister_6
+
+                    change = scope:jon_watch_transfer
+                }
+            }
+
+
+            resolve_title_and_vassal_change = scope:jon_watch_transfer
+
+
+            character:Mallister_6 = {
+
+                change_government = nights_watch_government
+
+                set_primary_title_to = title:k_the_wall
+
+                set_realm_capital = title:c_castle_black
+
+                set_location = title:c_castle_black.title_province
+
+                add_character_flag = segrellion_jon_resurrection_chain_started
+
+
+                add_character_flag = {
+
+                    flag = segrellion_body_in_ice_queued
+
+                    days = 12
+                }
+
+
+                trigger_event = {
+
+                    id = segrellion_jon_resurrection.0100
+
+                    days = 10
+                }
+            }
+
 
             if = {
 
                 limit = {
-                    exists = scope:jon_mutineer
+                    is_ai = no
                 }
 
-
-                death = {
-
-                    death_reason = death_murder
-
-                    killer = scope:jon_mutineer
+                root = {
+                    set_player_character = character:Mallister_6
                 }
             }
+        }
 
 
-            else = {
+        # =================================================
+        # VISIBLE DEATH EFFECT
+        # =================================================
 
-                death = {
-                    death_reason = death_murder
-                }
-            }
+        death = {
+
+            death_reason = death_murder
+
+            killer = scope:jon_mutineer
         }
 
 
@@ -515,34 +607,8 @@ segrellion_jon_resurrection.0100 = {
     }
 
     trigger = {
-
-		this = title:k_the_wall.holder
-
-        is_alive = yes
-
-        has_character_flag = segrellion_jon_resurrection_chain_started
-
-
-        character:Stark_7 = {
-
-            is_alive = no
-
-            has_character_flag = segrellion_jon_murdered_by_watch
-        }
-
-
-        character:Melisandre_1 ?= {
-            is_alive = yes
-        }
-
-
-        has_global_variable = segrellion_jon_resurrection_pending
-
-
-        NOT = {
-            has_global_variable = segrellion_resurrected_jon
-        }
-    }
+		always = yes
+	}
 
 
     immediate = {

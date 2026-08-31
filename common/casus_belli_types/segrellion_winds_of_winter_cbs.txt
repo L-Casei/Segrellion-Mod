@@ -1532,3 +1532,275 @@ segrellion_second_war_claimant_elimination_cb = {
 
 	transfer_behavior = transfer
 }
+
+# =========================================================
+# DAENERYS - THE IRON THRONE
+#
+# Daemon promised to win the Iron Throne for Daenerys
+# in exchange for her accepting his proposed Valyrian union.
+# =========================================================
+
+segrellion_daenerys_iron_throne_cb = {
+
+
+	icon = invasion
+
+	group = invasion
+
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+
+	allow_hostages = no
+
+
+	# =====================================================
+	# ONLY DAEMON, ONLY WHILE THE TWO-YEAR PACT IS ACTIVE
+	# =====================================================
+
+	allowed_for_character = {
+
+
+		this = character:Segrellion_60
+
+
+		has_character_flag = segrellion_daenerys_throne_pact_active
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_throne_war_declared
+		}
+
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = title:e_the_iron_throne.holder
+	}
+
+
+	target_titles = all
+
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:e_the_iron_throne
+		}
+	}
+
+
+	cost = {
+	}
+
+
+	# =====================================================
+	# WAR BEGINS
+	# =====================================================
+
+	on_declaration = {
+
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+
+			remove_character_flag = segrellion_daenerys_throne_pact_active
+
+
+			add_character_flag = segrellion_daenerys_throne_war_declared
+
+
+			set_variable = {
+
+				name = segrellion_daenerys_throne_war
+
+				value = scope:war
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+
+			remove_character_flag = segrellion_daenerys_waiting_for_throne_war
+
+
+			add_character_flag = segrellion_daenerys_fighting_for_iron_throne
+		}
+
+
+		scope:war ?= {
+
+			add_attacker = character:Targaryen_9
+		}
+	}
+
+
+	# =====================================================
+	# VICTORY
+	# DAENERYS RECEIVES THE IRON THRONE
+	# =====================================================
+
+	on_victory = {
+
+
+		scope:attacker = {
+
+
+			remove_variable = segrellion_daenerys_throne_war
+
+
+			add_character_flag = segrellion_daenerys_throne_war_won
+		}
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_fighting_for_iron_throne
+
+			add_character_flag = segrellion_daenerys_iron_throne_won_by_daemon
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = conquest
+
+			save_scope_as = segrellion_daenerys_throne_change
+
+			add_claim_on_loss = no
+		}
+
+
+		title:e_the_iron_throne = {
+
+			change_title_holder_include_vassals = {
+
+				holder = character:Targaryen_9
+
+				change = scope:segrellion_daenerys_throne_change
+
+				government_base = scope:defender
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_daenerys_throne_change
+
+
+		# =================================================
+		# DAENERYS FULFILLS HER SIDE OF THE PACT
+		#
+		# If Visenya remained, Daemon now has two wives.
+		# =================================================
+
+		scope:attacker = {
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_spouse_of = character:Targaryen_9
+					}
+				}
+
+
+				marry = character:Targaryen_9
+			}
+
+
+			add_character_flag = segrellion_daemon_married_daenerys_after_throne_war
+
+
+			if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 ?= {
+
+						is_alive = yes
+
+						is_spouse_of = scope:attacker
+					}
+				}
+
+
+				add_character_flag = segrellion_daemon_two_wives
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_married_daemon_after_throne_war
+		}
+	}
+
+
+	# =====================================================
+	# DEFEAT
+	# =====================================================
+
+	on_defeat = {
+
+
+		scope:attacker = {
+
+			remove_variable = segrellion_daenerys_throne_war
+
+			add_character_flag = segrellion_daenerys_throne_war_lost
+		}
+
+
+		character:Targaryen_9 = {
+
+
+			remove_character_flag = segrellion_daenerys_fighting_for_iron_throne
+
+
+			add_opinion = {
+
+				target = scope:attacker
+
+				modifier = segrellion_daenerys_throne_pact_abandoned_opinion
+			}
+		}
+	}
+
+
+	on_white_peace = {
+
+
+		scope:attacker = {
+
+			remove_variable = segrellion_daenerys_throne_war
+
+			add_character_flag = segrellion_daenerys_throne_war_white_peace
+		}
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_fighting_for_iron_throne
+		}
+	}
+}
