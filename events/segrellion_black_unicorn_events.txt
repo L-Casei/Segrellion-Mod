@@ -549,8 +549,6 @@ segrellion_black_unicorn.0030 = {
 		hidden_effect = {
 
 			add_character_flag = segrellion_black_unicorn_expedition_committed
-			add_character_flag = segrellion_black_unicorn_three_scout_route
-
 
 			trigger_event = {
 
@@ -590,7 +588,10 @@ segrellion_black_unicorn.0030 = {
 }
 
 # =========================================================
-# 0300 - THREE FOR SKAGOS
+# 0300 - THREE CANDIDATES
+#
+# Daemon summons three people but hires ONLY ONE.
+# Every candidate asks for 50 gold.
 # =========================================================
 
 segrellion_black_unicorn.0300 = {
@@ -605,14 +606,8 @@ segrellion_black_unicorn.0300 = {
 
 	left_portrait = {
 
-		character = root
-		animation = personality_rational
-	}
-
-
-	lower_left_portrait = {
-
 		character = scope:black_unicorn_shipmaster
+
 		animation = personality_bold
 	}
 
@@ -620,18 +615,21 @@ segrellion_black_unicorn.0300 = {
 	lower_center_portrait = {
 
 		character = scope:black_unicorn_swordsman
+
 		animation = personality_bold
 	}
 
 
-	lower_right_portrait = {
+	right_portrait = {
 
 		character = scope:black_unicorn_northern_guide
+
 		animation = personality_rational
 	}
 
 
 	immediate = {
+
 
 		# =================================================
 		# SHIPMASTER
@@ -644,14 +642,6 @@ segrellion_black_unicorn.0300 = {
 			template = segrellion_black_unicorn_shipmaster_character
 
 			save_scope_as = black_unicorn_shipmaster
-		}
-
-
-		set_variable = {
-
-			name = segrellion_black_unicorn_shipmaster
-
-			value = scope:black_unicorn_shipmaster
 		}
 
 
@@ -669,14 +659,6 @@ segrellion_black_unicorn.0300 = {
 		}
 
 
-		set_variable = {
-
-			name = segrellion_black_unicorn_swordsman
-
-			value = scope:black_unicorn_swordsman
-		}
-
-
 		# =================================================
 		# NORTHERN GUIDE
 		# =================================================
@@ -689,90 +671,189 @@ segrellion_black_unicorn.0300 = {
 
 			save_scope_as = black_unicorn_northern_guide
 		}
-
-
-		set_variable = {
-
-			name = segrellion_black_unicorn_northern_guide
-
-			value = scope:black_unicorn_northern_guide
-		}
-
-
-		add_character_flag = segrellion_black_unicorn_three_scouts_selected
 	}
 
+
+	# =====================================================
+	# SHIPMASTER
+	# 5% RETURN CHANCE
+	# =====================================================
 
 	option = {
 
 		name = segrellion_black_unicorn.0300.a
 
+		trigger = {
+			gold >= 50
+		}
+
 		custom_tooltip = segrellion_black_unicorn.0300.a.tt
 
 
-		hidden_effect = {
-
-			add_character_flag = segrellion_black_unicorn_three_scouts_sent
+		add_gold = -50
 
 
-			scope:black_unicorn_shipmaster = {
+		scope:black_unicorn_shipmaster = {
 
-				set_location = title:b_bitter_dryn.title_province
+			add_gold = 50
 
-				move_to_pool = yes
-			}
+			add_character_flag = segrellion_black_unicorn_selected_scout
 
-
-			scope:black_unicorn_swordsman = {
-
-				set_location = title:b_bitter_dryn.title_province
-
-				move_to_pool = yes
-			}
+			move_to_pool = yes
+		}
 
 
-			scope:black_unicorn_northern_guide = {
+		set_variable = {
 
-				set_location = title:b_bitter_dryn.title_province
+			name = segrellion_black_unicorn_selected_scout
 
-				move_to_pool = yes
-			}
-
-
-			# Each expedition resolves independently
-			# sometime between one and two years later.
-
-			trigger_event = {
-
-				id = segrellion_black_unicorn.0310
-
-				days = { 365 730 }
-			}
+			value = scope:black_unicorn_shipmaster
+		}
 
 
-			trigger_event = {
-
-				id = segrellion_black_unicorn.0311
-
-				days = { 365 730 }
-			}
+		scope:black_unicorn_swordsman = {
+			move_to_pool = yes
+		}
 
 
-			trigger_event = {
+		scope:black_unicorn_northern_guide = {
+			move_to_pool = yes
+		}
 
-				id = segrellion_black_unicorn.0312
 
-				days = { 365 730 }
-			}
+		add_character_flag = segrellion_black_unicorn_hired_shipmaster
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0310
+
+			days = { 365 730 }
+		}
+	}
+
+
+	# =====================================================
+	# SWORDSMAN
+	# 1% RETURN CHANCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0300.b
+
+		trigger = {
+			gold >= 50
+		}
+
+		custom_tooltip = segrellion_black_unicorn.0300.b.tt
+
+
+		add_gold = -50
+
+
+		scope:black_unicorn_swordsman = {
+
+			add_gold = 50
+
+			add_character_flag = segrellion_black_unicorn_selected_scout
+
+			move_to_pool = yes
+		}
+
+
+		set_variable = {
+
+			name = segrellion_black_unicorn_selected_scout
+
+			value = scope:black_unicorn_swordsman
+		}
+
+
+		scope:black_unicorn_shipmaster = {
+			move_to_pool = yes
+		}
+
+
+		scope:black_unicorn_northern_guide = {
+			move_to_pool = yes
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_hired_swordsman
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0311
+
+			days = { 365 730 }
+		}
+	}
+
+
+	# =====================================================
+	# NORTHERN GUIDE
+	# 10% RETURN CHANCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0300.c
+
+		trigger = {
+			gold >= 50
+		}
+
+		custom_tooltip = segrellion_black_unicorn.0300.c.tt
+
+
+		add_gold = -50
+
+
+		scope:black_unicorn_northern_guide = {
+
+			add_gold = 50
+
+			add_character_flag = segrellion_black_unicorn_selected_scout
+
+			move_to_pool = yes
+		}
+
+
+		set_variable = {
+
+			name = segrellion_black_unicorn_selected_scout
+
+			value = scope:black_unicorn_northern_guide
+		}
+
+
+		scope:black_unicorn_shipmaster = {
+			move_to_pool = yes
+		}
+
+
+		scope:black_unicorn_swordsman = {
+			move_to_pool = yes
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_hired_northern_guide
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0312
+
+			days = { 365 730 }
 		}
 	}
 }
 
-
 # =========================================================
-# 0310 - SHIPMASTER RESULT
-#
-# 5% chance to return.
+# 0310 - SHIPMASTER
+# 5% RETURNS
 # =========================================================
 
 segrellion_black_unicorn.0310 = {
@@ -783,113 +864,75 @@ segrellion_black_unicorn.0310 = {
 
 	immediate = {
 
-		add_character_flag = segrellion_black_unicorn_shipmaster_resolved
 
+		var:segrellion_black_unicorn_selected_scout ?= {
 
-		var:segrellion_black_unicorn_shipmaster ?= {
-
-			save_scope_as = black_unicorn_resolving_scout
+			save_scope_as = black_unicorn_selected_scout
 		}
 
 
-		if = {
+		random_list = {
 
-			limit = {
 
-				exists = scope:black_unicorn_resolving_scout
+			5 = {
 
-				scope:black_unicorn_resolving_scout = {
-					is_alive = yes
+				scope:black_unicorn_selected_scout = {
+
+					add_trait = maimed
+
+					add_trait = one_eyed
+
+					add_character_flag = segrellion_black_unicorn_scout_survivor
+
+					add_character_flag = segrellion_black_unicorn_scout_horrified
+
+					set_location = root.location
+				}
+
+
+				add_courtier = scope:black_unicorn_selected_scout
+
+
+				set_variable = {
+
+					name = segrellion_black_unicorn_returning_knight
+
+					value = scope:black_unicorn_selected_scout
+				}
+
+
+				add_character_flag = segrellion_black_unicorn_letter_received
+
+
+				trigger_event = {
+
+					id = segrellion_black_unicorn.0320
+
+					days = 1
 				}
 			}
 
 
-			random_list = {
+			95 = {
 
-				# =========================================
-				# SURVIVES
-				# =========================================
+				scope:black_unicorn_selected_scout = {
 
-				5 = {
-
-					scope:black_unicorn_resolving_scout = {
-
-						add_trait = maimed
-						add_trait = one_eyed
-
-						add_character_flag = segrellion_black_unicorn_scout_survivor
-						add_character_flag = segrellion_black_unicorn_scout_horrified
-
-						set_location = root.location
-					}
-
-
-					add_courtier = scope:black_unicorn_resolving_scout
-
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_character_flag = segrellion_black_unicorn_survivor_pending
-							}
-
-							NOT = {
-								has_character_flag = segrellion_black_unicorn_letter_received
-							}
-						}
-
-
-						set_variable = {
-
-							name = segrellion_black_unicorn_returning_knight
-
-							value = scope:black_unicorn_resolving_scout
-						}
-
-
-						add_character_flag = segrellion_black_unicorn_survivor_pending
-
-
-						trigger_event = {
-
-							id = segrellion_black_unicorn.0320
-
-							days = 1
-						}
-					}
+					add_character_flag = segrellion_black_unicorn_lost_on_skagos
 				}
 
 
-				# =========================================
-				# NEVER RETURNS
-				# =========================================
+				add_character_flag = segrellion_black_unicorn_trail_gone_cold
 
-				95 = {
-
-					scope:black_unicorn_resolving_scout = {
-
-						add_character_flag = segrellion_black_unicorn_lost_on_skagos
-
-						death = {
-							death_reason = death_vanished
-						}
-					}
-				}
+				add_character_flag = segrellion_black_unicorn_future_post_war_return
 			}
 		}
-
-
-		segrellion_black_unicorn_check_three_scouts_effect = yes
 	}
 }
 
 
 # =========================================================
-# 0311 - SWORDSMAN RESULT
-#
-# 1% chance to return.
+# 0311 - SWORDSMAN
+# 1% RETURNS
 # =========================================================
 
 segrellion_black_unicorn.0311 = {
@@ -900,105 +943,76 @@ segrellion_black_unicorn.0311 = {
 
 	immediate = {
 
-		add_character_flag = segrellion_black_unicorn_swordsman_resolved
 
+		var:segrellion_black_unicorn_selected_scout ?= {
 
-		var:segrellion_black_unicorn_swordsman ?= {
-
-			save_scope_as = black_unicorn_resolving_scout
+			save_scope_as = black_unicorn_selected_scout
 		}
 
 
-		if = {
+		random_list = {
 
-			limit = {
 
-				exists = scope:black_unicorn_resolving_scout
+			1 = {
 
-				scope:black_unicorn_resolving_scout = {
-					is_alive = yes
+				scope:black_unicorn_selected_scout = {
+
+					add_trait = maimed
+
+					add_trait = one_eyed
+
+					add_character_flag = segrellion_black_unicorn_scout_survivor
+
+					add_character_flag = segrellion_black_unicorn_scout_horrified
+
+					set_location = root.location
+				}
+
+
+				add_courtier = scope:black_unicorn_selected_scout
+
+
+				set_variable = {
+
+					name = segrellion_black_unicorn_returning_knight
+
+					value = scope:black_unicorn_selected_scout
+				}
+
+
+				add_character_flag = segrellion_black_unicorn_letter_received
+
+
+				trigger_event = {
+
+					id = segrellion_black_unicorn.0320
+
+					days = 1
 				}
 			}
 
 
-			random_list = {
+			99 = {
 
-				1 = {
+				scope:black_unicorn_selected_scout = {
 
-					scope:black_unicorn_resolving_scout = {
-
-						add_trait = maimed
-						add_trait = one_eyed
-
-						add_character_flag = segrellion_black_unicorn_scout_survivor
-						add_character_flag = segrellion_black_unicorn_scout_horrified
-
-						set_location = root.location
-					}
-
-
-					add_courtier = scope:black_unicorn_resolving_scout
-
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_character_flag = segrellion_black_unicorn_survivor_pending
-							}
-
-							NOT = {
-								has_character_flag = segrellion_black_unicorn_letter_received
-							}
-						}
-
-
-						set_variable = {
-
-							name = segrellion_black_unicorn_returning_knight
-
-							value = scope:black_unicorn_resolving_scout
-						}
-
-
-						add_character_flag = segrellion_black_unicorn_survivor_pending
-
-
-						trigger_event = {
-
-							id = segrellion_black_unicorn.0320
-
-							days = 1
-						}
-					}
+					add_character_flag = segrellion_black_unicorn_lost_on_skagos
 				}
 
 
-				99 = {
+				add_character_flag = segrellion_black_unicorn_trail_gone_cold
 
-					scope:black_unicorn_resolving_scout = {
-
-						add_character_flag = segrellion_black_unicorn_lost_on_skagos
-
-						death = {
-							death_reason = death_vanished
-						}
-					}
-				}
+				add_character_flag = segrellion_black_unicorn_future_post_war_return
 			}
 		}
-
-
-		segrellion_black_unicorn_check_three_scouts_effect = yes
 	}
 }
 
 
+
 # =========================================================
-# 0312 - NORTHERN GUIDE RESULT
-#
-# 10% chance to return.
+# 0312 - NORTHERN GUIDE
+# 10% RETURNS
 # =========================================================
 
 segrellion_black_unicorn.0312 = {
@@ -1009,97 +1023,68 @@ segrellion_black_unicorn.0312 = {
 
 	immediate = {
 
-		add_character_flag = segrellion_black_unicorn_guide_resolved
 
+		var:segrellion_black_unicorn_selected_scout ?= {
 
-		var:segrellion_black_unicorn_northern_guide ?= {
-
-			save_scope_as = black_unicorn_resolving_scout
+			save_scope_as = black_unicorn_selected_scout
 		}
 
 
-		if = {
+		random_list = {
 
-			limit = {
 
-				exists = scope:black_unicorn_resolving_scout
+			10 = {
 
-				scope:black_unicorn_resolving_scout = {
-					is_alive = yes
+				scope:black_unicorn_selected_scout = {
+
+					add_trait = maimed
+
+					add_trait = one_eyed
+
+					add_character_flag = segrellion_black_unicorn_scout_survivor
+
+					add_character_flag = segrellion_black_unicorn_scout_horrified
+
+					set_location = root.location
+				}
+
+
+				add_courtier = scope:black_unicorn_selected_scout
+
+
+				set_variable = {
+
+					name = segrellion_black_unicorn_returning_knight
+
+					value = scope:black_unicorn_selected_scout
+				}
+
+
+				add_character_flag = segrellion_black_unicorn_letter_received
+
+
+				trigger_event = {
+
+					id = segrellion_black_unicorn.0320
+
+					days = 1
 				}
 			}
 
 
-			random_list = {
+			90 = {
 
-				10 = {
+				scope:black_unicorn_selected_scout = {
 
-					scope:black_unicorn_resolving_scout = {
-
-						add_trait = maimed
-						add_trait = one_eyed
-
-						add_character_flag = segrellion_black_unicorn_scout_survivor
-						add_character_flag = segrellion_black_unicorn_scout_horrified
-
-						set_location = root.location
-					}
-
-
-					add_courtier = scope:black_unicorn_resolving_scout
-
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_character_flag = segrellion_black_unicorn_survivor_pending
-							}
-
-							NOT = {
-								has_character_flag = segrellion_black_unicorn_letter_received
-							}
-						}
-
-
-						set_variable = {
-
-							name = segrellion_black_unicorn_returning_knight
-
-							value = scope:black_unicorn_resolving_scout
-						}
-
-
-						add_character_flag = segrellion_black_unicorn_survivor_pending
-
-
-						trigger_event = {
-
-							id = segrellion_black_unicorn.0320
-
-							days = 1
-						}
-					}
+					add_character_flag = segrellion_black_unicorn_lost_on_skagos
 				}
 
 
-				90 = {
+				add_character_flag = segrellion_black_unicorn_trail_gone_cold
 
-					scope:black_unicorn_resolving_scout = {
-
-						add_character_flag = segrellion_black_unicorn_lost_on_skagos
-
-						death = {
-							death_reason = death_vanished
-						}
-					}
-				}
+				add_character_flag = segrellion_black_unicorn_future_post_war_return
 			}
 		}
-
-
-		segrellion_black_unicorn_check_three_scouts_effect = yes
 	}
 }
 
@@ -2262,12 +2247,11 @@ segrellion_black_unicorn.0130 = {
 		}
 	}
 
-	custom_tooltip = segrellion_black_unicorn.0130.a.tt
-	custom_tooltip = segrellion_black_unicorn.0130.a.tt
-
 	option = {
 
 		name = segrellion_black_unicorn.0130.a
+
+		custom_tooltip = segrellion_black_unicorn.0130.a.tt
 
 
 		trigger = {
@@ -2294,6 +2278,8 @@ segrellion_black_unicorn.0130 = {
 	option = {
 
 		name = segrellion_black_unicorn.0130.b
+
+		custom_tooltip = segrellion_black_unicorn.0130.b.tt
 
 
 		trigger_event = {
@@ -3831,7 +3817,6 @@ segrellion_black_unicorn.0195 = {
 	}
 }
 
-
 # =========================================================
 # 0200 - CAGED BY THE UNICORN
 #
@@ -3847,6 +3832,7 @@ segrellion_black_unicorn.0200 = {
 
 	theme = war
 
+
 	override_background = {
 		reference = segrellion_skagos
 	}
@@ -3855,6 +3841,7 @@ segrellion_black_unicorn.0200 = {
 	left_portrait = {
 
 		character = root
+
 		animation = anger
 	}
 
@@ -3862,7 +3849,38 @@ segrellion_black_unicorn.0200 = {
 	right_portrait = {
 
 		character = character:Black_Unicorn_1
+
 		animation = laugh
+	}
+
+
+	immediate = {
+
+
+		# Keep one REAL member of Daemon's company for
+		# the later ship scene.
+
+		random_courtier = {
+
+			limit = {
+
+				is_alive = yes
+				is_adult = yes
+			}
+
+			save_scope_as = black_unicorn_escape_companion
+		}
+
+
+		scope:black_unicorn_escape_companion ?= {
+
+			set_variable = {
+
+				name = segrellion_black_unicorn_escape_companion
+
+				value = scope:black_unicorn_escape_companion
+			}
+		}
 	}
 
 
@@ -3875,6 +3893,8 @@ segrellion_black_unicorn.0200 = {
 
 		add_character_flag = segrellion_black_unicorn_imprisoned_after_duel
 
+		add_character_flag = segrellion_black_unicorn_companions_captured
+
 
 		character:Black_Unicorn_1 = {
 
@@ -3883,6 +3903,433 @@ segrellion_black_unicorn.0200 = {
 				target = root
 
 				type = dungeon
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0210
+
+			days = { 3 6 }
+		}
+	}
+}
+
+# =========================================================
+# 0210 - THE PRISONER
+# =========================================================
+
+segrellion_black_unicorn.0210 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0210.t
+	desc = segrellion_black_unicorn.0210.desc
+
+	theme = dungeon
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+
+		override_imprisonment_visuals = yes
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = personality_rational
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		is_imprisoned_by = character:Black_Unicorn_1
+	}
+
+
+	immediate = {
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = black_unicorn_woman
+
+			# Temporarily remove her armored expedition outfit.
+			# She appears in her normal Skagosi clothing instead.
+
+			remove_character_flag = segrellion_black_unicorn_skagos_outfit
+		}
+	}
+
+
+	# =====================================================
+	# 1. TRUTH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0210.a
+
+		custom_tooltip = segrellion_black_unicorn.0210.a.tt
+
+
+		add_character_flag = segrellion_black_unicorn_prison_told_truth
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0211
+
+			days = 1
+		}
+	}
+
+
+	# =====================================================
+	# 2. ARROGANT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0210.b
+
+		trigger = {
+
+			has_trait = arrogant
+		}
+
+		trait = arrogant
+
+		custom_tooltip = segrellion_black_unicorn.0210.b.tt
+
+
+		add_character_flag = segrellion_black_unicorn_prison_arrogant_answer
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0220
+
+			days = 1
+		}
+	}
+
+
+	# =====================================================
+	# 3. LIE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0210.c
+
+		custom_tooltip = segrellion_black_unicorn.0210.c.tt
+
+
+		add_character_flag = segrellion_black_unicorn_prison_lied
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0212
+
+			days = 1
+		}
+	}
+
+
+	after = {
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_skagos_outfit
+		}
+	}
+}
+
+# =========================================================
+# 0211 - AN HONEST ANSWER
+# =========================================================
+
+segrellion_black_unicorn.0211 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0211.t
+	desc = segrellion_black_unicorn.0211.desc
+
+	theme = dynasty
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+
+		override_imprisonment_visuals = yes
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0211.a
+
+		custom_tooltip = segrellion_black_unicorn.0211.a.tt
+
+
+		hidden_effect = {
+
+
+			# Her identity is now genuinely known.
+
+			segrellion_reveal_black_unicorn_identity_effect = yes
+
+
+			add_character_flag = segrellion_black_unicorn_banned_from_skagos
+
+			add_character_flag = segrellion_black_unicorn_future_post_war_return
+
+			add_character_flag = segrellion_black_unicorn_forced_from_skagos
+
+
+			# CK3 supports release_from_prison directly
+			# on the prisoner scope.
+
+			release_from_prison = yes
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0214
+
+				days = 1
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0212 - NO SECOND CHANCES
+#
+# DAEMON LIED
+# =========================================================
+
+segrellion_black_unicorn.0212 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0212.t
+	desc = segrellion_black_unicorn.0212.desc
+
+	theme = dungeon
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = fear
+
+		override_imprisonment_visuals = yes
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0212.a
+
+		add_internal_flag = dangerous
+
+		custom_tooltip = segrellion_black_unicorn.0212.a.tt
+
+
+		death = {
+
+			death_reason = death_murdered
+
+			killer = character:Black_Unicorn_1
+		}
+	}
+}
+
+# =========================================================
+# 0214 - THE SHIP SOUTH
+# =========================================================
+
+segrellion_black_unicorn.0214 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0214.t
+	desc = segrellion_black_unicorn.0214.desc
+
+	theme = travel
+
+
+	override_background = {
+		reference = ship
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = sick_stomach
+	}
+
+
+	right_portrait = {
+
+		character = scope:black_unicorn_escape_companion
+
+		animation = worry
+	}
+
+
+	immediate = {
+
+
+		var:segrellion_black_unicorn_escape_companion ?= {
+
+			save_scope_as = black_unicorn_escape_companion
+		}
+
+
+		# They have already been carried down from the Cold Peaks.
+
+		set_location = title:b_bitter_dryn.title_province
+
+
+		add_character_flag = segrellion_black_unicorn_skagos_escape_complete
+
+		add_character_flag = segrellion_black_unicorn_post_war_return_pending
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0214.a
+
+		custom_tooltip = segrellion_black_unicorn.0214.a.tt
+
+
+		add_character_flag = segrellion_black_unicorn_cannot_return_to_skagos
+
+
+		segrellion_black_unicorn_return_to_daemon_camp_effect = yes
+	}
+}
+
+# =========================================================
+# 0220 - AN HEIR IN CHAINS
+#
+# ARROGANT PRISON RESPONSE
+# =========================================================
+
+segrellion_black_unicorn.0220 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0220.t
+	desc = segrellion_black_unicorn.0220.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+
+		override_imprisonment_visuals = yes
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = laugh
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0220.a
+
+		trait = arrogant
+
+		custom_tooltip = segrellion_black_unicorn.0220.a.tt
+
+
+		hidden_effect = {
+
+
+			# She is sufficiently entertained and intrigued
+			# to let him out of his chains.
+
+			release_from_prison = yes
+
+
+			remove_character_flag = segrellion_black_unicorn_imprisoned_after_duel
+
+
+			add_character_flag = segrellion_black_unicorn_arrogance_impressed_woman
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0135
+
+				days = 1
 			}
 		}
 	}
