@@ -37,6 +37,104 @@ segrellion_black_unicorn_startup = {
 				add_character_flag = segrellion_black_unicorn_mysterious_woman
 				add_character_flag = segrellion_icebringer_authorized
 
+				add_character_flag = segrellion_black_unicorn_skagos_outfit
+
+				add_character_flag = segrellion_black_unicorn_lock_camp_skagos
+
+
+				set_location = title:b_cold_peaks.title_province
+
+
+				domicile ?= {
+
+					if = {
+
+						limit = {
+
+							domicile_location != title:b_cold_peaks.title_province
+						}
+
+
+						move_domicile = title:b_cold_peaks.title_province
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_black_unicorn_army_created
+						}
+					}
+
+
+					create_maa_regiment = {
+
+						type = segrellion_skagosi_unicorns
+
+						check_can_recruit = no
+
+						size = 1
+					}
+
+
+					create_maa_regiment = {
+
+						type = segrellion_skagosi_unicorns
+
+						check_can_recruit = no
+
+						size = 1
+					}
+
+
+					create_maa_regiment = {
+
+						type = segrellion_skagosi_raiders
+
+						check_can_recruit = no
+
+						size = 1
+					}
+
+
+					create_maa_regiment = {
+
+						type = segrellion_skagosi_raiders
+
+						check_can_recruit = no
+
+						size = 1
+					}
+
+
+					add_character_flag = segrellion_black_unicorn_army_created
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_black_unicorn_camp_lock_started
+						}
+					}
+
+
+					add_character_flag = segrellion_black_unicorn_camp_lock_started
+
+
+					trigger_event = {
+
+						id = segrellion_black_unicorn.0000
+
+						days = 3
+					}
+				}
+
 
 				set_global_variable = {
 					name = segrellion_black_unicorn_woman

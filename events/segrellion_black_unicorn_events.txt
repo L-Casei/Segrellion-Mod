@@ -1,5 +1,74 @@
 namespace = segrellion_black_unicorn
 
+# =========================================================
+# 0000 - RED UNICORN CAMP LOCK
+#
+# She-Unicorn must remain hidden at the Cold Peaks until
+# the storyline explicitly releases her.
+# =========================================================
+
+segrellion_black_unicorn.0000 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Black_Unicorn_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_lock_camp_skagos
+	}
+
+
+	immediate = {
+
+
+		current_travel_plan ?= {
+
+			abort_travel_plan = yes
+		}
+
+
+		domicile ?= {
+
+			if = {
+
+				limit = {
+
+					domicile_location != title:b_cold_peaks.title_province
+				}
+
+
+				move_domicile = title:b_cold_peaks.title_province
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				location != title:b_cold_peaks.title_province
+			}
+
+
+			set_location = title:b_cold_peaks.title_province
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0000
+
+			days = 7
+		}
+	}
+}
+
 
 # =========================================================
 # 0001 - A UNICORN IN THE NORTH
@@ -929,6 +998,14 @@ segrellion_black_unicorn.0075 = {
 		animation = personality_bold
 	}
 
+	immediate = {
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = black_unicorn_woman
+		}
+	}
+
 
 	option = {
 
@@ -1089,17 +1166,21 @@ segrellion_black_unicorn.0080 = {
 		}
 	}
 
-
 	option = {
 
 		name = segrellion_black_unicorn.0080.a
 
+
 		trigger = {
-			scope:actor = scope:sc_victor
+
+			character:Segrellion_60 = {
+
+				has_character_flag = segrellion_black_unicorn_daemon_won_duel
+			}
 		}
 
 
-		scope:actor = {
+		character:Segrellion_60 = {
 
 			trigger_event = {
 
@@ -1115,12 +1196,17 @@ segrellion_black_unicorn.0080 = {
 
 		name = segrellion_black_unicorn.0080.b
 
+
 		trigger = {
-			scope:recipient = scope:sc_victor
+
+			character:Segrellion_60 = {
+
+				has_character_flag = segrellion_black_unicorn_daemon_lost_duel
+			}
 		}
 
 
-		scope:actor = {
+		character:Segrellion_60 = {
 
 			trigger_event = {
 
@@ -1130,6 +1216,8 @@ segrellion_black_unicorn.0080 = {
 			}
 		}
 	}
+
+
 }
 
 # =========================================================
