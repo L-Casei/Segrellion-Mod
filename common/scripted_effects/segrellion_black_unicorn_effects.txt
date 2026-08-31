@@ -1,0 +1,260 @@
+# =========================================================
+# THE BLACK UNICORN
+# SCRIPTED EFFECTS
+# =========================================================
+
+
+# =========================================================
+# SELECT DAEMON'S INVESTIGATOR
+#
+# Stored as a CHARACTER VARIABLE on Daemon so the same
+# person can be reused months or years later.
+# =========================================================
+
+segrellion_black_unicorn_begin_courtier_investigation_effect = {
+
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_black_unicorn_investigator
+		}
+
+		remove_variable = segrellion_black_unicorn_investigator
+	}
+
+
+	if = {
+
+		limit = {
+
+			any_courtier_or_guest = {
+
+				is_alive = yes
+				is_adult = yes
+
+				NOT = {
+					has_trait = incapable
+				}
+			}
+		}
+
+
+		random_courtier_or_guest = {
+
+			limit = {
+
+				is_alive = yes
+				is_adult = yes
+
+				intrigue >= 8
+
+				NOT = {
+					has_trait = incapable
+				}
+
+				NOT = {
+					this = root
+				}
+			}
+
+			alternative_limit = {
+
+				is_alive = yes
+				is_adult = yes
+
+				NOT = {
+					has_trait = incapable
+				}
+
+				NOT = {
+					this = root
+				}
+			}
+
+
+			save_scope_as = black_unicorn_investigator
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:black_unicorn_investigator
+			}
+
+
+			set_variable = {
+				name = segrellion_black_unicorn_investigator
+				value = scope:black_unicorn_investigator
+			}
+
+
+			scope:black_unicorn_investigator = {
+
+				add_character_flag = segrellion_black_unicorn_investigator
+			}
+		}
+	}
+
+
+	add_character_flag = segrellion_black_unicorn_courtier_investigation
+
+
+	trigger_event = {
+
+		id = segrellion_black_unicorn.0020
+
+		days = 90
+	}
+}
+
+
+# =========================================================
+# DUEL SAFETY
+#
+# The duel itself is REAL single combat.
+# These effects only prevent its random injury system from
+# permanently mutilating either story character.
+# =========================================================
+
+segrellion_black_unicorn_snapshot_duel_injuries_effect = {
+
+
+	if = {
+		limit = { has_trait = wounded_1 }
+		add_character_flag = segrellion_bu_pre_duel_wounded_1
+	}
+
+	if = {
+		limit = { has_trait = wounded_2 }
+		add_character_flag = segrellion_bu_pre_duel_wounded_2
+	}
+
+	if = {
+		limit = { has_trait = wounded_3 }
+		add_character_flag = segrellion_bu_pre_duel_wounded_3
+	}
+
+	if = {
+		limit = { has_trait = maimed }
+		add_character_flag = segrellion_bu_pre_duel_maimed
+	}
+
+	if = {
+		limit = { has_trait = one_legged }
+		add_character_flag = segrellion_bu_pre_duel_one_legged
+	}
+
+	if = {
+		limit = { has_trait = one_eyed }
+		add_character_flag = segrellion_bu_pre_duel_one_eyed
+	}
+
+	if = {
+		limit = { has_trait = disfigured }
+		add_character_flag = segrellion_bu_pre_duel_disfigured
+	}
+
+	if = {
+		limit = { has_trait = scarred }
+		add_character_flag = segrellion_bu_pre_duel_scarred
+	}
+}
+
+
+segrellion_black_unicorn_restore_duel_injuries_effect = {
+
+
+	if = {
+		limit = { has_trait = wounded_1 }
+		remove_trait = wounded_1
+	}
+
+	if = {
+		limit = { has_trait = wounded_2 }
+		remove_trait = wounded_2
+	}
+
+	if = {
+		limit = { has_trait = wounded_3 }
+		remove_trait = wounded_3
+	}
+
+	if = {
+		limit = { has_trait = maimed }
+		remove_trait = maimed
+	}
+
+	if = {
+		limit = { has_trait = one_legged }
+		remove_trait = one_legged
+	}
+
+	if = {
+		limit = { has_trait = one_eyed }
+		remove_trait = one_eyed
+	}
+
+	if = {
+		limit = { has_trait = disfigured }
+		remove_trait = disfigured
+	}
+
+	if = {
+		limit = { has_trait = scarred }
+		remove_trait = scarred
+	}
+
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_wounded_1 }
+		add_trait = wounded_1
+	}
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_wounded_2 }
+		add_trait = wounded_2
+	}
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_wounded_3 }
+		add_trait = wounded_3
+	}
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_maimed }
+		add_trait = maimed
+	}
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_one_legged }
+		add_trait = one_legged
+	}
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_one_eyed }
+		add_trait = one_eyed
+	}
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_disfigured }
+		add_trait = disfigured
+	}
+
+	if = {
+		limit = { has_character_flag = segrellion_bu_pre_duel_scarred }
+		add_trait = scarred
+	}
+
+
+	remove_character_flag = segrellion_bu_pre_duel_wounded_1
+	remove_character_flag = segrellion_bu_pre_duel_wounded_2
+	remove_character_flag = segrellion_bu_pre_duel_wounded_3
+
+	remove_character_flag = segrellion_bu_pre_duel_maimed
+	remove_character_flag = segrellion_bu_pre_duel_one_legged
+	remove_character_flag = segrellion_bu_pre_duel_one_eyed
+	remove_character_flag = segrellion_bu_pre_duel_disfigured
+	remove_character_flag = segrellion_bu_pre_duel_scarred
+}

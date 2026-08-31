@@ -1,0 +1,104 @@
+# =========================================================
+# THE BLACK UNICORN
+# STARTUP
+# =========================================================
+
+
+on_game_start_after_lobby = {
+
+	on_actions = {
+
+		segrellion_black_unicorn_startup
+	}
+}
+
+
+segrellion_black_unicorn_startup = {
+
+	effect = {
+
+
+		# =================================================
+		# MYSTERIOUS WOMAN + ICEBRINGER
+		# =================================================
+
+		character:Black_Unicorn_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					game_start_date = 8300.8.20
+				}
+
+
+				add_character_flag = segrellion_black_unicorn_mysterious_woman
+				add_character_flag = segrellion_icebringer_authorized
+
+
+				set_global_variable = {
+					name = segrellion_black_unicorn_woman
+					value = this
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							exists = global_var:segrellion_icebringer
+						}
+					}
+
+
+					segrellion_create_artifact_icebringer_effect = {
+						OWNER = this
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# DAEMON STORY START
+		#
+		# Randomly 60-120 days after game start.
+		# =================================================
+
+		character:Segrellion_60 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+					is_adult = yes
+
+					game_start_date = 8300.8.20
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_opening_queued
+					}
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_opening_seen
+					}
+				}
+
+
+				add_character_flag = segrellion_black_unicorn_opening_queued
+
+
+				trigger_event = {
+
+					id = segrellion_black_unicorn.0001
+
+					days = { 60 120 }
+				}
+			}
+		}
+	}
+}

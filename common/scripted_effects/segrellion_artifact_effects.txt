@@ -28,7 +28,22 @@ segrellion_create_artifact_icebringer_effect = {
 		save_scope_as = epic
 		set_variable = { name = valyrian_steel value = yes }
 		set_variable = { name = historical_unique_artifact value = yes }
-		set_variable = { name = traditional_house_owner value = scope:owner.house }
+
+		if = {
+
+			limit = {
+
+				scope:owner = {
+					exists = house
+				}
+			}
+
+			set_variable = {
+				name = traditional_house_owner
+				value = scope:owner.house
+			}
+		}
+		
 		set_variable = { name = segrellion_icebringer_artifact value = yes }
 		agot_add_artifact_history = {
 			ARTIFACT = this
