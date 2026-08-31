@@ -2,6 +2,12 @@
 # INVESTIGATE THE BLACK UNICORN
 # =========================================================
 
+# =========================================================
+# INVESTIGATE THE BLACK UNICORN
+#
+# Only after Daemon has won The Unicorn Returns.
+# =========================================================
+
 segrellion_investigate_black_unicorn_decision = {
 
 
@@ -11,11 +17,15 @@ segrellion_investigate_black_unicorn_decision = {
 	}
 
 
+	decision_group_type = major
+
 	sort_order = 80
 
 
 	desc = segrellion_investigate_black_unicorn_decision_desc
+
 	selection_tooltip = segrellion_investigate_black_unicorn_decision_tooltip
+
 	confirm_text = segrellion_investigate_black_unicorn_decision_confirm
 
 
@@ -25,12 +35,42 @@ segrellion_investigate_black_unicorn_decision = {
 
 	is_shown = {
 
+
 		this = character:Segrellion_60
+
 
 		has_character_flag = segrellion_black_unicorn_decision_unlocked
 
+
 		NOT = {
 			has_character_flag = segrellion_black_unicorn_expedition_committed
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_duel_resolved
+		}
+
+
+		# Debug can still test the storyline before the war.
+
+		trigger_if = {
+
+			limit = {
+
+				NOT = {
+					debug_only = yes
+				}
+			}
+
+
+			has_character_flag = segrellion_unicorn_returns_completed
+
+
+			title:c_farring_cross = {
+
+				holder = root
+			}
 		}
 	}
 
@@ -41,19 +81,60 @@ segrellion_investigate_black_unicorn_decision = {
 
 	is_valid = {
 
+
 		is_alive = yes
 		is_adult = yes
+
 		is_imprisoned = no
 
-		NOT = {
-			has_trait = incapable
+
+		custom_description = {
+
+			text = segrellion_black_unicorn_not_travelling_requirement
+
+			NOT = {
+				exists = current_travel_plan
+			}
 		}
 
-		NOT = {
-			exists = current_travel_plan
+
+		custom_description = {
+
+			text = segrellion_black_unicorn_woman_alive_requirement
+
+			character:Black_Unicorn_1 ?= {
+				is_alive = yes
+			}
 		}
 
-		gold >= 150
+
+		trigger_if = {
+
+			limit = {
+
+				NOT = {
+					debug_only = yes
+				}
+			}
+
+
+			custom_description = {
+
+				text = segrellion_black_unicorn_unicorn_returns_requirement
+
+				has_character_flag = segrellion_unicorn_returns_completed
+			}
+
+
+			custom_description = {
+
+				text = segrellion_black_unicorn_beacon_requirement
+
+				title:c_farring_cross = {
+					holder = root
+				}
+			}
+		}
 	}
 
 
@@ -73,19 +154,38 @@ segrellion_investigate_black_unicorn_decision = {
 
 	effect = {
 
-		trigger_event = {
 
-			id = segrellion_black_unicorn.0030
+		custom_tooltip = segrellion_investigate_black_unicorn_effect_trail_tt
+
+		custom_tooltip = segrellion_investigate_black_unicorn_effect_skagos_tt
+
+		custom_tooltip = segrellion_investigate_black_unicorn_effect_danger_tt
+
+
+		hidden_effect = {
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0030
+			}
 		}
 	}
 
 
-	ai_check_interval = 7
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_check_interval = 30
 
 
 	ai_potential = {
 
 		this = character:Segrellion_60
+
+		is_ai = yes
+
+		has_character_flag = segrellion_unicorn_returns_completed
 
 		has_character_flag = segrellion_black_unicorn_decision_unlocked
 	}

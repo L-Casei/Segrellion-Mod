@@ -7,8 +7,8 @@
 # =========================================================
 # SELECT DAEMON'S INVESTIGATOR
 #
-# Stored as a CHARACTER VARIABLE on Daemon so the same
-# person can be reused months or years later.
+# The investigator is permanently stored as a CHARACTER
+# VARIABLE on Daemon.
 # =========================================================
 
 segrellion_black_unicorn_begin_courtier_investigation_effect = {
@@ -24,76 +24,62 @@ segrellion_black_unicorn_begin_courtier_investigation_effect = {
 	}
 
 
-	if = {
+	random_courtier_or_guest = {
 
 		limit = {
 
-			any_courtier_or_guest = {
+			is_alive = yes
+			is_adult = yes
 
-				is_alive = yes
-				is_adult = yes
+			intrigue >= 8
 
-				NOT = {
-					has_trait = incapable
-				}
+			NOT = {
+				has_trait = incapable
+			}
+
+			NOT = {
+				this = root
 			}
 		}
 
 
-		random_courtier_or_guest = {
+		alternative_limit = {
 
-			limit = {
+			is_alive = yes
+			is_adult = yes
 
-				is_alive = yes
-				is_adult = yes
-
-				intrigue >= 8
-
-				NOT = {
-					has_trait = incapable
-				}
-
-				NOT = {
-					this = root
-				}
+			NOT = {
+				has_trait = incapable
 			}
 
-			alternative_limit = {
-
-				is_alive = yes
-				is_adult = yes
-
-				NOT = {
-					has_trait = incapable
-				}
-
-				NOT = {
-					this = root
-				}
+			NOT = {
+				this = root
 			}
-
-
-			save_scope_as = black_unicorn_investigator
 		}
 
 
-		if = {
-
-			limit = {
-				exists = scope:black_unicorn_investigator
-			}
+		save_scope_as = black_unicorn_investigator
+	}
 
 
-			set_variable = {
-				name = segrellion_black_unicorn_investigator
-				value = scope:black_unicorn_investigator
-			}
+	if = {
+
+		limit = {
+			exists = scope:black_unicorn_investigator
+		}
 
 
-			scope:black_unicorn_investigator = {
+		set_variable = {
 
-				add_character_flag = segrellion_black_unicorn_investigator
-			}
+			name = segrellion_black_unicorn_investigator
+
+			value = scope:black_unicorn_investigator
+		}
+
+
+		scope:black_unicorn_investigator = {
+
+			add_character_flag = segrellion_black_unicorn_investigator
 		}
 	}
 
@@ -108,7 +94,6 @@ segrellion_black_unicorn_begin_courtier_investigation_effect = {
 		days = 90
 	}
 }
-
 
 # =========================================================
 # DUEL SAFETY
@@ -257,4 +242,35 @@ segrellion_black_unicorn_restore_duel_injuries_effect = {
 	remove_character_flag = segrellion_bu_pre_duel_one_eyed
 	remove_character_flag = segrellion_bu_pre_duel_disfigured
 	remove_character_flag = segrellion_bu_pre_duel_scarred
+}
+
+# =========================================================
+# REVEAL THE BLACK UNICORN
+#
+# DO NOT CALL THIS EFFECT YET.
+#
+# The same character becomes Visenya Segrellion.
+# Her genealogy only appears after the reveal.
+# =========================================================
+
+segrellion_reveal_black_unicorn_identity_effect = {
+
+
+	character:Black_Unicorn_1 = {
+
+
+		change_first_name = segrellion_black_unicorn_true_name
+
+
+		set_father = character:Segrellion_55
+		set_mother = character:Segrellion_59
+
+
+		set_house = character:Segrellion_55.house
+
+
+		remove_character_flag = segrellion_black_unicorn_mysterious_woman
+
+		add_character_flag = segrellion_black_unicorn_identity_revealed
+	}
 }

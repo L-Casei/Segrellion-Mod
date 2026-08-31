@@ -302,37 +302,37 @@ segrellion_black_unicorn.0020 = {
 
 	title = segrellion_black_unicorn.0020.t
 
+
 	desc = {
 
 		first_valid = {
 
+
 			triggered_desc = {
 
 				trigger = {
-					exists = scope:black_unicorn_investigator
+					has_variable = segrellion_black_unicorn_investigator
 				}
 
 				desc = segrellion_black_unicorn.0020.desc_investigator
 			}
 
+
 			desc = segrellion_black_unicorn.0020.desc
 		}
 	}
 
+
 	theme = intrigue
 
-	left_portrait = {
-		character = root
-		animation = thinking
-	}
 
-	right_portrait = {
-		character = scope:black_unicorn_investigator
-		animation = personality_rational
+	override_background = {
+		reference = segrellion_westerosi_northern_tavern
 	}
 
 
 	immediate = {
+
 
 		var:segrellion_black_unicorn_investigator ?= {
 
@@ -345,15 +345,30 @@ segrellion_black_unicorn.0020 = {
 	}
 
 
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:black_unicorn_investigator
+		animation = personality_rational
+	}
+
+
 	option = {
 
 		name = segrellion_black_unicorn.0020.a
+
+		custom_tooltip = segrellion_black_unicorn.0020.a.tt
 	}
 }
 
-
 # =========================================================
-# 0030 - FUND THE EXPEDITION
+# 0030 - FOLLOWING THE BLACK UNICORN
 # =========================================================
 
 segrellion_black_unicorn.0030 = {
@@ -365,13 +380,21 @@ segrellion_black_unicorn.0030 = {
 
 	theme = travel
 
+
+	override_background = {
+		reference = segrellion_the_beacon
+	}
+
+
 	left_portrait = {
+
 		character = root
 		animation = personality_rational
 	}
 
 
 	immediate = {
+
 
 		var:segrellion_black_unicorn_investigator ?= {
 
@@ -380,9 +403,9 @@ segrellion_black_unicorn.0030 = {
 	}
 
 
-	# -----------------------------------------------------
-	# DAEMON GOES PERSONALLY
-	# -----------------------------------------------------
+	# =====================================================
+	# GO PERSONALLY
+	# =====================================================
 
 	option = {
 
@@ -390,91 +413,74 @@ segrellion_black_unicorn.0030 = {
 
 		add_internal_flag = special
 
-
-		add_character_flag = segrellion_black_unicorn_expedition_committed
-		add_character_flag = segrellion_black_unicorn_daemon_personal_route
+		custom_tooltip = segrellion_black_unicorn.0030.a.tt
 
 
-		location = {
-
-			save_scope_as = black_unicorn_origin
-		}
+		hidden_effect = {
 
 
-		if = {
+			add_character_flag = segrellion_black_unicorn_expedition_committed
 
-			limit = {
-				exists = scope:black_unicorn_origin
+			add_character_flag = segrellion_black_unicorn_daemon_personal_route
+
+
+			location = {
+
+				save_scope_as = black_unicorn_origin
 			}
 
-			set_variable = {
-				name = segrellion_black_unicorn_origin
-				value = scope:black_unicorn_origin
+
+			if = {
+
+				limit = {
+					exists = scope:black_unicorn_origin
+				}
+
+
+				set_variable = {
+
+					name = segrellion_black_unicorn_origin
+
+					value = scope:black_unicorn_origin
+				}
 			}
-		}
 
 
-		start_travel_plan = {
+			start_travel_plan = {
 
-			destination = title:c_skane.title_province
+				destination = title:b_bitter_drynn.title_province
 
-			return_trip = no
+				return_trip = no
 
-			on_arrival_event = segrellion_black_unicorn.0040
-			on_arrival_destinations = first
+				on_arrival_event = segrellion_black_unicorn.0040
 
-			on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+			}
 		}
 
 
 		ai_chance = {
-			base = 1
+			base = 100
 		}
 	}
 
 
-	# -----------------------------------------------------
-	# SEND THE ORIGINAL INVESTIGATOR
-	# -----------------------------------------------------
-
-	option = {
-
-		name = segrellion_black_unicorn.0030.b
-
-
-		trigger = {
-			exists = scope:black_unicorn_investigator
-		}
-
-
-		add_character_flag = segrellion_black_unicorn_expedition_committed
-		add_character_flag = segrellion_black_unicorn_courtier_expedition_pending
-
-
-		scope:black_unicorn_investigator = {
-
-			add_character_flag = segrellion_black_unicorn_investigator_sent_to_skagos
-		}
-
-
-		ai_chance = {
-			base = 99
-		}
-	}
-
-
-	# -----------------------------------------------------
-	# BACK OUT
-	# -----------------------------------------------------
+	# =====================================================
+	# NOT YET
+	#
+	# Refund the decision cost.
+	# =====================================================
 
 	option = {
 
 		name = segrellion_black_unicorn.0030.c
 
+		custom_tooltip = segrellion_black_unicorn.0030.c.tt
+
 
 		add_gold = 150
-
-		add_character_flag = segrellion_black_unicorn_expedition_aborted_once
 
 
 		ai_chance = {
@@ -483,10 +489,10 @@ segrellion_black_unicorn.0030 = {
 	}
 }
 
-
 # =========================================================
-# 0040 - THE WOMAN IN THE MOUNTAINS
-# FIRST SKAGOS ARRIVAL
+# 0040 - BITTER DRYNN
+#
+# Daemon arrives at the tavern in Bitter Drynn.
 # =========================================================
 
 segrellion_black_unicorn.0040 = {
@@ -498,95 +504,117 @@ segrellion_black_unicorn.0040 = {
 
 	theme = travel
 
+
 	override_background = {
-		reference = segrellion_skagos
+		reference = segrellion_westerosi_northern_tavern
 	}
+
 
 	left_portrait = {
+
 		character = root
-		animation = worry
+		animation = thinking
 	}
 
 
-	# -----------------------------------------------------
-	# CONTINUE INLAND
-	# -----------------------------------------------------
+	# =====================================================
+	# FOLLOW THE TRAIL INTO THE MOUNTAINS
+	# =====================================================
 
 	option = {
 
 		name = segrellion_black_unicorn.0040.a
 
+		custom_tooltip = segrellion_black_unicorn.0040.a.tt
 
-		add_character_flag = segrellion_black_unicorn_mountain_route
+
+		hidden_effect = {
 
 
-		if = {
+			add_character_flag = segrellion_black_unicorn_mountain_route
 
-			limit = {
-				exists = current_travel_plan
+
+			# The journey to Bitter Drynn is finished.
+			# A NEW travel plan begins one day later.
+
+			if = {
+
+				limit = {
+					exists = current_travel_plan
+				}
+
+
+				current_travel_plan = {
+
+					complete_travel_plan = yes
+				}
 			}
 
-			current_travel_plan = {
-				complete_travel_plan = yes
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0045
+
+				days = 1
 			}
-		}
-
-
-		trigger_event = {
-
-			id = segrellion_black_unicorn.0045
-
-			days = 1
 		}
 
 
 		ai_chance = {
-			base = 99
+			base = 100
 		}
 	}
 
 
-	# -----------------------------------------------------
-	# RETURN HOME
-	# -----------------------------------------------------
+	# =====================================================
+	# ABANDON THE SEARCH
+	# =====================================================
 
 	option = {
 
 		name = segrellion_black_unicorn.0040.b
 
+		custom_tooltip = segrellion_black_unicorn.0040.b.tt
 
-		add_character_flag = segrellion_black_unicorn_abandoned_on_skagos
+
+		hidden_effect = {
 
 
-		if = {
+			add_character_flag = segrellion_black_unicorn_abandoned_on_skagos
 
-			limit = {
-				exists = current_travel_plan
+
+			if = {
+
+				limit = {
+					exists = current_travel_plan
+				}
+
+
+				current_travel_plan = {
+
+					complete_travel_plan = yes
+				}
 			}
 
-			current_travel_plan = {
-				complete_travel_plan = yes
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0042
+
+				days = 1
 			}
-		}
-
-
-		trigger_event = {
-
-			id = segrellion_black_unicorn.0042
-
-			days = 1
 		}
 
 
 		ai_chance = {
-			base = 1
+			base = 0
 		}
 	}
 }
 
 
 # =========================================================
-# 0042 - BEGIN EARLY RETURN JOURNEY
+# 0042 - RETURN FROM BITTER DRYNN
 # =========================================================
 
 segrellion_black_unicorn.0042 = {
@@ -604,7 +632,7 @@ segrellion_black_unicorn.0042 = {
 		}
 
 
-		set_location = title:c_skane.title_province
+		set_location = title:b_bitter_drynn.title_province
 
 
 		if = {
@@ -621,6 +649,7 @@ segrellion_black_unicorn.0042 = {
 				return_trip = no
 
 				on_arrival_event = segrellion_black_unicorn.0043
+
 				on_arrival_destinations = first
 
 				on_travel_planner_cancel_event = segrellion_black_unicorn.0090
@@ -634,7 +663,6 @@ segrellion_black_unicorn.0042 = {
 		}
 	}
 }
-
 
 # =========================================================
 # 0043 - EARLY RETURN COMPLETE
@@ -656,7 +684,9 @@ segrellion_black_unicorn.0043 = {
 
 
 # =========================================================
-# 0045 - SKAGOS -> DEEPDOWN
+# 0045 - BITTER DRYNN -> COLD PEAKS
+#
+# A completely NEW travel plan.
 # =========================================================
 
 segrellion_black_unicorn.0045 = {
@@ -665,19 +695,36 @@ segrellion_black_unicorn.0045 = {
 	hidden = yes
 
 
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_black_unicorn_mountain_route
+
+		NOT = {
+			exists = current_travel_plan
+		}
+	}
+
+
 	immediate = {
 
 
-		set_location = title:c_skane.title_province
+		# Critical for landless characters:
+		# begin the next journey FROM Bitter Drynn,
+		# not from Daemon's camp/home position.
+
+		set_location = title:b_bitter_drynn.title_province
 
 
 		start_travel_plan = {
 
-			destination = title:c_deepdown.title_province
+			destination = title:b_cold_peaks.title_province
 
 			return_trip = no
 
 			on_arrival_event = segrellion_black_unicorn.0050
+
 			on_arrival_destinations = first
 
 			on_travel_planner_cancel_event = segrellion_black_unicorn.0090
@@ -700,7 +747,7 @@ segrellion_black_unicorn.0050 = {
 	theme = intrigue
 
 	override_background = {
-		reference = wilderness
+		reference = segrellion_skagos
 	}
 
 	left_portrait = {
@@ -717,21 +764,30 @@ segrellion_black_unicorn.0050 = {
 	immediate = {
 
 
+		# The second journey has now reached Cold Peaks.
+
 		if = {
 
 			limit = {
 				exists = current_travel_plan
 			}
 
+
 			current_travel_plan = {
+
 				complete_travel_plan = yes
 			}
 		}
 
 
+		set_location = title:b_cold_peaks.title_province
+
+
 		character:Black_Unicorn_1 ?= {
 
-			set_location = title:c_deepdown.title_province
+
+			set_location = title:b_cold_peaks.title_province
+
 
 			add_character_flag = segrellion_black_unicorn_met_daemon
 		}

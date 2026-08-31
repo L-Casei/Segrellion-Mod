@@ -1,11 +1,77 @@
 # =========================================================
+# DREAMER VISUAL LEVEL
+#
+# Keeps the dynamic DDS independent from direct XP checks
+# inside the trait icon evaluation.
+# =========================================================
+
+segrellion_sync_dreamer_visual_level_effect = {
+
+
+	remove_character_flag = segrellion_dreamer_visual_level_1
+	remove_character_flag = segrellion_dreamer_visual_level_2
+	remove_character_flag = segrellion_dreamer_visual_level_3
+
+
+	if = {
+
+		limit = {
+
+			has_trait = segrellion_dreamer_trait
+
+			has_trait_xp = {
+				trait = segrellion_dreamer_trait
+				value >= 50
+			}
+		}
+
+		add_character_flag = segrellion_dreamer_visual_level_3
+	}
+
+
+	else_if = {
+
+		limit = {
+
+			has_trait = segrellion_dreamer_trait
+
+			has_trait_xp = {
+				trait = segrellion_dreamer_trait
+				value >= 25
+			}
+		}
+
+		add_character_flag = segrellion_dreamer_visual_level_2
+	}
+
+
+	else_if = {
+
+		limit = {
+
+			has_trait = segrellion_dreamer_trait
+
+			has_trait_xp = {
+				trait = segrellion_dreamer_trait
+				value >= 10
+			}
+		}
+
+		add_character_flag = segrellion_dreamer_visual_level_1
+	}
+}
+
+# =========================================================
 # DREAMER EXPERIENCE
 # =========================================================
 
 segrellion_gain_dreamer_xp_effect = {
 
+
 	if = {
+
 		limit = {
+
 			NOT = {
 				has_trait = segrellion_dreamer_trait
 			}
@@ -16,9 +82,13 @@ segrellion_gain_dreamer_xp_effect = {
 
 
 	add_trait_xp = {
+
 		trait = segrellion_dreamer_trait
 		value = 1
 	}
+
+
+	segrellion_sync_dreamer_visual_level_effect = yes
 }
 
 
