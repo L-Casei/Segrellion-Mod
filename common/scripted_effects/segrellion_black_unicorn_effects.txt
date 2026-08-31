@@ -266,11 +266,48 @@ segrellion_reveal_black_unicorn_identity_effect = {
 		set_mother = character:Segrellion_59
 
 
-		set_house = character:Segrellion_55.house
+		set_house = house:house_Segrellion
 
 
 		remove_character_flag = segrellion_black_unicorn_mysterious_woman
 
 		add_character_flag = segrellion_black_unicorn_identity_revealed
+		add_character_flag = segrellion_black_unicorn_visenya_revealed
+	}
+}
+
+# =========================================================
+# RETURN TO THE BEACON
+# =========================================================
+
+segrellion_black_unicorn_return_to_beacon_effect = {
+
+
+	if = {
+
+		limit = {
+			exists = current_travel_plan
+		}
+
+		current_travel_plan = {
+			complete_travel_plan = yes
+		}
+	}
+
+
+	set_location = title:b_cold_peaks.title_province
+
+
+	start_travel_plan = {
+
+		destination = title:c_farring_cross.title_province
+
+		return_trip = no
+
+		on_arrival_event = segrellion_black_unicorn.0190
+
+		on_arrival_destinations = first
+
+		on_travel_planner_cancel_event = segrellion_black_unicorn.0090
 	}
 }
