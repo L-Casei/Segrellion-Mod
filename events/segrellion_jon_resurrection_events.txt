@@ -312,270 +312,182 @@ segrellion_jon_resurrection.0010 = {
 
     option = {
 
-        name = segrellion_jon_resurrection.0010.a
+		name = segrellion_jon_resurrection.0010.a
 
-
-        hidden_effect = {
-
-            # =================================================
-            # JON HAS BEEN MURDERED
-            # =================================================
-
-            add_character_flag = segrellion_jon_murdered_by_watch
-
-
-            set_global_variable = {
-
-                name = segrellion_jon_resurrection_pending
-
-                value = yes
-            }
-
-
-            # =================================================
-            # DENYS MALLISTER IS THE FIXED SUCCESSOR
-            # =================================================
-
-            set_global_variable = {
-
-                name = segrellion_jon_loyal_lord_commander
-
-                value = character:Mallister_6
-            }
-
-
-            # =================================================
-            # TRANSFER THE NIGHT'S WATCH
-            # =================================================
-
-            create_title_and_vassal_change = {
-
-                type = granted
-
-                save_scope_as = jon_watch_transfer
-
-                add_claim_on_loss = no
-            }
-
-
-            title:k_the_wall = {
-
-                change_title_holder_include_vassals = {
-
-                    holder = character:Mallister_6
-
-                    change = scope:jon_watch_transfer
-
-                    government_base = root
-                }
-            }
-
-
-            every_in_list = {
-
-                list = segrellion_jon_watch_titles
-
-
-                limit = {
-                    this != title:k_the_wall
-                }
-
-
-                change_title_holder = {
-
-                    holder = character:Mallister_6
-
-                    change = scope:jon_watch_transfer
-                }
-            }
-
-
-            resolve_title_and_vassal_change = scope:jon_watch_transfer
-
-
-            # =================================================
-            # PREPARE DENYS AS LORD COMMANDER
-            # =================================================
-
-            character:Mallister_6 = {
-
-                change_government = nights_watch_government
-
-                set_primary_title_to = title:k_the_wall
-
-                set_realm_capital = title:c_castle_black
-
-                set_location = title:c_castle_black.title_province
-
-
-                add_character_flag = segrellion_jon_resurrection_chain_started
-
-
-                add_character_flag = {
-
-                    flag = segrellion_body_in_ice_queued
-
-                    days = 12
-                }
-
-
-                # =============================================
-                # TEN DAYS AFTER JON'S DEATH
-                # =============================================
-
-                trigger_event = {
-
-                    id = segrellion_jon_resurrection.0100
-
-                    days = 10
-                }
-            }
-
-
-            # =================================================
-            # PLAYER CONTINUES AS DENYS
-            # =================================================
-
-            if = {
-
-                limit = {
-                    is_ai = no
-                }
-
-
-                root = {
-                    set_player_character = character:Mallister_6
-                }
-            }
-        }
 
 		# =================================================
-        # EVERYTHING BEFORE DEATH REMAINS HIDDEN
-        # =================================================
+		# PREPARE SUCCESSION BEFORE JON DIES
+		# =================================================
 
-        hidden_effect = {
+		hidden_effect = {
 
-            add_character_flag = segrellion_jon_murdered_by_watch
-
-
-            set_global_variable = {
-
-                name = segrellion_jon_resurrection_pending
-
-                value = yes
-            }
+			add_character_flag = segrellion_jon_murdered_by_watch
 
 
-            set_global_variable = {
-
-                name = segrellion_jon_loyal_lord_commander
-
-                value = character:Mallister_6
-            }
+			set_global_variable = {
+				name = segrellion_jon_resurrection_pending
+				value = yes
+			}
 
 
-            create_title_and_vassal_change = {
-
-                type = granted
-
-                save_scope_as = jon_watch_transfer
-
-                add_claim_on_loss = no
-            }
+			set_global_variable = {
+				name = segrellion_jon_loyal_lord_commander
+				value = character:Mallister_6
+			}
 
 
-            title:k_the_wall = {
+			# =================================================
+			# DENYS MUST BE A BLACK BROTHER
+			# =================================================
 
-                change_title_holder_include_vassals = {
+			character:Mallister_6 = {
 
-                    holder = character:Mallister_6
+				if = {
+					limit = {
+						NOT = {
+							has_trait = nightswatch
+						}
+					}
 
-                    change = scope:jon_watch_transfer
-
-                    government_base = root
-                }
-            }
-
-
-            every_in_list = {
-
-                list = segrellion_jon_watch_titles
-
-                limit = {
-                    this != title:k_the_wall
-                }
-
-                change_title_holder = {
-
-                    holder = character:Mallister_6
-
-                    change = scope:jon_watch_transfer
-                }
-            }
+					add_trait = nightswatch
+				}
+			}
 
 
-            resolve_title_and_vassal_change = scope:jon_watch_transfer
+			# =================================================
+			# TRANSFER THE NIGHT'S WATCH
+			# =================================================
+
+			create_title_and_vassal_change = {
+
+				type = granted
+
+				save_scope_as = jon_watch_transfer
+
+				add_claim_on_loss = no
+			}
 
 
-            character:Mallister_6 = {
+			title:k_the_wall = {
 
-                change_government = nights_watch_government
+				change_title_holder_include_vassals = {
 
-                set_primary_title_to = title:k_the_wall
+					holder = character:Mallister_6
 
-                set_realm_capital = title:c_castle_black
+					change = scope:jon_watch_transfer
 
-                set_location = title:c_castle_black.title_province
-
-                add_character_flag = segrellion_jon_resurrection_chain_started
-
-
-                add_character_flag = {
-
-                    flag = segrellion_body_in_ice_queued
-
-                    days = 12
-                }
+					government_base = root
+				}
+			}
 
 
-                trigger_event = {
+			every_in_list = {
 
-                    id = segrellion_jon_resurrection.0100
+				list = segrellion_jon_watch_titles
 
-                    days = 10
-                }
-            }
-
-
-            if = {
-
-                limit = {
-                    is_ai = no
-                }
-
-                root = {
-                    set_player_character = character:Mallister_6
-                }
-            }
-        }
+				limit = {
+					this != title:k_the_wall
+				}
 
 
-        # =================================================
-        # VISIBLE DEATH EFFECT
-        # =================================================
+				change_title_holder = {
 
-        death = {
+					holder = character:Mallister_6
 
-            death_reason = death_murder
-
-            killer = scope:jon_mutineer
-        }
+					change = scope:jon_watch_transfer
+				}
+			}
 
 
-        ai_chance = {
-            base = 100
-        }
-    }
+			resolve_title_and_vassal_change = scope:jon_watch_transfer
+
+
+			# =================================================
+			# FORCE THE CORRECT GOVERNMENT AFTER LANDING DENYS
+			# =================================================
+
+			character:Mallister_6 = {
+
+				change_government = nights_watch_government
+
+				set_primary_title_to = title:k_the_wall
+
+				set_realm_capital = title:c_castle_black
+
+				set_location = title:c_castle_black.title_province
+
+
+				add_character_flag = segrellion_jon_resurrection_chain_started
+
+
+				add_character_flag = {
+
+					flag = segrellion_body_in_ice_queued
+
+					days = 12
+				}
+
+
+				# ONLY ONE COPY OF BODY IN THE ICE
+
+				trigger_event = {
+
+					id = segrellion_jon_resurrection.0100
+
+					days = 10
+				}
+			}
+
+
+			# =================================================
+			# PLAYER CONTINUES AS DENYS
+			# =================================================
+
+			if = {
+
+				limit = {
+					is_ai = no
+				}
+
+
+				root = {
+					set_player_character = character:Mallister_6
+				}
+			}
+		}
+
+
+		# =================================================
+		# VISIBLE DEATH
+		# =================================================
+
+		if = {
+
+			limit = {
+				exists = scope:jon_mutineer
+			}
+
+
+			death = {
+
+				death_reason = death_murder
+
+				killer = scope:jon_mutineer
+			}
+		}
+
+		else = {
+
+			death = {
+				death_reason = death_murder
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
 }
 
 

@@ -1245,18 +1245,21 @@ segrellion_black_unicorn.0040 = {
 			# The journey to Bitter Drynn is finished.
 			# A NEW travel plan begins one day later.
 
-			if = {
+			# =====================================================
+			# CUT THE FIRST JOURNEY HERE
+			#
+			# Especially important for LANDED Daemon:
+			# otherwise CK3 begins his automatic return home.
+			# =====================================================
 
-				limit = {
-					exists = current_travel_plan
-				}
+			current_travel_plan ?= {
 
-
-				current_travel_plan = {
-
-					complete_travel_plan = yes
-				}
+				abort_travel_plan = yes
 			}
+
+
+			# Daemon is physically in Bitter Drynn.
+			set_location = title:b_bitter_dryn.title_province
 
 
 			trigger_event = {
@@ -1409,18 +1412,24 @@ segrellion_black_unicorn.0045 = {
 
 		has_character_flag = segrellion_black_unicorn_mountain_route
 
-		NOT = {
-			exists = current_travel_plan
-		}
 	}
 
 
 	immediate = {
 
+		# =====================================================
+		# DEFENSIVE CLEANUP
+		# =====================================================
 
-		# Critical for landless characters:
-		# begin the next journey FROM Bitter Drynn,
-		# not from Daemon's camp/home position.
+		current_travel_plan ?= {
+
+			abort_travel_plan = yes
+		}
+
+
+		# =====================================================
+		# START EXACTLY FROM BITTER DRYNN
+		# =====================================================
 
 		set_location = title:b_bitter_dryn.title_province
 
@@ -1471,25 +1480,14 @@ segrellion_black_unicorn.0050 = {
 
 	immediate = {
 
-
 		# The second journey has now reached Cold Peaks.
 
-		if = {
+		current_travel_plan ?= {
 
-			limit = {
-				exists = current_travel_plan
-			}
-
-
-			current_travel_plan = {
-
-				complete_travel_plan = yes
-			}
+			abort_travel_plan = yes
 		}
 
-
 		set_location = title:b_cold_peaks.title_province
-
 
 		character:Black_Unicorn_1 ?= {
 
@@ -2808,21 +2806,13 @@ segrellion_black_unicorn.0151 = {
 
 			add_character_flag = segrellion_black_unicorn_waiting_for_visenya
 
+			current_travel_plan ?= {
 
-			if = {
-
-				limit = {
-
-					exists = current_travel_plan
-				}
-
-
-				current_travel_plan = {
-
-					complete_travel_plan = yes
-				}
+				abort_travel_plan = yes
 			}
 
+
+			set_location = title:b_cold_peaks.title_province
 
 			# We are physically still at Cold Peaks.
 			# Never allow the next journey to originate from camp.
@@ -2854,43 +2844,48 @@ segrellion_black_unicorn.0152 = {
 	immediate = {
 
 
-		if = {
-
-			limit = {
-				exists = current_travel_plan
-			}
-
-			current_travel_plan = {
-				complete_travel_plan = yes
-			}
+		current_travel_plan ?= {
+			abort_travel_plan = yes
 		}
 
 
 		set_location = title:b_bitter_dryn.title_province
 
 
-		random_list = {
+		# =========================================================
+		# VISENYA'S DECISION IS DETERMINISTIC
+		#
+		# Shared the night together:
+		#   She comes.
+		#
+		# Did not:
+		#   She does not come.
+		# =========================================================
 
+		if = {
 
-			50 = {
+			limit = {
 
-				trigger_event = {
-
-					id = segrellion_black_unicorn.0160
-
-					days = { 1 4 }
-				}
+				has_character_flag = segrellion_black_unicorn_shared_night
 			}
 
 
-			50 = {
+			trigger_event = {
 
-				trigger_event = {
+				id = segrellion_black_unicorn.0160
 
-					id = segrellion_black_unicorn.0161
+				days = { 1 4 }
+			}
+		}
 
-					days = 5
-				}
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0161
+
+				days = 5
 			}
 		}
 	}
@@ -2910,23 +2905,15 @@ segrellion_black_unicorn.0153 = {
 	immediate = {
 
 
-		if = {
+	current_travel_plan ?= {
 
-			limit = {
-
-				exists = current_travel_plan
-			}
-
-
-			current_travel_plan = {
-
-				complete_travel_plan = yes
-			}
+			abort_travel_plan = yes
 		}
 
 
-		# Critical for a landless Daemon:
-		# force the origin of the NEW journey.
+		# =====================================================
+		# REAL ORIGIN: COLD PEAKS
+		# =====================================================
 
 		set_location = title:b_cold_peaks.title_province
 
@@ -3192,6 +3179,51 @@ segrellion_black_unicorn.0170 = {
 
 
 		add_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+
+		# =========================================================
+		# EXISTING WIFE DISCOVERS VISENYA
+		# =========================================================
+
+		random_spouse = {
+
+			limit = {
+
+				this != character:Black_Unicorn_1
+
+				is_alive = yes
+			}
+
+
+			save_scope_as = black_unicorn_betrayed_wife
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:black_unicorn_betrayed_wife
+			}
+
+
+			set_variable = {
+
+				name = segrellion_black_unicorn_betrayed_wife
+
+				value = scope:black_unicorn_betrayed_wife
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_existing_wife_discovered_visenya
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0173
+
+				days = 1
+			}
+		}
 	}
 
 
@@ -3365,6 +3397,116 @@ segrellion_black_unicorn.0172 = {
 				days = 30
 			}
 		}
+	}
+}
+
+# =========================================================
+# 0173 - A WIFE'S FURY
+#
+# Daemon returns with Visenya while already married.
+# =========================================================
+
+segrellion_black_unicorn.0173 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0173.t
+	desc = segrellion_black_unicorn.0173.desc
+
+	theme = marriage
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	immediate = {
+
+
+		var:segrellion_black_unicorn_betrayed_wife ?= {
+
+			save_scope_as = betrayed_wife
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			save_scope_as = visenya
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = shame
+	}
+
+
+	right_portrait = {
+
+		character = scope:betrayed_wife
+
+		animation = anger
+	}
+
+
+	trigger = {
+
+		exists = var:segrellion_black_unicorn_betrayed_wife
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0173.a
+
+		custom_tooltip = segrellion_black_unicorn.0173.a.tt
+
+
+		# =================================================
+		# PUBLIC ADULTERY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_trait = adulterer
+				}
+			}
+
+
+			add_trait = adulterer
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_publicly_disloyal_husband_modifier
+
+			years = 10
+		}
+
+
+		scope:betrayed_wife = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_husband_returned_with_lover_opinion
+			}
+
+
+			add_character_flag = segrellion_publicly_exposed_daemon_adultery
+		}
+
+
+		add_character_flag = segrellion_daemon_adultery_publicly_exposed
 	}
 }
 
