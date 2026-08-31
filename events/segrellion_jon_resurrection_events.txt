@@ -135,6 +135,10 @@ segrellion_jon_resurrection.0010 = {
 
         has_global_variable = segrellion_jon_resurrection_story_enabled
 
+		character:mallister_6 = {
+            is_alive = yes
+        }
+
         NOT = {
             has_global_variable = segrellion_resurrected_jon
         }
@@ -176,155 +180,12 @@ segrellion_jon_resurrection.0010 = {
             add_to_list = segrellion_jon_watch_titles
         }
 
-
-        # =================================================
-        # CHOOSE TEMPORARY LORD COMMANDER
-        #
-        # Prefer someone who actually likes Jon.
+		# =================================================
+        # DENYS MALLISTER SUCCEEDS JON
         # =================================================
 
-        ordered_vassal_or_below = {
-
-            limit = {
-
-                is_alive = yes
-                is_adult = yes
-
-                has_trait = nightswatch
-
-                this != root
-
-
-                opinion = {
-                    target = root
-                    value >= 25
-                }
-            }
-
-
-            order_by = diplomacy
-
-            position = 0
-
-            check_range_bounds = no
-
-
+        character:mallister_6 = {
             save_scope_as = jon_loyal_successor
-        }
-
-
-        # Courtier fallback.
-
-        if = {
-
-            limit = {
-
-                NOT = {
-                    exists = scope:jon_loyal_successor
-                }
-            }
-
-
-            ordered_courtier = {
-
-                limit = {
-
-                    is_alive = yes
-                    is_adult = yes
-
-                    has_trait = nightswatch
-
-                    this != root
-
-
-                    opinion = {
-                        target = root
-                        value >= 25
-                    }
-                }
-
-
-                order_by = diplomacy
-
-                position = 0
-
-                check_range_bounds = no
-
-
-                save_scope_as = jon_loyal_successor
-            }
-        }
-
-
-        # Neutral fallback.
-
-        if = {
-
-            limit = {
-
-                NOT = {
-                    exists = scope:jon_loyal_successor
-                }
-            }
-
-
-            ordered_vassal_or_below = {
-
-                limit = {
-
-                    is_alive = yes
-                    is_adult = yes
-
-                    has_trait = nightswatch
-
-                    this != root
-                }
-
-
-                order_by = diplomacy
-
-                position = 0
-
-                check_range_bounds = no
-
-
-                save_scope_as = jon_loyal_successor
-            }
-        }
-
-
-        if = {
-
-            limit = {
-
-                NOT = {
-                    exists = scope:jon_loyal_successor
-                }
-            }
-
-
-            ordered_courtier = {
-
-                limit = {
-
-                    is_alive = yes
-                    is_adult = yes
-
-                    has_trait = nightswatch
-
-                    this != root
-                }
-
-
-                order_by = diplomacy
-
-                position = 0
-
-                check_range_bounds = no
-
-
-                save_scope_as = jon_loyal_successor
-            }
         }
 
 
@@ -457,141 +318,168 @@ segrellion_jon_resurrection.0010 = {
 
         name = segrellion_jon_resurrection.0010.a
 
-
-        add_character_flag = segrellion_jon_murdered_by_watch
-
-
-        set_global_variable = {
-
-            name = segrellion_jon_resurrection_pending
-
-            value = yes
-        }
+        custom_tooltip = segrellion_jon_resurrection.0010.a.tt
 
 
-        # =================================================
-        # SAVE TEMPORARY LORD COMMANDER
-        # =================================================
+        hidden_effect = {
 
-        set_global_variable = {
+            # =================================================
+            # JON HAS BEEN MURDERED
+            # =================================================
 
-            name = segrellion_jon_loyal_lord_commander
-
-            value = scope:jon_loyal_successor
-        }
+            add_character_flag = segrellion_jon_murdered_by_watch
 
 
-        # =================================================
-        # TRANSFER NIGHT'S WATCH
-        # =================================================
+            set_global_variable = {
 
-        create_title_and_vassal_change = {
+                name = segrellion_jon_resurrection_pending
 
-            type = granted
-
-            save_scope_as = jon_watch_transfer
-
-            add_claim_on_loss = no
-        }
-
-
-        title:k_the_wall = {
-
-            change_title_holder_include_vassals = {
-
-                holder = scope:jon_loyal_successor
-
-                change = scope:jon_watch_transfer
-
-                government_base = root
-            }
-        }
-
-
-        every_in_list = {
-
-            list = segrellion_jon_watch_titles
-
-
-            limit = {
-                this != title:k_the_wall
+                value = yes
             }
 
 
-            change_title_holder = {
+            # =================================================
+            # DENYS MALLISTER IS THE FIXED SUCCESSOR
+            # =================================================
 
-                holder = scope:jon_loyal_successor
+            set_global_variable = {
 
-                change = scope:jon_watch_transfer
-            }
-        }
+                name = segrellion_jon_loyal_lord_commander
 
-
-        resolve_title_and_vassal_change = scope:jon_watch_transfer
-
-
-        # =================================================
-        # ABSOLUTELY FORCE NIGHT'S WATCH GOVERNMENT
-        #
-        # Do not let CK3 infer Feudal.
-        # =================================================
-
-        scope:jon_loyal_successor = {
-
-            change_government = nights_watch_government
-
-            set_realm_capital = title:c_castle_black
-
-            add_character_flag = segrellion_jon_resurrection_chain_started
-
-
-            add_character_flag = {
-
-                flag = segrellion_body_in_ice_queued
-
-                days = 10
+                value = character:mallister_6
             }
 
 
-            # =============================================
-            # DIRECT EVENT HANDOFF
-            #
-            # THIS is the important fix.
-            # =============================================
+            # =================================================
+            # TRANSFER THE NIGHT'S WATCH
+            # =================================================
 
-            trigger_event = {
+            create_title_and_vassal_change = {
 
-                id = segrellion_jon_resurrection.0100
+                type = granted
 
-                days = 2
-            }
-        }
+                save_scope_as = jon_watch_transfer
 
-
-        # =================================================
-        # JON DIES
-        # =================================================
-
-        if = {
-
-            limit = {
-                exists = scope:jon_mutineer
+                add_claim_on_loss = no
             }
 
 
-            death = {
+            title:k_the_wall = {
 
-                death_reason = death_murder
+                change_title_holder_include_vassals = {
 
-                killer = scope:jon_mutineer
+                    holder = character:mallister_6
+
+                    change = scope:jon_watch_transfer
+
+                    government_base = root
+                }
             }
-        }
 
 
-        else = {
+            every_in_list = {
 
-            death = {
-                death_reason = death_murder
+                list = segrellion_jon_watch_titles
+
+
+                limit = {
+                    this != title:k_the_wall
+                }
+
+
+                change_title_holder = {
+
+                    holder = character:mallister_6
+
+                    change = scope:jon_watch_transfer
+                }
+            }
+
+
+            resolve_title_and_vassal_change = scope:jon_watch_transfer
+
+
+            # =================================================
+            # PREPARE DENYS AS LORD COMMANDER
+            # =================================================
+
+            character:mallister_6 = {
+
+                change_government = nights_watch_government
+
+                set_primary_title_to = title:k_the_wall
+
+                set_realm_capital = title:c_castle_black
+
+                set_location = title:c_castle_black.title_province
+
+
+                add_character_flag = segrellion_jon_resurrection_chain_started
+
+
+                add_character_flag = {
+
+                    flag = segrellion_body_in_ice_queued
+
+                    days = 12
+                }
+
+
+                # =============================================
+                # TEN DAYS AFTER JON'S DEATH
+                # =============================================
+
+                trigger_event = {
+
+                    id = segrellion_jon_resurrection.0100
+
+                    days = 10
+                }
+            }
+
+
+            # =================================================
+            # PLAYER CONTINUES AS DENYS
+            # =================================================
+
+            if = {
+
+                limit = {
+                    is_ai = no
+                }
+
+
+                root = {
+                    set_player_character = character:mallister_6
+                }
+            }
+
+
+            # =================================================
+            # JON DIES
+            # =================================================
+
+            if = {
+
+                limit = {
+                    exists = scope:jon_mutineer
+                }
+
+
+                death = {
+
+                    death_reason = death_murder
+
+                    killer = scope:jon_mutineer
+                }
+            }
+
+
+            else = {
+
+                death = {
+                    death_reason = death_murder
+                }
             }
         }
 
@@ -632,9 +520,11 @@ segrellion_jon_resurrection.0100 = {
 
     trigger = {
 
-        this = title:k_the_wall.holder
+        this = character:mallister_6
 
         is_alive = yes
+
+		has_title = title:k_the_wall
 
         has_character_flag = segrellion_jon_resurrection_chain_started
 

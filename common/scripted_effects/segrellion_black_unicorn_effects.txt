@@ -332,3 +332,45 @@ segrellion_black_unicorn_return_to_daemon_camp_effect = {
 		days = 1
 	}
 }
+
+# =========================================================
+# BLACK UNICORN
+# CHECK THE THREE SKAGOS EXPEDITIONS
+#
+# If all three have resolved and nobody has returned with
+# She-Unicorn's letter, the trail simply goes cold.
+# =========================================================
+
+segrellion_black_unicorn_check_three_scouts_effect = {
+
+	if = {
+
+		limit = {
+
+			has_character_flag = segrellion_black_unicorn_shipmaster_resolved
+			has_character_flag = segrellion_black_unicorn_swordsman_resolved
+			has_character_flag = segrellion_black_unicorn_guide_resolved
+
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_survivor_pending
+			}
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_letter_received
+			}
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_trail_gone_cold
+			}
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_three_scouts_failed
+		add_character_flag = segrellion_black_unicorn_trail_gone_cold
+
+		# Reserved for the future storyline where Visenya
+		# eventually comes south after the Stormflame war.
+		add_character_flag = segrellion_black_unicorn_future_post_war_return
+	}
+}
