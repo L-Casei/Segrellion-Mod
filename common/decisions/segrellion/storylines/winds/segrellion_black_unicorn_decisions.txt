@@ -35,31 +35,44 @@ segrellion_investigate_black_unicorn_decision = {
 
 	is_shown = {
 
-
-		# This storyline belongs specifically to Daemon.
-
 		this = character:Segrellion_60
 
 
-		# The White Harbor investigation has revealed
-		# enough information to make the decision visible.
+		# =================================================
+		# NORMAL GAME
+		#
+		# Debug bypasses every storyline requirement.
+		# =================================================
 
-		has_character_flag = segrellion_black_unicorn_decision_unlocked
+		trigger_if = {
+
+			limit = {
+
+				NOT = {
+					debug_only = yes
+				}
+			}
 
 
-		# Once Daemon actually commits to the expedition,
-		# the decision disappears.
-
-		NOT = {
-			has_character_flag = segrellion_black_unicorn_expedition_committed
-		}
+			has_character_flag = segrellion_black_unicorn_decision_unlocked
 
 
-		# No reason to show it after the encounter has
-		# already reached its current conclusion.
+			has_character_flag = segrellion_unicorn_returns_completed
 
-		NOT = {
-			has_character_flag = segrellion_black_unicorn_duel_resolved
+
+			title:c_farring_cross = {
+				holder = root
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_expedition_committed
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_duel_resolved
+			}
 		}
 	}
 
@@ -70,31 +83,11 @@ segrellion_investigate_black_unicorn_decision = {
 	is_valid = {
 
 
-		is_alive = yes
-		is_adult = yes
-
-		is_imprisoned = no
-
-
-		custom_description = {
-
-			text = segrellion_black_unicorn_not_travelling_requirement
-
-			NOT = {
-				exists = current_travel_plan
-			}
-		}
-
-
-		custom_description = {
-
-			text = segrellion_black_unicorn_woman_alive_requirement
-
-			character:Black_Unicorn_1 ?= {
-				is_alive = yes
-			}
-		}
-
+		# =================================================
+		# NORMAL GAME
+		#
+		# Debug bypasses ALL requirements.
+		# =================================================
 
 		trigger_if = {
 
@@ -102,6 +95,31 @@ segrellion_investigate_black_unicorn_decision = {
 
 				NOT = {
 					debug_only = yes
+				}
+			}
+
+
+			is_alive = yes
+			is_adult = yes
+			is_imprisoned = no
+
+
+			custom_description = {
+
+				text = segrellion_black_unicorn_not_travelling_requirement
+
+				NOT = {
+					exists = current_travel_plan
+				}
+			}
+
+
+			custom_description = {
+
+				text = segrellion_black_unicorn_woman_alive_requirement
+
+				character:Black_Unicorn_1 ?= {
+					is_alive = yes
 				}
 			}
 
@@ -132,7 +150,22 @@ segrellion_investigate_black_unicorn_decision = {
 
 	cost = {
 
-		gold = 150
+		gold = {
+
+			value = 0
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						debug_only = yes
+					}
+				}
+
+				add = 150
+			}
+		}
 	}
 
 
