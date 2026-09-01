@@ -1327,6 +1327,122 @@ segrellion_support.4000 = {
 }
 
 # =========================================================
+# 4930 - THE TRUE UNICORN
+#
+# Root = Daemon
+#
+# The restoration of the Flamelands is no longer merely
+# a military victory. Daemon reclaims the principal branch
+# of House Segrellion and its leadership.
+# =========================================================
+
+segrellion_support.4930 = {
+
+	type = character_event
+
+	title = segrellion_support.4930.t
+	desc = segrellion_support.4930.desc
+
+	theme = dynasty
+
+
+	override_background = {
+
+		reference = segrellion_the_beacon_throne_room
+	}
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_title = title:e_flamelands
+
+		has_character_flag = segrellion_unicorn_returns_completed
+
+
+		NOT = {
+
+			has_character_flag = segrellion_daemon_restored_segrellion_dynast
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_support.4930.a
+
+		add_internal_flag = special
+
+		custom_tooltip = segrellion_support.4930.a.tt
+
+
+		hidden_effect = {
+
+
+			# =================================================
+			# RETURN TO THE PRINCIPAL SEGRELLION HOUSE
+			# =================================================
+
+			set_house = house:house_Segrellion
+
+
+			# =================================================
+			# HOUSE LEADERSHIP
+			#
+			# CK3 has a direct set_house_head effect.
+			# Dynasty Head itself is recalculated by the game
+			# from the dynasty's House Heads.
+			#
+			# With Daemon now ruling the restored Flamelands,
+			# he becomes the dominant Segrellion House Head.
+			# =================================================
+
+			house:house_Segrellion = {
+
+				set_house_head = root
+			}
+
+
+			# =================================================
+			# RESTORATION PRESTIGE
+			# =================================================
+
+			add_prestige = 750
+
+			add_legitimacy = 250
+
+
+			dynasty = {
+
+				add_dynasty_prestige = 500
+			}
+
+
+			add_character_flag = segrellion_daemon_restored_segrellion_dynast
+
+			add_character_flag = segrellion_daemon_true_unicorn
+		}
+	}
+}
+
+# =========================================================
 # 4940 - RESTORATION POLITICAL SETTLEMENT
 #
 # Hidden postwar router.

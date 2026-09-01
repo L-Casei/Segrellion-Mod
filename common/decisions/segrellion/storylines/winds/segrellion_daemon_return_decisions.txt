@@ -270,6 +270,24 @@ segrellion_the_unicorn_returns_decision = {
 
 		has_character_flag = segrellion_foreign_support_secured
 
+		# =====================================================
+		# WANDERING FLAME
+		#
+		# Unlike canonical Daemon, this version does NOT regard
+		# The Unicorn Returns as his inevitable next move.
+		# =====================================================
+
+		trigger_if = {
+
+			limit = {
+
+				segrellion_daemon_ai_wandering_flame_trigger = yes
+			}
+
+
+			segrellion_daemon_wandering_flamelands_opportunity_trigger = yes
+		}
+
 
 		# =====================================================
 		# PLATE OF SEGRELL
@@ -302,7 +320,94 @@ segrellion_the_unicorn_returns_decision = {
 	}
 
 	ai_will_do = {
-		base = 10000
+
+		base = 0
+
+
+		# =====================================================
+		# FLAMELANDS FOCUSED
+		#
+		# Once everything is ready, GO.
+		# =====================================================
+
+		modifier = {
+
+			add = 10000
+
+			segrellion_daemon_ai_flamelands_focused_trigger = yes
+		}
+
+
+		# =====================================================
+		# WANDERING FLAME
+		#
+		# Even after an exceptional opportunity exists, Daemon
+		# remains considerably less eager to commit.
+		# =====================================================
+
+		modifier = {
+
+			add = 5
+
+			segrellion_daemon_ai_wandering_flame_trigger = yes
+		}
+
+
+		# A full decade of wandering increases the temptation.
+
+		modifier = {
+
+			add = 75
+
+			segrellion_daemon_ai_wandering_flame_trigger = yes
+
+			current_date >= 8310.1.1
+		}
+
+
+		# An enormous army makes the restoration increasingly
+		# difficult for even Wandering Daemon to ignore.
+
+		modifier = {
+
+			add = 150
+
+			segrellion_daemon_ai_wandering_flame_trigger = yes
+
+			current_military_strength >= 8000
+		}
+
+
+		modifier = {
+
+			add = 300
+
+			segrellion_daemon_ai_wandering_flame_trigger = yes
+
+			current_military_strength >= 12000
+		}
+
+
+		# A distracted Stormflame realm creates temptation.
+
+		modifier = {
+
+			add = 100
+
+			segrellion_daemon_ai_wandering_flame_trigger = yes
+
+
+			title:e_flamelands = {
+
+				exists = holder
+
+
+				holder = {
+
+					is_at_war = yes
+				}
+			}
+		}
 	}
 }
 

@@ -1,0 +1,71 @@
+# =========================================================
+# DAEMON SEGRELLION AI STRATEGY
+# =========================================================
+
+
+segrellion_daemon_ai_flamelands_focused_trigger = {
+
+	has_game_rule = segrellion_daemon_ai_strategy_flamelands_focused
+}
+
+
+segrellion_daemon_ai_wandering_flame_trigger = {
+
+	has_game_rule = segrellion_daemon_ai_strategy_wandering_flame
+}
+
+
+# =========================================================
+# WANDERING FLAME
+# EXCEPTIONAL OPPORTUNITY TO RECLAIM THE FLAMELANDS
+#
+# Wandering Daemon should normally ignore the immediate
+# restoration. He only begins seriously considering it if
+# he becomes overwhelmingly powerful, many years pass, or
+# the Stormflames present an unusually vulnerable target.
+# =========================================================
+
+segrellion_daemon_wandering_flamelands_opportunity_trigger = {
+
+	OR = {
+
+
+		# Daemon has become overwhelmingly powerful.
+
+		current_military_strength >= 8000
+
+
+		# A decade has passed and he has still built a
+		# respectable army.
+
+		AND = {
+
+			current_date >= 8310.1.1
+
+			current_military_strength >= 5000
+		}
+
+
+		# The Stormflames are distracted by another war
+		# and Daemon has enough men to exploit it.
+
+		AND = {
+
+			current_date >= 8303.1.1
+
+			current_military_strength >= 4500
+
+
+			title:e_flamelands = {
+
+				exists = holder
+
+
+				holder = {
+
+					is_at_war = yes
+				}
+			}
+		}
+	}
+}
