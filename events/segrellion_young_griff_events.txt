@@ -1,5 +1,586 @@
 namespace = segrellion_young_griff
 
+# =========================================================
+# 0100 - THE SPIDER'S THREADS
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.0100 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.0100.t
+	desc = segrellion_young_griff.0100.desc
+
+	theme = intrigue
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		game_start_date = 8300.8.20
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_varys_contacted
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_varys_opening_scheduled
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.0100.a
+
+
+		remove_character_flag = segrellion_young_griff_varys_opening_scheduled
+
+		add_character_flag = segrellion_young_griff_varys_contacted
+
+		# Permanent story state for Varys' future operation.
+		add_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+
+
+		add_gold = 500
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_young_griff_spiders_support_modifier
+
+			years = 5
+		}
+
+
+		segrellion_young_griff_try_schedule_arianne_storms_end_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0200 - A PRINCESS AT STORM'S END
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.0200 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.0200.t
+	desc = segrellion_young_griff.0200.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:e_the_stormlands
+
+		has_character_flag = segrellion_young_griff_varys_contacted
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_arianne_story_started
+		}
+
+
+		character:Martell_9 ?= {
+
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_arianne_story_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_arianne_story_scheduled
+
+		add_character_flag = segrellion_young_griff_arianne_story_started
+
+
+		# Make absolutely sure Jon Connington is where he belongs.
+		segrellion_young_griff_place_jon_connington_effect = yes
+
+
+		character:Martell_9 = {
+
+			set_location = title:c_storms_end.title_province
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Martell_9
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.0200.a
+
+
+		add_opinion = {
+
+			target = character:Martell_9
+
+			modifier = segrellion_arianne_first_impression_opinion
+		}
+
+
+		character:Martell_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_arianne_first_impression_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.0210
+
+			days = { 2 4 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0210 - THE SON OF ELIA
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.0210 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.0210.t
+	desc = segrellion_young_griff.0210.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_arianne_story_started
+
+
+		character:Martell_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Martell_9
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.0210.a
+
+
+		add_opinion = {
+
+			target = character:Martell_9
+
+			modifier = segrellion_arianne_believes_aegon_opinion
+		}
+
+
+		character:Martell_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_arianne_believes_aegon_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.0220
+
+			days = { 3 5 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0220 - WHAT DORNE WANTS
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.0220 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.0220.t
+	desc = segrellion_young_griff.0220.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_arianne_story_started
+
+
+		character:Martell_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Martell_9
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.0220.a
+
+
+		add_opinion = {
+
+			target = character:Martell_9
+
+			modifier = segrellion_arianne_understands_aegon_opinion
+		}
+
+
+		character:Martell_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_arianne_understands_aegon_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.0230
+
+			days = { 3 5 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0230 - A DRAGON AND A SUN
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.0230 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.0230.t
+	desc = segrellion_young_griff.0230.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_arianne_story_started
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_arianne_route_resolved
+		}
+
+
+		character:Martell_9 ?= {
+
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Martell_9
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# MARRIAGE
+	# AI = 40%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.0230.a
+
+		custom_tooltip = segrellion_young_griff.0230.a.tt
+
+
+		trigger = {
+
+			is_married = no
+
+			character:Martell_9 ?= {
+				is_married = no
+			}
+		}
+
+
+		segrellion_young_griff_secure_dorne_support_effect = yes
+
+
+		add_character_flag = segrellion_young_griff_arianne_route_resolved
+		add_character_flag = segrellion_young_griff_married_arianne
+		add_character_flag = segrellion_young_griff_marriage_pact_resolved
+
+
+		add_opinion = {
+
+			target = character:Martell_9
+
+			modifier = segrellion_arianne_chosen_as_queen_opinion
+		}
+
+
+		character:Martell_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_arianne_chosen_as_queen_opinion
+			}
+		}
+
+
+		segrellion_young_griff_release_arianne_lock_effect = yes
+
+
+		character:Martell_9 = {
+
+			add_character_flag = segrellion_arianne_event_marriage_completed
+			add_character_flag = segrellion_young_griff_married_arianne
+		}
+
+
+		marry = character:Martell_9
+
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+
+	# =====================================================
+	# POLITICAL ALLIANCE WITHOUT MARRIAGE
+	# AI = 50%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.0230.b
+
+		custom_tooltip = segrellion_young_griff.0230.b.tt
+
+
+		segrellion_young_griff_secure_dorne_support_effect = yes
+
+
+		add_character_flag = segrellion_young_griff_arianne_route_resolved
+		add_character_flag = segrellion_young_griff_arianne_alliance_only
+
+
+		add_opinion = {
+
+			target = character:Martell_9
+
+			modifier = segrellion_arianne_dornish_alliance_opinion
+		}
+
+
+		character:Martell_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_arianne_dornish_alliance_opinion
+			}
+		}
+
+
+		segrellion_young_griff_release_arianne_lock_effect = yes
+
+		segrellion_young_griff_arianne_return_south_effect = yes
+
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+
+	# =====================================================
+	# FAILURE
+	# AI = 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.0230.c
+
+		custom_tooltip = segrellion_young_griff.0230.c.tt
+
+
+		add_character_flag = segrellion_young_griff_arianne_route_resolved
+		add_character_flag = segrellion_young_griff_dorne_route_closed
+
+
+		character:Martell_9 = {
+
+			add_character_flag = segrellion_arianne_rejected_young_griff
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_arianne_insulted_by_aegon_opinion
+			}
+
+
+			father ?= {
+
+				add_character_flag = segrellion_dorne_rejected_young_griff
+
+				add_opinion = {
+
+					target = root
+
+					modifier = segrellion_dorne_rejected_young_griff_opinion
+				}
+			}
+		}
+
+
+		add_opinion = {
+
+			target = character:Martell_9
+
+			modifier = segrellion_arianne_insulted_by_aegon_opinion
+		}
+
+
+		segrellion_young_griff_release_arianne_lock_effect = yes
+
+		segrellion_young_griff_arianne_return_south_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
 
 # =========================================================
 # 1000 - DAEMON CHOSE STANNIS
@@ -865,146 +1446,7 @@ segrellion_young_griff.4000 = {
 	}
 }
 
-# =========================================================
-# 4100 - A QUESTION OF QUEENS
-# Young Griff chooses whom to approach.
-# =========================================================
 
-segrellion_young_griff.4100 = {
-
-	type = character_event
-
-	title = segrellion_young_griff.4100.t
-	desc = segrellion_young_griff.4100.desc
-
-	theme = diplomacy
-
-
-	trigger = {
-
-		this = character:IAF_Young_Griff_1
-		is_alive = yes
-		is_married = no
-
-		game_start_date >= 8300.8.20
-		game_start_date < 8301.1.1
-
-		NOT = {
-			has_character_flag = segrellion_young_griff_marriage_pact_resolved
-		}
-	}
-
-
-	immediate = {
-
-		character:Targaryen_9 ?= {
-			save_scope_as = yg_daenerys
-		}
-
-		character:Martell_9 ?= {
-
-			save_scope_as = yg_arianne
-
-			father ?= {
-				save_scope_as = yg_doran
-			}
-		}
-	}
-
-
-	left_portrait = {
-		character = root
-		animation = personality_bold
-	}
-
-
-	# =====================================================
-	# DAENERYS
-	# =====================================================
-
-	option = {
-
-		name = segrellion_young_griff.4100.a
-
-		trigger = {
-
-			NOT = {
-				has_character_flag = segrellion_young_griff_daenerys_route_closed
-			}
-
-			character:Targaryen_9 ?= {
-				is_alive = yes
-				is_married = no
-			}
-		}
-
-		add_character_flag = segrellion_young_griff_daenerys_proposal_sent
-
-		character:Targaryen_9 = {
-
-			trigger_event = {
-				id = segrellion_young_griff.4110
-				days = 3
-			}
-		}
-	}
-
-
-	# =====================================================
-	# ARIANNE
-	# =====================================================
-
-	option = {
-
-		name = segrellion_young_griff.4100.b
-
-		trigger = {
-
-			character:Martell_9 ?= {
-				is_alive = yes
-				is_married = no
-			}
-		}
-
-		add_character_flag = segrellion_young_griff_proposed_arianne
-
-		character:Martell_9 = {
-
-			father ?= {
-
-				trigger_event = {
-					id = segrellion_young_griff.4120
-					days = 3
-				}
-			}
-		}
-	}
-
-
-	# =====================================================
-	# NOBODY
-	# =====================================================
-
-	option = {
-
-		name = segrellion_young_griff.4100.c
-
-		add_character_flag = segrellion_young_griff_marriage_pact_resolved
-
-		character:Martell_9 ?= {
-
-			if = {
-				limit = {
-					has_trait = refusing_marriage
-				}
-
-				remove_trait = refusing_marriage
-			}
-
-			remove_character_flag = segrellion_arianne_marriage_lock_active
-		}
-	}
-}
 
 
 # =========================================================
@@ -2318,6 +2760,9 @@ segrellion_young_griff.6010 = {
 
 			# =============================================
 			# DORAN MARTELL
+			#
+			# Dorne ONLY joins if Arianne's Storm's End
+			# storyline actually secured its support.
 			# =============================================
 
 			character:Martell_9 ?= {
@@ -2331,6 +2776,12 @@ segrellion_young_griff.6010 = {
 							is_alive = yes
 
 							this != title:h_the_iron_throne.holder
+
+
+							character:IAF_Young_Griff_1 = {
+
+								has_character_flag = segrellion_young_griff_dorne_support_secured
+							}
 						}
 
 

@@ -32,6 +32,7 @@ monthly_global_pulse = {
 		segrellion_jon_resurrection_progression
 		segrellion_stannis_opening_recovery
 		segrellion_jon_body_in_ice_failsafe
+		segrellion_young_griff_opening_progression
 	}
 }
 
@@ -664,6 +665,45 @@ segrellion_on_game_start_after_lobby = {
 		segrellion_arianne_marriage_lock_effect = yes
 		segrellion_setup_young_griff_blackfyre_effect = yes
 		segrellion_form_deadly_triarchy_effect = yes
+
+		# ====================================================
+		# YOUNG GRIFF - OPENING STORY
+		# ====================================================
+
+		character:IAF_Young_Griff_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					game_start_date = 8300.8.20
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_varys_opening_scheduled
+					}
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_varys_contacted
+					}
+				}
+
+
+				segrellion_young_griff_place_jon_connington_effect = yes
+
+
+				add_character_flag = segrellion_young_griff_varys_opening_scheduled
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.0100
+
+					days = 2
+				}
+			}
+		}
 
 		# Player ownership and game rules are only reliable after the
 		# lobby. Schedule Daenerys' opening route here, never at zero tick.
@@ -2553,4 +2593,26 @@ segrellion_jon_body_in_ice_failsafe = {
             }
         }
     }
+}
+
+# =========================================================
+# YOUNG GRIFF - OPENING STORY PROGRESSION
+# =========================================================
+
+segrellion_young_griff_opening_progression = {
+
+	effect = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				segrellion_young_griff_try_schedule_arianne_storms_end_effect = yes
+			}
+		}
+	}
 }

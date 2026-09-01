@@ -17,6 +17,11 @@ segrellion_arianne_marriage_lock_effect = {
 			current_date < 8305.8.20
 			character:Martell_9 ?= {
 				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_arianne_young_griff_route_resolved
+				}
+
 				any_spouse = {
 					this != character:Segrellion_60
 					this != character:IAF_Young_Griff_1
@@ -43,7 +48,14 @@ segrellion_arianne_marriage_lock_effect = {
 			character:Martell_9 ?= {
 				is_alive = yes
 				is_married = no
-				NOT = { has_character_flag = segrellion_arianne_event_marriage_completed }
+				
+				NOT = { 
+					has_character_flag = segrellion_arianne_event_marriage_completed 
+					}
+
+				NOT = {
+					has_character_flag = segrellion_arianne_young_griff_route_resolved
+				}
 			}
 		}
 
@@ -671,34 +683,13 @@ segrellion_setup_young_griff_300_effect = {
 		}
 
 		# =================================================
-		# YOUNG GRIFF - DYNASTIC MARRIAGE
+		# YOUNG GRIFF - STORYLINE
+		#
+		# The old automatic 4100 marriage opening has been
+		# replaced by:
+		#
+		# Varys -> Storm's End -> Arianne -> Dorne
 		# =================================================
-
-		character:IAF_Young_Griff_1 ?= {
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					game_start_date = 8300.8.20
-
-					is_married = no
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_marriage_path_started
-					}
-				}
-
-				add_character_flag = segrellion_young_griff_marriage_path_started
-
-				trigger_event = {
-					id = segrellion_young_griff.4100
-					days = { 5 10 }
-				}
-			}
-		}
 
 		# Prevent AGOT's normal dynamic Faegon invasion
 		# from creating a second Young Griff.

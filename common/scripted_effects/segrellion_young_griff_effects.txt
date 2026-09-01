@@ -432,3 +432,173 @@ segrellion_complete_young_griff_daenerys_pact_effect = {
 		}
 	}
 }
+
+
+# =========================================================
+# SCHEDULE ARIANNE'S ARRIVAL AT STORM'S END
+#
+# Varys must already have contacted Aegon.
+# Aegon must control the Stormlands.
+# =========================================================
+
+segrellion_young_griff_try_schedule_arianne_storms_end_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_character_flag = segrellion_young_griff_varys_contacted
+
+			has_title = title:e_the_stormlands
+
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_arianne_story_started
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_arianne_story_scheduled
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_arianne_route_resolved
+			}
+
+
+			character:Martell_9 ?= {
+
+				is_alive = yes
+				is_married = no
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_arianne_story_scheduled
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.0200
+
+			days = { 3 7 }
+		}
+	}
+}
+
+
+# =========================================================
+# DORNE SUPPORTS YOUNG GRIFF
+# =========================================================
+
+segrellion_young_griff_secure_dorne_support_effect = {
+
+	add_character_flag = segrellion_young_griff_dorne_support_secured
+
+
+	character:Martell_9 ?= {
+
+		add_character_flag = segrellion_arianne_supports_young_griff
+
+
+		father ?= {
+
+			add_character_flag = segrellion_dorne_supports_young_griff
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_dorne_supports_young_griff_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# RELEASE ARIANNE FROM THE OPENING MARRIAGE LOCK
+# =========================================================
+
+segrellion_young_griff_release_arianne_lock_effect = {
+
+	character:Martell_9 ?= {
+
+		if = {
+
+			limit = {
+				has_trait = refusing_marriage
+			}
+
+			remove_trait = refusing_marriage
+		}
+
+		remove_character_flag = segrellion_arianne_marriage_lock_active
+
+		add_character_flag = segrellion_arianne_young_griff_route_resolved
+	}
+}
+
+
+# =========================================================
+# ARIANNE RETURNS TO DORNE
+# =========================================================
+
+segrellion_young_griff_arianne_return_south_effect = {
+
+	character:Martell_9 ?= {
+
+		set_location = title:c_sunspear.title_province
+	}
+}
+
+
+# =========================================================
+# TODO - VARYS / KING'S LANDING
+#
+# FUTURE STORY:
+#
+# When Young Griff eventually declares war for the
+# Iron Throne and:
+#
+# segrellion_young_griff_varys_preparing_kings_landing
+#
+# is active, Varys begins his final operation inside
+# the Red Keep.
+#
+# FINAL RESULT:
+# Tommen is kidnapped alive and delivered to Aegon.
+#
+# DO NOT IMPLEMENT YET.
+# =========================================================
+
+# =========================================================
+# JON CONNINGTON WITH YOUNG GRIFF
+# =========================================================
+
+segrellion_young_griff_place_jon_connington_effect = {
+
+	character:Connington_4 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			set_variable = {
+				name = target_employer
+				value = character:IAF_Young_Griff_1
+			}
+
+			set_employer = character:IAF_Young_Griff_1
+
+			return_to_court = yes
+
+			add_character_flag = segrellion_jon_connington_with_young_griff
+		}
+	}
+}
