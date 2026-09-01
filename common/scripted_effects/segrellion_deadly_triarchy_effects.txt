@@ -2,157 +2,311 @@
 # THE DEADLY TRIARCHY
 # =========================================================
 
+# =========================================================
+# THE DEADLY TRIARCHY
+#
+# Daemon Segrellion
+# Young Griff
+# Joffrey Vladwyn
+#
+# Called after lobby and from the monthly failsafe.
+# Safe for both new games and existing saves.
+# =========================================================
+
 segrellion_form_deadly_triarchy_effect = {
 
-	# Older setup only recorded the Pentos compact on Young Griff.
-	# Repair the reciprocal flag before evaluating the triarchy so both
-	# new games and existing saves can enter the chain.
-	if = {
-		limit = {
-			game_start_date >= 8300.8.20
-			game_start_date < 8301.1.1
+    # =====================================================
+    # ONLY THE 300 AC BOOKMARK
+    # =====================================================
 
-			character:IAF_Young_Griff_1 ?= {
-				is_alive = yes
-				has_character_flag = segrellion_young_griff_supports_daemon
-			}
+    if = {
 
-			character:Segrellion_60 ?= {
-				is_alive = yes
-				NOT = {
-					has_character_flag = segrellion_daemon_supported_by_young_griff
-				}
-				NOR = {
-					has_character_flag = segrellion_pledged_to_stannis
-					has_character_flag = segrellion_pledged_to_daenerys
-				}
-			}
-		}
+        limit = {
 
-		character:Segrellion_60 = {
-			add_character_flag = segrellion_daemon_supported_by_young_griff
-		}
-	}
-
-	if = {
-		limit = {
-
-			game_start_date >= 8300.8.20
-			game_start_date < 8301.1.1
-
-			character:Segrellion_60 ?= {
-
-				is_alive = yes
-
-				has_character_flag = segrellion_daemon_supported_by_young_griff
-
-				NOR = {
-					has_character_flag = segrellion_pledged_to_stannis
-					has_character_flag = segrellion_pledged_to_daenerys
-				}
-
-				NOT = {
-					has_character_flag = segrellion_deadly_triarchy_formed
-				}
-			}
-
-			character:IAF_Young_Griff_1 ?= {
-
-				is_alive = yes
-
-				has_character_flag = segrellion_young_griff_supports_daemon
-			}
-
-			character:Vladwyn_5 ?= {
-				is_alive = yes
-			}
-		}
+            game_start_date >= 8300.8.20
+            game_start_date < 8301.1.1
 
 
-		# =================================================
-		# DAEMON
-		# =================================================
-
-		character:Segrellion_60 = {
-
-			add_character_flag = segrellion_deadly_triarchy_formed
-
-			add_character_modifier = {
-				modifier = segrellion_deadly_triarchy_modifier
-			}
-
-			add_opinion = {
-				target = character:IAF_Young_Griff_1
-				modifier = segrellion_deadly_triarchy_opinion
-			}
-
-			add_opinion = {
-				target = character:Vladwyn_5
-				modifier = segrellion_deadly_triarchy_opinion
-			}
-
-			trigger_event = {
-				id = segrellion_deadly_triarchy.0001
-				days = 3
-			}
-		}
+            character:Segrellion_60 ?= {
+                is_alive = yes
+            }
 
 
-		# =================================================
-		# JOFFREY
-		# =================================================
-
-		character:Vladwyn_5 = {
-
-			add_character_flag = segrellion_deadly_triarchy_formed
-
-			add_character_modifier = {
-				modifier = segrellion_deadly_triarchy_modifier
-			}
-
-			add_opinion = {
-				target = character:Segrellion_60
-				modifier = segrellion_deadly_triarchy_opinion
-			}
-
-			add_opinion = {
-				target = character:IAF_Young_Griff_1
-				modifier = segrellion_deadly_triarchy_opinion
-			}
-
-			trigger_event = {
-				id = segrellion_deadly_triarchy.0002
-				days = 3
-			}
-		}
+            character:IAF_Young_Griff_1 ?= {
+                is_alive = yes
+	            has_character_flag = segrellion_young_griff_supports_daemon
+            }
 
 
-		# =================================================
-		# YOUNG GRIFF
-		# =================================================
+            character:Vladwyn_5 ?= {
+                is_alive = yes
+            }
 
-		character:IAF_Young_Griff_1 = {
+            title:e_the_stormlands.holder = character:IAF_Young_Griff_1
+        }
 
-			add_character_flag = segrellion_deadly_triarchy_formed
 
-			add_character_modifier = {
-				modifier = segrellion_deadly_triarchy_modifier
-			}
+        # =================================================
+        # REPAIR THE PENTOS COMPACT
+        #
+        # Do not trust only the zero-tick setup.
+        # This also repairs old saves.
+        # =================================================
 
-			add_opinion = {
-				target = character:Segrellion_60
-				modifier = segrellion_deadly_triarchy_opinion
-			}
+        character:IAF_Young_Griff_1 = {
 
-			add_opinion = {
-				target = character:Vladwyn_5
-				modifier = segrellion_deadly_triarchy_opinion
-			}
+            if = {
 
-			trigger_event = {
-				id = segrellion_deadly_triarchy.0003
-				days = 3
-			}
-		}
-	}
+                limit = {
+
+                    NOT = {
+                        has_character_flag = segrellion_young_griff_supports_daemon
+                    }
+                }
+
+
+                add_character_flag = segrellion_young_griff_supports_daemon
+            }
+        }
+
+
+        character:Segrellion_60 = {
+
+            if = {
+
+                limit = {
+
+                    NOT = {
+                        has_character_flag = segrellion_daemon_supported_by_young_griff
+                    }
+                }
+
+
+                add_character_flag = segrellion_daemon_supported_by_young_griff
+            }
+        }
+
+
+        # =================================================
+        # FORM THE TRIARCHY
+        # =================================================
+
+        if = {
+
+            limit = {
+
+                character:Segrellion_60 = {
+
+                    has_character_flag = segrellion_daemon_supported_by_young_griff
+
+                    NOT = {
+                        has_character_flag = segrellion_deadly_triarchy_formed
+                    }
+                }
+
+
+                character:IAF_Young_Griff_1 = {
+                    has_character_flag = segrellion_young_griff_supports_daemon
+                }
+            }
+
+
+            # =============================================
+            # DAEMON
+            # =============================================
+
+            character:Segrellion_60 = {
+
+                add_character_flag = segrellion_deadly_triarchy_formed
+
+
+                add_character_modifier = {
+                    modifier = segrellion_deadly_triarchy_modifier
+                }
+
+
+                add_opinion = {
+                    target = character:IAF_Young_Griff_1
+                    modifier = segrellion_deadly_triarchy_opinion
+                }
+
+
+                add_opinion = {
+                    target = character:Vladwyn_5
+                    modifier = segrellion_deadly_triarchy_opinion
+                }
+
+
+                trigger_event = {
+                    id = segrellion_deadly_triarchy.0001
+                    days = 3
+                }
+            }
+
+
+            # =============================================
+            # JOFFREY
+            # =============================================
+
+            character:Vladwyn_5 = {
+
+                add_character_flag = segrellion_deadly_triarchy_formed
+
+
+                add_character_modifier = {
+                    modifier = segrellion_deadly_triarchy_modifier
+                }
+
+
+                add_opinion = {
+                    target = character:Segrellion_60
+                    modifier = segrellion_deadly_triarchy_opinion
+                }
+
+
+                add_opinion = {
+                    target = character:IAF_Young_Griff_1
+                    modifier = segrellion_deadly_triarchy_opinion
+                }
+
+
+                trigger_event = {
+                    id = segrellion_deadly_triarchy.0002
+                    days = 3
+                }
+            }
+
+
+            # =============================================
+            # YOUNG GRIFF
+            # =============================================
+
+            character:IAF_Young_Griff_1 = {
+
+                add_character_flag = segrellion_deadly_triarchy_formed
+
+
+                add_character_modifier = {
+                    modifier = segrellion_deadly_triarchy_modifier
+                }
+
+
+                add_opinion = {
+                    target = character:Segrellion_60
+                    modifier = segrellion_deadly_triarchy_opinion
+                }
+
+
+                add_opinion = {
+                    target = character:Vladwyn_5
+                    modifier = segrellion_deadly_triarchy_opinion
+                }
+
+
+                trigger_event = {
+                    id = segrellion_deadly_triarchy.0003
+                    days = 3
+                }
+            }
+        }
+    }
+}
+
+# =========================================================
+# DISSOLVE THE DEADLY TRIARCHY
+#
+# Called whenever the Pentos Compact between
+# Young Griff and Daemon is broken.
+# =========================================================
+
+segrellion_dissolve_deadly_triarchy_effect = {
+
+    # =====================================================
+    # DAEMON
+    # =====================================================
+
+    character:Segrellion_60 ?= {
+
+        remove_character_flag = segrellion_deadly_triarchy_formed
+
+        if = {
+            limit = {
+                has_character_modifier = segrellion_deadly_triarchy_modifier
+            }
+
+            remove_character_modifier = segrellion_deadly_triarchy_modifier
+        }
+
+
+        remove_opinion = {
+            target = character:IAF_Young_Griff_1
+            modifier = segrellion_deadly_triarchy_opinion
+        }
+
+
+        remove_opinion = {
+            target = character:Vladwyn_5
+            modifier = segrellion_deadly_triarchy_opinion
+        }
+    }
+
+
+    # =====================================================
+    # YOUNG GRIFF
+    # =====================================================
+
+    character:IAF_Young_Griff_1 ?= {
+
+        remove_character_flag = segrellion_deadly_triarchy_formed
+
+        if = {
+            limit = {
+                has_character_modifier = segrellion_deadly_triarchy_modifier
+            }
+
+            remove_character_modifier = segrellion_deadly_triarchy_modifier
+        }
+
+
+        remove_opinion = {
+            target = character:Segrellion_60
+            modifier = segrellion_deadly_triarchy_opinion
+        }
+
+
+        remove_opinion = {
+            target = character:Vladwyn_5
+            modifier = segrellion_deadly_triarchy_opinion
+        }
+    }
+
+
+    # =====================================================
+    # JOFFREY
+    # =====================================================
+
+    character:Vladwyn_5 ?= {
+
+        remove_character_flag = segrellion_deadly_triarchy_formed
+
+        if = {
+            limit = {
+                has_character_modifier = segrellion_deadly_triarchy_modifier
+            }
+
+            remove_character_modifier = segrellion_deadly_triarchy_modifier
+        }
+
+
+        remove_opinion = {
+            target = character:Segrellion_60
+            modifier = segrellion_deadly_triarchy_opinion
+        }
+
+
+        remove_opinion = {
+            target = character:IAF_Young_Griff_1
+            modifier = segrellion_deadly_triarchy_opinion
+        }
+    }
 }
