@@ -1,36 +1,155 @@
 segrellion_raise_unicorn_riders_decision = {
+
 	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_knight_kneeling.dds"
+		reference = "gfx/interface/illustrations/decisions/reinstitute_unicorn_riders_decision_background.dds"
 	}
+
 	decision_group_type = major
 
 	desc = segrellion_raise_unicorn_riders_decision_desc
 	selection_tooltip = segrellion_raise_unicorn_riders_decision_tooltip
 
+	# =========================================================
+	# VISIBILITY
+	# =========================================================
+
 	is_shown = {
-		dynasty = dynasty:dynn_Segrellion
-		has_global_variable = segrellion_flamelands_founded
-		NOT = { has_global_variable = segrellion_unicorn_riders_unlocked }
+
+		# The Unicorn Riders historically exist from roughly 140 AC onward.
+		current_date >= 8140.1.1
+
+		# Only the rulers of the historical seats of the Flamelands
+		# may institute their own Unicorn Riders.
+		OR = {
+			has_title = title:c_farring_cross
+			has_title = title:k_flamelands
+			has_title = title:e_flamelands
+		}
+
+		# If this ruler already commands Unicorn Riders,
+		# they do not need to institute them again.
+		NOT = {
+			any_maa_regiment = {
+				is_maa_type = segrellion_unicorn_riders
+			}
+		}
 	}
 
+	# =========================================================
+	# REQUIREMENTS
+	# =========================================================
+
 	is_valid = {
+
+		is_adult = yes
 		is_imprisoned = no
-		has_title = title:k_flamelands
-		gold >= 300
+		is_incapable = no
+
+		NOT = {
+			government_has_flag = government_is_nw
+		}
+
+		custom_description = {
+			text = segrellion_unicorn_riders_title_requirement_tt
+
+			OR = {
+				has_title = title:c_farring_cross
+				has_title = title:k_flamelands
+				has_title = title:e_flamelands
+			}
+		}
+
+		custom_description = {
+			text = segrellion_unicorn_riders_not_already_raised_tt
+
+			NOT = {
+				any_maa_regiment = {
+					is_maa_type = segrellion_unicorn_riders
+				}
+			}
+		}
+
+		gold >= 1000
 		prestige >= 500
 	}
 
-	effect = {
-		custom_tooltip = segrellion_raise_unicorn_riders_effect_tt
-		trigger_event = segrellion_decision.0003
-	}
+	# =========================================================
+	# COST
+	# =========================================================
 
 	cost = {
-		gold = 300
+		gold = 1000
 		prestige = 500
 	}
 
-	ai_potential = { always = no }
-	ai_will_do = { base = 0 }
+	# =========================================================
+	# EFFECT
+	# =========================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_reinstitute_unicorn_riders_effect_tt
+
+		# Attach the regiment to the highest relevant title.
+		# This means the Unicorn Riders belong to the institution,
+		# rather than permanently belonging to the character.
+
+		if = {
+			limit = {
+				has_title = title:e_flamelands
+			}
+
+			create_maa_regiment = {
+				type = segrellion_unicorn_riders
+				check_can_recruit = no
+				size = 1
+				title = title:e_flamelands
+			}
+		}
+
+		else_if = {
+			limit = {
+				has_title = title:k_flamelands
+			}
+
+			create_maa_regiment = {
+				type = segrellion_unicorn_riders
+				check_can_recruit = no
+				size = 1
+				title = title:k_flamelands
+			}
+		}
+
+		else = {
+
+			create_maa_regiment = {
+				type = segrellion_unicorn_riders
+				check_can_recruit = no
+				size = 1
+				title = title:c_farring_cross
+			}
+		}
+	}
+
+	# =========================================================
+	# AI
+	# =========================================================
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+
+		base = 0
+
+		# AI rulers will restore them, but only when wealthy enough
+		# that doing so will not immediately ruin the realm.
+		modifier = {
+			add = 100
+			gold >= 2000
+			prestige >= 1000
+		}
+	}
 }
 
