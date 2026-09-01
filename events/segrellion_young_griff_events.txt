@@ -3553,6 +3553,7 @@ segrellion_young_griff.8020 = {
 				end_war = attacker
 			}
 
+			segrellion_young_griff_cancel_agot_wars_aftermath_effect = yes
 
 			remove_character_flag = segrellion_young_griff_varys_final_plan_active
 
@@ -3602,6 +3603,9 @@ segrellion_young_griff.8030 = {
 		}
 	}
 
+	immediate = {
+		segrellion_young_griff_post_throne_conquest_effect = yes
+	}
 
 	left_portrait = {
 
@@ -3993,22 +3997,33 @@ segrellion_young_griff.8100 = {
 
 		character:Vladwyn_5 ?= {
 
-			if = {
+						if = {
 
 				limit = {
-					is_alive = yes
+
+					character:Vladwyn_5 ?= {
+						is_alive = yes
+					}
 				}
 
-				get_title = title:e_the_westerlands
 
-				add_character_flag = segrellion_vladwyn_given_westerlands
+				segrellion_young_griff_grant_westerlands_effect = {
+
+					RECIPIENT = character:Vladwyn_5
+				}
 
 
-				add_character_modifier = {
+				character:Vladwyn_5 = {
 
-					modifier = segrellion_vladwyn_westerlands_outsider_modifier
+					add_character_flag = segrellion_vladwyn_given_westerlands
 
-					years = 15
+
+					add_character_modifier = {
+
+						modifier = segrellion_vladwyn_westerlands_outsider_modifier
+
+						years = 15
+					}
 				}
 			}
 		}
@@ -4049,6 +4064,16 @@ segrellion_young_griff.8100 = {
 
 		custom_tooltip = segrellion_young_griff.8100.c.tt
 
+		var:segrellion_young_griff_cersei = {
+
+			save_scope_as = segrellion_submitted_cersei
+		}
+
+
+		segrellion_young_griff_grant_westerlands_effect = {
+
+			RECIPIENT = scope:segrellion_submitted_cersei
+		}
 
 		var:segrellion_young_griff_cersei = {
 
@@ -4320,6 +4345,32 @@ segrellion_young_griff.8120 = {
 
 		name = segrellion_young_griff.8120.a
 
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_young_griff_married_cersei
+
+
+				var:segrellion_young_griff_cersei ?= {
+
+					is_alive = yes
+				}
+			}
+
+
+			var:segrellion_young_griff_cersei = {
+
+				save_scope_as = segrellion_queen_cersei_westerlands
+			}
+
+
+			segrellion_young_griff_grant_westerlands_effect = {
+
+				RECIPIENT = scope:segrellion_queen_cersei_westerlands
+			}
+		}
+
 
 		segrellion_young_griff_after_cersei_settlement_effect = yes
 	}
@@ -4352,6 +4403,19 @@ segrellion_young_griff.8200 = {
 		var:segrellion_young_griff_margaery = {
 			is_alive = yes
 		}
+	}
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_margaery_story_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_margaery_story_scheduled
+
+		add_character_flag = segrellion_young_griff_margaery_story_started
 	}
 
 
@@ -4394,6 +4458,7 @@ segrellion_young_griff.8200 = {
 		marry = var:segrellion_young_griff_margaery
 
 		add_character_flag = segrellion_young_griff_married_margaery
+		add_character_flag = segrellion_young_griff_margaery_story_resolved
 
 
 		ai_chance = {
@@ -4465,6 +4530,19 @@ segrellion_young_griff.8210 = {
 		}
 	}
 
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_margaery_story_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_margaery_story_scheduled
+
+		add_character_flag = segrellion_young_griff_margaery_story_started
+	}
+
 
 	left_portrait = {
 
@@ -4533,6 +4611,8 @@ segrellion_young_griff.8210 = {
 			marry = var:segrellion_young_griff_margaery
 
 			add_character_flag = segrellion_young_griff_margaery_second_wife
+
+			add_character_flag = segrellion_young_griff_margaery_story_resolved
 		}
 
 
@@ -4568,6 +4648,7 @@ segrellion_young_griff.8210 = {
 
 
 		add_character_flag = segrellion_young_griff_refused_margaery
+		add_character_flag = segrellion_young_griff_margaery_story_resolved
 
 
 		ai_chance = {
@@ -4716,6 +4797,7 @@ segrellion_young_griff.8220 = {
 			marry = var:segrellion_young_griff_margaery
 
 			add_character_flag = segrellion_young_griff_married_margaery_after_arianne_divorce
+			add_character_flag = segrellion_young_griff_margaery_story_resolved
 
 
 			# =============================================
@@ -5059,12 +5141,13 @@ segrellion_young_griff.8150 = {
 		}
 
 
-		character:Baratheon_10 = {
+		segrellion_young_griff_grant_stormlands_effect = {
 
-			get_title = title:c_storms_end
-			get_title = title:d_shipbreaker_bay
-			get_title = title:k_shipbreaker_bay
-			get_title = title:e_the_stormlands
+			RECIPIENT = character:Baratheon_10
+		}
+
+
+		character:Baratheon_10 = {
 
 			add_character_flag = segrellion_mya_given_stormlands_by_aegon
 		}
@@ -5101,12 +5184,13 @@ segrellion_young_griff.8150 = {
 		}
 
 
-		character:Vladwyn_5 = {
+		segrellion_young_griff_grant_stormlands_effect = {
 
-			get_title = title:c_storms_end
-			get_title = title:d_shipbreaker_bay
-			get_title = title:k_shipbreaker_bay
-			get_title = title:e_the_stormlands
+			RECIPIENT = character:Vladwyn_5
+		}
+
+
+		character:Vladwyn_5 = {
 
 			add_character_flag = segrellion_vladwyn_lord_of_stormlands
 
@@ -5139,12 +5223,13 @@ segrellion_young_griff.8150 = {
 		}
 
 
-		character:Connington_4 = {
+		segrellion_young_griff_grant_stormlands_effect = {
 
-			get_title = title:c_storms_end
-			get_title = title:d_shipbreaker_bay
-			get_title = title:k_shipbreaker_bay
-			get_title = title:e_the_stormlands
+			RECIPIENT = character:Connington_4
+		}
+
+
+		character:Connington_4 = {
 
 			add_character_flag = segrellion_connington_lord_of_stormlands
 		}

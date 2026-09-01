@@ -812,6 +812,8 @@ segrellion_young_griff_try_schedule_path_2_varys_effect = {
 
 segrellion_young_griff_after_cersei_settlement_effect = {
 
+	add_character_flag = segrellion_young_griff_cersei_settlement_resolved
+
 	if = {
 
 		limit = {
@@ -1077,6 +1079,869 @@ segrellion_young_griff_westeros_core_setup_effect = {
 			add_character_flag = segrellion_young_griff_golden_company_setup
 
 			add_character_flag = segrellion_young_griff_golden_company_in_westeros
+		}
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF - CANCEL AGOT WAR'S AFTERMATH
+#
+# Aegon's conquest of King's Landing has its own complete
+# prisoner settlement:
+#
+# Tommen -> 8030
+# Cersei -> 8100
+# Margaery -> 8200 / 8210
+#
+# Therefore AGOT's generic Mega War punishment court must
+# NOT interfere with these prisoners.
+# =========================================================
+
+segrellion_young_griff_cancel_agot_wars_aftermath_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+		}
+
+
+		# Clean anything that may already have been prepared
+		# directly on Aegon.
+
+		clear_variable_list = mw_traitors_list
+
+		remove_variable = mw_punishment_window
+
+
+		# =================================================
+		# ONLY AEGON'S EXTERNAL CLAIM MEGA WAR
+		#
+		# The actual CK3 war has ALREADY been won.
+		#
+		# We invalidate only AGOT's post-war Mega War layer,
+		# preventing The War's Aftermath from being created.
+		# =================================================
+
+		every_owned_story = {
+
+			limit = {
+
+				story_type = story_agot_mw_rebel
+
+				var:mw_source = flag:mw_external
+
+				var:mw_war_cb = flag:claim_cb
+			}
+
+
+			clear_variable_list = mw_punishers_list
+
+
+			set_variable = {
+
+				name = mw_outcome
+				value = flag:invalidated
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_custom_aftermath_active
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - GRANT THE STORMLANDS
+#
+# Gives the entire political package:
+#
+# Storm's End
+# Shipbreaker Bay
+# The Stormlands
+#
+# Recipient becomes Aegon's vassal.
+# All direct de-jure Stormlands vassals currently beneath
+# Aegon are transferred to the new Lord Paramount.
+# =========================================================
+
+segrellion_young_griff_grant_stormlands_effect = {
+
+	$RECIPIENT$ = {
+
+		save_scope_as = segrellion_stormlands_recipient
+	}
+
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_stormlands_grant_change
+
+		add_claim_on_loss = no
+	}
+
+
+	# =====================================================
+	# LORD PARAMOUNTCY + EXISTING VASSALS
+	# =====================================================
+
+	title:e_the_stormlands = {
+
+		change_title_holder_include_vassals = {
+
+			holder = scope:segrellion_stormlands_recipient
+
+			change = scope:segrellion_stormlands_grant_change
+
+			take_baronies = no
+		}
+	}
+
+
+	# =====================================================
+	# STORM'S END ITSELF
+	# =====================================================
+
+	title:k_shipbreaker_bay = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_stormlands_recipient
+
+			change = scope:segrellion_stormlands_grant_change
+		}
+	}
+
+
+	title:d_shipbreaker_bay = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_stormlands_recipient
+
+			change = scope:segrellion_stormlands_grant_change
+		}
+	}
+
+
+	title:c_storms_end = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_stormlands_recipient
+
+			change = scope:segrellion_stormlands_grant_change
+
+			take_baronies = yes
+		}
+	}
+
+
+	# =====================================================
+	# RECIPIENT SWEARS DIRECTLY TO AEGON
+	# =====================================================
+
+	scope:segrellion_stormlands_recipient = {
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_vassal_of = root
+				}
+			}
+
+
+			change_liege = {
+
+				liege = root
+
+				change = scope:segrellion_stormlands_grant_change
+			}
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_stormlands_grant_change
+
+
+	# =====================================================
+	# ANY DE-JURE STORMLORDS STILL DIRECTLY UNDER AEGON
+	#
+	# Mega Wars can leave some rulers directly beneath
+	# the Iron Throne after realm reconstruction.
+	# =====================================================
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_stormlands_vassal_change
+
+		add_claim_on_loss = no
+	}
+
+
+	every_vassal = {
+
+		limit = {
+
+			this != scope:segrellion_stormlands_recipient
+
+
+			primary_title = {
+
+				any_this_title_or_de_jure_above = {
+
+					this = title:e_the_stormlands
+				}
+			}
+		}
+
+
+		change_liege = {
+
+			liege = scope:segrellion_stormlands_recipient
+
+			change = scope:segrellion_stormlands_vassal_change
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_stormlands_vassal_change
+
+
+	scope:segrellion_stormlands_recipient = {
+
+		set_realm_capital = title:c_storms_end
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - GRANT THE WESTERLANDS
+#
+# Same logic as Stormlands.
+#
+# Recipient receives:
+#
+# Casterly Rock
+# Westerlands crown
+# Lord Paramountcy
+# de-jure Westerland vassals currently under Aegon
+#
+# Recipient becomes Aegon's vassal.
+# =========================================================
+
+segrellion_young_griff_grant_westerlands_effect = {
+
+	$RECIPIENT$ = {
+
+		save_scope_as = segrellion_westerlands_recipient
+	}
+
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_westerlands_grant_change
+
+		add_claim_on_loss = no
+	}
+
+
+	title:e_the_westerlands = {
+
+		change_title_holder_include_vassals = {
+
+			holder = scope:segrellion_westerlands_recipient
+
+			change = scope:segrellion_westerlands_grant_change
+
+			take_baronies = no
+		}
+	}
+
+
+	title:k_the_westerlands = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_westerlands_recipient
+
+			change = scope:segrellion_westerlands_grant_change
+		}
+	}
+
+
+	title:d_casterly_rock = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_westerlands_recipient
+
+			change = scope:segrellion_westerlands_grant_change
+		}
+	}
+
+
+	title:c_casterly_rock = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_westerlands_recipient
+
+			change = scope:segrellion_westerlands_grant_change
+
+			take_baronies = yes
+		}
+	}
+
+
+	scope:segrellion_westerlands_recipient = {
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_vassal_of = root
+				}
+			}
+
+
+			change_liege = {
+
+				liege = root
+
+				change = scope:segrellion_westerlands_grant_change
+			}
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_westerlands_grant_change
+
+
+	# =====================================================
+	# REMAINING DE-JURE WESTERLAND VASSALS UNDER AEGON
+	# =====================================================
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_westerlands_vassal_change
+
+		add_claim_on_loss = no
+	}
+
+
+	every_vassal = {
+
+		limit = {
+
+			this != scope:segrellion_westerlands_recipient
+
+
+			primary_title = {
+
+				any_this_title_or_de_jure_above = {
+
+					this = title:e_the_westerlands
+				}
+			}
+		}
+
+
+		change_liege = {
+
+			liege = scope:segrellion_westerlands_recipient
+
+			change = scope:segrellion_westerlands_vassal_change
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_westerlands_vassal_change
+
+
+	scope:segrellion_westerlands_recipient = {
+
+		set_realm_capital = title:c_casterly_rock
+	}
+}
+
+
+# =========================================================
+# CHOOSE ANOTHER LANNISTER FOR THE WESTERLANDS
+#
+# Cersei dies.
+# Tyrion must NOT inherit because he belongs to Daenerys'
+# political camp.
+# =========================================================
+
+segrellion_young_griff_choose_lannister_westerlands_effect = {
+
+	var:segrellion_young_griff_cersei ?= {
+
+		save_scope_as = segrellion_cersei_for_westerlands
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_cersei_for_westerlands
+		}
+
+
+		scope:segrellion_cersei_for_westerlands = {
+
+			house ?= {
+
+				random_house_member = {
+
+					limit = {
+
+						is_alive = yes
+
+						is_adult = yes
+
+						this != scope:segrellion_cersei_for_westerlands
+
+
+						# Tyrion is currently with Daenerys.
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+
+
+					save_scope_as = segrellion_new_lannister_lord
+				}
+			}
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_new_lannister_lord
+		}
+
+
+		segrellion_young_griff_grant_westerlands_effect = {
+
+			RECIPIENT = scope:segrellion_new_lannister_lord
+		}
+
+
+		scope:segrellion_new_lannister_lord = {
+
+			add_character_flag = segrellion_lannister_given_westerlands_by_aegon
+		}
+	}
+}
+
+
+# =========================================================
+# DORNE BENDS THE KNEE
+#
+# Once Aegon wins the Iron Throne, Dorne becomes a direct
+# vassal of the Iron Throne.
+#
+# Any de-jure Dornish rulers currently sitting directly
+# beneath Aegon are returned beneath Dorne.
+# =========================================================
+
+segrellion_young_griff_vassalize_dorne_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			has_title = title:h_the_iron_throne
+
+
+			title:e_dorne ?= {
+
+				exists = holder
+			}
+		}
+
+
+		title:e_dorne.holder = {
+
+			save_scope_as = segrellion_dorne_holder
+		}
+
+
+		if = {
+
+			limit = {
+
+				scope:segrellion_dorne_holder != root
+
+				scope:segrellion_dorne_holder = {
+
+					NOT = {
+						is_vassal_of = root
+					}
+				}
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = swear_fealty
+
+				save_scope_as = segrellion_dorne_submission_change
+
+				add_claim_on_loss = no
+			}
+
+
+			scope:segrellion_dorne_holder = {
+
+				change_liege = {
+
+					liege = root
+
+					change = scope:segrellion_dorne_submission_change
+				}
+
+
+				add_character_flag = segrellion_dorne_submitted_to_young_griff
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_dorne_submission_change
+		}
+
+
+		# =================================================
+		# REBUILD DORNISH VASSAL STRUCTURE
+		# =================================================
+
+		create_title_and_vassal_change = {
+
+			type = granted
+
+			save_scope_as = segrellion_dorne_vassal_change
+
+			add_claim_on_loss = no
+		}
+
+
+		every_vassal = {
+
+			limit = {
+
+				this != scope:segrellion_dorne_holder
+
+
+				primary_title = {
+
+					any_this_title_or_de_jure_above = {
+
+						this = title:e_dorne
+					}
+				}
+			}
+
+
+			change_liege = {
+
+				liege = scope:segrellion_dorne_holder
+
+				change = scope:segrellion_dorne_vassal_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_dorne_vassal_change
+
+
+		add_character_flag = segrellion_young_griff_dorne_vassalized
+	}
+}
+
+
+# =========================================================
+# ABSORB THE OLD TARGARYEN HOST
+#
+# AGOT's unfinished/default Faegon machinery can leave the
+# titular e_targaryen_host_title alive.
+#
+# Once Aegon has the actual Iron Throne:
+#
+# - its courtiers join Aegon's Red Keep
+# - Varys joins Aegon's court
+# - Jon moves from Storm's End to King's Landing
+# - the obsolete Targaryen Host title is destroyed
+# =========================================================
+
+segrellion_young_griff_absorb_targaryen_host_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		# =================================================
+		# FIND THE OLD HOST HOLDER
+		# =================================================
+
+		title:e_targaryen_host_title ?= {
+
+			holder ?= {
+
+				save_scope_as = segrellion_old_targaryen_host_holder
+			}
+		}
+
+
+		# =================================================
+		# MOVE ITS COURT TO THE RED KEEP
+		# =================================================
+
+		scope:segrellion_old_targaryen_host_holder ?= {
+
+			every_courtier_or_guest = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != character:IAF_Young_Griff_1
+				}
+
+
+				set_employer = character:IAF_Young_Griff_1
+
+				return_to_court = yes
+
+				set_location = title:c_kings_landing.title_province
+			}
+
+
+			if = {
+
+				limit = {
+
+					has_title = title:e_targaryen_host_title
+				}
+
+
+				destroy_title = title:e_targaryen_host_title
+			}
+		}
+
+
+		# =================================================
+		# VARYS
+		# =================================================
+
+		character:Eunuch_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_varys_abandoned_young_griff
+					}
+				}
+
+
+				set_employer = character:IAF_Young_Griff_1
+
+				return_to_court = yes
+
+				set_location = title:c_kings_landing.title_province
+
+				add_character_flag = segrellion_varys_in_aegons_red_keep
+			}
+		}
+
+
+		# =================================================
+		# JON CONNINGTON
+		#
+		# Previous patch already puts Jon in Aegon's court
+		# at Storm's End from game start.
+		#
+		# Now the royal court moves to King's Landing.
+		# =================================================
+
+		character:Connington_4 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_connington_lord_of_stormlands
+					}
+				}
+
+
+				set_employer = character:IAF_Young_Griff_1
+
+				return_to_court = yes
+
+				set_location = title:c_kings_landing.title_province
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_targaryen_host_absorbed
+	}
+}
+
+
+# =========================================================
+# COMPLETE POST-THRONE CONSOLIDATION
+# =========================================================
+
+segrellion_young_griff_post_throne_conquest_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		set_location = title:c_kings_landing.title_province
+
+
+		segrellion_young_griff_absorb_targaryen_host_effect = yes
+
+		segrellion_young_griff_vassalize_dorne_effect = yes
+
+
+		add_character_flag = segrellion_young_griff_post_throne_consolidation_done
+	}
+}
+
+
+# =========================================================
+# MARGAERY TYRELL
+#
+# Missing effect in the current repository.
+#
+# Cersei must already have been resolved.
+# Path 2 must additionally resolve the Stormlands first.
+# =========================================================
+
+segrellion_young_griff_schedule_margaery_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+
+
+			OR = {
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_canon_path_2
+				}
+
+
+				AND = {
+
+					has_character_flag = segrellion_young_griff_canon_path_2
+
+					has_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+				}
+			}
+
+
+			has_variable = segrellion_young_griff_margaery
+
+
+			var:segrellion_young_griff_margaery = {
+
+				is_alive = yes
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_margaery_story_scheduled
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_margaery_story_started
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_margaery_story_resolved
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_margaery_story_scheduled
+
+
+		if = {
+
+			limit = {
+
+				is_married = no
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8200
+
+				days = 1
+			}
+		}
+
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8210
+
+				days = 1
+			}
 		}
 	}
 }

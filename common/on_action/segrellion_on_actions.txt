@@ -34,6 +34,7 @@ monthly_global_pulse = {
 		segrellion_stannis_opening_recovery
 		segrellion_jon_body_in_ice_failsafe
 		segrellion_young_griff_opening_progression
+		segrellion_young_griff_post_conquest_progression
 	}
 }
 
@@ -2735,6 +2736,56 @@ segrellion_young_griff_kings_landing_arrival_fallback = {
 
 			trigger_event = {
 				id = segrellion_young_griff.8020
+			}
+		}
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF - POST CONQUEST FAILSAFE
+#
+# Repairs:
+# - Dorne vassalage
+# - obsolete Targaryen Host
+# - Red Keep courtiers
+# - Margaery chain
+# =========================================================
+
+segrellion_young_griff_post_conquest_progression = {
+
+	effect = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_title = title:h_the_iron_throne
+				}
+
+
+				# =========================================
+				# REALM CONSOLIDATION
+				# =========================================
+
+				segrellion_young_griff_post_throne_conquest_effect = yes
+
+
+				# =========================================
+				# MARGAERY
+				#
+				# The scheduler itself verifies that:
+				#
+				# - Cersei is resolved
+				# - Stormlands are resolved when necessary
+				# - Margaery is alive
+				# - no duplicate event exists
+				# =========================================
+
+				segrellion_young_griff_schedule_margaery_effect = yes
 			}
 		}
 	}
