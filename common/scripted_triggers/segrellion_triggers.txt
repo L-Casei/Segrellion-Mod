@@ -409,3 +409,304 @@ segrellion_plate_recovery_blocked_trigger = {
 		has_global_variable = segrellion_plate_legitimately_recovered
 	}
 }
+
+
+# =========================================================
+# DAEMON SEGRELLION - REINFORCEMENT ROUTE GAME RULE
+# =========================================================
+
+
+# =========================================================
+# SELECTED SETTINGS
+# =========================================================
+
+segrellion_daemon_reinforcement_rule_stannis_trigger = {
+
+	has_game_rule = segrellion_daemon_reinforcement_route_stannis
+}
+
+
+segrellion_daemon_reinforcement_rule_daenerys_trigger = {
+
+	has_game_rule = segrellion_daemon_reinforcement_route_daenerys
+}
+
+
+segrellion_daemon_reinforcement_rule_daenerys_marriage_trigger = {
+
+	has_game_rule = segrellion_daemon_reinforcement_route_daenerys_marriage
+}
+
+
+segrellion_daemon_reinforcement_rule_vale_trigger = {
+
+	has_game_rule = segrellion_daemon_reinforcement_route_vale
+}
+
+
+segrellion_daemon_reinforcement_rule_vale_marriage_trigger = {
+
+	has_game_rule = segrellion_daemon_reinforcement_route_vale_marriage
+}
+
+
+segrellion_daemon_reinforcement_rule_dorne_trigger = {
+
+	has_game_rule = segrellion_daemon_reinforcement_route_dorne
+}
+
+
+# =========================================================
+# STANNIS CAN CURRENTLY BE FORCED
+#
+# This mirrors the actual option requirements.
+# If any of these cease to be true, the rule falls back
+# to the ordinary reinforcement probabilities.
+# =========================================================
+
+segrellion_daemon_reinforcement_force_stannis_available_trigger = {
+
+	segrellion_daemon_reinforcement_rule_stannis_trigger = yes
+
+	NOT = {
+		has_character_flag = segrellion_stannis_support_route_closed
+	}
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+	}
+
+	is_married = no
+
+	character:Baratheon_3 ?= {
+
+		is_alive = yes
+
+		any_child = {
+
+			is_alive = yes
+			is_female = yes
+			is_married = no
+		}
+	}
+}
+
+
+# =========================================================
+# DAENERYS CAN CURRENTLY BE FORCED
+# =========================================================
+
+segrellion_daemon_reinforcement_force_daenerys_available_trigger = {
+
+	OR = {
+
+		segrellion_daemon_reinforcement_rule_daenerys_trigger = yes
+
+		segrellion_daemon_reinforcement_rule_daenerys_marriage_trigger = yes
+	}
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_route_closed
+	}
+
+	character:Targaryen_9 ?= {
+		is_alive = yes
+	}
+}
+
+
+# =========================================================
+# THE VALE CAN CURRENTLY BE FORCED
+# =========================================================
+
+segrellion_daemon_reinforcement_force_vale_available_trigger = {
+
+	OR = {
+
+		segrellion_daemon_reinforcement_rule_vale_trigger = yes
+
+		segrellion_daemon_reinforcement_rule_vale_marriage_trigger = yes
+	}
+
+	NOT = {
+		has_character_flag = segrellion_vale_support_route_closed
+	}
+
+	title:e_the_vale = {
+
+		exists = holder
+
+		holder = {
+
+			is_alive = yes
+
+			has_active_diarchy = yes
+
+			diarch ?= {
+				is_alive = yes
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DORNE
+#
+# Daemon may only force this route AFTER Young Griff has
+# finished the Arianne event chain and specifically chose
+# an alliance without marrying her.
+# =========================================================
+
+segrellion_daemon_reinforcement_force_dorne_available_trigger = {
+
+	segrellion_daemon_reinforcement_rule_dorne_trigger = yes
+
+	NOT = {
+		has_character_flag = segrellion_dorne_support_route_closed
+	}
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+	}
+
+	is_married = no
+
+	character:IAF_Young_Griff_1 ?= {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_arianne_route_resolved
+
+		has_character_flag = segrellion_young_griff_arianne_alliance_only
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_married_arianne
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dorne_route_closed
+		}
+	}
+
+	character:Martell_9 ?= {
+
+		is_alive = yes
+		is_married = no
+	}
+}
+
+
+# =========================================================
+# DORNE - WAIT FOR YOUNG GRIFF
+#
+# While Arianne is alive, unmarried and potentially
+# available, Daemon waits for Young Griff's event 0230.
+#
+# If Arianne dies, marries someone else, Daemon marries,
+# Visenya returns or the route closes, the wait ends and
+# Daemon falls back to the normal reinforcement logic.
+# =========================================================
+
+segrellion_daemon_reinforcement_waiting_for_arianne_trigger = {
+
+	segrellion_daemon_reinforcement_rule_dorne_trigger = yes
+
+	NOT = {
+		has_character_flag = segrellion_dorne_support_route_closed
+	}
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+	}
+
+	is_married = no
+
+	character:IAF_Young_Griff_1 ?= {
+
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_arianne_route_resolved
+		}
+	}
+
+	character:Martell_9 ?= {
+
+		is_alive = yes
+		is_married = no
+	}
+}
+
+
+# =========================================================
+# ANY FORCED ROUTE IS CURRENTLY AVAILABLE
+#
+# Used to suppress all other route weights.
+# =========================================================
+
+segrellion_daemon_reinforcement_forced_route_available_trigger = {
+
+	OR = {
+
+		segrellion_daemon_reinforcement_force_stannis_available_trigger = yes
+
+		segrellion_daemon_reinforcement_force_daenerys_available_trigger = yes
+
+		segrellion_daemon_reinforcement_force_vale_available_trigger = yes
+
+		segrellion_daemon_reinforcement_force_dorne_available_trigger = yes
+	}
+}
+
+
+# =========================================================
+# DAENERYS + MARRIAGE
+#
+# Only overrides Daemon's choice if marriage is actually
+# possible. Otherwise his normal 3010 probabilities remain.
+# =========================================================
+
+segrellion_daemon_reinforcement_daenerys_marriage_choice_trigger = {
+
+	segrellion_daemon_reinforcement_rule_daenerys_marriage_trigger = yes
+
+	is_married = no
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+	}
+
+	character:Targaryen_9 ?= {
+
+		is_alive = yes
+		is_married = no
+	}
+}
+
+
+# =========================================================
+# VALE + MARRIAGE
+#
+# Mya is stored in segrellion_vale_negotiator by the
+# existing Vale negotiation chain.
+# =========================================================
+
+segrellion_daemon_reinforcement_vale_marriage_choice_trigger = {
+
+	segrellion_daemon_reinforcement_rule_vale_marriage_trigger = yes
+
+	is_married = no
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+	}
+
+	has_variable = segrellion_vale_negotiator
+
+	var:segrellion_vale_negotiator ?= {
+
+		is_alive = yes
+		is_married = no
+	}
+}
