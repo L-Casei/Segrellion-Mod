@@ -29,6 +29,7 @@ monthly_global_pulse = {
 		segrellion_deadly_triarchy_progression
 		segrellion_daenerys_followers_progression
 		segrellion_young_griff_iron_throne_invasion_failsafe
+		segrellion_young_griff_kings_landing_arrival_fallback
 		segrellion_jon_resurrection_progression
 		segrellion_stannis_opening_recovery
 		segrellion_jon_body_in_ice_failsafe
@@ -2579,6 +2580,8 @@ segrellion_young_griff_opening_progression = {
 
 		character:IAF_Young_Griff_1 ?= {
 
+			segrellion_young_griff_westeros_core_setup_effect = yes
+
 			if = {
 
 				limit = {
@@ -2633,6 +2636,11 @@ segrellion_young_griff_opening_progression = {
 
 # =========================================================
 # YOUNG GRIFF - KING'S LANDING ARRIVAL
+#
+# Varys has prepared the city.
+#
+# The moment one of Aegon's armies reaches King's Landing
+# during his final operation, the gates open.
 # =========================================================
 
 segrellion_young_griff_kings_landing_arrival_check = {
@@ -2643,39 +2651,23 @@ segrellion_young_griff_kings_landing_arrival_check = {
 
 			is_alive = yes
 
+			is_at_war = yes
+
 			has_character_flag = segrellion_young_griff_varys_final_plan_active
-
-			OR = {
-
-				has_character_flag = segrellion_young_griff_path_1_throne_war_declared
-
-				has_character_flag = segrellion_young_griff_path_2_throne_war_declared
-			}
 
 
 			NOT = {
 				has_character_flag = segrellion_young_griff_kings_landing_opened
 			}
 
+			NOT = {
+				has_character_flag = segrellion_young_griff_kings_landing_taken_by_varys
+			}
+
 
 			any_army = {
 
 				location = title:c_kings_landing.title_province
-			}
-
-
-			any_character_war = {
-
-				attacker = character:IAF_Young_Griff_1
-
-
-				casus_belli = {
-
-					any_target_title = {
-
-						this = title:h_the_iron_throne
-					}
-				}
 			}
 		}
 	}
@@ -2689,10 +2681,60 @@ segrellion_young_griff_kings_landing_arrival_check = {
 
 
 			trigger_event = {
-
 				id = segrellion_young_griff.8020
+			}
+		}
+	}
+}
 
-				days = 1
+# =========================================================
+# YOUNG GRIFF - KING'S LANDING ARRIVAL FAILSAFE
+#
+# Covers:
+# - loaded saves
+# - missed province-enter on_actions
+# - armies already standing inside King's Landing
+# =========================================================
+
+segrellion_young_griff_kings_landing_arrival_fallback = {
+
+	trigger = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			is_at_war = yes
+
+			has_character_flag = segrellion_young_griff_varys_final_plan_active
+
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_kings_landing_opened
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_kings_landing_taken_by_varys
+			}
+
+
+			any_army = {
+
+				location = title:c_kings_landing.title_province
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_kings_landing_opened
+
+
+			trigger_event = {
+				id = segrellion_young_griff.8020
 			}
 		}
 	}

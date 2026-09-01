@@ -964,3 +964,119 @@ segrellion_young_griff_start_path_1_throne_war_effect = {
 		}
 	}
 }
+
+# =========================================================
+# YOUNG GRIFF - 300 AC WESTEROS CORE SETUP
+#
+# Permanent starting entourage:
+# - Jon Connington at Storm's End
+# - Golden Company already landed in Westeros
+#
+# Idempotent and safe for existing saves.
+# =========================================================
+
+segrellion_young_griff_westeros_core_setup_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+		}
+
+
+		# =================================================
+		# JON CONNINGTON
+		# =================================================
+
+		segrellion_young_griff_place_jon_connington_effect = yes
+
+
+		character:Connington_4 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_location = title:c_storms_end.title_province
+
+				add_character_flag = segrellion_jon_connington_at_storms_end
+			}
+		}
+
+
+		# =================================================
+		# THE GOLDEN COMPANY
+		#
+		# 10,000 permanent special troops belonging to Aegon.
+		#
+		# They are NOT tied to one specific war, so they can
+		# fight for him in The Unicorn Returns, the Iron
+		# Throne war and every future conflict.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_golden_company_setup
+				}
+			}
+
+
+			spawn_army = {
+
+				name = segrellion_golden_company_host
+
+
+				men_at_arms = {
+					type = armored_footmen
+					men = 3500
+				}
+
+
+				men_at_arms = {
+					type = pikemen_unit
+					men = 2500
+				}
+
+
+				men_at_arms = {
+					type = bowmen
+					men = 2500
+				}
+
+
+				men_at_arms = {
+					type = armored_horsemen
+					men = 1500
+				}
+
+
+				location = title:c_storms_end.title_province
+
+				origin = title:c_storms_end.title_province
+
+
+				# Not tied to a particular war.
+				inheritable = no
+
+				uses_supply = yes
+			}
+
+
+			add_character_flag = segrellion_young_griff_golden_company_setup
+
+			add_character_flag = segrellion_young_griff_golden_company_in_westeros
+		}
+	}
+}
