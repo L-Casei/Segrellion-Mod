@@ -673,6 +673,38 @@ segrellion_young_griff.1000 = {
 
 			segrellion_young_griff_leave_daemon_restoration_effect = yes
 
+			# =====================================================
+			# AEGON NOW FOLLOWS HIS OWN ROAD
+			#
+			# He no longer waits for The Unicorn Returns.
+			# Six months later he reassesses his position.
+			# =====================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+					}
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_independent_throne_path_started
+					}
+				}
+
+
+				add_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.7900
+
+					months = 6
+				}
+			}
+
 			character:Segrellion_60 = {
 				trigger_event = {
 					id = segrellion_young_griff.1100
@@ -873,6 +905,38 @@ segrellion_young_griff.2000 = {
 			segrellion_young_griff_break_daemon_alliance_effect = yes
 			segrellion_young_griff_leave_daemon_restoration_effect = yes
 
+			# =====================================================
+			# AEGON NOW FOLLOWS HIS OWN ROAD
+			#
+			# He no longer waits for The Unicorn Returns.
+			# Six months later he reassesses his position.
+			# =====================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+					}
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_independent_throne_path_started
+					}
+				}
+
+
+				add_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.7900
+
+					months = 6
+				}
+			}
+
 			character:Segrellion_60 = {
 				trigger_event = {
 					id = segrellion_young_griff.2100
@@ -1052,6 +1116,9 @@ segrellion_young_griff.3000 = {
 		add_character_flag = segrellion_young_griff_daemon_choice_resolved
 		add_character_flag = segrellion_young_griff_stayed_daemon_dorne
 
+		add_character_flag = segrellion_young_griff_canon_path_2
+		remove_character_flag = segrellion_young_griff_canon_path_1
+
 		segrellion_young_griff_stay_with_daemon_restoration_effect = yes
 
 		character:Segrellion_60 = {
@@ -1076,6 +1143,9 @@ segrellion_young_griff.3000 = {
 
 		add_character_flag = segrellion_young_griff_daemon_choice_resolved
 		add_character_flag = segrellion_young_griff_left_daemon_dorne
+
+		add_character_flag = segrellion_young_griff_canon_path_1
+		remove_character_flag = segrellion_young_griff_canon_path_2
 
 		segrellion_young_griff_break_daemon_alliance_effect = yes
 		segrellion_young_griff_leave_daemon_restoration_effect = yes
@@ -2302,6 +2372,10 @@ segrellion_young_griff.7000 = {
 
 		name = segrellion_young_griff.7000.b
 
+		add_character_flag = segrellion_young_griff_blood_debt_resolved
+
+		segrellion_young_griff_try_schedule_path_2_varys_effect = yes
+
 		ai_chance = {
 			base = 10
 		}
@@ -2424,6 +2498,8 @@ segrellion_young_griff.7020 = {
 
 	option = {
 		name = segrellion_young_griff.7020.a
+		add_character_flag = segrellion_young_griff_blood_debt_resolved
+		segrellion_young_griff_try_schedule_path_2_varys_effect = yes
 	}
 }
 
@@ -2930,7 +3006,180 @@ segrellion_young_griff.6010 = {
 
 
 
+# =========================================================
+# 7900 - MY OWN ROAD
+#
+# Six months after abandoning Daemon.
+# Root = Young Griff
+# =========================================================
 
+segrellion_young_griff.7900 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.7900.t
+	desc = segrellion_young_griff.7900.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+		is_imprisoned = no
+
+		has_character_flag = segrellion_young_griff_canon_path_1
+		has_character_flag = segrellion_young_griff_free_for_iron_throne
+
+		OR = {
+
+			has_character_flag = segrellion_young_griff_left_daemon_stannis
+
+			has_character_flag = segrellion_young_griff_left_daemon_daenerys
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_independent_throne_path_started
+		}
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+
+		add_character_flag = segrellion_young_griff_independent_throne_path_started
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.7900.a
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.7910
+
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 7910 - THE SPIDER IS READY
+#
+# Independent Path.
+# Aegon abandoned Daemon six months ago.
+# =========================================================
+
+segrellion_young_griff.7910 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.7910.t
+	desc = segrellion_young_griff.7910.desc
+
+	theme = intrigue
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_canon_path_1
+		has_character_flag = segrellion_young_griff_independent_throne_path_started
+
+		has_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_independent_varys_seen
+		}
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+		character:Eunuch_1 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_independent_varys_seen
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Eunuch_1
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.7910.a
+
+		custom_tooltip = segrellion_young_griff.7910.a.tt
+
+
+		segrellion_young_griff_start_path_1_throne_war_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
 
 
 
@@ -3440,6 +3689,17 @@ segrellion_young_griff.8030 = {
 
 		character:Baratheon_7 = {
 
+			if = {
+
+				limit = {
+					is_married = yes
+				}
+
+				every_spouse = {
+					divorce = prev
+				}
+			}
+
 			release_from_prison = yes
 
 			set_employer = root
@@ -3697,7 +3957,7 @@ segrellion_young_griff.8100 = {
 		add_character_flag = segrellion_young_griff_executed_cersei
 
 
-		segrellion_young_griff_schedule_margaery_effect = yes
+		segrellion_young_griff_after_cersei_settlement_effect = yes
 
 
 		ai_chance = {
@@ -3756,7 +4016,7 @@ segrellion_young_griff.8100 = {
 		add_character_flag = segrellion_young_griff_gave_westerlands_to_joffrey
 
 
-		segrellion_young_griff_schedule_margaery_effect = yes
+		segrellion_young_griff_after_cersei_settlement_effect = yes
 
 
 		ai_chance = {
@@ -3797,7 +4057,7 @@ segrellion_young_griff.8100 = {
 		add_character_flag = segrellion_young_griff_spared_cersei
 
 
-		segrellion_young_griff_schedule_margaery_effect = yes
+		segrellion_young_griff_after_cersei_settlement_effect = yes
 
 
 		ai_chance = {
@@ -4047,7 +4307,7 @@ segrellion_young_griff.8120 = {
 		name = segrellion_young_griff.8120.a
 
 
-		segrellion_young_griff_schedule_margaery_effect = yes
+		segrellion_young_griff_after_cersei_settlement_effect = yes
 	}
 }
 
@@ -4545,5 +4805,367 @@ segrellion_young_griff.8230 = {
 	option = {
 
 		name = segrellion_young_griff.8230.a
+	}
+}
+
+
+# =========================================================
+# 8300 - NOW WE MARCH
+#
+# PATH 2
+# Daemon restored the Flamelands.
+# =========================================================
+
+segrellion_young_griff.8300 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8300.t
+	desc = segrellion_young_griff.8300.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_canon_path_2
+		has_character_flag = segrellion_young_griff_daemon_war_resolved
+		has_character_flag = segrellion_young_griff_blood_debt_resolved
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_path_2_varys_seen
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_path_2_varys_scheduled
+
+		add_character_flag = segrellion_young_griff_path_2_varys_seen
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Eunuch_1
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8300.a
+
+		custom_tooltip = segrellion_young_griff.8300.a.tt
+
+
+		add_character_flag = segrellion_young_griff_path_2_throne_war_declared
+
+
+		segrellion_young_griff_start_path_1_throne_war_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 8310 - NOTHING LEFT TO WAIT FOR
+# =========================================================
+
+segrellion_young_griff.8310 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8310.t
+	desc = segrellion_young_griff.8310.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_canon_path_2
+		has_character_flag = segrellion_young_griff_daemon_war_resolved
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_path_2_varys_seen
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_path_2_varys_scheduled
+
+		add_character_flag = segrellion_young_griff_path_2_varys_seen
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Eunuch_1
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8310.a
+
+		add_character_flag = segrellion_young_griff_path_2_throne_war_declared
+
+		segrellion_young_griff_start_path_1_throne_war_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 8150 - THE STORMLANDS QUESTION
+# =========================================================
+
+segrellion_young_griff.8150 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8150.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Baratheon_3 ?= {
+						is_alive = yes
+					}
+				}
+
+				desc = segrellion_young_griff.8150.desc_stannis_alive
+			}
+
+
+			desc = segrellion_young_griff.8150.desc_stannis_dead
+		}
+	}
+
+
+	theme = realm
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+		has_title = title:e_the_stormlands
+
+		has_character_flag = segrellion_young_griff_canon_path_2
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	# =====================================================
+	# MYA STONE
+	#
+	# SPECIAL OPPORTUNITY
+	# Only if she is married to Daemon.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8150.a
+
+		custom_tooltip = segrellion_young_griff.8150.a.special
+
+
+		trigger = {
+
+			character:Baratheon_10 ?= {
+
+				is_alive = yes
+
+				any_spouse = {
+					this = character:Segrellion_60
+				}
+			}
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Baratheon_10 = {
+
+			get_title = title:c_storms_end
+			get_title = title:d_shipbreaker_bay
+			get_title = title:k_shipbreaker_bay
+			get_title = title:e_the_stormlands
+
+			add_character_flag = segrellion_mya_given_stormlands_by_aegon
+		}
+
+
+		add_character_flag = segrellion_young_griff_stormlands_given_to_mya
+		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+
+		character:Segrellion_60 ?= {
+
+			add_character_flag = segrellion_daemon_secured_stormlands_for_mya
+		}
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+	}
+
+
+	# =====================================================
+	# JOFFREY VLADWYN
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8150.b
+
+
+		trigger = {
+
+			character:Vladwyn_5 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Vladwyn_5 = {
+
+			get_title = title:c_storms_end
+			get_title = title:d_shipbreaker_bay
+			get_title = title:k_shipbreaker_bay
+			get_title = title:e_the_stormlands
+
+			add_character_flag = segrellion_vladwyn_lord_of_stormlands
+
+			add_character_flag = segrellion_vladwyn_stormlands_story_unlocked
+		}
+
+
+		add_character_flag = segrellion_young_griff_stormlands_given_to_vladwyn
+		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+	}
+
+
+	# =====================================================
+	# JON CONNINGTON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8150.c
+
+
+		trigger = {
+
+			character:Connington_4 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Connington_4 = {
+
+			get_title = title:c_storms_end
+			get_title = title:d_shipbreaker_bay
+			get_title = title:k_shipbreaker_bay
+			get_title = title:e_the_stormlands
+
+			add_character_flag = segrellion_connington_lord_of_stormlands
+		}
+
+
+		add_character_flag = segrellion_young_griff_stormlands_given_to_connington
+		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+	}
+
+
+	# =====================================================
+	# KEEP THEM
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8150.d
+
+
+		add_character_flag = segrellion_young_griff_kept_stormlands
+
+		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_young_griff_overextended_stormlands_modifier
+
+			years = 10
+		}
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
 	}
 }

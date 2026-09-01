@@ -193,6 +193,33 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 					}
 				}
 			}
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_young_griff_canon_path_2
+
+					OR = {
+
+						NOT = {
+							character:Segrellion_60 = {
+								is_alive = yes
+							}
+						}
+
+						character:Segrellion_60 = {
+
+							NOT = {
+								has_title = title:e_flamelands
+							}
+						}
+					}
+				}
+
+
+				segrellion_young_griff_try_schedule_path_2_varys_effect = yes
+			}
 		}
 	}
 }
@@ -604,5 +631,161 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 
 			segrellion_young_griff_try_schedule_path_1_varys_effect = yes
 		}
+	}
+}
+
+
+# =========================================================
+# PATH 2 - VARYS AFTER THE FLAMELANDS
+# =========================================================
+
+segrellion_young_griff_try_schedule_path_2_varys_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+			is_imprisoned = no
+
+			has_character_flag = segrellion_young_griff_canon_path_2
+			has_character_flag = segrellion_young_griff_daemon_war_resolved
+			has_character_flag = segrellion_young_griff_arianne_route_resolved
+			has_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_path_2_varys_scheduled
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_path_2_varys_seen
+			}
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+
+			character:Eunuch_1 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		# =============================================
+		# DAEMON WON
+		#
+		# Do not interrupt the blood-debt scene.
+		# Varys waits until Aegon has decided whether
+		# to call upon Daemon.
+		# =============================================
+
+		if = {
+
+			limit = {
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+					has_title = title:e_flamelands
+				}
+
+				has_character_flag = segrellion_young_griff_blood_debt_resolved
+			}
+
+
+			add_character_flag = segrellion_young_griff_path_2_varys_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8300
+
+				days = { 2 5 }
+			}
+		}
+
+
+		# =============================================
+		# DAEMON LOST / DIED
+		# =============================================
+
+		else_if = {
+
+			limit = {
+
+				OR = {
+
+					character:Segrellion_60 = {
+						NOT = {
+							has_title = title:e_flamelands
+						}
+					}
+
+					NOT = {
+						character:Segrellion_60 = {
+							is_alive = yes
+						}
+					}
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_path_2_varys_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8310
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+# =========================================================
+# AFTER CERSEI
+#
+# Path 2 must settle the Stormlands before Margaery.
+# Path 1 proceeds directly to Margaery.
+# =========================================================
+
+segrellion_young_griff_after_cersei_settlement_effect = {
+
+	if = {
+
+		limit = {
+
+			has_character_flag = segrellion_young_griff_canon_path_2
+
+			has_title = title:e_the_stormlands
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.8150
+
+			days = 2
+		}
+	}
+
+
+	else = {
+
+		segrellion_young_griff_after_cersei_settlement_effect = yes
 	}
 }
