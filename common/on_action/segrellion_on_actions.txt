@@ -666,45 +666,6 @@ segrellion_on_game_start_after_lobby = {
 		segrellion_setup_young_griff_blackfyre_effect = yes
 		segrellion_form_deadly_triarchy_effect = yes
 
-		# ====================================================
-		# YOUNG GRIFF - OPENING STORY
-		# ====================================================
-
-		character:IAF_Young_Griff_1 ?= {
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					game_start_date = 8300.8.20
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_varys_opening_scheduled
-					}
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_varys_contacted
-					}
-				}
-
-
-				segrellion_young_griff_place_jon_connington_effect = yes
-
-
-				add_character_flag = segrellion_young_griff_varys_opening_scheduled
-
-
-				trigger_event = {
-
-					id = segrellion_young_griff.0100
-
-					days = 2
-				}
-			}
-		}
-
 		# Player ownership and game rules are only reliable after the
 		# lobby. Schedule Daenerys' opening route here, never at zero tick.
 		character:Targaryen_9 ?= {
@@ -2596,7 +2557,16 @@ segrellion_jon_body_in_ice_failsafe = {
 }
 
 # =========================================================
-# YOUNG GRIFF - OPENING STORY PROGRESSION
+# YOUNG GRIFF - CANON OPENING PROGRESSION
+#
+# Deadly Triarchy
+#       ->
+# Varys
+#       ->
+# Arianne
+#
+# Monthly failsafe so a lost delayed event can never
+# permanently break Aegon's storyline.
 # =========================================================
 
 segrellion_young_griff_opening_progression = {
@@ -2608,11 +2578,50 @@ segrellion_young_griff_opening_progression = {
 			if = {
 
 				limit = {
+
 					is_alive = yes
+
+					game_start_date >= 8300.8.20
+					game_start_date < 8301.1.1
+
+
+					has_character_flag = segrellion_deadly_triarchy_formed
+
+
+					title:e_the_stormlands.holder = character:IAF_Young_Griff_1
+
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_varys_contacted
+					}
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_varys_opening_scheduled
+					}
 				}
 
-				segrellion_young_griff_try_schedule_arianne_storms_end_effect = yes
+
+				add_character_flag = segrellion_young_griff_varys_opening_scheduled
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.0100
+
+					days = 2
+				}
 			}
+
+
+			# =============================================
+			# ARIANNE
+			#
+			# Once Varys has contacted Aegon, this becomes
+			# active. The effect itself checks Stormlands,
+			# Arianne's state and duplicate scheduling.
+			# =============================================
+
+			segrellion_young_griff_try_schedule_arianne_storms_end_effect = yes
 		}
 	}
 }
