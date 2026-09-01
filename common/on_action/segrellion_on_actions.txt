@@ -239,8 +239,12 @@ segrellion_daenerys_followers_progression = {
 }
 
 on_army_enter_province = {
+
 	on_actions = {
+
 		segrellion_unicorn_returns_beacon_arrival_check
+
+		segrellion_young_griff_kings_landing_arrival_check
 	}
 }
 
@@ -2622,6 +2626,69 @@ segrellion_young_griff_opening_progression = {
 			# =============================================
 
 			segrellion_young_griff_try_schedule_arianne_storms_end_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - KING'S LANDING ARRIVAL
+# =========================================================
+
+segrellion_young_griff_kings_landing_arrival_check = {
+
+	trigger = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_young_griff_varys_final_plan_active
+
+			has_character_flag = segrellion_young_griff_path_1_throne_war_declared
+
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_kings_landing_opened
+			}
+
+
+			any_army = {
+
+				location = title:c_kings_landing.title_province
+			}
+
+
+			any_character_war = {
+
+				attacker = character:IAF_Young_Griff_1
+
+
+				casus_belli = {
+
+					any_target_title = {
+
+						this = title:h_the_iron_throne
+					}
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_kings_landing_opened
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8020
+
+				days = 1
+			}
 		}
 	}
 }

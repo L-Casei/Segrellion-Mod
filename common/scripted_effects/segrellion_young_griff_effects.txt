@@ -82,33 +82,25 @@ segrellion_young_griff_stay_with_daemon_restoration_effect = {
 # =========================================================
 # THE UNICORN RETURNS HAS ENDED
 #
-# Called from Daemon's scope after every terminal outcome:
+# PATH 1:
+# Aegon abandoned Daemon after the Stannis/Daenerys split.
+# Once Arianne's story is also resolved, Varys begins the
+# final King's Landing operation.
 #
-# - Victory
-# - Defeat
-# - White peace
-# - Invalidated war
-#
-# Young Griff is released from waiting regardless of
-# whether Daemon won or lost.
+# PATH 2:
+# Aegon remained with Daemon.
+# The blood-debt storyline continues through 7000+.
 # =========================================================
 
 segrellion_young_griff_after_unicorn_returns_effect = {
 
-
 	# Persistent marker on Daemon.
-	#
-	# This allows the monthly failsafe to reconstruct
-	# Aegon's state even if the original event scheduling
-	# was somehow lost.
 
 	if = {
 
 		limit = {
-
 			this = character:Segrellion_60
 		}
-
 
 		add_character_flag = segrellion_unicorn_returns_resolved
 	}
@@ -119,7 +111,6 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 		if = {
 
 			limit = {
-
 				is_alive = yes
 			}
 
@@ -131,16 +122,41 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 			add_character_flag = segrellion_young_griff_free_for_iron_throne
 
 
-			# =============================================
-			# DAEMON WON AND AEGON HELPED HIM
+			# =================================================
+			# PATH 1
 			#
-			# Aegon may ask Daemon to repay the blood-debt
-			# before the invasion begins.
-			# =============================================
+			# Aegon did not remain committed to Daemon.
+			# Varys now decides whether the Flamelands result
+			# is described as Daemon's victory or defeat.
+			# =================================================
 
 			if = {
 
 				limit = {
+
+					has_character_flag = segrellion_young_griff_canon_path_1
+				}
+
+				segrellion_young_griff_try_schedule_path_1_varys_effect = yes
+			}
+
+
+			# =================================================
+			# PATH 2
+			#
+			# Aegon actually fought for Daemon.
+			# Keep the existing Blood Owed in Blood story.
+			#
+			# IMPORTANT:
+			# Do NOT schedule event 6000 here.
+			# Path 2 gets its own throne route later.
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_young_griff_canon_path_2
 
 					has_character_flag = segrellion_young_griff_supports_daemon
 
@@ -156,71 +172,42 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 				}
 
 
-				trigger_event = {
+				if = {
 
-					id = segrellion_young_griff.7000
+					limit = {
 
-					days = 1
-				}
-			}
-
-
-			# =============================================
-			# THE IRON THRONE CANNOT WAIT
-			# =============================================
-
-			if = {
-
-				limit = {
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_iron_throne_war_started
+						NOT = {
+							has_character_flag = segrellion_young_griff_blood_debt_event_scheduled
+						}
 					}
 
-					NOT = {
-						has_character_flag = segrellion_young_griff_invasion_event_scheduled
+
+					add_character_flag = segrellion_young_griff_blood_debt_event_scheduled
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff.7000
+
+						days = 1
 					}
-
-					NOT = {
-						has_title = title:h_the_iron_throne
-					}
-				}
-
-
-				add_character_flag = segrellion_young_griff_invasion_event_scheduled
-
-
-				trigger_event = {
-
-					id = segrellion_young_griff.6000
-
-					days = 10
 				}
 			}
 		}
 	}
 }
 
-
 # =========================================================
-# YOUNG GRIFF - IRON THRONE INVASION FAILSAFE
+# YOUNG GRIFF - STATE REPAIR
 #
-# Checked every month.
+# The old version also launched event 6000.
+# That is no longer allowed.
 #
-# The important rule:
-#
-# If Daemon's restoration war is over and Aegon has not
-# actually begun his Iron Throne war, try again.
-#
-# A single failed event can NEVER permanently freeze him.
+# Path 1 is now controlled by Varys.
+# Path 2 will receive its own continuation later.
 # =========================================================
 
 segrellion_young_griff_force_iron_throne_progression_effect = {
-
-
-	# =====================================================
-	# REPAIR AEGON'S STATE FROM DAEMON'S PERSISTENT FLAG
-	# =====================================================
 
 	if = {
 
@@ -254,63 +241,21 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 	}
 
 
-	# =====================================================
-	# RETRY THE INVASION
-	# =====================================================
+	# Path 1 recovery.
 
 	character:IAF_Young_Griff_1 ?= {
 
 		if = {
 
 			limit = {
-
 				is_alive = yes
-
-				is_imprisoned = no
-
-
-				has_character_flag = segrellion_young_griff_daemon_war_resolved
-
-
-				NOT = {
-					has_character_flag = segrellion_young_griff_iron_throne_war_started
-				}
-
-				NOT = {
-					has_character_flag = segrellion_young_griff_invasion_event_scheduled
-				}
-
-				NOT = {
-					has_title = title:h_the_iron_throne
-				}
-
-
-				title:h_the_iron_throne ?= {
-
-					exists = holder
-
-					holder = {
-
-						is_alive = yes
-
-						this != character:IAF_Young_Griff_1
-					}
-				}
 			}
 
-
-			add_character_flag = segrellion_young_griff_invasion_event_scheduled
-
-
-			trigger_event = {
-
-				id = segrellion_young_griff.6000
-
-				days = 1
-			}
+			segrellion_young_griff_try_schedule_path_1_varys_effect = yes
 		}
 	}
 }
+
 
 # =========================================================
 # YOUNG GRIFF FIGHTS FOR DAENERYS' THRONE
@@ -599,6 +544,65 @@ segrellion_young_griff_place_jon_connington_effect = {
 			return_to_court = yes
 
 			add_character_flag = segrellion_jon_connington_with_young_griff
+		}
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF - STATE REPAIR
+#
+# The old version also launched event 6000.
+# That is no longer allowed.
+#
+# Path 1 is now controlled by Varys.
+# Path 2 will receive its own continuation later.
+# =========================================================
+
+segrellion_young_griff_force_iron_throne_progression_effect = {
+
+	if = {
+
+		limit = {
+
+			character:Segrellion_60 ?= {
+
+				has_character_flag = segrellion_unicorn_returns_resolved
+			}
+
+
+			character:IAF_Young_Griff_1 ?= {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_daemon_war_resolved
+				}
+			}
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_daemon_war_resolved
+
+			remove_character_flag = segrellion_young_griff_waiting_for_daemon
+
+			add_character_flag = segrellion_young_griff_free_for_iron_throne
+		}
+	}
+
+
+	# Path 1 recovery.
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			segrellion_young_griff_try_schedule_path_1_varys_effect = yes
 		}
 	}
 }

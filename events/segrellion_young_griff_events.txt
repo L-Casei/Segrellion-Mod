@@ -59,6 +59,13 @@ segrellion_young_griff.0100 = {
 		animation = thinking
 	}
 
+	right_portrait = {
+
+		character = character:Eunuch_1
+
+		animation = personality_rational
+	}
+
 
 	option = {
 
@@ -654,6 +661,8 @@ segrellion_young_griff.1000 = {
 
 		add_character_flag = segrellion_young_griff_daemon_choice_resolved
 		add_character_flag = segrellion_young_griff_left_daemon_stannis
+		add_character_flag = segrellion_young_griff_canon_path_1
+		remove_character_flag = segrellion_young_griff_canon_path_2
 
 		segrellion_young_griff_break_daemon_alliance_effect = yes
 
@@ -694,6 +703,8 @@ segrellion_young_griff.1000 = {
 
 			add_character_flag = segrellion_young_griff_daemon_choice_resolved
 			add_character_flag = segrellion_young_griff_stayed_daemon_stannis
+			add_character_flag = segrellion_young_griff_canon_path_2
+			remove_character_flag = segrellion_young_griff_canon_path_1
 
 			# Political alliance still ends because Daemon chose Stannis.
 			segrellion_young_griff_break_daemon_alliance_effect = yes
@@ -856,6 +867,8 @@ segrellion_young_griff.2000 = {
 		hidden_effect = {
 			add_character_flag = segrellion_young_griff_daemon_choice_resolved
 			add_character_flag = segrellion_young_griff_left_daemon_daenerys
+			add_character_flag = segrellion_young_griff_canon_path_1
+			remove_character_flag = segrellion_young_griff_canon_path_2
 
 			segrellion_young_griff_break_daemon_alliance_effect = yes
 			segrellion_young_griff_leave_daemon_restoration_effect = yes
@@ -888,6 +901,8 @@ segrellion_young_griff.2000 = {
 		hidden_effect = {
 			add_character_flag = segrellion_young_griff_daemon_choice_resolved
 			add_character_flag = segrellion_young_griff_stayed_daemon_daenerys
+			add_character_flag = segrellion_young_griff_canon_path_2
+			remove_character_flag = segrellion_young_griff_canon_path_1
 
 			segrellion_young_griff_break_daemon_alliance_effect = yes
 			segrellion_young_griff_stay_with_daemon_restoration_effect = yes
@@ -2910,5 +2925,1625 @@ segrellion_young_griff.6010 = {
 
 			add_character_flag = segrellion_young_griff_invasion_event_failed
 		}
+	}
+}
+
+
+
+
+
+
+
+# =========================================================
+# 8000 - THE SPIDER'S LAST THREAD
+#
+# Daemon won the Flamelands.
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.8000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8000.t
+	desc = segrellion_young_griff.8000.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_canon_path_1
+		has_character_flag = segrellion_young_griff_daemon_war_resolved
+		has_character_flag = segrellion_young_griff_arianne_route_resolved
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_path_1_varys_seen
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_title = title:e_flamelands
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Eunuch_1
+		animation = personality_rational
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_path_1_varys_scheduled
+
+		add_character_flag = segrellion_young_griff_path_1_varys_seen
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8000.a
+
+		custom_tooltip = segrellion_young_griff.8000.a.tt
+
+		segrellion_young_griff_start_path_1_throne_war_effect = yes
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 8010 - THE SPIDER'S LAST THREAD
+#
+# Daemon failed in the Flamelands.
+# Same result, different narrative.
+# =========================================================
+
+segrellion_young_griff.8010 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8010.t
+	desc = segrellion_young_griff.8010.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_canon_path_1
+		has_character_flag = segrellion_young_griff_daemon_war_resolved
+		has_character_flag = segrellion_young_griff_arianne_route_resolved
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_path_1_varys_seen
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Eunuch_1
+		animation = personality_rational
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_path_1_varys_scheduled
+
+		add_character_flag = segrellion_young_griff_path_1_varys_seen
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8010.a
+
+		custom_tooltip = segrellion_young_griff.8010.a.tt
+
+		segrellion_young_griff_start_path_1_throne_war_effect = yes
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 8020 - THE GATES ARE OPEN
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_young_griff.8020 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8020.t
+	desc = segrellion_young_griff.8020.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_kings_landing_opened
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_kings_landing_taken_by_varys
+		}
+
+		character:Baratheon_7 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_kings_landing_taken_by_varys
+
+
+		# =================================================
+		# SAVE CERSEI
+		# =================================================
+
+		character:Baratheon_7 = {
+
+			mother ?= {
+
+				root = {
+
+					set_variable = {
+
+						name = segrellion_young_griff_cersei
+
+						value = prev
+					}
+				}
+			}
+
+
+			# =============================================
+			# SAVE MARGAERY BEFORE TOMMEN'S MARRIAGE CAN
+			# BE BROKEN BY THE NIGHT'S WATCH.
+			# =============================================
+
+			primary_spouse ?= {
+
+				root = {
+
+					set_variable = {
+
+						name = segrellion_young_griff_margaery
+
+						value = prev
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# TOMMEN
+		# =================================================
+
+		imprison = {
+
+			target = character:Baratheon_7
+
+			type = house_arrest
+		}
+
+
+		# =================================================
+		# CERSEI
+		# =================================================
+
+		var:segrellion_young_griff_cersei ?= {
+
+			root = {
+
+				imprison = {
+
+					target = prev
+
+					type = house_arrest
+				}
+			}
+		}
+
+
+		# =================================================
+		# MARGAERY
+		# =================================================
+
+		var:segrellion_young_griff_margaery ?= {
+
+			root = {
+
+				imprison = {
+
+					target = prev
+
+					type = house_arrest
+				}
+			}
+		}
+
+
+		# =================================================
+		# THE HIGH SPARROW
+		#
+		# We use Tommen's current religious head, so no
+		# historical character ID is required.
+		# =================================================
+
+		character:Baratheon_7 = {
+
+			faith.religious_head ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					death = {
+
+						death_reason = death_execution
+
+						killer = character:IAF_Young_Griff_1
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_high_sparrow_executed
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Eunuch_1
+		animation = personality_rational
+	}
+
+
+	lower_center_portrait = {
+
+		character = character:Baratheon_7
+		animation = fear
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8020.a
+
+
+		hidden_effect = {
+
+			# =============================================
+			# FIND AEGON'S IRON THRONE WAR AND WIN IT.
+			# =============================================
+
+			random_character_war = {
+
+				limit = {
+
+					attacker = root
+
+
+					casus_belli = {
+
+						any_target_title = {
+
+							this = title:h_the_iron_throne
+						}
+					}
+				}
+
+
+				end_war = attacker
+			}
+
+
+			remove_character_flag = segrellion_young_griff_varys_final_plan_active
+
+			add_character_flag = segrellion_young_griff_iron_throne_war_started
+
+			add_character_flag = segrellion_young_griff_crowned_after_varys_plan
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8030
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 8030 - THE BOY KING
+# =========================================================
+
+segrellion_young_griff.8030 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8030.t
+	desc = segrellion_young_griff.8030.desc
+
+	theme = realm
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		has_title = title:h_the_iron_throne
+
+		character:Baratheon_7 ?= {
+			is_alive = yes
+			is_imprisoned = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_7
+		animation = fear
+	}
+
+
+	# =====================================================
+	# NIGHT'S WATCH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8030.a
+
+		custom_tooltip = segrellion_young_griff.8030.a.tt
+
+
+		character:Baratheon_7 = {
+
+			if = {
+
+				limit = {
+					is_married = yes
+				}
+
+
+				every_spouse = {
+
+					divorce = prev
+				}
+			}
+
+
+			release_from_prison = yes
+
+			add_trait = nightswatch
+
+			add_character_flag = segrellion_tommen_spared_by_young_griff
+			add_character_flag = segrellion_tommen_sent_to_nights_watch
+
+
+			title:k_the_wall.holder ?= {
+
+				prev = {
+
+					set_employer = prev
+				}
+			}
+
+
+			set_location = title:c_castle_black.title_province
+		}
+
+
+		character:Eunuch_1 ?= {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_varys_tommen_spared_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.8100
+
+			days = 2
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# WARD
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8030.b
+
+		custom_tooltip = segrellion_young_griff.8030.b.tt
+
+
+		character:Baratheon_7 = {
+
+			release_from_prison = yes
+
+			set_employer = root
+
+			set_location = title:c_kings_landing.title_province
+
+			set_relation_guardian = root
+
+			add_character_flag = segrellion_tommen_ward_of_young_griff
+		}
+
+
+		set_relation_ward = character:Baratheon_7
+
+
+		add_dread = -25
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_young_griff_tommen_ward_mercy_modifier
+		}
+
+
+		character:Eunuch_1 ?= {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_varys_tommen_spared_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.8100
+
+			days = 2
+		}
+
+
+		ai_chance = {
+			base = 5
+		}
+	}
+
+
+	# =====================================================
+	# EXECUTE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8030.c
+
+		custom_tooltip = segrellion_young_griff.8030.c.tt
+
+
+		character:Baratheon_7 = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_executed_tommen
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.8040
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+# =========================================================
+# 8040 - A PROMISE BROKEN
+# =========================================================
+
+segrellion_young_griff.8040 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8040.t
+	desc = segrellion_young_griff.8040.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		has_character_flag = segrellion_young_griff_executed_tommen
+
+		character:Eunuch_1 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Eunuch_1
+		animation = disapproval
+	}
+
+
+	immediate = {
+
+		character:Eunuch_1 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_varys_tommen_executed_opinion
+			}
+
+
+			add_character_flag = segrellion_varys_abandoned_young_griff
+
+			add_character_flag = segrellion_varys_open_to_daenerys
+
+			add_character_flag = segrellion_varys_open_to_revealed_targaryen_daemon
+		}
+
+
+		remove_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+
+
+		if = {
+
+			limit = {
+
+				has_character_modifier = segrellion_young_griff_spiders_support_modifier
+			}
+
+			remove_character_modifier = segrellion_young_griff_spiders_support_modifier
+		}
+
+
+		add_character_flag = segrellion_young_griff_lost_varys_support
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8040.a
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.8100
+
+			days = 2
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 8100 - THE LIONESS IN CHAINS
+# =========================================================
+
+segrellion_young_griff.8100 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8100.t
+	desc = segrellion_young_griff.8100.desc
+
+	theme = realm
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		has_title = title:h_the_iron_throne
+
+		has_variable = segrellion_young_griff_cersei
+
+		var:segrellion_young_griff_cersei = {
+
+			is_alive = yes
+			is_imprisoned = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = root.var:segrellion_young_griff_cersei
+		animation = anger
+	}
+
+
+	# =====================================================
+	# EXECUTE -> LANNISTER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8100.a
+
+		custom_tooltip = segrellion_young_griff.8100.a.tt
+
+
+		segrellion_young_griff_choose_lannister_westerlands_effect = yes
+
+
+		var:segrellion_young_griff_cersei = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_executed_cersei
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+
+
+	# =====================================================
+	# EXECUTE -> JOFFREY VLADWYN
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8100.b
+
+		custom_tooltip = segrellion_young_griff.8100.b.tt
+
+
+		character:Vladwyn_5 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				get_title = title:e_the_westerlands
+
+				add_character_flag = segrellion_vladwyn_given_westerlands
+
+
+				add_character_modifier = {
+
+					modifier = segrellion_vladwyn_westerlands_outsider_modifier
+
+					years = 15
+				}
+			}
+		}
+
+
+		var:segrellion_young_griff_cersei = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_executed_cersei
+
+		add_character_flag = segrellion_young_griff_gave_westerlands_to_joffrey
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	# =====================================================
+	# CERSEI KNEELS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8100.c
+
+		custom_tooltip = segrellion_young_griff.8100.c.tt
+
+
+		var:segrellion_young_griff_cersei = {
+
+			release_from_prison = yes
+
+			add_character_flag = segrellion_cersei_bent_knee_to_young_griff
+
+			add_character_flag = segrellion_cersei_controls_westerlands_under_oath
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_cersei_forced_submission_opinion
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_spared_cersei
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+
+	# =====================================================
+	# OFFER MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8100.d
+
+		custom_tooltip = segrellion_young_griff.8100.d.tt
+
+
+		trigger = {
+
+			is_married = no
+
+			var:segrellion_young_griff_cersei = {
+
+				is_married = no
+			}
+		}
+
+
+		var:segrellion_young_griff_cersei = {
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8110
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+# =========================================================
+# 8110 - CERSEI CONSIDERS AEGON'S OFFER
+#
+# Root = Cersei
+# Hidden AI decision.
+# =========================================================
+
+segrellion_young_griff.8110 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		is_alive = yes
+
+		is_imprisoned = yes
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+			is_married = no
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	# ACCEPT
+
+	option = {
+
+		name = segrellion_young_griff.8110.a
+
+
+		release_from_prison = yes
+
+		marry = character:IAF_Young_Griff_1
+
+		add_character_flag = segrellion_cersei_married_young_griff
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_married_cersei
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8120
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+
+
+			modifier = {
+
+				add = 30
+
+				opinion = {
+
+					target = character:IAF_Young_Griff_1
+
+					value >= 0
+				}
+			}
+
+
+			modifier = {
+
+				add = 40
+
+				opinion = {
+
+					target = character:IAF_Young_Griff_1
+
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = -100
+
+				opinion = {
+
+					target = character:IAF_Young_Griff_1
+
+					value <= -50
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				has_trait = ambitious
+			}
+		}
+	}
+
+
+	# REFUSE
+
+	option = {
+
+		name = segrellion_young_griff.8110.b
+
+
+		character:IAF_Young_Griff_1 = {
+
+			segrellion_young_griff_choose_lannister_westerlands_effect = yes
+
+			add_character_flag = segrellion_cersei_refused_young_griff_marriage
+		}
+
+
+		death = {
+
+			death_reason = death_execution
+
+			killer = character:IAF_Young_Griff_1
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8120
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+}
+
+# =========================================================
+# 8120 - THE LIONESS' ANSWER
+# =========================================================
+
+segrellion_young_griff.8120 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8120.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_married_cersei
+				}
+
+				desc = segrellion_young_griff.8120.desc_accept
+			}
+
+
+			desc = segrellion_young_griff.8120.desc_refuse
+		}
+	}
+
+
+	theme = realm
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = root.var:segrellion_young_griff_cersei
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8120.a
+
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+	}
+}
+
+# =========================================================
+# 8200 - THE ROSE BEFORE THE DRAGON
+#
+# Aegon unmarried.
+# =========================================================
+
+segrellion_young_griff.8200 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8200.t
+	desc = segrellion_young_griff.8200.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_married = no
+
+		has_variable = segrellion_young_griff_margaery
+
+		var:segrellion_young_griff_margaery = {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = root.var:segrellion_young_griff_margaery
+		animation = admiration
+	}
+
+
+	# MARRY HER
+
+	option = {
+
+		name = segrellion_young_griff.8200.a
+
+		custom_tooltip = segrellion_young_griff.8200.a.tt
+
+
+		var:segrellion_young_griff_margaery = {
+
+			if = {
+
+				limit = {
+					is_imprisoned = yes
+				}
+
+				release_from_prison = yes
+			}
+		}
+
+
+		marry = var:segrellion_young_griff_margaery
+
+		add_character_flag = segrellion_young_griff_married_margaery
+
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+
+	# TAKE THE RANSOM
+
+	option = {
+
+		name = segrellion_young_griff.8200.b
+
+		custom_tooltip = segrellion_young_griff.8200.b.tt
+
+
+		add_gold = 300
+
+
+		var:segrellion_young_griff_margaery = {
+
+			if = {
+
+				limit = {
+					is_imprisoned = yes
+				}
+
+				release_from_prison = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_ransomed_margaery
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+# =========================================================
+# 8210 - A SECOND CROWN
+#
+# Aegon already has a wife.
+# =========================================================
+
+segrellion_young_griff.8210 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8210.t
+	desc = segrellion_young_griff.8210.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_married = yes
+
+		has_variable = segrellion_young_griff_margaery
+
+		var:segrellion_young_griff_margaery = {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = root.var:segrellion_young_griff_margaery
+		animation = admiration
+	}
+
+
+	# TAKE MARGAERY AS ANOTHER WIFE
+
+	option = {
+
+		name = segrellion_young_griff.8210.a
+
+		custom_tooltip = segrellion_young_griff.8210.a.tt
+
+
+		if = {
+
+			limit = {
+
+				any_spouse = {
+
+					this = character:Martell_9
+				}
+			}
+
+
+			character:Martell_9 = {
+
+				trigger_event = {
+
+					id = segrellion_young_griff.8220
+
+					days = 1
+				}
+			}
+		}
+
+
+		# Married, but not to Arianne.
+		# No Dornish political crisis.
+
+		else = {
+
+			var:segrellion_young_griff_margaery = {
+
+				if = {
+
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+			}
+
+
+			marry = var:segrellion_young_griff_margaery
+
+			add_character_flag = segrellion_young_griff_margaery_second_wife
+		}
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+
+
+	# REFUSE HER
+
+	option = {
+
+		name = segrellion_young_griff.8210.b
+
+		custom_tooltip = segrellion_young_griff.8210.b.tt
+
+
+		add_gold = 300
+
+
+		var:segrellion_young_griff_margaery = {
+
+			if = {
+
+				limit = {
+					is_imprisoned = yes
+				}
+
+				release_from_prison = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_refused_margaery
+
+
+		ai_chance = {
+			base = 65
+		}
+	}
+}
+
+# =========================================================
+# 8220 - ARIANNE'S ANSWER
+#
+# Root = Arianne
+# Hidden political decision.
+# =========================================================
+
+segrellion_young_griff.8220 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Martell_9
+
+		is_alive = yes
+
+		any_spouse = {
+			this = character:IAF_Young_Griff_1
+		}
+	}
+
+
+	# =====================================================
+	# 5% - ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8220.a
+
+
+		add_character_flag = segrellion_arianne_accepts_margaery_second_wife
+
+
+		character:IAF_Young_Griff_1 = {
+
+			var:segrellion_young_griff_margaery ?= {
+
+				if = {
+
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+			}
+
+
+			marry = var:segrellion_young_griff_margaery
+
+			set_primary_spouse = character:Martell_9
+
+			add_character_flag = segrellion_young_griff_margaery_second_wife
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8230
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 5
+		}
+	}
+
+
+	# =====================================================
+	# 95% - DORNE BREAKS WITH AEGON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8220.b
+
+
+		add_character_flag = segrellion_arianne_rejects_margaery_second_wife
+
+
+		add_opinion = {
+
+			target = character:IAF_Young_Griff_1
+
+			modifier = segrellion_arianne_margaery_second_wife_opinion
+		}
+
+
+		# The compliant new High Septon grants the divorce.
+
+		divorce = character:IAF_Young_Griff_1
+
+
+		set_location = title:c_sunspear.title_province
+
+
+		father ?= {
+
+			remove_character_flag = segrellion_dorne_supports_young_griff
+
+			add_character_flag = segrellion_dorne_secretly_supports_daenerys
+		}
+
+
+		character:Targaryen_9 ?= {
+
+			add_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			remove_character_flag = segrellion_young_griff_dorne_support_secured
+
+			add_character_flag = segrellion_young_griff_lost_dorne_over_margaery
+
+
+			var:segrellion_young_griff_margaery ?= {
+
+				if = {
+
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+			}
+
+
+			marry = var:segrellion_young_griff_margaery
+
+			add_character_flag = segrellion_young_griff_married_margaery_after_arianne_divorce
+
+
+			# =============================================
+			# CERSEI ALSO BETRAYS HIM IF HE ALLOWED HER
+			# TO RULE THE WESTERLANDS UNDER OATH.
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					has_variable = segrellion_young_griff_cersei
+
+					var:segrellion_young_griff_cersei = {
+
+						is_alive = yes
+
+						has_character_flag = segrellion_cersei_controls_westerlands_under_oath
+					}
+				}
+
+
+				var:segrellion_young_griff_cersei = {
+
+					add_character_flag = segrellion_cersei_secretly_supports_daenerys
+				}
+
+
+				character:Targaryen_9 ?= {
+
+					add_character_flag = segrellion_daenerys_secret_westerlands_support_against_aegon
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8230
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 95
+		}
+	}
+}
+
+# =========================================================
+# 8230 - THE PRICE OF A ROSE
+# =========================================================
+
+segrellion_young_griff.8230 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8230.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Martell_9 = {
+
+						has_character_flag = segrellion_arianne_accepts_margaery_second_wife
+					}
+				}
+
+				desc = segrellion_young_griff.8230.desc_accept
+			}
+
+
+			desc = segrellion_young_griff.8230.desc_dorne
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = root.var:segrellion_young_griff_margaery
+		animation = admiration
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8230.a
 	}
 }
