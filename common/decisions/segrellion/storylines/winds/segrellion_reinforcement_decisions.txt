@@ -149,6 +149,9 @@ segrellion_negotiate_reinforcements_decision = {
 						has_character_flag = segrellion_stannis_support_route_closed
 					}
 				}
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+				}
 			}
 
 			is_valid = {
@@ -170,7 +173,7 @@ segrellion_negotiate_reinforcements_decision = {
 			}
 
 			ai_chance = {
-				value = 10
+				value = 3
 			}
 		}
 
@@ -191,10 +194,39 @@ segrellion_negotiate_reinforcements_decision = {
 			icon = "gfx/interface/icons/message_feed/intrigue.dds"
 
 			is_shown = {
+
 				root = {
+
 					NOT = {
 						has_character_flag = segrellion_dorne_support_route_closed
 					}
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+					}
+				}
+
+
+				character:IAF_Young_Griff_1 ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_young_griff_arianne_alliance_only
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_married_arianne
+					}
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_dorne_route_closed
+					}
+				}
+
+
+				character:Martell_9 ?= {
+
+					is_alive = yes
+					is_married = no
 				}
 			}
 
@@ -211,7 +243,7 @@ segrellion_negotiate_reinforcements_decision = {
 			}
 
 			ai_chance = {
-				value = 40
+				value = 17
 			}
 		}
 
@@ -246,19 +278,7 @@ segrellion_negotiate_reinforcements_decision = {
 			}
 
 			ai_chance = {
-
-				value = 50
-
-
-				modifier = {
-
-					add = 100
-
-					root = {
-
-						segrellion_daemon_ai_wandering_flame_trigger = yes
-					}
-				}
+				value = 20
 			}
 		}
 
@@ -307,11 +327,8 @@ segrellion_negotiate_reinforcements_decision = {
 				}
 			}
 
-			# Weight for choosing this ROUTE among the four.
-			# The 95/5 negotiation chance happens later.
 			ai_chance = {
-				value = 40
-
+				value = 60
 			}
 		}
 	}

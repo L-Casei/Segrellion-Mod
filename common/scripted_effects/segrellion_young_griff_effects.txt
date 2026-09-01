@@ -82,19 +82,18 @@ segrellion_young_griff_stay_with_daemon_restoration_effect = {
 # =========================================================
 # THE UNICORN RETURNS HAS ENDED
 #
-# PATH 1:
-# Aegon abandoned Daemon after the Stannis/Daenerys split.
-# Once Arianne's story is also resolved, Varys begins the
-# final King's Landing operation.
+# IMPORTANT:
 #
-# PATH 2:
-# Aegon remained with Daemon.
-# The blood-debt storyline continues through 7000+.
+# PATH 1 does NOT care about this anymore.
+# Aegon abandoned Daemon and follows his own six-month
+# throne route through 7900 -> 7910.
+#
+# PATH 2 waited for Daemon and therefore continues here.
 # =========================================================
 
 segrellion_young_griff_after_unicorn_returns_effect = {
 
-	# Persistent marker on Daemon.
+	# Persistent world-state marker on Daemon.
 
 	if = {
 
@@ -111,7 +110,10 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 		if = {
 
 			limit = {
+
 				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_canon_path_2
 			}
 
 
@@ -123,40 +125,14 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 
 
 			# =================================================
-			# PATH 1
+			# DAEMON WON
 			#
-			# Aegon did not remain committed to Daemon.
-			# Varys now decides whether the Flamelands result
-			# is described as Daemon's victory or defeat.
+			# Aegon helped him, so resolve the blood debt first.
 			# =================================================
 
 			if = {
 
 				limit = {
-
-					has_character_flag = segrellion_young_griff_canon_path_1
-				}
-
-				segrellion_young_griff_try_schedule_path_1_varys_effect = yes
-			}
-
-
-			# =================================================
-			# PATH 2
-			#
-			# Aegon actually fought for Daemon.
-			# Keep the existing Blood Owed in Blood story.
-			#
-			# IMPORTANT:
-			# Do NOT schedule event 6000 here.
-			# Path 2 gets its own throne route later.
-			# =================================================
-
-			else_if = {
-
-				limit = {
-
-					has_character_flag = segrellion_young_griff_canon_path_2
 
 					has_character_flag = segrellion_young_griff_supports_daemon
 
@@ -194,19 +170,27 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 				}
 			}
 
+
+			# =================================================
+			# DAEMON LOST OR DIED
+			#
+			# There is no blood debt to resolve.
+			# Varys immediately takes over the storyline.
+			# =================================================
+
 			else_if = {
 
 				limit = {
 
-					has_character_flag = segrellion_young_griff_canon_path_2
-
 					OR = {
 
 						NOT = {
+
 							character:Segrellion_60 = {
 								is_alive = yes
 							}
 						}
+
 
 						character:Segrellion_60 = {
 
@@ -225,16 +209,21 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 }
 
 # =========================================================
-# YOUNG GRIFF - STATE REPAIR
+# YOUNG GRIFF - THRONE STORY REPAIR
 #
-# The old version also launched event 6000.
-# That is no longer allowed.
+# PATH 1:
+# Independent six-month route after abandoning Daemon.
 #
-# Path 1 is now controlled by Varys.
-# Path 2 will receive its own continuation later.
+# PATH 2:
+# Waits for The Unicorn Returns and then Varys.
 # =========================================================
 
 segrellion_young_griff_force_iron_throne_progression_effect = {
+
+
+	# =====================================================
+	# PATH 2 - REPAIR STATE AFTER UNICORN RETURNS
+	# =====================================================
 
 	if = {
 
@@ -249,6 +238,9 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 			character:IAF_Young_Griff_1 ?= {
 
 				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_canon_path_2
+
 
 				NOT = {
 					has_character_flag = segrellion_young_griff_daemon_war_resolved
@@ -268,17 +260,83 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 	}
 
 
-	# Path 1 recovery.
-
 	character:IAF_Young_Griff_1 ?= {
+
+
+		# =================================================
+		# PATH 1
+		#
+		# Stannis/Daenerys split.
+		# If the original 7900 schedule was lost, restore it.
+		# =================================================
 
 		if = {
 
 			limit = {
+
 				is_alive = yes
+				is_imprisoned = no
+
+				has_character_flag = segrellion_young_griff_canon_path_1
+
+				has_character_flag = segrellion_young_griff_free_for_iron_throne
+
+
+				OR = {
+
+					has_character_flag = segrellion_young_griff_left_daemon_stannis
+
+					has_character_flag = segrellion_young_griff_left_daemon_daenerys
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_started
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_iron_throne_war_started
+				}
+
+				NOT = {
+					has_title = title:h_the_iron_throne
+				}
 			}
 
-			segrellion_young_griff_try_schedule_path_1_varys_effect = yes
+
+			add_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.7900
+
+				months = 6
+			}
+		}
+
+
+		# =================================================
+		# PATH 2
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_canon_path_2
+
+				has_character_flag = segrellion_young_griff_daemon_war_resolved
+			}
+
+
+			segrellion_young_griff_try_schedule_path_2_varys_effect = yes
 		}
 	}
 }
@@ -786,6 +844,123 @@ segrellion_young_griff_after_cersei_settlement_effect = {
 
 	else = {
 
-		segrellion_young_griff_after_cersei_settlement_effect = yes
+		segrellion_young_griff_schedule_margaery_effect = yes
+	}
+}
+
+# =========================================================
+# VARYS' FINAL PLAN - BEGIN THE IRON THRONE WAR
+#
+# Shared by Path 1 and Path 2 despite the legacy effect name.
+# =========================================================
+
+segrellion_young_griff_start_path_1_throne_war_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+			is_imprisoned = no
+
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+
+
+			title:h_the_iron_throne ?= {
+
+				exists = holder
+
+				holder = {
+
+					is_alive = yes
+
+					this != root
+				}
+			}
+		}
+
+
+		# =============================================
+		# CLAIM
+		# =============================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_claim_on = title:h_the_iron_throne
+				}
+			}
+
+
+			add_pressed_claim = title:h_the_iron_throne
+		}
+
+
+		# =============================================
+		# DEFENDER
+		# =============================================
+
+		title:h_the_iron_throne.holder = {
+
+			save_scope_as = segrellion_young_griff_throne_defender
+		}
+
+
+		# =============================================
+		# START WAR
+		# =============================================
+
+		start_war = {
+
+			cb = claim_cb
+
+			target = scope:segrellion_young_griff_throne_defender
+
+			claimant = root
+
+			target_title = title:h_the_iron_throne
+		}
+
+
+		# =============================================
+		# PATH MARKER
+		# =============================================
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_young_griff_canon_path_1
+			}
+
+			add_character_flag = segrellion_young_griff_path_1_throne_war_declared
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_young_griff_canon_path_2
+			}
+
+			add_character_flag = segrellion_young_griff_path_2_throne_war_declared
+		}
+
+
+		add_character_flag = segrellion_young_griff_varys_final_plan_active
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff.6010
+
+			days = 1
+		}
 	}
 }
