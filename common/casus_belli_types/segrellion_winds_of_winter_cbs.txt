@@ -317,22 +317,13 @@ segrellion_unicorn_returns_cb = {
 		}
 
 
-		# =================================================
+		# =========================================================
 		# YOUNG GRIFF
 		#
-		# We deliberately require the flag that his 300 AC
-		# setup will give him. This prevents Stannis from
-		# accidentally joining the war before we replace him
-		# as holder of the Stormlands.
-		# =================================================
-
-		# =================================================
-		# YOUNG GRIFF
-		#
-		# If Aegon still honors the Pentos Compact, he joins
-		# Daemon directly. His participation does not depend
-		# on already possessing the Stormlands.
-		# =================================================
+		# If Aegon still honours his promise to Daemon, he joins
+		# automatically and is immediately informed that the
+		# Unicorn Returns has begun.
+		# =========================================================
 
 		character:IAF_Young_Griff_1 ?= {
 
@@ -350,15 +341,35 @@ segrellion_unicorn_returns_cb = {
 
 				scope:war ?= {
 
-					add_attacker = character:IAF_Young_Griff_1
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_attacker = character:IAF_Young_Griff_1
+							}
+						}
+
+
+						add_attacker = character:IAF_Young_Griff_1
+					}
 				}
 
-				character:IAF_Young_Griff_1 = {
 
-					trigger_event = {
-						id = segrellion_winds.0005
-						days = 1
+				add_character_flag = segrellion_young_griff_unicorn_returns_notice_pending
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_unicorn_returns_notice_seen
+						}
 					}
+
+
+					trigger_event = segrellion_winds.0005
 				}
 			}
 		}

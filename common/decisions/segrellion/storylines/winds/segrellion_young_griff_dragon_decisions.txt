@@ -1,0 +1,200 @@
+# =========================================================
+# I NEED A DRAGON
+# =========================================================
+
+segrellion_young_griff_need_dragon_decision = {
+
+	decision_group_type = major
+
+	desc = segrellion_young_griff_need_dragon_decision_desc
+
+	selection_tooltip = segrellion_young_griff_need_dragon_decision_tooltip
+
+	confirm_text = segrellion_young_griff_need_dragon_decision_confirm
+
+
+	is_shown = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_varys_contacted
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_path_chosen
+		}
+
+		NOT = {
+			has_trait = dragonrider
+		}
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	is_valid = {
+
+		is_adult = yes
+
+		is_imprisoned = no
+
+		NOT = {
+			exists = current_travel_plan
+		}
+	}
+
+
+	widget = {
+
+		gui = "decision_view_widget_option_list_generic"
+
+		controller = decision_option_list_controller
+
+		decision_to_second_step_button = "segrellion_young_griff_need_dragon_next_step"
+
+
+		# =================================================
+		# SEARCH FOR AN EGG
+		# =================================================
+
+		item = {
+
+			value = segrellion_young_griff_dragon_choice_egg
+
+			localization = segrellion_young_griff_dragon_choice_egg
+
+			current_description = segrellion_young_griff_dragon_choice_egg_desc
+
+			icon = "gfx/interface/icons/message_feed/intrigue.dds"
+
+
+			is_shown = {
+				always = yes
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 25
+			}
+		}
+
+
+		# =================================================
+		# TAKE ONE OF DAENERYS' DRAGONS
+		# =================================================
+
+		item = {
+
+			value = segrellion_young_griff_dragon_choice_daenerys
+
+			localization = segrellion_young_griff_dragon_choice_daenerys
+
+			current_description = segrellion_young_griff_dragon_choice_daenerys_desc
+
+			icon = "gfx/interface/icons/message_feed/martial.dds"
+
+
+			is_shown = {
+
+				character:Targaryen_9 ?= {
+
+					is_alive = yes
+
+					any_courtier = {
+
+						has_trait = dragon
+
+						NOT = {
+							exists = var:current_rider
+						}
+					}
+				}
+			}
+
+
+			is_valid = {
+
+				character:Targaryen_9 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			ai_chance = {
+				value = 75
+			}
+		}
+	}
+
+
+	effect = {
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_dragon_path_chosen
+
+
+			if = {
+
+				limit = {
+					scope:segrellion_young_griff_dragon_choice_egg = yes
+				}
+
+
+				add_character_flag = segrellion_young_griff_dragon_path_egg
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragon.0001
+
+					days = { 30 60 }
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_young_griff_dragon_choice_daenerys = yes
+				}
+
+
+				add_character_flag = segrellion_young_griff_dragon_path_daenerys
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragon.0100
+
+					days = { 15 30 }
+				}
+			}
+		}
+	}
+
+
+	ai_check_interval = 30
+
+
+	ai_potential = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_ai = yes
+	}
+
+
+	ai_will_do = {
+		base = 100
+	}
+}

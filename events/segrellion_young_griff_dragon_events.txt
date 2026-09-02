@@ -1,0 +1,340 @@
+namespace = segrellion_young_griff_dragon
+
+
+# =========================================================
+# 0001 - SEARCH FOR AN EGG
+# =========================================================
+
+segrellion_young_griff_dragon.0001 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0001.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_found_dragon_egg
+				}
+
+				desc = segrellion_young_griff_dragon.0001.desc_found
+			}
+
+
+			desc = segrellion_young_griff_dragon.0001.desc_failed
+		}
+	}
+
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_path_egg
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	immediate = {
+
+		random_list = {
+
+			45 = {
+
+				add_character_flag = segrellion_young_griff_found_dragon_egg
+
+
+				agot_create_weighted_dragon_egg_artifact = {
+					OWNER = root
+				}
+			}
+
+
+			55 = {
+
+				add_character_flag = segrellion_young_griff_dragon_egg_search_failed
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_dragon_route_resolved
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+		name = segrellion_young_griff_dragon.0001.a
+	}
+}
+
+
+# =========================================================
+# 0100 - STEAL A DRAGON
+# =========================================================
+
+segrellion_young_griff_dragon.0100 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0100.t
+	desc = segrellion_young_griff_dragon.0100.desc
+
+	theme = danger
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_path_daenerys
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Targaryen_9 = {
+
+			random_courtier = {
+
+				limit = {
+
+					has_trait = dragon
+
+					NOT = {
+						exists = var:current_rider
+					}
+				}
+
+
+				save_scope_as = segrellion_young_griff_target_dragon
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_young_griff_target_dragon
+			}
+
+
+			set_variable = {
+
+				name = segrellion_young_griff_target_dragon
+
+				value = scope:segrellion_young_griff_target_dragon
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_young_griff_target_dragon
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0100.a
+
+
+		trigger = {
+			exists = scope:segrellion_young_griff_target_dragon
+		}
+
+
+		random_list = {
+
+			25 = {
+
+				add_character_flag = segrellion_young_griff_caught_stealing_dragon
+
+				add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+
+				character:Targaryen_9 = {
+
+					add_character_flag = segrellion_daenerys_caught_young_griff_dragon_theft
+
+					add_opinion = {
+
+						target = root
+
+						modifier = segrellion_daenerys_caught_dragon_thief_opinion
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragon.0110
+
+					days = 1
+				}
+			}
+
+
+			75 = {
+
+				agot_try_tame_dragon_effect = {
+
+					TAMER = root
+
+					DRAGON = scope:segrellion_young_griff_target_dragon
+				}
+
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff_dragon.0110
+
+						days = 1
+					}
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0100.b
+
+
+		trigger = {
+
+			NOT = {
+				exists = scope:segrellion_young_griff_target_dragon
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_dragon_route_resolved
+	}
+}
+
+
+# =========================================================
+# 0110 - THE RESULT
+# =========================================================
+
+segrellion_young_griff_dragon.0110 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0110.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_caught_stealing_dragon
+				}
+
+				desc = segrellion_young_griff_dragon.0110.desc_caught
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					is_current_dragonrider = yes
+				}
+
+				desc = segrellion_young_griff_dragon.0110.desc_success
+			}
+
+
+			desc = segrellion_young_griff_dragon.0110.desc_failure
+		}
+	}
+
+
+	theme = danger
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0110.a
+
+
+		if = {
+
+			limit = {
+				is_current_dragonrider = yes
+			}
+
+
+			add_character_flag = segrellion_young_griff_stole_daenerys_dragon
+
+
+			character:Targaryen_9 ?= {
+
+				add_character_flag = segrellion_daenerys_dragon_stolen_by_young_griff
+
+
+				add_opinion = {
+
+					target = root
+
+					modifier = segrellion_daenerys_dragon_stolen_opinion
+				}
+			}
+		}
+	}
+}

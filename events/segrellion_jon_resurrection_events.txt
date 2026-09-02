@@ -887,13 +887,83 @@ segrellion_jon_resurrection.0210 = {
 		}
 
 
+		add_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+
 		trigger_event = {
 
-			id = segrellion_jon_resurrection.0300
+			id = segrellion_jon_resurrection.0220
 
 			days = { 2 5 }
 		}
 
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 0220 - THE WAR BEYOND THE WALL
+#
+# Jon has reclaimed the Watch and executed his murderers.
+#
+# He does NOT abandon the Wall yet.
+# Stannis' campaign must be resolved first.
+# =========================================================
+
+segrellion_jon_resurrection.0220 = {
+
+	type = character_event
+
+	title = segrellion_jon_resurrection.0220.t
+	desc = segrellion_jon_resurrection.0220.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+
+	trigger = {
+
+		has_character_flag = segrellion_canonical_current_jon
+
+		is_alive = yes
+
+		has_title = title:k_the_wall
+
+		has_character_flag = segrellion_jon_mutineers_purged
+
+		has_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+
+		NOT = {
+			has_character_flag = segrellion_jon_stannis_result_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_3
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_jon_resurrection.0220.a
 
 		ai_chance = {
 			base = 100
@@ -1514,6 +1584,8 @@ segrellion_jon_winterfell_campaign_cb = {
 		has_character_flag = segrellion_canonical_current_jon
 
 		has_character_flag = segrellion_jon_winterfell_cb_authorized
+
+		has_title = title:k_the_wall
 	}
 
 
@@ -1578,6 +1650,50 @@ segrellion_jon_winterfell_campaign_cb = {
 
 			add_character_flag = segrellion_jon_winterfell_campaign_active
 
+			add_character_flag = segrellion_jon_broke_watch_neutrality
+
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_trait = nightswatch
+
+					this != scope:attacker
+				}
+
+
+				add_opinion = {
+
+					target = scope:attacker
+
+					modifier = segrellion_jon_broke_watch_neutrality_opinion
+				}
+			}
+
+
+			every_courtier = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_trait = nightswatch
+
+					this != scope:attacker
+				}
+
+
+				add_opinion = {
+
+					target = scope:attacker
+
+					modifier = segrellion_jon_broke_watch_neutrality_opinion
+				}
+			}
+
 
 			set_variable = {
 
@@ -1598,25 +1714,40 @@ segrellion_jon_winterfell_campaign_cb = {
 
 				men_at_arms = {
 
-					type = bowmen
+					type = nw_rangers
 
-					men = 600
+					men = 700
 				}
 
 
 				men_at_arms = {
 
-					type = pikemen_unit
+					type = sworn_brothers
 
-					men = 400
+					men = 500
 				}
 
 
-				levies = 4000
+				men_at_arms = {
+
+					type = wildling_raiders
+
+					men = 1000
+				}
+
+
+				men_at_arms = {
+
+					type = wildling_cavalry
+
+					men = 300
+				}
+
+
+				levies = 2500
 
 
 				inheritable = no
-
 
 				location = title:c_castle_black.title_province
 
@@ -1721,6 +1852,11 @@ segrellion_jon_winterfell_campaign_cb = {
 			remove_variable = segrellion_jon_winterfell_war
 
 			add_character_flag = segrellion_jon_winterfell_campaign_victory
+
+			# Jon remained Lord Commander throughout the campaign.
+			# Only victory finally ends his command.
+
+			segrellion_jon_leave_watch_for_winterfell_effect = yes
 
 
 			ep3_become_landed_warning_effect = {

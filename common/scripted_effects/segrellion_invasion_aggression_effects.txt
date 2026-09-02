@@ -166,7 +166,12 @@ segrellion_initialize_daenerys_aggression_effect = {
 			if = {
 
 				limit = {
-					has_game_rule = segrellion_daenerys_aggression_peaceful
+					OR = {
+
+						has_game_rule = segrellion_daenerys_aggression_peaceful
+
+						has_character_flag = segrellion_daenerys_random_peaceful
+					}
 				}
 
 				add_character_flag = segrellion_daenerys_ai_free_cities_route
@@ -188,7 +193,12 @@ segrellion_initialize_daenerys_aggression_effect = {
 			else_if = {
 
 				limit = {
-					has_game_rule = segrellion_daenerys_aggression_passive
+					OR = {
+
+						has_game_rule = segrellion_daenerys_aggression_passive
+
+						has_character_flag = segrellion_daenerys_random_passive
+					}
 				}
 
 				add_character_flag = segrellion_daenerys_ai_slow_fleet
@@ -210,7 +220,12 @@ segrellion_initialize_daenerys_aggression_effect = {
 			else_if = {
 
 				limit = {
-					has_game_rule = segrellion_daenerys_aggression_default
+					OR = {
+
+						has_game_rule = segrellion_daenerys_aggression_default
+
+						has_character_flag = segrellion_daenerys_random_default
+					}
 				}
 
 				add_character_flag = segrellion_daenerys_ai_standard_fleet
@@ -229,7 +244,12 @@ segrellion_initialize_daenerys_aggression_effect = {
 			else_if = {
 
 				limit = {
-					has_game_rule = segrellion_daenerys_aggression_aggressive
+					OR = {
+
+						has_game_rule = segrellion_daenerys_aggression_aggressive
+
+						has_character_flag = segrellion_daenerys_random_aggressive
+					}
 				}
 
 				add_character_flag = segrellion_daenerys_ai_rush_crossing
@@ -377,6 +397,96 @@ segrellion_daenerys_invasion_peace_guard_effect = {
 				}
 
 				remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+			}
+		}
+	}
+}
+
+# =========================================================
+# RANDOM STORY GAME RULE INITIALIZATION
+# =========================================================
+
+segrellion_initialize_random_story_rules_effect = {
+
+	# =====================================================
+	# DAENERYS AGGRESSION
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			has_game_rule = segrellion_daenerys_aggression_random
+
+			character:Targaryen_9 ?= {
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_random_aggression_resolved
+				}
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_random_aggression_resolved
+
+
+			random_list = {
+
+				25 = {
+					add_character_flag = segrellion_daenerys_random_peaceful
+				}
+
+				25 = {
+					add_character_flag = segrellion_daenerys_random_passive
+				}
+
+				25 = {
+					add_character_flag = segrellion_daenerys_random_default
+				}
+
+				25 = {
+					add_character_flag = segrellion_daenerys_random_aggressive
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DAEMON GENERAL STRATEGY
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			has_game_rule = segrellion_daemon_ai_strategy_random
+
+			character:Segrellion_60 ?= {
+
+				NOT = {
+					has_character_flag = segrellion_daemon_random_strategy_resolved
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_random_strategy_resolved
+
+
+			random_list = {
+
+				50 = {
+					add_character_flag = segrellion_daemon_random_flamelands_focused
+				}
+
+				50 = {
+					add_character_flag = segrellion_daemon_random_wandering_flame
+				}
 			}
 		}
 	}
