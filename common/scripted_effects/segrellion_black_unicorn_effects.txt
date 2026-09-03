@@ -1303,3 +1303,456 @@ segrellion_rhaegon_early_growth_effect = {
 		}
 	}
 }
+
+# =========================================================
+# BLACK UNICORN - POST BEACON STORY
+#
+# Starts the one-year clock after Daemon gains the
+# Flamelands.
+#
+# This effect is deliberately idempotent because it is
+# called both from on_title_gain and from the monthly
+# failsafe.
+# =========================================================
+
+segrellion_black_unicorn_start_post_beacon_clock_effect = {
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				title:e_flamelands.holder = this
+
+
+				character:Black_Unicorn_1 ?= {
+					is_alive = yes
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+				}
+			}
+
+
+			# =================================================
+			# THE LAST UNICORN
+			# =================================================
+
+			give_nickname = nick_segrellion_the_last_unicorn
+
+			add_character_flag = segrellion_daemon_last_unicorn_nickname_granted
+
+
+			# =================================================
+			# ENSURE VISENYA'S SECRET HAS ALREADY BEEN CHOSEN
+			#
+			# This does NOT choose a route based on this story.
+			# It simply uses the existing game-rule/random
+			# resolver if the secret was never initialized.
+			# =================================================
+
+			character:Black_Unicorn_1 = {
+
+				segrellion_black_unicorn_resolve_secret_effect = yes
+			}
+
+
+			# =================================================
+			# ONE-YEAR CLOCK
+			# =================================================
+
+			add_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+
+
+			add_character_flag = {
+
+				flag = segrellion_black_unicorn_post_beacon_waiting_year
+
+				years = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# MONTHLY POST-BEACON CHECK
+#
+# Once the one-year flag expires, this does NOT start a new
+# timer.
+#
+# It simply waits indefinitely until:
+#
+# - Daemon is alive
+# - Visenya is alive
+# - Daemon still rules the Flamelands
+# - Visenya has not already joined him
+# - Daemon is not at war
+# - Daemon is physically at the Beacon
+#
+# Then the event starts immediately.
+# =========================================================
+
+segrellion_black_unicorn_post_beacon_progression_effect = {
+
+	# =====================================================
+	# SAVE-COMPATIBLE CLOCK START
+	# =====================================================
+
+	segrellion_black_unicorn_start_post_beacon_clock_effect = yes
+
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_imprisoned = no
+
+
+				title:e_flamelands.holder = this
+
+
+				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_started
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+				}
+
+
+				is_at_war = no
+
+
+				location = title:b_castle_farring.title_province
+
+
+				character:Black_Unicorn_1 ?= {
+
+					is_alive = yes
+
+					is_imprisoned = no
+
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+					}
+				}
+			}
+
+
+			# Mark it BEFORE firing so another pulse can never
+			# duplicate the opening.
+
+			add_character_flag = segrellion_black_unicorn_post_beacon_started
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0600
+
+				days = 0
+			}
+		}
+	}
+}
+
+# =========================================================
+# PREPARE DAEMON FOR THE BEACON DUEL
+#
+# -25 prowess because he is still partially bound.
+#
+# EVERY currently equipped artifact is temporarily
+# unequipped:
+#
+# - Trueflame
+# - Icebringer
+# - armor
+# - accessory bonuses
+# - anything else the player may have equipped
+# =========================================================
+
+segrellion_black_unicorn_prepare_beacon_duel_effect = {
+
+	add_character_modifier = {
+
+		modifier = segrellion_black_unicorn_bound_duel_modifier
+	}
+
+
+	every_equipped_character_artifact = {
+
+		set_variable = {
+
+			name = segrellion_black_unicorn_beacon_duel_unequipped
+
+			value = yes
+		}
+
+
+		unequip_artifact_from_owner = yes
+	}
+
+
+	add_character_flag = segrellion_black_unicorn_beacon_duel_loadout_removed
+}
+
+
+# =========================================================
+# RESTORE DAEMON AFTER THE DUEL
+# =========================================================
+
+segrellion_black_unicorn_restore_beacon_duel_effect = {
+
+	remove_character_modifier = segrellion_black_unicorn_bound_duel_modifier
+
+
+	every_character_artifact = {
+
+		limit = {
+
+			has_variable = segrellion_black_unicorn_beacon_duel_unequipped
+		}
+
+
+		equip_artifact_to_owner_replace = yes
+
+
+		remove_variable = segrellion_black_unicorn_beacon_duel_unequipped
+	}
+
+
+	remove_character_flag = segrellion_black_unicorn_beacon_duel_loadout_removed
+}
+
+# =========================================================
+# VISENYA TAKES THE FLAMELANDS
+#
+# ROOT = DAEMON
+#
+# IMPORTANT:
+# Titles are transferred BEFORE Daemon dies.
+# Otherwise normal inheritance could steal the realm from
+# Visenya immediately after the assassination.
+# =========================================================
+
+segrellion_black_unicorn_visenya_take_flamelands_effect = {
+
+	# =====================================================
+	# REVEAL HER REAL IDENTITY
+	# =====================================================
+
+	segrellion_reveal_black_unicorn_identity_effect = yes
+
+
+	character:Black_Unicorn_1 = {
+
+		remove_character_flag = segrellion_black_unicorn_lock_camp_skagos
+
+
+		set_location = title:b_castle_farring.title_province
+
+
+		add_character_flag = segrellion_black_unicorn_seized_flamelands
+
+		add_character_flag = segrellion_black_unicorn_illegitimate_lady_of_flamelands
+
+
+		# =================================================
+		# MURDERER + DYNASTIC KINSLAYER
+		# =================================================
+
+		if = {
+
+			limit = {
+				NOT = { has_trait = murderer }
+			}
+
+			add_trait = murderer
+		}
+
+
+		if = {
+
+			limit = {
+				NOT = { has_trait = kinslayer_1 }
+			}
+
+			add_trait = kinslayer_1
+		}
+
+
+		# =================================================
+		# ILLEGITIMATE RULER
+		# =================================================
+
+		add_character_modifier = {
+
+			modifier = segrellion_black_unicorn_illegitimate_ruler_modifier
+		}
+	}
+
+
+	# =====================================================
+	# TITLE TRANSFER
+	# =====================================================
+
+	create_title_and_vassal_change = {
+
+		type = usurped
+
+		save_scope_as = segrellion_visenya_flamelands_takeover
+	}
+
+
+	# -----------------------------------------------------
+	# THE BEACON / CAPITAL COUNTY
+	# -----------------------------------------------------
+
+	if = {
+
+		limit = {
+
+			title:c_farring_cross.holder = root
+		}
+
+
+		title:c_farring_cross = {
+
+			change_title_holder = {
+
+				holder = character:Black_Unicorn_1
+
+				change = scope:segrellion_visenya_flamelands_takeover
+
+				government_base = root
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# KINGDOM TITLE, IF DAEMON HOLDS IT
+	# -----------------------------------------------------
+
+	if = {
+
+		limit = {
+
+			title:k_flamelands.holder ?= {
+				this = root
+			}
+		}
+
+
+		title:k_flamelands = {
+
+			change_title_holder = {
+
+				holder = character:Black_Unicorn_1
+
+				change = scope:segrellion_visenya_flamelands_takeover
+
+				government_base = root
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# FLAMELANDS + ITS VASSALS
+	# -----------------------------------------------------
+
+	title:e_flamelands = {
+
+		change_title_holder_include_vassals = {
+
+			holder = character:Black_Unicorn_1
+
+			change = scope:segrellion_visenya_flamelands_takeover
+
+			government_base = root
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_visenya_flamelands_takeover
+
+
+	# =====================================================
+	# DESTROY HER OLD LANDLESS WARBAND TITLE
+	#
+	# She is no longer the hidden ruler of a Skagosi camp.
+	# She is now Lady of the Flamelands.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			title:d_laamp_red_unicorn.holder ?= {
+				this = character:Black_Unicorn_1
+			}
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			destroy_title = title:d_laamp_red_unicorn
+		}
+	}
+
+
+	# =====================================================
+	# STORY STATE
+	# =====================================================
+
+	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+	add_character_flag = segrellion_black_unicorn_daemon_killed_by_visenya
+
+
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_post_beacon_visenya_victory
+	}
+
+
+	# =====================================================
+	# DAEMON DIES
+	# =====================================================
+
+	death = {
+
+		death_reason = death_execution
+
+		killer = character:Black_Unicorn_1
+	}
+}

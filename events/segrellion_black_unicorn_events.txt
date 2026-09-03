@@ -6132,3 +6132,1273 @@ segrellion_black_unicorn.0595 = {
 		return_home = yes
 	}
 }
+
+# =========================================================
+# PART III - THE BLACK UNICORN COMES TO THE BEACON
+# =========================================================
+
+
+# =========================================================
+# 0600 - STEEL IN THE DARK
+# =========================================================
+
+segrellion_black_unicorn.0600 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0600.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			# =================================================
+			# WIFE PRESENT + ICEBRINGER
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = segrellion_black_unicorn_beacon_spouse_present
+
+
+					character:Black_Unicorn_1 = {
+
+						has_character_flag = segrellion_black_unicorn_secret_icebringer
+					}
+				}
+
+
+				desc = segrellion_black_unicorn.0600.desc_spouse_icebringer
+			}
+
+
+			# =================================================
+			# WIFE PRESENT + NO ICEBRINGER
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = segrellion_black_unicorn_beacon_spouse_present
+				}
+
+
+				desc = segrellion_black_unicorn.0600.desc_spouse
+			}
+
+
+			# =================================================
+			# ALONE + ICEBRINGER
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Black_Unicorn_1 = {
+
+						has_character_flag = segrellion_black_unicorn_secret_icebringer
+					}
+				}
+
+
+				desc = segrellion_black_unicorn.0600.desc_icebringer
+			}
+
+
+			# =================================================
+			# ALONE + NORMAL BLADE
+			# =================================================
+
+			desc = segrellion_black_unicorn.0600.desc
+		}
+	}
+
+
+	theme = danger
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_at_war = no
+
+		location = title:b_castle_farring.title_province
+
+		has_character_flag = segrellion_black_unicorn_post_beacon_started
+
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+		}
+
+
+		character:Black_Unicorn_1 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# CHECK WHETHER DAEMON'S WIFE IS ACTUALLY WITH HIM
+		# =================================================
+
+		primary_spouse ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					location = title:b_castle_farring.title_province
+				}
+
+
+				save_scope_as = segrellion_daemon_beacon_spouse
+
+
+				root = {
+
+					add_character_flag = segrellion_black_unicorn_beacon_spouse_present
+				}
+			}
+		}
+
+
+		# =================================================
+		# VISENYA HAS ENTERED THE BEACON
+		# =================================================
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_black_unicorn_lock_camp_skagos
+
+
+			current_travel_plan ?= {
+
+				abort_travel_plan = yes
+			}
+
+
+			set_location = title:b_castle_farring.title_province
+
+
+			add_character_flag = segrellion_black_unicorn_infiltrated_beacon
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0600.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0605
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0605 - THE GREAT HALL
+# =========================================================
+
+segrellion_black_unicorn.0605 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0605.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = segrellion_black_unicorn_beacon_spouse_present
+				}
+
+
+				desc = segrellion_black_unicorn.0605.desc_spouse
+			}
+
+
+			desc = segrellion_black_unicorn.0605.desc
+		}
+	}
+
+
+	theme = danger
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_suspicious
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0605.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0610
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0610 - VISENYA SEGRELLION
+# =========================================================
+
+segrellion_black_unicorn.0610 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0610.t
+
+	desc = segrellion_black_unicorn.0610.desc
+
+	theme = danger
+
+
+	immediate = {
+
+		segrellion_reveal_black_unicorn_identity_effect = yes
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_revealed_at_beacon
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = anger
+	}
+
+
+	# =====================================================
+	# 1 - GRAB A SWORD
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0610.a
+
+		add_internal_flag = dangerous
+
+
+		hidden_effect = {
+
+			random_list = {
+
+
+				# -----------------------------------------
+				# SUCCESS - 15%
+				# -----------------------------------------
+
+				15 = {
+
+					add_character_flag = segrellion_black_unicorn_escape_attempt_success
+
+
+					trigger_event = {
+
+						id = segrellion_black_unicorn.0620
+
+						days = 1
+					}
+				}
+
+
+				# -----------------------------------------
+				# FAILURE - 85%
+				# -----------------------------------------
+
+				85 = {
+
+					add_character_flag = segrellion_black_unicorn_escape_attempt_failed
+
+
+					trigger_event = {
+
+						id = segrellion_black_unicorn.0621
+
+						days = 1
+					}
+				}
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+
+
+	# =====================================================
+	# 2 - HAVE YOU CONFUSED ME WITH LEO STORMFLAME?
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0610.b
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0660
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# =====================================================
+	# 3 - ARROGANT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0610.c
+
+
+		trigger = {
+
+			has_trait = arrogant
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0690
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}
+
+# =========================================================
+# 0620 - A SWORD IN HAND
+# =========================================================
+
+segrellion_black_unicorn.0620 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0620.t
+
+	desc = segrellion_black_unicorn.0620.desc
+
+	theme = war
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0620.a
+
+		add_internal_flag = dangerous
+
+
+		hidden_effect = {
+
+			segrellion_black_unicorn_prepare_beacon_duel_effect = yes
+
+
+			configure_start_single_combat_effect = {
+
+				SC_INITIATOR = root
+
+				SC_ATTACKER = root
+
+				SC_DEFENDER = character:Black_Unicorn_1
+
+				FATALITY = practice
+
+				FIXED = no
+
+				LOCALE = terrain_scope
+
+				OUTPUT_EVENT = segrellion_black_unicorn.0630
+
+				INVALIDATION_EVENT = segrellion_black_unicorn.0639
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0621 - TOO SLOW
+# =========================================================
+
+segrellion_black_unicorn.0621 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0621.t
+
+	desc = segrellion_black_unicorn.0621.desc
+
+	theme = death
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = pain
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0621.a
+
+
+		segrellion_black_unicorn_visenya_take_flamelands_effect = yes
+	}
+}
+
+# =========================================================
+# 0630 - DUEL RESULT
+# =========================================================
+
+segrellion_black_unicorn.0630 = {
+
+	type = character_event
+
+	window = duel_event
+
+	title = segrellion_black_unicorn.0630.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					root = scope:sc_victor
+				}
+
+
+				desc = segrellion_black_unicorn.0630.desc_daemon_wins
+			}
+
+
+			desc = segrellion_black_unicorn.0630.desc_visenya_wins
+		}
+	}
+
+
+	theme = war
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = personality_bold
+	}
+
+
+	immediate = {
+
+		segrellion_black_unicorn_restore_beacon_duel_effect = yes
+
+
+		remove_character_flag = segrellion_black_unicorn_beacon_duel_daemon_won
+
+		remove_character_flag = segrellion_black_unicorn_beacon_duel_visenya_won
+
+
+		if = {
+
+			limit = {
+
+				root = scope:sc_victor
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_beacon_duel_daemon_won
+		}
+
+
+		else = {
+
+			add_character_flag = segrellion_black_unicorn_beacon_duel_visenya_won
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0630.a
+
+
+		trigger = {
+
+			has_character_flag = segrellion_black_unicorn_beacon_duel_daemon_won
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0630.b
+
+
+		trigger = {
+
+			has_character_flag = segrellion_black_unicorn_beacon_duel_visenya_won
+		}
+	}
+
+
+	after = {
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_beacon_duel_daemon_won
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0640
+
+				days = 1
+			}
+		}
+
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0635
+
+				days = 1
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0635 - THE LAST MISTAKE
+# =========================================================
+
+segrellion_black_unicorn.0635 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0635.t
+
+	desc = segrellion_black_unicorn.0635.desc
+
+	theme = death
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0635.a
+
+
+		segrellion_black_unicorn_visenya_take_flamelands_effect = yes
+	}
+}
+
+# =========================================================
+# 0640 - THE KILLING BLOW
+# =========================================================
+
+segrellion_black_unicorn.0640 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0640.t
+
+	desc = segrellion_black_unicorn.0640.desc
+
+	theme = war
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = pain
+	}
+
+
+	# =====================================================
+	# KILL HER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0640.a
+
+		add_internal_flag = dangerous
+
+
+		add_character_flag = segrellion_black_unicorn_daemon_killed_visenya
+
+
+		character:Black_Unicorn_1 = {
+
+			death = {
+
+				death_reason = death_battle
+
+				killer = root
+			}
+		}
+
+
+		# =================================================
+		# HER WARRIORS FALL UPON DAEMON'S ENTIRE COURT
+		# =================================================
+
+		every_courtier = {
+
+			limit = {
+
+				is_alive = yes
+			}
+
+
+			death = {
+
+				death_reason = death_battle
+			}
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+
+		death = {
+
+			death_reason = death_battle
+		}
+	}
+
+
+	# =====================================================
+	# SPARE HER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0640.b
+
+
+		add_character_flag = segrellion_black_unicorn_duel_spared_visenya
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_spared_by_daemon_at_beacon
+
+			set_location = title:b_castle_farring.title_province
+		}
+
+
+		custom_tooltip = segrellion_black_unicorn_council_route_pending_tt
+	}
+}
+
+# =========================================================
+# 0639 - DUEL INVALIDATED
+# =========================================================
+
+segrellion_black_unicorn.0639 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	immediate = {
+
+		segrellion_black_unicorn_restore_beacon_duel_effect = yes
+
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+		add_character_flag = segrellion_black_unicorn_beacon_duel_invalidated
+	}
+}
+
+# =========================================================
+# 0660 - LEO STORMFLAME?
+# =========================================================
+
+segrellion_black_unicorn.0660 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0660.t
+
+	desc = segrellion_black_unicorn.0660.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0660.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0670
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0670 - THE BLACK MOON AVENGED
+# =========================================================
+
+segrellion_black_unicorn.0670 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0670.t
+
+	desc = segrellion_black_unicorn.0670.desc
+
+	theme = dynasty
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0670.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0680
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0680 - THE LAST UNICORN
+# =========================================================
+
+segrellion_black_unicorn.0680 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0680.t
+
+	desc = segrellion_black_unicorn.0680.desc
+
+	theme = dynasty
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = laugh
+	}
+
+
+	# =====================================================
+	# TALK
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0680.a
+
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+		add_character_flag = segrellion_black_unicorn_visenya_given_safe_conduct
+
+
+		custom_tooltip = segrellion_black_unicorn_council_route_pending_tt
+	}
+
+
+	# =====================================================
+	# DEMAND
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0680.b
+
+		add_internal_flag = dangerous
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0685
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0685 - YOUR LAST WORDS
+# =========================================================
+
+segrellion_black_unicorn.0685 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0685.t
+
+	desc = segrellion_black_unicorn.0685.desc
+
+	theme = death
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0685.a
+
+
+		segrellion_black_unicorn_visenya_take_flamelands_effect = yes
+	}
+}
+
+# =========================================================
+# 0690 - TEN THOUSAND MEN
+# =========================================================
+
+segrellion_black_unicorn.0690 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0690.t
+
+	desc = segrellion_black_unicorn.0690.desc
+
+	theme = danger
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_arrogant
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = laugh
+	}
+
+
+	# =====================================================
+	# TALK NORMALLY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0690.a
+
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+		add_character_flag = segrellion_black_unicorn_visenya_given_safe_conduct
+
+
+		custom_tooltip = segrellion_black_unicorn_council_route_pending_tt
+	}
+
+
+	# =====================================================
+	# TEST YOUR LUCK
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0690.b
+
+
+		trigger = {
+
+			has_trait = arrogant
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0700
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0700 - WITHOUT AN AUDIENCE
+# =========================================================
+
+segrellion_black_unicorn.0700 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0700.t
+
+	desc = segrellion_black_unicorn.0700.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = personality_suspicious
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0700.a
+
+
+		add_character_flag = segrellion_black_unicorn_private_negotiation_started
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0710
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0710 - THE TWO UNICORNS
+# =========================================================
+
+segrellion_black_unicorn.0710 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0710.t
+
+	desc = segrellion_black_unicorn.0710.desc
+
+	theme = dynasty
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0710.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0720
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0720 - A KNIFE BETWEEN UNICORNS
+# =========================================================
+
+segrellion_black_unicorn.0720 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0720.t
+
+	desc = segrellion_black_unicorn.0720.desc
+
+	theme = danger
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+
+		animation = anger
+	}
+
+
+	# =====================================================
+	# 1 - REASON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0720.a
+
+
+		add_character_flag = segrellion_black_unicorn_private_reason_route_pending
+
+
+		custom_tooltip = segrellion_black_unicorn_private_route_pending_tt
+	}
+
+
+	# =====================================================
+	# 2 - LUSTFUL
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0720.b
+
+
+		trigger = {
+
+			has_trait = lustful
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_private_lustful_route_pending
+
+
+		custom_tooltip = segrellion_black_unicorn_private_route_pending_tt
+	}
+
+
+	# =====================================================
+	# 3 - HEADBUTT / DISARM HER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0720.c
+
+		add_internal_flag = dangerous
+
+
+		add_character_flag = segrellion_black_unicorn_private_headbutt_route_pending
+
+
+		custom_tooltip = segrellion_black_unicorn_private_route_pending_tt
+	}
+}
