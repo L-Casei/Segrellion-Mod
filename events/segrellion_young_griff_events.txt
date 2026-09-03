@@ -3232,6 +3232,12 @@ segrellion_young_griff.6010 = {
 
 			remove_character_flag = segrellion_young_griff_invasion_event_scheduled
 
+			# Start checking Aegon's PERSONAL advance on King's Landing.
+			trigger_event = {
+				id = segrellion_young_griff.8015
+				days = 1
+			}
+
 
 			# =============================================
 			# DORAN MARTELL
@@ -3725,6 +3731,85 @@ segrellion_young_griff.8010 = {
 
 		ai_chance = {
 			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 8015 - AEGON MARCHES ON KING'S LANDING
+#
+# Hidden watcher.
+# Once the Iron Throne war has begun, check Aegon's
+# PERSONAL location every few days.
+#
+# This deliberately does NOT depend on army on_actions.
+# Aegon himself must reach King's Landing.
+# =========================================================
+
+segrellion_young_griff.8015 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		is_at_war = yes
+
+		has_character_flag = segrellion_young_griff_varys_final_plan_active
+
+		has_character_flag = segrellion_young_griff_iron_throne_war_started
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_kings_landing_opened
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_kings_landing_taken_by_varys
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# AEGON HIMSELF HAS REACHED KING'S LANDING
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				location = title:c_kings_landing.title_province
+			}
+
+
+			add_character_flag = segrellion_young_griff_kings_landing_opened
+
+
+			trigger_event = {
+				id = segrellion_young_griff.8020
+			}
+		}
+
+
+		# =================================================
+		# NOT THERE YET
+		# Check again shortly.
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_young_griff.8015
+				days = 2
+			}
 		}
 	}
 }

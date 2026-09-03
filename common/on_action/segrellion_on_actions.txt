@@ -268,8 +268,6 @@ on_army_enter_province = {
 		segrellion_unicorn_returns_beacon_arrival_check
 
 		segrellion_unicorn_returns_stormflame_commander_lock
-
-		segrellion_young_griff_kings_landing_arrival_check
 	}
 }
 
@@ -2796,60 +2794,6 @@ segrellion_young_griff_opening_progression = {
 	}
 }
 
-
-# =========================================================
-# YOUNG GRIFF - KING'S LANDING ARRIVAL
-#
-# Varys has prepared the city.
-#
-# The moment one of Aegon's armies reaches King's Landing
-# during his final operation, the gates open.
-# =========================================================
-
-segrellion_young_griff_kings_landing_arrival_check = {
-
-	trigger = {
-
-		character:IAF_Young_Griff_1 ?= {
-
-			is_alive = yes
-
-			is_at_war = yes
-
-			has_character_flag = segrellion_young_griff_varys_final_plan_active
-
-
-			NOT = {
-				has_character_flag = segrellion_young_griff_kings_landing_opened
-			}
-
-			NOT = {
-				has_character_flag = segrellion_young_griff_kings_landing_taken_by_varys
-			}
-
-
-			any_army = {
-
-				location = title:c_kings_landing.title_province
-			}
-		}
-	}
-
-
-	effect = {
-
-		character:IAF_Young_Griff_1 = {
-
-			add_character_flag = segrellion_young_griff_kings_landing_opened
-
-
-			trigger_event = {
-				id = segrellion_young_griff.8020
-			}
-		}
-	}
-}
-
 # =========================================================
 # YOUNG GRIFF - KING'S LANDING ARRIVAL FAILSAFE
 #
@@ -2871,6 +2815,8 @@ segrellion_young_griff_kings_landing_arrival_fallback = {
 
 			has_character_flag = segrellion_young_griff_varys_final_plan_active
 
+			has_character_flag = segrellion_young_griff_iron_throne_war_started
+
 
 			NOT = {
 				has_character_flag = segrellion_young_griff_kings_landing_opened
@@ -2881,10 +2827,8 @@ segrellion_young_griff_kings_landing_arrival_fallback = {
 			}
 
 
-			any_army = {
-
-				location = title:c_kings_landing.title_province
-			}
+			# Aegon PERSONALLY reached King's Landing.
+			location = title:c_kings_landing.title_province
 		}
 	}
 
