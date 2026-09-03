@@ -501,16 +501,23 @@ segrellion_young_griff_place_jon_connington_effect = {
 }
 
 # =========================================================
-# YOUNG GRIFF - STATE REPAIR
+# YOUNG GRIFF - THRONE STORY REPAIR
 #
-# The old version also launched event 6000.
-# That is no longer allowed.
+# PATH 1:
+# Aegon abandoned Daemon.
+# Six months later -> 7900 -> 7910 -> Iron Throne.
 #
-# Path 1 is now controlled by Varys.
-# Path 2 will receive its own continuation later.
+# PATH 2:
+# Aegon remained with Daemon.
+# Wait for Unicorn Returns -> debt -> Varys -> Iron Throne.
 # =========================================================
 
 segrellion_young_griff_force_iron_throne_progression_effect = {
+
+
+	# =====================================================
+	# PATH 2 - REPAIR STATE AFTER UNICORN RETURNS
+	# =====================================================
 
 	if = {
 
@@ -525,6 +532,9 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 			character:IAF_Young_Griff_1 ?= {
 
 				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_canon_path_2
+
 
 				NOT = {
 					has_character_flag = segrellion_young_griff_daemon_war_resolved
@@ -544,34 +554,79 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 	}
 
 
-	# Path 1 recovery.
-
 	character:IAF_Young_Griff_1 ?= {
+
+
+		# =================================================
+		# PATH 1 - RECOVER 7900
+		#
+		# If the original six-month delayed event vanished,
+		# restore it.
+		# =================================================
 
 		if = {
 
 			limit = {
+
 				is_alive = yes
+				is_imprisoned = no
+
+				has_character_flag = segrellion_young_griff_canon_path_1
+
+				has_character_flag = segrellion_young_griff_free_for_iron_throne
+
+
+				OR = {
+
+					has_character_flag = segrellion_young_griff_left_daemon_stannis
+
+					has_character_flag = segrellion_young_griff_left_daemon_daenerys
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_started
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_iron_throne_war_started
+				}
+
+				NOT = {
+					has_title = title:h_the_iron_throne
+				}
 			}
 
-			segrellion_young_griff_try_schedule_path_1_varys_effect = yes
+
+			add_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.7900
+
+				months = 6
+			}
 		}
 
 
-		# =========================================================
-		# PATH 1 - VARYS FINAL PLAN RECOVERY
+		# =================================================
+		# PATH 1 - RECOVER 7910
 		#
-		# 7900 already happened, but 7910 was lost or failed.
-		# =========================================================
+		# 7900 already happened but Varys' final event
+		# disappeared.
+		# =================================================
 
 		if = {
 
 			limit = {
 
 				is_alive = yes
-
 				is_imprisoned = no
-
 
 				has_character_flag = segrellion_young_griff_canon_path_1
 
@@ -607,6 +662,34 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 
 				days = 1
 			}
+		}
+
+
+		# =================================================
+		# PATH 2
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_canon_path_2
+
+				has_character_flag = segrellion_young_griff_daemon_war_resolved
+
+				NOT = {
+					has_title = title:h_the_iron_throne
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_iron_throne_war_started
+				}
+			}
+
+
+			segrellion_young_griff_try_schedule_path_2_varys_effect = yes
 		}
 	}
 }
