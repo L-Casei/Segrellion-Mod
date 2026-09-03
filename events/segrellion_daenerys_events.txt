@@ -147,7 +147,7 @@ segrellion_daenerys_invasion.0001 = {
 
 				factor = 0
 
-				has_game_rule = segrellion_daenerys_aggression_peaceful
+				has_character_flag = segrellion_daenerys_ai_free_cities_route
 			}
 		}
 
@@ -311,7 +311,7 @@ segrellion_daenerys_invasion.0001 = {
 
 				add = 100
 
-				has_game_rule = segrellion_daenerys_aggression_peaceful
+				has_character_flag = segrellion_daenerys_ai_free_cities_route
 			}
 		}
 
@@ -813,7 +813,11 @@ segrellion_daenerys_invasion.0006 = {
 
 
 	# =====================================================
-	# WAIT AND BUILD THE DRAGON FLEET
+	# PREPARE THE DRAGON FLEET
+	#
+	# For AI Daenerys, this is the point where the aggression
+	# profile controls campaign timing. Her story and movement
+	# to Pentos have already happened.
 	# =====================================================
 
 	option = {
@@ -831,7 +835,7 @@ segrellion_daenerys_invasion.0006 = {
 
 				factor = 0
 
-				has_game_rule = segrellion_daenerys_aggression_aggressive
+				has_character_flag = segrellion_daenerys_ai_rush_crossing
 			}
 		}
 
@@ -842,21 +846,46 @@ segrellion_daenerys_invasion.0006 = {
 
 				is_ai = yes
 
-				has_game_rule = segrellion_daenerys_aggression_passive
+				has_character_flag = segrellion_daenerys_ai_slow_fleet
 			}
 
 
-			add_character_flag = segrellion_daenerys_passive_fleet_preparation
+			add_character_flag = segrellion_daenerys_delayed_fleet_preparation
 
 
 			trigger_event = {
 
 				id = segrellion_daenerys_invasion.0014
 
-				days = { 365 540 }
+				days = { 2555 4380 }
 			}
 		}
 
+
+		# Strategic/default AI waits 2-5 years here, after the
+		# opening story, before committing resources to the fleet.
+
+		else_if = {
+
+			limit = {
+				is_ai = yes
+			}
+
+
+			add_character_flag = segrellion_daenerys_delayed_fleet_preparation
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0014
+
+				days = { 730 1825 }
+			}
+		}
+
+
+		# Players control their own pace and begin construction
+		# immediately when they choose this option.
 
 		else = {
 
@@ -905,7 +934,7 @@ segrellion_daenerys_invasion.0006 = {
 
 				add = 100
 
-				has_game_rule = segrellion_daenerys_aggression_aggressive
+				has_character_flag = segrellion_daenerys_ai_rush_crossing
 			}
 		}
 
@@ -1955,14 +1984,16 @@ segrellion_daenerys_invasion.0015 = {
 
 
 # =========================================================
-# 0014 - PASSIVE FLEET PREPARATION
+# 0014 - DELAYED AI FLEET PREPARATION
 #
-# Daenerys has chosen Westeros, but her preparations
-# proceed cautiously and slowly.
+# Daenerys has chosen Westeros and reached Pentos. Her AI
+# aggression profile has now completed its campaign delay.
+# The legacy passive flag remains accepted for old saves.
 # =========================================================
 
 segrellion_daenerys_invasion.0014 = {
 
+	type = character_event
 	hidden = yes
 
 
@@ -1972,7 +2003,10 @@ segrellion_daenerys_invasion.0014 = {
 
 		is_alive = yes
 
-		has_character_flag = segrellion_daenerys_passive_fleet_preparation
+		OR = {
+			has_character_flag = segrellion_daenerys_delayed_fleet_preparation
+			has_character_flag = segrellion_daenerys_passive_fleet_preparation
+		}
 
 		has_character_flag = segrellion_daenerys_camped_at_pentos
 
@@ -1988,6 +2022,7 @@ segrellion_daenerys_invasion.0014 = {
 
 	immediate = {
 
+		remove_character_flag = segrellion_daenerys_delayed_fleet_preparation
 		remove_character_flag = segrellion_daenerys_passive_fleet_preparation
 
 		add_character_flag = segrellion_daenerys_fleet_project_active

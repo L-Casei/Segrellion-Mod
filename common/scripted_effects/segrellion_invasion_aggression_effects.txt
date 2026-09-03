@@ -46,9 +46,13 @@ segrellion_initialize_young_griff_aggression_effect = {
 
 
 # =========================================================
-# DAENERYS
+# DAENERYS STORY INITIALIZATION
 #
 # ROOT = Daenerys
+#
+# The aggression rule selects an AI campaign profile here,
+# but it must never delay the beginning of her storyline.
+# The actual strategic delay is applied at the fleet decision.
 # =========================================================
 
 segrellion_initialize_daenerys_aggression_effect = {
@@ -80,10 +84,11 @@ segrellion_initialize_daenerys_aggression_effect = {
 			}
 
 			add_character_flag = segrellion_daenerys_invasion_event_scheduled
+			add_character_flag = segrellion_daenerys_story_opening_scheduled
 
 			trigger_event = {
 				id = segrellion_daenerys_invasion.0001
-				days = { 15 30 }
+				days = { 3 7 }
 			}
 		}
 
@@ -95,6 +100,7 @@ segrellion_initialize_daenerys_aggression_effect = {
 		else = {
 
 			add_character_flag = segrellion_daenerys_invasion_event_scheduled
+			add_character_flag = segrellion_daenerys_story_opening_scheduled
 
 			# =================================================
 			# HARD WAR LOCK
@@ -158,9 +164,9 @@ segrellion_initialize_daenerys_aggression_effect = {
 
 
 			# =============================================
-			# PEACEFUL
+			# CAMPAIGN PROFILE: PEACEFUL
 			#
-			# Daenerys consciously rejects Westeros.
+			# .0001 uses this profile to choose the Free Cities.
 			# =============================================
 
 			if = {
@@ -175,19 +181,13 @@ segrellion_initialize_daenerys_aggression_effect = {
 				}
 
 				add_character_flag = segrellion_daenerys_ai_free_cities_route
-
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0001
-					days = { 15 30 }
-				}
 			}
 
 
 			# =============================================
-			# PASSIVE
+			# CAMPAIGN PROFILE: PASSIVE
 			#
-			# 7-12 years, matching the game-rule description.
-			# Do not replace this with the short internal event delays.
+			# The 7-12 year delay is applied later at .0006.
 			# =============================================
 
 			else_if = {
@@ -202,19 +202,13 @@ segrellion_initialize_daenerys_aggression_effect = {
 				}
 
 				add_character_flag = segrellion_daenerys_ai_slow_fleet
-
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0001
-					days = { 2555 4380 }
-				}
 			}
 
 
 			# =============================================
-			# DEFAULT
+			# CAMPAIGN PROFILE: DEFAULT
 			#
-			# 2-5 years, matching the game-rule description.
-			# This is the strategic invasion delay, not flavor pacing.
+			# The 2-5 year delay is applied later at .0006.
 			# =============================================
 
 			else_if = {
@@ -229,16 +223,11 @@ segrellion_initialize_daenerys_aggression_effect = {
 				}
 
 				add_character_flag = segrellion_daenerys_ai_standard_fleet
-
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0001
-					days = { 730 1825 }
-				}
 			}
 
 
 			# =============================================
-			# AGGRESSIVE
+			# CAMPAIGN PROFILE: AGGRESSIVE
 			# =============================================
 
 			else_if = {
@@ -253,24 +242,25 @@ segrellion_initialize_daenerys_aggression_effect = {
 				}
 
 				add_character_flag = segrellion_daenerys_ai_rush_crossing
-
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0001
-					days = { 1 7 }
-				}
 			}
 
 
 			# =============================================
-			# FALLBACK = DEFAULT (2-5 years)
+			# FALLBACK PROFILE = DEFAULT
 			# =============================================
 
 			else = {
+				add_character_flag = segrellion_daenerys_ai_standard_fleet
+			}
 
-				trigger_event = {
-					id = segrellion_daenerys_invasion.0001
-					days = { 730 1825 }
-				}
+
+			# Story begins promptly for every AI profile. The selected
+			# profile is consumed only when Daenerys reaches .0006 and
+			# must decide how quickly to launch the campaign.
+
+			trigger_event = {
+				id = segrellion_daenerys_invasion.0001
+				days = { 3 7 }
 			}
 		}
 	}
@@ -286,6 +276,43 @@ segrellion_initialize_daenerys_aggression_effect = {
 segrellion_daenerys_invasion_peace_guard_effect = {
 
 	character:Targaryen_9 ?= {
+
+		# Save-compatible repair for campaigns created while .0001
+		# inherited the old 2-5 / 7-12 year aggression delay. The old
+		# delayed event may remain in the queue, but it will harmlessly
+		# fail its trigger after this accelerated opening is resolved.
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+				is_ai = yes
+
+				has_character_flag = segrellion_daenerys_invasion_event_scheduled
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_story_opening_scheduled
+				}
+
+				NOR = {
+					has_character_flag = segrellion_daenerys_invasion_committed
+					has_character_flag = segrellion_daenerys_invasion_delayed_once
+					has_character_flag = segrellion_daenerys_invasion_abandoned
+					has_character_flag = segrellion_daenerys_special_story_abandoned
+					has_character_flag = segrellion_daenerys_free_cities_path
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_story_opening_scheduled
+
+
+			trigger_event = {
+				id = segrellion_daenerys_invasion.0001
+				days = { 3 7 }
+			}
+		}
 
 		if = {
 
