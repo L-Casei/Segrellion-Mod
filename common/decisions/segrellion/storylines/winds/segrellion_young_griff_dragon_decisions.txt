@@ -4,7 +4,11 @@
 
 segrellion_young_griff_need_dragon_decision = {
 
-	decision_group_type = major
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_young_griff_need_dragon_decision_background.dds"
+	}
+
+	sort_order = 175
 
 	desc = segrellion_young_griff_need_dragon_decision_desc
 
@@ -12,6 +16,10 @@ segrellion_young_griff_need_dragon_decision = {
 
 	confirm_text = segrellion_young_griff_need_dragon_decision_confirm
 
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
 
 	is_shown = {
 
@@ -27,14 +35,14 @@ segrellion_young_griff_need_dragon_decision = {
 		}
 
 		NOT = {
-			has_trait = dragonrider
-		}
-
-		NOT = {
 			has_title = title:h_the_iron_throne
 		}
 	}
 
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
 
 	is_valid = {
 
@@ -42,11 +50,54 @@ segrellion_young_griff_need_dragon_decision = {
 
 		is_imprisoned = no
 
+
 		NOT = {
 			exists = current_travel_plan
 		}
+
+
+		# -------------------------------------------------
+		# NO DRAGON
+		# -------------------------------------------------
+
+		custom_description = {
+
+			text = segrellion_young_griff_need_dragon_no_dragon_requirement
+
+			NOR = {
+
+				has_trait = dragonrider
+
+
+				any_relation = {
+					type = agot_dragon
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# NO DRAGON EGG
+		# -------------------------------------------------
+
+		custom_description = {
+
+			text = segrellion_young_griff_need_dragon_no_egg_requirement
+
+			NOT = {
+
+				any_character_artifact = {
+
+					has_variable = dragon_egg
+				}
+			}
+		}
 	}
 
+
+	# =====================================================
+	# ROUTE SELECTOR
+	# =====================================================
 
 	widget = {
 
@@ -55,6 +106,8 @@ segrellion_young_griff_need_dragon_decision = {
 		controller = decision_option_list_controller
 
 		decision_to_second_step_button = "segrellion_young_griff_need_dragon_next_step"
+
+		show_from_start = yes
 
 
 		# =================================================
@@ -67,7 +120,7 @@ segrellion_young_griff_need_dragon_decision = {
 
 			localization = segrellion_young_griff_dragon_choice_egg
 
-			current_description = segrellion_young_griff_dragon_choice_egg_desc
+			current_description = segrellion_young_griff_dragon_choice_egg_tt
 
 			icon = "gfx/interface/icons/message_feed/intrigue.dds"
 
@@ -82,6 +135,10 @@ segrellion_young_griff_need_dragon_decision = {
 			}
 
 
+			# This only determines the preferred/default
+			# widget selection.
+			#
+			# Actual AI randomness is handled in effect.
 			ai_chance = {
 				value = 25
 			}
@@ -89,7 +146,7 @@ segrellion_young_griff_need_dragon_decision = {
 
 
 		# =================================================
-		# TAKE ONE OF DAENERYS' DRAGONS
+		# DAENERYS' DRAGON
 		# =================================================
 
 		item = {
@@ -98,7 +155,7 @@ segrellion_young_griff_need_dragon_decision = {
 
 			localization = segrellion_young_griff_dragon_choice_daenerys
 
-			current_description = segrellion_young_griff_dragon_choice_daenerys_desc
+			current_description = segrellion_young_griff_dragon_choice_daenerys_tt
 
 			icon = "gfx/interface/icons/message_feed/martial.dds"
 
@@ -109,9 +166,11 @@ segrellion_young_griff_need_dragon_decision = {
 
 					is_alive = yes
 
+
 					any_courtier = {
 
 						has_trait = dragon
+
 
 						NOT = {
 							exists = var:current_rider
@@ -124,7 +183,19 @@ segrellion_young_griff_need_dragon_decision = {
 			is_valid = {
 
 				character:Targaryen_9 ?= {
+
 					is_alive = yes
+
+
+					any_courtier = {
+
+						has_trait = dragon
+
+
+						NOT = {
+							exists = var:current_rider
+						}
+					}
 				}
 			}
 
@@ -136,52 +207,138 @@ segrellion_young_griff_need_dragon_decision = {
 	}
 
 
+	# =====================================================
+	# EFFECTS
+	# =====================================================
+
 	effect = {
+
+		# Important warning shown to the player.
+		custom_tooltip = segrellion_young_griff_need_dragon_danger_warning_tt
+
+
+		trigger_if = {
+
+			limit = {
+				scope:segrellion_young_griff_dragon_choice_egg = yes
+			}
+
+			custom_tooltip = segrellion_young_griff_dragon_choice_egg_effect_tt
+		}
+
+
+		trigger_if = {
+
+			limit = {
+				scope:segrellion_young_griff_dragon_choice_daenerys = yes
+			}
+
+			custom_tooltip = segrellion_young_griff_dragon_choice_daenerys_effect_tt
+		}
+
 
 		hidden_effect = {
 
 			add_character_flag = segrellion_young_griff_dragon_path_chosen
 
 
+			# =================================================
+			# AI
+			#
+			# Real 25 / 75 random roll.
+			# =================================================
+
 			if = {
 
 				limit = {
-					scope:segrellion_young_griff_dragon_choice_egg = yes
+					is_ai = yes
 				}
 
 
-				add_character_flag = segrellion_young_griff_dragon_path_egg
+				# Daenerys route exists.
+				if = {
+
+					limit = {
+
+						character:Targaryen_9 ?= {
+
+							is_alive = yes
 
 
-				trigger_event = {
+							any_courtier = {
 
-					id = segrellion_young_griff_dragon.0001
+								has_trait = dragon
 
-					days = { 30 60 }
+
+								NOT = {
+									exists = var:current_rider
+								}
+							}
+						}
+					}
+
+
+					random_list = {
+
+						25 = {
+
+							segrellion_young_griff_choose_dragon_egg_route_effect = yes
+						}
+
+
+						75 = {
+
+							segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
+						}
+					}
+				}
+
+
+				# Daenerys route unavailable.
+				else = {
+
+					segrellion_young_griff_choose_dragon_egg_route_effect = yes
 				}
 			}
 
 
-			else_if = {
+			# =================================================
+			# PLAYER
+			# =================================================
 
-				limit = {
-					scope:segrellion_young_griff_dragon_choice_daenerys = yes
+			else = {
+
+				if = {
+
+					limit = {
+						scope:segrellion_young_griff_dragon_choice_egg = yes
+					}
+
+
+					segrellion_young_griff_choose_dragon_egg_route_effect = yes
 				}
 
 
-				add_character_flag = segrellion_young_griff_dragon_path_daenerys
+				else_if = {
+
+					limit = {
+						scope:segrellion_young_griff_dragon_choice_daenerys = yes
+					}
 
 
-				trigger_event = {
-
-					id = segrellion_young_griff_dragon.0100
-
-					days = { 15 30 }
+					segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
 				}
 			}
 		}
 	}
 
+
+	# =====================================================
+	# AI
+	#
+	# 33 = priority/weight of taking the decision.
+	# NOT a 33% coin flip.
+	# =====================================================
 
 	ai_check_interval = 30
 
@@ -195,6 +352,6 @@ segrellion_young_griff_need_dragon_decision = {
 
 
 	ai_will_do = {
-		base = 100
+		base = 33
 	}
 }

@@ -208,139 +208,6 @@ segrellion_young_griff_after_unicorn_returns_effect = {
 	}
 }
 
-# =========================================================
-# YOUNG GRIFF - THRONE STORY REPAIR
-#
-# PATH 1:
-# Independent six-month route after abandoning Daemon.
-#
-# PATH 2:
-# Waits for The Unicorn Returns and then Varys.
-# =========================================================
-
-segrellion_young_griff_force_iron_throne_progression_effect = {
-
-
-	# =====================================================
-	# PATH 2 - REPAIR STATE AFTER UNICORN RETURNS
-	# =====================================================
-
-	if = {
-
-		limit = {
-
-			character:Segrellion_60 ?= {
-
-				has_character_flag = segrellion_unicorn_returns_resolved
-			}
-
-
-			character:IAF_Young_Griff_1 ?= {
-
-				is_alive = yes
-
-				has_character_flag = segrellion_young_griff_canon_path_2
-
-
-				NOT = {
-					has_character_flag = segrellion_young_griff_daemon_war_resolved
-				}
-			}
-		}
-
-
-		character:IAF_Young_Griff_1 = {
-
-			add_character_flag = segrellion_young_griff_daemon_war_resolved
-
-			remove_character_flag = segrellion_young_griff_waiting_for_daemon
-
-			add_character_flag = segrellion_young_griff_free_for_iron_throne
-		}
-	}
-
-
-	character:IAF_Young_Griff_1 ?= {
-
-
-		# =================================================
-		# PATH 1
-		#
-		# Stannis/Daenerys split.
-		# If the original 7900 schedule was lost, restore it.
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				is_alive = yes
-				is_imprisoned = no
-
-				has_character_flag = segrellion_young_griff_canon_path_1
-
-				has_character_flag = segrellion_young_griff_free_for_iron_throne
-
-
-				OR = {
-
-					has_character_flag = segrellion_young_griff_left_daemon_stannis
-
-					has_character_flag = segrellion_young_griff_left_daemon_daenerys
-				}
-
-
-				NOT = {
-					has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
-				}
-
-				NOT = {
-					has_character_flag = segrellion_young_griff_independent_throne_path_started
-				}
-
-				NOT = {
-					has_character_flag = segrellion_young_griff_iron_throne_war_started
-				}
-
-				NOT = {
-					has_title = title:h_the_iron_throne
-				}
-			}
-
-
-			add_character_flag = segrellion_young_griff_independent_throne_path_scheduled
-
-
-			trigger_event = {
-
-				id = segrellion_young_griff.7900
-
-				months = 6
-			}
-		}
-
-
-		# =================================================
-		# PATH 2
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				is_alive = yes
-
-				has_character_flag = segrellion_young_griff_canon_path_2
-
-				has_character_flag = segrellion_young_griff_daemon_war_resolved
-			}
-
-
-			segrellion_young_griff_try_schedule_path_2_varys_effect = yes
-		}
-	}
-}
-
 
 # =========================================================
 # YOUNG GRIFF FIGHTS FOR DAENERYS' THRONE
@@ -689,6 +556,58 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 
 			segrellion_young_griff_try_schedule_path_1_varys_effect = yes
 		}
+
+
+		# =========================================================
+		# PATH 1 - VARYS FINAL PLAN RECOVERY
+		#
+		# 7900 already happened, but 7910 was lost or failed.
+		# =========================================================
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_imprisoned = no
+
+
+				has_character_flag = segrellion_young_griff_canon_path_1
+
+				has_character_flag = segrellion_young_griff_independent_throne_path_started
+
+				has_character_flag = segrellion_young_griff_varys_contacted
+
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_varys_seen
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_varys_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_iron_throne_war_started
+				}
+
+				NOT = {
+					has_title = title:h_the_iron_throne
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_independent_varys_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.7910
+
+				days = 1
+			}
+		}
 	}
 }
 
@@ -711,7 +630,7 @@ segrellion_young_griff_try_schedule_path_2_varys_effect = {
 			has_character_flag = segrellion_young_griff_canon_path_2
 			has_character_flag = segrellion_young_griff_daemon_war_resolved
 			has_character_flag = segrellion_young_griff_arianne_route_resolved
-			has_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+			has_character_flag = segrellion_young_griff_varys_contacted
 
 			NOT = {
 				has_character_flag = segrellion_young_griff_path_2_varys_scheduled
@@ -1943,5 +1862,36 @@ segrellion_young_griff_schedule_margaery_effect = {
 				days = 1
 			}
 		}
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF - DRAGON ROUTES
+# =========================================================
+
+segrellion_young_griff_choose_dragon_egg_route_effect = {
+
+	add_character_flag = segrellion_young_griff_dragon_path_egg
+
+
+	trigger_event = {
+
+		id = segrellion_young_griff_dragon.0001
+
+		days = { 30 60 }
+	}
+}
+
+
+segrellion_young_griff_choose_daenerys_dragon_route_effect = {
+
+	add_character_flag = segrellion_young_griff_dragon_path_daenerys
+
+
+	trigger_event = {
+
+		id = segrellion_young_griff_dragon.0100
+
+		days = { 15 30 }
 	}
 }

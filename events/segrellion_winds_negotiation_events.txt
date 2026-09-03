@@ -3450,3 +3450,64 @@ segrellion_support.6200 = {
 		}
 	}
 }
+
+
+# =========================================================
+# 6210 - THE DEBT IS PAID
+# Root = Daemon
+# =========================================================
+
+segrellion_support.6210 = {
+
+	type = character_event
+
+	title = segrellion_support.6210.t
+	desc = segrellion_support.6210.desc
+
+	theme = stewardship
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_paid_in_full
+
+		NOT = {
+			has_character_flag = segrellion_vale_debt_completion_event_seen
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_vale_debt_completion_event_seen
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_content
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_vale.holder
+
+		animation = personality_content
+	}
+
+
+	option = {
+
+		name = segrellion_support.6210.a
+
+
+		add_prestige = 100
+	}
+}

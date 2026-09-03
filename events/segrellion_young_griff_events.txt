@@ -3332,6 +3332,9 @@ segrellion_young_griff.7900 = {
 		name = segrellion_young_griff.7900.a
 
 
+		add_character_flag = segrellion_young_griff_independent_varys_scheduled
+
+
 		trigger_event = {
 
 			id = segrellion_young_griff.7910
@@ -3377,7 +3380,7 @@ segrellion_young_griff.7910 = {
 		has_character_flag = segrellion_young_griff_canon_path_1
 		has_character_flag = segrellion_young_griff_independent_throne_path_started
 
-		has_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+		has_character_flag = segrellion_young_griff_varys_contacted
 
 		NOT = {
 			has_character_flag = segrellion_young_griff_independent_varys_seen
@@ -3392,10 +3395,34 @@ segrellion_young_griff.7910 = {
 		}
 	}
 
+	on_trigger_fail = {
+		remove_character_flag = segrellion_young_griff_independent_varys_scheduled
+	}
+
 
 	immediate = {
 
+		remove_character_flag = segrellion_young_griff_independent_varys_scheduled
+
+
 		add_character_flag = segrellion_young_griff_independent_varys_seen
+
+
+		# Repair older saves where this redundant state flag
+		# was lost despite Varys having already contacted Aegon.
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+		}
 	}
 
 
@@ -5173,6 +5200,10 @@ segrellion_young_griff.8300 = {
 		}
 	}
 
+	on_trigger_fail = {
+		remove_character_flag = segrellion_young_griff_path_2_varys_scheduled
+	}
+
 
 	immediate = {
 
@@ -5241,6 +5272,10 @@ segrellion_young_griff.8310 = {
 		NOT = {
 			has_character_flag = segrellion_young_griff_path_2_varys_seen
 		}
+	}
+
+	on_trigger_fail = {
+		remove_character_flag = segrellion_young_griff_path_2_varys_scheduled
 	}
 
 

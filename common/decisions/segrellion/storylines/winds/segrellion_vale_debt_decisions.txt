@@ -159,96 +159,11 @@ segrellion_repay_vale_debt_decision = {
 
 	effect = {
 
-		# =================================================
-		# 100
-		# =================================================
+		hidden_effect = {
 
-		if = {
-
-			limit = {
-				scope:segrellion_vale_repayment_100 = yes
-			}
-
-			add_gold = -100
-
-			var:segrellion_vale_creditor ?= {
-
-				if = {
-					limit = { is_alive = yes }
-					add_gold = 100
-				}
-			}
-
-			change_variable = {
-				name = segrellion_vale_debt
-				subtract = 100
-			}
-		}
-
-
-		# =================================================
-		# 250
-		# =================================================
-
-		else_if = {
-
-			limit = {
-				scope:segrellion_vale_repayment_250 = yes
-			}
-
-			add_gold = -250
-
-			var:segrellion_vale_creditor ?= {
-
-				if = {
-					limit = { is_alive = yes }
-					add_gold = 250
-				}
-			}
-
-			change_variable = {
-				name = segrellion_vale_debt
-				subtract = 250
-			}
-		}
-
-
-		# =================================================
-		# 500
-		# =================================================
-
-		else_if = {
-
-			limit = {
-				scope:segrellion_vale_repayment_500 = yes
-			}
-
-			add_gold = -500
-
-			var:segrellion_vale_creditor ?= {
-
-				if = {
-					limit = { is_alive = yes }
-					add_gold = 500
-				}
-			}
-
-			change_variable = {
-				name = segrellion_vale_debt
-				subtract = 500
-			}
-		}
-
-
-		# =================================================
-		# FULL BALANCE
-		# =================================================
-
-		else_if = {
-
-			limit = {
-				scope:segrellion_vale_repayment_full = yes
-			}
+			# =================================================
+			# SAVE THE PAYEE
+			# =================================================
 
 			var:segrellion_vale_creditor ?= {
 
@@ -258,33 +173,252 @@ segrellion_repay_vale_debt_decision = {
 						is_alive = yes
 					}
 
-					add_gold = root.var:segrellion_vale_debt
+
+					save_scope_as = segrellion_vale_payment_recipient
 				}
 			}
 
-			add_gold = {
-				value = var:segrellion_vale_debt
-				multiply = -1
+
+			# Creditor died: the debt remains owed to the Vale.
+			if = {
+
+				limit = {
+
+					NOT = {
+						exists = scope:segrellion_vale_payment_recipient
+					}
+
+
+					title:e_the_vale ?= {
+						exists = holder
+					}
+				}
+
+
+				title:e_the_vale.holder = {
+
+					save_scope_as = segrellion_vale_payment_recipient
+				}
 			}
 
-			set_variable = {
-				name = segrellion_vale_debt
-				value = 0
+
+			# =================================================
+			# 100 GOLD
+			# =================================================
+
+			if = {
+
+				limit = {
+					scope:segrellion_vale_repayment_100 = yes
+				}
+
+
+				if = {
+
+					limit = {
+						exists = scope:segrellion_vale_payment_recipient
+					}
+
+
+					pay_short_term_gold = {
+
+						target = scope:segrellion_vale_payment_recipient
+
+						gold = 100
+					}
+				}
+
+
+				else = {
+
+					remove_short_term_gold = 100
+				}
+
+
+				change_variable = {
+
+					name = segrellion_vale_debt
+
+					add = -100
+				}
 			}
-		}
 
 
-		# =================================================
-		# DEBT COMPLETELY PAID
-		# =================================================
+			# =================================================
+			# 250 GOLD
+			# =================================================
 
-		if = {
+			else_if = {
 
-			limit = {
-				var:segrellion_vale_debt <= 0
+				limit = {
+					scope:segrellion_vale_repayment_250 = yes
+				}
+
+
+				if = {
+
+					limit = {
+						exists = scope:segrellion_vale_payment_recipient
+					}
+
+
+					pay_short_term_gold = {
+
+						target = scope:segrellion_vale_payment_recipient
+
+						gold = 250
+					}
+				}
+
+
+				else = {
+
+					remove_short_term_gold = 250
+				}
+
+
+				change_variable = {
+
+					name = segrellion_vale_debt
+
+					add = -250
+				}
 			}
 
-			segrellion_finish_vale_debt_effect = yes
+
+			# =================================================
+			# 500 GOLD
+			# =================================================
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_vale_repayment_500 = yes
+				}
+
+
+				if = {
+
+					limit = {
+						exists = scope:segrellion_vale_payment_recipient
+					}
+
+
+					pay_short_term_gold = {
+
+						target = scope:segrellion_vale_payment_recipient
+
+						gold = 500
+					}
+				}
+
+
+				else = {
+
+					remove_short_term_gold = 500
+				}
+
+
+				change_variable = {
+
+					name = segrellion_vale_debt
+
+					add = -500
+				}
+			}
+
+
+			# =================================================
+			# FULL REMAINING BALANCE
+			# =================================================
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_vale_repayment_full = yes
+				}
+
+
+				save_scope_value_as = {
+
+					name = segrellion_vale_payment_amount
+
+					value = var:segrellion_vale_debt
+				}
+
+
+				if = {
+
+					limit = {
+						exists = scope:segrellion_vale_payment_recipient
+					}
+
+
+					pay_short_term_gold = {
+
+						target = scope:segrellion_vale_payment_recipient
+
+						gold = scope:segrellion_vale_payment_amount
+					}
+				}
+
+
+				else = {
+
+					remove_short_term_gold = scope:segrellion_vale_payment_amount
+				}
+
+
+				set_variable = {
+
+					name = segrellion_vale_debt
+
+					value = 0
+				}
+			}
+
+
+			# =================================================
+			# FULLY REPAID
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					var:segrellion_vale_debt <= 0
+				}
+
+
+				if = {
+
+					limit = {
+						exists = scope:segrellion_vale_payment_recipient
+					}
+
+
+					set_variable = {
+
+						name = segrellion_vale_debt_repaid_creditor
+
+						value = scope:segrellion_vale_payment_recipient
+					}
+				}
+
+
+				add_character_flag = segrellion_vale_debt_paid_in_full
+
+
+				segrellion_finish_vale_debt_effect = yes
+
+
+				trigger_event = {
+
+					id = segrellion_support.6210
+
+					days = 1
+				}
+			}
 		}
 	}
 
