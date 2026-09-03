@@ -907,6 +907,22 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 
 		character:Black_Unicorn_1 = {
 
+			if = {
+
+				limit = {
+
+					title:d_laamp_red_unicorn.holder ?= {
+						this = character:Black_Unicorn_1
+					}
+				}
+
+
+				character:Black_Unicorn_1 = {
+
+					destroy_title = title:d_laamp_red_unicorn
+				}
+			}
+
 			set_employer = root
 
 			return_to_court = yes
@@ -2220,18 +2236,31 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 	segrellion_black_unicorn_record_daemon_union_effect = yes
 
 
+	# =====================================================
+	# REMOVE CURRENT WIFE
+	# =====================================================
+
 	if = {
 
 		limit = {
 			has_variable = segrellion_black_unicorn_current_wife
 		}
 
+
 		segrellion_black_unicorn_abandon_current_wife_effect = yes
 	}
 
 
+	# =====================================================
+	# BREAK DAEMON BETROTHAL
+	# =====================================================
+
 	segrellion_black_unicorn_break_betrothal_for_visenya_effect = yes
 
+
+	# =====================================================
+	# BREAK VISENYA BETROTHAL
+	# =====================================================
 
 	character:Black_Unicorn_1 = {
 
@@ -2241,32 +2270,78 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 				exists = betrothed
 			}
 
+
 			break_betrothal = betrothed
 		}
 	}
 
 
-	marry = character:Black_Unicorn_1
-
-
-	add_character_flag = segrellion_black_unicorn_visenya_married_daemon
-
-
-	character:Black_Unicorn_1 = {
-
-		add_character_flag = segrellion_black_unicorn_married_daemon
-	}
-
+	# =====================================================
+	# FIRST MAKE VISENYA A VALID COURT CHARACTER
+	# =====================================================
 
 	segrellion_black_unicorn_visenya_join_daemon_effect = yes
 
-	segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
 
-	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+	# =====================================================
+	# THEN MARRY
+	# =====================================================
 
-	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+	marry = character:Black_Unicorn_1
 
-	add_character_flag = segrellion_black_unicorn_part_iii_marriage_resolution
+
+	# =====================================================
+	# VERIFY THAT CK3 ACTUALLY CREATED THE MARRIAGE
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			is_spouse_of = character:Black_Unicorn_1
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_married_daemon
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_married_daemon
+		}
+
+
+		segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
+
+		segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+
+
+		add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+		add_character_flag = segrellion_black_unicorn_part_iii_marriage_resolution
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0881
+
+			days = 1
+		}
+	}
+
+
+	else = {
+
+		add_character_flag = segrellion_black_unicorn_visenya_marriage_failed
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0889
+
+			days = 1
+		}
+	}
 }
 
 
