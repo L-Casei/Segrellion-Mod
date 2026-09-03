@@ -4054,6 +4054,13 @@ segrellion_young_griff.8020 = {
 # 8030 - THE BOY KING
 # =========================================================
 
+# =========================================================
+# 8030 - THE BOY KING
+#
+# Root = Young Griff
+# Tommen's fate after the fall of King's Landing.
+# =========================================================
+
 segrellion_young_griff.8030 = {
 
 	type = character_event
@@ -4063,34 +4070,57 @@ segrellion_young_griff.8030 = {
 
 	theme = realm
 
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	trigger = {
 
 		this = character:IAF_Young_Griff_1
 
-		has_title = title:h_the_iron_throne
+		is_alive = yes
+
 
 		character:Baratheon_7 ?= {
+
 			is_alive = yes
+
 			is_imprisoned = yes
 		}
 	}
 
+
 	immediate = {
-		segrellion_young_griff_post_throne_conquest_effect = yes
+
+		# =================================================
+		# SAVE MARGAERY BEFORE TOMMEN'S MARRIAGE CAN
+		# BE BROKEN BY THE NIGHT'S WATCH.
+		# =================================================
+
+		character:Baratheon_7 = {
+
+			primary_spouse ?= {
+
+				save_scope_as = segrellion_tommen_spouse
+			}
+		}
 	}
+
 
 	left_portrait = {
 
 		character = root
-		animation = thinking
+
+		animation = personality_rational
 	}
 
 
 	right_portrait = {
 
 		character = character:Baratheon_7
-		animation = fear
+
+		animation = personality_fearful
 	}
 
 
@@ -4105,70 +4135,38 @@ segrellion_young_griff.8030 = {
 		custom_tooltip = segrellion_young_griff.8030.a.tt
 
 
-		character:Baratheon_7 = {
+		hidden_effect = {
 
-			if = {
-
-				limit = {
-					is_married = yes
-				}
-
-
-				every_spouse = {
-
-					divorce = prev
-				}
+			# Tommen cannot retain Deerfield after taking the black.
+			segrellion_transfer_tommen_deerfield_effect = {
+				RECIPIENT = root
 			}
 
 
-			release_from_prison = yes
+			character:Baratheon_7 = {
 
-			add_trait = nightswatch
+				release_from_prison = yes
 
-			add_character_flag = segrellion_tommen_spared_by_young_griff
-			add_character_flag = segrellion_tommen_sent_to_nights_watch
+				add_trait = nightswatch
 
+				add_character_flag = segrellion_tommen_spared_by_young_griff
 
-			title:k_the_wall.holder ?= {
-
-				prev = {
-
-					set_employer = prev
-				}
+				add_character_flag = segrellion_tommen_sent_to_nights_watch
 			}
 
 
-			set_location = title:c_castle_black.title_province
-		}
-
-
-		character:Eunuch_1 ?= {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_varys_tommen_spared_opinion
-			}
-		}
-
-
-		trigger_event = {
-
-			id = segrellion_young_griff.8100
-
-			days = 2
+			add_character_flag = segrellion_young_griff_tommen_fate_resolved
 		}
 
 
 		ai_chance = {
-			base = 90
+			base = 70
 		}
 	}
 
 
 	# =====================================================
-	# WARD
+	# SPARE HIM - KEEP HIM AS A WARD
 	# =====================================================
 
 	option = {
@@ -4178,103 +4176,26 @@ segrellion_young_griff.8030 = {
 		custom_tooltip = segrellion_young_griff.8030.b.tt
 
 
-		character:Baratheon_7 = {
+		hidden_effect = {
 
-			if = {
+			character:Baratheon_7 = {
 
-				limit = {
-					is_married = yes
-				}
+				release_from_prison = yes
 
-				every_spouse = {
-					divorce = prev
-				}
+				set_employer = root
+
+				add_character_flag = segrellion_tommen_spared_by_young_griff
+
+				add_character_flag = segrellion_tommen_kept_as_ward
 			}
 
-			release_from_prison = yes
 
-			set_employer = root
-
-			set_location = title:c_kings_landing.title_province
-
-			set_relation_guardian = root
-
-			add_character_flag = segrellion_tommen_ward_of_young_griff
-		}
-
-
-		set_relation_ward = character:Baratheon_7
-
-
-		add_dread = -25
-
-
-		add_character_modifier = {
-
-			modifier = segrellion_young_griff_tommen_ward_mercy_modifier
-		}
-
-
-		character:Eunuch_1 ?= {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_varys_tommen_spared_opinion
-			}
-		}
-
-
-		trigger_event = {
-
-			id = segrellion_young_griff.8100
-
-			days = 2
+			add_character_flag = segrellion_young_griff_tommen_fate_resolved
 		}
 
 
 		ai_chance = {
-			base = 5
-		}
-	}
-
-
-	# =====================================================
-	# EXECUTE
-	# =====================================================
-
-	option = {
-
-		name = segrellion_young_griff.8030.c
-
-		custom_tooltip = segrellion_young_griff.8030.c.tt
-
-
-		character:Baratheon_7 = {
-
-			death = {
-
-				death_reason = death_execution
-
-				killer = root
-			}
-		}
-
-
-		add_character_flag = segrellion_young_griff_executed_tommen
-
-
-		trigger_event = {
-
-			id = segrellion_young_griff.8040
-
-			days = 1
-		}
-
-
-		ai_chance = {
-			base = 5
+			base = 30
 		}
 	}
 }
@@ -4846,6 +4767,95 @@ segrellion_young_griff.8120 = {
 
 
 		segrellion_young_griff_after_cersei_settlement_effect = yes
+	}
+}
+
+# =========================================================
+# 8170 - A SEAT FOR THE SENTINEL
+# =========================================================
+
+segrellion_young_griff.8170 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8170.t
+	desc = segrellion_young_griff.8170.desc
+
+	theme = realm
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		title:d_deerfield.holder = root
+
+
+		character:Vladwyn_5 ?= {
+
+			is_alive = yes
+
+			NOR = {
+
+				has_character_flag = segrellion_vladwyn_given_westerlands
+
+				has_character_flag = segrellion_vladwyn_lord_of_stormlands
+			}
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_deerfield_settlement_scheduled
+
+		add_character_flag = segrellion_young_griff_deerfield_settlement_resolved
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_deerfield_settlement_scheduled
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Vladwyn_5
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8170.a
+
+		custom_tooltip = segrellion_young_griff.8170.a.tt
+
+
+		hidden_effect = {
+
+			segrellion_young_griff_grant_deerfield_effect = {
+				RECIPIENT = character:Vladwyn_5
+			}
+
+
+			character:Vladwyn_5 = {
+				add_character_flag = segrellion_vladwyn_given_deerfield
+			}
+
+
+			add_character_flag = segrellion_young_griff_deerfield_settlement_resolved
+		}
 	}
 }
 

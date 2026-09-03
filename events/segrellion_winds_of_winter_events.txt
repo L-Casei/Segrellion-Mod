@@ -45,6 +45,13 @@ segrellion_winds.0001 = {
 			target = scope:flamelands_defender
 			target_title = title:e_flamelands
 		}
+
+		trigger_event = {
+
+			id = segrellion_winds.0399
+
+			days = 1
+		}
 	}
 }
 
@@ -1292,6 +1299,80 @@ segrellion_winds.0301 = {
 		}
 	}
 }
+
+# =========================================================
+# 0399 - DAEMON MARCHES ON THE BEACON
+#
+# Same system as Aegon's King's Landing watcher.
+# We check DAEMON HIMSELF, not an army scope.
+# =========================================================
+
+segrellion_winds.0399 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_at_war = yes
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+
+		NOT = {
+			has_character_flag = segrellion_beacon_surrender_demanded
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# DAEMON HIMSELF HAS REACHED THE BEACON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				location = title:b_castle_farring.title_province
+			}
+
+
+			add_character_flag = segrellion_beacon_surrender_demanded
+
+			remove_character_modifier = segrellion_beacon_awaits_modifier
+
+
+			trigger_event = {
+
+				id = segrellion_winds.0401
+			}
+		}
+
+
+		# =================================================
+		# NOT THERE YET
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_winds.0399
+
+				days = 2
+			}
+		}
+	}
+}
+
 
 # =========================================================
 # 0401 - DAEMON BEFORE THE BEACON

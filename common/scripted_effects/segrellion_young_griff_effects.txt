@@ -2060,9 +2060,12 @@ segrellion_young_griff_post_throne_conquest_effect = {
 		set_location = title:c_kings_landing.title_province
 
 
-		segrellion_young_griff_absorb_targaryen_host_effect = yes
+		hidden_effect = {
 
-		segrellion_young_griff_vassalize_dorne_effect = yes
+			segrellion_young_griff_absorb_targaryen_host_effect = yes
+
+			segrellion_young_griff_vassalize_dorne_effect = yes
+		}
 
 
 		add_character_flag = segrellion_young_griff_post_throne_consolidation_done
@@ -2193,5 +2196,194 @@ segrellion_young_griff_choose_daenerys_dragon_route_effect = {
 		id = segrellion_young_griff_dragon.0100
 
 		days = { 15 30 }
+	}
+}
+
+
+# =========================================================
+# TOMMEN - REMOVE DEERFIELD
+#
+# RECIPIENT = whoever inherits Deerfield after Tommen
+# =========================================================
+
+segrellion_transfer_tommen_deerfield_effect = {
+
+	$RECIPIENT$ = {
+		save_scope_as = segrellion_deerfield_recipient
+	}
+
+
+	create_title_and_vassal_change = {
+
+		type = conquest
+
+		save_scope_as = segrellion_tommen_deerfield_change
+
+		add_claim_on_loss = no
+	}
+
+
+	# =====================================================
+	# DUCHY OF DEERFIELD
+	# =====================================================
+
+	if = {
+
+		limit = {
+			title:d_deerfield.holder = character:Baratheon_7
+		}
+
+
+		title:d_deerfield = {
+
+			change_title_holder = {
+
+				holder = scope:segrellion_deerfield_recipient
+
+				change = scope:segrellion_tommen_deerfield_change
+			}
+		}
+	}
+
+
+	# =====================================================
+	# COUNTY
+	# =====================================================
+
+	if = {
+
+		limit = {
+			title:c_point_square.holder = character:Baratheon_7
+		}
+
+
+		title:c_point_square = {
+
+			change_title_holder = {
+
+				holder = scope:segrellion_deerfield_recipient
+
+				change = scope:segrellion_tommen_deerfield_change
+
+				take_baronies = yes
+			}
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_tommen_deerfield_change
+}
+
+# =========================================================
+# GRANT DEERFIELD
+# =========================================================
+
+segrellion_young_griff_grant_deerfield_effect = {
+
+	$RECIPIENT$ = {
+		save_scope_as = segrellion_deerfield_grant_recipient
+	}
+
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_deerfield_grant_change
+
+		add_claim_on_loss = no
+	}
+
+
+	title:d_deerfield = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_deerfield_grant_recipient
+
+			change = scope:segrellion_deerfield_grant_change
+		}
+	}
+
+
+	title:c_point_square = {
+
+		change_title_holder = {
+
+			holder = scope:segrellion_deerfield_grant_recipient
+
+			change = scope:segrellion_deerfield_grant_change
+
+			take_baronies = yes
+		}
+	}
+
+
+	scope:segrellion_deerfield_grant_recipient = {
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_vassal_of = root
+				}
+			}
+
+
+			change_liege = {
+
+				liege = root
+
+				change = scope:segrellion_deerfield_grant_change
+			}
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_deerfield_grant_change
+}
+
+# =========================================================
+# DAEMON SWEARS FEALTY TO AEGON
+# ROOT = Daemon
+# =========================================================
+
+segrellion_daemon_swear_fealty_to_aegon_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			is_independent_ruler = yes
+
+
+			character:IAF_Young_Griff_1 ?= {
+				has_title = title:h_the_iron_throne
+			}
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = swear_fealty
+
+			save_scope_as = segrellion_daemon_aegon_fealty_change
+
+			add_claim_on_loss = no
+		}
+
+
+		change_liege = {
+
+			liege = character:IAF_Young_Griff_1
+
+			change = scope:segrellion_daemon_aegon_fealty_change
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_daemon_aegon_fealty_change
 	}
 }

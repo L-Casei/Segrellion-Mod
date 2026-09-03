@@ -16,7 +16,6 @@ monthly_global_pulse = {
 		segrellion_historical_dragons_progression
 		segrellion_icebringer_monthly_event_pulse
 		segrellion_icebringer_historical_loss_progression
-		segrellion_unicorn_returns_beacon_arrival_fallback
 		segrellion_daemon_parentage_progression
 		segrellion_deathwish_historical_progression
 		segrellion_winds_300_aftermath_check
@@ -42,6 +41,8 @@ monthly_global_pulse = {
 		segrellion_massey_secret_support_progression
 		segrellion_rhaegon_early_growth_progression
 		segrellion_black_unicorn_post_beacon_progression
+		segrellion_young_griff_deerfield_progression
+		segrellion_aegon_daemon_vassalage_progression
 	}
 }
 
@@ -264,8 +265,6 @@ segrellion_daenerys_followers_progression = {
 on_army_enter_province = {
 
 	on_actions = {
-
-		segrellion_unicorn_returns_beacon_arrival_check
 
 		segrellion_unicorn_returns_stormflame_commander_lock
 	}
@@ -1396,30 +1395,29 @@ segrellion_unicorn_returns_beacon_siege_check = {
 
 	trigger = {
 
-		scope:barony ?= {
-			this = title:b_castle_farring
-		}
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+		has_character_flag = segrellion_beacon_surrender_demanded
+
+		has_character_flag = segrellion_leo_refused_beacon_surrender
 
 
-		scope:war ?= {
-			is_attacker = character:Segrellion_60
-		}
+		location = title:b_castle_farring.title_province
 
 
-		character:Segrellion_60 ?= {
-
-			is_alive = yes
-
-			has_character_flag = segrellion_unicorn_returns_war_active
-
-			NOT = {
-				has_character_flag = segrellion_beacon_stormed_resolution
-			}
+		NOT = {
+			has_character_flag = segrellion_beacon_siege_resolved
 		}
 	}
 
 
 	effect = {
+
+		add_character_flag = segrellion_beacon_siege_resolved
 
 		character:Segrellion_60 = {
 
@@ -2202,198 +2200,94 @@ segrellion_stannis_iron_throne_war_setup = {
 			add_character_flag = segrellion_stannis_iron_throne_war_started
 		}
 
-
 		# =================================================
-		# THE NORTH
-		#
-		# Whoever currently holds e_the_north joins.
+		# JON SNOW
 		# =================================================
 
-		title:e_the_north.holder ?= {
+		if = {
 
-			save_scope_as = segrellion_stannis_north_ally
-
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					this != character:Baratheon_3
-				}
-
-
-				scope:war = {
-
-
-					# If the megawar system placed the
-					# Northern ruler against Stannis,
-					# remove that participation first.
-
-					if = {
-
-						limit = {
-
-							is_defender = scope:segrellion_stannis_north_ally
-						}
-
-
-						remove_participant = scope:segrellion_stannis_north_ally
-					}
-
-
-					# Force the ruler of the North
-					# onto Stannis' side.
-
-					if = {
-
-						limit = {
-
-							NOT = {
-
-								is_attacker = scope:segrellion_stannis_north_ally
-							}
-						}
-
-
-						add_attacker = scope:segrellion_stannis_north_ally
-					}
-				}
-
-
-				add_character_flag = segrellion_north_supported_stannis_iron_throne
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
 			}
 
 
-			# =================================================
-			# NORTHERN GREAT LORDS
-			#
-			# Direct vassals of the current ruler of the North.
-			#
-			# This naturally catches the major houses:
-			# Manderly, Glover, Umber, etc., without tying
-			# the storyline to individual character IDs.
-			# =================================================
+			global_var:segrellion_resurrected_jon = {
+				save_scope_as = segrellion_stannis_jon_ally
+			}
 
-			every_vassal = {
 
-				limit = {
+			scope:war = {
 
+				if = {
+
+					limit = {
+						is_defender = scope:segrellion_stannis_jon_ally
+					}
+
+					remove_participant = scope:segrellion_stannis_jon_ally
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_attacker = scope:segrellion_stannis_jon_ally
+						}
+					}
+
+					add_attacker = scope:segrellion_stannis_jon_ally
+				}
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				character:Stark_7 ?= {
 					is_alive = yes
-
 					is_landed = yes
+				}
+			}
 
-					this != character:Baratheon_3
+
+			scope:war = {
+
+				if = {
+
+					limit = {
+						is_defender = character:Stark_7
+					}
+
+					remove_participant = character:Stark_7
 				}
 
 
-				save_temporary_scope_as = segrellion_stannis_northern_bannerlord
+				if = {
 
+					limit = {
 
-				scope:war = {
-
-
-					if = {
-
-						limit = {
-
-							is_defender = scope:segrellion_stannis_northern_bannerlord
+						NOT = {
+							is_attacker = character:Stark_7
 						}
-
-
-						remove_participant = scope:segrellion_stannis_northern_bannerlord
 					}
 
-
-					if = {
-
-						limit = {
-
-							NOT = {
-
-								is_attacker = scope:segrellion_stannis_northern_bannerlord
-							}
-						}
-
-
-						add_attacker = scope:segrellion_stannis_northern_bannerlord
-					}
+					add_attacker = character:Stark_7
 				}
-
-
-				add_character_flag = segrellion_northern_bannerlord_supported_stannis
 			}
 		}
 
 
 		# =================================================
-		# THE VALE
+		# MANDERLY / GLOVER / DUSTIN
 		#
-		# No invitation and no AI choice.
-		#
-		# Whoever currently holds e_the_vale joins Stannis.
+		# Only these Northern houses follow Stannis.
 		# =================================================
 
-		title:e_the_vale.holder ?= {
-
-			save_scope_as = segrellion_stannis_vale_ally
-
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					this != character:Baratheon_3
-				}
-
-
-				scope:war = {
-
-
-					if = {
-
-						limit = {
-
-							is_defender = scope:segrellion_stannis_vale_ally
-						}
-
-
-						remove_participant = scope:segrellion_stannis_vale_ally
-					}
-
-
-					if = {
-
-						limit = {
-
-							NOT = {
-
-								is_attacker = scope:segrellion_stannis_vale_ally
-							}
-						}
-
-
-						add_attacker = scope:segrellion_stannis_vale_ally
-					}
-				}
-
-
-				add_character_flag = segrellion_vale_supported_stannis_iron_throne
-			}
-
-
-			# =================================================
-			# VALE GREAT LORDS
-			#
-			# Direct vassals of the current ruler of the Vale.
-			#
-			# Royce, Corbray and the other principal Vale
-			# lords are therefore taken from the actual
-			# current political setup.
-			# =================================================
+		title:e_the_north.holder ?= {
 
 			every_vassal = {
 
@@ -2403,25 +2297,30 @@ segrellion_stannis_iron_throne_war_setup = {
 
 					is_landed = yes
 
-					this != character:Baratheon_3
+
+					OR = {
+
+						house = house:house_Manderly
+
+						house = house:house_Glover
+
+						house = house:house_Dustin
+					}
 				}
 
 
-				save_temporary_scope_as = segrellion_stannis_vale_bannerlord
+				save_temporary_scope_as = segrellion_stannis_northern_ally
 
 
 				scope:war = {
 
-
 					if = {
 
 						limit = {
-
-							is_defender = scope:segrellion_stannis_vale_bannerlord
+							is_defender = scope:segrellion_stannis_northern_ally
 						}
 
-
-						remove_participant = scope:segrellion_stannis_vale_bannerlord
+						remove_participant = scope:segrellion_stannis_northern_ally
 					}
 
 
@@ -2430,18 +2329,16 @@ segrellion_stannis_iron_throne_war_setup = {
 						limit = {
 
 							NOT = {
-
-								is_attacker = scope:segrellion_stannis_vale_bannerlord
+								is_attacker = scope:segrellion_stannis_northern_ally
 							}
 						}
 
-
-						add_attacker = scope:segrellion_stannis_vale_bannerlord
+						add_attacker = scope:segrellion_stannis_northern_ally
 					}
 				}
 
 
-				add_character_flag = segrellion_vale_bannerlord_supported_stannis
+				add_character_flag = segrellion_northern_lord_supported_stannis
 			}
 		}
 	}
@@ -3087,6 +2984,140 @@ segrellion_jon_wait_for_stannis_progression = {
 						}
 					}
 				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - DEERFIELD SETTLEMENT
+# =========================================================
+
+segrellion_young_griff_deerfield_progression = {
+
+	trigger = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_deerfield_settlement_resolved
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_deerfield_settlement_scheduled
+			}
+		}
+
+
+		character:Vladwyn_5 ?= {
+			is_alive = yes
+		}
+
+
+		title:d_deerfield.holder = character:IAF_Young_Griff_1
+	}
+
+
+	effect = {
+
+		character:IAF_Young_Griff_1 = {
+
+
+			# =================================================
+			# JOFFREY ALREADY RECEIVED A GREAT LORDSHIP
+			# Aegon simply keeps Deerfield.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					character:Vladwyn_5 = {
+
+						OR = {
+
+							has_character_flag = segrellion_vladwyn_given_westerlands
+
+							has_character_flag = segrellion_vladwyn_lord_of_stormlands
+						}
+					}
+				}
+
+
+				add_character_flag = segrellion_young_griff_deerfield_settlement_resolved
+			}
+
+
+			# =================================================
+			# JOFFREY GOT NEITHER
+			# =================================================
+
+			else = {
+
+				add_character_flag = segrellion_young_griff_deerfield_settlement_scheduled
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.8170
+
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+segrellion_aegon_daemon_vassalage_progression = {
+
+	trigger = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			is_independent_ruler = yes
+
+			has_title = title:e_flamelands
+
+			NOT = {
+				has_character_flag = segrellion_daemon_aegon_status_scheduled
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daemon_aegon_status_resolved
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_status_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0001
+
+				days = { 7 14 }
 			}
 		}
 	}
