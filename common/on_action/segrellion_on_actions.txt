@@ -250,7 +250,17 @@ on_army_enter_province = {
 
 		segrellion_unicorn_returns_beacon_arrival_check
 
+		segrellion_unicorn_returns_stormflame_commander_lock
+
 		segrellion_young_griff_kings_landing_arrival_check
+	}
+}
+
+on_army_monthly = {
+
+	on_actions = {
+
+		segrellion_unicorn_returns_stormflame_commander_lock
 	}
 }
 
@@ -327,7 +337,23 @@ segrellion_unicorn_returns_leo_beacon_lock = {
 						}
 					}
 
+
+					# Clifford is the canonical field commander
+					# while he remains alive and available.
 					if = {
+						limit = {
+							character:Stormflame_13 ?= {
+								is_alive = yes
+								is_imprisoned = no
+							}
+						}
+
+						assign_commander = character:Stormflame_13
+					}
+
+
+					# If Clifford is dead, Eldon takes command.
+					else_if = {
 						limit = {
 							character:Stormflame_12 ?= {
 								is_alive = yes
@@ -337,6 +363,7 @@ segrellion_unicorn_returns_leo_beacon_lock = {
 
 						assign_commander = character:Stormflame_12
 					}
+
 
 					else = {
 						remove_commander = yes
@@ -1163,18 +1190,67 @@ segrellion_unicorn_returns_beacon_arrival_check = {
 
 	trigger = {
 
+		# on_army_enter_province:
+		# ROOT = owner of the army
+		# scope:army = army that just entered the province
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_unicorn_returns_war_active
+
+		NOT = {
+			has_character_flag = segrellion_beacon_surrender_demanded
+		}
+
+		scope:army ?= {
+			location = title:b_castle_farring.title_province
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_beacon_surrender_demanded
+
+		remove_character_modifier = segrellion_beacon_awaits_modifier
+
+		# INSTANT.
+		# Daemon has physically reached the Beacon.
+		trigger_event = {
+			id = segrellion_winds.0401
+		}
+	}
+}
+
+# =========================================================
+# THE UNICORN RETURNS
+# STORMFLAME FIELD COMMANDER LOCK
+#
+# ROOT = owner of the army
+# scope:army = army being processed
+#
+# Leo is eighty years old and remains at the Beacon.
+# Clifford commands the field host while alive.
+# Eldon replaces Clifford if necessary.
+# =========================================================
+
+segrellion_unicorn_returns_stormflame_commander_lock = {
+
+	trigger = {
+
+		this = character:Stormflame_3
+
 		character:Segrellion_60 ?= {
-
 			is_alive = yes
-
 			has_character_flag = segrellion_unicorn_returns_war_active
+		}
 
-			NOT = {
-				has_character_flag = segrellion_beacon_surrender_demanded
-			}
+		scope:army ?= {
 
-			any_army = {
-				location = title:b_castle_farring.title_province
+			army_commander ?= {
+				this = character:Stormflame_3
 			}
 		}
 	}
@@ -1182,16 +1258,47 @@ segrellion_unicorn_returns_beacon_arrival_check = {
 
 	effect = {
 
-		character:Segrellion_60 = {
+		scope:army = {
 
-			add_character_flag = segrellion_beacon_surrender_demanded
 
-			remove_character_modifier = segrellion_beacon_awaits_modifier
+			# CLIFFORD
+			if = {
+				limit = {
+					character:Stormflame_13 ?= {
+						is_alive = yes
+						is_imprisoned = no
+					}
+				}
 
-			trigger_event = {
-				id = segrellion_winds.0401
-				days = 1
+				assign_commander = character:Stormflame_13
 			}
+
+
+			# ELDON
+			else_if = {
+				limit = {
+					character:Stormflame_12 ?= {
+						is_alive = yes
+						is_imprisoned = no
+					}
+				}
+
+				assign_commander = character:Stormflame_12
+			}
+
+
+			else = {
+				remove_commander = yes
+			}
+		}
+
+
+		# Leo remains physically at the Beacon.
+		character:Stormflame_3 = {
+
+			set_knight_status = forbid
+
+			set_location = title:b_castle_farring.title_province
 		}
 	}
 }
