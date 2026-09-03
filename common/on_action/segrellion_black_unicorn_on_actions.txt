@@ -12,6 +12,64 @@ on_game_start_after_lobby = {
 	}
 }
 
+# =========================================================
+# THE BLACK UNICORN
+# SECRET PRE-LOBBY SETUP
+#
+# Rhaegon's existence, ownership and bond are established
+# before the playable interface is active.
+#
+# This prevents Visenya's dragon bond from appearing as a
+# new public taming during gameplay.
+# =========================================================
+
+segrellion_black_unicorn_secret_pre_lobby_setup = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				game_start_date = 8300.8.20
+
+
+				character:Black_Unicorn_1 ?= {
+
+					is_alive = yes
+				}
+			}
+
+
+			character:Black_Unicorn_1 = {
+
+
+				# -----------------------------------------
+				# RESOLVE SECRET ROUTE
+				# -----------------------------------------
+
+				segrellion_black_unicorn_resolve_secret_effect = yes
+
+
+				# -----------------------------------------
+				# RHAEGON
+				# -----------------------------------------
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_black_unicorn_secret_rhaegon
+					}
+
+
+					segrellion_black_unicorn_create_rhaegon_effect = yes
+				}
+			}
+		}
+	}
+}
+
 
 segrellion_black_unicorn_startup = {
 

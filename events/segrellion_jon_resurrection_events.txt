@@ -709,9 +709,10 @@ segrellion_jon_resurrection.0120 = {
 # =========================================================
 # 0200 - THE WOLF OPENS HIS EYES
 #
-# Global player event.
+# DENYS MALLISTER PATH ONLY.
 #
-# Only choice: become Jon.
+# This is the continuation of the storyline for a player
+# who began as Jon, died, and was temporarily moved to Denys.
 # =========================================================
 
 segrellion_jon_resurrection.0200 = {
@@ -736,7 +737,10 @@ segrellion_jon_resurrection.0200 = {
 
 	trigger = {
 
+		this = character:Mallister_6
+
 		is_ai = no
+
 
 		has_global_variable = segrellion_resurrected_jon
 
@@ -744,8 +748,6 @@ segrellion_jon_resurrection.0200 = {
 		global_var:segrellion_resurrected_jon ?= {
 
 			is_alive = yes
-
-			is_ai = yes
 
 			is_playable_character = yes
 
@@ -757,11 +759,13 @@ segrellion_jon_resurrection.0200 = {
 	immediate = {
 
 		global_var:segrellion_resurrected_jon = {
+
 			save_scope_as = resurrected_jon
 		}
 
 
 		character:Melisandre_1 ?= {
+
 			save_scope_as = melisandre
 		}
 	}
@@ -798,19 +802,105 @@ segrellion_jon_resurrection.0200 = {
 			}
 		}
 	}
+}
+
+# =========================================================
+# 0205 - THE WOLF RETURNS
+#
+# GLOBAL PLAYER PHASE EVENT.
+#
+# Large fullscreen event announcing Jon Snow's resurrection.
+#
+# The player may:
+# - remain with their current character;
+# - take control of Jon.
+# =========================================================
+
+segrellion_jon_resurrection.0205 = {
+
+	type = fullscreen_event
+
+	window = fullscreen_event
 
 
-	# =================================================
-	# REMAIN AS CURRENT CHARACTER
-	# =================================================
+	title = segrellion_jon_resurrection.0205.t
+
+	desc = segrellion_jon_resurrection.0205.desc
+
+
+	theme = faith
+
+
+	# Temporary existing Castle Black background.
+	# Replace this later with Jon's dedicated 1100x440 art.
+	override_background = {
+
+		reference = segrellion_castle_black_great_hall
+	}
+
+
+	trigger = {
+
+		is_ai = no
+
+
+		has_global_variable = segrellion_resurrected_jon
+
+
+		global_var:segrellion_resurrected_jon ?= {
+
+			is_alive = yes
+
+			is_playable_character = yes
+
+			has_title = title:k_the_wall
+		}
+	}
+
+
+	immediate = {
+
+		global_var:segrellion_resurrected_jon = {
+
+			save_scope_as = resurrected_jon
+		}
+	}
+
+
+	# =====================================================
+	# REMAIN WITH CURRENT CHARACTER
+	# =====================================================
 
 	option = {
 
-		name = segrellion_jon_resurrection.0200.b
+		name = segrellion_jon_resurrection.0205.a
 
-		custom_tooltip = segrellion_jon_resurrection.0200.b.tt
+		custom_tooltip = segrellion_jon_resurrection.0205.a.tt
+	}
+
+
+	# =====================================================
+	# PLAY AS JON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_jon_resurrection.0205.b
+
+		custom_tooltip = segrellion_jon_resurrection.0205.b.tt
+
+
+		hidden_effect = {
+
+			root = {
+
+				set_player_character = scope:resurrected_jon
+			}
+		}
 	}
 }
+
+
 
 # =========================================================
 # 0210 - THE KNIVES REMEMBER

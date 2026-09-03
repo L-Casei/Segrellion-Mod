@@ -5400,14 +5400,95 @@ segrellion_young_griff.8150 = {
 			character:Baratheon_10 ?= {
 
 				is_alive = yes
+			}
 
-				any_spouse = {
-					this = character:Segrellion_60
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+			}
+
+
+			OR = {
+
+
+				# -----------------------------------------
+				# ALREADY MARRIED
+				# -----------------------------------------
+
+				character:Baratheon_10 = {
+
+					any_spouse = {
+
+						this = character:Segrellion_60
+					}
+				}
+
+
+				# -----------------------------------------
+				# PROMISED TO DAEMON
+				# -----------------------------------------
+
+				AND = {
+
+					character:Segrellion_60 = {
+
+						is_married = no
+
+						has_character_flag = segrellion_mya_marriage_deferred
+
+						has_variable = segrellion_mya_promised_bride
+
+						var:segrellion_mya_promised_bride = {
+
+							this = character:Baratheon_10
+						}
+					}
+
+
+					character:Baratheon_10 = {
+
+						is_married = no
+					}
+				}
+			}
+		}
+
+		# =================================================
+		# THE PROMISE WAS NOT YET FULFILLED
+		#
+		# Aegon's offer of the Stormlands brings the marriage
+		# forward immediately.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Baratheon_10 = {
+
+					NOT = {
+
+						any_spouse = {
+
+							this = character:Segrellion_60
+						}
+					}
 				}
 			}
 
+
+			segrellion_complete_mya_daemon_marriage_effect = yes
+
+
 			character:Segrellion_60 ?= {
-				is_alive = yes
+
+				trigger_event = {
+
+					id = segrellion_young_griff.8160
+
+					days = 1
+				}
 			}
 		}
 
@@ -5537,5 +5618,55 @@ segrellion_young_griff.8150 = {
 
 
 		segrellion_young_griff_schedule_margaery_effect = yes
+	}
+}
+
+# =========================================================
+# 8160 - A LADY FOR THE STORMLANDS
+#
+# Root = Daemon
+#
+# Aegon has offered the Stormlands to Mya Stone.
+# Her old promise to Daemon is fulfilled immediately.
+# =========================================================
+
+segrellion_young_griff.8160 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+
+	opening = segrellion_young_griff.8160.opening
+
+	title = segrellion_young_griff.8160.t
+
+	desc = segrellion_young_griff.8160.desc
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+
+		character:Baratheon_10 ?= {
+
+			is_alive = yes
+
+			any_spouse = {
+
+				this = character:Segrellion_60
+			}
+
+			has_title = title:e_the_stormlands
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8160.a
 	}
 }

@@ -430,16 +430,56 @@ segrellion_create_resurrected_jon_effect = {
 		}
 
 
+		# =========================================================
+		# DENYS MALLISTER
+		#
+		# Player originally playing Jon follows the intimate
+		# resurrection event from Castle Black.
+		# =========================================================
+
+		character:Mallister_6 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_ai = no
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_jon_resurrection.0200
+
+					days = 1
+				}
+			}
+		}
+
+
+		# =========================================================
+		# EVERY OTHER HUMAN PLAYER
+		#
+		# Gets the major phase event instead.
+		# =========================================================
+
 		every_player = {
 
 			limit = {
+
+				is_ai = no
+
 				this != scope:resurrected_jon
+
+				this != character:Mallister_6
 			}
 
 
 			trigger_event = {
 
-				id = segrellion_jon_resurrection.0200
+				id = segrellion_jon_resurrection.0205
 
 				days = 1
 			}

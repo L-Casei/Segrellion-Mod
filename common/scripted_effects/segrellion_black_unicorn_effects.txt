@@ -546,10 +546,10 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 			# +3 prowess alongside +3 size during early
 			# growth.
 			#
-			# Size 30 therefore corresponds to 30 prowess.
+			# Size 3 therefore corresponds to 3 prowess.
 			# =============================================
 
-			add_prowess_skill = 30
+			add_prowess_skill = 3
 
 
 			# =============================================
@@ -572,8 +572,16 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 		segrellion_initialize_runtime_dragon_stats_effect = {
 
 			DRAGON = scope:rhaegon
+
 			DRAGON_AGE = scope:rhaegon.age
-			DRAGON_SIZE = 30
+
+			DRAGON_SIZE = 3
+		}
+
+
+		scope:rhaegon = {
+
+			add_character_flag = segrellion_rhaegon_early_growth_active
 		}
 
 
@@ -1018,5 +1026,280 @@ segrellion_black_unicorn_rickon_osha_join_daemon_effect = {
 		add_character_flag = segrellion_daemon_promised_restore_rickon_north
 
 		add_character_flag = segrellion_black_unicorn_rickon_osha_joined_daemon
+	}
+}
+
+# =========================================================
+# RHAEGON - EARLY EXPLOSIVE GROWTH
+#
+# Birth : 3
+# Age 1 : 18
+# Age 2 : 35
+# Age 3 : 55
+#
+# After age 3 the custom growth stops completely and AGOT's
+# normal dragon growth system takes over.
+# =========================================================
+
+segrellion_rhaegon_early_growth_effect = {
+
+	if = {
+
+		limit = {
+
+			exists = global_var:segrellion_historical_rhaegon
+		}
+
+
+		global_var:segrellion_historical_rhaegon = {
+
+			save_scope_as = segrellion_rhaegon_growth_dragon
+		}
+
+
+		if = {
+
+			limit = {
+
+				scope:segrellion_rhaegon_growth_dragon = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_rhaegon_early_growth_active
+				}
+			}
+
+
+			# =================================================
+			# FIND RHAEGON'S AGOT RUNTIME STORAGE
+			# =================================================
+
+			random_in_global_list = {
+
+				variable = gl_dragon_variable_storage
+
+
+				limit = {
+
+					var:dragon_id ?= scope:segrellion_rhaegon_growth_dragon
+				}
+
+
+				save_scope_as = segrellion_rhaegon_growth_storage
+			}
+
+
+			# =================================================
+			# AGE 0
+			# SIZE 3
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					scope:segrellion_rhaegon_growth_dragon = {
+
+						age < 1
+					}
+				}
+
+
+				scope:segrellion_rhaegon_growth_dragon = {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 3
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 3
+					}
+				}
+
+
+				scope:segrellion_rhaegon_growth_storage ?= {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 3
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 3
+					}
+				}
+			}
+
+
+			# =================================================
+			# AGE 1
+			# SIZE 18
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					scope:segrellion_rhaegon_growth_dragon = {
+
+						age >= 1
+						age < 2
+					}
+				}
+
+
+				scope:segrellion_rhaegon_growth_dragon = {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 18
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 18
+					}
+				}
+
+
+				scope:segrellion_rhaegon_growth_storage ?= {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 18
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 18
+					}
+				}
+			}
+
+
+			# =================================================
+			# AGE 2
+			# SIZE 35
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					scope:segrellion_rhaegon_growth_dragon = {
+
+						age >= 2
+						age < 3
+					}
+				}
+
+
+				scope:segrellion_rhaegon_growth_dragon = {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 35
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 35
+					}
+				}
+
+
+				scope:segrellion_rhaegon_growth_storage ?= {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 35
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 35
+					}
+				}
+			}
+
+
+			# =================================================
+			# AGE 3
+			# SIZE 55
+			#
+			# Release him into AGOT's normal growth system.
+			# =================================================
+
+			else = {
+
+
+				scope:segrellion_rhaegon_growth_dragon = {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 55
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 55
+					}
+
+
+					remove_character_flag = segrellion_rhaegon_early_growth_active
+
+					add_character_flag = segrellion_rhaegon_early_growth_complete
+				}
+
+
+				scope:segrellion_rhaegon_growth_storage ?= {
+
+					set_variable = {
+
+						name = dragon_size_base
+
+						value = 55
+					}
+
+					set_variable = {
+
+						name = dragon_size
+
+						value = 55
+					}
+				}
+			}
+		}
 	}
 }
