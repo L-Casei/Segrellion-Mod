@@ -3238,6 +3238,19 @@ segrellion_young_griff.6010 = {
 				days = 1
 			}
 
+			# AI failsafe: give Aegon time to march naturally.
+			if = {
+
+				limit = {
+					is_ai = yes
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff.8016
+					days = { 45 75 }
+				}
+			}
+
 
 			# =============================================
 			# DORAN MARTELL
@@ -3812,6 +3825,89 @@ segrellion_young_griff.8015 = {
 			}
 		}
 	}
+}
+
+# =========================================================
+# 8016 - AI MARCH FAILSAFE
+#
+# The AI gets time to reach King's Landing naturally.
+# If it fails, force Aegon's final advance so the
+# Varys storyline cannot stall forever.
+# =========================================================
+
+segrellion_young_griff.8016 = {
+
+    type = character_event
+
+    hidden = yes
+
+
+    trigger = {
+
+        this = character:IAF_Young_Griff_1
+
+        is_alive = yes
+
+        is_ai = yes
+
+        is_at_war = yes
+
+        has_character_flag = segrellion_young_griff_varys_final_plan_active
+
+        has_character_flag = segrellion_young_griff_iron_throne_war_started
+
+
+        NOT = {
+            has_character_flag = segrellion_young_griff_kings_landing_opened
+        }
+
+        NOT = {
+            has_character_flag = segrellion_young_griff_kings_landing_taken_by_varys
+        }
+    }
+
+
+    immediate = {
+
+        # =================================================
+        # HE ARRIVED NATURALLY
+        # =================================================
+
+        if = {
+
+            limit = {
+                location = title:c_kings_landing.title_province
+            }
+
+
+            add_character_flag = segrellion_young_griff_kings_landing_opened
+
+
+            trigger_event = {
+                id = segrellion_young_griff.8020
+            }
+        }
+
+
+        # =================================================
+        # AI FAILED TO GO THERE
+        # Force the narrative advance.
+        # =================================================
+
+        else = {
+
+            set_location = title:c_kings_landing.title_province
+
+
+            add_character_flag = segrellion_young_griff_kings_landing_opened
+
+
+            trigger_event = {
+                id = segrellion_young_griff.8020
+                days = 1
+            }
+        }
+    }
 }
 
 # =========================================================
