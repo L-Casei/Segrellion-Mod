@@ -5069,7 +5069,7 @@ segrellion_black_unicorn.0405 = {
 
 
 	# =====================================================
-	# DIPLOMATIC
+	# A - SINCERE
 	# =====================================================
 
 	option = {
@@ -5079,27 +5079,20 @@ segrellion_black_unicorn.0405 = {
 
 		add_character_flag = segrellion_rhaegon_response_diplomatic
 
-
-		character:Black_Unicorn_1 = {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_visenya_daemon_diplomatic_opinion
-			}
-		}
+		add_character_flag = segrellion_black_unicorn_route_a_sincere
 
 
 		trigger_event = {
 
-			id = segrellion_black_unicorn.0406
+			id = segrellion_black_unicorn.0550
+
+			days = 1
 		}
 	}
 
 
 	# =====================================================
-	# PROUD
+	# B - PROUD
 	# =====================================================
 
 	option = {
@@ -5109,27 +5102,20 @@ segrellion_black_unicorn.0405 = {
 
 		add_character_flag = segrellion_rhaegon_response_proud
 
-
-		character:Black_Unicorn_1 = {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_visenya_daemon_proud_opinion
-			}
-		}
+		add_character_flag = segrellion_black_unicorn_route_b_proud
 
 
 		trigger_event = {
 
-			id = segrellion_black_unicorn.0406
+			id = segrellion_black_unicorn.0520
+
+			days = 1
 		}
 	}
 
 
 	# =====================================================
-	# SUSPICIOUS
+	# C - FEARLESS
 	# =====================================================
 
 	option = {
@@ -5137,29 +5123,23 @@ segrellion_black_unicorn.0405 = {
 		name = segrellion_black_unicorn.0405.c
 
 
+		# Keep old flag for save / storyline compatibility.
 		add_character_flag = segrellion_rhaegon_response_suspicious
 
-
-		character:Black_Unicorn_1 = {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_visenya_daemon_suspicious_opinion
-			}
-		}
+		add_character_flag = segrellion_black_unicorn_route_c_fearless
 
 
 		trigger_event = {
 
-			id = segrellion_black_unicorn.0406
+			id = segrellion_black_unicorn.0510
+
+			days = 1
 		}
 	}
 
 
 	# =====================================================
-	# THREATENING
+	# D - UNTIE ME
 	# =====================================================
 
 	option = {
@@ -5169,21 +5149,14 @@ segrellion_black_unicorn.0405 = {
 
 		add_character_flag = segrellion_rhaegon_response_threatening
 
-
-		character:Black_Unicorn_1 = {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_visenya_daemon_threatening_opinion
-			}
-		}
+		add_character_flag = segrellion_black_unicorn_route_d_release
 
 
 		trigger_event = {
 
-			id = segrellion_black_unicorn.0406
+			id = segrellion_black_unicorn.0500
+
+			days = 1
 		}
 	}
 }
@@ -5308,5 +5281,854 @@ segrellion_black_unicorn.0406 = {
 		# - unlock Hugh continuation
 		# - introduce Rickon / Osha
 		# =================================================
+	}
+}
+
+
+# =========================================================
+# 0500 - THE SHIVERING SEA
+#
+# ROUTE D
+# =========================================================
+
+segrellion_black_unicorn.0500 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0500.t
+	desc = segrellion_black_unicorn.0500.desc
+
+	theme = danger
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_route_d_release
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_route_d_resolved
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_black_unicorn_route_d_resolved
+
+		add_character_flag = segrellion_black_unicorn_expelled_from_skagos
+
+		add_character_flag = segrellion_black_unicorn_one_guard_survived
+
+
+		# Future Part III.
+
+		add_character_flag = segrellion_black_unicorn_part_iii_pending
+
+		add_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
+
+
+		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = pain
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0500.a
+
+
+		return_home = yes
+	}
+}
+
+# =========================================================
+# 0510 - DO YOU THINK I FEAR YOU?
+# =========================================================
+
+segrellion_black_unicorn.0510 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0510.t
+	desc = segrellion_black_unicorn.0510.desc
+
+	theme = danger
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_route_c_fearless
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_route_c_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	# =====================================================
+	# C.A - DEATH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0510.a
+
+
+		trigger = {
+
+			global_var:segrellion_rhaegon_character ?= {
+				is_alive = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_route_c_resolved
+
+		add_character_flag = segrellion_black_unicorn_route_c_valar_morghulis
+
+
+		global_var:segrellion_rhaegon_character = {
+
+			save_scope_as = segrellion_rhaegon_killer
+		}
+
+
+		death = {
+
+			death_reason = death_dragon_slain
+
+			killer = scope:segrellion_rhaegon_killer
+		}
+	}
+
+
+	# =====================================================
+	# C.B - DESTINY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0510.b
+
+
+		add_character_flag = segrellion_black_unicorn_route_c_resolved
+
+		add_character_flag = segrellion_black_unicorn_route_c_destiny
+
+		add_character_flag = segrellion_black_unicorn_destiny_route_pending
+
+		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 0520 - NO FRIGHTENED PRISONER
+# =========================================================
+
+segrellion_black_unicorn.0520 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0520.t
+	desc = segrellion_black_unicorn.0520.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_route_b_proud
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_arrogant
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_arrogant
+	}
+
+
+	# Keep pushing.
+
+	option = {
+
+		name = segrellion_black_unicorn.0520.a
+
+
+		add_character_flag = segrellion_black_unicorn_pride_exchange_1
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0530
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	# Back away.
+
+	option = {
+
+		name = segrellion_black_unicorn.0520.b
+
+
+		add_character_flag = segrellion_black_unicorn_route_b_abandoned
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0595
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+# =========================================================
+# 0530 - NEITHER BLINKS
+# =========================================================
+
+segrellion_black_unicorn.0530 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0530.t
+	desc = segrellion_black_unicorn.0530.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_pride_exchange_1
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_arrogant
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0530.a
+
+
+		add_character_flag = segrellion_black_unicorn_pride_exchange_2
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0540
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0530.b
+
+
+		add_character_flag = segrellion_black_unicorn_route_b_abandoned
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0595
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+# =========================================================
+# 0540 - MORNING WITHOUT SURRENDER
+#
+# Implied sex. No recycled Icebringer material.
+# =========================================================
+
+segrellion_black_unicorn.0540 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0540.t
+	desc = segrellion_black_unicorn.0540.desc
+
+	theme = romance
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_pride_exchange_2
+
+
+		character:Black_Unicorn_1 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_black_unicorn_route_b_completed
+
+		add_character_flag = segrellion_black_unicorn_daemon_slept_with_visenya
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0540.a
+
+
+		segrellion_black_unicorn_visenya_join_daemon_effect = yes
+
+
+		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 0550 - WHY ARE YOU REALLY HERE?
+# =========================================================
+
+segrellion_black_unicorn.0550 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0550.t
+	desc = segrellion_black_unicorn.0550.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_route_a_sincere
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_rational
+	}
+
+
+	# Family first.
+
+	option = {
+
+		name = segrellion_black_unicorn.0550.a
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_trust_earned
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0560
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# Rickon is part of the reason.
+
+	option = {
+
+		name = segrellion_black_unicorn.0550.b
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_trust_earned
+
+		add_character_flag = segrellion_black_unicorn_daemon_mentions_rickon
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0560
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# Aggressive / obvious dragon interest.
+
+	option = {
+
+		name = segrellion_black_unicorn.0550.c
+
+
+		add_character_flag = segrellion_black_unicorn_route_a_failed
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0595
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# =========================================================
+# 0560 - THE STARK BOY
+# =========================================================
+
+segrellion_black_unicorn.0560 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0560.t
+	desc = segrellion_black_unicorn.0560.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_visenya_trust_earned
+
+
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+		}
+
+		character:Stark_hh_13 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		# They appear inside Visenya's settlement.
+		# They are NOT Daemon's courtiers yet.
+
+		character:Stark_Dummy_11 = {
+			set_location = character:Black_Unicorn_1.location
+		}
+
+		character:Stark_hh_13 = {
+			set_location = character:Black_Unicorn_1.location
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_rickon_revealed
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = surprise
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_11
+		animation = child_personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0560.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0570
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0570 - WHO ARE YOU?
+# =========================================================
+
+segrellion_black_unicorn.0570 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0570.t
+	desc = segrellion_black_unicorn.0570.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_rickon_revealed
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0570.a
+
+
+		add_character_flag = segrellion_black_unicorn_daemon_knows_visenya_identity
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0580
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0580 - COME WITH ME
+# =========================================================
+
+segrellion_black_unicorn.0580 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0580.t
+	desc = segrellion_black_unicorn.0580.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_daemon_knows_visenya_identity
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_suspicious
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0580.a
+
+
+		add_character_flag = segrellion_black_unicorn_daemon_family_before_dragon
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0590
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 0590 - VISENYA'S CONDITION
+# =========================================================
+
+segrellion_black_unicorn.0590 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0590.t
+	desc = segrellion_black_unicorn.0590.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_daemon_family_before_dragon
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# AI DAEMON = 100%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0590.a
+
+
+		segrellion_black_unicorn_visenya_join_daemon_effect = yes
+
+		segrellion_black_unicorn_rickon_osha_join_daemon_effect = yes
+
+
+		add_character_flag = segrellion_black_unicorn_route_a_completed
+
+		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0590.b
+
+
+		add_character_flag = segrellion_black_unicorn_route_a_refused_condition
+
+		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0595
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# =========================================================
+# 0595 - THE ROAD SOUTH
+#
+# Generic failed ending for A/B.
+# DOES NOT unlock Part III.
+# =========================================================
+
+segrellion_black_unicorn.0595 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0595.t
+	desc = segrellion_black_unicorn.0595.desc
+
+	theme = travel
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+		add_character_flag = segrellion_black_unicorn_left_skagos_without_visenya
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0595.a
+
+		return_home = yes
 	}
 }

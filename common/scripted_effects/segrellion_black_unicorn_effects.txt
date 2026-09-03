@@ -622,3 +622,401 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 		add_character_flag = segrellion_black_unicorn_rhaegon_created
 	}
 }
+
+# =========================================================
+# VISENYA - CREATE HER FOUR SKAGOSI WARRIORS
+#
+# Their canonical identities can be developed later.
+# For now they inherit Visenya's culture and faith.
+# =========================================================
+
+segrellion_black_unicorn_create_visenya_companions_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_visenya_companions_created
+			}
+
+			character:Black_Unicorn_1 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		# =================================================
+		# WARRIOR 1
+		# =================================================
+
+		create_character = {
+
+			age = { 28 36 }
+
+			gender = male
+
+			dynasty = none
+
+			random_traits = no
+
+			culture = character:Black_Unicorn_1.culture
+
+			faith = character:Black_Unicorn_1.faith
+
+			location = root.location
+
+			employer = root
+
+			trait = strong
+			trait = brave
+			trait = education_martial_3
+			trait = blademaster_2
+
+			martial = { 10 14 }
+			prowess = { 16 20 }
+
+			save_scope_as = segrellion_visenya_skagosi_1
+		}
+
+
+		scope:segrellion_visenya_skagosi_1 = {
+
+			add_character_flag = segrellion_visenya_skagosi_warrior
+
+			add_character_flag = segrellion_visenya_skagosi_warrior_1
+
+			return_to_court = yes
+		}
+
+
+		set_global_variable = {
+			name = segrellion_visenya_skagosi_warrior_1
+			value = scope:segrellion_visenya_skagosi_1
+		}
+
+
+		# =================================================
+		# WARRIOR 2
+		# =================================================
+
+		create_character = {
+
+			age = { 24 34 }
+
+			gender = male
+
+			dynasty = none
+
+			random_traits = no
+
+			culture = character:Black_Unicorn_1.culture
+
+			faith = character:Black_Unicorn_1.faith
+
+			location = root.location
+
+			employer = root
+
+			trait = strong
+			trait = wrathful
+			trait = education_martial_3
+			trait = blademaster_1
+
+			martial = { 11 15 }
+			prowess = { 15 19 }
+
+			save_scope_as = segrellion_visenya_skagosi_2
+		}
+
+
+		scope:segrellion_visenya_skagosi_2 = {
+
+			add_character_flag = segrellion_visenya_skagosi_warrior
+
+			add_character_flag = segrellion_visenya_skagosi_warrior_2
+
+			return_to_court = yes
+		}
+
+
+		set_global_variable = {
+			name = segrellion_visenya_skagosi_warrior_2
+			value = scope:segrellion_visenya_skagosi_2
+		}
+
+
+		# =================================================
+		# WARRIOR 3
+		# =================================================
+
+		create_character = {
+
+			age = { 30 40 }
+
+			gender = male
+
+			dynasty = none
+
+			random_traits = no
+
+			culture = character:Black_Unicorn_1.culture
+
+			faith = character:Black_Unicorn_1.faith
+
+			location = root.location
+
+			employer = root
+
+			trait = brave
+			trait = callous
+			trait = education_martial_4
+			trait = blademaster_2
+
+			martial = { 12 16 }
+			prowess = { 17 21 }
+
+			save_scope_as = segrellion_visenya_skagosi_3
+		}
+
+
+		scope:segrellion_visenya_skagosi_3 = {
+
+			add_character_flag = segrellion_visenya_skagosi_warrior
+
+			add_character_flag = segrellion_visenya_skagosi_warrior_3
+
+			return_to_court = yes
+		}
+
+
+		set_global_variable = {
+			name = segrellion_visenya_skagosi_warrior_3
+			value = scope:segrellion_visenya_skagosi_3
+		}
+
+
+		# =================================================
+		# WARRIOR 4
+		# =================================================
+
+		create_character = {
+
+			age = { 22 31 }
+
+			gender = male
+
+			dynasty = none
+
+			random_traits = no
+
+			culture = character:Black_Unicorn_1.culture
+
+			faith = character:Black_Unicorn_1.faith
+
+			location = root.location
+
+			employer = root
+
+			trait = strong
+			trait = stubborn
+			trait = education_martial_3
+			trait = blademaster_1
+
+			martial = { 10 14 }
+			prowess = { 15 19 }
+
+			save_scope_as = segrellion_visenya_skagosi_4
+		}
+
+
+		scope:segrellion_visenya_skagosi_4 = {
+
+			add_character_flag = segrellion_visenya_skagosi_warrior
+
+			add_character_flag = segrellion_visenya_skagosi_warrior_4
+
+			return_to_court = yes
+		}
+
+
+		set_global_variable = {
+			name = segrellion_visenya_skagosi_warrior_4
+			value = scope:segrellion_visenya_skagosi_4
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_companions_created
+	}
+}
+
+# =========================================================
+# VISENYA WILLINGLY JOINS DAEMON
+#
+# Used by EVERY route in which Visenya decides to leave
+# Skagos willingly.
+#
+# Rickon and Osha are NOT handled here.
+# =========================================================
+
+segrellion_black_unicorn_visenya_join_daemon_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			character:Black_Unicorn_1 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		# =================================================
+		# VISENYA
+		# =================================================
+
+		character:Black_Unicorn_1 = {
+
+			set_employer = root
+
+			return_to_court = yes
+
+			set_location = root.location
+
+
+			add_character_flag = segrellion_visenya_joined_daemon
+
+			add_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+
+			add_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+		}
+
+
+		# Keep this flag on Daemon as well because other
+		# storyline systems already use it.
+
+		add_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+
+
+		# =================================================
+		# FOUR SKAGOSI
+		# =================================================
+
+		segrellion_black_unicorn_create_visenya_companions_effect = yes
+
+
+		# =================================================
+		# 250 SKAGOSI MAA
+		#
+		# Existing type:
+		# segrellion_skagosi_raiders
+		#
+		# stack = 50
+		# size 5 = 250 men
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_skagosi_maa_granted
+				}
+			}
+
+
+			create_maa_regiment = {
+
+				type = segrellion_skagosi_raiders
+
+				check_can_recruit = no
+
+				size = 5
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_skagosi_maa_granted
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_join_package_completed
+	}
+}
+
+# =========================================================
+# RICKON + OSHA JOIN DAEMON
+#
+# ONLY Route A is allowed to call this.
+# =========================================================
+
+segrellion_black_unicorn_rickon_osha_join_daemon_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			has_character_flag = segrellion_black_unicorn_route_a_sincere
+		}
+
+
+		# =================================================
+		# RICKON STARK
+		# =================================================
+
+		character:Stark_Dummy_11 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_employer = root
+
+				return_to_court = yes
+
+				set_location = root.location
+
+
+				add_character_flag = segrellion_rickon_under_daemon_protection
+
+				add_character_flag = segrellion_rickon_black_unicorn_route
+			}
+		}
+
+
+		# =================================================
+		# OSHA
+		# =================================================
+
+		character:Stark_hh_13 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_employer = root
+
+				return_to_court = yes
+
+				set_location = root.location
+
+
+				add_character_flag = segrellion_osha_under_daemon_protection
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_promised_restore_rickon_north
+
+		add_character_flag = segrellion_black_unicorn_rickon_osha_joined_daemon
+	}
+}
