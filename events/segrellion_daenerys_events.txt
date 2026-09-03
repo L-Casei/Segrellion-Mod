@@ -340,6 +340,12 @@ segrellion_daenerys_invasion.0001 = {
 
 		# Westeros is permanently rejected.
 		remove_character_flag = sworn_peace		
+		if = {
+			limit = {
+				has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+			}
+			remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+		}
 		add_character_flag = segrellion_daenerys_invasion_abandoned
 		add_character_flag = segrellion_daenerys_westeros_rejected
 
@@ -727,7 +733,7 @@ segrellion_daenerys_invasion.0005 = {
 
 	right_portrait = {
 
-		character = character:selmy_3
+		character = character:Selmy_3
 		animation = personality_rational
 	}
 
@@ -801,7 +807,7 @@ segrellion_daenerys_invasion.0006 = {
 
 
 	right_portrait = {
-		character = character:selmy_3
+		character = character:Selmy_3
 		animation = personality_rational
 	}
 
@@ -2185,6 +2191,7 @@ segrellion_daenerys_invasion.0016 = {
 
 segrellion_daenerys_invasion.0018 = {
 
+	type = character_event
 	hidden = yes
 
 	trigger = {
@@ -2198,6 +2205,11 @@ segrellion_daenerys_invasion.0018 = {
 
 
 	immediate = {
+
+		# Daenerys has left Pentos for good.
+		remove_character_flag = segrellion_daenerys_camped_at_pentos
+		remove_character_flag = segrellion_daenerys_delayed_fleet_preparation
+		remove_character_flag = segrellion_daenerys_passive_fleet_preparation
 
 		# =================================================
 		# THE PREPARATION PHASE IS OVER
@@ -2660,6 +2672,20 @@ segrellion_daenerys_invasion.0091 = {
 		remove_character_flag = segrellion_daenerys_landing_flamelands
 		remove_character_flag = segrellion_daenerys_landing_masseys_hook
 		remove_character_flag = segrellion_daenerys_landing_beacon
+
+		# AI safety: a cancelled crossing returns the staging camp
+		# to Pentos before another landing attempt is made.
+		if = {
+
+			limit = {
+				is_ai = yes
+				has_domicile = yes
+			}
+
+			domicile = {
+				move_domicile = title:c_pentos.title_province
+			}
+		}
 
 		if = {
 			limit = {

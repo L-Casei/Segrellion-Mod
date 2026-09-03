@@ -375,6 +375,45 @@ segrellion_daenerys_invasion_peace_guard_effect = {
 				add_character_modifier = {
 					modifier = segrellion_daenerys_preparing_invasion_ai_modifier
 				}
+
+				# =================================================
+				# KEEP DAENERYS' CAMP AT PENTOS
+				#
+				# While the AI is preparing the invasion, Pentos is
+				# her fixed staging area. If vanilla/AGOT moves the
+				# adventurer camp elsewhere, return it to Pentos.
+				#
+				# Once the scripted crossing begins, stop interfering.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_daenerys_camped_at_pentos
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landing_chosen
+						}
+
+						NOT = {
+							exists = current_travel_plan
+						}
+
+						has_domicile = yes
+
+						domicile = {
+
+							NOT = {
+								domicile_location = title:c_pentos.title_province
+							}
+						}
+					}
+
+					domicile = {
+						move_domicile = title:c_pentos.title_province
+					}
+				}
 			}
 
 
