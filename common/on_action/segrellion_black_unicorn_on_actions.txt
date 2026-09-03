@@ -52,13 +52,18 @@ segrellion_black_unicorn_startup = {
 					game_start_date = 8300.8.20
 				}
 
+				# =================================================
+				# RESOLVE VISENYA'S STORY VARIANT
+				# =================================================
+
+				segrellion_black_unicorn_resolve_secret_effect = yes
+
 
 				# =================================================
 				# BASIC STORY FLAGS
 				# =================================================
 
 				add_character_flag = segrellion_black_unicorn_mysterious_woman
-				add_character_flag = segrellion_icebringer_authorized
 				add_character_flag = segrellion_black_unicorn_skagos_outfit
 				add_character_flag = segrellion_black_unicorn_lock_camp_skagos
 
@@ -218,23 +223,60 @@ segrellion_black_unicorn_startup = {
 
 
 				# =================================================
-				# ICEBRINGER
+				# VISENYA'S SECRET
+				# =================================================
+
+
+				# =================================================
+				# ICEBRINGER ROUTE
 				# =================================================
 
 				if = {
 
 					limit = {
+						has_character_flag = segrellion_black_unicorn_secret_icebringer
+					}
 
-						NOT = {
-							exists = global_var:segrellion_icebringer
+
+					add_character_flag = segrellion_icebringer_authorized
+
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								exists = global_var:segrellion_icebringer
+							}
+						}
+
+
+						segrellion_create_artifact_icebringer_effect = {
+
+							OWNER = this
 						}
 					}
+				}
 
 
-					segrellion_create_artifact_icebringer_effect = {
+				# =================================================
+				# RHAEGON ROUTE
+				# =================================================
 
-						OWNER = this
+				else_if = {
+
+					limit = {
+						has_character_flag = segrellion_black_unicorn_secret_rhaegon
 					}
+
+
+					# She-Unicorn must not be treated as an authorized
+					# Icebringer holder in this route.
+
+					remove_character_flag = segrellion_icebringer_authorized
+
+
+					segrellion_black_unicorn_create_rhaegon_effect = yes
 				}
 			}
 }

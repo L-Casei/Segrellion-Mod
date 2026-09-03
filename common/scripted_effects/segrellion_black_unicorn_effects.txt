@@ -334,3 +334,232 @@ segrellion_black_unicorn_return_to_daemon_camp_effect = {
 }
 
 
+# =========================================================
+# VISENYA - RESOLVE SECRET OF SKAGOS
+#
+# ROOT = Black_Unicorn_1
+#
+# The result is stored directly on She-Unicorn.
+# This effect is idempotent.
+# =========================================================
+
+segrellion_black_unicorn_resolve_secret_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_secret_icebringer
+			}
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_secret_rhaegon
+			}
+		}
+
+
+		# =================================================
+		# ICEBRINGER
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_game_rule = segrellion_visenya_secret_icebringer
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_secret_icebringer
+		}
+
+
+		# =================================================
+		# RHAEGON
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_game_rule = segrellion_visenya_secret_rhaegon
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_secret_rhaegon
+		}
+
+
+		# =================================================
+		# RANDOM
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_game_rule = segrellion_visenya_secret_random
+			}
+
+
+			random_list = {
+
+				50 = {
+					add_character_flag = segrellion_black_unicorn_secret_icebringer
+				}
+
+				50 = {
+					add_character_flag = segrellion_black_unicorn_secret_rhaegon
+				}
+			}
+		}
+
+
+		# =================================================
+		# DEFENSIVE FALLBACK
+		#
+		# Preserve the current mod behavior.
+		# =================================================
+
+		else = {
+
+			add_character_flag = segrellion_black_unicorn_secret_icebringer
+		}
+	}
+}
+
+
+# =========================================================
+# CREATE SECRET RHAEGON
+#
+# ROOT = Black_Unicorn_1
+#
+# Rhaegon already exists when Daemon begins investigating.
+#
+# This deliberately does NOT use
+# agot_spawn_owned_hatchling_from_egg_effect because that
+# effect sends the owner a hatching interface message.
+#
+# There is no physical egg here because its discovery and
+# hatching happened before the playable storyline.
+# =========================================================
+
+segrellion_black_unicorn_create_rhaegon_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				exists = global_var:segrellion_historical_rhaegon
+			}
+		}
+
+
+		save_scope_as = rhaegon_owner
+
+
+		create_character = {
+
+			name = Rhaegon
+
+			location = root.location
+
+			template = agot_dragon_hatchling_template
+
+			age = 0
+
+			random_traits = no
+
+			save_scope_as = rhaegon
+		}
+
+
+		# =================================================
+		# OWNERSHIP
+		# =================================================
+
+		hidden_effect = {
+
+			agot_set_as_owned_dragon = {
+
+				OWNER = scope:rhaegon_owner
+				DRAGON = scope:rhaegon
+			}
+		}
+
+
+		# =================================================
+		# RHAEGON
+		# =================================================
+
+		scope:rhaegon = {
+
+			change_first_name = Rhaegon
+
+
+			add_character_flag = segrellion_rhaegon_dragon
+			add_character_flag = segrellion_rhaegon_secret
+			add_character_flag = agot_no_silly_name
+
+
+			# =============================================
+			# REQUESTED TRAITS
+			#
+			# dragon_physique_good_3 =
+			# highest positive dragon physique tier /
+			# Tyrannic Leviathan.
+			# =============================================
+
+			add_trait = dragon_majestic
+
+
+			remove_trait = dragon_physique_bad
+			remove_trait = dragon_physique_good_1
+			remove_trait = dragon_physique_good_2
+			remove_trait = dragon_physique_good_3
+
+			add_trait = dragon_physique_good_3
+
+
+			# =============================================
+			# RHAEGON DNA
+			#
+			# DO NOT add has_scripted_appearance yet.
+			#
+			# Your custom Rhaegon dragon DNA/runtime
+			# appearance effect goes here once created.
+			# =============================================
+		}
+
+
+		# =================================================
+		# AGOT DRAGON SYSTEM
+		# =================================================
+
+		agot_dragon_tree_creation_effect = {
+
+			DRAGON = scope:rhaegon
+		}
+
+
+		agot_bond_dragon_relation_effect = {
+
+			ACTOR = scope:rhaegon_owner
+			DRAGON = scope:rhaegon
+		}
+
+
+		# =================================================
+		# PERMANENT REFERENCE
+		# =================================================
+
+		set_global_variable = {
+
+			name = segrellion_historical_rhaegon
+
+			value = scope:rhaegon
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_rhaegon_created
+	}
+}

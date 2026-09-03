@@ -1226,7 +1226,29 @@ segrellion_black_unicorn.0040 = {
 	type = character_event
 
 	title = segrellion_black_unicorn.0040.t
-	desc = segrellion_black_unicorn.0040.desc
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Black_Unicorn_1 ?= {
+
+						has_character_flag = segrellion_black_unicorn_secret_rhaegon
+					}
+				}
+
+
+				desc = segrellion_black_unicorn.0040.desc
+			}
+
+
+			desc = segrellion_black_unicorn.0040.desc_icebringer
+		}
+	}
 
 	theme = travel
 
@@ -1452,17 +1474,56 @@ segrellion_black_unicorn.0045 = {
 		set_location = title:b_bitter_dryn.title_province
 
 
-		start_travel_plan = {
+		# =====================================================
+		# RHAEGON ROUTE
+		# =====================================================
 
-			destination = title:b_cold_peaks.title_province
+		if = {
 
-			return_trip = no
+			limit = {
 
-			on_arrival_event = segrellion_black_unicorn.0050
+				character:Black_Unicorn_1 ?= {
 
-			on_arrival_destinations = first
+					has_character_flag = segrellion_black_unicorn_secret_rhaegon
+				}
+			}
 
-			on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+
+			start_travel_plan = {
+
+				destination = title:b_cold_peaks.title_province
+
+				return_trip = no
+
+				on_arrival_event = segrellion_black_unicorn.0400
+
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+			}
+		}
+
+
+		# =====================================================
+		# ICEBRINGER ROUTE
+		#
+		# EXACT EXISTING ROUTE.
+		# =====================================================
+
+		else = {
+
+			start_travel_plan = {
+
+				destination = title:b_cold_peaks.title_province
+
+				return_trip = no
+
+				on_arrival_event = segrellion_black_unicorn.0050
+
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_black_unicorn.0090
+			}
 		}
 	}
 }
@@ -4630,5 +4691,621 @@ segrellion_black_unicorn.0099 = {
 	option = {
 
 		name = segrellion_black_unicorn.0099.a
+	}
+}
+
+# =========================================================
+# =========================================================
+#
+# RHAEGON ROUTE
+#
+# =========================================================
+# =========================================================
+
+
+# =========================================================
+# 0400 - AMBUSH AT THE COLD PEAKS
+#
+# Daemon reaches the Cold Peaks but never gets the normal
+# 0050 encounter.
+# =========================================================
+
+segrellion_black_unicorn.0400 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0400.t
+	desc = segrellion_black_unicorn.0400.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = wilderness
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = fear
+	}
+
+
+	immediate = {
+
+		# Same arrival cleanup currently used by 0050.
+
+		current_travel_plan ?= {
+
+			abort_travel_plan = yes
+		}
+
+
+		set_location = title:b_cold_peaks.title_province
+
+
+		character:Black_Unicorn_1 ?= {
+
+			set_location = title:b_cold_peaks.title_province
+		}
+
+
+		add_character_flag = segrellion_rhaegon_route_started
+		add_character_flag = segrellion_rhaegon_daemon_ambushed
+		add_character_flag = segrellion_rhaegon_daemon_captured
+		add_character_flag = segrellion_rhaegon_guards_missing
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0400.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0401
+		}
+	}
+}
+
+
+# =========================================================
+# 0401 - SOMETHING IN THE CAVE
+#
+# First direct appearance of Rhaegon.
+# =========================================================
+
+segrellion_black_unicorn.0401 = {
+
+	type = character_event
+
+	window = agot_dragon_character_event
+
+	title = segrellion_black_unicorn.0401.t
+	desc = segrellion_black_unicorn.0401.desc
+
+	theme = dragon
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = fear
+	}
+
+
+	right_portrait = {
+
+		character = scope:rhaegon
+
+		animation = dragon_head
+
+		camera = camera_dragon_event_standing_baby
+
+		outfit_tags = {
+			linear_camera_zoom
+		}
+	}
+
+
+	immediate = {
+
+		global_var:segrellion_historical_rhaegon ?= {
+
+			save_scope_as = rhaegon
+		}
+
+
+		add_character_flag = segrellion_daemon_knows_rhaegon_exists
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0401.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0402
+		}
+	}
+}
+
+
+# =========================================================
+# 0402 - SHE-UNICORN
+#
+# Visenya stops Rhaegon.
+#
+# IMPORTANT:
+# She remains She-Unicorn.
+# =========================================================
+
+segrellion_black_unicorn.0402 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0402.t
+	desc = segrellion_black_unicorn.0402.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_black_unicorn_found_woman
+		add_character_flag = segrellion_daemon_met_she_unicorn_rhaegon_route
+
+
+		character:Black_Unicorn_1 ?= {
+
+			add_character_flag = segrellion_black_unicorn_met_daemon
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0402.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0403
+		}
+	}
+}
+
+
+# =========================================================
+# 0403 - RHAE AND AEGON
+#
+# First clue.
+# Still NO identity reveal.
+# =========================================================
+
+segrellion_black_unicorn.0403 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0403.t
+	desc = segrellion_black_unicorn.0403.desc
+
+	theme = dynasty
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = worry
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daemon_noticed_she_unicorn_reaction
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0403.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0404
+		}
+	}
+}
+
+
+# =========================================================
+# 0404 - RHAEGON
+#
+# Rhae + Aegon = Rhaegon.
+#
+# Daemon now has enough information to suspect something,
+# but She-Unicorn still does NOT reveal her identity.
+# =========================================================
+
+segrellion_black_unicorn.0404 = {
+
+	type = character_event
+
+	window = agot_dragon_character_event
+
+	title = segrellion_black_unicorn.0404.t
+	desc = segrellion_black_unicorn.0404.desc
+
+	theme = dragon
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	immediate = {
+
+		global_var:segrellion_historical_rhaegon ?= {
+
+			save_scope_as = rhaegon
+		}
+
+
+		add_character_flag = segrellion_daemon_knows_rhaegon_name
+		add_character_flag = segrellion_daemon_suspects_she_unicorn_segrellion
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = scope:rhaegon
+
+		animation = dragon_head
+
+		camera = camera_dragon_event_standing_baby
+
+		outfit_tags = {
+			linear_camera_zoom
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0404.a
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0405
+		}
+	}
+}
+
+
+# =========================================================
+# 0405 - DAEMON'S RESPONSE
+#
+# All four responses continue to 0406.
+# =========================================================
+
+segrellion_black_unicorn.0405 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0405.t
+	desc = segrellion_black_unicorn.0405.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# DIPLOMATIC
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0405.a
+
+
+		add_character_flag = segrellion_rhaegon_response_diplomatic
+
+
+		character:Black_Unicorn_1 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_visenya_daemon_diplomatic_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0406
+		}
+	}
+
+
+	# =====================================================
+	# PROUD
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0405.b
+
+
+		add_character_flag = segrellion_rhaegon_response_proud
+
+
+		character:Black_Unicorn_1 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_visenya_daemon_proud_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0406
+		}
+	}
+
+
+	# =====================================================
+	# SUSPICIOUS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0405.c
+
+
+		add_character_flag = segrellion_rhaegon_response_suspicious
+
+
+		character:Black_Unicorn_1 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_visenya_daemon_suspicious_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0406
+		}
+	}
+
+
+	# =====================================================
+	# THREATENING
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0405.d
+
+
+		add_character_flag = segrellion_rhaegon_response_threatening
+
+
+		character:Black_Unicorn_1 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_visenya_daemon_threatening_opinion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0406
+		}
+	}
+}
+
+
+# =========================================================
+# 0406 - DAEMON'S MEN
+#
+# 80% - both unharmed
+# 18% - one badly wounded
+#  2% - one killed by the Skagosi during the ambush
+#
+# Rhaegon never kills either guard.
+#
+# CURRENT STOPPING POINT.
+# =========================================================
+
+segrellion_black_unicorn.0406 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0406.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_rhaegon_guard_dead
+				}
+
+				desc = segrellion_black_unicorn.0406.desc_dead
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_rhaegon_guard_injured
+				}
+
+				desc = segrellion_black_unicorn.0406.desc_injured
+			}
+
+
+			desc = segrellion_black_unicorn.0406.desc_alive
+		}
+	}
+
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	immediate = {
+
+		random_list = {
+
+			80 = {
+
+				add_character_flag = segrellion_rhaegon_guards_alive
+			}
+
+
+			18 = {
+
+				add_character_flag = segrellion_rhaegon_guard_injured
+			}
+
+
+			2 = {
+
+				add_character_flag = segrellion_rhaegon_guard_dead
+			}
+		}
+
+
+		remove_character_flag = segrellion_rhaegon_guards_missing
+
+		add_character_flag = segrellion_rhaegon_guard_fate_known
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0406.a
+
+
+		add_character_flag = segrellion_rhaegon_first_encounter_complete
+
+
+		# =================================================
+		# STOP HERE FOR NOW.
+		#
+		# DO NOT:
+		# - reveal Visenya
+		# - call reveal identity effect
+		# - remove storyline_active
+		# - send Daemon home
+		# - unlock Hugh continuation
+		# - introduce Rickon / Osha
+		# =================================================
 	}
 }
