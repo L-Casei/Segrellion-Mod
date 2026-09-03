@@ -10,6 +10,207 @@
 # ============================================================
 
 # ============================================================
+# INITIALIZE RUNTIME DRAGON STATS
+#
+# Creates / repairs AGOT's story_dragon_variable_storage
+# without touching dragon appearance / DNA.
+#
+# Used for dynamically-created custom dragons whose visual
+# DNA will be handled separately.
+#
+# $DRAGON$
+# $DRAGON_AGE$
+# $DRAGON_SIZE$
+# ============================================================
+
+segrellion_initialize_runtime_dragon_stats_effect = {
+
+	$DRAGON$ = {
+		save_scope_as = dragon
+	}
+
+
+	# ========================================================
+	# CHARACTER-SIDE DRAGON VARIABLES
+	# ========================================================
+
+	scope:dragon = {
+
+		set_variable = {
+			name = dragon_age
+			value = $DRAGON_AGE$
+		}
+
+		set_variable = {
+			name = dragon_size_base
+			value = $DRAGON_SIZE$
+		}
+
+		set_variable = {
+			name = dragon_size
+			value = $DRAGON_SIZE$
+		}
+
+
+		# AGOT expects living dragons to have this story.
+
+		if = {
+			limit = {
+				is_alive = yes
+
+				NOT = {
+					any_owned_story = {
+						story_type = story_dragon_alive
+					}
+				}
+			}
+
+			create_story = story_dragon_alive
+		}
+	}
+
+
+	# ========================================================
+	# FIND EXISTING STORAGE
+	# ========================================================
+
+	if = {
+
+		limit = {
+
+			any_in_global_list = {
+				variable = gl_dragon_variable_storage
+
+				var:dragon_id ?= scope:dragon
+			}
+		}
+
+
+		random_in_global_list = {
+			variable = gl_dragon_variable_storage
+
+			limit = {
+				var:dragon_id ?= scope:dragon
+			}
+
+			save_scope_as = segrellion_runtime_dragon_storage
+		}
+	}
+
+
+	# ========================================================
+	# CREATE STORAGE
+	# ========================================================
+
+	else = {
+
+		# Remove any broken previous storage linked to Rhaegon.
+
+		every_in_global_list = {
+			variable = gl_dragon_variable_storage
+
+			limit = {
+				var:dragon_id ?= scope:dragon
+			}
+
+			remove_list_global_variable = {
+				name = gl_dragon_variable_storage
+				target = this
+			}
+		}
+
+
+		# story_dragon_variable_storage reads this during setup.
+
+		title:c_ruins.holder = {
+
+			set_variable = {
+				name = transfered_dragon
+				value = scope:dragon
+			}
+		}
+
+
+		scope:dragon = {
+
+			create_story = {
+				type = story_dragon_variable_storage
+				save_scope_as = segrellion_runtime_dragon_storage
+			}
+		}
+
+
+		scope:segrellion_runtime_dragon_storage = {
+
+			set_variable = {
+				name = dragon_id
+				value = scope:dragon
+			}
+		}
+
+
+		add_to_global_variable_list = {
+			name = gl_dragon_variable_storage
+			target = scope:segrellion_runtime_dragon_storage
+		}
+	}
+
+
+	# ========================================================
+	# FORCE CORRECT RUNTIME VALUES
+	# ========================================================
+
+	scope:segrellion_runtime_dragon_storage = {
+
+		set_variable = {
+			name = dragon_id
+			value = scope:dragon
+		}
+
+		set_variable = {
+			name = dragon_age
+			value = $DRAGON_AGE$
+		}
+
+		set_variable = {
+			name = dragon_size_base
+			value = $DRAGON_SIZE$
+		}
+
+		set_variable = {
+			name = dragon_size
+			value = $DRAGON_SIZE$
+		}
+	}
+
+
+	# ========================================================
+	# LIVING DRAGON REGISTRY
+	# ========================================================
+
+	scope:dragon = {
+
+		if = {
+			limit = {
+				is_alive = yes
+
+				NOT = {
+					is_target_in_global_variable_list = {
+						name = living_dragons
+						target = this
+					}
+				}
+			}
+
+			add_to_global_variable_list = {
+				name = living_dragons
+				target = this
+			}
+		}
+	}
+}
+
+# ============================================================
 # NATIVE AGOT HISTORICAL DRAGON INITIALIZATION
 #
 # Mirrors the exact architecture used by AGOT canon dragons:

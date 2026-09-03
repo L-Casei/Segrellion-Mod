@@ -457,6 +457,14 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 		save_scope_as = rhaegon_owner
 
 
+		# =================================================
+		# CREATE RHAEGON
+		#
+		# Direct creation.
+		# NO hatch effect.
+		# NO interface notification.
+		# =================================================
+
 		create_character = {
 
 			name = Rhaegon
@@ -488,7 +496,7 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 
 		# =================================================
-		# RHAEGON
+		# RHAEGON TRAITS
 		# =================================================
 
 		scope:rhaegon = {
@@ -502,32 +510,83 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 
 			# =============================================
-			# REQUESTED TRAITS
-			#
-			# dragon_physique_good_3 =
-			# highest positive dragon physique tier /
-			# Tyrannic Leviathan.
+			# PHYSIQUE
 			# =============================================
-
-			add_trait = dragon_majestic
-
 
 			remove_trait = dragon_physique_bad
 			remove_trait = dragon_physique_good_1
 			remove_trait = dragon_physique_good_2
 			remove_trait = dragon_physique_good_3
 
+			# Tyrannic Leviathan
 			add_trait = dragon_physique_good_3
+
+
+			# =============================================
+			# SPECIAL
+			# =============================================
+
+			add_trait = dragon_majestic
+
+
+			# =============================================
+			# PERSONALITY
+			# =============================================
+
+			add_trait = dragon_bloodthirsty
+			add_trait = dragon_voracious
+			add_trait = dragon_calculating
+			add_trait = dragon_imperious
+
+
+			# =============================================
+			# GROWTH-APPROPRIATE PROWESS
+			#
+			# Our historical dragon growth system gives
+			# +3 prowess alongside +3 size during early
+			# growth.
+			#
+			# Size 30 therefore corresponds to 30 prowess.
+			# =============================================
+
+			add_prowess_skill = 30
 
 
 			# =============================================
 			# RHAEGON DNA
 			#
-			# DO NOT add has_scripted_appearance yet.
+			# Still intentionally absent.
 			#
-			# Your custom Rhaegon dragon DNA/runtime
-			# appearance effect goes here once created.
+			# DO NOT add has_scripted_appearance until
+			# Rhaegon's actual dragon DNA is supplied.
 			# =============================================
+		}
+
+
+		# =================================================
+		# AGOT DRAGON RUNTIME STORAGE
+		#
+		# This is the part currently missing.
+		# =================================================
+
+		segrellion_initialize_runtime_dragon_stats_effect = {
+
+			DRAGON = scope:rhaegon
+			DRAGON_AGE = scope:rhaegon.age
+			DRAGON_SIZE = 30
+		}
+
+
+		# Bloodthirsty receives +4 Draconic Dread when AGOT
+		# normally assigns the personality through its
+		# personality event. We reproduce that initialization
+		# because the trait is being assigned directly.
+
+		scope:rhaegon = {
+
+			change_draconic_dread = {
+				VALUE = 4
+			}
 		}
 
 
