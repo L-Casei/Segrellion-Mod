@@ -919,7 +919,10 @@ segrellion_young_griff.1000 = {
 				}
 
 
-				add_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+				add_character_flag = {
+					flag = segrellion_young_griff_independent_throne_path_scheduled
+					days = 210
+				}
 
 
 				trigger_event = {
@@ -1151,7 +1154,10 @@ segrellion_young_griff.2000 = {
 				}
 
 
-				add_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+				add_character_flag = {
+					flag = segrellion_young_griff_independent_throne_path_scheduled
+					days = 210
+				}
 
 
 				trigger_event = {
@@ -1375,6 +1381,34 @@ segrellion_young_griff.3000 = {
 		segrellion_young_griff_break_daemon_alliance_effect = yes
 		segrellion_young_griff_leave_daemon_restoration_effect = yes
 
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_started
+				}
+			}
+
+
+			add_character_flag = {
+				flag = segrellion_young_griff_independent_throne_path_scheduled
+				days = 210
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.7900
+
+				months = 6
+			}
+		}
+
 		character:Segrellion_60 = {
 			trigger_event = {
 				id = segrellion_young_griff.3100
@@ -1522,14 +1556,31 @@ segrellion_young_griff.3200 = {
 
 		name = segrellion_young_griff.3200.a
 
+
 		ai_chance = {
 			base = 90
 		}
 
+
 		add_character_flag = segrellion_young_griff_vale_response_resolved
 
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+
+		add_character_flag = segrellion_young_griff_stayed_daemon_vale
+
+
+		add_character_flag = segrellion_young_griff_canon_path_2
+
+		remove_character_flag = segrellion_young_griff_canon_path_1
+
+
+		segrellion_young_griff_stay_with_daemon_restoration_effect = yes
+
+
 		add_opinion = {
+
 			target = character:Segrellion_60
+
 			modifier = segrellion_young_griff_approved_vale_support_opinion
 		}
 	}
@@ -1545,13 +1596,56 @@ segrellion_young_griff.3200 = {
 
 		custom_tooltip = segrellion_young_griff.3200.b.tt
 
+
 		ai_chance = {
 			base = 10
 		}
 
+
 		add_character_flag = segrellion_young_griff_vale_response_resolved
 
-		segrellion_break_young_griff_daemon_alliance_effect = yes
+		add_character_flag = segrellion_young_griff_daemon_choice_resolved
+
+		add_character_flag = segrellion_young_griff_left_daemon_vale
+
+
+		add_character_flag = segrellion_young_griff_canon_path_1
+
+		remove_character_flag = segrellion_young_griff_canon_path_2
+
+
+		segrellion_young_griff_break_daemon_alliance_effect = yes
+
+		segrellion_young_griff_leave_daemon_restoration_effect = yes
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_started
+				}
+			}
+
+
+			add_character_flag = {
+				flag = segrellion_young_griff_independent_throne_path_scheduled
+				days = 210
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.7900
+
+				months = 6
+			}
+		}
 	}
 }
 
@@ -2567,6 +2661,17 @@ segrellion_young_griff.7000 = {
 		}
 	}
 
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_blood_debt_event_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_blood_debt_event_scheduled
+	}
+
 	left_portrait = {
 		character = root
 		animation = personality_bold
@@ -2592,14 +2697,26 @@ segrellion_young_griff.7000 = {
 	}
 
 
-	# DO NOT CALL IN THE DEBT
 	option = {
 
 		name = segrellion_young_griff.7000.b
 
 		add_character_flag = segrellion_young_griff_blood_debt_resolved
 
+
 		segrellion_young_griff_try_schedule_path_2_varys_effect = yes
+
+
+		# Varys' post-Flamelands scene must happen regardless
+		# of whether Aegon chooses to call in Daemon's debt.
+
+		trigger_event = {
+
+			id = segrellion_young_griff.0170
+
+			days = { 2 5 }
+		}
+
 
 		ai_chance = {
 			base = 10
@@ -3337,7 +3454,10 @@ segrellion_young_griff.7900 = {
 		name = segrellion_young_griff.7900.a
 
 
-		add_character_flag = segrellion_young_griff_independent_varys_scheduled
+		add_character_flag = {
+			flag = segrellion_young_griff_independent_varys_scheduled
+			days = 30
+		}
 
 
 		trigger_event = {
