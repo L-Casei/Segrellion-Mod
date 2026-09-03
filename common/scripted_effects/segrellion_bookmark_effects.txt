@@ -108,6 +108,97 @@ segrellion_setup_winds_of_winter_hosts_effect = {
 
 		character:Segrellion_60 ?= {
 
+			# =================================================
+			# DAEMON'S STARTING TREASURY
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					game_start_date = 8300.8.20
+
+					NOT = {
+						has_character_flag = segrellion_daemon_winds_starting_funds
+					}
+				}
+
+
+				add_gold = 500
+
+				add_character_flag = segrellion_daemon_winds_starting_funds
+			}
+
+
+			# =================================================
+			# DAEMON'S ESTABLISHED EXILE CAMP
+			#
+			# Pavilion III
+			# Supply Tent III
+			# Roaring Campfire II
+			# Proving Grounds IV
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					game_start_date = 8300.8.20
+
+					has_domicile = yes
+
+					NOT = {
+						has_character_flag = segrellion_daemon_winds_camp_upgraded
+					}
+				}
+
+
+				domicile = {
+
+
+					# -----------------------------------------
+					# PAVILION III
+					# -----------------------------------------
+
+					add_domicile_building = camp_main_02
+					add_domicile_building = camp_main_03
+
+
+					# -----------------------------------------
+					# SUPPLY TENT III
+					# -----------------------------------------
+
+					add_domicile_building = supply_tent_01
+					add_domicile_building = supply_tent_02
+					add_domicile_building = supply_tent_03
+
+
+					# -----------------------------------------
+					# ROARING CAMPFIRE II
+					# -----------------------------------------
+
+					add_domicile_building = camp_fire_01
+					add_domicile_building = camp_fire_02
+
+
+					# -----------------------------------------
+					# PROVING GROUNDS IV
+					# -----------------------------------------
+
+					add_domicile_building = proving_grounds_01
+					add_domicile_building = proving_grounds_02
+					add_domicile_building = proving_grounds_03
+					add_domicile_building = proving_grounds_04
+				}
+
+
+				add_character_flag = segrellion_daemon_winds_camp_upgraded
+			}
+
 			if = {
 				limit = {
 					is_alive = yes
@@ -315,12 +406,6 @@ segrellion_setup_massey_defiance_effect = {
 				modifier = segrellion_massey_despises_leo_opinion
 			}
 
-			# Daemon represents the restoration of the old order.
-			add_opinion = {
-				target = character:Segrellion_60
-				modifier = segrellion_massey_supports_daemon_opinion
-			}
-
 			# The True Sentinels are respected as fellow enemies
 			# of the Stormflame regime.
 			add_opinion = {
@@ -329,6 +414,71 @@ segrellion_setup_massey_defiance_effect = {
 			}
 
 			add_character_flag = segrellion_massey_defiance_initialized
+		}
+	}
+}
+
+# =========================================================
+# MASSEY'S HOOK
+# SECRET SUPPORT FOR DAEMON
+#
+# The Lord of Massey's Hook quietly confirms that the
+# Stormflames have never been accepted as the rightful
+# masters of the Flamelands.
+# =========================================================
+
+segrellion_schedule_massey_secret_support_effect = {
+
+	if = {
+
+		limit = {
+
+			game_start_date = 8300.8.20
+
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+				is_adult = yes
+
+				NOT = {
+					has_character_flag = segrellion_massey_secret_support_letter_queued
+				}
+
+				NOT = {
+					has_character_flag = segrellion_massey_secret_support_received
+				}
+
+				NOT = {
+					has_character_flag = segrellion_unicorn_returns_decision_taken
+				}
+
+				NOT = {
+					has_character_flag = segrellion_unicorn_returns_completed
+				}
+			}
+
+
+			title:d_masseys_hook.holder ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_massey_defiance_initialized
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_massey_secret_support_letter_queued
+
+
+			trigger_event = {
+
+				id = segrellion_winds.0006
+
+				days = { 15 30 }
+			}
 		}
 	}
 }

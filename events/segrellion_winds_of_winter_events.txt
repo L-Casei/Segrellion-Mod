@@ -209,6 +209,247 @@ segrellion_winds.0005 = {
 	}
 }
 
+# =========================================================
+# 0006 - THE FLAMELANDS REMEMBER
+#
+# A secret raven from Massey's Hook.
+# =========================================================
+
+segrellion_winds.0006 = {
+
+	type = letter_event
+
+	sender = title:d_masseys_hook.holder
+
+	opening = segrellion_winds.0006.opening
+
+	title = segrellion_winds.0006.t
+	desc = segrellion_winds.0006.desc
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_massey_secret_support_received
+		}
+
+		title:d_masseys_hook.holder ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_massey_secret_support_letter_queued
+
+		add_character_flag = segrellion_massey_secret_support_received
+
+
+		title:d_masseys_hook.holder = {
+
+			save_scope_as = segrellion_massey_supporter
+
+			add_character_flag = segrellion_massey_secretly_supports_daemon
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_massey_supports_daemon_opinion
+			}
+		}
+
+
+		add_opinion = {
+
+			target = scope:segrellion_massey_supporter
+
+			modifier = segrellion_daemon_respects_massey_support_opinion
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT HIS SECRET SUPPORT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0006.a
+
+		custom_tooltip = segrellion_winds.0006.support_tt
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+
+	# =====================================================
+	# ASK FOR MONEY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_winds.0006.b
+
+		custom_tooltip = segrellion_winds.0006.support_tt
+		custom_tooltip = segrellion_winds.0006.funds_tt
+
+
+		add_character_flag = segrellion_massey_funding_requested
+
+
+		hidden_effect = {
+
+			random_list = {
+
+
+				# -----------------------------------------
+				# 100 GOLD - MOST LIKELY
+				# -----------------------------------------
+
+				60 = {
+
+					add_gold = 100
+
+					add_character_flag = segrellion_massey_funding_100
+
+
+					scope:segrellion_massey_supporter ?= {
+						add_gold = -100
+					}
+				}
+
+
+				# -----------------------------------------
+				# 250 GOLD
+				# -----------------------------------------
+
+				30 = {
+
+					add_gold = 250
+
+					add_character_flag = segrellion_massey_funding_250
+
+
+					scope:segrellion_massey_supporter ?= {
+						add_gold = -250
+					}
+				}
+
+
+				# -----------------------------------------
+				# 500 GOLD - RARE
+				# -----------------------------------------
+
+				10 = {
+
+					add_gold = 500
+
+					add_character_flag = segrellion_massey_funding_500
+
+
+					scope:segrellion_massey_supporter ?= {
+						add_gold = -500
+					}
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_winds.0007
+
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+
+# =========================================================
+# 0007 - COIN FROM MASSEY'S HOOK
+# =========================================================
+
+segrellion_winds.0007 = {
+
+	type = letter_event
+
+	sender = title:d_masseys_hook.holder
+
+	opening = segrellion_winds.0007.opening
+
+	title = segrellion_winds.0007.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_massey_funding_500
+				}
+
+				desc = segrellion_winds.0007.desc_500
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_massey_funding_250
+				}
+
+				desc = segrellion_winds.0007.desc_250
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_massey_funding_100
+				}
+
+				desc = segrellion_winds.0007.desc_100
+			}
+
+
+			desc = segrellion_winds.0007.desc_fallback
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winds.0007.a
+
+
+		hidden_effect = {
+
+			remove_character_flag = segrellion_massey_funding_requested
+
+			remove_character_flag = segrellion_massey_funding_100
+			remove_character_flag = segrellion_massey_funding_250
+			remove_character_flag = segrellion_massey_funding_500
+		}
+	}
+}
+
 
 # =========================================================
 # 0101 - SOMETHING SURVIVED

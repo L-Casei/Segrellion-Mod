@@ -32,7 +32,40 @@ segrellion_repay_vale_debt_decision = {
 	is_valid = {
 
 		is_adult = yes
+
 		is_imprisoned = no
+
+
+		custom_description = {
+
+			text = segrellion_vale_debt_outstanding_requirement
+
+			has_variable = segrellion_vale_debt
+
+			var:segrellion_vale_debt > 0
+		}
+
+
+		custom_description = {
+
+			text = segrellion_vale_debt_can_make_payment_requirement
+
+			OR = {
+
+				# At least the minimum fixed payment is possible.
+				AND = {
+					var:segrellion_vale_debt >= 100
+					gold >= 100
+				}
+
+				# Less than 100 remains, so the full-balance
+				# option is the only necessary payment.
+				AND = {
+					var:segrellion_vale_debt < 100
+					gold >= var:segrellion_vale_debt
+				}
+			}
+		}
 	}
 
 
@@ -53,7 +86,9 @@ segrellion_repay_vale_debt_decision = {
 
 			value = segrellion_vale_repayment_100
 
-			current_description = segrellion_vale_repayment_100_desc
+			current_description = {
+				desc = segrellion_vale_repayment_100_desc
+			}
 
 			localization = segrellion_vale_repayment_100
 
@@ -81,7 +116,9 @@ segrellion_repay_vale_debt_decision = {
 
 			value = segrellion_vale_repayment_250
 
-			current_description = segrellion_vale_repayment_250_desc
+			current_description = {
+				desc = segrellion_vale_repayment_250_desc
+			}
 
 			localization = segrellion_vale_repayment_250
 
@@ -109,7 +146,9 @@ segrellion_repay_vale_debt_decision = {
 
 			value = segrellion_vale_repayment_500
 
-			current_description = segrellion_vale_repayment_500_desc
+			current_description = {
+				desc = segrellion_vale_repayment_500_desc
+			}
 
 			localization = segrellion_vale_repayment_500
 
@@ -137,7 +176,9 @@ segrellion_repay_vale_debt_decision = {
 
 			value = segrellion_vale_repayment_full
 
-			current_description = segrellion_vale_repayment_full_desc
+			current_description = {
+				desc = segrellion_vale_repayment_full_desc
+			}
 
 			localization = segrellion_vale_repayment_full
 
@@ -158,6 +199,47 @@ segrellion_repay_vale_debt_decision = {
 
 
 	effect = {
+
+		custom_tooltip = segrellion_vale_debt_payment_effect_tt
+
+
+		if = {
+			limit = {
+				scope:segrellion_vale_repayment_100 = yes
+			}
+
+			custom_tooltip = segrellion_vale_debt_payment_100_effect_tt
+		}
+
+
+		else_if = {
+			limit = {
+				scope:segrellion_vale_repayment_250 = yes
+			}
+
+			custom_tooltip = segrellion_vale_debt_payment_250_effect_tt
+		}
+
+
+		else_if = {
+			limit = {
+				scope:segrellion_vale_repayment_500 = yes
+			}
+
+			custom_tooltip = segrellion_vale_debt_payment_500_effect_tt
+		}
+
+
+		else_if = {
+			limit = {
+				scope:segrellion_vale_repayment_full = yes
+			}
+
+			custom_tooltip = segrellion_vale_debt_payment_full_effect_tt
+		}
+
+
+		custom_tooltip = segrellion_vale_debt_completion_effect_tt
 
 		hidden_effect = {
 
