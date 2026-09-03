@@ -880,6 +880,26 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 			}
 		}
 
+		# =================================================
+		# DESTROY THE OLD RED UNICORN LANDLESS CAMP
+		#
+		# Visenya cannot reliably become Daemon's courtier
+		# while still being the ruler of her old LAAMP title.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:d_laamp_red_unicorn.holder ?= {
+					this = character:Black_Unicorn_1
+				}
+			}
+
+
+			destroy_title = title:d_laamp_red_unicorn
+		}
+
 
 		# =================================================
 		# VISENYA
@@ -1755,4 +1775,874 @@ segrellion_black_unicorn_visenya_take_flamelands_effect = {
 
 		killer = character:Black_Unicorn_1
 	}
+}
+
+# =========================================================
+# BLACK UNICORN PART III
+# COMMON CLEANUP
+# =========================================================
+
+segrellion_black_unicorn_clear_post_beacon_route_flags_effect = {
+
+	remove_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+	remove_character_flag = segrellion_black_unicorn_private_reason_route_pending
+
+	remove_character_flag = segrellion_black_unicorn_private_lustful_route_pending
+
+	remove_character_flag = segrellion_black_unicorn_private_headbutt_route_pending
+
+	remove_character_flag = segrellion_black_unicorn_private_negotiation_started
+}
+
+
+# =========================================================
+# RHAEGON REMAINS WITH VISENYA
+#
+# Never changes ownership or bond.
+# It only keeps the dragon physically with Visenya.
+# =========================================================
+
+segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = {
+
+	if = {
+
+		limit = {
+			exists = global_var:segrellion_historical_rhaegon
+		}
+
+
+		global_var:segrellion_historical_rhaegon = {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_location = character:Black_Unicorn_1.location
+
+
+				add_character_flag = segrellion_rhaegon_remained_with_visenya
+			}
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_visenya_kept_rhaegon
+		}
+	}
+}
+
+
+# =========================================================
+# VISENYA LEAVES THE BEACON WITHOUT AN AGREEMENT
+# =========================================================
+
+segrellion_black_unicorn_visenya_leave_beacon_effect = {
+
+	character:Black_Unicorn_1 = {
+
+		set_location = title:b_cold_peaks.title_province
+
+		add_character_flag = segrellion_black_unicorn_left_beacon_without_agreement
+	}
+
+
+	segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
+
+	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+
+	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+	add_character_flag = segrellion_black_unicorn_no_agreement_with_visenya
+}
+
+
+# =========================================================
+# RECORD DAEMON'S CURRENT MARRIAGE / BETROTHAL
+#
+# Stored permanently for later wife-specific story events.
+# =========================================================
+
+segrellion_black_unicorn_record_daemon_union_effect = {
+
+	if = {
+		limit = {
+			has_variable = segrellion_black_unicorn_current_wife
+		}
+
+		remove_variable = segrellion_black_unicorn_current_wife
+	}
+
+
+	if = {
+		limit = {
+			has_variable = segrellion_black_unicorn_current_betrothed
+		}
+
+		remove_variable = segrellion_black_unicorn_current_betrothed
+	}
+
+
+	if = {
+
+		limit = {
+			exists = primary_spouse
+		}
+
+
+		primary_spouse = {
+
+			save_scope_as = segrellion_black_unicorn_current_wife_scope
+
+			add_character_flag = segrellion_black_unicorn_wife_before_visenya
+		}
+
+
+		set_variable = {
+
+			name = segrellion_black_unicorn_current_wife
+
+			value = scope:segrellion_black_unicorn_current_wife_scope
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_had_existing_wife
+
+
+		if = {
+
+			limit = {
+				scope:segrellion_black_unicorn_current_wife_scope = character:Targaryen_9
+			}
+
+			add_character_flag = segrellion_black_unicorn_important_wife_daenerys
+		}
+
+
+		if = {
+
+			limit = {
+				scope:segrellion_black_unicorn_current_wife_scope = character:Martell_9
+			}
+
+			add_character_flag = segrellion_black_unicorn_important_wife_arianne
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			exists = betrothed
+		}
+
+
+		betrothed = {
+
+			save_scope_as = segrellion_black_unicorn_current_betrothed_scope
+
+			add_character_flag = segrellion_black_unicorn_betrothed_before_visenya
+		}
+
+
+		set_variable = {
+
+			name = segrellion_black_unicorn_current_betrothed
+
+			value = scope:segrellion_black_unicorn_current_betrothed_scope
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_had_existing_betrothal
+	}
+}
+
+
+# =========================================================
+# DAEMON ABANDONS HIS EXISTING WIFE FOR VISENYA
+# =========================================================
+
+segrellion_black_unicorn_abandon_current_wife_effect = {
+
+	var:segrellion_black_unicorn_current_wife ?= {
+
+		save_scope_as = segrellion_black_unicorn_abandoned_wife
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_black_unicorn_abandoned_wife
+
+			scope:segrellion_black_unicorn_abandoned_wife = {
+				is_alive = yes
+			}
+		}
+
+
+		scope:segrellion_black_unicorn_abandoned_wife = {
+
+			add_character_flag = segrellion_black_unicorn_abandoned_by_daemon_for_visenya
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_abandoned_wife_for_visenya_opinion
+			}
+
+
+			every_close_family_member = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != root
+				}
+
+
+				add_opinion = {
+
+					target = root
+
+					modifier = segrellion_family_abandoned_for_visenya_opinion
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					is_spouse_of = root
+				}
+
+				divorce = root
+			}
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_existing_wife_abandoned
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_black_unicorn_faithless_husband_modifier
+
+			years = 10
+		}
+	}
+}
+
+
+# =========================================================
+# BREAK AN EXISTING BETROTHAL FOR VISENYA
+# =========================================================
+
+segrellion_black_unicorn_break_betrothal_for_visenya_effect = {
+
+	if = {
+
+		limit = {
+			exists = betrothed
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_existing_betrothal_abandoned
+
+		break_betrothal = betrothed
+	}
+}
+
+
+# =========================================================
+# POLITICAL ALLIANCE
+#
+# Visenya:
+# - joins Daemon
+# - is politically legitimized
+# - becomes designated heir
+# - becomes Castellan
+# - receives fallback Right Hand status if AGOT somehow
+#   rejects the council appointment
+# =========================================================
+
+segrellion_black_unicorn_political_alliance_effect = {
+
+	segrellion_black_unicorn_visenya_join_daemon_effect = yes
+
+
+	character:Black_Unicorn_1 = {
+
+		if = {
+
+			limit = {
+				has_trait = bastard
+			}
+
+			remove_trait = bastard
+
+			add_trait = legitimized_bastard
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_trait = wild_oat
+			}
+
+			remove_trait = wild_oat
+
+			add_trait = legitimized_bastard
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_legitimized_by_daemon
+
+		add_character_flag = segrellion_black_unicorn_visenya_political_alliance
+	}
+
+
+	add_character_flag = segrellion_black_unicorn_visenya_political_alliance
+
+
+	# =====================================================
+	# ACTUAL DESIGNATED HEIR
+	# =====================================================
+
+	set_designated_heir_unsafe = character:Black_Unicorn_1
+
+
+	add_character_flag = segrellion_black_unicorn_visenya_designated_heir
+
+
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_heir_to_daemon
+	}
+
+
+	# =====================================================
+	# CASTELLAN
+	#
+	# Clear the existing seat because assign_councillor_type
+	# only assigns to an available position.
+	# =====================================================
+
+	if = {
+
+		limit = {
+			exists = cp:councillor_castellan
+		}
+
+		fire_councillor = cp:councillor_castellan
+	}
+
+
+	assign_councillor_type = {
+
+		type = councillor_castellan
+
+		target = character:Black_Unicorn_1
+
+		fire_on_actions = yes
+	}
+
+
+	if = {
+
+		limit = {
+
+			character:Black_Unicorn_1 = {
+				has_council_position = councillor_castellan
+			}
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_castellan
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_castellan_of_flamelands
+		}
+	}
+
+
+	else = {
+
+		add_character_flag = segrellion_black_unicorn_visenya_right_hand_fallback
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_right_hand_of_daemon
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_black_unicorn_right_hand_modifier
+			}
+		}
+	}
+
+
+	segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
+
+	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+
+	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+	add_character_flag = segrellion_black_unicorn_part_iii_political_resolution
+}
+
+# =========================================================
+# EXCLUSIVE MARRIAGE TO VISENYA
+#
+# Used by:
+# - Council normal marriage
+# - Council: wife refuses, Daemon chooses Visenya
+# - Private-room marriage
+#
+# This route removes any existing wife.
+# =========================================================
+
+segrellion_black_unicorn_marry_visenya_exclusive_effect = {
+
+	segrellion_black_unicorn_record_daemon_union_effect = yes
+
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_black_unicorn_current_wife
+		}
+
+		segrellion_black_unicorn_abandon_current_wife_effect = yes
+	}
+
+
+	segrellion_black_unicorn_break_betrothal_for_visenya_effect = yes
+
+
+	character:Black_Unicorn_1 = {
+
+		if = {
+
+			limit = {
+				exists = betrothed
+			}
+
+			break_betrothal = betrothed
+		}
+	}
+
+
+	marry = character:Black_Unicorn_1
+
+
+	add_character_flag = segrellion_black_unicorn_visenya_married_daemon
+
+
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_married_daemon
+	}
+
+
+	segrellion_black_unicorn_visenya_join_daemon_effect = yes
+
+	segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
+
+	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+
+	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+	add_character_flag = segrellion_black_unicorn_part_iii_marriage_resolution
+}
+
+
+# =========================================================
+# DUAL MARRIAGE
+#
+# TECHNICAL TEST REQUIRED:
+# Faith / AGOT may later normalize an invalid second spouse.
+#
+# Isolated deliberately behind dedicated flags.
+# =========================================================
+
+segrellion_black_unicorn_marry_visenya_dual_effect = {
+
+	segrellion_black_unicorn_record_daemon_union_effect = yes
+
+
+	add_character_flag = segrellion_black_unicorn_attempted_dual_marriage
+
+	add_character_flag = segrellion_black_unicorn_dual_marriage_accepted
+
+
+	character:Black_Unicorn_1 = {
+
+		if = {
+
+			limit = {
+				exists = betrothed
+			}
+
+			break_betrothal = betrothed
+		}
+	}
+
+
+	# Deliberately DO NOT divorce Daemon's first wife.
+
+	marry = character:Black_Unicorn_1
+
+
+	add_character_flag = segrellion_black_unicorn_visenya_married_daemon
+
+
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_married_daemon
+
+		add_character_flag = segrellion_black_unicorn_dual_marriage_accepted
+	}
+
+
+	segrellion_black_unicorn_visenya_join_daemon_effect = yes
+
+	segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
+
+	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+
+	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+	add_character_flag = segrellion_black_unicorn_part_iii_dual_marriage_resolution
+}
+
+# =========================================================
+# PRIVATE ROOM - CONSENSUAL INTIMACY
+#
+# No pregnancy is produced here.
+# =========================================================
+
+segrellion_black_unicorn_private_intimacy_effect = {
+
+	had_sex_with_effect = {
+
+		CHARACTER = character:Black_Unicorn_1
+
+		PREGNANCY_CHANCE = 0
+	}
+
+
+	add_character_flag = segrellion_black_unicorn_private_intimacy_with_visenya
+
+
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_private_intimacy_with_daemon
+	}
+}
+
+
+# =========================================================
+# PRIVATE ROOM - SOULMATES
+# =========================================================
+
+segrellion_black_unicorn_make_daemon_visenya_soulmates_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_relation_soulmate = character:Black_Unicorn_1
+			}
+		}
+
+
+		set_relation_soulmate = {
+
+			target = character:Black_Unicorn_1
+
+			reason = soulmate_laamp_adventure
+		}
+	}
+
+
+	add_character_flag = segrellion_black_unicorn_visenya_soulmate
+
+	add_character_flag = segrellion_daemon_visenya_soulmates
+
+
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_daemon_soulmate
+
+		add_character_flag = segrellion_visenya_daemon_soulmates
+	}
+}
+
+# =========================================================
+# DAEMON BETRAYS AND IMPRISONS VISENYA
+# =========================================================
+
+segrellion_black_unicorn_capture_visenya_effect = {
+
+	# She cannot remain a landless ruler while imprisoned
+	# in Daemon's court.
+
+	if = {
+
+		limit = {
+
+			title:d_laamp_red_unicorn.holder ?= {
+				this = character:Black_Unicorn_1
+			}
+		}
+
+
+		destroy_title = title:d_laamp_red_unicorn
+	}
+
+
+	character:Black_Unicorn_1 = {
+
+		set_employer = root
+
+		return_to_court = yes
+
+		set_location = title:b_castle_farring.title_province
+
+
+		add_character_flag = segrellion_black_unicorn_imprisoned_by_daemon
+
+		add_character_flag = segrellion_black_unicorn_imprisoned_visenya_story_pending
+	}
+
+
+	# =====================================================
+	# EXISTING NAMED SKAGOSI COMPANIONS
+	#
+	# If they were already generated, they die resisting.
+	# If not, the generic assault party is simply treated
+	# as neutralized by narrative/state flag.
+	# =====================================================
+
+	global_var:segrellion_visenya_skagosi_warrior_1 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_battle
+				killer = root
+			}
+		}
+	}
+
+
+	global_var:segrellion_visenya_skagosi_warrior_2 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_battle
+				killer = root
+			}
+		}
+	}
+
+
+	global_var:segrellion_visenya_skagosi_warrior_3 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_battle
+				killer = root
+			}
+		}
+	}
+
+
+	global_var:segrellion_visenya_skagosi_warrior_4 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_battle
+				killer = root
+			}
+		}
+	}
+
+
+	add_character_flag = segrellion_black_unicorn_skagosi_followers_neutralized
+
+
+	# =====================================================
+	# RHAEGON IS KEPT SAFE
+	#
+	# DO NOT:
+	# - kill him
+	# - remove him
+	# - re-bond him
+	# - transfer his ownership
+	# =====================================================
+
+	if = {
+
+		limit = {
+			exists = global_var:segrellion_historical_rhaegon
+		}
+
+
+		global_var:segrellion_historical_rhaegon = {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_location = title:b_castle_farring.title_province
+
+				add_character_flag = segrellion_rhaegon_safe_after_visenya_capture
+			}
+		}
+	}
+
+
+	imprison = {
+
+		target = character:Black_Unicorn_1
+
+		type = dungeon
+	}
+
+
+	add_character_flag = segrellion_black_unicorn_visenya_imprisoned
+
+	add_character_flag = segrellion_black_unicorn_daemon_betrayed_visenya
+
+	add_character_flag = segrellion_black_unicorn_imprisoned_visenya_story_pending
+
+
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_betrayed_by_daemon
+	}
+
+
+	add_character_modifier = {
+
+		modifier = segrellion_black_unicorn_treacherous_host_modifier
+
+		years = 10
+	}
+
+
+	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+
+	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+}
+
+# =========================================================
+# BAD ENDING
+#
+# Daemon breaks the negotiation and attacks.
+# His supporters in the room die.
+# His physically-present wife also dies.
+# Visenya survives and takes the Flamelands.
+# =========================================================
+
+segrellion_black_unicorn_force_fight_bad_ending_effect = {
+
+	add_character_flag = segrellion_black_unicorn_daemon_died_fighting_visenya
+
+
+	# =====================================================
+	# DAEMON'S FIGHTING MEN
+	# =====================================================
+
+	every_knight = {
+
+		limit = {
+
+			is_alive = yes
+
+			location = title:b_castle_farring.title_province
+		}
+
+
+		death = {
+
+			death_reason = death_battle
+
+			killer = character:Black_Unicorn_1
+		}
+	}
+
+
+	# =====================================================
+	# WIFE, ONLY IF SHE IS ACTUALLY PRESENT
+	# =====================================================
+
+	primary_spouse ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				location = title:b_castle_farring.title_province
+			}
+
+
+			death = {
+
+				death_reason = death_battle
+
+				killer = character:Black_Unicorn_1
+			}
+		}
+	}
+
+
+	# Existing takeover effect:
+	# - Visenya gets Flamelands
+	# - murderer
+	# - kinslayer
+	# - illegitimate ruler penalty
+	# - Daemon dies
+
+	segrellion_black_unicorn_visenya_take_flamelands_effect = yes
 }

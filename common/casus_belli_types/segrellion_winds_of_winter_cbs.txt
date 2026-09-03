@@ -57,11 +57,42 @@ segrellion_unicorn_returns_cb = {
 
 	should_invalidate = {
 
-		ep3_adventurer_landless_should_invalidate_trigger = yes
+		# =====================================================
+		# THE WAR MUST SURVIVE DAEMON BECOMING LANDED
+		#
+		# Vanilla adventurer invasions invalidate immediately
+		# when the attacker gains land.
+		#
+		# This is NOT appropriate for The Unicorn Returns.
+		#
+		# Daemon may inherit Vhal, Blackmark or another title
+		# during the war without abandoning his restoration.
+		# =====================================================
+
+		NOT = {
+
+			any_in_list = {
+
+				list = target_titles
+
+				any_in_de_jure_hierarchy = {
+
+					tier = tier_county
+
+					is_landless_type_title = no
+
+					holder = {
+
+						target_is_same_character_or_above = scope:defender
+					}
+				}
+			}
+		}
 	}
 
 
 	cost = {
+		prestige = 250
 	}
 
 
