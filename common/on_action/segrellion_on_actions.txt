@@ -1395,32 +1395,44 @@ segrellion_unicorn_returns_beacon_siege_check = {
 
 	trigger = {
 
-		this = character:Segrellion_60
+		# The siege that just completed must actually be
+		# the Beacon itself.
 
-		is_alive = yes
-
-		has_character_flag = segrellion_unicorn_returns_war_active
-
-		has_character_flag = segrellion_beacon_surrender_demanded
-
-		has_character_flag = segrellion_leo_refused_beacon_surrender
+		scope:barony ?= {
+			this = title:b_castle_farring
+		}
 
 
-		location = title:b_castle_farring.title_province
+		# It must belong to Daemon's restoration war.
+
+		scope:war ?= {
+			is_attacker = character:Segrellion_60
+		}
 
 
-		NOT = {
-			has_character_flag = segrellion_beacon_siege_resolved
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_unicorn_returns_war_active
+
+			has_character_flag = segrellion_beacon_surrender_demanded
+
+			has_character_flag = segrellion_leo_refused_beacon_surrender
+
+			NOT = {
+				has_character_flag = segrellion_beacon_siege_resolved
+			}
 		}
 	}
 
 
 	effect = {
 
-		add_character_flag = segrellion_beacon_siege_resolved
 
 		character:Segrellion_60 = {
 
+			add_character_flag = segrellion_beacon_siege_resolved
 			add_character_flag = segrellion_beacon_stormed_resolution
 
 			remove_character_modifier = segrellion_beacon_awaits_modifier

@@ -1486,10 +1486,6 @@ segrellion_black_unicorn_post_beacon_progression_effect = {
 
 				is_at_war = no
 
-
-				location = title:b_castle_farring.title_province
-
-
 				character:Black_Unicorn_1 ?= {
 
 					is_alive = yes
@@ -1504,16 +1500,38 @@ segrellion_black_unicorn_post_beacon_progression_effect = {
 			}
 
 
-			# Mark it BEFORE firing so another pulse can never
-			# duplicate the opening.
+			# =====================================================
+			# RETURN DAEMON TO THE BEACON
+			#
+			# Part III happens at the Beacon. Daemon may still have
+			# a stale physical location after commanding armies.
+			# =====================================================
+
+			if = {
+
+				limit = {
+					location != title:b_castle_farring.title_province
+				}
+
+
+				current_travel_plan ?= {
+					abort_travel_plan = yes
+				}
+
+
+				set_location = title:b_castle_farring.title_province
+			}
+
+
+			# =====================================================
+			# START PART III
+			# =====================================================
 
 			add_character_flag = segrellion_black_unicorn_post_beacon_started
 
 
 			trigger_event = {
-
 				id = segrellion_black_unicorn.0600
-
 				days = 0
 			}
 		}
