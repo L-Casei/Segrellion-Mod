@@ -43,6 +43,7 @@ monthly_global_pulse = {
 		segrellion_black_unicorn_post_beacon_progression
 		segrellion_young_griff_deerfield_progression
 		segrellion_aegon_daemon_vassalage_progression
+		segrellion_black_unicorn_personal_lock_progression
 	}
 }
 
@@ -54,6 +55,7 @@ on_game_start_after_lobby = {
         iaf_canon_children_on_game_start_after_lobby
         vladwyn_8106_startup
 		segrellion_tommen_peace_guard
+		segrellion_black_unicorn_personal_lock_progression
     }
 }
 
@@ -97,6 +99,7 @@ on_marriage = {
 	on_actions = {
 		segrellion_daenerys_marriage_guard
 		segrellion_arianne_marriage_guard
+		segrellion_black_unicorn_visenya_marriage_guard
 	}
 }
 
@@ -117,6 +120,23 @@ on_title_gain = {
 		segrellion_second_war_throne_settlement
 		segrellion_deadly_triarchy_title_gain
 		segrellion_black_unicorn_post_beacon_title_gain
+	}
+}
+
+on_set_relation_lover = {
+
+	on_actions = {
+
+		segrellion_black_unicorn_visenya_lover_guard
+	}
+}
+
+
+on_set_relation_soulmate = {
+
+	on_actions = {
+
+		segrellion_black_unicorn_visenya_soulmate_guard
 	}
 }
 
@@ -3130,6 +3150,257 @@ segrellion_aegon_daemon_vassalage_progression = {
 				id = segrellion_aegon_daemon.0001
 
 				days = { 7 14 }
+			}
+		}
+	}
+}
+
+# =========================================================
+# VISENYA PERSONAL STORY LOCK
+# =========================================================
+
+segrellion_black_unicorn_personal_lock_progression = {
+
+	effect = {
+
+		segrellion_black_unicorn_personal_lock_effect = yes
+	}
+}
+
+
+# =========================================================
+# VISENYA MARRIAGE GUARD
+# =========================================================
+
+segrellion_black_unicorn_visenya_marriage_guard = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					this = character:Black_Unicorn_1
+
+					scope:spouse = character:Black_Unicorn_1
+				}
+
+
+				NOT = {
+
+					AND = {
+
+						OR = {
+
+							AND = {
+
+								this = character:Segrellion_60
+
+								scope:spouse = character:Black_Unicorn_1
+							}
+
+							AND = {
+
+								this = character:Black_Unicorn_1
+
+								scope:spouse = character:Segrellion_60
+							}
+						}
+
+
+						character:Black_Unicorn_1 = {
+
+							OR = {
+
+								has_character_flag = segrellion_black_unicorn_scripted_marriage_authorized
+
+								has_character_flag = segrellion_black_unicorn_visenya_married_daemon
+
+								has_character_flag = segrellion_black_unicorn_married_daemon
+							}
+						}
+					}
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					this = character:Black_Unicorn_1
+				}
+
+				divorce = scope:spouse
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:spouse = character:Black_Unicorn_1
+				}
+
+				scope:spouse = {
+					divorce = root
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# VISENYA LOVER GUARD
+# =========================================================
+
+segrellion_black_unicorn_visenya_lover_guard = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					this = character:Black_Unicorn_1
+
+					scope:target = character:Black_Unicorn_1
+				}
+
+
+				NOT = {
+
+					AND = {
+
+						OR = {
+
+							AND = {
+
+								this = character:Segrellion_60
+
+								scope:target = character:Black_Unicorn_1
+							}
+
+							AND = {
+
+								this = character:Black_Unicorn_1
+
+								scope:target = character:Segrellion_60
+							}
+						}
+
+
+						character:Black_Unicorn_1 = {
+
+							OR = {
+
+								has_character_flag = segrellion_black_unicorn_scripted_lover_authorized
+
+								has_character_flag = segrellion_visenya_daemon_lovers
+							}
+						}
+					}
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					this = character:Black_Unicorn_1
+				}
+
+				remove_relation_lover = scope:target
+			}
+
+
+			else = {
+
+				scope:target = {
+
+					remove_relation_lover = root
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# VISENYA SOULMATE GUARD
+# =========================================================
+
+segrellion_black_unicorn_visenya_soulmate_guard = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					this = character:Black_Unicorn_1
+
+					scope:target = character:Black_Unicorn_1
+				}
+
+
+				NOT = {
+
+					AND = {
+
+						OR = {
+
+							AND = {
+
+								this = character:Segrellion_60
+
+								scope:target = character:Black_Unicorn_1
+							}
+
+							AND = {
+
+								this = character:Black_Unicorn_1
+
+								scope:target = character:Segrellion_60
+							}
+						}
+
+
+						character:Black_Unicorn_1 = {
+
+							OR = {
+
+								has_character_flag = segrellion_black_unicorn_scripted_soulmate_authorized
+
+								has_character_flag = segrellion_visenya_daemon_soulmates
+							}
+						}
+					}
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					this = character:Black_Unicorn_1
+				}
+
+				remove_relation_soulmate = scope:target
+			}
+
+
+			else = {
+
+				scope:target = {
+
+					remove_relation_soulmate = root
+				}
 			}
 		}
 	}

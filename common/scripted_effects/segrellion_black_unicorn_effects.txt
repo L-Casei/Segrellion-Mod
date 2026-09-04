@@ -1390,9 +1390,8 @@ segrellion_rhaegon_early_growth_effect = {
 # Starts the one-year clock after Daemon gains the
 # Flamelands.
 #
-# This effect is deliberately idempotent because it is
-# called both from on_title_gain and from the monthly
-# failsafe.
+# The monthly pulse and an independent watchdog both
+# protect this storyline from missed on_actions.
 # =========================================================
 
 segrellion_black_unicorn_start_post_beacon_clock_effect = {
@@ -1427,17 +1426,23 @@ segrellion_black_unicorn_start_post_beacon_clock_effect = {
 			# THE LAST UNICORN
 			# =================================================
 
-			give_nickname = nick_segrellion_the_last_unicorn
+			if = {
 
-			add_character_flag = segrellion_daemon_last_unicorn_nickname_granted
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daemon_last_unicorn_nickname_granted
+					}
+				}
+
+				give_nickname = nick_segrellion_the_last_unicorn
+
+				add_character_flag = segrellion_daemon_last_unicorn_nickname_granted
+			}
 
 
 			# =================================================
-			# ENSURE VISENYA'S SECRET HAS ALREADY BEEN CHOSEN
-			#
-			# This does NOT choose a route based on this story.
-			# It simply uses the existing game-rule/random
-			# resolver if the secret was never initialized.
+			# VISENYA'S SECRET
 			# =================================================
 
 			character:Black_Unicorn_1 = {
@@ -1452,12 +1457,25 @@ segrellion_black_unicorn_start_post_beacon_clock_effect = {
 
 			add_character_flag = segrellion_black_unicorn_post_beacon_clock_started
 
-
 			add_character_flag = {
 
 				flag = segrellion_black_unicorn_post_beacon_waiting_year
 
 				years = 1
+			}
+
+
+			# =================================================
+			# INDEPENDENT WATCHDOG
+			# =================================================
+
+			add_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0599
+
+				days = 30
 			}
 		}
 	}
@@ -1465,33 +1483,50 @@ segrellion_black_unicorn_start_post_beacon_clock_effect = {
 
 
 # =========================================================
-# MONTHLY POST-BEACON CHECK
+# TRY TO START PART III
 #
-# Once the one-year flag expires, this does NOT start a new
-# timer.
+# This is the ONLY place that decides whether 0600 should
+# be launched.
 #
-# It simply waits indefinitely until:
-#
-# - Daemon is alive
-# - Visenya is alive
-# - Daemon still rules the Flamelands
-# - Visenya has not already joined him
-# - Daemon is not at war
-# - Daemon is physically at the Beacon
-#
-# Then the event starts immediately.
+# The actual event does not depend on physical location.
 # =========================================================
 
-segrellion_black_unicorn_post_beacon_progression_effect = {
-
-	# =====================================================
-	# SAVE-COMPATIBLE CLOCK START
-	# =====================================================
-
-	segrellion_black_unicorn_start_post_beacon_clock_effect = yes
-
+segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
 
 	character:Segrellion_60 ?= {
+
+
+		# =====================================================
+		# OLD-SAVE RECOVERY
+		#
+		# Older versions marked the story "started" BEFORE
+		# 0600 successfully opened.
+		#
+		# If that happened, clear the dead flag.
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_post_beacon_started
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon
+				}
+			}
+
+			remove_character_flag = segrellion_black_unicorn_post_beacon_started
+		}
+
+
+		# =====================================================
+		# START
+		# =====================================================
 
 		if = {
 
@@ -1501,9 +1536,7 @@ segrellion_black_unicorn_post_beacon_progression_effect = {
 
 				is_imprisoned = no
 
-
 				title:e_flamelands.holder = this
-
 
 				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
 
@@ -1512,16 +1545,17 @@ segrellion_black_unicorn_post_beacon_progression_effect = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
 				}
 
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_queued
+				}
 
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_started
 				}
 
-
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
 				}
-
 
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
@@ -1530,12 +1564,12 @@ segrellion_black_unicorn_post_beacon_progression_effect = {
 
 				is_at_war = no
 
+
 				character:Black_Unicorn_1 ?= {
 
 					is_alive = yes
 
 					is_imprisoned = no
-
 
 					NOT = {
 						has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
@@ -1544,42 +1578,75 @@ segrellion_black_unicorn_post_beacon_progression_effect = {
 			}
 
 
-			# =====================================================
-			# RETURN DAEMON TO THE BEACON
-			#
-			# Part III happens at the Beacon. Daemon may still have
-			# a stale physical location after commanding armies.
-			# =====================================================
+			# Temporary only. Even if the event somehow disappears,
+			# this guard expires automatically.
 
-			if = {
+			add_character_flag = {
 
-				limit = {
-					location != title:b_castle_farring.title_province
-				}
+				flag = segrellion_black_unicorn_post_beacon_queued
 
-
-				current_travel_plan ?= {
-					abort_travel_plan = yes
-				}
-
-
-				set_location = title:b_castle_farring.title_province
+				days = 3
 			}
 
 
-			# =====================================================
-			# START PART III
-			# =====================================================
-
-			add_character_flag = segrellion_black_unicorn_post_beacon_started
-
-
 			trigger_event = {
+
 				id = segrellion_black_unicorn.0600
+
 				days = 0
 			}
 		}
 	}
+}
+
+
+# =========================================================
+# MONTHLY POST-BEACON CHECK
+# =========================================================
+
+segrellion_black_unicorn_post_beacon_progression_effect = {
+
+	segrellion_black_unicorn_start_post_beacon_clock_effect = yes
+
+
+	# =====================================================
+	# OLD-SAVE WATCHDOG RECOVERY
+	# =====================================================
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+				}
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0599
+
+				days = 30
+			}
+		}
+	}
+
+
+	segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = yes
 }
 
 # =========================================================
@@ -2369,6 +2436,22 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 	}
 
 
+	character:Black_Unicorn_1 = {
+
+		add_character_flag = segrellion_black_unicorn_scripted_marriage_authorized
+
+		if = {
+
+			limit = {
+				has_trait = refusing_marriage
+			}
+
+
+			remove_trait = refusing_marriage
+		}
+	}
+
+
 	# =====================================================
 	# LITERAL MARRIAGE
 	# =====================================================
@@ -2438,6 +2521,12 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 			days = 1
 		}
 	}
+
+
+	character:Black_Unicorn_1 = {
+
+		remove_character_flag = segrellion_black_unicorn_scripted_marriage_authorized
+	}
 }
 
 
@@ -2483,6 +2572,12 @@ segrellion_black_unicorn_make_daemon_visenya_soulmates_effect = {
 		}
 
 
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_scripted_soulmate_authorized
+		}
+
+
 		set_relation_soulmate = {
 
 			target = character:Black_Unicorn_1
@@ -2502,6 +2597,12 @@ segrellion_black_unicorn_make_daemon_visenya_soulmates_effect = {
 		add_character_flag = segrellion_black_unicorn_daemon_soulmate
 
 		add_character_flag = segrellion_visenya_daemon_soulmates
+	}
+
+
+	character:Black_Unicorn_1 = {
+
+		remove_character_flag = segrellion_black_unicorn_scripted_soulmate_authorized
 	}
 }
 
@@ -2757,4 +2858,180 @@ segrellion_black_unicorn_force_fight_bad_ending_effect = {
 	# - Daemon dies
 
 	segrellion_black_unicorn_visenya_take_flamelands_effect = yes
+}
+
+# =========================================================
+# VISENYA PERSONAL STORY LOCK
+#
+# Until her storyline releases her:
+#
+# - no external marriage
+# - no external betrothal
+# - no external lovers
+# - no external soulmates
+#
+# Scripted Daemon relations created by this storyline are
+# explicitly preserved.
+# =========================================================
+
+segrellion_black_unicorn_personal_lock_effect = {
+
+	character:Black_Unicorn_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+					}
+				}
+
+
+				NOR = {
+
+					has_character_flag = segrellion_black_unicorn_visenya_married_daemon
+
+					has_character_flag = segrellion_black_unicorn_married_daemon
+				}
+			}
+
+
+			save_scope_as = segrellion_locked_visenya
+
+
+			# =================================================
+			# BLOCK NORMAL MARRIAGE
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_trait = refusing_marriage
+					}
+				}
+
+				add_trait = refusing_marriage
+			}
+
+
+			# =================================================
+			# REMOVE BETROTHALS
+			# =================================================
+
+			if = {
+
+				limit = {
+					exists = betrothed
+				}
+
+				break_betrothal = betrothed
+			}
+
+
+			# =================================================
+			# REMOVE EXTERNAL SPOUSES
+			# =================================================
+
+			every_spouse = {
+
+				divorce = scope:segrell_locked_visenya
+			}
+
+
+			# =================================================
+			# REMOVE EXTERNAL LOVERS
+			#
+			# Daemon is preserved only if OUR storyline
+			# explicitly established the relation.
+			# =================================================
+
+			every_lover = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+
+							AND = {
+
+								this = character:Segrellion_60
+
+								scope:segrellion_locked_visenya = {
+
+									OR = {
+
+										has_character_flag = segrellion_black_unicorn_scripted_lover_authorized
+
+										has_character_flag = segrellion_visenya_daemon_lovers
+									}
+								}
+							}
+						}
+					}
+
+
+					remove_relation_lover = scope:segrellion_locked_visenya
+				}
+			}
+
+
+			# =================================================
+			# REMOVE EXTERNAL SOULMATES
+			# =================================================
+
+			every_soulmate = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+
+							AND = {
+
+								this = character:Segrellion_60
+
+								scope:segrellion_locked_visenya = {
+
+									OR = {
+
+										has_character_flag = segrellion_black_unicorn_scripted_soulmate_authorized
+
+										has_character_flag = segrellion_visenya_daemon_soulmates
+									}
+								}
+							}
+						}
+					}
+
+
+					remove_relation_soulmate = scope:segrellion_locked_visenya
+				}
+			}
+		}
+
+
+		else = {
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+	}
 }
