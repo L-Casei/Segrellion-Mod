@@ -2,6 +2,83 @@
 # JON POST-RESURRECTION - EFFECTS
 # =========================================================
 
+# =========================================================
+# JON SNOW - PERSONALITY
+# =========================================================
+
+segrellion_jon_normalize_personality_effect = {
+
+	# Remove the old Jon traits we no longer want.
+
+	if = {
+		limit = { has_trait = honest }
+		remove_trait = honest
+	}
+
+	if = {
+		limit = { has_trait = honorable }
+		remove_trait = honorable
+	}
+
+	if = {
+		limit = { has_trait = compassionate }
+		remove_trait = compassionate
+	}
+
+	if = {
+		limit = { has_trait = cynical }
+		remove_trait = cynical
+	}
+
+
+	# Canon Segrellion Jon personality.
+
+	if = {
+		limit = {
+			NOT = { has_trait = brave }
+		}
+
+		add_trait = brave
+	}
+
+	if = {
+		limit = {
+			NOT = { has_trait = just }
+		}
+
+		add_trait = just
+	}
+
+	if = {
+		limit = {
+			NOT = { has_trait = callous }
+		}
+
+		add_trait = callous
+	}
+
+	if = {
+		limit = {
+			NOT = { has_trait = vengeful }
+		}
+
+		add_trait = vengeful
+	}
+
+
+	# Jon is a Dreamer.
+
+	if = {
+		limit = {
+			NOT = {
+				has_trait = segrellion_dreamer_trait
+			}
+		}
+
+		add_trait = segrellion_dreamer_trait
+	}
+}
+
 segrellion_jon_execute_surviving_mutineers_effect = {
 
 	# ROOT = Jon
@@ -29,24 +106,41 @@ segrellion_jon_close_mutiny_storyline_effect = {
 	remove_character_flag = segrellion_jon_post_resurrection_chain_running
 
 	add_character_flag = segrellion_jon_mutiny_closed
+
+	# Compatibility with the original resurrection storyline.
+
+	add_character_flag = segrellion_jon_mutineers_purged
+	add_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+
+
+	# Continue toward the Stannis / Northern storyline.
+
+	trigger_event = {
+		id = segrellion_jon_resurrection.0220
+		days = { 2 5 }
+	}
 }
 
 segrellion_jon_post_resurrection_dreamer_progression_effect = {
 
 	# ROOT = Jon
-	# Si ya tienes un efecto propio para dreamer/sueños,
-	# sustitúyelo aquí directamente.
 
 	if = {
 		limit = {
-			has_trait = dreamer
+			NOT = {
+				has_trait = segrellion_dreamer_trait
+			}
 		}
 
-		add_trait_xp = {
-			trait = dreamer
-			value = 25
-		}
+		add_trait = segrellion_dreamer_trait
 	}
+
+	add_trait_xp = {
+		trait = segrellion_dreamer_trait
+		value = 25
+	}
+
+	segrellion_sync_dreamer_visual_level_effect = yes
 }
 
 segrellion_jon_apply_awakened_appearance_effect = {

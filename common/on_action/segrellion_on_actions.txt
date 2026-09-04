@@ -31,6 +31,7 @@ monthly_global_pulse = {
 		segrellion_young_griff_iron_throne_invasion_failsafe
 		segrellion_young_griff_kings_landing_arrival_fallback
 		segrellion_jon_resurrection_progression
+		segrellion_jon_targaryen_reveal_progression
 		segrellion_stannis_opening_recovery
 		segrellion_jon_body_in_ice_failsafe
 		segrellion_young_griff_opening_progression
@@ -522,6 +523,15 @@ segrellion_on_game_start = {
 				add_character_flag = segrellion_daenerys_custom_clothes
 				if = {
 					limit = {
+						NOT = {
+							has_trait = segrellion_dreamer_trait
+						}
+					}
+
+					add_trait = segrellion_dreamer_trait
+				}
+				if = {
+					limit = {
 						current_date < 8113.1.1
 						any_spouse = { this = character:Segrellion_1 }
 					}
@@ -541,6 +551,25 @@ segrellion_on_game_start = {
 				add_character_flag = segrellion_aeryn_custom_clothes
 			}
 		}
+
+		# =========================================================
+		# JON SNOW - CANON PERSONALITY / DREAMER
+		# =========================================================
+
+		character:Stark_7 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+					game_start_date = 8300.8.20
+				}
+
+				segrellion_jon_normalize_personality_effect = yes
+
+				add_character_flag = segrellion_jon_force_no_headgear
+			}
+		}
+
 		segrellion_setup_historical_artifacts_effect = yes
 		segrellion_process_icebringer_historical_loss_effect = yes
 		segrellion_setup_winds_of_winter_hosts_effect = yes
@@ -548,7 +577,6 @@ segrellion_on_game_start = {
 		segrellion_schedule_massey_secret_support_effect = yes
 		segrellion_setup_young_griff_300_effect = yes
 		segrellion_setup_daenerys_300_effect = yes
-		# segrellion_setup_daenerys_followers_effect = yes
 		segrellion_setup_jon_resurrection_story_effect = yes
 		segrellion_setup_ramsay_takeover_effect = yes
 		segrellion_setup_stannis_northern_campaign_effect = yes
@@ -3400,6 +3428,71 @@ segrellion_black_unicorn_visenya_soulmate_guard = {
 				scope:target = {
 
 					remove_relation_soulmate = root
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# JON SNOW - TARGARYEN REVEAL
+# =========================================================
+
+segrellion_jon_targaryen_reveal_progression = {
+
+	effect = {
+
+		if = {
+			limit = {
+
+				has_global_variable = segrellion_resurrected_jon
+
+				global_var:segrellion_resurrected_jon ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_jon_targaryen_revealed
+					}
+
+					OR = {
+
+						dynasty ?= dynasty:dynn_Targaryen
+
+						character:Stark_7 = {
+							dynasty ?= dynasty:dynn_Targaryen
+						}
+					}
+				}
+			}
+
+
+			global_var:segrellion_resurrected_jon = {
+
+				# If AGOT changed the historical Jon's house,
+				# mirror that change onto our resurrected Jon.
+
+				if = {
+					limit = {
+
+						character:Stark_7 = {
+							dynasty ?= dynasty:dynn_Targaryen
+						}
+
+						NOT = {
+							dynasty ?= dynasty:dynn_Targaryen
+						}
+					}
+
+					set_house = character:Stark_7.house
+				}
+
+
+				add_character_flag = segrellion_jon_targaryen_revealed
+
+				trigger_event = {
+					id = segrellion_jon.1350
+					days = 1
 				}
 			}
 		}

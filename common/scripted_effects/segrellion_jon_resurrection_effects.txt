@@ -118,6 +118,8 @@ segrellion_create_resurrected_jon_effect = {
 
 				add_character_flag = segrellion_resurrected_jon_appearance
 
+				add_character_flag = segrellion_jon_force_no_headgear
+
 				add_character_flag = has_scripted_appearance
 
 				add_character_flag = hair_trait_m_hair_ep3_byzantine_01
@@ -165,65 +167,7 @@ segrellion_create_resurrected_jon_effect = {
 				# DEATH CHANGED HIM
 				# =========================================
 
-				if = {
-					limit = { has_trait = compassionate }
-					remove_trait = compassionate
-				}
-
-				if = {
-					limit = { has_trait = forgiving }
-					remove_trait = forgiving
-				}
-
-				if = {
-					limit = { has_trait = trusting }
-					remove_trait = trusting
-				}
-
-
-				# IMPORTANT:
-				# Jon is no longer Honest after his return.
-
-				if = {
-					limit = { has_trait = honest }
-					remove_trait = honest
-				}
-
-
-				if = {
-
-					limit = {
-						NOT = {
-							has_trait = callous
-						}
-					}
-
-					add_trait = callous
-				}
-
-
-				if = {
-
-					limit = {
-						NOT = {
-							has_trait = cynical
-						}
-					}
-
-					add_trait = cynical
-				}
-
-
-				if = {
-
-					limit = {
-						NOT = {
-							has_trait = vengeful
-						}
-					}
-
-					add_trait = vengeful
-				}
+				segrellion_jon_normalize_personality_effect = yes
 
 
 				# =========================================
@@ -354,32 +298,59 @@ segrellion_create_resurrected_jon_effect = {
 
 		scope:resurrected_jon = {
 
+				if = {
+					limit = {
+						NOT = {
+							has_trait = nightswatch
+						}
+					}
+
+					add_trait = nightswatch
+				}
+
+				change_government = nights_watch_government
+
+				set_primary_title_to = title:k_the_wall
+
+				set_realm_capital = title:c_castle_black
+
+				set_location = title:c_castle_black.title_province
+			}
+
+
+			# =========================================================
+			# RETURN PLAYER CONTROL TO JON IMMEDIATELY
+			#
+			# If the original Jon player was transferred to Denys,
+			# switch back before CK3 evaluates Denys as unlanded.
+			# =========================================================
+
 			if = {
 				limit = {
-					NOT = {
-						has_trait = nightswatch
+
+					scope:interim_lord_commander = {
+						is_ai = no
 					}
 				}
 
-				add_trait = nightswatch
+				scope:interim_lord_commander = {
+
+					set_player_character = scope:resurrected_jon
+				}
 			}
 
 
-			change_government = nights_watch_government
+			# =========================================================
+			# BEGIN JON'S POST-RESURRECTION STORY
+			# =========================================================
 
+			scope:resurrected_jon = {
 
-			set_primary_title_to = title:k_the_wall
-
-			set_realm_capital = title:c_castle_black
-
-			set_location = title:c_castle_black.title_province
-
-
-			trigger_event = {
-				id = segrellion_jon.1299
-				days = 0
+				trigger_event = {
+					id = segrellion_jon.1299
+					days = 0
+				}
 			}
-		}
 
 
 		# =========================================================
@@ -414,24 +385,6 @@ segrellion_create_resurrected_jon_effect = {
 
 
 				equip_artifact_to_owner_replace = yes
-			}
-		}
-
-
-		# =================================================
-		# AFTERMATH
-		#
-		# First the player learns Jon lives.
-		# Then Jon judges his murderers.
-		# =================================================
-
-		scope:resurrected_jon = {
-
-			trigger_event = {
-
-				id = segrellion_jon_resurrection.0210
-
-				days = 2
 			}
 		}
 
