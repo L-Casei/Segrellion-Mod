@@ -726,6 +726,27 @@ segrellion_unicorn_returns_cb = {
 
 			resolve_title_and_vassal_change = scope:segrellion_flamelands_restoration_change
 
+			# =====================================================
+			# LEO'S SENTENCE
+			#
+			# Only now is Leo allowed to die.
+			#
+			# e_flamelands and the restored holdings already belong
+			# to Daemon, so Leo's death can no longer change the
+			# primary defender or create a Stormflame successor.
+			# =====================================================
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_leo_execution_pending_after_unicorn_returns_victory
+				}
+
+
+				segrellion_queue_leo_execution_after_unicorn_returns_effect = yes
+			}
+
 
 			# =====================================================
 			# DAEMON'S CAPITAL
@@ -1317,6 +1338,8 @@ segrellion_stannis_northern_campaign_cb = {
 
 			remove_variable = segrellion_stannis_northern_war
 
+			remove_character_flag = segrellion_leo_execution_pending_after_unicorn_returns_victory
+
 
 			trigger_event = {
 
@@ -1351,6 +1374,8 @@ segrellion_stannis_northern_campaign_cb = {
 			add_character_flag = segrellion_stannis_northern_campaign_failed
 
 			remove_variable = segrellion_stannis_northern_war
+
+			remove_character_flag = segrellion_leo_execution_pending_after_unicorn_returns_victory
 
 
 			trigger_event = {
@@ -1408,6 +1433,7 @@ segrellion_stannis_northern_campaign_cb = {
 
 			remove_character_flag = segrellion_stannis_northern_cb_authorized
 			remove_character_flag = segrellion_stannis_northern_campaign_active
+			remove_character_flag = segrellion_leo_execution_pending_after_unicorn_returns_victory
 
 			segrellion_remove_stannis_pre_winterfell_modifiers_effect = yes
 

@@ -42,6 +42,7 @@ segrellion_gather_stormflames_at_beacon_effect = {
 
 			limit = {
 				is_alive = yes
+				is_male = yes
 			}
 
 			# They are not to be randomly pulled out as knights.
@@ -134,6 +135,8 @@ segrellion_capture_stormflame_court_effect = {
 
 				is_alive = yes
 
+				is_male = yes
+
 				is_imprisoned = no
 			}
 
@@ -195,6 +198,156 @@ segrellion_capture_stormflame_court_effect = {
 	}
 }
 
+# =========================================================
+# CONFISCATE STORMFLAME MALE TITLES
+#
+# Every landed Stormflame man loses every real landed title
+# before execution or being sent to the Night's Watch.
+#
+# Leo is deliberately excluded. He must remain primary
+# defender until The Unicorn Returns actually ends.
+# =========================================================
+
+segrellion_confiscate_stormflame_male_titles_effect = {
+
+
+	create_title_and_vassal_change = {
+
+		type = revoked
+
+		save_scope_as = segrellion_stormflame_confiscation_change
+
+		add_claim_on_loss = no
+	}
+
+
+	house:house_Stormflame = {
+
+		every_house_member = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_male = yes
+
+				this != character:Stormflame_3
+			}
+
+
+			every_held_title = {
+
+				limit = {
+
+					is_landless_type_title = no
+
+					is_noble_family_title = no
+				}
+
+
+				change_title_holder = {
+
+					holder = character:Segrellion_60
+
+					change = scope:segrellion_stormflame_confiscation_change
+				}
+			}
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_stormflame_confiscation_change
+}
+
+# =========================================================
+# LEO'S DELAYED EXECUTION
+#
+# Never kill Leo while he is still the primary defender.
+#
+# If the war has already ended, execute him immediately.
+# Otherwise keep him imprisoned and mark the execution
+# for the moment Daemon wins The Unicorn Returns.
+# =========================================================
+
+segrellion_queue_leo_execution_after_unicorn_returns_effect = {
+
+
+	character:Segrellion_60 = {
+
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_unicorn_returns_completed
+
+				title:e_flamelands.holder = this
+			}
+
+
+			remove_character_flag = segrellion_leo_execution_pending_after_unicorn_returns_victory
+
+
+			character:Stormflame_3 ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					death = {
+
+						death_reason = death_execution
+
+						killer = character:Segrellion_60
+					}
+				}
+			}
+		}
+
+
+		else = {
+
+
+			add_character_flag = segrellion_leo_execution_pending_after_unicorn_returns_victory
+
+
+			# Leo remains in chains until the war is formally won.
+			if = {
+
+				limit = {
+
+					character:Stormflame_3 ?= {
+
+						is_alive = yes
+
+						is_imprisoned = no
+					}
+				}
+
+
+				character:Stormflame_3 = {
+
+					add_character_flag = {
+						flag = block_imprisonment_event
+						days = 2
+					}
+				}
+
+
+				imprison = {
+
+					target = character:Stormflame_3
+
+					type = dungeon
+				}
+			}
+		}
+	}
+}
+
 
 # =========================================================
 # BREAK THE PROMISE
@@ -203,47 +356,70 @@ segrellion_capture_stormflame_court_effect = {
 
 segrellion_execute_all_stormflame_captives_effect = {
 
+
 	character:Segrellion_60 = {
+
 		add_character_flag = segrellion_broke_beacon_mercy_oath
 	}
 
+
+	# Prevent succession shenanigans from the condemned men.
+	segrellion_confiscate_stormflame_male_titles_effect = yes
+
+
+	# Every male Stormflame except Leo is executed now.
+	# Stormflame women are completely outside this war settlement.
 	house:house_Stormflame = {
 
 		every_house_member = {
 
 			limit = {
+
 				is_alive = yes
+
+				is_male = yes
+
+				this != character:Stormflame_3
 			}
 
+
 			death = {
+
 				death_reason = death_execution
+
 				killer = character:Segrellion_60
 			}
 		}
 	}
+
+
+	# Leo must remain alive until the CB has formally ended.
+	segrellion_queue_leo_execution_after_unicorn_returns_effect = yes
 }
 
 
-# =========================================================
-# HONOR THE PROMISE
-# LEO DIES, HIS FAMILY IS RELEASED
-# =========================================================
-
 segrellion_execute_leo_spare_stormflame_family_effect = {
 
+
 	character:Segrellion_60 = {
+
 		add_character_flag = segrellion_honored_beacon_mercy_oath
 	}
 
 
 	# =====================================================
-	# SURVIVING STORMFLAMES
+	# CONFISCATE EVERY STORMFLAME MALE TITLE FIRST
+	# =====================================================
+
+	segrellion_confiscate_stormflame_male_titles_effect = yes
+
+
+	# =====================================================
+	# ADULT MEN -> NIGHT'S WATCH
 	#
-	# Adult men take the black.
-	# Women and children are released.
-	#
-	# This happens BEFORE Leo dies so the adult men are
-	# removed from normal succession before his death.
+	# Women are deliberately NEVER scoped here.
+	# Leo is excluded because he awaits execution after
+	# the formal end of the war.
 	# =====================================================
 
 	house:house_Stormflame = {
@@ -251,97 +427,109 @@ segrellion_execute_leo_spare_stormflame_family_effect = {
 		every_house_member = {
 
 			limit = {
+
 				is_alive = yes
+
+				is_male = yes
+
+				is_adult = yes
+
 				this != character:Stormflame_3
 			}
 
 
-			# -------------------------------------------------
-			# ADULT MEN -> NIGHT'S WATCH
-			# -------------------------------------------------
+			add_character_flag = segrellion_sent_to_wall_by_daemon
+
 
 			if = {
 
 				limit = {
-					is_male = yes
-					is_adult = yes
+					is_imprisoned = yes
 				}
 
-
-				add_character_flag = segrellion_sent_to_wall_by_daemon
-
-
-				if = {
-					limit = {
-						is_imprisoned = yes
-					}
-
-					release_from_prison = yes
-				}
-
-
-				if = {
-					limit = {
-						NOT = {
-							has_trait = nightswatch
-						}
-					}
-
-					add_trait = nightswatch
-				}
-
-
-				if = {
-					limit = {
-						is_ruler = no
-
-						title:k_the_wall.holder ?= {
-							is_alive = yes
-						}
-					}
-
-					set_employer = title:k_the_wall.holder
-				}
+				release_from_prison = yes
 			}
 
 
-			# -------------------------------------------------
-			# WOMEN AND CHILDREN -> RELEASED
-			# -------------------------------------------------
+			if = {
 
-			else = {
+				limit = {
 
-				add_character_flag = segrellion_spared_by_daemon_at_beacon
-
-				if = {
-					limit = {
-						is_imprisoned = yes
+					NOT = {
+						has_trait = nightswatch
 					}
-
-					release_from_prison = yes
 				}
+
+				add_trait = nightswatch
+			}
+
+
+			if = {
+
+				limit = {
+
+					is_ruler = no
+
+					title:k_the_wall.holder ?= {
+						is_alive = yes
+					}
+				}
+
+
+				set_employer = title:k_the_wall.holder
+
+				set_location = title:k_the_wall.holder.capital_province
 			}
 		}
 	}
 
 
 	# =====================================================
-	# LEO PAYS THE PRICE
+	# MALE CHILDREN
+	#
+	# They are spared and released.
+	# Women are not touched at all.
 	# =====================================================
 
-	character:Stormflame_3 ?= {
+	house:house_Stormflame = {
 
-		if = {
+		every_house_member = {
+
 			limit = {
+
 				is_alive = yes
+
+				is_male = yes
+
+				is_adult = no
+
+				this != character:Stormflame_3
 			}
 
-			death = {
-				death_reason = death_execution
-				killer = character:Segrellion_60
+
+			add_character_flag = segrellion_spared_by_daemon_at_beacon
+
+
+			if = {segrellion_execute_all_stormflame_captives_effect = {
+
+				limit = {
+					is_imprisoned = yes
+				}
+
+				release_from_prison = yes
 			}
 		}
 	}
+
+
+	# =====================================================
+	# LEO
+	#
+	# DO NOT KILL HIM HERE.
+	# He stays imprisoned until Impose Demands.
+	# =====================================================
+
+	segrellion_queue_leo_execution_after_unicorn_returns_effect = yes
 }
 
 
@@ -352,14 +540,20 @@ segrellion_execute_leo_spare_stormflame_family_effect = {
 
 segrellion_spare_all_stormflame_captives_effect = {
 
+
 	house:house_Stormflame = {
 
 		every_house_member = {
 
 			limit = {
+
 				is_alive = yes
+
+				is_male = yes
+
 				is_imprisoned = yes
 			}
+
 
 			release_from_prison = yes
 		}
