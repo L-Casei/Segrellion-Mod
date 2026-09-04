@@ -117,7 +117,9 @@ segrellion_young_griff_need_dragon_decision = {
 
 			localization = segrellion_young_griff_dragon_choice_egg
 
-			current_description = segrellion_young_griff_dragon_choice_egg_tt
+			current_description = {
+				desc = segrellion_young_griff_dragon_choice_egg_tt
+			}
 
 			icon = "gfx/interface/icons/message_feed/intrigue.dds"
 
@@ -164,7 +166,9 @@ segrellion_young_griff_need_dragon_decision = {
 
 			localization = segrellion_young_griff_dragon_choice_daenerys
 
-			current_description = segrellion_young_griff_dragon_choice_daenerys_tt
+			current_description = {
+				desc = segrellion_young_griff_dragon_choice_daenerys_tt
+			}
 
 			icon = "gfx/interface/icons/message_feed/martial.dds"
 
@@ -235,43 +239,25 @@ segrellion_young_griff_need_dragon_decision = {
 		custom_tooltip = segrellion_young_griff_need_dragon_danger_warning_tt
 
 
-		trigger_if = {
+		# =====================================================
+		# AI
+		# =====================================================
+
+		if = {
 
 			limit = {
-				scope:segrellion_young_griff_dragon_choice_egg = yes
+				is_ai = yes
 			}
 
-			custom_tooltip = segrellion_young_griff_dragon_choice_egg_effect_tt
-		}
+
+			hidden_effect = {
+
+				add_character_flag = segrellion_young_griff_dragon_path_chosen
 
 
-		trigger_if = {
-
-			limit = {
-				scope:segrellion_young_griff_dragon_choice_daenerys = yes
-			}
-
-			custom_tooltip = segrellion_young_griff_dragon_choice_daenerys_effect_tt
-		}
-
-
-		hidden_effect = {
-
-			add_character_flag = segrellion_young_griff_dragon_path_chosen
-
-
-			# =================================================
-			# AI
-			# =================================================
-
-			if = {
-
-				limit = {
-					is_ai = yes
-				}
-
-
+				# =================================================
 				# BOTH ROUTES AVAILABLE
+				# =================================================
 
 				if = {
 
@@ -282,6 +268,7 @@ segrellion_young_griff_need_dragon_decision = {
 							is_alive = yes
 							is_adult = yes
 							is_imprisoned = no
+
 							learning >= 8
 							stewardship >= 8
 						}
@@ -313,17 +300,21 @@ segrellion_young_griff_need_dragon_decision = {
 					random_list = {
 
 						60 = {
+
 							segrellion_young_griff_choose_dragon_egg_route_effect = yes
 						}
 
 						40 = {
+
 							segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
 						}
 					}
 				}
 
 
-				# ONLY EGG ROUTE AVAILABLE
+				# =================================================
+				# ONLY EGG ROUTE
+				# =================================================
 
 				else_if = {
 
@@ -334,16 +325,20 @@ segrellion_young_griff_need_dragon_decision = {
 							is_alive = yes
 							is_adult = yes
 							is_imprisoned = no
+
 							learning >= 8
 							stewardship >= 8
 						}
 					}
 
+
 					segrellion_young_griff_choose_dragon_egg_route_effect = yes
 				}
 
 
-				# ONLY DRAGON ROUTE AVAILABLE
+				# =================================================
+				# ONLY DRAGON ROUTE
+				# =================================================
 
 				else_if = {
 
@@ -371,44 +366,70 @@ segrellion_young_griff_need_dragon_decision = {
 						}
 					}
 
+
 					segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
 				}
 
 
 				else = {
+
 					remove_character_flag = segrellion_young_griff_dragon_path_chosen
 				}
 			}
+		}
 
 
-			# =================================================
-			# PLAYER
-			# =================================================
+		# =====================================================
+		# PLAYER
+		#
+		# decision_option_list_controller passes the selected
+		# option as a scope. It must be handled with switch.
+		# =====================================================
 
-			else = {
+		else = {
 
-				if = {
+			switch = {
 
-					limit = {
-						scope:segrellion_young_griff_dragon_choice_egg = yes
+				trigger = yes
+
+
+				# =================================================
+				# SEARCH FOR AN EGG
+				# =================================================
+
+				scope:segrellion_young_griff_dragon_choice_egg = {
+
+					custom_tooltip = segrellion_young_griff_dragon_choice_egg_tt
+
+					custom_tooltip = segrellion_young_griff_dragon_choice_egg_effect_tt
+
+
+					hidden_effect = {
+
+						add_character_flag = segrellion_young_griff_dragon_path_chosen
+
+						segrellion_young_griff_choose_dragon_egg_route_effect = yes
 					}
-
-					segrellion_young_griff_choose_dragon_egg_route_effect = yes
 				}
 
 
-				else_if = {
+				# =================================================
+				# TAKE ONE OF DAENERYS' DRAGONS
+				# =================================================
 
-					limit = {
-						scope:segrellion_young_griff_dragon_choice_daenerys = yes
+				scope:segrellion_young_griff_dragon_choice_daenerys = {
+
+					custom_tooltip = segrellion_young_griff_dragon_choice_daenerys_tt
+
+					custom_tooltip = segrellion_young_griff_dragon_choice_daenerys_effect_tt
+
+
+					hidden_effect = {
+
+						add_character_flag = segrellion_young_griff_dragon_path_chosen
+
+						segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
 					}
-
-					segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
-				}
-
-
-				else = {
-					remove_character_flag = segrellion_young_griff_dragon_path_chosen
 				}
 			}
 		}

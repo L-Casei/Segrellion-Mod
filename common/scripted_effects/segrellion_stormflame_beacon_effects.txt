@@ -221,6 +221,70 @@ segrellion_confiscate_stormflame_male_titles_effect = {
 	}
 
 
+	# =====================================================
+	# BAYWATER WOODS
+	#
+	# This must return to Daemon regardless of whether its
+	# current Stormflame holder is male or female.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				title:d_the_baywater_woods.holder = character:Segrellion_60
+			}
+		}
+
+
+		title:d_the_baywater_woods = {
+
+			change_title_holder = {
+
+				holder = character:Segrellion_60
+
+				change = scope:segrellion_stormflame_confiscation_change
+			}
+		}
+	}
+
+
+	# =====================================================
+	# MORLESCENT
+	#
+	# Same rule: this land forms part of the settlement and
+	# cannot remain with a surviving Stormflame woman.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				title:c_morlescent.holder = character:Segrellion_60
+			}
+		}
+
+
+		title:c_morlescent = {
+
+			change_title_holder = {
+
+				holder = character:Segrellion_60
+
+				change = scope:segrellion_stormflame_confiscation_change
+
+				take_baronies = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ALL OTHER LANDED STORMFLAME MEN
+	# =====================================================
+
 	house:house_Stormflame = {
 
 		every_house_member = {
@@ -510,7 +574,7 @@ segrellion_execute_leo_spare_stormflame_family_effect = {
 			add_character_flag = segrellion_spared_by_daemon_at_beacon
 
 
-			if = {segrellion_execute_all_stormflame_captives_effect = {
+			if = {
 
 				limit = {
 					is_imprisoned = yes
