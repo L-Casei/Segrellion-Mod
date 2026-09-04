@@ -166,6 +166,14 @@ segrellion_castle_lore.1020 = {
 
 			2 = {
 
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_balerions_exile_ledger
+					}
+				}
+
+
 				trigger_event = {
 					id = segrellion_castle_lore.1022
 				}
@@ -257,6 +265,21 @@ segrellion_castle_lore.1022 = {
 			if = {
 
 				limit = {
+
+					NOT = {
+						exists = global_var:segrellion_balerions_exile_ledger
+					}
+				}
+
+
+				segrellion_create_old_segrellion_ledger_effect = {
+					OWNER = root
+				}
+			}
+
+			if = {
+
+				limit = {
 					NOT = {
 						exists = var:segrellion_lore_vhal_archives
 					}
@@ -301,6 +324,14 @@ segrellion_castle_lore.1030 = {
 
 
 			1 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_vhalyrax_lost_egg
+					}
+				}
+
 
 				trigger_event = {
 					id = segrellion_castle_lore.1032
@@ -379,6 +410,47 @@ segrellion_castle_lore.1032 = {
 				limit = {
 					NOT = {
 						exists = var:segrellion_lore_vhal_caves
+					}
+				}
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							exists = global_var:segrellion_vhalyrax_lost_egg
+						}
+					}
+
+
+					create_artifact_dragon_egg_yellow_effect = {
+						OWNER = root
+					}
+
+
+					scope:newly_created_artifact ?= {
+
+						set_artifact_name = segrellion_vhalyrax_lost_egg_name
+
+						set_artifact_description = segrellion_vhalyrax_lost_egg_description
+
+
+						set_variable = {
+							name = segrellion_vhalyrax_lost_egg_artifact
+							value = yes
+						}
+
+
+						set_variable = {
+							name = historical_unique_artifact
+							value = yes
+						}
+
+
+						set_global_variable = {
+							name = segrellion_vhalyrax_lost_egg
+							value = this
+						}
 					}
 				}
 
@@ -596,6 +668,8 @@ segrellion_castle_lore.2030 = {
 
 	immediate = {
 
+		segrellion_find_sword_of_the_sentinel_effect = yes
+
 		random_list = {
 
 			90 = {
@@ -607,6 +681,14 @@ segrellion_castle_lore.2030 = {
 
 
 			10 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_sword_of_the_sentinel_global
+					}
+				}
+
 
 				trigger_event = {
 					id = segrellion_castle_lore.2032
@@ -679,6 +761,23 @@ segrellion_castle_lore.2032 = {
 		add_martial_lifestyle_xp = 250
 
 		hidden_effect = {
+
+			segrellion_find_sword_of_the_sentinel_effect = yes
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						exists = global_var:segrellion_sword_of_the_sentinel_global
+					}
+				}
+
+
+				segrellion_create_artifact_sword_of_the_sentinel_effect = {
+					OWNER = root
+				}
+			}
 
 			if = {
 
@@ -758,6 +857,10 @@ segrellion_castle_lore.2041 = {
 		add_prestige = 100
 
 		hidden_effect = {
+
+			segrellion_create_moonbloom_effect = {
+				OWNER = root
+			}
 
 			if = {
 

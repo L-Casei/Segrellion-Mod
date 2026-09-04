@@ -731,6 +731,7 @@ segrellion_setup_dragon_egg_history_effect = {
 }
 
 segrellion_create_artifact_sword_of_the_sentinel_effect = {
+
 	$OWNER$ = { save_scope_as = owner }
 	set_artifact_rarity_masterwork = yes
 
@@ -748,6 +749,10 @@ segrellion_create_artifact_sword_of_the_sentinel_effect = {
 	scope:newly_created_artifact ?= {
 		equip_artifact_to_owner_replace = yes
 		set_variable = { name = segrellion_sword_of_the_sentinel value = yes }
+		set_global_variable = {
+			name = segrellion_sword_of_the_sentinel_global
+			value = this
+		}
 	}
 }
 
@@ -3113,61 +3118,155 @@ segrellion_deathwish_historical_progression_effect = {
 
 segrellion_create_old_segrellion_ledger_effect = {
 
-    create_artifact = {
-        name = segrellion_old_segrellion_ledger_name
-        description = segrellion_old_segrellion_ledger_description
-
-        type = pedestal
-        rarity = masterwork
-
-        visual = segrellion_old_segrellion_ledger_visual
-
-        modifier = {
-            stewardship = 1
-            monthly_prestige = 0.05
-        }
-
-        save_scope_as = created_artifact
+    $OWNER$ = {
+        save_scope_as = owner
     }
 
-    scope:created_artifact = {
+
+    # GREEN / MASTERWORK
+    set_artifact_rarity_masterwork = yes
+
+
+    scope:owner = {
+
+        create_artifact = {
+
+            name = segrellion_old_segrellion_ledger_name
+
+            description = segrellion_old_segrellion_ledger_description
+
+            # Personal book artifact.
+            type = journal
+
+            visuals = segrellion_old_segrellion_ledger_visuals
+
+            template = segrellion_old_segrellion_ledger_template
+
+            wealth = scope:wealth
+
+            quality = scope:quality
+
+            modifier = segrellion_old_segrellion_ledger_modifier
+
+            save_scope_as = newly_created_artifact
+
+            decaying = no
+        }
+    }
+
+
+    scope:newly_created_artifact ?= {
+
+        set_global_variable = {
+            name = segrellion_balerions_exile_ledger
+            value = this
+        }
+
         set_variable = {
-            name = segrellion_artifact_id
-            value = flag:segrellion_old_segrellion_ledger
+            name = historical_unique_artifact
+            value = yes
+        }
+
+        set_variable = {
+            name = segrellion_balerions_exile_ledger_artifact
+            value = yes
         }
     }
-
-    add_character_flag = segrellion_old_segrellion_ledger_created
 }
 
 
 segrellion_create_moonbloom_effect = {
 
-    create_artifact = {
-        name = segrellion_moonbloom_name
-        description = segrellion_moonbloom_description
-
-        type = pedestal
-        rarity = famed
-
-        visual = segrellion_moonbloom_visual
-
-        modifier = {
-            learning = 1
-            health = 0.05
-            stress_gain_mult = -0.05
-        }
-
-        save_scope_as = created_artifact
+    $OWNER$ = {
+        save_scope_as = owner
     }
 
-    scope:created_artifact = {
+
+    # BLUE / FAMED
+    set_artifact_rarity_famed = yes
+
+
+    scope:owner = {
+
+        create_artifact = {
+
+            name = segrellion_moonbloom_name
+
+            description = segrellion_moonbloom_description
+
+            # Personal miscellaneous artifact.
+            type = miscellaneous
+
+            visuals = segrellion_moonbloom_visuals
+
+            template = segrellion_moonbloom_template
+
+            wealth = scope:wealth
+
+            quality = scope:quality
+
+            modifier = segrellion_moonbloom_modifier
+
+            save_scope_as = newly_created_artifact
+
+            decaying = no
+        }
+    }
+
+
+    scope:newly_created_artifact ?= {
+
         set_variable = {
-            name = segrellion_artifact_id
-            value = flag:segrellion_moonbloom
+            name = segrellion_moonbloom_artifact
+            value = yes
         }
     }
+}
 
-    add_character_flag = segrellion_moonbloom_created
+segrellion_find_sword_of_the_sentinel_effect = {
+
+
+    # Remove an invalid reference if the artifact was destroyed.
+
+    if = {
+
+        limit = {
+
+            has_global_variable = segrellion_sword_of_the_sentinel_global
+
+            NOT = {
+                exists = global_var:segrellion_sword_of_the_sentinel_global
+            }
+        }
+
+        remove_global_variable = segrellion_sword_of_the_sentinel_global
+    }
+
+
+    # Rebuild the reference from an existing sword.
+
+    if = {
+
+        limit = {
+
+            NOT = {
+                exists = global_var:segrellion_sword_of_the_sentinel_global
+            }
+        }
+
+
+        every_artifact = {
+
+            limit = {
+                has_variable = segrellion_sword_of_the_sentinel
+            }
+
+
+            set_global_variable = {
+                name = segrellion_sword_of_the_sentinel_global
+                value = this
+            }
+        }
+    }
 }
 
