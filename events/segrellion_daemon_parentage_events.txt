@@ -139,6 +139,7 @@ segrellion_daemon_parentage.0002 = {
 
 		add_character_flag = segrellion_daemon_parentage_known
 		add_character_flag = segrellion_daemon_parentage_known_daemon_only
+		segrellion_daemon_try_start_parentage_identity_chain_effect = yes
 	}
 
 
@@ -195,6 +196,7 @@ segrellion_daemon_parentage.0003 = {
 
 		add_character_flag = segrellion_daemon_parentage_known
 		add_character_flag = segrellion_daemon_parentage_known_with_hugh
+		segrellion_daemon_try_start_parentage_identity_chain_effect = yes
 
 		character:Segrellion_43 = {
 
@@ -572,3 +574,362 @@ segrellion_daemon_parentage.0005 = {
 }
 
 
+
+
+# =========================================================
+# 0100 - THE MAD KING'S BLOOD
+# =========================================================
+
+segrellion_daemon_parentage.0100 = {
+
+	type = character_event
+
+	title = segrellion_daemon_parentage.0100.t
+	desc = segrellion_daemon_parentage.0100.desc
+
+	theme = dynasty
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daemon_parentage_known
+
+		NOT = {
+			has_character_flag = segrellion_daemon_parentage_identity_chain_started
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daemon_parentage_identity_chain_queued
+
+		add_character_flag = segrellion_daemon_parentage_identity_chain_started
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	# =====================================================
+	# CLAIM THE THRONE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daemon_parentage.0100.a
+
+		custom_tooltip = segrellion_daemon_parentage.0100.a.tt
+
+		segrellion_daemon_accept_targaryen_claim_effect = yes
+
+
+		trigger_event = {
+
+			id = segrellion_daemon_parentage.0110
+
+			days = { 10 16 }
+		}
+
+
+		ai_chance = {
+			base = 65
+		}
+	}
+
+
+	# =====================================================
+	# RENOUNCE IT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daemon_parentage.0100.b
+
+		custom_tooltip = segrellion_daemon_parentage.0100.b.tt
+
+		segrellion_daemon_renounce_targaryen_claim_effect = yes
+
+
+		trigger_event = {
+
+			id = segrellion_daemon_parentage.0110
+
+			days = { 10 16 }
+		}
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - DRAGON OR UNICORN?
+# =========================================================
+
+segrellion_daemon_parentage.0110 = {
+
+	type = character_event
+
+	title = segrellion_daemon_parentage.0110.t
+	desc = segrellion_daemon_parentage.0110.desc
+
+	theme = dynasty
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daemon_parentage_identity_chain_started
+
+		NOT = {
+			has_character_flag = segrellion_daemon_parentage_banner_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# TARGARYEN
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daemon_parentage.0110.a
+
+		custom_tooltip = segrellion_daemon_parentage.0110.a.tt
+
+		segrellion_daemon_choose_targaryen_dynasty_effect = yes
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+
+	# =====================================================
+	# SEGRELLION
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daemon_parentage.0110.b
+
+		custom_tooltip = segrellion_daemon_parentage.0110.b.tt
+
+		segrellion_daemon_choose_segrellion_dynasty_effect = yes
+
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+
+	# =====================================================
+	# BOTH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daemon_parentage.0110.c
+
+		custom_tooltip = segrellion_daemon_parentage.0110.c.tt
+
+
+		add_character_flag = segrellion_daemon_wants_hybrid_dynasty
+
+
+		trigger_event = {
+
+			id = segrellion_daemon_parentage.0120
+
+			days = { 2 4 }
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - A NAME FOR TWO BLOODS
+# =========================================================
+
+segrellion_daemon_parentage.0120 = {
+
+	type = character_event
+
+	title = segrellion_daemon_parentage.0120.t
+	desc = segrellion_daemon_parentage.0120.desc
+
+	theme = dynasty
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_daemon_wants_hybrid_dynasty
+
+		NOT = {
+			has_character_flag = segrellion_daemon_parentage_banner_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0120.a
+
+		custom_tooltip = segrellion_daemon_parentage.0120.a.tt
+
+		segrellion_daemon_become_vhalaryen_effect = yes
+
+		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0120.b
+
+		custom_tooltip = segrellion_daemon_parentage.0120.b.tt
+
+		segrellion_daemon_become_targellion_effect = yes
+
+		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0120.c
+
+		custom_tooltip = segrellion_daemon_parentage.0120.c.tt
+
+		segrellion_daemon_become_drakoryn_effect = yes
+
+		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0120.d
+
+		custom_tooltip = segrellion_daemon_parentage.0120.d.tt
+
+
+		trigger_event = {
+
+			id = segrellion_daemon_parentage.0130
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0130 - CUSTOM DYNASTY NAME
+#
+# GUI HOOK.
+#
+# The custom text-entry window will use:
+# segrellion_daemon_custom_hybrid_dynasty_name_pending
+#
+# The three normal names remain available here.
+# =========================================================
+
+segrellion_daemon_parentage.0130 = {
+
+	type = character_event
+
+	title = segrellion_daemon_parentage.0130.t
+	desc = segrellion_daemon_parentage.0130.desc
+
+	theme = dynasty
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0130.a
+
+		segrellion_daemon_become_vhalaryen_effect = yes
+
+		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0130.b
+
+		segrellion_daemon_become_targellion_effect = yes
+
+		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0130.c
+
+		segrellion_daemon_become_drakoryn_effect = yes
+
+		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+	}
+
+
+	option = {
+
+		name = segrellion_daemon_parentage.0130.d
+
+		custom_tooltip = segrellion_daemon_parentage.0130.d.tt
+
+		add_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+	}
+}

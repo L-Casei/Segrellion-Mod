@@ -38,3 +38,654 @@ segrellion_create_daemon_parentage_secret_effect = {
 		}
 	}
 }
+
+# =========================================================
+# DAEMON PARENTAGE - CONTINUOUS PROGRESSION
+#
+# Handles:
+# - public father correction
+# - old save recovery
+# - personal identity storyline
+# =========================================================
+
+segrellion_daemon_parentage_progression_effect = {
+
+	character:Segrellion_60 ?= {
+
+		# =====================================================
+		# PUBLIC REVELATION
+		#
+		# AGOT creates agot_royal_bastard_story when the
+		# parentage becomes public, but does NOT replace the
+		# displayed father.
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				owns_story_of_type = agot_royal_bastard_story
+			}
+
+
+			# Find Aerys II dynamically through Daenerys.
+			character:Targaryen_9 ?= {
+
+				father ?= {
+					save_scope_as = segrellion_daemon_aerys
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					exists = scope:segrellion_daemon_aerys
+				}
+
+
+				# Biological truth.
+				set_real_father = scope:segrellion_daemon_aerys
+
+
+				# PUBLIC genealogy.
+				if = {
+
+					limit = {
+
+						NOT = {
+							father = scope:segrellion_daemon_aerys
+						}
+					}
+
+					set_father = scope:segrellion_daemon_aerys
+				}
+
+
+				add_character_flag = segrellion_daemon_parentage_publicly_revealed
+
+				add_character_flag = segrellion_daemon_parentage_known
+			}
+		}
+
+
+		# =====================================================
+		# PERSONAL STORY
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daemon_parentage_known
+			}
+
+			segrellion_daemon_try_start_parentage_identity_chain_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# START DAEMON'S PERSONAL PARENTAGE STORY
+# =========================================================
+
+segrellion_daemon_try_start_parentage_identity_chain_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			is_alive = yes
+
+			has_character_flag = segrellion_daemon_parentage_known
+
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_identity_chain_started
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_identity_chain_queued
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_parentage_identity_chain_queued
+
+
+		trigger_event = {
+
+			id = segrellion_daemon_parentage.0100
+
+			days = { 2 5 }
+		}
+	}
+}
+
+# =========================================================
+# DAEMON ACCEPTS HIS TARGARYEN CLAIM
+#
+# Uses King's Landing's CURRENT de jure hierarchy instead
+# of hardcoding Blackwater/Crownlands title IDs.
+#
+# This automatically covers:
+# county -> duchy -> kingdom -> empire
+#
+# The Iron Throne hegemony is added separately.
+# =========================================================
+
+segrellion_daemon_accept_targaryen_claim_effect = {
+
+	add_character_flag = segrellion_daemon_targaryen_claimant_path
+
+	remove_character_flag = segrellion_daemon_renounced_targaryen_claim
+
+
+	# =====================================================
+	# IRON THRONE HEGEMONY
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_claim_on = title:h_the_iron_throne
+			}
+		}
+
+		add_pressed_claim = title:h_the_iron_throne
+	}
+
+
+	# =====================================================
+	# NORMAL IRON THRONE EMPIRE TITLE
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_claim_on = title:e_the_iron_throne
+			}
+		}
+
+		add_pressed_claim = title:e_the_iron_throne
+	}
+
+
+	# =====================================================
+	# KING'S LANDING HIERARCHY
+	# =====================================================
+
+	title:c_kings_landing ?= {
+
+		save_scope_as = segrellion_daemon_claim_county
+
+
+		de_jure_liege ?= {
+
+			save_scope_as = segrellion_daemon_claim_duchy
+
+
+			de_jure_liege ?= {
+
+				save_scope_as = segrellion_daemon_claim_kingdom
+
+
+				de_jure_liege ?= {
+
+					save_scope_as = segrellion_daemon_claim_empire
+				}
+			}
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_county
+
+			NOT = {
+				has_claim_on = scope:segrellion_daemon_claim_county
+			}
+		}
+
+		add_pressed_claim = scope:segrellion_daemon_claim_county
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_duchy
+
+			NOT = {
+				has_claim_on = scope:segrellion_daemon_claim_duchy
+			}
+		}
+
+		add_pressed_claim = scope:segrellion_daemon_claim_duchy
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_kingdom
+
+			NOT = {
+				has_claim_on = scope:segrellion_daemon_claim_kingdom
+			}
+		}
+
+		add_pressed_claim = scope:segrellion_daemon_claim_kingdom
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_empire
+
+			NOT = {
+				has_claim_on = scope:segrellion_daemon_claim_empire
+			}
+		}
+
+		add_pressed_claim = scope:segrellion_daemon_claim_empire
+	}
+}
+
+
+# =========================================================
+# DAEMON REJECTS HIS TARGARYEN CLAIM
+# =========================================================
+
+segrellion_daemon_renounce_targaryen_claim_effect = {
+
+	add_character_flag = segrellion_daemon_renounced_targaryen_claim
+
+	remove_character_flag = segrellion_daemon_targaryen_claimant_path
+
+
+	title:c_kings_landing ?= {
+
+		save_scope_as = segrellion_daemon_claim_county
+
+
+		de_jure_liege ?= {
+
+			save_scope_as = segrellion_daemon_claim_duchy
+
+
+			de_jure_liege ?= {
+
+				save_scope_as = segrellion_daemon_claim_kingdom
+
+
+				de_jure_liege ?= {
+
+					save_scope_as = segrellion_daemon_claim_empire
+				}
+			}
+		}
+	}
+
+
+	if = {
+
+		limit = {
+			has_claim_on = title:h_the_iron_throne
+		}
+
+		remove_claim = title:h_the_iron_throne
+	}
+
+
+	if = {
+
+		limit = {
+			has_claim_on = title:e_the_iron_throne
+		}
+
+		remove_claim = title:e_the_iron_throne
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_county
+
+			has_claim_on = scope:segrellion_daemon_claim_county
+		}
+
+		remove_claim = scope:segrellion_daemon_claim_county
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_duchy
+
+			has_claim_on = scope:segrellion_daemon_claim_duchy
+		}
+
+		remove_claim = scope:segrellion_daemon_claim_duchy
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_kingdom
+
+			has_claim_on = scope:segrellion_daemon_claim_kingdom
+		}
+
+		remove_claim = scope:segrellion_daemon_claim_kingdom
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_daemon_claim_empire
+
+			has_claim_on = scope:segrellion_daemon_claim_empire
+		}
+
+		remove_claim = scope:segrellion_daemon_claim_empire
+	}
+}
+
+# =========================================================
+# DAEMON BECOMES A TARGARYEN
+# =========================================================
+
+segrellion_daemon_choose_targaryen_dynasty_effect = {
+
+	character:Targaryen_9 ?= {
+
+		house ?= {
+			save_scope_as = segrellion_daemon_targaryen_house
+		}
+	}
+
+
+	if = {
+
+		limit = {
+			exists = scope:segrellion_daemon_targaryen_house
+		}
+
+
+		set_house = scope:segrellion_daemon_targaryen_house
+
+
+		# Ensure Aerys' bloodline mechanics are inherited even
+		# if Daemon learned the truth privately.
+		apply_bastard_bloodline_inheritance_effect = yes
+
+
+		add_character_flag = segrellion_daemon_chose_targaryen_identity
+		add_character_flag = segrellion_daemon_parentage_banner_resolved
+		add_character_flag = segrellion_daemon_parentage_next_stage_ready
+	}
+}
+
+
+# =========================================================
+# DAEMON REMAINS SEGRELLION
+# =========================================================
+
+segrellion_daemon_choose_segrellion_dynasty_effect = {
+
+	set_house = house:house_Segrellion
+
+
+	add_character_flag = segrellion_daemon_chose_segrellion_identity
+
+	add_character_flag = segrellion_daemon_parentage_banner_resolved
+
+	add_character_flag = segrellion_daemon_parentage_next_stage_ready
+}
+
+
+# =========================================================
+# HYBRID DYNASTY - COMMON FINALIZATION
+# =========================================================
+
+segrellion_daemon_finalize_hybrid_dynasty_effect = {
+
+	add_character_flag = segrellion_daemon_hybrid_dynasty
+
+	add_character_flag = segrellion_daemon_parentage_banner_resolved
+
+	add_character_flag = segrellion_daemon_parentage_next_stage_ready
+
+
+	# Targaryen bloodline inheritance remains part of Daemon
+	# even though he founded another dynasty.
+
+	apply_bastard_bloodline_inheritance_effect = yes
+
+
+	# =====================================================
+	# NEW DYNASTY
+	# =====================================================
+
+	dynasty ?= {
+
+		add_dynasty_modifier = segrellion_hybrid_dragon_unicorn_dynasty_modifier
+
+
+		# Copy every Segrellion legacy already unlocked.
+
+		if = {
+
+			limit = {
+
+				dynasty:dynn_Segrellion = {
+					has_dynasty_perk = segrellion_legacy_1
+				}
+
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_1
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_1
+		}
+
+
+		if = {
+
+			limit = {
+
+				dynasty:dynn_Segrellion = {
+					has_dynasty_perk = segrellion_legacy_2
+				}
+
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_2
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_2
+		}
+
+
+		if = {
+
+			limit = {
+
+				dynasty:dynn_Segrellion = {
+					has_dynasty_perk = segrellion_legacy_3
+				}
+
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_3
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_3
+		}
+
+
+		if = {
+
+			limit = {
+
+				dynasty:dynn_Segrellion = {
+					has_dynasty_perk = segrellion_legacy_4
+				}
+
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_4
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_4
+		}
+
+
+		if = {
+
+			limit = {
+
+				dynasty:dynn_Segrellion = {
+					has_dynasty_perk = segrellion_legacy_5
+				}
+
+				NOT = {
+					has_dynasty_perk = segrellion_legacy_5
+				}
+			}
+
+			add_dynasty_perk = segrellion_legacy_5
+		}
+	}
+
+
+	# =====================================================
+	# SEGRELLION RELATIONS
+	# =====================================================
+
+	dynasty:dynn_Segrellion = {
+
+		every_dynasty_member = {
+
+			limit = {
+
+				is_alive = yes
+
+				this != root
+			}
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_hybrid_dynasty_blood_kinship_opinion
+			}
+
+
+			root = {
+
+				add_opinion = {
+
+					target = prev
+
+					modifier = segrellion_hybrid_dynasty_blood_kinship_opinion
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# TARGARYEN RELATIONS
+	# =====================================================
+
+	character:Targaryen_9 ?= {
+
+		dynasty ?= {
+
+			every_dynasty_member = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != root
+				}
+
+
+				add_opinion = {
+
+					target = root
+
+					modifier = segrellion_hybrid_dynasty_blood_kinship_opinion
+				}
+
+
+				root = {
+
+					add_opinion = {
+
+						target = prev
+
+						modifier = segrellion_hybrid_dynasty_blood_kinship_opinion
+					}
+				}
+			}
+		}
+	}
+}
+
+
+segrellion_daemon_become_vhalaryen_effect = {
+
+	set_house = house:house_Vhalaryen
+
+	add_character_flag = segrellion_daemon_founded_vhalaryen
+
+	segrellion_daemon_finalize_hybrid_dynasty_effect = yes
+}
+
+
+segrellion_daemon_become_targellion_effect = {
+
+	set_house = house:house_Targellion
+
+	add_character_flag = segrellion_daemon_founded_targellion
+
+	segrellion_daemon_finalize_hybrid_dynasty_effect = yes
+}
+
+
+segrellion_daemon_become_drakoryn_effect = {
+
+	set_house = house:house_Drakoryn
+
+	add_character_flag = segrellion_daemon_founded_drakoryn
+
+	segrellion_daemon_finalize_hybrid_dynasty_effect = yes
+}
