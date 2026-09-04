@@ -1288,38 +1288,48 @@ segrellion_check_mya_deferred_marriage_effect = {
 				remove_variable = segrellion_mya_regency_ward
 			}
 
-
 			# =================================================
-			# 302 AC
+			# MYA CAN NOW MARRY DAEMON
 			#
-			# Mya is now able to leave the regency.
-			# Daemon must have restored the Flamelands.
+			# The marriage happens when:
+			# - Mya is no longer Robin's regent
+			# OR
+			# - Robin reaches 14 years of age
 			# =================================================
 
 			else_if = {
 
 				limit = {
 
-					current_date >= 8302.1.1
-
-
 					is_alive = yes
-
 					is_married = no
 
-					has_title = title:e_flamelands
-
-
 					scope:segrellion_mya_deferred_bride = {
-
 						is_alive = yes
-
 						is_married = no
-
 						this = character:Baratheon_10
 					}
-				}
 
+					var:segrellion_mya_regency_ward ?= {
+
+						OR = {
+
+							age >= 14
+
+							NOT = {
+
+								AND = {
+
+									has_active_diarchy = yes
+
+									diarch ?= {
+										this = character:Baratheon_10
+									}
+								}
+							}
+						}
+					}
+				}
 
 				segrellion_complete_mya_daemon_marriage_effect = yes
 			}

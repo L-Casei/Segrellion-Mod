@@ -475,6 +475,8 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 			age = 0
 
+			gender = male
+
 			random_traits = no
 
 			save_scope_as = rhaegon
@@ -503,10 +505,7 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 			change_first_name = Rhaegon
 
-			# Copy the supplied persistent DNA from a dead
-			# historical source character. Dynamic characters
-			# cannot reference common/dna_data directly.
-			copy_inheritable_appearance_from = character:Dummy_Segrellion_Rhaegon_1
+			segrellion_black_unicorn_apply_rhaegon_dna_effect = yes
 
 
 			add_character_flag = segrellion_rhaegon_dragon
@@ -519,7 +518,9 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 			# PHYSIQUE
 			# =============================================
 
-			remove_trait = dragon_physique_bad
+			remove_trait = dragon_physique_bad_1
+			remove_trait = dragon_physique_bad_2
+			remove_trait = dragon_physique_bad_3
 			remove_trait = dragon_physique_good_1
 			remove_trait = dragon_physique_good_2
 			remove_trait = dragon_physique_good_3
@@ -632,6 +633,92 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 
 		add_character_flag = segrellion_black_unicorn_rhaegon_created
+	}
+}
+
+
+# =========================================================
+# APPLY RHAEGON'S SCRIPTED DNA
+#
+# ROOT = Rhaegon
+#
+# The AGOT hatchling template creates persistent color data
+# before a dynamic character can receive scripted DNA. Keep
+# both the portrait and that stored runtime data synchronized.
+# This is idempotent so existing saves can be repaired too.
+# =========================================================
+
+segrellion_black_unicorn_apply_rhaegon_dna_effect = {
+
+	copy_inheritable_appearance_from = character:Dummy_Segrellion_Rhaegon_1
+
+	set_variable = {
+		name = primary_color
+		value = flag:black
+	}
+
+	set_variable = {
+		name = primary_color_grading
+		value = flag:darkest
+	}
+
+	every_in_global_list = {
+
+		variable = gl_dragon_variable_storage
+
+		limit = {
+			var:dragon_id ?= root
+		}
+
+		set_variable = {
+			name = gene_dragon_primary_color_hue
+			value = 0
+		}
+
+		set_variable = {
+			name = gene_dragon_primary_color_value
+			value = 1
+		}
+
+		set_variable = {
+			name = gene_dragon_secondary_hue
+			value = 0.023529
+		}
+
+		set_variable = {
+			name = gene_dragon_secondary_value
+			value = 1
+		}
+
+		set_variable = {
+			name = gene_dragon_tertiary_hue
+			value = 0.768627
+		}
+
+		set_variable = {
+			name = gene_dragon_tertiary_value
+			value = 0.662745
+		}
+
+		set_variable = {
+			name = gene_dragon_eye_color_hue
+			value = 0.152941
+		}
+
+		set_variable = {
+			name = gene_dragon_eye_color_value
+			value = 0.560784
+		}
+
+		set_variable = {
+			name = gene_dragon_horn_color_hue
+			value = 0.792157
+		}
+
+		set_variable = {
+			name = gene_dragon_horn_color_value
+			value = 0.768627
+		}
 	}
 }
 
