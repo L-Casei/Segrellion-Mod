@@ -8,6 +8,157 @@
 # YOUNG GRIFF
 #
 # ROOT = Young Griff
+# =========================================================
+
+
+# =========================================================
+# YOUNG GRIFF - SCRIPTED WARS ONLY
+#
+# The AI must not spend Aegon's claims on ordinary CK3/AGOT
+# wars. His Flamelands involvement and every Iron Throne
+# campaign are created by this mod's events.
+#
+# The modifier suppresses AI willingness. sworn_peace blocks
+# the normal declare-war interaction outright. A separate
+# ownership flag ensures we never remove sworn_peace if some
+# other system applied it.
+# =========================================================
+
+segrellion_young_griff_apply_scripted_war_lock_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+			is_ai = yes
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_crowned_after_varys_plan
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_daenerys_pact_fulfilled
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_young_griff_scripted_wars_only_ai_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_young_griff_scripted_wars_only_ai_modifier
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = sworn_peace
+				}
+			}
+
+			add_character_flag = sworn_peace
+			add_character_flag = segrellion_young_griff_scripted_war_lock_owns_sworn_peace
+		}
+
+
+		# Save repair: discard an autonomous offensive war that
+		# was already declared before this lock existed. Scripted
+		# throne wars are explicitly preserved.
+
+		every_character_war = {
+
+			limit = {
+
+				primary_attacker = root
+
+				NOT = {
+
+					casus_belli = {
+
+						any_target_title = {
+							this = title:h_the_iron_throne
+						}
+					}
+				}
+			}
+
+			end_war = invalidated
+		}
+	}
+
+
+	else = {
+
+		segrellion_young_griff_release_scripted_war_lock_effect = yes
+	}
+}
+
+
+# Temporarily opens only the hard interaction lock. The AI
+# suppression modifier remains active during the event tick.
+
+segrellion_young_griff_open_scripted_war_window_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_ai = yes
+
+			has_character_flag = segrellion_young_griff_scripted_war_lock_owns_sworn_peace
+		}
+
+		remove_character_flag = sworn_peace
+		remove_character_flag = segrellion_young_griff_scripted_war_lock_owns_sworn_peace
+	}
+}
+
+
+segrellion_young_griff_release_scripted_war_lock_effect = {
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_young_griff_scripted_wars_only_ai_modifier
+		}
+
+		remove_character_modifier = segrellion_young_griff_scripted_wars_only_ai_modifier
+	}
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_young_griff_scripted_war_lock_owns_sworn_peace
+		}
+
+		remove_character_flag = sworn_peace
+		remove_character_flag = segrellion_young_griff_scripted_war_lock_owns_sworn_peace
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - INITIALIZATION
 #
 # IMPORTANT:
 # His normal Iron Throne claim is temporarily removed from
@@ -42,6 +193,9 @@ segrellion_initialize_young_griff_aggression_effect = {
 			remove_claim = title:h_the_iron_throne
 		}
 	}
+
+
+	segrellion_young_griff_apply_scripted_war_lock_effect = yes
 }
 
 

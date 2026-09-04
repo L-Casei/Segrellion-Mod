@@ -881,33 +881,47 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 		}
 
 		# =================================================
-		# DESTROY THE OLD RED UNICORN LANDLESS CAMP
+		# PRESERVE VISENYA'S ENTIRE COURT
+		#
+		# The camp title must be destroyed before Visenya can
+		# become Daemon's courtier. Save its people first so
+		# nobody is lost when the LAAMP court disappears.
+		# =================================================
+
+		character:Black_Unicorn_1 = {
+
+			every_courtier_or_guest = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				add_to_temporary_list = segrellion_black_unicorn_visenya_court_transfer
+			}
+		}
+
+
+		# =================================================
+		# DESTROY THE OLD RED UNICORN LANDLESS CAMP FIRST
 		#
 		# Visenya cannot reliably become Daemon's courtier
 		# while still being the ruler of her old LAAMP title.
 		# =================================================
 
-		if = {
-
-			limit = {
-
-				title:d_laamp_red_unicorn.holder ?= {
-					this = character:Black_Unicorn_1
-				}
-			}
-
-
-			destroy_title = title:d_laamp_red_unicorn
-		}
-
-
-		# =================================================
-		# VISENYA
-		# =================================================
-
 		character:Black_Unicorn_1 = {
 
 			if = {
+
+				limit = {
+					is_landless_adventurer = yes
+				}
+
+
+				destroy_title = primary_title
+			}
+
+			else_if = {
 
 				limit = {
 
@@ -917,11 +931,41 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 				}
 
 
-				character:Black_Unicorn_1 = {
-
-					destroy_title = title:d_laamp_red_unicorn
-				}
+				destroy_title = title:d_laamp_red_unicorn
 			}
+		}
+
+
+		# =================================================
+		# MOVE ALL OF VISENYA'S COURTIERS TO DAEMON
+		# =================================================
+
+		every_in_list = {
+
+			list = segrellion_black_unicorn_visenya_court_transfer
+
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			set_employer = root
+
+			return_to_court = yes
+
+			set_location = root.location
+
+
+			add_character_flag = segrellion_black_unicorn_followed_visenya_to_daemon
+		}
+
+
+		# =================================================
+		# VISENYA BECOMES DAEMON'S COURTIER
+		# =================================================
+
+		character:Black_Unicorn_1 = {
 
 			set_employer = root
 
@@ -2251,6 +2295,12 @@ segrellion_black_unicorn_political_alliance_effect = {
 
 segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 
+	# Visenya must stop being a landless ruler before any
+	# marriage or divorce logic runs. Her whole court follows.
+
+	segrellion_black_unicorn_visenya_join_daemon_effect = yes
+
+
 	segrellion_black_unicorn_record_daemon_union_effect = yes
 
 
@@ -2269,6 +2319,21 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 	}
 
 
+	# Remove any additional spouse left by polygamy or AGOT
+	# relationship mechanics. Visenya is the sole exception,
+	# which also makes this effect safe if it is fired twice.
+
+	every_spouse = {
+
+		limit = {
+			this != character:Black_Unicorn_1
+		}
+
+
+		divorce = root
+	}
+
+
 	# =====================================================
 	# BREAK DAEMON BETROTHAL
 	# =====================================================
@@ -2281,6 +2346,16 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 	# =====================================================
 
 	character:Black_Unicorn_1 = {
+
+		every_spouse = {
+
+			limit = {
+				this != root
+			}
+
+
+			divorce = character:Black_Unicorn_1
+		}
 
 		if = {
 
@@ -2295,17 +2370,20 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 
 
 	# =====================================================
-	# FIRST MAKE VISENYA A VALID COURT CHARACTER
+	# LITERAL MARRIAGE
 	# =====================================================
 
-	segrellion_black_unicorn_visenya_join_daemon_effect = yes
+	if = {
+
+		limit = {
+			NOT = {
+				is_spouse_of = character:Black_Unicorn_1
+			}
+		}
 
 
-	# =====================================================
-	# THEN MARRY
-	# =====================================================
-
-	marry = character:Black_Unicorn_1
+		marry = character:Black_Unicorn_1
+	}
 
 
 	# =====================================================
@@ -2362,65 +2440,6 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 	}
 }
 
-
-# =========================================================
-# DUAL MARRIAGE
-#
-# TECHNICAL TEST REQUIRED:
-# Faith / AGOT may later normalize an invalid second spouse.
-#
-# Isolated deliberately behind dedicated flags.
-# =========================================================
-
-segrellion_black_unicorn_marry_visenya_dual_effect = {
-
-	segrellion_black_unicorn_record_daemon_union_effect = yes
-
-
-	add_character_flag = segrellion_black_unicorn_attempted_dual_marriage
-
-	add_character_flag = segrellion_black_unicorn_dual_marriage_accepted
-
-
-	character:Black_Unicorn_1 = {
-
-		if = {
-
-			limit = {
-				exists = betrothed
-			}
-
-			break_betrothal = betrothed
-		}
-	}
-
-
-	# Deliberately DO NOT divorce Daemon's first wife.
-
-	marry = character:Black_Unicorn_1
-
-
-	add_character_flag = segrellion_black_unicorn_visenya_married_daemon
-
-
-	character:Black_Unicorn_1 = {
-
-		add_character_flag = segrellion_black_unicorn_married_daemon
-
-		add_character_flag = segrellion_black_unicorn_dual_marriage_accepted
-	}
-
-
-	segrellion_black_unicorn_visenya_join_daemon_effect = yes
-
-	segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
-
-	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
-
-	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
-
-	add_character_flag = segrellion_black_unicorn_part_iii_dual_marriage_resolution
-}
 
 # =========================================================
 # PRIVATE ROOM - CONSENSUAL INTIMACY
