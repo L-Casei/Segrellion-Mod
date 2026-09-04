@@ -1,0 +1,239 @@
+namespace = segrellion_jon
+
+# =========================================================
+# 1299 - START CHAIN
+# =========================================================
+
+segrellion_jon.1299 = {
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		if = {
+			limit = {
+				NOT = { has_character_flag = segrellion_jon_post_resurrection_chain_started }
+			}
+
+			add_character_flag = segrellion_jon_post_resurrection_chain_started
+			add_character_flag = segrellion_jon_post_resurrection_chain_running
+
+			trigger_event = {
+				id = segrellion_jon.1300
+				days = 10
+			}
+		}
+	}
+}
+
+# =========================================================
+# 1300 - FOR THE WATCH
+# =========================================================
+
+segrellion_jon.1300 = {
+	type = character_event
+
+	title = segrellion_jon.1300.t
+	desc = segrellion_jon.1300.desc
+
+	theme = death
+
+	trigger = {
+		is_alive = yes
+		has_character_flag = segrellion_jon_post_resurrection_chain_started
+		NOT = { has_character_flag = segrellion_jon_mutiny_closed }
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = segrellion_jon.1300.a
+		custom_tooltip = segrellion_jon.1300.a.tt
+
+		segrellion_jon_execute_surviving_mutineers_effect = yes
+
+		add_prestige = 250
+		add_dread = 20
+
+		segrellion_jon_close_mutiny_storyline_effect = yes
+
+		trigger_event = {
+			id = segrellion_jon.1310
+			days = { 10 14 }
+		}
+	}
+}
+
+# =========================================================
+# 1310 - THE MAN WHO RETURNED
+# =========================================================
+
+segrellion_jon.1310 = {
+	type = character_event
+
+	title = segrellion_jon.1310.t
+	desc = segrellion_jon.1310.desc
+
+	theme = mysticism
+
+	trigger = {
+		is_alive = yes
+		has_character_flag = segrellion_jon_post_resurrection_chain_started
+		NOT = { has_character_flag = segrellion_jon_post_resurrection_legend_begun }
+	}
+
+	left_portrait = {
+		character = root
+		animation = contemplation
+	}
+
+	option = {
+		name = segrellion_jon.1310.a
+		custom_tooltip = segrellion_jon.1310.a.tt
+
+		add_character_flag = segrellion_jon_post_resurrection_legend_begun
+
+		add_prestige = 150
+
+		trigger_event = {
+			id = segrellion_jon.1320
+			days = 14
+		}
+	}
+}
+
+# =========================================================
+# 1320 - THE WOLF DREAMS
+# =========================================================
+
+segrellion_jon.1320 = {
+	type = character_event
+
+	title = segrellion_jon.1320.t
+	desc = segrellion_jon.1320.desc
+
+	theme = mysticism
+
+	trigger = {
+		is_alive = yes
+		has_character_flag = segrellion_jon_post_resurrection_legend_begun
+		NOT = { has_character_flag = segrellion_jon_wolf_dreams_begun }
+	}
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_jon.1320.a
+		custom_tooltip = segrellion_jon.1320.a.tt
+
+		add_character_flag = segrellion_jon_wolf_dreams_begun
+		add_stress = 10
+		add_prestige = 75
+
+		segrellion_jon_post_resurrection_dreamer_progression_effect = yes
+
+		trigger_event = {
+			id = segrellion_jon.1330
+			days = 28
+		}
+	}
+}
+
+# =========================================================
+# 1330 - SOMETHING AWAKENED
+# =========================================================
+
+segrellion_jon.1330 = {
+	type = character_event
+
+	title = segrellion_jon.1330.t
+	desc = segrellion_jon.1330.desc
+
+	theme = mysticism
+
+	trigger = {
+		is_alive = yes
+		has_character_flag = segrellion_jon_wolf_dreams_begun
+		NOT = { has_character_flag = segrellion_jon_something_awakened }
+	}
+
+	left_portrait = {
+		character = root
+		animation = contemplation
+	}
+
+	option = {
+		name = segrellion_jon.1330.a
+		custom_tooltip = segrellion_jon.1330.a.tt
+
+		add_character_flag = segrellion_jon_something_awakened
+		add_character_flag = segrellion_jon_identity_dreams_unlocked
+
+		add_prestige = 125
+
+		segrellion_jon_post_resurrection_dreamer_progression_effect = yes
+		segrellion_jon_apply_awakened_appearance_effect = yes
+
+		add_character_flag = segrellion_jon_targaryen_revealed
+
+		trigger_event = {
+			id = segrellion_jon.1350
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 1350 - THE DRAGON IN THE WOLF
+# =========================================================
+
+segrellion_jon.1350 = {
+	type = character_event
+
+	title = segrellion_jon.1350.t
+	desc = segrellion_jon.1350.desc
+
+	theme = dynasty
+
+	trigger = {
+		is_alive = yes
+		has_character_flag = segrellion_jon_targaryen_revealed
+		NOT = { has_character_flag = segrellion_jon_dragon_in_the_wolf_done }
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = segrellion_jon.1350.a
+		custom_tooltip = segrellion_jon.1350.a.tt
+
+		add_character_flag = segrellion_jon_dragon_in_the_wolf_done
+		add_character_flag = segrellion_jon_targaryen_claim_storyline_started
+
+		if = {
+			limit = {
+				has_trait = just
+			}
+			remove_trait = just
+		}
+
+		if = {
+			limit = {
+				NOT = { has_trait = ambitious }
+			}
+			add_trait = ambitious
+		}
+
+		add_prestige = 500
+		add_legitimacy = 0.15
+	}
+}

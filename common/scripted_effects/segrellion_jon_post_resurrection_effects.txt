@@ -1,0 +1,70 @@
+# =========================================================
+# JON POST-RESURRECTION - EFFECTS
+# =========================================================
+
+segrellion_jon_execute_surviving_mutineers_effect = {
+
+	# ROOT = Jon
+
+	every_character = {
+		limit = {
+			is_alive = yes
+			segrellion_jon_is_murder_mutineer_trigger = yes
+		}
+
+		add_character_flag = segrellion_jon_mutineer_judged
+
+		death = {
+			death_reason = death_execution
+			killer = root
+		}
+	}
+}
+
+segrellion_jon_close_mutiny_storyline_effect = {
+
+	# ROOT = Jon
+
+	remove_character_flag = segrellion_jon_mutiny_active
+	remove_character_flag = segrellion_jon_post_resurrection_chain_running
+
+	add_character_flag = segrellion_jon_mutiny_closed
+}
+
+segrellion_jon_post_resurrection_dreamer_progression_effect = {
+
+	# ROOT = Jon
+	# Si ya tienes un efecto propio para dreamer/sueños,
+	# sustitúyelo aquí directamente.
+
+	if = {
+		limit = {
+			has_trait = dreamer
+		}
+
+		add_trait_xp = {
+			trait = dreamer
+			value = 25
+		}
+	}
+}
+
+segrellion_jon_apply_awakened_appearance_effect = {
+
+	# ROOT = Jon
+	# El portrait modifier conserva la cara de Jon y sustituye
+	# únicamente los colores de pelo y ojos.
+
+	if = {
+		limit = {
+			has_inactive_trait = purple_eyes
+		}
+
+		make_trait_active = purple_eyes
+		remove_trait = purple_eyes
+	}
+
+	make_trait_inactive = cool_silver_hair
+
+	add_character_flag = segrellion_jon_awakened_appearance
+}
