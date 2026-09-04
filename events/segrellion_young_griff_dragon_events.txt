@@ -2,7 +2,10 @@ namespace = segrellion_young_griff_dragon
 
 
 # =========================================================
-# 0001 - SEARCH FOR AN EGG
+# 0001 - A SCHOLAR'S TASK
+#
+# Young Griff orders a capable courtier to investigate
+# possible surviving dragon eggs.
 # =========================================================
 
 segrellion_young_griff_dragon.0001 = {
@@ -11,24 +14,7 @@ segrellion_young_griff_dragon.0001 = {
 
 	title = segrellion_young_griff_dragon.0001.t
 
-	desc = {
-
-		first_valid = {
-
-			triggered_desc = {
-
-				trigger = {
-					has_character_flag = segrellion_young_griff_found_dragon_egg
-				}
-
-				desc = segrellion_young_griff_dragon.0001.desc_found
-			}
-
-
-			desc = segrellion_young_griff_dragon.0001.desc_failed
-		}
-	}
-
+	desc = segrellion_young_griff_dragon.0001.desc
 
 	theme = intrigue
 
@@ -49,44 +35,628 @@ segrellion_young_griff_dragon.0001 = {
 
 	immediate = {
 
-		random_list = {
+		random_courtier = {
 
-			45 = {
+			limit = {
 
-				add_character_flag = segrellion_young_griff_found_dragon_egg
+				is_alive = yes
 
+				is_adult = yes
 
-				agot_create_weighted_dragon_egg_artifact = {
-					OWNER = root
-				}
+				is_imprisoned = no
+
+				learning >= 8
+
+				stewardship >= 8
 			}
 
 
-			55 = {
-
-				add_character_flag = segrellion_young_griff_dragon_egg_search_failed
-			}
+			save_scope_as = segrellion_young_griff_dragon_researcher
 		}
 
 
-		add_character_flag = segrellion_young_griff_dragon_route_resolved
+		if = {
+
+			limit = {
+				exists = scope:segrellion_young_griff_dragon_researcher
+			}
+
+
+			set_variable = {
+
+				name = segrellion_young_griff_dragon_researcher
+
+				value = scope:segrellion_young_griff_dragon_researcher
+			}
+		}
 	}
 
 
 	left_portrait = {
+
 		character = root
+
 		animation = thinking
 	}
 
 
+	right_portrait = {
+
+		character = var:segrellion_young_griff_dragon_researcher
+
+		animation = personality_rational
+	}
+
+
 	option = {
+
 		name = segrellion_young_griff_dragon.0001.a
+
+
+		trigger = {
+			exists = var:segrellion_young_griff_dragon_researcher
+		}
+
+
+		add_character_flag = segrellion_young_griff_dragon_research_underway
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragon.0010
+
+			days = { 45 75 }
+		}
+	}
+
+
+	# Failsafe. This should never normally appear.
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0001.b
+
+
+		trigger = {
+
+			NOT = {
+				exists = var:segrellion_young_griff_dragon_researcher
+			}
+		}
+
+
+		remove_character_flag = segrellion_young_griff_dragon_path_chosen
+
+		remove_character_flag = segrellion_young_griff_dragon_path_egg
 	}
 }
 
 
 # =========================================================
-# 0100 - STEAL A DRAGON
+# 0010 - THREE EMBERS
+#
+# Dragonstone
+# Red Lake
+# Summerhall
+# =========================================================
+
+segrellion_young_griff_dragon.0010 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0010.t
+
+	desc = segrellion_young_griff_dragon.0010.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_path_egg
+
+		has_character_flag = segrellion_young_griff_dragon_research_underway
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_dragon_research_underway
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = var:segrellion_young_griff_dragon_researcher
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# DRAGONSTONE
+	#
+	# It is a genuine lead, but politically impossible.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0010.a
+
+		trigger = {
+			always = no
+		}
+
+		show_as_unavailable = {
+			always = yes
+		}
+	}
+
+
+	# =====================================================
+	# RED LAKE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0010.b
+
+		custom_tooltip = segrellion_young_griff_dragon.0010.b.tt
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_dragon_search_red_lake
+
+
+			start_travel_plan = {
+
+				destination = title:c_red_lake.title_province
+
+				return_trip = yes
+
+				on_arrival_event = segrellion_young_griff_dragon.0020
+
+				on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+			}
+		}
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+
+
+	# =====================================================
+	# SUMMERHALL
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0010.c
+
+		custom_tooltip = segrellion_young_griff_dragon.0010.c.tt
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_dragon_search_summerhall
+
+
+			start_travel_plan = {
+
+				destination = title:c_summerhall.title_province
+
+				return_trip = yes
+
+				on_arrival_event = segrellion_young_griff_dragon.0030
+
+				on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+			}
+		}
+
+
+		ai_chance = {
+			base = 65
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - RED LAKE
+# =========================================================
+
+segrellion_young_griff_dragon.0020 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0020.t
+
+	desc = segrellion_young_griff_dragon.0020.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_search_red_lake
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0020.a
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragon.0021
+
+			days = { 2 4 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0021 - NOTHING AT RED LAKE
+#
+# Red Lake is always a dead end.
+# =========================================================
+
+segrellion_young_griff_dragon.0021 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0021.t
+
+	desc = segrellion_young_griff_dragon.0021.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_search_red_lake
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = frustration
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0021.a
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_dragon_egg_search_failed
+
+			add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+			remove_character_flag = segrellion_young_griff_dragon_search_red_lake
+
+			remove_variable = segrellion_young_griff_dragon_researcher
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - THE ASHES OF SUMMERHALL
+# =========================================================
+
+segrellion_young_griff_dragon.0030 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0030.t
+
+	desc = segrellion_young_griff_dragon.0030.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_search_summerhall
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0030.a
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragon.0031
+
+			days = { 1 3 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0031 - BENEATH THE BURNED STONES
+# =========================================================
+
+segrellion_young_griff_dragon.0031 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0031.t
+
+	desc = segrellion_young_griff_dragon.0031.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_search_summerhall
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0031.a
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragon.0032
+
+			days = { 1 3 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0032 - WHAT THE FIRE SPARED
+#
+# EXACT CHANCES:
+#
+# 10% egg
+# 90% nothing
+# =========================================================
+
+segrellion_young_griff_dragon.0032 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0032.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_found_summerhall_egg
+				}
+
+				desc = segrellion_young_griff_dragon.0032.desc_found
+			}
+
+
+			desc = segrellion_young_griff_dragon.0032.desc_failed
+		}
+	}
+
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_search_summerhall
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	immediate = {
+
+		random_list = {
+
+
+			# =================================================
+			# 10% - THE EGG SURVIVED
+			# =================================================
+
+			10 = {
+
+				add_character_flag = segrellion_young_griff_found_dragon_egg
+
+				add_character_flag = segrellion_young_griff_found_summerhall_egg
+
+
+				agot_create_weighted_dragon_egg_artifact = {
+
+					OWNER = root
+				}
+
+
+				# Preserve the fact that this specific egg
+				# came from Summerhall.
+
+				scope:newly_created_artifact ?= {
+
+					set_variable = {
+
+						name = segrellion_summerhall_dragon_egg
+
+						value = yes
+					}
+
+
+					set_artifact_name = segrellion_summerhall_dragon_egg_name
+
+					set_artifact_description = segrellion_summerhall_dragon_egg_description
+				}
+			}
+
+
+			# =================================================
+			# 90% - NOTHING
+			# =================================================
+
+			90 = {
+
+				add_character_flag = segrellion_young_griff_dragon_egg_search_failed
+
+				add_character_flag = segrellion_young_griff_summerhall_search_failed
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+		remove_character_flag = segrellion_young_griff_dragon_search_summerhall
+
+		remove_variable = segrellion_young_griff_dragon_researcher
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0032.a
+	}
+}
+
+
+# =========================================================
+# 0090 - EGG SEARCH TRAVEL CANCELLED
+# =========================================================
+
+segrellion_young_griff_dragon.0090 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_dragon_path_chosen
+
+		remove_character_flag = segrellion_young_griff_dragon_path_egg
+
+		remove_character_flag = segrellion_young_griff_dragon_search_red_lake
+
+		remove_character_flag = segrellion_young_griff_dragon_search_summerhall
+
+		remove_character_flag = segrellion_young_griff_dragon_research_underway
+
+		remove_variable = segrellion_young_griff_dragon_researcher
+	}
+}
+
+
+# =========================================================
+# 0100 - A DRAGON WITHOUT A RIDER
+#
+# Only Rhaegal or Viserion may be targeted.
 # =========================================================
 
 segrellion_young_griff_dragon.0100 = {
@@ -94,6 +664,7 @@ segrellion_young_griff_dragon.0100 = {
 	type = character_event
 
 	title = segrellion_young_griff_dragon.0100.t
+
 	desc = segrellion_young_griff_dragon.0100.desc
 
 	theme = danger
@@ -110,22 +681,22 @@ segrellion_young_griff_dragon.0100 = {
 		NOT = {
 			has_character_flag = segrellion_young_griff_dragon_route_resolved
 		}
-
-		character:Targaryen_9 ?= {
-			is_alive = yes
-		}
 	}
 
 
 	immediate = {
 
-		character:Targaryen_9 = {
+		# =================================================
+		# BOTH ARE AVAILABLE
+		# =================================================
 
-			random_courtier = {
+		if = {
 
-				limit = {
+			limit = {
 
-					has_trait = dragon
+				character:dragon_rhaegal ?= {
+
+					is_alive = yes
 
 					NOT = {
 						exists = var:current_rider
@@ -133,6 +704,81 @@ segrellion_young_griff_dragon.0100 = {
 				}
 
 
+				character:dragon_viserion ?= {
+
+					is_alive = yes
+
+					NOT = {
+						exists = var:current_rider
+					}
+				}
+			}
+
+
+			random_list = {
+
+				50 = {
+
+					character:dragon_rhaegal = {
+						save_scope_as = segrellion_young_griff_target_dragon
+					}
+				}
+
+				50 = {
+
+					character:dragon_viserion = {
+						save_scope_as = segrellion_young_griff_target_dragon
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# ONLY RHAEGAL
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				character:dragon_rhaegal ?= {
+
+					is_alive = yes
+
+					NOT = {
+						exists = var:current_rider
+					}
+				}
+			}
+
+
+			character:dragon_rhaegal = {
+				save_scope_as = segrellion_young_griff_target_dragon
+			}
+		}
+
+
+		# =================================================
+		# ONLY VISERION
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				character:dragon_viserion ?= {
+
+					is_alive = yes
+
+					NOT = {
+						exists = var:current_rider
+					}
+				}
+			}
+
+
+			character:dragon_viserion = {
 				save_scope_as = segrellion_young_griff_target_dragon
 			}
 		}
@@ -165,9 +811,13 @@ segrellion_young_griff_dragon.0100 = {
 
 	right_portrait = {
 
-		character = scope:segrellion_young_griff_target_dragon
+		character = var:segrellion_young_griff_target_dragon
 	}
 
+
+	# =====================================================
+	# GO TO THE DRAGON
+	# =====================================================
 
 	option = {
 
@@ -175,72 +825,32 @@ segrellion_young_griff_dragon.0100 = {
 
 
 		trigger = {
-			exists = scope:segrellion_young_griff_target_dragon
+			exists = var:segrellion_young_griff_target_dragon
 		}
 
 
-		random_list = {
-
-			25 = {
-
-				add_character_flag = segrellion_young_griff_caught_stealing_dragon
-
-				add_character_flag = segrellion_young_griff_dragon_route_resolved
+		custom_tooltip = segrellion_young_griff_dragon.0100.a.tt
 
 
-				character:Targaryen_9 = {
+		hidden_effect = {
 
-					add_character_flag = segrellion_daenerys_caught_young_griff_dragon_theft
+			start_travel_plan = {
 
-					add_opinion = {
+				destination = var:segrellion_young_griff_target_dragon.location
 
-						target = root
+				return_trip = yes
 
-						modifier = segrellion_daenerys_caught_dragon_thief_opinion
-					}
-				}
+				on_arrival_event = segrellion_young_griff_dragon.0110
 
-
-				trigger_event = {
-
-					id = segrellion_young_griff_dragon.0110
-
-					days = 1
-				}
-			}
-
-
-			75 = {
-
-				agot_try_tame_dragon_effect = {
-
-					TAMER = root
-
-					DRAGON = scope:segrellion_young_griff_target_dragon
-				}
-
-
-				if = {
-
-					limit = {
-						is_alive = yes
-					}
-
-
-					add_character_flag = segrellion_young_griff_dragon_route_resolved
-
-
-					trigger_event = {
-
-						id = segrellion_young_griff_dragon.0110
-
-						days = 1
-					}
-				}
+				on_travel_planner_cancel_event = segrellion_young_griff_dragon.0190
 			}
 		}
 	}
 
+
+	# =====================================================
+	# FAILSAFE - BOTH DRAGONS UNAVAILABLE
+	# =====================================================
 
 	option = {
 
@@ -250,18 +860,26 @@ segrellion_young_griff_dragon.0100 = {
 		trigger = {
 
 			NOT = {
-				exists = scope:segrellion_young_griff_target_dragon
+				exists = var:segrellion_young_griff_target_dragon
 			}
 		}
 
 
-		add_character_flag = segrellion_young_griff_dragon_route_resolved
+		remove_character_flag = segrellion_young_griff_dragon_path_chosen
+
+		remove_character_flag = segrellion_young_griff_dragon_path_daenerys
 	}
 }
 
 
 # =========================================================
-# 0110 - THE RESULT
+# 0110 - BLOOD OF THE DRAGON
+#
+# EXACT CHANCES:
+#
+# 40% death
+# 50% burned
+# 10% tame
 # =========================================================
 
 segrellion_young_griff_dragon.0110 = {
@@ -270,18 +888,249 @@ segrellion_young_griff_dragon.0110 = {
 
 	title = segrellion_young_griff_dragon.0110.t
 
+	desc = segrellion_young_griff_dragon.0110.desc
+
+	theme = danger
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_path_daenerys
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = var:segrellion_young_griff_target_dragon
+	}
+
+
+	# =====================================================
+	# APPROACH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0110.a
+
+
+		trigger = {
+
+			var:segrellion_young_griff_target_dragon ?= {
+
+				is_alive = yes
+
+				has_trait = dragon
+
+				NOT = {
+					exists = var:current_rider
+				}
+			}
+		}
+
+
+		custom_tooltip = segrellion_young_griff_dragon.0110.a.tt
+
+
+		hidden_effect = {
+
+			random_list = {
+
+
+				# =============================================
+				# 40% - DEATH
+				# =============================================
+
+				40 = {
+
+					death = {
+
+						death_reason = death_dragon_ate_failed_tamed
+
+						killer = var:segrellion_young_griff_target_dragon
+					}
+				}
+
+
+				# =============================================
+				# 50% - BURNED
+				# =============================================
+
+				50 = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_trait = burned
+							}
+						}
+
+						add_trait = burned
+					}
+
+
+					add_trait_xp = {
+
+						trait = burned
+
+						track = burned
+
+						value = 100
+					}
+
+
+					add_character_flag = segrellion_young_griff_burned_by_dragon
+
+					add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+
+					character:Targaryen_9 ?= {
+
+						add_character_flag = segrellion_daenerys_caught_young_griff_dragon_theft
+
+
+						add_opinion = {
+
+							target = root
+
+							modifier = segrellion_daenerys_caught_dragon_thief_opinion
+						}
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff_dragon.0120
+
+						days = 1
+					}
+				}
+
+
+				# =============================================
+				# 10% - TAME
+				# =============================================
+
+				10 = {
+
+					agot_tame_dragon = {
+
+						TAMER = root
+
+						DRAGON = var:segrellion_young_griff_target_dragon
+					}
+
+
+					add_character_flag = segrellion_young_griff_tamed_daenerys_dragon
+
+					add_character_flag = segrellion_young_griff_stole_daenerys_dragon
+
+					add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+
+					character:Targaryen_9 ?= {
+
+						add_character_flag = segrellion_daenerys_dragon_stolen_by_young_griff
+
+
+						add_opinion = {
+
+							target = root
+
+							modifier = segrellion_daenerys_dragon_stolen_opinion
+						}
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff_dragon.0120
+
+						days = 1
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# TARGET NO LONGER AVAILABLE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0110.b
+
+
+		trigger = {
+
+			NOT = {
+
+				var:segrellion_young_griff_target_dragon ?= {
+
+					is_alive = yes
+
+					has_trait = dragon
+
+					NOT = {
+						exists = var:current_rider
+					}
+				}
+			}
+		}
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_dragon_target_lost
+
+			add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragon.0120
+
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - FIRE AND BLOOD
+# =========================================================
+
+segrellion_young_griff_dragon.0120 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0120.t
+
+
 	desc = {
 
 		first_valid = {
-
-			triggered_desc = {
-
-				trigger = {
-					has_character_flag = segrellion_young_griff_caught_stealing_dragon
-				}
-
-				desc = segrellion_young_griff_dragon.0110.desc_caught
-			}
 
 
 			triggered_desc = {
@@ -290,11 +1139,31 @@ segrellion_young_griff_dragon.0110 = {
 					is_current_dragonrider = yes
 				}
 
-				desc = segrellion_young_griff_dragon.0110.desc_success
+				desc = segrellion_young_griff_dragon.0120.desc_success
 			}
 
 
-			desc = segrellion_young_griff_dragon.0110.desc_failure
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_burned_by_dragon
+				}
+
+				desc = segrellion_young_griff_dragon.0120.desc_burned
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_dragon_target_lost
+				}
+
+				desc = segrellion_young_griff_dragon.0120.desc_lost
+			}
+
+
+			desc = segrellion_young_griff_dragon.0120.desc_failure
 		}
 	}
 
@@ -302,39 +1171,58 @@ segrellion_young_griff_dragon.0110 = {
 	theme = danger
 
 
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+	}
+
+
 	left_portrait = {
+
 		character = root
+
 		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = var:segrellion_young_griff_target_dragon
 	}
 
 
 	option = {
 
-		name = segrellion_young_griff_dragon.0110.a
+		name = segrellion_young_griff_dragon.0120.a
 
 
-		if = {
+		hidden_effect = {
 
-			limit = {
-				is_current_dragonrider = yes
-			}
-
-
-			add_character_flag = segrellion_young_griff_stole_daenerys_dragon
-
-
-			character:Targaryen_9 ?= {
-
-				add_character_flag = segrellion_daenerys_dragon_stolen_by_young_griff
-
-
-				add_opinion = {
-
-					target = root
-
-					modifier = segrellion_daenerys_dragon_stolen_opinion
-				}
-			}
+			remove_variable = segrellion_young_griff_target_dragon
 		}
+	}
+}
+
+
+# =========================================================
+# 0190 - DRAGON TRAVEL CANCELLED
+# =========================================================
+
+segrellion_young_griff_dragon.0190 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_dragon_path_chosen
+
+		remove_character_flag = segrellion_young_griff_dragon_path_daenerys
+
+		remove_variable = segrellion_young_griff_target_dragon
 	}
 }

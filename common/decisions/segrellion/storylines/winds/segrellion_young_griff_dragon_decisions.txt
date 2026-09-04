@@ -50,7 +50,6 @@ segrellion_young_griff_need_dragon_decision = {
 
 		is_imprisoned = no
 
-
 		NOT = {
 			exists = current_travel_plan
 		}
@@ -67,7 +66,6 @@ segrellion_young_griff_need_dragon_decision = {
 			NOR = {
 
 				has_trait = dragonrider
-
 
 				any_relation = {
 					type = agot_dragon
@@ -87,7 +85,6 @@ segrellion_young_griff_need_dragon_decision = {
 			NOT = {
 
 				any_character_artifact = {
-
 					has_variable = dragon_egg
 				}
 			}
@@ -131,22 +128,34 @@ segrellion_young_griff_need_dragon_decision = {
 
 
 			is_valid = {
-				always = yes
+
+				gold >= 100
+
+				prestige >= 150
+
+				any_courtier = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+
+					learning >= 8
+
+					stewardship >= 8
+				}
 			}
 
 
-			# This only determines the preferred/default
-			# widget selection.
-			#
-			# Actual AI randomness is handled in effect.
 			ai_chance = {
-				value = 25
+				value = 60
 			}
 		}
 
 
 		# =================================================
-		# DAENERYS' DRAGON
+		# RHAEGAL / VISERION
 		# =================================================
 
 		item = {
@@ -162,15 +171,20 @@ segrellion_young_griff_need_dragon_decision = {
 
 			is_shown = {
 
-				character:Targaryen_9 ?= {
+				OR = {
 
-					is_alive = yes
+					character:dragon_rhaegal ?= {
 
+						is_alive = yes
 
-					any_courtier = {
+						NOT = {
+							exists = var:current_rider
+						}
+					}
 
-						has_trait = dragon
+					character:dragon_viserion ?= {
 
+						is_alive = yes
 
 						NOT = {
 							exists = var:current_rider
@@ -182,15 +196,20 @@ segrellion_young_griff_need_dragon_decision = {
 
 			is_valid = {
 
-				character:Targaryen_9 ?= {
+				OR = {
 
-					is_alive = yes
+					character:dragon_rhaegal ?= {
 
+						is_alive = yes
 
-					any_courtier = {
+						NOT = {
+							exists = var:current_rider
+						}
+					}
 
-						has_trait = dragon
+					character:dragon_viserion ?= {
 
+						is_alive = yes
 
 						NOT = {
 							exists = var:current_rider
@@ -201,7 +220,7 @@ segrellion_young_griff_need_dragon_decision = {
 
 
 			ai_chance = {
-				value = 75
+				value = 40
 			}
 		}
 	}
@@ -213,7 +232,6 @@ segrellion_young_griff_need_dragon_decision = {
 
 	effect = {
 
-		# Important warning shown to the player.
 		custom_tooltip = segrellion_young_griff_need_dragon_danger_warning_tt
 
 
@@ -244,8 +262,6 @@ segrellion_young_griff_need_dragon_decision = {
 
 			# =================================================
 			# AI
-			#
-			# Real 25 / 75 random roll.
 			# =================================================
 
 			if = {
@@ -255,20 +271,36 @@ segrellion_young_griff_need_dragon_decision = {
 				}
 
 
-				# Daenerys route exists.
+				# BOTH ROUTES AVAILABLE
+
 				if = {
 
 					limit = {
 
-						character:Targaryen_9 ?= {
+						any_courtier = {
 
 							is_alive = yes
+							is_adult = yes
+							is_imprisoned = no
+							learning >= 8
+							stewardship >= 8
+						}
 
 
-							any_courtier = {
+						OR = {
 
-								has_trait = dragon
+							character:dragon_rhaegal ?= {
 
+								is_alive = yes
+
+								NOT = {
+									exists = var:current_rider
+								}
+							}
+
+							character:dragon_viserion ?= {
+
+								is_alive = yes
 
 								NOT = {
 									exists = var:current_rider
@@ -280,24 +312,71 @@ segrellion_young_griff_need_dragon_decision = {
 
 					random_list = {
 
-						25 = {
-
+						60 = {
 							segrellion_young_griff_choose_dragon_egg_route_effect = yes
 						}
 
-
-						75 = {
-
+						40 = {
 							segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
 						}
 					}
 				}
 
 
-				# Daenerys route unavailable.
-				else = {
+				# ONLY EGG ROUTE AVAILABLE
+
+				else_if = {
+
+					limit = {
+
+						any_courtier = {
+
+							is_alive = yes
+							is_adult = yes
+							is_imprisoned = no
+							learning >= 8
+							stewardship >= 8
+						}
+					}
 
 					segrellion_young_griff_choose_dragon_egg_route_effect = yes
+				}
+
+
+				# ONLY DRAGON ROUTE AVAILABLE
+
+				else_if = {
+
+					limit = {
+
+						OR = {
+
+							character:dragon_rhaegal ?= {
+
+								is_alive = yes
+
+								NOT = {
+									exists = var:current_rider
+								}
+							}
+
+							character:dragon_viserion ?= {
+
+								is_alive = yes
+
+								NOT = {
+									exists = var:current_rider
+								}
+							}
+						}
+					}
+
+					segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
+				}
+
+
+				else = {
+					remove_character_flag = segrellion_young_griff_dragon_path_chosen
 				}
 			}
 
@@ -314,7 +393,6 @@ segrellion_young_griff_need_dragon_decision = {
 						scope:segrellion_young_griff_dragon_choice_egg = yes
 					}
 
-
 					segrellion_young_griff_choose_dragon_egg_route_effect = yes
 				}
 
@@ -325,20 +403,17 @@ segrellion_young_griff_need_dragon_decision = {
 						scope:segrellion_young_griff_dragon_choice_daenerys = yes
 					}
 
-
 					segrellion_young_griff_choose_daenerys_dragon_route_effect = yes
+				}
+
+
+				else = {
+					remove_character_flag = segrellion_young_griff_dragon_path_chosen
 				}
 			}
 		}
 	}
 
-
-	# =====================================================
-	# AI
-	#
-	# 33 = priority/weight of taking the decision.
-	# NOT a 33% coin flip.
-	# =====================================================
 
 	ai_check_interval = 30
 
