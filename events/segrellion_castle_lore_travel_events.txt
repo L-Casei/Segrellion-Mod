@@ -17,6 +17,9 @@ segrellion_castle_lore_travel.0001 = {
 
 	immediate = {
 
+		current_travel_plan.current_location = {
+			save_scope_as = segrellion_castle_lore_traversed_province
+		}
 
 		# =================================================
 		# VHAL
@@ -27,13 +30,15 @@ segrellion_castle_lore_travel.0001 = {
 
 			limit = {
 
-				current_date >= 106.4.18
+				current_date >= 8106.4.18
 
 				NOT = {
 					has_character_flag = segrellion_castle_lore_visited_vhal
 				}
 
-				location = title:VHAL_BARONY_ID.title_province
+				scope:segrellion_castle_lore_traversed_province = {
+					this = title:b_berryport.title_province
+				}
 			}
 
 
@@ -54,13 +59,15 @@ segrellion_castle_lore_travel.0001 = {
 
 			limit = {
 
-				current_date >= 144.1.28
+				current_date >= 8144.1.28
 
 				NOT = {
 					has_character_flag = segrellion_castle_lore_visited_beacon
 				}
 
-				location = title:b_castle_farring.title_province
+				scope:segrellion_castle_lore_traversed_province = {
+					this = title:b_castle_farring.title_province
+				}
 			}
 
 
@@ -74,20 +81,22 @@ segrellion_castle_lore_travel.0001 = {
 
 		# =================================================
 		# WHITE HALL
-		# Use its HISTORICAL founding date here.
+		# Completed and granted as a seat on 1 January 164.
 		# =================================================
 
 		if = {
 
 			limit = {
 
-				current_date >= WHITE_HALL_FOUNDING_DATE
+				current_date >= 8164.1.1
 
 				NOT = {
 					has_character_flag = segrellion_castle_lore_visited_white_hall
 				}
 
-				location = title:WHITE_HALL_BARONY_ID.title_province
+				scope:segrellion_castle_lore_traversed_province = {
+					this = title:b_benthill_dale.title_province
+				}
 			}
 
 
@@ -98,21 +107,5 @@ segrellion_castle_lore_travel.0001 = {
 			}
 		}
 
-
-		# =================================================
-		# KEEP WATCHING WHILE TRAVELLING
-		# =================================================
-
-		if = {
-
-			limit = {
-				exists = current_travel_plan
-			}
-
-			trigger_event = {
-				id = segrellion_castle_lore_travel.0001
-				days = 1
-			}
-		}
 	}
 }
