@@ -131,6 +131,238 @@ segrellion_young_griff_dragon.0001 = {
 	}
 }
 
+segrellion_young_griff_dragon.0002 = {
+    type = character_event
+
+    title = segrellion_young_griff_dragon.0002.t
+    desc = segrellion_young_griff_dragon.0002.desc
+
+    theme = intrigue
+    left_portrait = {
+        character = root
+        animation = personality_rational
+    }
+
+    right_portrait = {
+        character = scope:investigator
+        animation = personality_rational
+    }
+
+    immediate = {
+        if = {
+            limit = {
+                has_variable = segrellion_young_griff_dragon_investigator
+            }
+
+            var:segrellion_young_griff_dragon_investigator = {
+                save_scope_as = investigator
+            }
+        }
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0002.a
+
+        add_character_flag = segrellion_young_griff_egg_leads_discovered
+
+        trigger_event = {
+            id = segrellion_young_griff_dragon.0003
+            days = 1
+        }
+    }
+}
+
+segrellion_young_griff_dragon.0003 = {
+    type = character_event
+
+    title = segrellion_young_griff_dragon.0003.t
+    desc = segrellion_young_griff_dragon.0003.desc
+
+    theme = travel
+
+    left_portrait = {
+        character = root
+        animation = personality_rational
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0003.a
+
+        trigger = {
+            always = no
+        }
+
+        custom_tooltip = segrellion_young_griff_dragon_dragonstone_blocked_tt
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0003.b
+
+        add_character_flag = segrellion_young_griff_searching_red_lake
+
+        trigger_event = {
+            id = segrellion_young_griff_dragon.0010
+            days = 10
+        }
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0003.c
+
+        add_character_flag = segrellion_young_griff_searching_summerhall
+
+        trigger_event = {
+            id = segrellion_young_griff_dragon.0020
+            days = 10
+        }
+    }
+}
+
+segrellion_young_griff_dragon.0010 = {
+    type = character_event
+
+    title = segrellion_young_griff_dragon.0010.t
+    desc = segrellion_young_griff_dragon.0010.desc
+
+    theme = travel
+
+    left_portrait = {
+        character = root
+        animation = personality_rational
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0010.a
+
+        trigger_event = {
+            id = segrellion_young_griff_dragon.0011
+            days = { 10 20 }
+        }
+    }
+}
+
+
+segrellion_young_griff_dragon.0011 = {
+    type = character_event
+
+    title = segrellion_young_griff_dragon.0011.t
+    desc = segrellion_young_griff_dragon.0011.desc
+
+    theme = travel
+
+    left_portrait = {
+        character = root
+        animation = personality_rational
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0011.a
+
+        remove_character_flag = segrellion_young_griff_searching_red_lake
+        add_character_flag = segrellion_young_griff_dragon_search_failed
+        add_character_flag = segrellion_young_griff_dragon_route_resolved
+    }
+}
+
+segrellion_young_griff_dragon.0020 = {
+    type = character_event
+
+    title = segrellion_young_griff_dragon.0020.t
+    desc = segrellion_young_griff_dragon.0020.desc
+
+    theme = travel
+
+    left_portrait = {
+        character = root
+        animation = personality_rational
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0020.a
+
+        trigger_event = {
+            id = segrellion_young_griff_dragon.0021
+            days = { 5 10 }
+        }
+    }
+}
+
+
+segrellion_young_griff_dragon.0021 = {
+    type = character_event
+
+    title = segrellion_young_griff_dragon.0021.t
+    desc = segrellion_young_griff_dragon.0021.desc
+
+    theme = travel
+
+    left_portrait = {
+        character = root
+        animation = personality_rational
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0021.a
+
+        trigger_event = {
+            id = segrellion_young_griff_dragon.0022
+            days = { 3 7 }
+        }
+    }
+}
+
+
+segrellion_young_griff_dragon.0022 = {
+    type = character_event
+
+    title = segrellion_young_griff_dragon.0022.t
+    desc = segrellion_young_griff_dragon.0022.desc
+
+    theme = travel
+
+    left_portrait = {
+        character = root
+        animation = personality_rational
+    }
+
+    immediate = {
+        random_list = {
+            10 = {
+                add_character_flag = segrellion_young_griff_summerhall_egg_success
+            }
+
+            90 = {
+                add_character_flag = segrellion_young_griff_summerhall_egg_failure
+            }
+        }
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0022.a
+
+        trigger = {
+            has_character_flag = segrellion_young_griff_summerhall_egg_success
+        }
+
+        segrellion_young_griff_create_summerhall_egg_effect = yes
+
+        remove_character_flag = segrellion_young_griff_searching_summerhall
+        add_character_flag = segrellion_young_griff_dragon_route_resolved
+    }
+
+    option = {
+        name = segrellion_young_griff_dragon.0022.b
+
+        trigger = {
+            has_character_flag = segrellion_young_griff_summerhall_egg_failure
+        }
+
+        remove_character_flag = segrellion_young_griff_searching_summerhall
+        add_character_flag = segrellion_young_griff_dragon_search_failed
+        add_character_flag = segrellion_young_griff_dragon_route_resolved
+    }
+}
+
 
 # =========================================================
 # 0010 - THREE EMBERS
@@ -686,45 +918,35 @@ segrellion_young_griff_dragon.0100 = {
 
 	immediate = {
 
-		# =================================================
-		# BOTH ARE AVAILABLE
-		# =================================================
+		random_list = {
 
-		if = {
-
-			limit = {
-
-				character:dragon_rhaegal ?= {
-
-					is_alive = yes
-
-					NOT = {
-						exists = var:current_rider
+			50 = {
+				if = {
+					limit = {
+						character:dragon_rhaegal = {
+							is_alive = yes
+							NOT = {
+								has_variable = current_rider
+							}
+						}
 					}
-				}
-
-
-				character:dragon_viserion ?= {
-
-					is_alive = yes
-
-					NOT = {
-						exists = var:current_rider
-					}
-				}
-			}
-
-
-			random_list = {
-
-				50 = {
 
 					character:dragon_rhaegal = {
 						save_scope_as = segrellion_young_griff_target_dragon
 					}
 				}
+			}
 
-				50 = {
+			50 = {
+				if = {
+					limit = {
+						character:dragon_viserion = {
+							is_alive = yes
+							NOT = {
+								has_variable = current_rider
+							}
+						}
+					}
 
 					character:dragon_viserion = {
 						save_scope_as = segrellion_young_griff_target_dragon
@@ -733,69 +955,41 @@ segrellion_young_griff_dragon.0100 = {
 			}
 		}
 
-
-		# =================================================
-		# ONLY RHAEGAL
-		# =================================================
-
-		else_if = {
-
+		if = {
 			limit = {
+				NOT = {
+					exists = scope:segrellion_young_griff_target_dragon
+				}
 
-				character:dragon_rhaegal ?= {
-
+				character:dragon_rhaegal = {
 					is_alive = yes
-
 					NOT = {
-						exists = var:current_rider
+						has_variable = current_rider
 					}
 				}
 			}
-
 
 			character:dragon_rhaegal = {
 				save_scope_as = segrellion_young_griff_target_dragon
 			}
 		}
 
-
-		# =================================================
-		# ONLY VISERION
-		# =================================================
-
-		else_if = {
-
+		if = {
 			limit = {
+				NOT = {
+					exists = scope:segrellion_young_griff_target_dragon
+				}
 
-				character:dragon_viserion ?= {
-
+				character:dragon_viserion = {
 					is_alive = yes
-
 					NOT = {
-						exists = var:current_rider
+						has_variable = current_rider
 					}
 				}
 			}
 
-
 			character:dragon_viserion = {
 				save_scope_as = segrellion_young_griff_target_dragon
-			}
-		}
-
-
-		if = {
-
-			limit = {
-				exists = scope:segrellion_young_griff_target_dragon
-			}
-
-
-			set_variable = {
-
-				name = segrellion_young_griff_target_dragon
-
-				value = scope:segrellion_young_griff_target_dragon
 			}
 		}
 	}

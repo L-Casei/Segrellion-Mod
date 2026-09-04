@@ -1,0 +1,118 @@
+namespace = segrellion_castle_lore_travel
+
+
+segrellion_castle_lore_travel.0001 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		is_alive = yes
+
+		exists = current_travel_plan
+	}
+
+
+	immediate = {
+
+
+		# =================================================
+		# VHAL
+		# Historically established from 18 April 106.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				current_date >= 106.4.18
+
+				NOT = {
+					has_character_flag = segrellion_castle_lore_visited_vhal
+				}
+
+				location = title:VHAL_BARONY_ID.title_province
+			}
+
+
+			add_character_flag = segrellion_castle_lore_visited_vhal
+
+			trigger_event = {
+				id = segrellion_castle_lore.1000
+			}
+		}
+
+
+		# =================================================
+		# THE BEACON
+		# Historically established from 28 January 144.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				current_date >= 144.1.28
+
+				NOT = {
+					has_character_flag = segrellion_castle_lore_visited_beacon
+				}
+
+				location = title:b_castle_farring.title_province
+			}
+
+
+			add_character_flag = segrellion_castle_lore_visited_beacon
+
+			trigger_event = {
+				id = segrellion_castle_lore.2000
+			}
+		}
+
+
+		# =================================================
+		# WHITE HALL
+		# Use its HISTORICAL founding date here.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				current_date >= WHITE_HALL_FOUNDING_DATE
+
+				NOT = {
+					has_character_flag = segrellion_castle_lore_visited_white_hall
+				}
+
+				location = title:WHITE_HALL_BARONY_ID.title_province
+			}
+
+
+			add_character_flag = segrellion_castle_lore_visited_white_hall
+
+			trigger_event = {
+				id = segrellion_castle_lore.3000
+			}
+		}
+
+
+		# =================================================
+		# KEEP WATCHING WHILE TRAVELLING
+		# =================================================
+
+		if = {
+
+			limit = {
+				exists = current_travel_plan
+			}
+
+			trigger_event = {
+				id = segrellion_castle_lore_travel.0001
+				days = 1
+			}
+		}
+	}
+}
