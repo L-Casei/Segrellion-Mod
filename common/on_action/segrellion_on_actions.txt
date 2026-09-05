@@ -572,8 +572,6 @@ segrellion_on_game_start = {
 			}
 		}
 
-		segrellion_setup_historical_artifacts_effect = yes
-		segrellion_process_icebringer_historical_loss_effect = yes
 		segrellion_setup_winds_of_winter_hosts_effect = yes
 		segrellion_setup_massey_defiance_effect = yes
 		segrellion_schedule_massey_secret_support_effect = yes
@@ -729,6 +727,7 @@ segrellion_arianne_marriage_lock_progression = {
 segrellion_young_griff_blackfyre_progression = {
 	effect = {
 		segrellion_setup_young_griff_blackfyre_effect = yes
+		segrellion_young_griff_schedule_blackfyre_reveal_effect = yes
 	}
 }
 
@@ -774,6 +773,8 @@ segrellion_on_game_start_after_lobby = {
 	
 	effect = {
 
+		segrellion_setup_historical_artifacts_effect = yes
+		segrellion_process_icebringer_historical_loss_effect = yes
 		segrellion_apply_later_canon_supplied_appearances_effect = yes
 		segrellion_setup_daenerys_dragons_300_effect = yes
 		segrellion_arianne_marriage_lock_effect = yes
@@ -1783,31 +1784,9 @@ segrellion_daenerys_iron_throne_fertility_restore = {
 
 segrellion_young_griff_blackfyre_reveal_on_title_gain = {
 
-	trigger = {
-
-		this = character:IAF_Young_Griff_1
-
-		has_title = title:h_the_iron_throne
-
-		has_character_flag = segrellion_young_griff_true_blackfyre
-
-		NOT = {
-			has_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
-		}
-
-		NOT = {
-			has_character_flag = segrellion_young_griff_blackfyre_revealed
-		}
-	}
-
 	effect = {
 
-		add_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
-
-		trigger_event = {
-			id = segrellion_young_griff.5000
-			days = { 30 180 }
-		}
+		segrellion_young_griff_schedule_blackfyre_reveal_effect = yes
 	}
 }
 
@@ -2220,6 +2199,19 @@ segrellion_second_war_register_contender = {
 # side first and force them onto Stannis' side.
 # =========================================================
 
+# =========================================================
+# STANNIS - IRON THRONE WAR SUPPORT
+#
+# Once Jon has been restored to the North and has pledged
+# himself to Stannis' claim:
+#
+# - Jon joins Stannis
+# - House Manderly joins Stannis
+# - House Dustin joins Stannis
+#
+# Their existing unrelated wars do not matter.
+# =========================================================
+
 segrellion_stannis_iron_throne_war_setup = {
 
 	trigger = {
@@ -2247,7 +2239,7 @@ segrellion_stannis_iron_throne_war_setup = {
 
 
 		# =================================================
-		# SAVE STANNIS' IRON THRONE WAR
+		# SAVE THE WAR
 		# =================================================
 
 		character:Baratheon_3 = {
@@ -2259,31 +2251,51 @@ segrellion_stannis_iron_throne_war_setup = {
 				value = scope:war
 			}
 
-
 			add_character_flag = segrellion_stannis_iron_throne_war_started
 		}
 
+
 		# =================================================
 		# JON SNOW
+		# RESURRECTED VERSION
 		# =================================================
 
 		if = {
 
 			limit = {
+
 				has_global_variable = segrellion_resurrected_jon
+
+
+				global_var:segrellion_resurrected_jon ?= {
+
+					is_alive = yes
+					is_landed = yes
+
+					has_title = title:e_the_north
+
+					has_character_flag = segrellion_jon_restored_to_winterfell
+
+					has_character_flag = segrellion_jon_pledged_to_stannis_iron_throne
+				}
 			}
 
 
 			global_var:segrellion_resurrected_jon = {
+
 				save_scope_as = segrellion_stannis_jon_ally
 			}
 
 
 			scope:war = {
 
+				# AGOT megawars may have placed Jon
+				# on the wrong side first.
+
 				if = {
 
 					limit = {
+
 						is_defender = scope:segrellion_stannis_jon_ally
 					}
 
@@ -2303,17 +2315,55 @@ segrellion_stannis_iron_throne_war_setup = {
 					add_attacker = scope:segrellion_stannis_jon_ally
 				}
 			}
+
+
+			scope:segrellion_stannis_jon_ally = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_stannis_throne_support_event_seen
+						}
+					}
+
+					add_character_flag = segrellion_stannis_throne_support_event_seen
+
+					trigger_event = {
+						id = segrellion_stannis.0600
+						days = 1
+					}
+				}
+			}
 		}
 
+
+		# =================================================
+		# HISTORICAL JON FALLBACK
+		# =================================================
 
 		else_if = {
 
 			limit = {
 
 				character:Stark_7 ?= {
+
 					is_alive = yes
 					is_landed = yes
+
+					has_title = title:e_the_north
+
+					has_character_flag = segrellion_jon_restored_to_winterfell
+
+					has_character_flag = segrellion_jon_pledged_to_stannis_iron_throne
 				}
+			}
+
+
+			character:Stark_7 = {
+
+				save_scope_as = segrellion_stannis_jon_ally
 			}
 
 
@@ -2322,10 +2372,11 @@ segrellion_stannis_iron_throne_war_setup = {
 				if = {
 
 					limit = {
-						is_defender = character:Stark_7
+
+						is_defender = scope:segrellion_stannis_jon_ally
 					}
 
-					remove_participant = character:Stark_7
+					remove_participant = scope:segrellion_stannis_jon_ally
 				}
 
 
@@ -2334,57 +2385,111 @@ segrellion_stannis_iron_throne_war_setup = {
 					limit = {
 
 						NOT = {
-							is_attacker = character:Stark_7
+							is_attacker = scope:segrellion_stannis_jon_ally
 						}
 					}
 
-					add_attacker = character:Stark_7
+					add_attacker = scope:segrellion_stannis_jon_ally
+				}
+			}
+
+
+			scope:segrellion_stannis_jon_ally = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_stannis_throne_support_event_seen
+						}
+					}
+
+					add_character_flag = segrellion_stannis_throne_support_event_seen
+
+					trigger_event = {
+						id = segrellion_stannis.0600
+						days = 1
+					}
 				}
 			}
 		}
 
 
 		# =================================================
-		# MANDERLY / GLOVER / DUSTIN
+		# MANDERLY + DUSTIN
 		#
-		# Only these Northern houses follow Stannis.
+		# ONLY if Jon actually rules the North and has
+		# pledged himself to Stannis.
 		# =================================================
 
 		title:e_the_north.holder ?= {
 
-			every_vassal = {
+			if = {
 
 				limit = {
 
 					is_alive = yes
 
-					is_landed = yes
+					has_character_flag = segrellion_jon_restored_to_winterfell
 
-
-					OR = {
-
-						house = house:house_Manderly
-
-						house = house:house_Glover
-
-						house = house:house_Dustin
-					}
+					has_character_flag = segrellion_jon_pledged_to_stannis_iron_throne
 				}
 
 
-				save_temporary_scope_as = segrellion_stannis_northern_ally
+				every_vassal = {
+
+					limit = {
+
+						is_alive = yes
+						is_landed = yes
 
 
-				scope:war = {
+						OR = {
 
-					if = {
+							house = house:house_Manderly
 
-						limit = {
-							is_defender = scope:segrellion_stannis_northern_ally
+							house = house:house_Dustin
+						}
+					}
+
+
+					save_temporary_scope_as = segrellion_stannis_northern_ally
+
+
+					scope:war = {
+
+						# If AGOT initially threw them onto
+						# the Iron Throne's side, remove them.
+
+						if = {
+
+							limit = {
+
+								is_defender = scope:segrellion_stannis_northern_ally
+							}
+
+							remove_participant = scope:segrellion_stannis_northern_ally
 						}
 
-						remove_participant = scope:segrellion_stannis_northern_ally
+
+						# Then force them onto Stannis' side.
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									is_attacker = scope:segrellion_stannis_northern_ally
+								}
+							}
+
+							add_attacker = scope:segrellion_stannis_northern_ally
+						}
 					}
+
+
+					add_character_flag = segrellion_northern_lord_supported_stannis
 
 
 					if = {
@@ -2392,16 +2497,18 @@ segrellion_stannis_iron_throne_war_setup = {
 						limit = {
 
 							NOT = {
-								is_attacker = scope:segrellion_stannis_northern_ally
+								has_character_flag = segrellion_stannis_throne_support_event_seen
 							}
 						}
 
-						add_attacker = scope:segrellion_stannis_northern_ally
+						add_character_flag = segrellion_stannis_throne_support_event_seen
+
+						trigger_event = {
+							id = segrellion_stannis.0610
+							days = 1
+						}
 					}
 				}
-
-
-				add_character_flag = segrellion_northern_lord_supported_stannis
 			}
 		}
 	}

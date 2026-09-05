@@ -54,17 +54,47 @@ segrellion_legacy_v_valid_great_house_target_trigger = {
 # - the opposing primary ruler is TARGET's vassal
 # =========================================================
 
+# =========================================================
+# CALLER LEADS AT LEAST ONE WAR
+# =========================================================
+
+segrellion_legacy_v_caller_leads_war_trigger = {
+
+	any_character_war = {
+
+		OR = {
+
+			primary_attacker ?= prev
+
+			primary_defender ?= prev
+		}
+	}
+}
+
+
+# =========================================================
+# CAN THIS LORD JOIN THIS WAR?
+#
+# Scope = WAR
+#
+# IMPORTANT:
+# The caller must be the PRIMARY war leader.
+# Merely participating in somebody else's war is not enough.
+# =========================================================
+
 segrellion_legacy_v_callable_war_trigger = {
 
 	OR = {
 
 		# -------------------------------------------------
-		# CALLER IS ON THE ATTACKING SIDE
+		# CALLER LEADS THE ATTACKING SIDE
 		# -------------------------------------------------
 
 		AND = {
 
-			is_attacker = $CALLER$
+			primary_attacker = {
+				this = $CALLER$
+			}
 
 			NOT = {
 				is_attacker = $TARGET$
@@ -87,12 +117,14 @@ segrellion_legacy_v_callable_war_trigger = {
 
 
 		# -------------------------------------------------
-		# CALLER IS ON THE DEFENDING SIDE
+		# CALLER LEADS THE DEFENDING SIDE
 		# -------------------------------------------------
 
 		AND = {
 
-			is_defender = $CALLER$
+			primary_defender = {
+				this = $CALLER$
+			}
 
 			NOT = {
 				is_attacker = $TARGET$

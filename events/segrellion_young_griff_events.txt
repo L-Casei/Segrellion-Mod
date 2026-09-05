@@ -1649,175 +1649,6 @@ segrellion_young_griff.3200 = {
 	}
 }
 
-# =========================================================
-# 5000 - THE THREAD UNRAVELS
-# =========================================================
-
-segrellion_young_griff.5000 = {
-
-	type = character_event
-
-	title = segrellion_young_griff.5000.t
-	desc = segrellion_young_griff.5000.desc
-
-	theme = intrigue
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	trigger = {
-
-		this = character:IAF_Young_Griff_1
-
-		is_alive = yes
-
-		has_title = title:h_the_iron_throne
-
-		has_character_flag = segrellion_young_griff_true_blackfyre
-
-		NOT = {
-			has_character_flag = segrellion_young_griff_blackfyre_revealed
-		}
-	}
-
-	left_portrait = {
-		character = root
-		animation = thinking
-	}
-
-	option = {
-
-		name = segrellion_young_griff.5000.a
-
-		add_character_flag = segrellion_young_griff_blackfyre_truth_circulating
-
-		trigger_event = {
-			id = segrellion_young_griff.5010
-			days = { 30 90 }
-		}
-	}
-}
-
-# =========================================================
-# 5010 - THE BLACK DRAGON UNMASKED
-# =========================================================
-
-segrellion_young_griff.5010 = {
-
-	type = character_event
-
-	title = segrellion_young_griff.5010.t
-	desc = segrellion_young_griff.5010.desc
-
-	theme = crown
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	trigger = {
-
-		this = character:IAF_Young_Griff_1
-
-		is_alive = yes
-
-		has_character_flag = segrellion_young_griff_true_blackfyre
-
-		NOT = {
-			has_character_flag = segrellion_young_griff_blackfyre_revealed
-		}
-	}
-
-
-	immediate = {
-
-		# =================================================
-		# TRUE PARENTAGE
-		# Uses AGOT's own Blackfyre fAegon parentage.
-		# =================================================
-
-		set_father = character:Mopatis_1
-		set_mother = character:Mopatis_hh_1
-
-		set_house = house:house_Blackfyre
-
-
-		# =================================================
-		# THE DISGUISE ENDS
-		# =================================================
-
-		if = {
-
-			limit = {
-				has_character_modifier = shade_of_the_evening_hair_dye
-			}
-
-			remove_character_modifier = shade_of_the_evening_hair_dye
-		}
-
-
-		# =================================================
-		# THE TARGARYEN CLAIM WAS FALSE
-		# =================================================
-
-		if = {
-
-			limit = {
-				has_claim_on = title:h_the_iron_throne
-			}
-
-			remove_claim = title:h_the_iron_throne
-		}
-
-
-		# =================================================
-		# POLITICAL CONSEQUENCES
-		# =================================================
-
-		add_legitimacy = -300
-
-		add_character_modifier = {
-			modifier = segrellion_exposed_blackfyre_pretender_modifier
-			years = 20
-		}
-
-
-		remove_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
-		remove_character_flag = segrellion_young_griff_blackfyre_truth_circulating
-
-		add_character_flag = segrellion_young_griff_blackfyre_revealed
-
-
-		# Daenerys takes the deception particularly badly.
-		character:Targaryen_9 ?= {
-
-			if = {
-
-				limit = {
-					is_alive = yes
-				}
-
-				add_opinion = {
-					target = root
-					modifier = segrellion_exposed_blackfyre_to_daenerys_opinion
-				}
-			}
-		}
-	}
-
-
-	left_portrait = {
-		character = root
-		animation = shock
-	}
-
-
-	option = {
-
-		name = segrellion_young_griff.5010.a
-	}
-}
 
 # =========================================================
 # 4000 - THE TIME HAS COME
@@ -2629,6 +2460,379 @@ segrellion_young_griff.4121 = {
 		trigger = {
 			has_character_flag = segrellion_young_griff_arianne_offer_lost
 		}
+	}
+}
+
+
+# =========================================================
+# 5000 - A THREAD PULLED
+#
+# Root = Petyr Baelish
+#
+# Littlefinger discovers that Aegon is not the son of
+# Rhaegar Targaryen, but the descendant of the Blackfyres.
+# =========================================================
+
+segrellion_young_griff.5000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.5000.t
+	desc = segrellion_young_griff.5000.desc
+
+	theme = intrigue
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baelish_2
+
+		is_alive = yes
+		is_adult = yes
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_true_blackfyre
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_blackfyre_revealed
+			}
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			remove_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.5000.a
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_blackfyre_truth_circulating
+
+
+			trigger_event = {
+				id = segrellion_young_griff.5010
+				days = { 7 21 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5010 - THE MUMMER'S DRAGON
+#
+# Root = Young Griff
+#
+# Petyr's evidence has been deliberately spread throughout
+# the Seven Kingdoms.
+#
+# The revelation is PUBLIC.
+# The murder conspiracies are NOT.
+# =========================================================
+
+segrellion_young_griff.5010 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.5010.t
+	desc = segrellion_young_griff.5010.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_young_griff_true_blackfyre
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
+		}
+	}
+
+
+	immediate = {
+
+
+		# =================================================
+		# THE BLACKFYRE TRUTH BECOMES PUBLIC
+		# =================================================
+
+		set_father = character:Mopatis_1
+
+		set_mother = character:Mopatis_hh_1
+
+		set_house = house:house_Blackfyre
+
+
+		# =================================================
+		# REMOVE THE DISGUISE
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_modifier = shade_of_the_evening_hair_dye
+			}
+
+			remove_character_modifier = shade_of_the_evening_hair_dye
+		}
+
+
+		# =================================================
+		# POLITICAL DAMAGE
+		# =================================================
+
+		add_character_modifier = {
+			modifier = segrellion_mummers_dragon_modifier
+		}
+
+
+		remove_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+
+		remove_character_flag = segrellion_young_griff_blackfyre_truth_circulating
+
+		add_character_flag = segrellion_young_griff_blackfyre_revealed
+
+
+		# =================================================
+		# SECRET CONSPIRACIES
+		#
+		# Everything below is deliberately hidden.
+		# Murder schemes themselves are secret schemes.
+		# =================================================
+
+		hidden_effect = {
+
+
+			# =============================================
+			# PETYR BAELISH
+			# =============================================
+
+			character:Baelish_2 ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+						is_adult = yes
+						is_imprisoned = no
+
+
+						can_start_scheme = {
+							type = murder
+							target_character = character:IAF_Young_Griff_1
+						}
+					}
+
+
+					start_scheme = {
+						type = murder
+						target_character = character:IAF_Young_Griff_1
+					}
+
+
+					add_character_flag = segrellion_baelish_murdering_young_griff
+				}
+			}
+
+
+			# =============================================
+			# CERSEI LANNISTER
+			# Character ID confirmed: Lannister_6
+			# Only if alive and free.
+			# =============================================
+
+			character:Lannister_6 ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+						is_adult = yes
+						is_imprisoned = no
+
+
+						can_start_scheme = {
+							type = murder
+							target_character = character:IAF_Young_Griff_1
+						}
+					}
+
+
+					start_scheme = {
+						type = murder
+						target_character = character:IAF_Young_Griff_1
+					}
+
+
+					add_character_flag = segrellion_cersei_murdering_young_griff
+				}
+			}
+
+
+			# =============================================
+			# OLENNA TYRELL
+			#
+			# Olenna is Mace Tyrell's mother.
+			# Normally Mace is the current Reach holder.
+			#
+			# Fallback handles one of Mace's children
+			# already inheriting the Reach.
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					title:e_the_reach.holder ?= {
+
+						house = house:house_Tyrell
+
+						mother ?= {
+
+							is_alive = yes
+							is_adult = yes
+							is_imprisoned = no
+						}
+					}
+				}
+
+
+				title:e_the_reach.holder = {
+
+					mother = {
+
+						save_scope_as = segrellion_olenna
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					title:e_the_reach.holder ?= {
+
+						house = house:house_Tyrell
+
+						father ?= {
+
+							mother ?= {
+
+								is_alive = yes
+								is_adult = yes
+								is_imprisoned = no
+							}
+						}
+					}
+				}
+
+
+				title:e_the_reach.holder = {
+
+					father = {
+
+						mother = {
+
+							save_scope_as = segrellion_olenna
+						}
+					}
+				}
+			}
+
+
+			scope:segrellion_olenna ?= {
+
+				if = {
+
+					limit = {
+
+						can_start_scheme = {
+							type = murder
+							target_character = character:IAF_Young_Griff_1
+						}
+					}
+
+
+					start_scheme = {
+						type = murder
+						target_character = character:IAF_Young_Griff_1
+					}
+
+
+					add_character_flag = segrellion_olenna_murdering_young_griff
+				}
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = character:Baelish_2
+		animation = personality_smirk
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.5010.a
 	}
 }
 

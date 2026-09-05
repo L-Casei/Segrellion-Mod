@@ -2342,3 +2342,139 @@ segrellion_stannis.0080 = {
 		}
 	}
 }
+
+
+# =========================================================
+# 0600 - JON ANSWERS THE CALL
+# Root = Jon Snow
+# =========================================================
+
+segrellion_stannis.0600 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0600.t
+	desc = segrellion_stannis.0600.desc
+
+	theme = battle
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_3
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0600.a
+
+
+		# Absolute failsafe:
+		# make sure Jon really is in Stannis' war.
+
+		character:Baratheon_3 ?= {
+
+			var:segrellion_stannis_iron_throne_war ?= {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_attacker = root
+						}
+					}
+
+					add_attacker = root
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0610 - THE NORTH REMEMBERS
+# Root = Manderly or Dustin ruler
+# =========================================================
+
+segrellion_stannis.0610 = {
+
+	type = character_event
+
+	title = segrellion_stannis.0610.t
+	desc = segrellion_stannis.0610.desc
+
+	theme = battle
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_3
+		animation = personality_rational
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		OR = {
+
+			house = house:house_Manderly
+
+			house = house:house_Dustin
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.0610.a
+
+
+		character:Baratheon_3 ?= {
+
+			var:segrellion_stannis_iron_throne_war ?= {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_attacker = root
+						}
+					}
+
+					add_attacker = root
+				}
+			}
+		}
+	}
+}

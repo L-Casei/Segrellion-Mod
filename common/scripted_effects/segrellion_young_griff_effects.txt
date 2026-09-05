@@ -2423,3 +2423,55 @@ segrellion_young_griff_create_summerhall_egg_effect = {
 
     add_character_flag = segrellion_young_griff_found_summerhall_egg
 }
+
+# =========================================================
+# YOUNG GRIFF - BLACKFYRE REVELATION
+#
+# Petyr Baelish discovers the truth only after Aegon
+# has actually taken the Iron Throne.
+# =========================================================
+
+segrellion_young_griff_schedule_blackfyre_reveal_effect = {
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_title = title:h_the_iron_throne
+
+				has_character_flag = segrellion_young_griff_true_blackfyre
+
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+
+
+				character:Baelish_2 ?= {
+					is_alive = yes
+					is_adult = yes
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+
+
+			character:Baelish_2 = {
+
+				trigger_event = {
+					id = segrellion_young_griff.5000
+					days = { 30 90 }
+				}
+			}
+		}
+	}
+}
