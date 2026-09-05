@@ -44,7 +44,6 @@ monthly_global_pulse = {
 		segrellion_jon_wait_for_stannis_progression
 		segrellion_massey_secret_support_progression
 		segrellion_rhaegon_early_growth_progression
-		segrellion_black_unicorn_post_beacon_progression
 		segrellion_young_griff_deerfield_progression
 		segrellion_aegon_daemon_vassalage_progression
 		segrellion_black_unicorn_personal_lock_progression
@@ -1858,6 +1857,16 @@ segrellion_daemon_flamelands_title_gain = {
 # =========================================================
 
 segrellion_black_unicorn_post_beacon_title_gain = {
+
+	trigger = {
+		this = character:Segrellion_60
+		scope:title = {
+			OR = {
+				this = title:e_flamelands
+				this = title:c_farring_cross
+			}
+		}
+	}
 
 	effect = {
 
@@ -3828,4 +3837,13 @@ segrellion_jon_targaryen_reveal_progression = {
 			}
 		}
 	}
+}
+# Engine-supported bootstrap for existing saves. Once active, 0598 checks every 30 days.
+quarterly_playable_pulse = {
+	on_actions = { segrellion_black_unicorn_post_beacon_quarterly_recovery }
+}
+
+segrellion_black_unicorn_post_beacon_quarterly_recovery = {
+	trigger = { this = character:Segrellion_60 }
+	effect = { segrellion_black_unicorn_post_beacon_progression_effect = yes }
 }

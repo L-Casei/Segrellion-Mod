@@ -1,0 +1,36 @@
+# Part III is available after Route D or the surviving Route C choice.
+# The Beacon also supports restores made without the original war flag.
+segrellion_black_unicorn_part_iii_eligible_trigger = {
+	this = character:Segrellion_60
+	is_alive = yes
+	OR = {
+		has_title = title:e_flamelands
+		has_title = title:c_farring_cross
+	}
+	OR = {
+		AND = {
+			has_character_flag = segrellion_black_unicorn_part_iii_pending
+			has_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
+		}
+		has_character_flag = segrellion_black_unicorn_route_d_resolved
+		has_character_flag = segrellion_black_unicorn_route_c_destiny
+		has_character_flag = segrellion_black_unicorn_destiny_route_pending
+	}
+	NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_started }
+	NOT = { has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon }
+	NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_resolved }
+	NOT = { has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon }
+	exists = character:Black_Unicorn_1
+	character:Black_Unicorn_1 = {
+		is_alive = yes
+		NOT = { has_character_flag = segrellion_black_unicorn_visenya_joined_daemon }
+	}
+}
+
+segrellion_black_unicorn_part_iii_ready_trigger = {
+	segrellion_black_unicorn_part_iii_eligible_trigger = yes
+	has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+	NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year }
+	is_imprisoned = no
+	character:Black_Unicorn_1 = { is_imprisoned = no }
+}
