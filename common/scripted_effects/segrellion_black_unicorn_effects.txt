@@ -1806,102 +1806,313 @@ segrellion_rhaegon_early_growth_effect = {
 # =========================================================
 # BLACK UNICORN - POST BEACON STORY
 #
-# Starts the one-year Part III clock after Daemon has
-# restored the Flamelands or acquired the Beacon.
+# NEW V4 SYSTEM
 #
-# Route D and the surviving Route C choice unlock this storyline.
+# The delayed event itself IS the one-year clock.
+# No temporary one-year flag is required.
 # =========================================================
 
 segrellion_black_unicorn_start_post_beacon_clock_effect = {
+
 	character:Segrellion_60 ?= {
+
 		if = {
+
 			limit = {
+
 				segrellion_black_unicorn_part_iii_eligible_trigger = yes
-				NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_clock_started }
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_started
+				}
 			}
+
+
+			# =================================================
+			# THE LAST UNICORN
+			# =================================================
+
 			if = {
-				limit = { NOT = { has_character_flag = segrellion_daemon_last_unicorn_nickname_granted } }
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daemon_last_unicorn_nickname_granted
+					}
+				}
+
 				give_nickname = nick_segrellion_the_last_unicorn
+
 				add_character_flag = segrellion_daemon_last_unicorn_nickname_granted
 			}
-			character:Black_Unicorn_1 = { segrellion_black_unicorn_resolve_secret_effect = yes }
+
+
+			# =================================================
+			# MAKE SURE VISENYA'S SECRET EXISTS
+			# =================================================
+
+			character:Black_Unicorn_1 = {
+
+				segrellion_black_unicorn_resolve_secret_effect = yes
+			}
+
+
+			# =================================================
+			# CLEAN ALL OLD CLOCK IMPLEMENTATIONS
+			# =================================================
+
+			remove_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
+			remove_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+			remove_character_flag = segrellion_black_unicorn_post_beacon_controller_queued
+			remove_character_flag = segrellion_black_unicorn_post_beacon_queued
+
+
+			# =================================================
+			# V4 CLOCK
+			# =================================================
+
 			add_character_flag = segrellion_black_unicorn_post_beacon_clock_started
-			add_character_flag = segrellion_black_unicorn_post_beacon_clock_v3
-			add_character_flag = {
-				flag = segrellion_black_unicorn_post_beacon_waiting_year
+			add_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
+
+			# =================================================
+			# THIS IS THE ACTUAL CLOCK
+			#
+			# 365 days after conquering the Flamelands,
+			# Steel in the Dark is attempted directly.
+			# =================================================
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0600
+
 				days = 365
 			}
-			trigger_event = { id = segrellion_black_unicorn.0599 days = 365 }
-			# Explicit recurring controller; monthly_global_pulse is not an engine hook.
-			add_character_flag = { flag = segrellion_black_unicorn_post_beacon_controller_queued days = 40 }
-			trigger_event = { id = segrellion_black_unicorn.0598 days = 30 }
 		}
 	}
 }
 
 
 # =========================================================
-# TRY TO START PART III
+# COMPATIBILITY ENTRY POINT
+#
+# Older queued 0598 / 0599 events may still call this.
 # =========================================================
 
 segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
+
 	character:Segrellion_60 ?= {
+
 		if = {
+
 			limit = {
+
 				segrellion_black_unicorn_part_iii_ready_trigger = yes
-				NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_queued }
 			}
-			add_character_flag = { flag = segrellion_black_unicorn_post_beacon_queued days = 3 }
-			trigger_event = { id = segrellion_black_unicorn.0600 days = 1 }
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0600
+
+				days = 1
+			}
 		}
 	}
 }
 
 
 # =========================================================
-# POST-BEACON RECOVERY / EXPLICIT 30-DAY CONTROLLER
+# OLD SAVE RECOVERY
+#
+# Called by quarterly_playable_pulse.
 # =========================================================
 
 segrellion_black_unicorn_post_beacon_progression_effect = {
+
 	character:Segrellion_60 ?= {
-		# Earlier builds marked the story started before 0600 was actually delivered.
+
+
+		# =====================================================
+		# REMOVE A FALSE "STARTED" FLAG LEFT BY BROKEN BUILDS
+		# =====================================================
+
 		if = {
+
 			limit = {
+
 				has_character_flag = segrellion_black_unicorn_post_beacon_started
-				NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_resolved }
-				NOT = { has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon }
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+				}
 			}
+
 			remove_character_flag = segrellion_black_unicorn_post_beacon_started
 		}
+
+
+		# =====================================================
+		# OLD SAVE:
+		# THE OLD ONE-YEAR TIMER IS STILL RUNNING
+		#
+		# Recheck every 30 days until it expires.
+		# =====================================================
+
 		if = {
-			limit = { segrellion_black_unicorn_part_iii_eligible_trigger = yes }
-			# Migrate old saves, including v2. Preserve a genuinely running year timer.
-			if = {
-				limit = { NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_clock_v3 } }
-				if = {
-					limit = { NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year } }
-					add_character_flag = { flag = segrellion_black_unicorn_post_beacon_waiting_year days = 7 }
-					add_character_flag = segrellion_black_unicorn_post_beacon_legacy_recovered
-					trigger_event = { id = segrellion_black_unicorn.0599 days = 7 }
+
+			limit = {
+
+				segrellion_black_unicorn_part_iii_eligible_trigger = yes
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
 				}
-				add_character_flag = segrellion_black_unicorn_post_beacon_clock_started
-				add_character_flag = segrellion_black_unicorn_post_beacon_clock_v3
-				remove_character_flag = segrellion_black_unicorn_post_beacon_queued
-				remove_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
-				character:Black_Unicorn_1 = { segrellion_black_unicorn_resolve_secret_effect = yes }
-				if = {
-					limit = { NOT = { has_character_flag = segrellion_daemon_last_unicorn_nickname_granted } }
-					give_nickname = nick_segrellion_the_last_unicorn
-					add_character_flag = segrellion_daemon_last_unicorn_nickname_granted
+
+				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+
+				has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_controller_queued
 				}
 			}
-			segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = yes
-			# This timer survives save/load and retries imprisonment or lost event queues.
-			if = {
-				limit = { NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_controller_queued } }
-				add_character_flag = { flag = segrellion_black_unicorn_post_beacon_controller_queued days = 40 }
-				trigger_event = { id = segrellion_black_unicorn.0598 days = 30 }
+
+
+			add_character_flag = {
+
+				flag = segrellion_black_unicorn_post_beacon_controller_queued
+
+				days = 40
 			}
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0599
+
+				days = 30
+			}
+		}
+
+
+		# =====================================================
+		# OLD SAVE:
+		# CLOCK STARTED, BUT THE YEAR ALREADY FINISHED.
+		#
+		# Do NOT force the player to wait another year.
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				segrellion_black_unicorn_part_iii_eligible_trigger = yes
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+				}
+
+				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
+				}
+			}
+
+
+			remove_character_flag = segrellion_black_unicorn_post_beacon_controller_queued
+			remove_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+			remove_character_flag = segrellion_black_unicorn_post_beacon_queued
+
+			add_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0600
+
+				days = 7
+			}
+		}
+
+
+		# =====================================================
+		# BROKEN SAVE:
+		# DAEMON ALREADY WON THE UNICORN RETURNS,
+		# BUT NO CLOCK WAS EVER CREATED.
+		#
+		# Recover immediately instead of making him wait
+		# another full year.
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				segrellion_black_unicorn_part_iii_eligible_trigger = yes
+
+				has_character_flag = segrellion_unicorn_returns_completed
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+				}
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+			add_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0600
+
+				days = 7
+			}
+		}
+
+
+		# =====================================================
+		# NON-UNICORN-RETURNS TITLE ACQUISITION
+		#
+		# If another valid route somehow gave Daemon the
+		# Flamelands, start a normal fresh one-year timer.
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				segrellion_black_unicorn_part_iii_eligible_trigger = yes
+
+				NOT = {
+					has_character_flag = segrellion_unicorn_returns_completed
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+				}
+			}
+
+
+			segrellion_black_unicorn_start_post_beacon_clock_effect = yes
 		}
 	}
 }

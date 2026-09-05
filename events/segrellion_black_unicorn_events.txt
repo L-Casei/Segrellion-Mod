@@ -6470,29 +6470,54 @@ segrellion_black_unicorn.0595 = {
 }
 
 # =========================================================
-# PART III - THE BLACK UNICORN COMES TO THE BEACON
+# 0598 - LEGACY PART III CONTROLLER
+#
+# Exists only so already-queued events from old saves
+# cannot break anything.
 # =========================================================
 
-# =========================================================
-# 0599 - PART III CLOCK / WATCHDOG
-# =========================================================
-
-# Explicit controller, bootstrapped by title gain, route completion and a real quarterly pulse.
 segrellion_black_unicorn.0598 = {
+
 	type = character_event
 	hidden = yes
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+	}
+
 	immediate = {
+
 		remove_character_flag = segrellion_black_unicorn_post_beacon_controller_queued
+
 		segrellion_black_unicorn_post_beacon_progression_effect = yes
 	}
 }
 
+
+# =========================================================
+# 0599 - LEGACY PART III WATCHDOG
+#
+# Same purpose as 0598.
+# =========================================================
+
 segrellion_black_unicorn.0599 = {
+
 	type = character_event
 	hidden = yes
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+	}
+
 	immediate = {
-		# Do not clear waiting_year: stale queued events must not shorten a new timer.
+
+		remove_character_flag = segrellion_black_unicorn_post_beacon_controller_queued
 		remove_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+
 		segrellion_black_unicorn_post_beacon_progression_effect = yes
 	}
 }
@@ -6592,15 +6617,57 @@ segrellion_black_unicorn.0600 = {
 
 
 	trigger = {
+
 		segrellion_black_unicorn_part_iii_ready_trigger = yes
-		has_character_flag = segrellion_black_unicorn_post_beacon_queued
 	}
 
 
 	on_trigger_fail = {
 
-		remove_character_flag = segrellion_black_unicorn_post_beacon_queued
+		# =====================================================
+		# DO NOT LOSE PART III JUST BECAUSE DAEMON OR VISENYA
+		# WAS TEMPORARILY UNAVAILABLE.
+		#
+		# Once the one-year clock has fired, keep retrying.
+		# =====================================================
 
+		if = {
+
+			limit = {
+
+				this = character:Segrellion_60
+				is_alive = yes
+
+				has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon
+				}
+
+				exists = character:Black_Unicorn_1
+
+				character:Black_Unicorn_1 = {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+					}
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0600
+
+				days = 30
+			}
+		}
 	}
 
 

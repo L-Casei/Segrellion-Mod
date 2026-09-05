@@ -1,36 +1,95 @@
-# Part III is available after Route D or the surviving Route C choice.
-# The Beacon also supports restores made without the original war flag.
+# =========================================================
+# VISENYA - PART III
+# =========================================================
+#
+# Territorial truth:
+# Daemon must actually rule the Flamelands.
+#
+# Story truth:
+# The Unicorn Returns was completed OR an older Visenya
+# Part III route flag already exists.
+#
+# This deliberately avoids depending on fragile pairs of
+# flags from older versions.
+# =========================================================
+
 segrellion_black_unicorn_part_iii_eligible_trigger = {
+
 	this = character:Segrellion_60
 	is_alive = yes
+
+	has_title = title:e_flamelands
+
+
+	# =====================================================
+	# STORY HAS REACHED THE POINT WHERE PART III CAN EXIST
+	# =====================================================
+
 	OR = {
-		has_title = title:e_flamelands
-		has_title = title:c_farring_cross
-	}
-	OR = {
-		AND = {
-			has_character_flag = segrellion_black_unicorn_part_iii_pending
-			has_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
-		}
+
+		# Canonical case.
+		has_character_flag = segrellion_unicorn_returns_completed
+
+		# Save compatibility with older Visenya implementations.
+		has_character_flag = segrellion_black_unicorn_part_iii_pending
+		has_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
 		has_character_flag = segrellion_black_unicorn_route_d_resolved
 		has_character_flag = segrellion_black_unicorn_route_c_destiny
 		has_character_flag = segrellion_black_unicorn_destiny_route_pending
 	}
-	NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_started }
-	NOT = { has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon }
-	NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_resolved }
-	NOT = { has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon }
+
+
+	# =====================================================
+	# PART III HAS NOT ALREADY HAPPENED
+	# =====================================================
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+	}
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon
+	}
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+	}
+
+
+	# =====================================================
+	# VISENYA STILL EXISTS AS THE FUTURE THREAT
+	# =====================================================
+
 	exists = character:Black_Unicorn_1
+
 	character:Black_Unicorn_1 = {
+
 		is_alive = yes
-		NOT = { has_character_flag = segrellion_black_unicorn_visenya_joined_daemon }
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+		}
 	}
 }
 
+
+# =========================================================
+# READY TO ACTUALLY OPEN 0600
+# =========================================================
+
 segrellion_black_unicorn_part_iii_ready_trigger = {
+
 	segrellion_black_unicorn_part_iii_eligible_trigger = yes
-	has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
-	NOT = { has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year }
+
+	has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
+	NOT = {
+		has_character_flag = segrellion_black_unicorn_post_beacon_started
+	}
+
 	is_imprisoned = no
-	character:Black_Unicorn_1 = { is_imprisoned = no }
+
+	character:Black_Unicorn_1 = {
+		is_imprisoned = no
+	}
 }
