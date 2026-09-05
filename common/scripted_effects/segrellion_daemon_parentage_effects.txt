@@ -126,6 +126,52 @@ segrellion_daemon_parentage_progression_effect = {
 	character:Segrellion_60 ?= {
 
 		# =====================================================
+		# REPAIR DAEMON'S KNOWLEDGE STATE
+		#
+		# Do not rely exclusively on our custom flag.
+		# AGOT may already consider Daemon to know or have
+		# publicly revealed his royal parentage.
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_daemon_parentage_known
+				}
+
+				OR = {
+
+					# Daemon mechanically knows his own
+					# illegitimate-parentage secret.
+
+					any_known_secret = {
+
+						secret_type = secret_unmarried_illegitimate_child
+
+						secret_target = {
+							this = character:Segrellion_60
+						}
+					}
+
+
+					# AGOT has already begun/finished the
+					# public royal-bastard reveal.
+
+					owns_story_of_type = agot_royal_bastard_story
+
+					has_character_flag = royal_bastard
+				}
+			}
+
+
+			add_character_flag = segrellion_daemon_parentage_known
+		}
+
+		# =====================================================
 		# PUBLIC REVELATION
 		#
 		# AGOT creates agot_royal_bastard_story when the
@@ -215,25 +261,32 @@ segrellion_daemon_try_start_parentage_identity_chain_effect = {
 
 			has_character_flag = segrellion_daemon_parentage_known
 
-
 			NOT = {
 				has_character_flag = segrellion_daemon_parentage_identity_chain_started
-			}
-
-			NOT = {
-				has_character_flag = segrellion_daemon_parentage_identity_chain_queued
 			}
 		}
 
 
-		add_character_flag = segrellion_daemon_parentage_identity_chain_queued
+		# Clear the old permanent queue flag.
+		# Older versions could leave this flag forever if
+		# the delayed event was lost.
 
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_daemon_parentage_identity_chain_queued
+			}
+
+			remove_character_flag = segrellion_daemon_parentage_identity_chain_queued
+		}
+
+
+		# Fire the identity event directly.
+		# 0100 itself marks the chain as started,
+		# so a permanent queue flag is unnecessary.
 
 		trigger_event = {
-
 			id = segrellion_daemon_parentage.0100
-
-			days = { 2 5 }
 		}
 	}
 }
@@ -533,35 +586,45 @@ segrellion_daemon_finalize_hybrid_dynasty_effect = {
 
 
 	# =====================================================
-	# NEW DYNASTY
+	# NEW DYNASTY - STARTING RENOWN / SPLENDOR
 	# =====================================================
 
-	dynasty ?= {
+	if = {
 
-		# =================================================
-		# STARTING DYNASTY RENOWN
-		# =================================================
+		limit = {
 
-		add_dynasty_prestige = 6250
-
-
-		# =================================================
-		# STARTING SPLENDOR
-		#
-		# The dynasty begins at Splendor level 0 regardless
-		# of the Renown granted above.
-		# =================================================
-
-		while = {
-
-			limit = {
-
-				dynasty_prestige_level > 0
+			NOT = {
+				has_character_flag = segrellion_daemon_hybrid_dynasty_initialized
 			}
-
-			add_dynasty_prestige_level = -1
 		}
 
+
+		dynasty ?= {
+
+			# 6250 spendable Renown.
+
+			add_dynasty_prestige = 6250
+
+
+			# But the dynasty begins at Splendor level 0.
+
+			while = {
+
+				limit = {
+
+					dynasty_prestige_level > 0
+				}
+
+				add_dynasty_prestige_level = -1
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_hybrid_dynasty_initialized
+	}
+
+
+	dynasty ?= {
 
 		add_dynasty_modifier = segrellion_hybrid_dragon_unicorn_dynasty_modifier
 
@@ -734,9 +797,35 @@ segrellion_daemon_finalize_hybrid_dynasty_effect = {
 
 segrellion_daemon_become_vhalaryen_effect = {
 
-	set_house = house:house_Vhalaryen
+	# Create a REAL independent dynasty and founding House for Daemon.
+
+	create_dynasty = {
+		save_scope_as = segrellion_daemon_new_hybrid_dynasty
+	}
+
+
+	# Dynasty identity.
+
+	scope:segrellion_daemon_new_hybrid_dynasty = {
+
+		set_dynasty_name = dynn_Vhalaryen
+
+		set_coa = dynn_Vhalaryen
+	}
+
+
+	# Founding House uses exactly the same name and arms.
+
+	house ?= {
+
+		set_house_name_from_dynasty = scope:segrellion_daemon_new_hybrid_dynasty
+
+		set_coa = dynn_Vhalaryen
+	}
+
 
 	add_character_flag = segrellion_daemon_founded_vhalaryen
+
 
 	segrellion_daemon_finalize_hybrid_dynasty_effect = yes
 }
@@ -744,9 +833,29 @@ segrellion_daemon_become_vhalaryen_effect = {
 
 segrellion_daemon_become_targellion_effect = {
 
-	set_house = house:house_Targellion
+	create_dynasty = {
+		save_scope_as = segrellion_daemon_new_hybrid_dynasty
+	}
+
+
+	scope:segrellion_daemon_new_hybrid_dynasty = {
+
+		set_dynasty_name = dynn_Targellion
+
+		set_coa = dynn_Targellion
+	}
+
+
+	house ?= {
+
+		set_house_name_from_dynasty = scope:segrellion_daemon_new_hybrid_dynasty
+
+		set_coa = dynn_Targellion
+	}
+
 
 	add_character_flag = segrellion_daemon_founded_targellion
+
 
 	segrellion_daemon_finalize_hybrid_dynasty_effect = yes
 }
@@ -754,9 +863,29 @@ segrellion_daemon_become_targellion_effect = {
 
 segrellion_daemon_become_drakoryn_effect = {
 
-	set_house = house:house_Drakoryn
+	create_dynasty = {
+		save_scope_as = segrellion_daemon_new_hybrid_dynasty
+	}
+
+
+	scope:segrellion_daemon_new_hybrid_dynasty = {
+
+		set_dynasty_name = dynn_Drakoryn
+
+		set_coa = dynn_Drakoryn
+	}
+
+
+	house ?= {
+
+		set_house_name_from_dynasty = scope:segrellion_daemon_new_hybrid_dynasty
+
+		set_coa = dynn_Drakoryn
+	}
+
 
 	add_character_flag = segrellion_daemon_founded_drakoryn
+
 
 	segrellion_daemon_finalize_hybrid_dynasty_effect = yes
 }

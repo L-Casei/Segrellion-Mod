@@ -911,70 +911,22 @@ segrellion_daemon_parentage.0120 = {
 			add_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
 
 
-			# Create Daemon's independent dynasty.
-
-			create_dynasty = {
-
-				save_scope_as = segrellion_daemon_custom_hybrid_dynasty
-			}
-
-
-			# Give the new dynasty Daemon's custom default COA.
-
-			scope:segrellion_daemon_custom_hybrid_dynasty = {
-
-				set_coa = segrellion_daemon_custom_dynasty_base_coa
-			}
-
-
-			# The newly generated House should use the same COA.
-
-			house ?= {
-
-				set_coa = segrellion_daemon_custom_dynasty_base_coa
-			}
-
-
-			# Open CK3's REAL dynasty customization window.
-			#
-			# This contains the editable dynasty-name text field
-			# and the coat-of-arms editor.
-
-			dynasty ?= {
-
-				open_view_data = {
-
-					view = dynasty_customization
-
-					player = root
-				}
-			}
-
-
-			# Confirmation follows after the player has had
-			# time to enter the desired name.
-
 			trigger_event = {
 
 				id = segrellion_daemon_parentage.0130
-
-				days = 1
 			}
 		}
 	}
 }
 
-
 # =========================================================
-# 0130 - CUSTOM DYNASTY NAME
+# 0130 - A NAME OF MY OWN
 #
-# Root = Daemon
+# Uses CK3's native character-naming widget as a text input.
+# The entered string is copied into BOTH:
 #
-# The player has created and customized an independent
-# dynasty. Only two choices remain:
-#
-# 1. Accept it.
-# 2. Return to the three suggested dynasties.
+# - Dynasty name
+# - Founding House name
 # =========================================================
 
 segrellion_daemon_parentage.0130 = {
@@ -1002,6 +954,33 @@ segrellion_daemon_parentage.0130 = {
 	}
 
 
+	immediate = {
+
+		# Hidden temporary character used ONLY as the native
+		# CK3 text-input target.
+		#
+		# The name typed into the widget becomes this character's
+		# first name and is then copied into the new Dynasty/House.
+
+		create_character = {
+
+			culture = root.culture
+
+			faith = root.faith
+
+			gender = male
+
+			age = 16
+
+			dynasty = none
+
+			random_traits = no
+
+			save_scope_as = segrellion_dynasty_name_input
+		}
+	}
+
+
 	left_portrait = {
 
 		character = root
@@ -1011,7 +990,32 @@ segrellion_daemon_parentage.0130 = {
 
 
 	# =====================================================
-	# ACCEPT CUSTOM NAME
+	# NATIVE CK3 NAME INPUT
+	# =====================================================
+
+	widgets = {
+
+		widget = {
+
+			gui = "event_window_widget_name_child"
+
+			container = "dynamic_birth_name"
+
+			controller = name_character
+
+			setup_scope = {
+
+				scope:segrellion_dynasty_name_input = {
+
+					save_scope_as = name_character_target
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CONFIRM NAME
 	# =====================================================
 
 	option = {
@@ -1023,31 +1027,37 @@ segrellion_daemon_parentage.0130 = {
 
 		hidden_effect = {
 
-			# Save the newly customized dynasty.
+			# Create Daemon's real independent dynasty.
+			# create_dynasty automatically makes Daemon
+			# founder of its founding House.
 
-			dynasty ?= {
+			create_dynasty = {
 
-				save_scope_as = segrellion_daemon_final_custom_dynasty
+				save_scope_as = segrellion_daemon_custom_hybrid_dynasty
 			}
 
 
-			# Make Daemon's House use the same custom name
-			# and the same custom COA as the dynasty.
+			# =================================================
+			# DYNASTY NAME + COA
+			# =================================================
 
-			if = {
+			scope:segrellion_daemon_custom_hybrid_dynasty = {
 
-				limit = {
+				set_dynasty_name = segrellion_daemon_custom_dynasty_entered_name
 
-					exists = scope:segrellion_daemon_final_custom_dynasty
-				}
+				set_coa = segrellion_daemon_custom_dynasty_base_coa
+			}
 
 
-				house ?= {
+			# =================================================
+			# HOUSE NAME + COA
+			# =================================================
 
-					set_house_name_from_dynasty = scope:segrellion_daemon_final_custom_dynasty
+			house ?= {
 
-					set_coa = scope:segrellion_daemon_final_custom_dynasty
-				}
+				set_house_name = segrellion_daemon_custom_dynasty_entered_name
+
+				set_coa = segrellion_daemon_custom_dynasty_base_coa
 			}
 
 
@@ -1057,12 +1067,22 @@ segrellion_daemon_parentage.0130 = {
 
 
 			segrellion_daemon_finalize_hybrid_dynasty_effect = yes
+
+
+			# Remove the temporary input character from play.
+
+			scope:segrellion_dynasty_name_input ?= {
+
+				death = {
+					death_reason = death_natural_causes
+				}
+			}
 		}
 	}
 
 
 	# =====================================================
-	# RETURN TO PRESET NAMES
+	# GO BACK
 	# =====================================================
 
 	option = {
@@ -1074,17 +1094,20 @@ segrellion_daemon_parentage.0130 = {
 
 		hidden_effect = {
 
-			set_house = house:house_Segrellion
-
-
 			remove_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+
+
+			scope:segrellion_dynasty_name_input ?= {
+
+				death = {
+					death_reason = death_natural_causes
+				}
+			}
 
 
 			trigger_event = {
 
 				id = segrellion_daemon_parentage.0120
-
-				days = 1
 			}
 		}
 	}
