@@ -1300,6 +1300,42 @@ segrellion_young_griff_westeros_core_setup_effect = {
 				}
 			}
 
+			# =================================================
+			# PHYSICALLY MOVE THE GOLDEN COMPANY TO WESTEROS
+			#
+			# set_location only moves the Captain-General.
+			# A landless company is represented on the map by
+			# its domicile, so the domicile must move as well.
+			#
+			# Separate flag deliberately repairs existing saves
+			# where the old setup flag was already applied.
+			# =================================================
+
+			scope:segrellion_golden_company_captain = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_golden_company_domicile_moved_to_storms_end
+						}
+					}
+
+
+					domicile ?= {
+
+						move_domicile = title:c_storms_end.title_province
+					}
+
+
+					set_location = title:c_storms_end.title_province
+
+
+					add_character_flag = segrellion_golden_company_domicile_moved_to_storms_end
+				}
+			}
+
 
 			# =============================================
 			# INITIAL LANDING AT STORM'S END
@@ -2141,6 +2177,7 @@ segrellion_young_griff_post_throne_conquest_effect = {
 
 
 		add_character_flag = segrellion_young_griff_post_throne_consolidation_done
+		segrellion_young_griff_crownlands_guard_effect = yes
 		segrellion_young_griff_schedule_blackfyre_reveal_effect = yes
 	}
 }
@@ -2969,6 +3006,128 @@ segrellion_young_griff_start_flamelands_submission_war_effect = {
 			target = character:Segrellion_60
 
 			target_title = title:e_flamelands
+		}
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - CROWNLANDS TITLE GUARD
+#
+# AGOT may cause the AI king to hand the empire-tier
+# Crownlands title to another lord.
+#
+# Do not hardcode the title key.
+# Locate it through King's Landing's de jure hierarchy:
+#
+# county -> duchy -> kingdom -> empire
+# =========================================================
+
+segrellion_young_griff_crownlands_guard_effect = {
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_title = title:h_the_iron_throne
+			}
+
+
+			# =================================================
+			# FIND THE CROWNLANDS EMPIRE-TIER TITLE
+			# =================================================
+
+			title:c_kings_landing ?= {
+
+				de_jure_liege ?= {
+
+					de_jure_liege ?= {
+
+						de_jure_liege ?= {
+
+							save_scope_as = segrellion_young_griff_crownlands_empire
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# SOMEONE ELSE HAS BEEN GIVEN IT
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					exists = scope:segrellion_young_griff_crownlands_empire
+
+
+					scope:segrellion_young_griff_crownlands_empire = {
+
+						exists = holder
+
+
+						NOT = {
+							holder = character:IAF_Young_Griff_1
+						}
+					}
+				}
+
+
+				scope:segrellion_young_griff_crownlands_empire = {
+
+					holder ?= {
+
+						save_scope_as = segrellion_wrong_crownlands_holder
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						exists = scope:segrellion_wrong_crownlands_holder
+					}
+
+
+					create_title_and_vassal_change = {
+
+						type = conquest
+
+						save_scope_as = segrellion_young_griff_crownlands_recovery_change
+
+						add_claim_on_loss = no
+					}
+
+
+					# Return the title and its Crownlands
+					# vassal structure directly to the king.
+
+					scope:segrellion_young_griff_crownlands_empire = {
+
+						change_title_holder_include_vassals = {
+
+							holder = character:IAF_Young_Griff_1
+
+							change = scope:segrellion_young_griff_crownlands_recovery_change
+
+							government_base = scope:segrellion_wrong_crownlands_holder
+						}
+					}
+
+
+					resolve_title_and_vassal_change = scope:segrellion_young_griff_crownlands_recovery_change
+
+
+					add_character_flag = segrellion_young_griff_crownlands_recovered
+				}
+			}
 		}
 	}
 }

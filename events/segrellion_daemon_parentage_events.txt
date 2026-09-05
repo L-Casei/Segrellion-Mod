@@ -195,15 +195,51 @@ segrellion_daemon_parentage.0003 = {
 
 	immediate = {
 
-		add_character_flag = segrellion_daemon_parentage_known
-		add_character_flag = segrellion_daemon_parentage_known_with_hugh
-		segrellion_daemon_try_start_parentage_identity_chain_effect = yes
+		# =================================================
+		# HUGH FINALLY TELLS DAEMON
+		# =================================================
 
 		character:Segrellion_43 = {
 
+			# Safety for old saves / interrupted chains.
+
+			segrellion_create_daemon_parentage_secret_effect = yes
+
+
+			random_known_secret = {
+
+				limit = {
+
+					secret_type = secret_unmarried_illegitimate_child
+
+					secret_target = {
+						this = character:Segrellion_60
+					}
+				}
+
+
+				reveal_to = root
+			}
+
+
+			add_character_flag = told_true_parentage
+
 			add_character_flag = segrellion_hugh_knows_daemon_parentage
+
 			add_character_flag = segrellion_hugh_revealed_daemon_parentage
 		}
+
+
+		# =================================================
+		# ONLY NOW DOES DAEMON KNOW
+		# =================================================
+
+		add_character_flag = segrellion_daemon_parentage_known
+
+		add_character_flag = segrellion_daemon_parentage_known_with_hugh
+
+
+		segrellion_daemon_try_start_parentage_identity_chain_effect = yes
 	}
 
 
@@ -283,43 +319,31 @@ segrellion_daemon_parentage.0004 = {
 
 		name = segrellion_daemon_parentage.0004.a
 
+
 		trigger = {
+
 			has_character_flag = segrellion_hugh_parentage_reveal_immediately
 		}
 
+
 		custom_tooltip = segrellion_daemon_parentage.0004.a.tt
+
 
 		remove_character_flag = segrellion_hugh_parentage_reveal_immediately
 
 
-		# Hugh now possesses the REAL CK3 heritage secret.
+		# Hugh knows the secret.
+		# Daemon does not yet.
+
 		segrellion_create_daemon_parentage_secret_effect = yes
-
-
-		# Daemon privately learns that same secret.
-		random_known_secret = {
-
-			limit = {
-
-				secret_type = secret_unmarried_illegitimate_child
-
-				secret_target = {
-					this = character:Segrellion_60
-				}
-			}
-
-			reveal_to = character:Segrellion_60
-		}
-
-
-		add_character_flag = told_true_parentage
-		add_character_flag = segrellion_hugh_revealed_daemon_parentage
 
 
 		character:Segrellion_60 = {
 
 			trigger_event = {
+
 				id = segrellion_daemon_parentage.0003
+
 				days = 2
 			}
 		}
@@ -814,17 +838,28 @@ segrellion_daemon_parentage.0120 = {
 	}
 
 
+	# =====================================================
+	# VHALARYEN
+	# =====================================================
+
 	option = {
 
 		name = segrellion_daemon_parentage.0120.a
 
 		custom_tooltip = segrellion_daemon_parentage.0120.a.tt
 
-		segrellion_daemon_become_vhalaryen_effect = yes
+		hidden_effect = {
 
-		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+			segrellion_daemon_become_vhalaryen_effect = yes
+
+			remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+		}
 	}
 
+
+	# =====================================================
+	# TARGELLION
+	# =====================================================
 
 	option = {
 
@@ -832,11 +867,18 @@ segrellion_daemon_parentage.0120 = {
 
 		custom_tooltip = segrellion_daemon_parentage.0120.b.tt
 
-		segrellion_daemon_become_targellion_effect = yes
+		hidden_effect = {
 
-		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+			segrellion_daemon_become_targellion_effect = yes
+
+			remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+		}
 	}
 
+
+	# =====================================================
+	# DRAKORYN
+	# =====================================================
 
 	option = {
 
@@ -844,11 +886,18 @@ segrellion_daemon_parentage.0120 = {
 
 		custom_tooltip = segrellion_daemon_parentage.0120.c.tt
 
-		segrellion_daemon_become_drakoryn_effect = yes
+		hidden_effect = {
 
-		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+			segrellion_daemon_become_drakoryn_effect = yes
+
+			remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+		}
 	}
 
+
+	# =====================================================
+	# A NAME OF MY OWN
+	# =====================================================
 
 	option = {
 
@@ -857,35 +906,60 @@ segrellion_daemon_parentage.0120 = {
 		custom_tooltip = segrellion_daemon_parentage.0120.d.tt
 
 
-		add_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+		hidden_effect = {
+
+			add_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
 
 
-		# Create a genuinely independent new dynasty for Daemon.
-		create_dynasty = {
+			# Create Daemon's independent dynasty.
 
-			save_scope_as = segrellion_daemon_custom_hybrid_dynasty
-		}
+			create_dynasty = {
 
-
-		# Open the real dynasty page.
-		# The vanilla quill button on this screen opens CK3's
-		# dynasty name / coat-of-arms customization window.
-		house = {
-
-			open_view_data = {
-
-				view = dynasty_house_view
+				save_scope_as = segrellion_daemon_custom_hybrid_dynasty
 			}
-		}
 
 
-		# Once the player has chosen the desired name and arms,
-		# the confirmation event follows.
-		trigger_event = {
+			# Give the new dynasty Daemon's custom default COA.
 
-			id = segrellion_daemon_parentage.0130
+			scope:segrellion_daemon_custom_hybrid_dynasty = {
 
-			days = 1
+				set_coa = segrellion_daemon_custom_dynasty_base_coa
+			}
+
+
+			# The newly generated House should use the same COA.
+
+			house ?= {
+
+				set_coa = segrellion_daemon_custom_dynasty_base_coa
+			}
+
+
+			# Open CK3's REAL dynasty customization window.
+			#
+			# This contains the editable dynasty-name text field
+			# and the coat-of-arms editor.
+
+			dynasty ?= {
+
+				open_view_data = {
+
+					view = dynasty_customization
+
+					player = root
+				}
+			}
+
+
+			# Confirmation follows after the player has had
+			# time to enter the desired name.
+
+			trigger_event = {
+
+				id = segrellion_daemon_parentage.0130
+
+				days = 1
+			}
 		}
 	}
 }
@@ -921,7 +995,6 @@ segrellion_daemon_parentage.0130 = {
 
 		has_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
 
-
 		NOT = {
 
 			has_character_flag = segrellion_daemon_parentage_banner_resolved
@@ -938,7 +1011,7 @@ segrellion_daemon_parentage.0130 = {
 
 
 	# =====================================================
-	# ACCEPT THE CUSTOM DYNASTY
+	# ACCEPT CUSTOM NAME
 	# =====================================================
 
 	option = {
@@ -948,17 +1021,48 @@ segrellion_daemon_parentage.0130 = {
 		custom_tooltip = segrellion_daemon_parentage.0130.a.tt
 
 
-		remove_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+		hidden_effect = {
 
-		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+			# Save the newly customized dynasty.
+
+			dynasty ?= {
+
+				save_scope_as = segrellion_daemon_final_custom_dynasty
+			}
 
 
-		segrellion_daemon_finalize_hybrid_dynasty_effect = yes
+			# Make Daemon's House use the same custom name
+			# and the same custom COA as the dynasty.
+
+			if = {
+
+				limit = {
+
+					exists = scope:segrellion_daemon_final_custom_dynasty
+				}
+
+
+				house ?= {
+
+					set_house_name_from_dynasty = scope:segrellion_daemon_final_custom_dynasty
+
+					set_coa = scope:segrellion_daemon_final_custom_dynasty
+				}
+			}
+
+
+			remove_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+
+			remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+
+
+			segrellion_daemon_finalize_hybrid_dynasty_effect = yes
+		}
 	}
 
 
 	# =====================================================
-	# GO BACK TO THE THREE PRESET NAMES
+	# RETURN TO PRESET NAMES
 	# =====================================================
 
 	option = {
@@ -968,19 +1072,20 @@ segrellion_daemon_parentage.0130 = {
 		custom_tooltip = segrellion_daemon_parentage.0130.b.tt
 
 
-		# Return Daemon to House Segrellion before reopening
-		# the original selection.
-		set_house = house:house_Segrellion
+		hidden_effect = {
+
+			set_house = house:house_Segrellion
 
 
-		remove_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+			remove_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
 
 
-		trigger_event = {
+			trigger_event = {
 
-			id = segrellion_daemon_parentage.0120
+				id = segrellion_daemon_parentage.0120
 
-			days = 1
+				days = 1
+			}
 		}
 	}
 }

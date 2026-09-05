@@ -26,6 +26,7 @@ monthly_global_pulse = {
 		segrellion_young_griff_daemon_marriage_lock_progression
 		segrellion_daenerys_invasion_peace_guard
 		segrellion_young_griff_daenerys_pact_progression
+		segrellion_young_griff_crownlands_guard_progression
 		segrellion_deadly_triarchy_progression
 		segrellion_daenerys_followers_progression
 		segrellion_young_griff_iron_throne_invasion_failsafe
@@ -119,6 +120,7 @@ on_title_gain = {
 		segrellion_daenerys_iron_throne_fertility_restore
 		segrellion_young_griff_blackfyre_reveal_on_title_gain
 		segrellion_young_griff_daenerys_pact_title_gain
+		segrellion_young_griff_crownlands_guard_progression
 		segrellion_north_story_title_gain_cleanup
 		segrellion_second_war_throne_settlement
 		segrellion_deadly_triarchy_title_gain
@@ -259,6 +261,18 @@ segrellion_daenerys_invasion_peace_guard = {
 	effect = {
 
 		segrellion_daenerys_invasion_peace_guard_effect = yes
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF - CROWNLANDS TITLE GUARD
+# =========================================================
+
+segrellion_young_griff_crownlands_guard_progression = {
+
+	effect = {
+
+		segrellion_young_griff_crownlands_guard_effect = yes
 	}
 }
 
@@ -751,6 +765,13 @@ segrellion_young_griff_daemon_marriage_guard = {
 
 		# =================================================
 		# YOUNG GRIFF
+		#
+		# Any marriage made while his scripted marriage
+		# storyline is still unresolved MUST have been
+		# explicitly authorized by one of our events.
+		#
+		# This does not depend on refusing_marriage or on
+		# the lock-added bookkeeping flag.
 		# =================================================
 
 		if = {
@@ -767,31 +788,81 @@ segrellion_young_griff_daemon_marriage_guard = {
 
 				character:IAF_Young_Griff_1 = {
 
-					has_character_flag = segrellion_young_griff_story_marriage_lock_added
+					NOT = {
+						has_character_flag = segrellion_young_griff_story_marriage_authorized
+					}
 
 
 					NOT = {
-						has_character_flag = segrellion_young_griff_story_marriage_authorized
+						has_character_flag = segrellion_young_griff_margaery_story_resolved
 					}
 				}
 			}
 
 
+			# =============================================
+			# YOUNG GRIFF IS ROOT
+			# =============================================
+
 			if = {
 
 				limit = {
+
 					this = character:IAF_Young_Griff_1
 				}
+
 
 				divorce = scope:spouse
 			}
 
 
-			else = {
+			# =============================================
+			# YOUNG GRIFF IS THE SPOUSE
+			# =============================================
+
+			else_if = {
+
+				limit = {
+
+					scope:spouse = character:IAF_Young_Griff_1
+				}
+
 
 				scope:spouse = {
+
 					divorce = root
 				}
+			}
+
+
+			# =============================================
+			# RESTORE THE LOCK IMMEDIATELY
+			# =============================================
+
+			character:IAF_Young_Griff_1 = {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						is_married = no
+
+
+						NOT = {
+							has_trait = refusing_marriage
+						}
+					}
+
+
+					add_trait = refusing_marriage
+				}
+
+
+				add_character_flag = segrellion_young_griff_story_marriage_lock_added
+
+				add_character_flag = segrellion_young_griff_random_marriage_blocked
 			}
 		}
 

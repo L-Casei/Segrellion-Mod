@@ -2648,6 +2648,46 @@ segrellion_young_griff.5010 = {
 
 		add_character_flag = segrellion_young_griff_blackfyre_revealed
 
+		# =================================================
+		# THE TRUTH SPREADS THROUGH WESTEROS
+		#
+		# Every landed ruler whose capital lies within the
+		# Seven Kingdoms receives the public revelation.
+		# =================================================
+
+		every_ruler = {
+
+			limit = {
+
+				is_alive = yes
+
+
+				this != character:IAF_Young_Griff_1
+
+
+				capital_barony ?= {
+
+					title_province = {
+
+						geographical_region = world_westeros_seven_kingdoms
+					}
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_knows_young_griff_blackfyre_truth
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.5011
+
+				days = 1
+			}
+		}
+
 
 		# =================================================
 		# SECRET CONSPIRACIES
@@ -2842,6 +2882,82 @@ segrellion_young_griff.5010 = {
 	option = {
 
 		name = segrellion_young_griff.5010.a
+	}
+}
+
+# =========================================================
+# 5011 - THE BLACK DRAGON REVEALED
+#
+# Root = any ruler in Westeros
+#
+# Public broadcast counterpart to 5010.
+# =========================================================
+
+segrellion_young_griff.5011 = {
+
+	type = character_event
+
+
+	title = segrellion_young_griff.5011.t
+
+	desc = segrellion_young_griff.5011.desc
+
+
+	theme = crown
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+
+		NOT = {
+			this = character:IAF_Young_Griff_1
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_knows_young_griff_blackfyre_truth
+		}
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_knows_young_griff_blackfyre_truth
+	}
+
+
+	left_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.5011.a
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }
 

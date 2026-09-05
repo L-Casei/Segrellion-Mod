@@ -68,11 +68,27 @@ segrellion_daemon_parentage_progression_effect = {
 				is_alive = yes
 				has_character_flag = segrellion_hugh_revealed_daemon_parentage
 
-				character:Segrellion_60 ?= {
-					is_alive = yes
-					NOT = { has_character_flag = segrellion_daemon_parentage_publicly_revealed }
-					NOT = { has_character_flag = awaiting_bastardry_result }
-					NOT = { owns_story_of_type = agot_royal_bastard_story }
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+
+				# Hugh's visible revelation must actually have happened.
+				has_character_flag = segrellion_daemon_parentage_known_with_hugh
+
+
+				NOT = {
+					has_character_flag = segrellion_daemon_parentage_publicly_revealed
+				}
+
+
+				NOT = {
+					has_character_flag = awaiting_bastardry_result
+				}
+
+
+				NOT = {
+					owns_story_of_type = agot_royal_bastard_story
 				}
 			}
 
@@ -521,6 +537,31 @@ segrellion_daemon_finalize_hybrid_dynasty_effect = {
 	# =====================================================
 
 	dynasty ?= {
+
+		# =================================================
+		# STARTING DYNASTY RENOWN
+		# =================================================
+
+		add_dynasty_prestige = 6250
+
+
+		# =================================================
+		# STARTING SPLENDOR
+		#
+		# The dynasty begins at Splendor level 0 regardless
+		# of the Renown granted above.
+		# =================================================
+
+		while = {
+
+			limit = {
+
+				dynasty_prestige_level > 0
+			}
+
+			add_dynasty_prestige_level = -1
+		}
+
 
 		add_dynasty_modifier = segrellion_hybrid_dragon_unicorn_dynasty_modifier
 
