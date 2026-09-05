@@ -661,11 +661,27 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 segrellion_black_unicorn_apply_rhaegon_dna_effect = {
 
-	# This effect can run from game-start on_actions, where root is unset.
-	# Preserve the current dragon explicitly before entering storage scopes.
+	# ========================================================
+	# TARGET
+	# ========================================================
+
+	# This effect can also run from game-start repair logic,
+	# where root may be unset.
 	save_scope_as = segrellion_rhaegon_dna_target
 
+
+	# ========================================================
+	# ACTUAL CHARACTER DNA
+	# ========================================================
+
+	# Copy Rhaegon's complete supplied DNA:
+	# morphology, horns, snout, fins, body shading, colors, etc.
 	copy_inheritable_appearance_from = character:Dummy_Segrellion_Rhaegon_1
+
+
+	# ========================================================
+	# AGOT COLOR CATEGORIES
+	# ========================================================
 
 	set_variable = {
 		name = primary_color
@@ -677,6 +693,19 @@ segrellion_black_unicorn_apply_rhaegon_dna_effect = {
 		value = flag:darkest
 	}
 
+
+	# ========================================================
+	# AGOT PERSISTENT DRAGON APPEARANCE STORAGE
+	#
+	# IMPORTANT:
+	# The portrait DNA above is not enough for a dynamic AGOT
+	# dragon. AGOT also keeps the dragon's appearance in its
+	# own persistent runtime story storage.
+	#
+	# These values reproduce the FIRST allele of Rhaegon's
+	# supplied dragon DNA, which is the one used by Rhaegon.
+	# ========================================================
+
 	every_in_global_list = {
 
 		variable = gl_dragon_variable_storage
@@ -684,6 +713,11 @@ segrellion_black_unicorn_apply_rhaegon_dna_effect = {
 		limit = {
 			var:dragon_id ?= scope:segrellion_rhaegon_dna_target
 		}
+
+
+		# ====================================================
+		# COLORS
+		# ====================================================
 
 		set_variable = {
 			name = gene_dragon_primary_color_hue
@@ -734,7 +768,226 @@ segrellion_black_unicorn_apply_rhaegon_dna_effect = {
 			name = gene_dragon_horn_color_value
 			value = 0.768627
 		}
+
+
+		# ====================================================
+		# MAIN HORNS
+		#
+		# DNA:
+		# dragon_horns_dreamfyre = 226
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_main_horn_shape_template
+			value = 5
+		}
+
+		set_variable = {
+			name = gene_dragon_main_horn_shape_value
+			value = 0.886275
+		}
+
+
+		# ====================================================
+		# BODY SHADING
+		#
+		# DNA:
+		# dragon_body_shading_lower_tertiary = 0
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_body_shading_template
+			value = 4
+		}
+
+		set_variable = {
+			name = gene_dragon_body_shading_value
+			value = 0
+		}
+
+
+		# ====================================================
+		# WING SHADING
+		#
+		# DNA:
+		# dragon_wings_shading_front_tertiary = 163
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_wings_shading_template
+			value = 8
+		}
+
+		set_variable = {
+			name = gene_dragon_wings_shading_value
+			value = 0.639216
+		}
+
+
+		# ====================================================
+		# NECK / BODY / TAIL
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_neck_length
+			value = 0.298039
+		}
+
+		set_variable = {
+			name = gene_dragon_metallic_scales_strength
+			value = 0.6
+		}
+
+		set_variable = {
+			name = gene_dragon_wounded
+			value = 0
+		}
+
+		set_variable = {
+			name = gene_dragon_old_neck
+			value = 0
+		}
+
+		set_variable = {
+			name = gene_dragon_tail_length
+			value = 0.619608
+		}
+
+
+		# ====================================================
+		# FINS / CREST / SPIKES
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_center_fin_size
+			value = 0.568627
+		}
+
+		set_variable = {
+			name = gene_dragon_side_fin_size
+			value = 0.529412
+		}
+
+		set_variable = {
+			name = gene_dragon_crest_depth
+			value = 0.419608
+		}
+
+		set_variable = {
+			name = gene_dragon_back_spike_size
+			value = 0.807843
+		}
+
+		set_variable = {
+			name = gene_dragon_neck_spike_size
+			value = 0.619608
+		}
+
+
+		# ====================================================
+		# EYEBROW HORNS
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_horns_eyebrow_length
+			value = 0.349020
+		}
+
+		set_variable = {
+			name = gene_dragon_horns_eyebrow
+			value = 0.286275
+		}
+
+
+		# ====================================================
+		# SNOUT
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_snout_length
+			value = 0.388235
+		}
+
+		set_variable = {
+			name = gene_dragon_snout_height
+			value = 0.407843
+		}
+
+		set_variable = {
+			name = gene_dragon_snout_width
+			value = 0.149020
+		}
+
+		set_variable = {
+			name = gene_dragon_snout_end_width
+			value = 0.478431
+		}
+
+		set_variable = {
+			name = gene_dragon_snout_profile
+			value = 0.607843
+		}
+
+
+		# ====================================================
+		# CHIN / JAWS
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_chin_profile
+			value = 0.807843
+		}
+
+		set_variable = {
+			name = gene_dragon_jaw_width
+			value = 0.647059
+		}
+
+		set_variable = {
+			name = gene_dragon_upper_jaw_width
+			value = 0.137255
+		}
+
+		set_variable = {
+			name = gene_dragon_lower_jaw_width
+			value = 0.156863
+		}
+
+		set_variable = {
+			name = gene_dragon_lower_jaw_height
+			value = 0.709804
+		}
+
+
+		# ====================================================
+		# FACE
+		# ====================================================
+
+		set_variable = {
+			name = gene_dragon_cheek_width
+			value = 0.309804
+		}
+
+		set_variable = {
+			name = gene_dragon_head_roundness
+			value = 0.498039
+		}
+
+		set_variable = {
+			name = gene_dragon_brow_width
+			value = 0.188235
+		}
+
+		set_variable = {
+			name = gene_dragon_outer_brow_height
+			value = 0.176471
+		}
 	}
+
+
+	# ========================================================
+	# REPAIR MARKER
+	# ========================================================
 
 	add_character_flag = segrellion_rhaegon_runtime_dna_repaired
 }
