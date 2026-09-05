@@ -855,6 +855,30 @@ segrellion_daemon_parentage.0120 = {
 		custom_tooltip = segrellion_daemon_parentage.0120.d.tt
 
 
+		add_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+
+
+		# Create a genuinely independent new dynasty for Daemon.
+		create_dynasty = {
+
+			save_scope_as = segrellion_daemon_custom_hybrid_dynasty
+		}
+
+
+		# Open the real dynasty page.
+		# The vanilla quill button on this screen opens CK3's
+		# dynasty name / coat-of-arms customization window.
+		dynasty = {
+
+			open_view_data = {
+
+				view = dynasty_house_view
+			}
+		}
+
+
+		# Once the player has chosen the desired name and arms,
+		# the confirmation event follows.
 		trigger_event = {
 
 			id = segrellion_daemon_parentage.0130
@@ -868,12 +892,13 @@ segrellion_daemon_parentage.0120 = {
 # =========================================================
 # 0130 - CUSTOM DYNASTY NAME
 #
-# GUI HOOK.
+# Root = Daemon
 #
-# The custom text-entry window will use:
-# segrellion_daemon_custom_hybrid_dynasty_name_pending
+# The player has created and customized an independent
+# dynasty. Only two choices remain:
 #
-# The three normal names remain available here.
+# 1. Accept it.
+# 2. Return to the three suggested dynasties.
 # =========================================================
 
 segrellion_daemon_parentage.0130 = {
@@ -886,6 +911,22 @@ segrellion_daemon_parentage.0130 = {
 	theme = dynasty
 
 
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_daemon_wants_hybrid_dynasty
+
+		has_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+
+
+		NOT = {
+
+			has_character_flag = segrellion_daemon_parentage_banner_resolved
+		}
+	}
+
+
 	left_portrait = {
 
 		character = root
@@ -894,42 +935,50 @@ segrellion_daemon_parentage.0130 = {
 	}
 
 
+	# =====================================================
+	# ACCEPT THE CUSTOM DYNASTY
+	# =====================================================
+
 	option = {
 
 		name = segrellion_daemon_parentage.0130.a
 
-		segrellion_daemon_become_vhalaryen_effect = yes
+		custom_tooltip = segrellion_daemon_parentage.0130.a.tt
+
+
+		remove_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
 
 		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
+
+
+		segrellion_daemon_finalize_hybrid_dynasty_effect = yes
 	}
 
+
+	# =====================================================
+	# GO BACK TO THE THREE PRESET NAMES
+	# =====================================================
 
 	option = {
 
 		name = segrellion_daemon_parentage.0130.b
 
-		segrellion_daemon_become_targellion_effect = yes
-
-		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
-	}
+		custom_tooltip = segrellion_daemon_parentage.0130.b.tt
 
 
-	option = {
-
-		name = segrellion_daemon_parentage.0130.c
-
-		segrellion_daemon_become_drakoryn_effect = yes
-
-		remove_character_flag = segrellion_daemon_wants_hybrid_dynasty
-	}
+		# Return Daemon to House Segrellion before reopening
+		# the original selection.
+		set_house = house:house_Segrellion
 
 
-	option = {
+		remove_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
 
-		name = segrellion_daemon_parentage.0130.d
 
-		custom_tooltip = segrellion_daemon_parentage.0130.d.tt
+		trigger_event = {
 
-		add_character_flag = segrellion_daemon_custom_hybrid_dynasty_name_pending
+			id = segrellion_daemon_parentage.0120
+
+			days = 1
+		}
 	}
 }

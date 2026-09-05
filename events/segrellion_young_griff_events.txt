@@ -3581,6 +3581,17 @@ segrellion_young_griff.6010 = {
 
 
 					add_attacker = scope:young_griff_daemon
+
+
+					scope:young_griff_daemon = {
+
+						trigger_event = {
+
+							id = segrellion_young_griff.6020
+
+							days = 1
+						}
+					}
 				}
 			}
 		}
@@ -3602,6 +3613,68 @@ segrellion_young_griff.6010 = {
 
 			add_character_flag = segrellion_young_griff_invasion_event_failed
 		}
+	}
+}
+
+
+# =========================================================
+# 6020 - RAISE THE UNICORN
+#
+# Root = Daemon
+#
+# Aegon's war for the Iron Throne has actually begun.
+# Daemon has already been added to the attacking side.
+# =========================================================
+
+segrellion_young_griff.6020 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_young_griff.6020.opening
+
+	title = segrellion_young_griff.6020.t
+	desc = segrellion_young_griff.6020.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_pledged_to_young_griff
+
+
+		NOT = {
+
+			has_character_flag = segrellion_daemon_called_to_young_griff_war
+		}
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_young_griff_iron_throne_war_started
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daemon_called_to_young_griff_war
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.6020.a
+
+		custom_tooltip = segrellion_young_griff.6020.a.tt
 	}
 }
 
