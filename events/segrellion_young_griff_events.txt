@@ -2469,23 +2469,16 @@ segrellion_young_griff.4121 = {
 #
 # Root = Petyr Baelish
 #
-# Littlefinger discovers that Aegon is not the son of
-# Rhaegar Targaryen, but the descendant of the Blackfyres.
+# Hidden story event.
+# Petyr discovers the Blackfyre truth and begins spreading
+# the evidence throughout Westeros.
 # =========================================================
 
 segrellion_young_griff.5000 = {
 
 	type = character_event
 
-	title = segrellion_young_griff.5000.t
-	desc = segrellion_young_griff.5000.desc
-
-	theme = intrigue
-
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
+	hidden = yes
 
 
 	trigger = {
@@ -2493,6 +2486,7 @@ segrellion_young_griff.5000 = {
 		this = character:Baelish_2
 
 		is_alive = yes
+
 		is_adult = yes
 
 
@@ -2502,7 +2496,6 @@ segrellion_young_griff.5000 = {
 
 			has_title = title:h_the_iron_throne
 
-			has_character_flag = segrellion_young_griff_true_blackfyre
 
 			NOT = {
 				has_character_flag = segrellion_young_griff_blackfyre_revealed
@@ -2520,32 +2513,33 @@ segrellion_young_griff.5000 = {
 	}
 
 
-	left_portrait = {
+	immediate = {
 
-		character = root
-		animation = thinking
-	}
-
-
-	right_portrait = {
-
-		character = character:IAF_Young_Griff_1
-		animation = personality_bold
-	}
-
-
-	option = {
-
-		name = segrellion_young_griff.5000.a
+		add_character_flag = segrellion_baelish_discovered_young_griff_blackfyre
 
 
 		character:IAF_Young_Griff_1 = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_true_blackfyre
+					}
+				}
+
+				add_character_flag = segrellion_young_griff_true_blackfyre
+			}
+
 
 			add_character_flag = segrellion_young_griff_blackfyre_truth_circulating
 
 
 			trigger_event = {
+
 				id = segrellion_young_griff.5010
+
 				days = { 7 21 }
 			}
 		}
@@ -2593,6 +2587,13 @@ segrellion_young_griff.5010 = {
 		NOT = {
 			has_character_flag = segrellion_young_griff_blackfyre_revealed
 		}
+	}
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+
+		remove_character_flag = segrellion_young_griff_blackfyre_truth_circulating
 	}
 
 
@@ -2826,7 +2827,7 @@ segrellion_young_griff.5010 = {
 	right_portrait = {
 
 		character = character:Baelish_2
-		animation = personality_smirk
+		animation = personality_rational
 	}
 
 
@@ -6112,15 +6113,18 @@ segrellion_young_griff.8150 = {
 
 		has_character_flag = segrellion_young_griff_canon_path_2
 
+
 		NOT = {
 			has_character_flag = segrellion_young_griff_stormlands_settlement_resolved
 		}
 	}
 
+
 	on_trigger_fail = {
 
 		remove_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
 	}
+
 
 	immediate = {
 
@@ -6137,51 +6141,40 @@ segrellion_young_griff.8150 = {
 
 	# =====================================================
 	# MYA STONE
-	#
-	# SPECIAL OPPORTUNITY
-	# Only if she is married to Daemon.
 	# =====================================================
 
 	option = {
 
 		name = segrellion_young_griff.8150.a
 
-		custom_tooltip = segrellion_young_griff.8150.a.special
+		custom_tooltip = segrellion_young_griff.8150.a.tt
 
 
 		trigger = {
 
 			character:Baratheon_10 ?= {
-
 				is_alive = yes
 			}
 
 
 			character:Segrellion_60 ?= {
-
 				is_alive = yes
 			}
 
 
 			OR = {
 
-
-				# -----------------------------------------
-				# ALREADY MARRIED
-				# -----------------------------------------
+				# Already married to Daemon.
 
 				character:Baratheon_10 = {
 
 					any_spouse = {
-
 						this = character:Segrellion_60
 					}
 				}
 
 
-				# -----------------------------------------
-				# PROMISED TO DAEMON
-				# -----------------------------------------
+				# Marriage promised, but not yet fulfilled.
 
 				AND = {
 
@@ -6194,82 +6187,128 @@ segrellion_young_griff.8150 = {
 						has_variable = segrellion_mya_promised_bride
 
 						var:segrellion_mya_promised_bride = {
-
 							this = character:Baratheon_10
 						}
 					}
 
 
 					character:Baratheon_10 = {
-
 						is_married = no
 					}
 				}
 			}
 		}
 
-		# =================================================
-		# THE PROMISE WAS NOT YET FULFILLED
-		#
-		# Aegon's offer of the Stormlands brings the marriage
-		# forward immediately.
-		# =================================================
 
-		if = {
+		hidden_effect = {
 
-			limit = {
+			# =============================================
+			# LEGITIMIZE MYA AS A BARATHEON
+			# =============================================
 
-				character:Baratheon_10 = {
+			character:Baratheon_10 = {
 
-					NOT = {
+				if = {
 
-						any_spouse = {
+					limit = {
+						has_trait = bastard
+					}
 
-							this = character:Segrellion_60
+					remove_trait = bastard
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = legitimized_bastard
 						}
+					}
+
+					add_trait = legitimized_bastard
+				}
+
+
+				add_character_flag = segrellion_mya_legitimized_by_aegon
+
+
+				# Mya gains a STRONG hook on Aegon.
+
+				add_hook = {
+
+					target = root
+
+					type = loyalty_hook
+				}
+			}
+
+
+			# =============================================
+			# FULFIL THE OLD MARRIAGE PROMISE
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					character:Baratheon_10 = {
+
+						NOT = {
+
+							any_spouse = {
+								this = character:Segrellion_60
+							}
+						}
+					}
+				}
+
+
+				segrellion_complete_mya_daemon_marriage_effect = yes
+
+
+				character:Segrellion_60 ?= {
+
+					trigger_event = {
+
+						id = segrellion_young_griff.8160
+
+						days = 1
 					}
 				}
 			}
 
 
-			segrellion_complete_mya_daemon_marriage_effect = yes
+			# =============================================
+			# GIVE MYA THE STORMLANDS
+			# =============================================
+
+			segrellion_young_griff_grant_stormlands_effect = {
+
+				RECIPIENT = character:Baratheon_10
+			}
+
+
+			character:Baratheon_10 = {
+
+				add_character_flag = segrellion_mya_given_stormlands_by_aegon
+			}
+
+
+			add_character_flag = segrellion_young_griff_stormlands_given_to_mya
+
+			add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
 
 
 			character:Segrellion_60 ?= {
 
-				trigger_event = {
-
-					id = segrellion_young_griff.8160
-
-					days = 1
-				}
+				add_character_flag = segrellion_daemon_secured_stormlands_for_mya
 			}
+
+
+			segrellion_young_griff_schedule_margaery_effect = yes
 		}
-
-
-		segrellion_young_griff_grant_stormlands_effect = {
-
-			RECIPIENT = character:Baratheon_10
-		}
-
-
-		character:Baratheon_10 = {
-
-			add_character_flag = segrellion_mya_given_stormlands_by_aegon
-		}
-
-
-		add_character_flag = segrellion_young_griff_stormlands_given_to_mya
-		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
-
-
-		character:Segrellion_60 ?= {
-
-			add_character_flag = segrellion_daemon_secured_stormlands_for_mya
-		}
-
-
-		segrellion_young_griff_schedule_margaery_effect = yes
 	}
 
 
@@ -6281,39 +6320,49 @@ segrellion_young_griff.8150 = {
 
 		name = segrellion_young_griff.8150.b
 
+		custom_tooltip = segrellion_young_griff.8150.b.tt
+
 
 		trigger = {
 
 			character:Vladwyn_5 ?= {
-
 				is_alive = yes
+			}
 
-				NOT = {
-					has_character_flag = segrellion_vladwyn_given_westerlands
-				}
+
+			# IMPORTANT:
+			# Check the actual political reality.
+			# Do NOT trust an old character flag.
+
+			NOT = {
+				title:e_the_westerlands.holder = character:Vladwyn_5
 			}
 		}
 
 
-		segrellion_young_griff_grant_stormlands_effect = {
+		hidden_effect = {
 
-			RECIPIENT = character:Vladwyn_5
+			segrellion_young_griff_grant_stormlands_effect = {
+
+				RECIPIENT = character:Vladwyn_5
+			}
+
+
+			character:Vladwyn_5 = {
+
+				add_character_flag = segrellion_vladwyn_lord_of_stormlands
+
+				add_character_flag = segrellion_vladwyn_stormlands_story_unlocked
+			}
+
+
+			add_character_flag = segrellion_young_griff_stormlands_given_to_vladwyn
+
+			add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+
+			segrellion_young_griff_schedule_margaery_effect = yes
 		}
-
-
-		character:Vladwyn_5 = {
-
-			add_character_flag = segrellion_vladwyn_lord_of_stormlands
-
-			add_character_flag = segrellion_vladwyn_stormlands_story_unlocked
-		}
-
-
-		add_character_flag = segrellion_young_griff_stormlands_given_to_vladwyn
-		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
-
-
-		segrellion_young_griff_schedule_margaery_effect = yes
 	}
 
 
@@ -6325,6 +6374,8 @@ segrellion_young_griff.8150 = {
 
 		name = segrellion_young_griff.8150.c
 
+		custom_tooltip = segrellion_young_griff.8150.c.tt
+
 
 		trigger = {
 
@@ -6334,49 +6385,58 @@ segrellion_young_griff.8150 = {
 		}
 
 
-		segrellion_young_griff_grant_stormlands_effect = {
+		hidden_effect = {
 
-			RECIPIENT = character:Connington_4
+			segrellion_young_griff_grant_stormlands_effect = {
+
+				RECIPIENT = character:Connington_4
+			}
+
+
+			character:Connington_4 = {
+
+				add_character_flag = segrellion_connington_lord_of_stormlands
+			}
+
+
+			add_character_flag = segrellion_young_griff_stormlands_given_to_connington
+
+			add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+
+			segrellion_young_griff_schedule_margaery_effect = yes
 		}
-
-
-		character:Connington_4 = {
-
-			add_character_flag = segrellion_connington_lord_of_stormlands
-		}
-
-
-		add_character_flag = segrellion_young_griff_stormlands_given_to_connington
-		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
-
-
-		segrellion_young_griff_schedule_margaery_effect = yes
 	}
 
 
 	# =====================================================
-	# KEEP THEM
+	# KEEP THE STORMLANDS
 	# =====================================================
 
 	option = {
 
 		name = segrellion_young_griff.8150.d
 
-
-		add_character_flag = segrellion_young_griff_kept_stormlands
-
-		add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+		custom_tooltip = segrellion_young_griff.8150.d.tt
 
 
-		add_character_modifier = {
+		hidden_effect = {
 
-			modifier = segrellion_young_griff_overextended_stormlands_modifier
+			add_character_flag = segrellion_young_griff_kept_stormlands
 
-			years = 10
+			add_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_young_griff_overextended_stormlands_modifier
+
+				years = 10
+			}
+
+
+			segrellion_young_griff_schedule_margaery_effect = yes
 		}
-
-
-		segrellion_young_griff_schedule_margaery_effect = yes
 	}
 }
 
