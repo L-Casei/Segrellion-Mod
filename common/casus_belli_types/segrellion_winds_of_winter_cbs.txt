@@ -1925,3 +1925,260 @@ segrellion_daenerys_iron_throne_cb = {
 		}
 	}
 }
+
+
+# =========================================================
+# AEGON - FORCE THE FLAMELANDS TO SUBMIT
+#
+# Young Griff does NOT take Daemon's titles.
+# Victory forces Daemon and the Flamelands beneath the
+# Iron Throne.
+# =========================================================
+
+segrellion_aegon_flamelands_submission_cb = {
+
+	icon = invasion
+	group = invasion
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+	allow_hostages = no
+
+
+	mutually_exclusive_titles = {
+		always = yes
+	}
+
+
+	# =====================================================
+	# ONLY YOUNG GRIFF
+	# =====================================================
+
+	allowed_for_character = {
+
+		this = character:IAF_Young_Griff_1
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_young_griff_flamelands_force_authorized
+	}
+
+
+	# =====================================================
+	# ONLY DAEMON
+	# =====================================================
+
+	allowed_against_character = {
+
+		scope:defender = character:Segrellion_60
+	}
+
+
+	target_titles = all
+
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+
+	# Daemon keeps the Flamelands.
+	# Only his political independence changes.
+
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:e_flamelands
+		}
+	}
+
+
+	should_invalidate = {
+
+		OR = {
+
+			NOT = {
+				title:e_flamelands.holder = scope:defender
+			}
+
+
+			scope:defender = {
+
+				NOT = {
+					is_independent_ruler = yes
+				}
+			}
+		}
+	}
+
+
+	cost = {
+	}
+
+
+	# =====================================================
+	# DECLARATION
+	# =====================================================
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_young_griff_flamelands_force_authorized
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_war_active
+		}
+
+
+		scope:defender = {
+
+			add_character_flag = segrellion_daemon_aegon_status_resolved
+		}
+	}
+
+
+	# =====================================================
+	# AEGON WINS
+	# =====================================================
+
+	on_victory_desc = {
+
+		desc = segrellion_aegon_flamelands_submission_victory_desc
+	}
+
+
+	on_victory = {
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_war_active
+
+			add_character_flag = segrellion_young_griff_flamelands_subjugated
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+
+			create_title_and_vassal_change = {
+
+				type = swear_fealty
+
+				save_scope_as = segrellion_aegon_flamelands_submission_change
+
+				add_claim_on_loss = no
+			}
+		}
+
+
+		scope:defender = {
+
+			change_liege = {
+
+				liege = scope:attacker
+
+				change = scope:segrellion_aegon_flamelands_submission_change
+			}
+
+
+			add_character_flag = segrellion_daemon_forced_to_submit_to_aegon
+
+			add_character_flag = segrellion_daemon_aegon_fealty_accepted
+		}
+
+
+		scope:attacker = {
+
+			resolve_title_and_vassal_change = scope:segrellion_aegon_flamelands_submission_change
+		}
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	# =====================================================
+	# WHITE PEACE
+	# =====================================================
+
+	on_white_peace_desc = {
+
+		desc = segrellion_aegon_flamelands_submission_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_war_active
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+		}
+
+
+		scope:defender = {
+
+			add_character_flag = segrellion_daemon_defied_aegon
+		}
+
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	# =====================================================
+	# AEGON LOSES
+	# =====================================================
+
+	on_defeat_desc = {
+
+		desc = segrellion_aegon_flamelands_submission_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_war_active
+
+			add_character_flag = segrellion_young_griff_failed_to_subjugate_flamelands
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+		}
+
+
+		scope:defender = {
+
+			add_character_flag = segrellion_daemon_defied_aegon
+		}
+
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_invalidated = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_young_griff_flamelands_force_authorized
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_war_active
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+
+	on_primary_defender_death = inherit
+}

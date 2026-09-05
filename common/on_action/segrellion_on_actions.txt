@@ -23,6 +23,7 @@ monthly_global_pulse = {
 		segrellion_unicorn_returns_leo_beacon_lock
 		segrellion_arianne_marriage_lock_progression
 		segrellion_young_griff_blackfyre_progression
+		segrellion_young_griff_daemon_marriage_lock_progression
 		segrellion_daenerys_invasion_peace_guard
 		segrellion_young_griff_daenerys_pact_progression
 		segrellion_deadly_triarchy_progression
@@ -100,6 +101,7 @@ on_marriage = {
 	on_actions = {
 		segrellion_daenerys_marriage_guard
 		segrellion_arianne_marriage_guard
+		segrellion_young_griff_daemon_marriage_guard
 		segrellion_black_unicorn_visenya_marriage_guard
 	}
 }
@@ -724,6 +726,150 @@ segrellion_arianne_marriage_lock_progression = {
 	}
 }
 
+# =========================================================
+# YOUNG GRIFF / DAEMON STORY MARRIAGE LOCK
+# =========================================================
+
+segrellion_young_griff_daemon_marriage_lock_progression = {
+
+	effect = {
+
+		segrellion_apply_winds_story_marriage_locks_effect = yes
+	}
+}
+
+
+# =========================================================
+# REVERSE ANY UNAUTHORIZED MARRIAGE THAT BYPASSES
+# refusing_marriage THROUGH AN EVENT OR OTHER SCRIPT.
+# =========================================================
+
+segrellion_young_griff_daemon_marriage_guard = {
+
+	effect = {
+
+
+		# =================================================
+		# YOUNG GRIFF
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					this = character:IAF_Young_Griff_1
+
+					scope:spouse = character:IAF_Young_Griff_1
+				}
+
+
+				character:IAF_Young_Griff_1 = {
+
+					has_character_flag = segrellion_young_griff_story_marriage_lock_added
+
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_story_marriage_authorized
+					}
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					this = character:IAF_Young_Griff_1
+				}
+
+				divorce = scope:spouse
+			}
+
+
+			else = {
+
+				scope:spouse = {
+					divorce = root
+				}
+			}
+		}
+
+
+		# =================================================
+		# DAEMON
+		#
+		# Visenya is explicitly excluded because her own
+		# Black Unicorn marriage guard owns that storyline.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					this = character:Segrellion_60
+
+					scope:spouse = character:Segrellion_60
+				}
+
+
+				character:Segrellion_60 = {
+
+					has_character_flag = segrellion_daemon_story_marriage_lock_added
+
+
+					NOT = {
+						has_character_flag = segrellion_daemon_story_marriage_authorized
+					}
+				}
+
+
+				NOT = {
+
+					OR = {
+
+						AND = {
+
+							this = character:Segrellion_60
+							scope:spouse = character:Black_Unicorn_1
+						}
+
+
+						AND = {
+
+							this = character:Black_Unicorn_1
+							scope:spouse = character:Segrellion_60
+						}
+					}
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					this = character:Segrellion_60
+				}
+
+				divorce = scope:spouse
+			}
+
+
+			else = {
+
+				scope:spouse = {
+					divorce = root
+				}
+			}
+		}
+
+
+		segrellion_apply_winds_story_marriage_locks_effect = yes
+	}
+}
+
 segrellion_young_griff_blackfyre_progression = {
 	effect = {
 		segrellion_setup_young_griff_blackfyre_effect = yes
@@ -780,6 +926,7 @@ segrellion_on_game_start_after_lobby = {
 		segrellion_arianne_marriage_lock_effect = yes
 		segrellion_initialize_random_story_rules_effect = yes
 		segrellion_setup_young_griff_blackfyre_effect = yes
+		segrellion_apply_winds_story_marriage_locks_effect = yes
 		character:IAF_Young_Griff_1 ?= {
 
 			segrellion_young_griff_westeros_core_setup_effect = yes
@@ -3227,6 +3374,11 @@ segrellion_aegon_daemon_vassalage_progression = {
 			is_alive = yes
 
 			has_title = title:h_the_iron_throne
+
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_flamelands_submission_resolved
+			}
 		}
 
 
@@ -3238,9 +3390,11 @@ segrellion_aegon_daemon_vassalage_progression = {
 
 			has_title = title:e_flamelands
 
+
 			NOT = {
 				has_character_flag = segrellion_daemon_aegon_status_scheduled
 			}
+
 
 			NOT = {
 				has_character_flag = segrellion_daemon_aegon_status_resolved
@@ -3253,8 +3407,16 @@ segrellion_aegon_daemon_vassalage_progression = {
 
 		character:Segrellion_60 = {
 
-			add_character_flag = segrellion_daemon_aegon_status_scheduled
+			add_character_flag = {
 
+				flag = segrellion_daemon_aegon_status_scheduled
+
+				days = 30
+			}
+		}
+
+
+		character:IAF_Young_Griff_1 = {
 
 			trigger_event = {
 

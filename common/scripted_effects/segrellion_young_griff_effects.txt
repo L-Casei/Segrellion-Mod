@@ -377,9 +377,17 @@ segrellion_complete_young_griff_daenerys_pact_effect = {
 
 		character:IAF_Young_Griff_1 = {
 
+			segrellion_young_griff_open_story_marriage_window_effect = yes
+
+
 			marry = character:Targaryen_9
 
+
+			segrellion_young_griff_close_story_marriage_window_effect = yes
+
+
 			add_character_flag = segrellion_young_griff_daenerys_pact_fulfilled
+
 			remove_character_flag = segrellion_young_griff_fighting_for_daenerys
 
 			segrellion_young_griff_release_scripted_war_lock_effect = yes
@@ -1263,67 +1271,97 @@ segrellion_young_griff_westeros_core_setup_effect = {
 		# =================================================
 		# THE GOLDEN COMPANY
 		#
-		# 10,000 permanent special troops belonging to Aegon.
+		# Use AGOT's REAL landless Golden Company.
 		#
-		# They are NOT tied to one specific war, so they can
-		# fight for him in The Unicorn Returns, the Iron
-		# Throne war and every future conflict.
+		# d_laamp_merc_golden_company
+		#
+		# - No duplicate special army.
+		# - The real Captain-General is moved to Storm's End.
+		# - The Golden Company becomes Aegon's ally.
 		# =================================================
+
+		title:d_laamp_merc_golden_company ?= {
+
+			holder ?= {
+
+				save_scope_as = segrellion_golden_company_captain
+			}
+		}
+
 
 		if = {
 
 			limit = {
 
-				NOT = {
-					has_character_flag = segrellion_young_griff_golden_company_setup
+				exists = scope:segrellion_golden_company_captain
+
+				scope:segrellion_golden_company_captain = {
+					is_alive = yes
 				}
 			}
 
 
-			spawn_army = {
+			# =============================================
+			# INITIAL LANDING AT STORM'S END
+			#
+			# Only do this once.
+			# Do NOT continuously teleport the company back
+			# after it starts moving around Westeros.
+			# =============================================
 
-				name = segrellion_golden_company_host
+			if = {
 
+				limit = {
 
-				men_at_arms = {
-					type = armored_footmen
-					men = 3500
+					NOT = {
+						has_character_flag = segrellion_young_griff_golden_company_laamp_setup
+					}
 				}
 
 
-				men_at_arms = {
-					type = pikemen_unit
-					men = 2500
+				scope:segrellion_golden_company_captain = {
+
+					set_location = title:c_storms_end.title_province
+
+					add_character_flag = segrellion_golden_company_with_young_griff
+
+					add_character_flag = segrellion_golden_company_at_storms_end
 				}
 
 
-				men_at_arms = {
-					type = bowmen
-					men = 2500
-				}
+				add_character_flag = segrellion_young_griff_golden_company_laamp_setup
 
-
-				men_at_arms = {
-					type = armored_horsemen
-					men = 1500
-				}
-
-
-				location = title:c_storms_end.title_province
-
-				origin = title:c_storms_end.title_province
-
-
-				# Not tied to a particular war.
-				inheritable = no
-
-				uses_supply = yes
+				add_character_flag = segrellion_young_griff_golden_company_in_westeros
 			}
 
 
-			add_character_flag = segrellion_young_griff_golden_company_setup
+			# =============================================
+			# ALLIANCE WITH AEGON
+			#
+			# This is outside the one-time setup so that if
+			# something removes the alliance during setup,
+			# subsequent progression can repair it.
+			# =============================================
 
-			add_character_flag = segrellion_young_griff_golden_company_in_westeros
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_allied_to = scope:segrellion_golden_company_captain
+					}
+				}
+
+
+				create_alliance = {
+
+					target = scope:segrellion_golden_company_captain
+
+					allied_through_owner = root
+
+					allied_through_target = scope:segrellion_golden_company_captain
+				}
+			}
 		}
 	}
 }
@@ -1793,6 +1831,14 @@ segrellion_young_griff_choose_lannister_westerlands_effect = {
 		scope:segrellion_new_lannister_lord = {
 
 			add_character_flag = segrellion_lannister_given_westerlands_by_aegon
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_lannister_granted_westerlands_by_aegon_opinion
+			}
 		}
 	}
 }
@@ -2876,6 +2922,53 @@ segrellion_young_griff_schedule_blackfyre_reveal_effect = {
 					days = { 30 90 }
 				}
 			}
+		}
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF - FORCE DAEMON TO SUBMIT
+# =========================================================
+
+segrellion_young_griff_start_flamelands_submission_war_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				is_independent_ruler = yes
+
+				has_title = title:e_flamelands
+			}
+		}
+
+
+		add_character_flag = {
+
+			flag = segrellion_young_griff_flamelands_force_authorized
+
+			days = 30
+		}
+
+
+		start_war = {
+
+			cb = segrellion_aegon_flamelands_submission_cb
+
+			target = character:Segrellion_60
+
+			target_title = title:e_flamelands
 		}
 	}
 }

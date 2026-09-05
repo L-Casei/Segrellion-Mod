@@ -2,7 +2,9 @@ namespace = segrellion_aegon_daemon
 
 
 # =========================================================
-# 0001 - A KING ABOVE THE FLAMELANDS
+# 0001 - THE FLAMELANDS QUESTION
+#
+# Root = Young Griff
 # =========================================================
 
 segrellion_aegon_daemon.0001 = {
@@ -10,51 +12,106 @@ segrellion_aegon_daemon.0001 = {
 	type = character_event
 
 	title = segrellion_aegon_daemon.0001.t
-	desc = segrellion_aegon_daemon.0001.desc
+
+
+	desc = {
+
+		first_valid = {
+
+
+			# Daemon actually fought for Aegon's crown.
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Segrellion_60 = {
+
+						has_character_flag = segrellion_pledged_to_young_griff
+					}
+				}
+
+				desc = segrellion_aegon_daemon.0001.desc_friend
+			}
+
+
+			# They reached this point without Daemon
+			# fighting for Aegon's throne.
+
+			desc = segrellion_aegon_daemon.0001.desc_hostile
+		}
+	}
+
 
 	theme = diplomacy
 
 
 	trigger = {
 
-		this = character:Segrellion_60
+		this = character:IAF_Young_Griff_1
 
 		is_alive = yes
 
-		is_independent_ruler = yes
-
-		has_title = title:e_flamelands
+		has_title = title:h_the_iron_throne
 
 
-		character:IAF_Young_Griff_1 ?= {
+		character:Segrellion_60 ?= {
 
 			is_alive = yes
 
-			has_title = title:h_the_iron_throne
+			is_independent_ruler = yes
+
+			has_title = title:e_flamelands
+
+
+			NOT = {
+				has_character_flag = segrellion_daemon_aegon_status_resolved
+			}
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		character:Segrellion_60 ?= {
+
+			remove_character_flag = segrellion_daemon_aegon_status_scheduled
 		}
 	}
 
 
 	immediate = {
 
-		remove_character_flag = segrellion_daemon_aegon_status_scheduled
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_aegon_status_scheduled
+		}
+
+
+		add_character_flag = segrellion_young_griff_flamelands_submission_story_started
 	}
 
 
 	left_portrait = {
+
 		character = root
+
 		animation = thinking
 	}
 
 
 	right_portrait = {
-		character = character:IAF_Young_Griff_1
-		animation = personality_rational
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
 	}
 
 
 	# =====================================================
-	# BEND THE KNEE
+	# PEACEFUL REQUEST
+	#
+	# Available because Daemon fought for Aegon.
 	# =====================================================
 
 	option = {
@@ -64,83 +121,39 @@ segrellion_aegon_daemon.0001 = {
 		custom_tooltip = segrellion_aegon_daemon.0001.a.tt
 
 
-		hidden_effect = {
+		trigger = {
 
-			segrellion_daemon_swear_fealty_to_aegon_effect = yes
+			character:Segrellion_60 = {
 
-			add_character_flag = segrellion_daemon_aegon_fealty_accepted
+				has_character_flag = segrellion_pledged_to_young_griff
+			}
+		}
 
-			add_character_flag = segrellion_daemon_aegon_status_resolved
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_peaceful_request_pending
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0002
+
+				days = { 2 5 }
+			}
 		}
 
 
 		ai_chance = {
-
-			base = 50
-
-
-			modifier = {
-
-				factor = 4
-
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value >= 60
-				}
-			}
-
-
-			modifier = {
-
-				factor = 2
-
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value >= 25
-				}
-
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value < 60
-				}
-			}
-
-
-			modifier = {
-
-				factor = 0.5
-
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value <= -25
-				}
-			}
-
-
-			# FUTURE STORY GOALS.
-			# These flags can simply be assigned when we build
-			# Daemon's post-Flamelands political storyline.
-
-			modifier = {
-				factor = 0.30
-				has_character_flag = segrellion_daemon_goal_help_daenerys
-			}
-
-			modifier = {
-				factor = 0.10
-				has_character_flag = segrellion_daemon_goal_own_iron_throne_claim
-			}
-
-			modifier = {
-				factor = 0.40
-				has_character_flag = segrellion_daemon_goal_help_jon
-			}
+			base = 90
 		}
 	}
 
 
 	# =====================================================
-	# REMAIN INDEPENDENT
+	# ULTIMATUM
+	#
+	# Daemon did NOT fight for Aegon.
 	# =====================================================
 
 	option = {
@@ -150,92 +163,83 @@ segrellion_aegon_daemon.0001 = {
 		custom_tooltip = segrellion_aegon_daemon.0001.b.tt
 
 
-		hidden_effect = {
+		trigger = {
 
-			add_character_flag = segrellion_daemon_aegon_fealty_refused
+			character:Segrellion_60 = {
 
-			add_character_flag = segrellion_daemon_aegon_status_resolved
-
-
-			# Aegon may try again later.
-
-			random_list = {
-
-				65 = {
-
-					add_character_flag = segrellion_daemon_aegon_second_request_scheduled
-
-
-					trigger_event = {
-
-						id = segrellion_aegon_daemon.0002
-
-						days = { 730 1825 }
-					}
-				}
-
-
-				35 = {
+				NOT = {
+					has_character_flag = segrellion_pledged_to_young_griff
 				}
 			}
 		}
 
 
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_ultimatum_pending
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0003
+
+				days = { 2 5 }
+			}
+		}
+
+
 		ai_chance = {
-
-			base = 50
-
-
-			modifier = {
-
-				factor = 0.25
-
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value >= 60
-				}
-			}
+			base = 80
+		}
+	}
 
 
-			modifier = {
+	# =====================================================
+	# LEAVE THE FLAMELANDS INDEPENDENT
+	# =====================================================
 
-				factor = 2
+	option = {
 
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value <= -25
-				}
-			}
+		name = segrellion_aegon_daemon.0001.c
+
+		custom_tooltip = segrellion_aegon_daemon.0001.c.tt
 
 
-			modifier = {
-				factor = 4
-				has_character_flag = segrellion_daemon_goal_help_daenerys
-			}
+		character:Segrellion_60 = {
 
-			modifier = {
-				factor = 10
-				has_character_flag = segrellion_daemon_goal_own_iron_throne_claim
-			}
+			add_character_flag = segrellion_daemon_aegon_status_resolved
 
-			modifier = {
-				factor = 3
-				has_character_flag = segrellion_daemon_goal_help_jon
-			}
+			add_character_flag = segrellion_daemon_independence_tolerated_by_aegon
+		}
+
+
+		add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+
+		ai_chance = {
+			base = 20
 		}
 	}
 }
 
 
 # =========================================================
-# 0002 - AEGON ASKS AGAIN
+# 0002 - THE KING'S REQUEST
+#
+# Root = Daemon
+# Peaceful request.
 # =========================================================
 
 segrellion_aegon_daemon.0002 = {
 
-	type = character_event
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_aegon_daemon.0002.opening
 
 	title = segrellion_aegon_daemon.0002.t
+
 	desc = segrellion_aegon_daemon.0002.desc
 
 	theme = diplomacy
@@ -251,7 +255,7 @@ segrellion_aegon_daemon.0002 = {
 
 		has_title = title:e_flamelands
 
-		has_character_flag = segrellion_daemon_aegon_fealty_refused
+		has_character_flag = segrellion_daemon_aegon_peaceful_request_pending
 
 
 		character:IAF_Young_Griff_1 ?= {
@@ -265,27 +269,35 @@ segrellion_aegon_daemon.0002 = {
 
 	on_trigger_fail = {
 
-		remove_character_flag = segrellion_daemon_aegon_second_request_scheduled
+		remove_character_flag = segrellion_daemon_aegon_peaceful_request_pending
 	}
 
 
 	immediate = {
 
-		remove_character_flag = segrellion_daemon_aegon_second_request_scheduled
+		remove_character_flag = segrellion_daemon_aegon_peaceful_request_pending
 	}
 
 
 	left_portrait = {
+
 		character = root
+
 		animation = thinking
 	}
 
 
 	right_portrait = {
+
 		character = character:IAF_Young_Griff_1
-		animation = personality_bold
+
+		animation = personality_rational
 	}
 
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
 
 	option = {
 
@@ -294,15 +306,19 @@ segrellion_aegon_daemon.0002 = {
 		custom_tooltip = segrellion_aegon_daemon.0002.a.tt
 
 
-		hidden_effect = {
+		segrellion_daemon_swear_fealty_to_aegon_effect = yes
 
-			segrellion_daemon_swear_fealty_to_aegon_effect = yes
 
-			remove_character_flag = segrellion_daemon_aegon_fealty_refused
+		add_character_flag = segrellion_daemon_aegon_fealty_accepted
 
-			add_character_flag = segrellion_daemon_aegon_fealty_accepted
+		add_character_flag = segrellion_daemon_aegon_status_resolved
 
-			add_character_flag = segrellion_daemon_aegon_second_request_accepted
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+			add_character_flag = segrellion_young_griff_flamelands_peacefully_submitted
 		}
 
 
@@ -310,39 +326,40 @@ segrellion_aegon_daemon.0002 = {
 
 			base = 50
 
+
+			# Exact 75 / 25:
+			#
+			# Aegon helped Daemon.
+			# Daemon helped Aegon.
+			# Daemon likes Aegon.
+
 			modifier = {
-				factor = 4
-				opinion = {
-					target = character:IAF_Young_Griff_1
-					value >= 60
+
+				add = 25
+
+
+				has_character_flag = segrellion_pledged_to_young_griff
+
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_supports_daemon
 				}
-			}
 
-			modifier = {
-				factor = 0.5
+
 				opinion = {
+
 					target = character:IAF_Young_Griff_1
-					value <= -25
+
+					value >= 25
 				}
-			}
-
-			modifier = {
-				factor = 0.30
-				has_character_flag = segrellion_daemon_goal_help_daenerys
-			}
-
-			modifier = {
-				factor = 0.10
-				has_character_flag = segrellion_daemon_goal_own_iron_throne_claim
-			}
-
-			modifier = {
-				factor = 0.40
-				has_character_flag = segrellion_daemon_goal_help_jon
 			}
 		}
 	}
 
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
 
 	option = {
 
@@ -351,9 +368,17 @@ segrellion_aegon_daemon.0002 = {
 		custom_tooltip = segrellion_aegon_daemon.0002.b.tt
 
 
-		hidden_effect = {
+		add_character_flag = segrellion_daemon_aegon_fealty_refused
 
-			add_character_flag = segrellion_daemon_aegon_second_request_refused
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0004
+
+				days = { 2 4 }
+			}
 		}
 
 
@@ -361,28 +386,368 @@ segrellion_aegon_daemon.0002 = {
 
 			base = 50
 
+
 			modifier = {
-				factor = 2
+
+				add = -25
+
+
+				has_character_flag = segrellion_pledged_to_young_griff
+
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_supports_daemon
+				}
+
+
 				opinion = {
+
 					target = character:IAF_Young_Griff_1
-					value <= -25
+
+					value >= 25
 				}
 			}
+		}
+	}
+}
 
-			modifier = {
-				factor = 4
-				has_character_flag = segrellion_daemon_goal_help_daenerys
-			}
 
-			modifier = {
-				factor = 10
-				has_character_flag = segrellion_daemon_goal_own_iron_throne_claim
-			}
+# =========================================================
+# 0003 - KNEEL OR FACE THE DRAGON
+#
+# Root = Daemon
+# Hostile ultimatum.
+# =========================================================
 
-			modifier = {
-				factor = 3
-				has_character_flag = segrellion_daemon_goal_help_jon
+segrellion_aegon_daemon.0003 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_aegon_daemon.0003.opening
+
+	title = segrellion_aegon_daemon.0003.t
+
+	desc = segrellion_aegon_daemon.0003.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_independent_ruler = yes
+
+		has_title = title:e_flamelands
+
+		has_character_flag = segrellion_daemon_aegon_ultimatum_pending
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_daemon_aegon_ultimatum_pending
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daemon_aegon_ultimatum_pending
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# BEND THE KNEE
+	#
+	# 20%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0003.a
+
+		custom_tooltip = segrellion_aegon_daemon.0003.a.tt
+
+
+		segrellion_daemon_swear_fealty_to_aegon_effect = yes
+
+
+		add_character_flag = segrellion_daemon_submitted_under_aegon_threat
+
+		add_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+		add_character_flag = segrellion_daemon_aegon_status_resolved
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	#
+	# 80%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0003.b
+
+		custom_tooltip = segrellion_aegon_daemon.0003.b.tt
+
+
+		add_character_flag = segrellion_daemon_rejected_aegon_ultimatum
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0005
+
+				days = { 2 4 }
 			}
+		}
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+}
+
+
+# =========================================================
+# 0004 - DAEMON REFUSED THE PEACEFUL REQUEST
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_aegon_daemon.0004 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0004.t
+
+	desc = segrellion_aegon_daemon.0004.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			is_independent_ruler = yes
+
+			has_title = title:e_flamelands
+
+			has_character_flag = segrellion_daemon_aegon_fealty_refused
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	# ATTACK
+
+	option = {
+
+		name = segrellion_aegon_daemon.0004.a
+
+		custom_tooltip = segrellion_aegon_daemon.0004.a.tt
+
+
+		segrellion_young_griff_start_flamelands_submission_war_effect = yes
+
+
+		ai_chance = {
+			base = 45
+		}
+	}
+
+
+	# LET HIM REMAIN INDEPENDENT
+
+	option = {
+
+		name = segrellion_aegon_daemon.0004.b
+
+		custom_tooltip = segrellion_aegon_daemon.0004.b.tt
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_status_resolved
+
+			add_character_flag = segrellion_daemon_independence_tolerated_by_aegon
+		}
+
+
+		add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+
+		ai_chance = {
+			base = 55
+		}
+	}
+}
+
+
+# =========================================================
+# 0005 - DAEMON DEFIES THE ULTIMATUM
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_aegon_daemon.0005 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0005.t
+
+	desc = segrellion_aegon_daemon.0005.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			is_independent_ruler = yes
+
+			has_title = title:e_flamelands
+
+			has_character_flag = segrellion_daemon_rejected_aegon_ultimatum
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	# MAKE GOOD ON THE THREAT
+
+	option = {
+
+		name = segrellion_aegon_daemon.0005.a
+
+		custom_tooltip = segrellion_aegon_daemon.0005.a.tt
+
+
+		segrellion_young_griff_start_flamelands_submission_war_effect = yes
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# BACK DOWN
+
+	option = {
+
+		name = segrellion_aegon_daemon.0005.b
+
+		custom_tooltip = segrellion_aegon_daemon.0005.b.tt
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_status_resolved
+
+			add_character_flag = segrellion_daemon_independence_tolerated_by_aegon
+		}
+
+
+		add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+
+		ai_chance = {
+			base = 30
 		}
 	}
 }

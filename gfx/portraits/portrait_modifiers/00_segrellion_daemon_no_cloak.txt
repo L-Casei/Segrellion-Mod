@@ -1,0 +1,62 @@
+segrellion_daemon_no_cloak = {
+
+	usage = game
+
+	selection_behavior = max
+
+	priority = 100
+
+
+	# ========================================================
+	# DAEMON SEGRELLION
+	#
+	# Never allow CK3 / AGOT rank-based portrait modifiers
+	# to automatically give Daemon a cloak.
+	#
+	# If we explicitly give him one ourselves in the future,
+	# set:
+	#
+	# segrellion_daemon_custom_cloak
+	#
+	# and this blocker will disable itself.
+	# ========================================================
+
+	daemon_no_cloak = {
+
+		dna_modifiers = {
+
+			accessory = {
+
+				mode = add
+
+				gene = cloaks
+
+				template = no_cloak
+
+				value = 0
+			}
+		}
+
+
+		weight = {
+
+			base = 0
+
+
+			modifier = {
+
+				add = 10000
+
+				exists = this
+
+				this = character:Segrellion_60
+
+
+				NOT = {
+
+					has_character_flag = segrellion_daemon_custom_cloak
+				}
+			}
+		}
+	}
+}

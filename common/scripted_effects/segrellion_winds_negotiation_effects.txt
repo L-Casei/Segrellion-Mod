@@ -1177,7 +1177,14 @@ segrellion_complete_mya_daemon_marriage_effect = {
 
 		character:Segrellion_60 = {
 
+			segrellion_daemon_open_story_marriage_window_effect = yes
+
+
 			marry = character:Baratheon_10
+
+
+			segrellion_daemon_close_story_marriage_window_effect = yes
+
 
 			add_character_flag = segrellion_mya_marriage_completed
 
@@ -1848,4 +1855,271 @@ segrellion_daenerys_abandon_army_for_early_crossing_effect = {
 	}
 
 	add_character_flag = segrellion_daenerys_rushed_crossing_army_reduced
+}
+
+
+# =========================================================
+# WINDS OF WINTER - STORY MARRIAGE LOCKS
+#
+# Young Griff and Daemon must not be stolen by random
+# CK3 / AGOT marriages while their scripted political
+# marriage storylines are still active.
+# =========================================================
+
+segrellion_apply_winds_story_marriage_locks_effect = {
+
+	if = {
+
+		limit = {
+
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+		}
+
+
+		# =================================================
+		# YOUNG GRIFF
+		#
+		# Keep him unmarried until the post-conquest
+		# Cersei / Margaery marriage story has had its chance.
+		# =================================================
+
+		character:IAF_Young_Griff_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_married = no
+
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_story_marriage_authorized
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_margaery_story_resolved
+					}
+
+
+					# Before taking the throne the lock always remains.
+					# After taking it, keep it until Cersei is resolved
+					# and Margaery either receives her event or is dead.
+
+					OR = {
+
+						NOT = {
+							has_title = title:h_the_iron_throne
+						}
+
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+						}
+
+
+						character:Tyrell_14 ?= {
+							is_alive = yes
+						}
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = refusing_marriage
+						}
+					}
+
+
+					add_trait = refusing_marriage
+				}
+
+
+				add_character_flag = segrellion_young_griff_story_marriage_lock_added
+			}
+
+
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_story_marriage_lock_added
+				}
+
+
+				if = {
+
+					limit = {
+						has_trait = refusing_marriage
+					}
+
+					remove_trait = refusing_marriage
+				}
+
+
+				remove_character_flag = segrellion_young_griff_story_marriage_lock_added
+			}
+		}
+
+
+		# =================================================
+		# DAEMON SEGRELLION
+		#
+		# Daemon remains unavailable until:
+		#
+		# - The Unicorn Returns has been resolved;
+		# - no Daenerys marriage promise remains;
+		# - no Mya Stone marriage promise remains;
+		# - no reinforcement negotiation is still running.
+		# =================================================
+
+		character:Segrellion_60 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_married = no
+
+
+					NOT = {
+						has_character_flag = segrellion_daemon_story_marriage_authorized
+					}
+
+
+					OR = {
+
+						NOT = {
+							has_title = title:e_flamelands
+						}
+
+
+						has_character_flag = segrellion_daenerys_marriage_promised
+
+						has_character_flag = segrellion_mya_marriage_deferred
+
+						has_character_flag = segrellion_troop_negotiation_active
+
+						has_character_flag = segrellion_negotiation_pending_stannis
+
+						has_character_flag = segrellion_negotiation_pending_dorne
+
+						has_character_flag = segrellion_negotiation_pending_daenerys
+
+						has_character_flag = segrellion_negotiation_pending_vale
+
+						has_character_flag = segrellion_waiting_for_vale_answer
+
+						has_character_flag = segrellion_waiting_for_daenerys_answer
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = refusing_marriage
+						}
+					}
+
+
+					add_trait = refusing_marriage
+				}
+
+
+				add_character_flag = segrellion_daemon_story_marriage_lock_added
+			}
+
+
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_daemon_story_marriage_lock_added
+				}
+
+
+				if = {
+
+					limit = {
+						has_trait = refusing_marriage
+					}
+
+					remove_trait = refusing_marriage
+				}
+
+
+				remove_character_flag = segrellion_daemon_story_marriage_lock_added
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# TEMPORARILY AUTHORIZE A SCRIPTED YOUNG GRIFF MARRIAGE
+# =========================================================
+
+segrellion_young_griff_open_story_marriage_window_effect = {
+
+	add_character_flag = segrellion_young_griff_story_marriage_authorized
+
+
+	if = {
+
+		limit = {
+
+			has_character_flag = segrellion_young_griff_story_marriage_lock_added
+
+			has_trait = refusing_marriage
+		}
+
+
+		remove_trait = refusing_marriage
+	}
+}
+
+
+segrellion_young_griff_close_story_marriage_window_effect = {
+
+	remove_character_flag = segrellion_young_griff_story_marriage_authorized
+}
+
+
+# =========================================================
+# TEMPORARILY AUTHORIZE A SCRIPTED DAEMON MARRIAGE
+# =========================================================
+
+segrellion_daemon_open_story_marriage_window_effect = {
+
+	add_character_flag = segrellion_daemon_story_marriage_authorized
+
+
+	if = {
+
+		limit = {
+
+			has_character_flag = segrellion_daemon_story_marriage_lock_added
+
+			has_trait = refusing_marriage
+		}
+
+
+		remove_trait = refusing_marriage
+	}
+}
+
+
+segrellion_daemon_close_story_marriage_window_effect = {
+
+	remove_character_flag = segrellion_daemon_story_marriage_authorized
 }

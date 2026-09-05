@@ -705,7 +705,11 @@ segrellion_young_griff.0230 = {
 		}
 
 
+		segrellion_young_griff_open_story_marriage_window_effect = yes
+
 		marry = character:Martell_9
+
+		segrellion_young_griff_close_story_marriage_window_effect = yes
 
 
 		ai_chance = {
@@ -2385,7 +2389,11 @@ segrellion_young_griff.4121 = {
 				add_character_flag = segrellion_arianne_event_marriage_completed
 			}
 
+			segrellion_young_griff_open_story_marriage_window_effect = yes
+
 			marry = character:Martell_9
+
+			segrellion_young_griff_close_story_marriage_window_effect = yes
 
 			add_character_flag = segrellion_young_griff_married_arianne
 			add_character_flag = segrellion_young_griff_marriage_pact_resolved
@@ -2987,7 +2995,22 @@ segrellion_young_griff.7010 = {
 		}
 
 		ai_chance = {
+
 			base = 70
+
+
+			# Aegon actually fought for Daemon and helped restore
+			# the Flamelands. Daemon is overwhelmingly likely to
+			# repay that debt.
+
+			modifier = {
+
+				add = 25
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_supports_daemon
+				}
+			}
 		}
 	}
 
@@ -3008,7 +3031,18 @@ segrellion_young_griff.7010 = {
 		}
 
 		ai_chance = {
+
 			base = 30
+
+
+			modifier = {
+
+				add = -25
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_supports_daemon
+				}
+			}
 		}
 	}
 }
@@ -3495,6 +3529,29 @@ segrellion_young_griff.6010 = {
 				}
 			}
 
+			# =============================================
+			# THE GOLDEN COMPANY
+			# =============================================
+
+			title:d_laamp_merc_golden_company ?= {
+
+				holder ?= {
+
+					if = {
+
+						limit = {
+
+							is_alive = yes
+
+							this != title:h_the_iron_throne.holder
+						}
+
+
+						save_scope_as = young_griff_golden_company
+					}
+				}
+			}
+
 
 			# =============================================
 			# JOFFREY VLADWYN
@@ -3549,6 +3606,26 @@ segrellion_young_griff.6010 = {
 			scope:young_griff_iron_throne_war = {
 
 
+				# =========================================
+				# GOLDEN COMPANY
+				# =========================================
+
+				if = {
+
+					limit = {
+
+						exists = scope:young_griff_golden_company
+					}
+
+
+					add_attacker = scope:young_griff_golden_company
+				}
+
+
+				# =========================================
+				# DORNE
+				# =========================================
+
 				if = {
 
 					limit = {
@@ -3561,6 +3638,10 @@ segrellion_young_griff.6010 = {
 				}
 
 
+				# =========================================
+				# JOFFREY VLADWYN
+				# =========================================
+
 				if = {
 
 					limit = {
@@ -3572,6 +3653,10 @@ segrellion_young_griff.6010 = {
 					add_attacker = scope:young_griff_vladwyn
 				}
 
+
+				# =========================================
+				# DAEMON
+				# =========================================
 
 				if = {
 
@@ -5106,7 +5191,20 @@ segrellion_young_griff.8110 = {
 
 		release_from_prison = yes
 
+
+		character:IAF_Young_Griff_1 = {
+
+			segrellion_young_griff_open_story_marriage_window_effect = yes
+		}
+
+
 		marry = character:IAF_Young_Griff_1
+
+
+		character:IAF_Young_Griff_1 = {
+
+			segrellion_young_griff_close_story_marriage_window_effect = yes
+		}
 
 		add_character_flag = segrellion_cersei_married_young_griff
 
@@ -5468,7 +5566,11 @@ segrellion_young_griff.8200 = {
 		}
 
 
+		segrellion_young_griff_open_story_marriage_window_effect = yes
+
 		marry = var:segrellion_young_griff_margaery
+
+		segrellion_young_griff_close_story_marriage_window_effect = yes
 
 		add_character_flag = segrellion_young_griff_married_margaery
 		add_character_flag = segrellion_young_griff_margaery_story_resolved
@@ -5622,7 +5724,11 @@ segrellion_young_griff.8210 = {
 			}
 
 
+			segrellion_young_griff_open_story_marriage_window_effect = yes
+
 			marry = var:segrellion_young_griff_margaery
+
+			segrellion_young_griff_close_story_marriage_window_effect = yes
 
 			add_character_flag = segrellion_young_griff_margaery_second_wife
 
@@ -5724,7 +5830,11 @@ segrellion_young_griff.8220 = {
 			}
 
 
+			segrellion_young_griff_open_story_marriage_window_effect = yes
+
 			marry = var:segrellion_young_griff_margaery
+
+			segrellion_young_griff_close_story_marriage_window_effect = yes
 
 			set_primary_spouse = character:Martell_9
 
@@ -5808,7 +5918,11 @@ segrellion_young_griff.8220 = {
 			}
 
 
+			segrellion_young_griff_open_story_marriage_window_effect = yes
+
 			marry = var:segrellion_young_griff_margaery
+
+			segrellion_young_griff_close_story_marriage_window_effect = yes
 
 			add_character_flag = segrellion_young_griff_married_margaery_after_arianne_divorce
 			add_character_flag = segrellion_young_griff_margaery_story_resolved
