@@ -667,7 +667,7 @@ segrellion_young_griff_dragon.0100 = {
 
 	desc = segrellion_young_griff_dragon.0100.desc
 
-	theme = danger
+	theme = dragon
 
 
 	trigger = {
@@ -699,9 +699,8 @@ segrellion_young_griff_dragon.0100 = {
 						}
 					}
 
-					set_variable = {
-						name = segrellion_young_griff_target_dragon
-						value = character:dragon_rhaegal
+					character:dragon_rhaegal = {
+						save_scope_as = segrellion_young_griff_target_dragon
 					}
 				}
 			}
@@ -717,9 +716,8 @@ segrellion_young_griff_dragon.0100 = {
 						}
 					}
 
-					set_variable = {
-						name = segrellion_young_griff_target_dragon
-						value = character:dragon_viserion
+					character:dragon_viserion = {
+						save_scope_as = segrellion_young_griff_target_dragon
 					}
 				}
 			}
@@ -775,7 +773,7 @@ segrellion_young_griff_dragon.0100 = {
 
 	right_portrait = {
 
-		character = var:segrellion_young_griff_target_dragon
+		character = scope:segrellion_young_griff_target_dragon
 	}
 
 
@@ -789,7 +787,7 @@ segrellion_young_griff_dragon.0100 = {
 
 
 		trigger = {
-			exists = var:segrellion_young_griff_target_dragon
+			exists = scope:segrellion_young_griff_target_dragon
 		}
 
 
@@ -798,9 +796,14 @@ segrellion_young_griff_dragon.0100 = {
 
 		hidden_effect = {
 
+			set_variable = {
+				name = segrellion_young_griff_target_dragon
+				value = scope:segrellion_young_griff_target_dragon
+			}
+
 			start_travel_plan = {
 
-				destination = var:segrellion_young_griff_target_dragon.location
+				destination = scope:segrellion_young_griff_target_dragon.location
 
 				return_trip = yes
 
@@ -824,7 +827,7 @@ segrellion_young_griff_dragon.0100 = {
 		trigger = {
 
 			NOT = {
-				exists = var:segrellion_young_griff_target_dragon
+				exists = scope:segrellion_young_griff_target_dragon
 			}
 		}
 

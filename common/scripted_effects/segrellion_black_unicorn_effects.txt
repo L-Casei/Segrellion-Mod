@@ -735,6 +735,8 @@ segrellion_black_unicorn_apply_rhaegon_dna_effect = {
 			value = 0.768627
 		}
 	}
+
+	add_character_flag = segrellion_rhaegon_runtime_dna_repaired
 }
 
 # =========================================================
@@ -1240,6 +1242,52 @@ segrellion_rhaegon_early_growth_effect = {
 		global_var:segrellion_historical_rhaegon = {
 
 			save_scope_as = segrellion_rhaegon_growth_dragon
+		}
+
+
+		# The broken creation path used by recent builds could leave a
+		# storage story without dragon_id. Such a story runs every day and
+		# continuously errors, so remove it before repairing Rhaegon.
+
+		every_in_global_list = {
+
+			variable = gl_dragon_variable_storage
+
+			limit = {
+				NOT = {
+					has_variable = dragon_id
+				}
+			}
+
+			remove_list_global_variable = {
+				name = gl_dragon_variable_storage
+				target = this
+			}
+
+			end_story = yes
+		}
+
+
+		# Existing saves skip the creation effect entirely. Reapply the
+		# corrected portrait/runtime colours once for those dragons.
+
+		if = {
+
+			limit = {
+
+				scope:segrellion_rhaegon_growth_dragon = {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_rhaegon_runtime_dna_repaired
+					}
+				}
+			}
+
+			scope:segrellion_rhaegon_growth_dragon = {
+				segrellion_black_unicorn_apply_rhaegon_dna_effect = yes
+			}
 		}
 
 

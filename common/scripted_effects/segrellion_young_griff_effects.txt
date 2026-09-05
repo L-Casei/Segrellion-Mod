@@ -2181,45 +2181,22 @@ segrellion_young_griff_prepare_post_conquest_prisoners_effect = {
 		# =================================================
 		# MARGAERY
 		#
-		# Refresh the variable while she is still Tommen's
-		# spouse. This runs before the player decides
-		# Tommen's fate.
+		# Do not depend on Tommen still being married. In old saves
+		# that relationship may already have been broken by the
+		# Night's Watch outcome. Her historical AGOT ID is stable.
 		# =================================================
 
 		if = {
 
 			limit = {
-
-				NOT = {
-					has_variable = segrellion_young_griff_margaery
-				}
-
-
-				character:Baratheon_7 ?= {
-
+				character:Tyrell_14 ?= {
 					is_alive = yes
-
-					primary_spouse ?= {
-						is_alive = yes
-					}
 				}
 			}
 
-
-			character:Baratheon_7 = {
-
-				primary_spouse = {
-
-					root = {
-
-						set_variable = {
-
-							name = segrellion_young_griff_margaery
-
-							value = prev
-						}
-					}
-				}
+			set_variable = {
+				name = segrellion_young_griff_margaery
+				value = character:Tyrell_14
 			}
 		}
 
@@ -2453,6 +2430,27 @@ segrellion_young_griff_post_conquest_chain_recovery_effect = {
 
 			else = {
 
+				# Repair saves in which the delayed event was lost while
+				# the old permanent scheduled flag survived.
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_young_griff_margaery_story_scheduled
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_margaery_story_started
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_margaery_story_resolved
+						}
+					}
+
+					remove_character_flag = segrellion_young_griff_margaery_story_scheduled
+				}
+
 				segrellion_young_griff_schedule_margaery_effect = yes
 			}
 		}
@@ -2522,7 +2520,12 @@ segrellion_young_griff_schedule_margaery_effect = {
 		}
 
 
-		add_character_flag = segrellion_young_griff_margaery_story_scheduled
+		add_character_flag = {
+
+			flag = segrellion_young_griff_margaery_story_scheduled
+
+			days = 10
+		}
 
 
 		if = {
