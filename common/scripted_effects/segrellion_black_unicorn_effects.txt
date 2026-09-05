@@ -469,7 +469,7 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 			name = Rhaegon
 
-			location = root.location
+			location = scope:rhaegon_owner.location
 
 			template = agot_dragon_hatchling_template
 
@@ -479,6 +479,13 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 			random_traits = no
 
+			# AGOT's hatchling template expects this exact scope in
+			# after_creation when it builds the dragon story storage.
+			save_scope_as = dragon
+		}
+
+
+		scope:dragon = {
 			save_scope_as = rhaegon
 		}
 
@@ -654,6 +661,10 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 segrellion_black_unicorn_apply_rhaegon_dna_effect = {
 
+	# This effect can run from game-start on_actions, where root is unset.
+	# Preserve the current dragon explicitly before entering storage scopes.
+	save_scope_as = segrellion_rhaegon_dna_target
+
 	copy_inheritable_appearance_from = character:Dummy_Segrellion_Rhaegon_1
 
 	set_variable = {
@@ -671,7 +682,7 @@ segrellion_black_unicorn_apply_rhaegon_dna_effect = {
 		variable = gl_dragon_variable_storage
 
 		limit = {
-			var:dragon_id ?= root
+			var:dragon_id ?= scope:segrellion_rhaegon_dna_target
 		}
 
 		set_variable = {

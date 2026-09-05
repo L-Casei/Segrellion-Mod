@@ -9,11 +9,19 @@
 # Root   = character who learns the secret
 # Target = Daemon Segrellion
 #
-# This is the SAME heritage-secret type used by
-# AGOT for Jon Snow.
+# Daemon's public mother is already his real mother, so the
+# Jon Snow-specific secret (which requires both parents to be
+# disputed) is not valid here. Use CK3/AGOT's paternal
+# illegitimacy secret, which AGOT's royal-bastard events also
+# handle natively.
 # =========================================================
 
 segrellion_create_daemon_parentage_secret_effect = {
+
+	# Repair older saves before validating or creating the secret.
+	character:Segrellion_60 ?= {
+		set_real_father = character:Targaryen_1
+	}
 
 	if = {
 
@@ -23,7 +31,7 @@ segrellion_create_daemon_parentage_secret_effect = {
 
 				any_known_secret = {
 
-					secret_type = secret_agot_disputed_heritage
+					secret_type = secret_unmarried_illegitimate_child
 
 					secret_target = {
 						this = character:Segrellion_60
@@ -33,7 +41,7 @@ segrellion_create_daemon_parentage_secret_effect = {
 		}
 
 		add_secret = {
-			type = secret_agot_disputed_heritage
+			type = secret_unmarried_illegitimate_child
 			target = character:Segrellion_60
 		}
 	}
@@ -49,6 +57,55 @@ segrellion_create_daemon_parentage_secret_effect = {
 # =========================================================
 
 segrellion_daemon_parentage_progression_effect = {
+
+	# Recovery for saves in which Hugh already attempted the public
+	# reveal while the old, invalid Jon Snow secret type was in use.
+	character:Segrellion_43 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+				has_character_flag = segrellion_hugh_revealed_daemon_parentage
+
+				character:Segrellion_60 ?= {
+					is_alive = yes
+					NOT = { has_character_flag = segrellion_daemon_parentage_publicly_revealed }
+					NOT = { has_character_flag = awaiting_bastardry_result }
+					NOT = { owns_story_of_type = agot_royal_bastard_story }
+				}
+			}
+
+			segrellion_create_daemon_parentage_secret_effect = yes
+
+			random_known_secret = {
+				limit = {
+					secret_type = secret_unmarried_illegitimate_child
+					secret_target = { this = character:Segrellion_60 }
+				}
+				save_scope_as = heritage_secret
+			}
+
+			if = {
+				limit = { exists = scope:heritage_secret }
+
+				save_scope_as = revealer
+
+				character:Segrellion_60 = {
+					add_character_flag = royal_bastard
+					add_character_flag = awaiting_bastardry_result
+					add_character_flag = segrellion_daemon_parentage_known
+					add_character_flag = segrellion_daemon_parentage_known_with_hugh
+					segrellion_daemon_try_start_parentage_identity_chain_effect = yes
+
+					trigger_event = {
+						id = agot_events_bastard.0950
+						days = 1
+					}
+				}
+			}
+		}
+	}
 
 	character:Segrellion_60 ?= {
 
@@ -202,23 +259,6 @@ segrellion_daemon_accept_targaryen_claim_effect = {
 
 
 	# =====================================================
-	# NORMAL IRON THRONE EMPIRE TITLE
-	# =====================================================
-
-	if = {
-
-		limit = {
-
-			NOT = {
-				has_claim_on = title:e_the_iron_throne
-			}
-		}
-
-		add_pressed_claim = title:e_the_iron_throne
-	}
-
-
-	# =====================================================
 	# KING'S LANDING HIERARCHY
 	# =====================================================
 
@@ -349,16 +389,6 @@ segrellion_daemon_renounce_targaryen_claim_effect = {
 		}
 
 		remove_claim = title:h_the_iron_throne
-	}
-
-
-	if = {
-
-		limit = {
-			has_claim_on = title:e_the_iron_throne
-		}
-
-		remove_claim = title:e_the_iron_throne
 	}
 
 

@@ -1059,7 +1059,12 @@ segrellion_young_griff_after_cersei_settlement_effect = {
 		}
 
 
-		add_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
+		add_character_flag = {
+
+			flag = segrellion_young_griff_stormlands_settlement_scheduled
+
+			days = 10
+		}
 
 
 		trigger_event = {
@@ -2093,6 +2098,366 @@ segrellion_young_griff_post_throne_conquest_effect = {
 	}
 }
 
+
+# =========================================================
+# PREPARE KING'S LANDING PRISONERS
+#
+# AGOT Mega Wars may release secondary prisoners when the
+# Iron Throne war ends.
+#
+# Reassert Cersei and Margaery AFTER the war has ended.
+# =========================================================
+
+segrellion_young_griff_prepare_post_conquest_prisoners_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		# =================================================
+		# CERSEI
+		#
+		# Do not depend on Tommen's mother scope.
+		# Her historical ID is stable.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Lannister_6 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			set_variable = {
+
+				name = segrellion_young_griff_cersei
+
+				value = character:Lannister_6
+			}
+
+
+			# Whatever AGOT did with her after the Mega War,
+			# put her specifically into Aegon's custody.
+
+			character:Lannister_6 = {
+
+				if = {
+
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+			}
+
+
+			imprison = {
+
+				target = character:Lannister_6
+
+				type = house_arrest
+			}
+
+
+			character:Lannister_6 = {
+
+				set_location = title:c_kings_landing.title_province
+			}
+		}
+
+
+		# =================================================
+		# MARGAERY
+		#
+		# Refresh the variable while she is still Tommen's
+		# spouse. This runs before the player decides
+		# Tommen's fate.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_variable = segrellion_young_griff_margaery
+				}
+
+
+				character:Baratheon_7 ?= {
+
+					is_alive = yes
+
+					primary_spouse ?= {
+						is_alive = yes
+					}
+				}
+			}
+
+
+			character:Baratheon_7 = {
+
+				primary_spouse = {
+
+					root = {
+
+						set_variable = {
+
+							name = segrellion_young_griff_margaery
+
+							value = prev
+						}
+					}
+				}
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				has_variable = segrellion_young_griff_margaery
+
+
+				var:segrellion_young_griff_margaery = {
+					is_alive = yes
+				}
+			}
+
+
+			var:segrellion_young_griff_margaery = {
+
+				save_scope_as = segrellion_post_conquest_margaery
+
+
+				if = {
+
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+			}
+
+
+			imprison = {
+
+				target = scope:segrellion_post_conquest_margaery
+
+				type = house_arrest
+			}
+
+
+			scope:segrellion_post_conquest_margaery = {
+
+				set_location = title:c_kings_landing.title_province
+			}
+		}
+	}
+}
+
+# =========================================================
+# SCHEDULE CERSEI SETTLEMENT
+# =========================================================
+
+segrellion_young_griff_schedule_cersei_settlement_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_tommen_fate_resolved
+
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_cersei_settlement_scheduled
+			}
+		}
+
+
+		# =================================================
+		# CERSEI LIVES
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Lannister_6 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			segrellion_young_griff_prepare_post_conquest_prisoners_effect = yes
+
+
+			add_character_flag = {
+
+				flag = segrellion_young_griff_cersei_settlement_scheduled
+
+				days = 10
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8100
+
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# CERSEI IS ALREADY DEAD
+		#
+		# Her personal settlement is impossible, but the
+		# rest of Aegon's post-war story must continue.
+		# =================================================
+
+		else = {
+
+			add_character_flag = segrellion_young_griff_cersei_settlement_resolved
+
+			segrellion_young_griff_after_cersei_settlement_effect = yes
+		}
+	}
+}
+
+# =========================================================
+# POST-CONQUEST STORY RECOVERY
+#
+# Repairs broken saves and lost delayed events:
+#
+# Tommen
+#   -> Cersei
+#   -> Stormlands
+#   -> Margaery
+# =========================================================
+
+segrellion_young_griff_post_conquest_chain_recovery_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		# Always repair the political consolidation.
+
+		segrellion_young_griff_post_throne_conquest_effect = yes
+
+
+		# =================================================
+		# CERSEI
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_young_griff_tommen_fate_resolved
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+				}
+			}
+
+
+			segrellion_young_griff_schedule_cersei_settlement_effect = yes
+		}
+
+
+		# =================================================
+		# AFTER CERSEI
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+			}
+
+
+			# =============================================
+			# PATH 2: STORMLANDS FIRST
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_young_griff_canon_path_2
+
+					has_title = title:e_the_stormlands
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_stormlands_settlement_resolved
+					}
+				}
+
+
+				# Repair old saves where this permanent flag
+				# survived after the actual event was lost.
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
+					}
+
+					remove_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
+				}
+
+
+				segrellion_young_griff_after_cersei_settlement_effect = yes
+			}
+
+
+			# =============================================
+			# PATH 1 OR STORMLANDS ALREADY DONE:
+			# MARGAERY
+			# =============================================
+
+			else = {
+
+				segrellion_young_griff_schedule_margaery_effect = yes
+			}
+		}
+	}
+}
 
 # =========================================================
 # MARGAERY TYRELL

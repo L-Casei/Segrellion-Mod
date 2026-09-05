@@ -3637,9 +3637,6 @@ segrellion_young_griff.6020 = {
 	title = segrellion_young_griff.6020.t
 	desc = segrellion_young_griff.6020.desc
 
-	theme = war
-
-
 	trigger = {
 
 		this = character:Segrellion_60
@@ -4407,6 +4404,8 @@ segrellion_young_griff.8020 = {
 
 			segrellion_young_griff_cancel_agot_wars_aftermath_effect = yes
 
+			segrellion_young_griff_prepare_post_conquest_prisoners_effect = yes
+
 			remove_character_flag = segrellion_young_griff_varys_final_plan_active
 
 			add_character_flag = segrellion_young_griff_iron_throne_war_started
@@ -4473,6 +4472,8 @@ segrellion_young_griff.8030 = {
 		hidden_effect = {
 
 			segrellion_young_griff_post_throne_conquest_effect = yes
+
+			segrellion_young_griff_prepare_post_conquest_prisoners_effect = yes
 		}
 	}
 
@@ -4560,14 +4561,7 @@ segrellion_young_griff.8030 = {
 
 
 			add_character_flag = segrellion_young_griff_tommen_fate_resolved
-
-
-			trigger_event = {
-
-				id = segrellion_young_griff.8100
-
-				days = 2
-			}
+			segrellion_young_griff_schedule_cersei_settlement_effect = yes
 		}
 
 
@@ -4652,14 +4646,7 @@ segrellion_young_griff.8030 = {
 
 
 			add_character_flag = segrellion_young_griff_tommen_fate_resolved
-
-
-			trigger_event = {
-
-				id = segrellion_young_griff.8100
-
-				days = 2
-			}
+			segrellion_young_griff_schedule_cersei_settlement_effect = yes
 		}
 
 
@@ -4803,14 +4790,7 @@ segrellion_young_griff.8040 = {
 
 		name = segrellion_young_griff.8040.a
 
-
-		trigger_event = {
-
-			id = segrellion_young_griff.8100
-
-			days = 2
-		}
-
+		segrellion_young_griff_schedule_cersei_settlement_effect = yes
 
 		ai_chance = {
 			base = 100
@@ -4836,17 +4816,45 @@ segrellion_young_griff.8100 = {
 
 		this = character:IAF_Young_Griff_1
 
+		is_alive = yes
+
 		has_title = title:h_the_iron_throne
 
-		has_variable = segrellion_young_griff_cersei
 
-		var:segrellion_young_griff_cersei = {
-
+		character:Lannister_6 ?= {
 			is_alive = yes
-			is_imprisoned = yes
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_cersei_settlement_resolved
 		}
 	}
+	
+	on_trigger_fail = {
 
+		remove_character_flag = segrellion_young_griff_cersei_settlement_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_cersei_settlement_scheduled
+
+
+		set_variable = {
+
+			name = segrellion_young_griff_cersei
+
+			value = character:Lannister_6
+		}
+
+
+		hidden_effect = {
+
+			segrellion_young_griff_prepare_post_conquest_prisoners_effect = yes
+		}
+	}
 
 	left_portrait = {
 
@@ -5497,6 +5505,7 @@ segrellion_young_griff.8200 = {
 
 
 		add_character_flag = segrellion_young_griff_ransomed_margaery
+		add_character_flag = segrellion_young_griff_margaery_story_resolved
 
 
 		ai_chance = {
@@ -6108,6 +6117,10 @@ segrellion_young_griff.8150 = {
 		}
 	}
 
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_stormlands_settlement_scheduled
+	}
 
 	immediate = {
 
