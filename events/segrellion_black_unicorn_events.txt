@@ -4025,32 +4025,40 @@ segrellion_black_unicorn.0181 = {
 segrellion_black_unicorn.0190 = {
 
 	type = character_event
-
 	hidden = yes
 
 
 	immediate = {
 
+		# =================================================
+		# THE INVESTIGATION IS NOW ACTUALLY FINISHED
+		# =================================================
+
 		remove_character_flag = segrellion_black_unicorn_storyline_active
 
+
+		# =================================================
+		# CLOSE ANY REMAINING TRAVEL PLAN
+		# =================================================
 
 		if = {
 
 			limit = {
-
 				exists = current_travel_plan
 			}
 
 
 			current_travel_plan = {
-
 				complete_travel_plan = yes
 			}
 		}
 
 
-		var:segrellion_black_unicorn_origin ?= {
+		# =================================================
+		# ORIGINAL DAEMON LOCATION
+		# =================================================
 
+		var:segrellion_black_unicorn_origin ?= {
 			save_scope_as = black_unicorn_return_destination
 		}
 
@@ -4058,7 +4066,6 @@ segrellion_black_unicorn.0190 = {
 		if = {
 
 			limit = {
-
 				exists = scope:black_unicorn_return_destination
 			}
 
@@ -4071,6 +4078,91 @@ segrellion_black_unicorn.0190 = {
 
 
 		# =================================================
+		# RHAEGON PATH:
+		# VISENYA ALREADY JOINED DAEMON
+		#
+		# Keep her and Rhaegon physically with Daemon after
+		# the real return journey finishes.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Black_Unicorn_1 ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+				}
+			}
+
+
+			character:Black_Unicorn_1 = {
+
+				set_location = root.location
+			}
+
+
+			global_var:segrellion_historical_rhaegon ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					set_location = root.location
+				}
+			}
+		}
+
+
+		# =================================================
+		# ROUTE A:
+		# RICKON + OSHA ALSO RETURN WITH DAEMON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_rickon_osha_joined_daemon
+			}
+
+
+			character:Stark_Dummy_11 ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					set_location = root.location
+				}
+			}
+
+
+			character:Stark_hh_13 ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					set_location = root.location
+				}
+			}
+		}
+
+
+		# =================================================
+		# OLD ICEBRINGER ROUTE:
 		# VISENYA CAME WITH DAEMON
 		# =================================================
 
@@ -4101,6 +4193,7 @@ segrellion_black_unicorn.0190 = {
 
 
 		# =================================================
+		# OLD ICEBRINGER ROUTE:
 		# VISENYA REMAINED ON SKAGOS
 		# =================================================
 
@@ -5130,6 +5223,10 @@ segrellion_black_unicorn.0405 = {
 		reference = segrellion_hidden_cavern
 	}
 
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	left_portrait = {
 
@@ -5299,6 +5396,10 @@ segrellion_black_unicorn.0406 = {
 		reference = segrellion_hidden_cavern
 	}
 
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	immediate = {
 
@@ -5383,6 +5484,16 @@ segrellion_black_unicorn.0500 = {
 	theme = danger
 
 
+	override_background = {
+		reference = ship
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
 	trigger = {
 
 		this = character:Segrellion_60
@@ -5430,7 +5541,13 @@ segrellion_black_unicorn.0500 = {
 		custom_tooltip = segrellion_black_unicorn.ui.0500.a.tt
 
 
-		return_home = yes
+		hidden_effect = {
+
+			set_location = title:b_cold_peaks.title_province
+
+
+			segrellion_black_unicorn_return_to_daemon_camp_effect = yes
+		}
 	}
 }
 
@@ -5446,6 +5563,16 @@ segrellion_black_unicorn.0510 = {
 	desc = segrellion_black_unicorn.0510.desc
 
 	theme = danger
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
 
 
 	trigger = {
@@ -5477,7 +5604,9 @@ segrellion_black_unicorn.0510 = {
 
 
 	# =====================================================
-	# C.A - DEATH
+	# C.A - VALAR MORGHULIS
+	#
+	# Fatal.
 	# =====================================================
 
 	option = {
@@ -5485,10 +5614,12 @@ segrellion_black_unicorn.0510 = {
 		name = segrellion_black_unicorn.0510.a
 		custom_tooltip = segrellion_black_unicorn.ui.0510.a.tt
 
+		add_internal_flag = dangerous
+
 
 		trigger = {
 
-			global_var:segrellion_rhaegon_character ?= {
+			global_var:segrellion_historical_rhaegon ?= {
 				is_alive = yes
 			}
 		}
@@ -5499,7 +5630,7 @@ segrellion_black_unicorn.0510 = {
 		add_character_flag = segrellion_black_unicorn_route_c_valar_morghulis
 
 
-		global_var:segrellion_rhaegon_character = {
+		global_var:segrellion_historical_rhaegon = {
 
 			save_scope_as = segrellion_rhaegon_killer
 		}
@@ -5511,11 +5642,22 @@ segrellion_black_unicorn.0510 = {
 
 			killer = scope:segrellion_rhaegon_killer
 		}
+
+
+		ai_chance = {
+			base = 0
+		}
 	}
 
 
 	# =====================================================
 	# C.B - DESTINY
+	#
+	# Daemon refuses to yield but does not provoke Rhaegon
+	# into killing him.
+	#
+	# He returns home. Visenya remains on Skagos.
+	# The later Beacon confrontation remains possible.
 	# =====================================================
 
 	option = {
@@ -5530,7 +5672,22 @@ segrellion_black_unicorn.0510 = {
 
 		add_character_flag = segrellion_black_unicorn_destiny_route_pending
 
+
+		add_character_flag = segrellion_black_unicorn_part_iii_pending
+
+		add_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
+
+
 		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+
+		hidden_effect = {
+
+			set_location = title:b_cold_peaks.title_province
+
+
+			segrellion_black_unicorn_return_to_daemon_camp_effect = yes
+		}
 
 
 		ai_chance = {
@@ -5551,6 +5708,14 @@ segrellion_black_unicorn.0520 = {
 	desc = segrellion_black_unicorn.0520.desc
 
 	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
 
 
 	trigger = {
@@ -5640,6 +5805,14 @@ segrellion_black_unicorn.0530 = {
 
 	theme = diplomacy
 
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	trigger = {
 
@@ -5726,6 +5899,14 @@ segrellion_black_unicorn.0540 = {
 
 	theme = romance
 
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	trigger = {
 
@@ -5764,7 +5945,7 @@ segrellion_black_unicorn.0540 = {
 	}
 
 
-	option = {
+		option = {
 
 		name = segrellion_black_unicorn.0540.a
 		custom_tooltip = segrellion_black_unicorn.ui.0540.a.tt
@@ -5774,6 +5955,12 @@ segrellion_black_unicorn.0540 = {
 
 
 		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+
+		hidden_effect = {
+
+			segrellion_black_unicorn_return_to_daemon_camp_effect = yes
+		}
 
 
 		ai_chance = {
@@ -5794,6 +5981,14 @@ segrellion_black_unicorn.0550 = {
 	desc = segrellion_black_unicorn.0550.desc
 
 	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
 
 
 	trigger = {
@@ -5910,6 +6105,14 @@ segrellion_black_unicorn.0560 = {
 
 	theme = diplomacy
 
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	trigger = {
 
@@ -5990,6 +6193,14 @@ segrellion_black_unicorn.0570 = {
 
 	theme = intrigue
 
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	trigger = {
 
@@ -6045,6 +6256,14 @@ segrellion_black_unicorn.0580 = {
 	desc = segrellion_black_unicorn.0580.desc
 
 	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
 
 
 	trigger = {
@@ -6102,6 +6321,14 @@ segrellion_black_unicorn.0590 = {
 
 	theme = diplomacy
 
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
 
 	trigger = {
 
@@ -6146,6 +6373,12 @@ segrellion_black_unicorn.0590 = {
 		add_character_flag = segrellion_black_unicorn_route_a_completed
 
 		add_character_flag = segrellion_black_unicorn_skagos_part_ii_resolved
+
+
+		hidden_effect = {
+
+			segrellion_black_unicorn_return_to_daemon_camp_effect = yes
+		}
 
 
 		ai_chance = {
@@ -6237,12 +6470,7 @@ segrellion_black_unicorn.0595 = {
 # =========================================================
 
 # =========================================================
-# 0599 - POST-BEACON WATCHDOG
-#
-# Independent from the monthly global pulse.
-#
-# It checks every 30 days until Part III either starts,
-# becomes impossible, or is resolved.
+# 0599 - PART III CLOCK / WATCHDOG
 # =========================================================
 
 segrellion_black_unicorn.0599 = {
@@ -6254,19 +6482,36 @@ segrellion_black_unicorn.0599 = {
 
 	immediate = {
 
+
 		# =================================================
-		# KEEP WATCHDOG ALIVE
+		# THE WAIT IS OVER
 		#
-		# If this event chain ever disappears, this timed
-		# flag expires and the monthly pulse rebuilds it.
+		# Explicitly clear it here.
+		# We no longer rely only on timed-flag expiration.
 		# =================================================
 
-		add_character_flag = {
+		remove_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
 
-			flag = segrellion_black_unicorn_post_beacon_watchdog_started
+		remove_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
 
-			days = 90
-		}
+
+		# =================================================
+		# TRY PART III
+		# =================================================
+
+		segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = yes
+
+
+		# =================================================
+		# RETRY IF TEMPORARILY BLOCKED
+		#
+		# For example:
+		# - Daemon imprisoned
+		# - Visenya imprisoned
+		#
+		# It does NOT require Daemon to physically be at
+		# the Beacon and does NOT require peace.
+		# =================================================
 
 		if = {
 
@@ -6278,7 +6523,14 @@ segrellion_black_unicorn.0599 = {
 
 				title:e_flamelands.holder = this
 
-				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+				has_character_flag = segrellion_unicorn_returns_completed
+
+				has_character_flag = segrellion_black_unicorn_part_iii_pending
+				has_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_started
+				}
 
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
@@ -6300,29 +6552,19 @@ segrellion_black_unicorn.0599 = {
 			}
 
 
-			segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = yes
+			add_character_flag = {
+
+				flag = segrellion_black_unicorn_post_beacon_watchdog_started
+
+				days = 60
+			}
 
 
-			if = {
+			trigger_event = {
 
-				limit = {
+				id = segrellion_black_unicorn.0599
 
-					NOT = {
-						has_character_flag = segrellion_black_unicorn_post_beacon_started
-					}
-
-					NOT = {
-						has_character_flag = segrellion_black_unicorn_post_beacon_resolved
-					}
-				}
-
-
-				trigger_event = {
-
-					id = segrellion_black_unicorn.0599
-
-					days = 14
-				}
+				days = 30
 			}
 		}
 	}

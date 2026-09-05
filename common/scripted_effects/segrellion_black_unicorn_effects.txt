@@ -1242,6 +1242,18 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 		}
 
 		# =================================================
+		# VISENYA IS LEAVING SKAGOS PERMANENTLY
+		#
+		# Stop the recurring Cold Peaks camp lock before
+		# moving her into Daemon's court.
+		# =================================================
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_black_unicorn_lock_camp_skagos
+		}
+
+		# =================================================
 		# PRESERVE VISENYA'S ENTIRE COURT
 		#
 		# The camp title must be destroyed before Visenya can
@@ -1794,11 +1806,10 @@ segrellion_rhaegon_early_growth_effect = {
 # =========================================================
 # BLACK UNICORN - POST BEACON STORY
 #
-# Starts the one-year clock after Daemon gains the
-# Flamelands.
+# Starts the one-year Part III clock after Daemon has
+# canonically completed The Unicorn Returns.
 #
-# The monthly pulse and an independent watchdog both
-# protect this storyline from missed on_actions.
+# Only Route D from Part II unlocks this storyline.
 # =========================================================
 
 segrellion_black_unicorn_start_post_beacon_clock_effect = {
@@ -1814,9 +1825,14 @@ segrellion_black_unicorn_start_post_beacon_clock_effect = {
 				title:e_flamelands.holder = this
 
 
-				character:Black_Unicorn_1 ?= {
-					is_alive = yes
-				}
+				# The Flamelands must have been restored through
+				# The Unicorn Returns.
+				has_character_flag = segrellion_unicorn_returns_completed
+
+
+				# Only the intended Part II route unlocks Part III.
+				has_character_flag = segrellion_black_unicorn_part_iii_pending
+				has_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
 
 
 				NOT = {
@@ -1824,7 +1840,25 @@ segrellion_black_unicorn_start_post_beacon_clock_effect = {
 				}
 
 				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_started
+				}
+
+				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+				}
+
+
+				character:Black_Unicorn_1 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+					}
 				}
 			}
 
@@ -1864,30 +1898,30 @@ segrellion_black_unicorn_start_post_beacon_clock_effect = {
 
 			add_character_flag = segrellion_black_unicorn_post_beacon_clock_started
 
+			# Marks saves using the corrected Part III system.
+			add_character_flag = segrellion_black_unicorn_post_beacon_clock_v2
+
+
 			add_character_flag = {
 
 				flag = segrellion_black_unicorn_post_beacon_waiting_year
 
-				years = 1
+				days = 365
 			}
 
 
 			# =================================================
-			# INDEPENDENT WATCHDOG
+			# DIRECT ONE-YEAR EVENT
+			#
+			# Part III no longer relies on the monthly pulse
+			# noticing that a timed flag expired.
 			# =================================================
-
-			add_character_flag = {
-
-				flag = segrellion_black_unicorn_post_beacon_watchdog_started
-
-				days = 90
-			}
 
 			trigger_event = {
 
 				id = segrellion_black_unicorn.0599
 
-				days = 30
+				days = 365
 			}
 		}
 	}
@@ -1896,11 +1930,6 @@ segrellion_black_unicorn_start_post_beacon_clock_effect = {
 
 # =========================================================
 # TRY TO START PART III
-#
-# This is the ONLY place that decides whether 0600 should
-# be launched.
-#
-# The actual event does not depend on physical location.
 # =========================================================
 
 segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
@@ -1909,12 +1938,7 @@ segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
 
 
 		# =====================================================
-		# OLD-SAVE RECOVERY
-		#
-		# Older versions marked the story "started" BEFORE
-		# 0600 successfully opened.
-		#
-		# If that happened, clear the dead flag.
+		# OLD DEAD-START RECOVERY
 		# =====================================================
 
 		if = {
@@ -1937,7 +1961,7 @@ segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
 
 
 		# =====================================================
-		# START
+		# START PART III
 		# =====================================================
 
 		if = {
@@ -1950,12 +1974,25 @@ segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
 
 				title:e_flamelands.holder = this
 
+
+				# Canonical restoration completed.
+				has_character_flag = segrellion_unicorn_returns_completed
+
+
+				# Correct Part II route.
+				has_character_flag = segrellion_black_unicorn_part_iii_pending
+				has_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
+
+
+				# The one-year clock must have started.
 				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
 
 
+				# And must now be finished.
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
 				}
+
 
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_queued
@@ -1987,9 +2024,6 @@ segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
 			}
 
 
-			# Temporary only. Even if the event somehow disappears,
-			# this guard expires automatically.
-
 			add_character_flag = {
 
 				flag = segrellion_black_unicorn_post_beacon_queued
@@ -2002,7 +2036,7 @@ segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
 
 				id = segrellion_black_unicorn.0600
 
-				days = 0
+				days = 1
 			}
 		}
 	}
@@ -2010,16 +2044,21 @@ segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = {
 
 
 # =========================================================
-# MONTHLY POST-BEACON CHECK
+# MONTHLY POST-BEACON RECOVERY
 # =========================================================
 
 segrellion_black_unicorn_post_beacon_progression_effect = {
 
-	segrellion_black_unicorn_start_post_beacon_clock_effect = yes
-
 
 	# =====================================================
-	# OLD-SAVE WATCHDOG RECOVERY
+	# LEGACY / BETA-SAVE RECOVERY
+	#
+	# Saves created before the corrected clock system may
+	# already have won The Unicorn Returns without Part III
+	# ever being scheduled.
+	#
+	# Those saves are recovered immediately instead of
+	# forcing the player to wait another year.
 	# =====================================================
 
 	character:Segrellion_60 ?= {
@@ -2030,35 +2069,76 @@ segrellion_black_unicorn_post_beacon_progression_effect = {
 
 				is_alive = yes
 
-				has_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+				title:e_flamelands.holder = this
+
+				has_character_flag = segrellion_unicorn_returns_completed
+
+				has_character_flag = segrellion_black_unicorn_part_iii_pending
+				has_character_flag = segrellion_black_unicorn_part_iii_after_flamelands
+
 
 				NOT = {
-					has_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+					has_character_flag = segrellion_black_unicorn_post_beacon_clock_v2
+				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_post_beacon_started
 				}
 
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
 				}
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+				}
+
+
+				character:Black_Unicorn_1 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+					}
+				}
 			}
 
 
-			add_character_flag = {
-
-				flag = segrellion_black_unicorn_post_beacon_watchdog_started
-
-				days = 90
-			}
+			# Mark this save as migrated.
+			add_character_flag = segrellion_black_unicorn_post_beacon_clock_v2
+			add_character_flag = segrellion_black_unicorn_post_beacon_clock_started
+			add_character_flag = segrellion_black_unicorn_post_beacon_legacy_recovered
 
 
+			# Remove any dead state left by the old implementation.
+			remove_character_flag = segrellion_black_unicorn_post_beacon_waiting_year
+			remove_character_flag = segrellion_black_unicorn_post_beacon_watchdog_started
+			remove_character_flag = segrellion_black_unicorn_post_beacon_queued
+
+
+			# Give the recovered save a few days rather than
+			# opening the story directly inside the monthly pulse.
 			trigger_event = {
 
 				id = segrellion_black_unicorn.0599
 
-				days = 30
+				days = 7
 			}
 		}
 	}
 
+
+	# =====================================================
+	# NORMAL FUTURE-GAME FALLBACK
+	# =====================================================
+
+	segrellion_black_unicorn_start_post_beacon_clock_effect = yes
+
+
+	# =====================================================
+	# MONTHLY FINAL SAFETY NET
+	# =====================================================
 
 	segrellion_black_unicorn_try_start_post_beacon_part_iii_effect = yes
 }

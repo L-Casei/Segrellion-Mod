@@ -1016,9 +1016,64 @@ segrellion_create_artifact_trueflame_effect = {
     }
 }
 
+# =========================================================
+# FIND TRUEFLAME
+#
+# Rebuilds the global reference if Trueflame already exists.
+# Prevents duplicate creation in old or partially broken saves.
+# =========================================================
+
+segrellion_find_trueflame_effect = {
+
+	# Remove a dead global reference.
+
+	if = {
+
+		limit = {
+
+			has_global_variable = segrellion_trueflame
+
+			NOT = {
+				exists = global_var:segrellion_trueflame
+			}
+		}
+
+		remove_global_variable = segrellion_trueflame
+	}
+
+
+	# Recover the reference from the actual artifact.
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				exists = global_var:segrellion_trueflame
+			}
+		}
+
+
+		every_artifact = {
+
+			limit = {
+				has_variable = segrellion_trueflame_artifact
+			}
+
+
+			set_global_variable = {
+
+				name = segrellion_trueflame
+				value = this
+			}
+		}
+	}
+}
 
 
 segrellion_setup_trueflame_history_effect = {
+
+	segrellion_find_trueflame_effect = yes
 
     if = {
         limit = {
