@@ -1372,13 +1372,9 @@ segrellion_young_griff_westeros_core_setup_effect = {
 			}
 
 
-			# =============================================
-			# ALLIANCE WITH AEGON
-			#
-			# This is outside the one-time setup so that if
-			# something removes the alliance during setup,
-			# subsequent progression can repair it.
-			# =============================================
+			# =================================================
+			# PERMANENT GOLDEN COMPANY ALLIANCE
+			# =================================================
 
 			if = {
 
@@ -1390,29 +1386,74 @@ segrellion_young_griff_westeros_core_setup_effect = {
 				}
 
 
-				# Required because Aegon and the Golden Company captain
-				# have no familial relation.
+				# The old alliance uses Aegon and the captain
+				# themselves as the persistence anchors.
+				# They are not married/related, so CK3 destroys
+				# that alliance when the game advances.
+				#
+				# Replace it with a real married pair as the
+				# persistence anchors.
 
-				allow_alliance = scope:segrellion_golden_company_captain
+				if = {
+
+					limit = {
+
+						is_allied_to = scope:segrellion_golden_company_captain
+					}
+
+
+					break_alliance = scope:segrellion_golden_company_captain
+				}
+
+
+				random_ruler = {
+
+					limit = {
+
+						is_alive = yes
+						is_married = yes
+
+						this != root
+						this != scope:segrellion_golden_company_captain
+					}
+
+
+					save_scope_as = segrellion_golden_company_alliance_anchor_owner
+
+
+					random_spouse = {
+
+						limit = {
+							is_alive = yes
+						}
+
+						save_scope_as = segrellion_golden_company_alliance_anchor_target
+					}
+				}
 
 
 				if = {
 
 					limit = {
 
-						NOT = {
-							is_allied_to = scope:segrellion_golden_company_captain
-						}
+						exists = scope:segrellion_golden_company_alliance_anchor_owner
+						exists = scope:segrellion_golden_company_alliance_anchor_target
 					}
+
+
+					allow_alliance = scope:segrellion_golden_company_captain
 
 
 					create_alliance = {
 
 						target = scope:segrellion_golden_company_captain
 
-						allied_through_owner = root
-						allied_through_target = scope:segrellion_golden_company_captain
+						allied_through_owner = scope:segrellion_golden_company_alliance_anchor_owner
+						allied_through_target = scope:segrellion_golden_company_alliance_anchor_target
 					}
+
+
+					add_character_flag = segrellion_young_griff_golden_company_alliance_established
 				}
 			}
 		}
@@ -4251,6 +4292,104 @@ segrellion_young_griff_stormlands_instability_progression_effect = {
 					trigger_event = {
 
 						id = segrellion_young_griff.9030
+					}
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF
+# GOLDEN COMPANY ALLIANCE FAILSAFE
+# =========================================================
+
+segrellion_young_griff_maintain_golden_company_alliance_effect = {
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+				}
+
+
+				title:d_laamp_merc_golden_company ?= {
+
+					exists = holder
+
+					holder = {
+						is_alive = yes
+					}
+				}
+			}
+
+
+			title:d_laamp_merc_golden_company.holder = {
+
+				save_scope_as = segrellion_golden_company_current_captain
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_allied_to = scope:segrellion_golden_company_current_captain
+					}
+				}
+
+
+				random_ruler = {
+
+					limit = {
+
+						is_alive = yes
+						is_married = yes
+
+						this != root
+						this != scope:segrellion_golden_company_current_captain
+					}
+
+
+					save_scope_as = segrellion_golden_company_repair_anchor_owner
+
+
+					random_spouse = {
+
+						limit = {
+							is_alive = yes
+						}
+
+						save_scope_as = segrellion_golden_company_repair_anchor_target
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						exists = scope:segrellion_golden_company_repair_anchor_owner
+						exists = scope:segrellion_golden_company_repair_anchor_target
+					}
+
+
+					allow_alliance = scope:segrellion_golden_company_current_captain
+
+
+					create_alliance = {
+
+						target = scope:segrellion_golden_company_current_captain
+
+						allied_through_owner = scope:segrellion_golden_company_repair_anchor_owner
+						allied_through_target = scope:segrellion_golden_company_repair_anchor_target
 					}
 				}
 			}
