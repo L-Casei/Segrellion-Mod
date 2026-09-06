@@ -1,0 +1,585 @@
+namespace = segrellion_vhal_investigation
+
+segrellion_vhal_investigation.0001 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0001.t
+	desc = segrellion_vhal_investigation.0001.desc
+
+	theme = intrigue
+
+	option = {
+
+		name = segrellion_vhal_investigation.0001.a
+
+		trigger_event = {
+			id = segrellion_vhal_investigation.0100
+		}
+	}
+
+	option = {
+
+		name = segrellion_vhal_investigation.0001.b
+
+		trigger_event = {
+			id = segrellion_vhal_investigation.0200
+		}
+	}
+
+	option = {
+
+		name = segrellion_vhal_investigation.0001.c
+
+		trigger_event = {
+			id = segrellion_vhal_investigation.0300
+		}
+	}
+
+	option = {
+
+		name = segrellion_vhal_investigation.0001.d
+	}
+}
+
+segrellion_vhal_investigation.0100 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			70 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0110
+				}
+			}
+
+			25 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0120
+				}
+			}
+
+			5 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0130
+				}
+			}
+		}
+	}
+}
+
+segrellion_vhal_investigation.0110 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0110.t
+	desc = segrellion_vhal_investigation.0110.desc
+
+	theme = learning
+
+	option = {
+
+		name = segrellion_vhal_investigation.0110.a
+
+		add_learning_skill = 1
+	}
+}
+
+segrellion_vhal_investigation.0120 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0120.t
+	desc = segrellion_vhal_investigation.0120.desc
+
+	theme = learning
+
+	option = {
+
+		name = segrellion_vhal_investigation.0120.a
+
+		add_character_flag = segrellion_found_azuron_scale
+	}
+}
+
+segrellion_vhal_investigation.0130 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0130.t
+	desc = segrellion_vhal_investigation.0130.desc
+
+	theme = learning
+
+	option = {
+
+		name = segrellion_vhal_investigation.0130.a
+
+		# AQUÍ LLAMAMOS AL EFECTO/EVENTO DEL HUEVO
+		# QUE YA USA LA VISITA DE VHAL.
+	}
+}
+
+segrellion_vhal_investigation.0200 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			55 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0210
+				}
+			}
+
+			28 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0220
+				}
+			}
+
+			14 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0230
+				}
+			}
+
+			3 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0240
+				}
+			}
+		}
+	}
+}
+
+segrellion_vhal_investigation.0210 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0210.t
+	desc = segrellion_vhal_investigation.0210.desc
+
+	theme = intrigue
+
+	option = {
+
+		name = segrellion_vhal_investigation.0210.a
+	}
+}
+
+segrellion_vhal_investigation.0220 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0220.t
+	desc = segrellion_vhal_investigation.0220.desc
+
+	theme = intrigue
+
+	option = {
+
+		name = segrellion_vhal_investigation.0220.a
+	}
+}
+
+segrellion_vhal_investigation.0230 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0230.t
+	desc = segrellion_vhal_investigation.0230.desc
+
+	theme = intrigue
+
+	option = {
+
+		name = segrellion_vhal_investigation.0230.a
+
+		trigger_event = {
+			id = segrellion_vhal_investigation.0231
+		}
+	}
+
+	option = {
+
+		name = segrellion_vhal_investigation.0230.b
+	}
+}
+
+segrellion_vhal_investigation.0231 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0231.t
+	desc = segrellion_vhal_investigation.0231.desc
+
+	theme = wealth
+
+	option = {
+
+		name = segrellion_vhal_investigation.0231.a
+
+		add_gold = 1500
+
+		add_character_flag = segrellion_discovered_vhal_hidden_treasury
+	}
+}
+
+segrellion_vhal_investigation.0240 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0240.t
+	desc = segrellion_vhal_investigation.0240.desc
+
+	theme = dread
+
+	option = {
+
+		name = segrellion_vhal_investigation.0240.a
+
+		death = {
+			death_reason = death_disappearance
+		}
+	}
+}
+
+segrellion_vhal_investigation.0300 = {
+
+	hidden = yes
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				this = character:Segrellion_60
+
+				NOT = {
+					has_character_flag = segrellion_daena_letter_found
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_vhal_investigation.0390
+			}
+		}
+
+		else = {
+
+			random_list = {
+
+				60 = {
+					trigger_event = {
+						id = segrellion_vhal_investigation.0310
+					}
+				}
+
+				25 = {
+					trigger_event = {
+						id = segrellion_vhal_investigation.0320
+					}
+				}
+
+				15 = {
+					trigger_event = {
+						id = segrellion_vhal_investigation.0330
+					}
+				}
+			}
+		}
+	}
+}
+
+segrellion_vhal_investigation.0310 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			20 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0311
+				}
+			}
+
+			20 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0312
+				}
+			}
+
+			20 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0313
+				}
+			}
+
+			20 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0314
+				}
+			}
+
+			20 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0315
+				}
+			}
+		}
+	}
+}
+
+segrellion_vhal_investigation.0311 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0311.t
+	desc = segrellion_vhal_investigation.0311.desc
+
+	theme = learning
+
+	option = {
+		name = segrellion_vhal_investigation.0311.a
+		add_learning_lifestyle_xp = 100
+	}
+}
+
+segrellion_vhal_investigation.0312 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0312.t
+	desc = segrellion_vhal_investigation.0312.desc
+
+	theme = learning
+
+	option = {
+		name = segrellion_vhal_investigation.0312.a
+		add_learning_lifestyle_xp = 100
+	}
+}
+
+segrellion_vhal_investigation.0313 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0313.t
+	desc = segrellion_vhal_investigation.0313.desc
+
+	theme = learning
+
+	option = {
+		name = segrellion_vhal_investigation.0313.a
+		add_learning_lifestyle_xp = 100
+	}
+}
+
+segrellion_vhal_investigation.0314 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0314.t
+	desc = segrellion_vhal_investigation.0314.desc
+
+	theme = learning
+
+	option = {
+		name = segrellion_vhal_investigation.0314.a
+		add_learning_lifestyle_xp = 100
+	}
+}
+
+segrellion_vhal_investigation.0315 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0315.t
+	desc = segrellion_vhal_investigation.0315.desc
+
+	theme = learning
+
+	option = {
+		name = segrellion_vhal_investigation.0315.a
+		add_learning_lifestyle_xp = 100
+	}
+}
+
+segrellion_vhal_investigation.0320 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0320.t
+	desc = segrellion_vhal_investigation.0320.desc
+
+	theme = learning
+
+	option = {
+
+		name = segrellion_vhal_investigation.0320.a
+
+		add_character_flag = segrellion_found_old_valyria_book
+
+		# CREAR ARTEFACTO
+	}
+}
+
+segrellion_vhal_investigation.0330 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			35 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0340
+				}
+			}
+
+			30 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0350
+				}
+			}
+
+			25 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0360
+				}
+			}
+
+			10 = {
+				trigger_event = {
+					id = segrellion_vhal_investigation.0370
+				}
+			}
+		}
+	}
+}
+
+segrellion_vhal_investigation.0340 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0340.t
+	desc = segrellion_vhal_investigation.0340.desc
+
+	theme = learning
+
+	option = {
+
+		name = segrellion_vhal_investigation.0340.a
+
+		add_character_flag = segrellion_found_blue_flower_diadem
+
+		# CREATE DIADEM ARTIFACT
+	}
+}
+
+segrellion_vhal_investigation.0350 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0350.t
+	desc = segrellion_vhal_investigation.0350.desc
+
+	theme = learning
+
+	option = {
+
+		name = segrellion_vhal_investigation.0350.a
+
+		add_character_flag = segrellion_found_alysanne_memorandum
+
+		# CREATE MEMORANDUM ARTIFACT
+	}
+}
+
+segrellion_vhal_investigation.0360 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0360.t
+	desc = segrellion_vhal_investigation.0360.desc
+
+	theme = martial
+
+	option = {
+
+		name = segrellion_vhal_investigation.0360.a
+
+		# LLAMAR AQUÍ AL ARTEFACTO EXISTENTE
+		# DE LA ESPADA DE TRISTAN VLADWYN.
+	}
+}
+
+segrellion_vhal_investigation.0370 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0370.t
+	desc = segrellion_vhal_investigation.0370.desc
+
+	theme = martial
+
+	option = {
+
+		name = segrellion_vhal_investigation.0370.a
+
+		add_character_flag = segrellion_found_dragonspear
+
+		# CREATE DRAGONSPEAR ARTIFACT
+	}
+}
+
+segrellion_vhal_investigation.0390 = {
+
+	type = character_event
+
+	title = segrellion_vhal_investigation.0390.t
+	desc = segrellion_vhal_investigation.0390.desc
+
+	theme = intrigue
+
+	immediate = {
+
+		add_character_flag = segrellion_daena_letter_found
+	}
+
+    if = {
+
+        limit = {
+
+            this = character:Segrellion_60
+
+            NOT = {
+                has_character_flag = segrellion_daena_letter_found
+            }
+
+            # AÑADIR AQUÍ TAMBIÉN
+            # LA FLAG EXISTENTE DE "DAEMON YA CONOCE SU PARENTAGE"
+        }
+
+        trigger_event = {
+            id = segrellion_vhal_investigation.0390
+        }
+    }
+
+	option = {
+
+		name = segrellion_vhal_investigation.0390.a
+
+		segrellion_create_daemon_parentage_secret_effect = yes
+	}
+}
