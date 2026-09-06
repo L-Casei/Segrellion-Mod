@@ -1,5 +1,10 @@
 namespace = segrellion_vhal_investigation
 
+
+# =========================================================
+# MAIN MENU
+# =========================================================
+
 segrellion_vhal_investigation.0001 = {
 
 	type = character_event
@@ -8,6 +13,10 @@ segrellion_vhal_investigation.0001 = {
 	desc = segrellion_vhal_investigation.0001.desc
 
 	theme = intrigue
+
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
 
 	option = {
 
@@ -42,6 +51,11 @@ segrellion_vhal_investigation.0001 = {
 	}
 }
 
+
+# =========================================================
+# CAVERNS OF VHAL
+# =========================================================
+
 segrellion_vhal_investigation.0100 = {
 
 	hidden = yes
@@ -51,18 +65,28 @@ segrellion_vhal_investigation.0100 = {
 		random_list = {
 
 			70 = {
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0110
 				}
 			}
 
 			25 = {
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0120
 				}
 			}
 
 			5 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_vhalyrax_lost_egg
+					}
+				}
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0130
 				}
@@ -70,6 +94,11 @@ segrellion_vhal_investigation.0100 = {
 		}
 	}
 }
+
+
+# ---------------------------------------------------------
+# NOTHING FOUND
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0110 = {
 
@@ -80,6 +109,10 @@ segrellion_vhal_investigation.0110 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0110.a
@@ -87,6 +120,11 @@ segrellion_vhal_investigation.0110 = {
 		add_learning_skill = 1
 	}
 }
+
+
+# ---------------------------------------------------------
+# AZURON'S SCALE
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0120 = {
 
@@ -97,13 +135,26 @@ segrellion_vhal_investigation.0120 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0120.a
 
+		segrellion_create_artifact_azuron_dragon_scale_effect = {
+			OWNER = root
+		}
+
 		add_character_flag = segrellion_found_azuron_scale
 	}
 }
+
+
+# ---------------------------------------------------------
+# VHALYRAX'S LOST EGG
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0130 = {
 
@@ -114,14 +165,24 @@ segrellion_vhal_investigation.0130 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0130.a
 
-		# AQUÍ LLAMAMOS AL EFECTO/EVENTO DEL HUEVO
-		# QUE YA USA LA VISITA DE VHAL.
+		segrellion_create_vhalyrax_lost_egg_effect = {
+			OWNER = root
+		}
 	}
 }
+
+
+# =========================================================
+# SECRET ROOMS AND PASSAGES
+# =========================================================
 
 segrellion_vhal_investigation.0200 = {
 
@@ -132,24 +193,35 @@ segrellion_vhal_investigation.0200 = {
 		random_list = {
 
 			55 = {
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0210
 				}
 			}
 
 			28 = {
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0220
 				}
 			}
 
 			14 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_vhal_hidden_treasury_discovered
+					}
+				}
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0230
 				}
 			}
 
 			3 = {
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0240
 				}
@@ -157,6 +229,11 @@ segrellion_vhal_investigation.0200 = {
 		}
 	}
 }
+
+
+# ---------------------------------------------------------
+# NO PASSAGE
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0210 = {
 
@@ -167,11 +244,20 @@ segrellion_vhal_investigation.0210 = {
 
 	theme = intrigue
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0210.a
 	}
 }
+
+
+# ---------------------------------------------------------
+# DEAD END
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0220 = {
 
@@ -182,11 +268,20 @@ segrellion_vhal_investigation.0220 = {
 
 	theme = intrigue
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0220.a
 	}
 }
+
+
+# ---------------------------------------------------------
+# STRANGE BRICK
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0230 = {
 
@@ -196,6 +291,10 @@ segrellion_vhal_investigation.0230 = {
 	desc = segrellion_vhal_investigation.0230.desc
 
 	theme = intrigue
+
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
 
 	option = {
 
@@ -212,6 +311,11 @@ segrellion_vhal_investigation.0230 = {
 	}
 }
 
+
+# ---------------------------------------------------------
+# HIDDEN TREASURY
+# ---------------------------------------------------------
+
 segrellion_vhal_investigation.0231 = {
 
 	type = character_event
@@ -221,6 +325,10 @@ segrellion_vhal_investigation.0231 = {
 
 	theme = wealth
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0231.a
@@ -228,8 +336,18 @@ segrellion_vhal_investigation.0231 = {
 		add_gold = 1500
 
 		add_character_flag = segrellion_discovered_vhal_hidden_treasury
+
+		set_global_variable = {
+			name = segrellion_vhal_hidden_treasury_discovered
+			value = root
+		}
 	}
 }
+
+
+# ---------------------------------------------------------
+# LOST FOREVER
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0240 = {
 
@@ -240,15 +358,24 @@ segrellion_vhal_investigation.0240 = {
 
 	theme = dread
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0240.a
 
 		death = {
-			death_reason = death_disappearance
+			death_reason = death_segrellion_lost_vhal_passages
 		}
 	}
 }
+
+
+# =========================================================
+# GREAT RECORD HALLS
+# =========================================================
 
 segrellion_vhal_investigation.0300 = {
 
@@ -256,6 +383,15 @@ segrellion_vhal_investigation.0300 = {
 
 	immediate = {
 
+		# Restore artifact references before deciding whether
+		# the physical relic can still be found.
+		segrellion_find_sword_of_the_sentinel_effect = yes
+		segrellion_setup_dragonspear_lance_history_effect = yes
+
+
+		# Daemon always finds Daena's letter on his first
+		# investigation of the Records if he does not yet
+		# know his true parentage.
 		if = {
 
 			limit = {
@@ -263,7 +399,11 @@ segrellion_vhal_investigation.0300 = {
 				this = character:Segrellion_60
 
 				NOT = {
-					has_character_flag = segrellion_daena_letter_found
+					has_character_flag = segrellion_daemon_parentage_known
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daena_letter_found_in_vhal_records
 				}
 			}
 
@@ -277,18 +417,50 @@ segrellion_vhal_investigation.0300 = {
 			random_list = {
 
 				60 = {
+
 					trigger_event = {
 						id = segrellion_vhal_investigation.0310
 					}
 				}
 
 				25 = {
+
+					trigger = {
+
+						NOT = {
+							exists = global_var:segrellion_old_valyria_history_book
+						}
+					}
+
 					trigger_event = {
 						id = segrellion_vhal_investigation.0320
 					}
 				}
 
 				15 = {
+
+					trigger = {
+
+						OR = {
+
+							NOT = {
+								exists = global_var:segrellion_blue_flower_diadem
+							}
+
+							NOT = {
+								exists = global_var:segrellion_alysanne_memorandum
+							}
+
+							NOT = {
+								exists = global_var:segrellion_sword_of_the_sentinel_global
+							}
+
+							NOT = {
+								exists = global_var:segrellion_dragonspear_lance
+							}
+						}
+					}
+
 					trigger_event = {
 						id = segrellion_vhal_investigation.0330
 					}
@@ -297,6 +469,11 @@ segrellion_vhal_investigation.0300 = {
 		}
 	}
 }
+
+
+# =========================================================
+# RECORDS: OLD STORIES
+# =========================================================
 
 segrellion_vhal_investigation.0310 = {
 
@@ -339,6 +516,7 @@ segrellion_vhal_investigation.0310 = {
 	}
 }
 
+
 segrellion_vhal_investigation.0311 = {
 
 	type = character_event
@@ -348,11 +526,15 @@ segrellion_vhal_investigation.0311 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 		name = segrellion_vhal_investigation.0311.a
-		add_learning_lifestyle_xp = 100
 	}
 }
+
 
 segrellion_vhal_investigation.0312 = {
 
@@ -363,11 +545,15 @@ segrellion_vhal_investigation.0312 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 		name = segrellion_vhal_investigation.0312.a
-		add_learning_lifestyle_xp = 100
 	}
 }
+
 
 segrellion_vhal_investigation.0313 = {
 
@@ -378,11 +564,15 @@ segrellion_vhal_investigation.0313 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 		name = segrellion_vhal_investigation.0313.a
-		add_learning_lifestyle_xp = 100
 	}
 }
+
 
 segrellion_vhal_investigation.0314 = {
 
@@ -393,11 +583,15 @@ segrellion_vhal_investigation.0314 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 		name = segrellion_vhal_investigation.0314.a
-		add_learning_lifestyle_xp = 100
 	}
 }
+
 
 segrellion_vhal_investigation.0315 = {
 
@@ -408,11 +602,19 @@ segrellion_vhal_investigation.0315 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 		name = segrellion_vhal_investigation.0315.a
-		add_learning_lifestyle_xp = 100
 	}
 }
+
+
+# =========================================================
+# HISTORY OF OLD VALYRIA
+# =========================================================
 
 segrellion_vhal_investigation.0320 = {
 
@@ -423,15 +625,26 @@ segrellion_vhal_investigation.0320 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0320.a
 
-		add_character_flag = segrellion_found_old_valyria_book
+		segrellion_create_old_valyria_history_book_effect = {
+			OWNER = root
+		}
 
-		# CREAR ARTEFACTO
+		add_character_flag = segrellion_found_old_valyria_book
 	}
 }
+
+
+# =========================================================
+# RECORDS: LOST RELICS
+# =========================================================
 
 segrellion_vhal_investigation.0330 = {
 
@@ -439,27 +652,62 @@ segrellion_vhal_investigation.0330 = {
 
 	immediate = {
 
+		segrellion_find_sword_of_the_sentinel_effect = yes
+		segrellion_setup_dragonspear_lance_history_effect = yes
+
 		random_list = {
 
 			35 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_blue_flower_diadem
+					}
+				}
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0340
 				}
 			}
 
 			30 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_alysanne_memorandum
+					}
+				}
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0350
 				}
 			}
 
 			25 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_sword_of_the_sentinel_global
+					}
+				}
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0360
 				}
 			}
 
 			10 = {
+
+				trigger = {
+
+					NOT = {
+						exists = global_var:segrellion_dragonspear_lance
+					}
+				}
+
 				trigger_event = {
 					id = segrellion_vhal_investigation.0370
 				}
@@ -467,6 +715,11 @@ segrellion_vhal_investigation.0330 = {
 		}
 	}
 }
+
+
+# ---------------------------------------------------------
+# BLUE FLOWER DIADEM
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0340 = {
 
@@ -477,15 +730,26 @@ segrellion_vhal_investigation.0340 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0340.a
 
-		add_character_flag = segrellion_found_blue_flower_diadem
+		segrellion_create_blue_flower_diadem_effect = {
+			OWNER = root
+		}
 
-		# CREATE DIADEM ARTIFACT
+		add_character_flag = segrellion_found_blue_flower_diadem
 	}
 }
+
+
+# ---------------------------------------------------------
+# ALYSANNE'S MEMORANDUM
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0350 = {
 
@@ -496,15 +760,26 @@ segrellion_vhal_investigation.0350 = {
 
 	theme = learning
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0350.a
 
-		add_character_flag = segrellion_found_alysanne_memorandum
+		segrellion_create_alysanne_memorandum_effect = {
+			OWNER = root
+		}
 
-		# CREATE MEMORANDUM ARTIFACT
+		add_character_flag = segrellion_found_alysanne_memorandum
 	}
 }
+
+
+# ---------------------------------------------------------
+# SWORD OF THE SENTINEL
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0360 = {
 
@@ -515,14 +790,24 @@ segrellion_vhal_investigation.0360 = {
 
 	theme = martial
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0360.a
 
-		# LLAMAR AQUÍ AL ARTEFACTO EXISTENTE
-		# DE LA ESPADA DE TRISTAN VLADWYN.
+		segrellion_create_artifact_sword_of_the_sentinel_effect = {
+			OWNER = root
+		}
 	}
 }
+
+
+# ---------------------------------------------------------
+# DRAGONSPEAR
+# ---------------------------------------------------------
 
 segrellion_vhal_investigation.0370 = {
 
@@ -533,15 +818,34 @@ segrellion_vhal_investigation.0370 = {
 
 	theme = martial
 
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
+	}
+
 	option = {
 
 		name = segrellion_vhal_investigation.0370.a
 
-		add_character_flag = segrellion_found_dragonspear
+		segrellion_create_artifact_dragonspear_lance_effect = {
+			OWNER = root
+		}
 
-		# CREATE DRAGONSPEAR ARTIFACT
+		scope:newly_created_artifact ?= {
+
+			set_variable = {
+				name = segrellion_dragonspear_rediscovered_artifact
+				value = yes
+			}
+		}
+
+		add_character_flag = segrellion_found_dragonspear
 	}
 }
+
+
+# =========================================================
+# DAEMON: DAENA'S LETTER
+# =========================================================
 
 segrellion_vhal_investigation.0390 = {
 
@@ -552,34 +856,37 @@ segrellion_vhal_investigation.0390 = {
 
 	theme = intrigue
 
-	immediate = {
-
-		add_character_flag = segrellion_daena_letter_found
+	override_background = {
+		reference = segrellion_vhal_inside_event_background
 	}
 
-    if = {
+	trigger = {
 
-        limit = {
+		this = character:Segrellion_60
 
-            this = character:Segrellion_60
+		NOT = {
+			has_character_flag = segrellion_daemon_parentage_known
+		}
 
-            NOT = {
-                has_character_flag = segrellion_daena_letter_found
-            }
+		NOT = {
+			has_character_flag = segrellion_daena_letter_found_in_vhal_records
+		}
+	}
 
-            # AÑADIR AQUÍ TAMBIÉN
-            # LA FLAG EXISTENTE DE "DAEMON YA CONOCE SU PARENTAGE"
-        }
+	immediate = {
 
-        trigger_event = {
-            id = segrellion_vhal_investigation.0390
-        }
-    }
+		add_character_flag = segrellion_daena_letter_found_in_vhal_records
+
+		segrellion_create_daemon_parentage_secret_effect = yes
+
+		add_character_flag = segrellion_daemon_parentage_known
+		add_character_flag = segrellion_daemon_parentage_known_daemon_only
+
+		segrellion_daemon_try_start_parentage_identity_chain_effect = yes
+	}
 
 	option = {
 
 		name = segrellion_vhal_investigation.0390.a
-
-		segrellion_create_daemon_parentage_secret_effect = yes
 	}
 }

@@ -1259,13 +1259,23 @@ segrellion_setup_dragonspear_lance_history_effect = {
 
     # Dragonspear vanishes together with Aegon.
     else_if = {
-        limit = {
-            current_date >= 8205.9.24
-            exists = global_var:segrellion_dragonspear_lance
-        }
 
-        destroy_artifact = global_var:segrellion_dragonspear_lance
-    }
+		limit = {s
+
+			current_date >= 8205.9.24
+
+			exists = global_var:segrellion_dragonspear_lance
+
+			global_var:segrellion_dragonspear_lance = {
+
+				NOT = {
+					has_variable = segrellion_dragonspear_rediscovered_artifact
+				}
+			}
+		}
+
+		destroy_artifact = global_var:segrellion_dragonspear_lance
+	}
 }
 
 
@@ -3325,3 +3335,304 @@ segrellion_find_sword_of_the_sentinel_effect = {
     }
 }
 
+
+# =========================================================
+# VHAL INVESTIGATION ARTIFACTS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# VHALYRAX'S LOST EGG
+# Shared by the Vhal travel event and the investigation.
+# ---------------------------------------------------------
+
+segrellion_create_vhalyrax_lost_egg_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				exists = global_var:segrellion_vhalyrax_lost_egg
+			}
+		}
+
+		create_artifact_dragon_egg_yellow_effect = {
+			OWNER = scope:owner
+		}
+
+		scope:newly_created_artifact ?= {
+
+			set_artifact_name = segrellion_vhalyrax_lost_egg_name
+
+			set_artifact_description = segrellion_vhalyrax_lost_egg_description
+
+			set_variable = {
+				name = segrellion_vhalyrax_lost_egg_artifact
+				value = yes
+			}
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+			set_global_variable = {
+				name = segrellion_vhalyrax_lost_egg
+				value = this
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# SCALE OF AZURON
+# GREEN / MASTERWORK
+# ---------------------------------------------------------
+
+segrellion_create_artifact_azuron_dragon_scale_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	set_artifact_rarity_masterwork = yes
+
+	scope:owner = {
+
+		create_artifact = {
+
+			name = segrellion_azuron_dragon_scale_name
+			description = segrellion_azuron_dragon_scale_desc
+
+			type = miscellaneous
+
+			visuals = segrellion_azuron_dragon_scale_visuals
+
+			template = segrellion_azuron_dragon_scale_template
+
+			wealth = scope:wealth
+			quality = scope:quality
+
+			save_scope_as = newly_created_artifact
+
+			decaying = no
+		}
+	}
+
+	scope:newly_created_artifact ?= {
+
+		equip_artifact_to_owner_replace = yes
+
+		set_variable = {
+			name = segrellion_azuron_dragon_scale_artifact
+			value = yes
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# HISTORY OF OLD VALYRIA
+# BLUE / FAMED
+# ---------------------------------------------------------
+
+segrellion_create_old_valyria_history_book_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				exists = global_var:segrellion_old_valyria_history_book
+			}
+		}
+
+		set_artifact_rarity_famed = yes
+
+		scope:owner = {
+
+			create_artifact = {
+
+				name = segrellion_old_valyria_history_book_name
+				description = segrellion_old_valyria_history_book_desc
+
+				type = journal
+
+				visuals = segrellion_old_valyria_history_book_visuals
+
+				template = segrellion_old_valyria_history_book_template
+
+				wealth = scope:wealth
+				quality = scope:quality
+
+				modifier = segrellion_old_valyria_history_book_modifier
+
+				save_scope_as = newly_created_artifact
+
+				decaying = no
+			}
+		}
+
+		scope:newly_created_artifact ?= {
+
+			equip_artifact_to_owner_replace = yes
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+			set_variable = {
+				name = segrellion_old_valyria_history_book_artifact
+				value = yes
+			}
+
+			set_global_variable = {
+				name = segrellion_old_valyria_history_book
+				value = this
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# DIADEM OF THE BLUE FLOWER
+# ---------------------------------------------------------
+
+segrellion_create_blue_flower_diadem_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				exists = global_var:segrellion_blue_flower_diadem
+			}
+		}
+
+		set_artifact_rarity_famed = yes
+
+		scope:owner = {
+
+			create_artifact = {
+
+				name = segrellion_blue_flower_diadem_name
+				description = segrellion_blue_flower_diadem_desc
+
+				type = helmet
+
+				visuals = segrellion_blue_flower_diadem_visuals
+
+				template = segrellion_blue_flower_diadem_template
+
+				wealth = scope:wealth
+				quality = scope:quality
+
+				save_scope_as = newly_created_artifact
+
+				decaying = no
+			}
+		}
+
+		scope:newly_created_artifact ?= {
+
+			equip_artifact_to_owner_replace = yes
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+			set_variable = {
+				name = segrellion_blue_flower_diadem_artifact
+				value = yes
+			}
+
+			set_global_variable = {
+				name = segrellion_blue_flower_diadem
+				value = this
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# MEMORANDUM OF ALYSANNE SEGRELLION
+# ---------------------------------------------------------
+
+segrellion_create_alysanne_memorandum_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				exists = global_var:segrellion_alysanne_memorandum
+			}
+		}
+
+		set_artifact_rarity_famed = yes
+
+		scope:owner = {
+
+			create_artifact = {
+
+				name = segrellion_alysanne_memorandum_name
+				description = segrellion_alysanne_memorandum_desc
+
+				type = journal
+
+				visuals = segrellion_alysanne_memorandum_visuals
+
+				template = segrellion_alysanne_memorandum_template
+
+				wealth = scope:wealth
+				quality = scope:quality
+
+				save_scope_as = newly_created_artifact
+
+				decaying = no
+			}
+		}
+
+		scope:newly_created_artifact ?= {
+
+			equip_artifact_to_owner_replace = yes
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+			set_variable = {
+				name = segrellion_alysanne_memorandum_artifact
+				value = yes
+			}
+
+			set_global_variable = {
+				name = segrellion_alysanne_memorandum
+				value = this
+			}
+		}
+	}
+}
