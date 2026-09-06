@@ -1,10 +1,21 @@
 segrellion_investigate_vhal_secrets_decision = {
 
-	picture = "gfx/interface/illustrations/decisions/uncover_the_lost_legacy_decision_background.dds"
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/uncover_the_lost_legacy_decision_background.dds"
+	}
 
 	desc = segrellion_investigate_vhal_secrets_decision_desc
-
 	selection_tooltip = segrellion_investigate_vhal_secrets_decision_tooltip
+	confirm_text = segrellion_investigate_vhal_secrets_decision_confirm
+
+	cooldown = {
+		years = 2
+	}
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
 
 	is_shown = {
 
@@ -16,24 +27,168 @@ segrellion_investigate_vhal_secrets_decision = {
 		has_title = title:b_berryport
 	}
 
-	is_valid = {
 
-		has_title = title:c_blackmark
-		has_title = title:b_berryport
+	# =====================================================
+	# CHOOSE AREA
+	#
+	# FIRST SCREEN:
+	# Decision description + picture
+	#
+	# CLICK BUTTON:
+	# Opens second decision step with these three choices.
+	# NO EVENT MENU.
+	# =====================================================
+
+	widget = {
+
+		gui = "decision_view_widget_option_list_generic"
+
+		controller = decision_option_list_controller
+
+		decision_to_second_step_button = segrellion_investigate_vhal_secrets_decision_choose_area
+
+
+		# -------------------------------------------------
+		# CAVERNS OF VHAL
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_vhal_investigate_caverns
+
+			localization = segrellion_vhal_investigate_caverns
+
+			current_description = segrellion_vhal_investigate_caverns_desc
+
+			is_default = yes
+
+			ai_chance = {
+				value = 100
+			}
+		}
+
+
+		# -------------------------------------------------
+		# SECRET ROOMS AND PASSAGES
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_vhal_investigate_passages
+
+			localization = segrellion_vhal_investigate_passages
+
+			current_description = segrellion_vhal_investigate_passages_desc
+
+			ai_chance = {
+				value = 90
+			}
+		}
+
+
+		# -------------------------------------------------
+		# GREAT RECORD HALLS
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_vhal_investigate_records
+
+			localization = segrellion_vhal_investigate_records
+
+			current_description = segrellion_vhal_investigate_records_desc
+
+			ai_chance = {
+				value = 80
+			}
+		}
 	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
 
 	effect = {
 
-		trigger_event = {
-			id = segrellion_vhal_investigation.0001
+		custom_tooltip = segrellion_investigate_vhal_secrets_decision_effect_tt
+
+
+		# -------------------------------------------------
+		# CAVERNS
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				scope:segrellion_vhal_investigate_caverns = yes
+			}
+
+			custom_tooltip = segrellion_vhal_investigate_caverns_effect_tt
+
+			hidden_effect = {
+
+				trigger_event = {
+					id = segrellion_vhal_investigation.0100
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# SECRET PASSAGES
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_vhal_investigate_passages = yes
+			}
+
+			custom_tooltip = segrellion_vhal_investigate_passages_effect_tt
+
+			hidden_effect = {
+
+				trigger_event = {
+					id = segrellion_vhal_investigation.0200
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# GREAT RECORD HALLS
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_vhal_investigate_records = yes
+			}
+
+			custom_tooltip = segrellion_vhal_investigate_records_effect_tt
+
+			hidden_effect = {
+
+				trigger_event = {
+					id = segrellion_vhal_investigation.0300
+				}
+			}
 		}
 	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_check_interval = 0
 
 	ai_potential = {
 		always = no
 	}
 
-	cooldown = {
-		years = 1
+	ai_will_do = {
+		base = 0
 	}
 }
