@@ -2091,13 +2091,29 @@ segrellion_young_griff_open_story_marriage_window_effect = {
 
 segrellion_young_griff_close_story_marriage_window_effect = {
 
+
+	# =====================================================
+	# ANY SPOUSE CREATED WHILE OUR SCRIPT WINDOW WAS OPEN
+	# IS A LEGITIMATE STORY SPOUSE.
+	# =====================================================
+
+	every_spouse = {
+
+		add_character_flag = segrellion_young_griff_authorized_story_spouse
+	}
+
+
 	remove_character_flag = segrellion_young_griff_story_marriage_authorized
 
 
-	# If the event did not actually leave Aegon married,
-	# immediately restore the normal storyline lock.
+	# Restore normal storyline locks.
 
 	segrellion_apply_winds_story_marriage_locks_effect = yes
+
+
+	# Hard-lock him again immediately.
+
+	segrellion_young_griff_hard_marriage_guard_effect = yes
 }
 
 
@@ -2132,3 +2148,260 @@ segrellion_daemon_close_story_marriage_window_effect = {
 
 	segrellion_apply_winds_story_marriage_locks_effect = yes
 }
+
+# =========================================================
+# YOUNG GRIFF - HARD MARRIAGE GUARD
+#
+# Young Griff may ONLY remain married to a spouse that was
+# explicitly authorized by one of our scripted story events.
+#
+# It does not matter HOW the marriage happened:
+#
+# - normal AI marriage
+# - arrange introduction
+# - AGOT event
+# - scheme
+# - direct scripted marriage
+# - another mod
+#
+# If the spouse was not authorized by us, the marriage is
+# destroyed.
+# =========================================================
+
+segrellion_young_griff_hard_marriage_guard_effect = {
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			# =================================================
+			# SAVE COMPATIBILITY
+			#
+			# Old versions did not mark legitimate story
+			# spouses with our new permanent authorization
+			# flag.
+			# =================================================
+
+
+			# -------------------------------------------------
+			# ARIANNE
+			# -------------------------------------------------
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_married_arianne
+				}
+
+				character:Martell_9 ?= {
+
+					if = {
+
+						limit = {
+							is_spouse_of = character:IAF_Young_Griff_1
+						}
+
+						add_character_flag = segrellion_young_griff_authorized_story_spouse
+					}
+				}
+			}
+
+
+			# -------------------------------------------------
+			# DAENERYS
+			# -------------------------------------------------
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_daenerys_pact_fulfilled
+				}
+
+				character:Targaryen_9 ?= {
+
+					if = {
+
+						limit = {
+							is_spouse_of = character:IAF_Young_Griff_1
+						}
+
+						add_character_flag = segrellion_young_griff_authorized_story_spouse
+					}
+				}
+			}
+
+
+			# -------------------------------------------------
+			# CERSEI
+			# -------------------------------------------------
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_married_cersei
+				}
+
+				character:Lannister_6 ?= {
+
+					if = {
+
+						limit = {
+							is_spouse_of = character:IAF_Young_Griff_1
+						}
+
+						add_character_flag = segrellion_young_griff_authorized_story_spouse
+					}
+				}
+			}
+
+
+			# -------------------------------------------------
+			# MARGAERY
+			# -------------------------------------------------
+
+			if = {
+
+				limit = {
+
+					has_variable = segrellion_young_griff_margaery
+
+					OR = {
+
+						has_character_flag = segrellion_young_griff_married_margaery
+
+						has_character_flag = segrellion_young_griff_margaery_second_wife
+
+						has_character_flag = segrellion_young_griff_married_margaery_after_arianne_divorce
+					}
+				}
+
+
+				var:segrellion_young_griff_margaery ?= {
+
+					if = {
+
+						limit = {
+							is_spouse_of = character:IAF_Young_Griff_1
+						}
+
+						add_character_flag = segrellion_young_griff_authorized_story_spouse
+					}
+				}
+			}
+
+
+			# =================================================
+			# SCRIPTED MARRIAGE WINDOW IS CURRENTLY OPEN
+			#
+			# One of OUR events is performing the marriage.
+			# Mark the resulting spouse as legitimate.
+			# =================================================
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_story_marriage_authorized
+				}
+
+
+				every_spouse = {
+
+					add_character_flag = segrellion_young_griff_authorized_story_spouse
+				}
+			}
+
+
+			# =================================================
+			# NORMAL STATE
+			#
+			# Young Griff is NEVER allowed to marry randomly.
+			# =================================================
+
+			else = {
+
+
+				# ---------------------------------------------
+				# PREVENT NORMAL AI MATCHMAKING
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = refusing_marriage
+						}
+					}
+
+					add_trait = refusing_marriage
+				}
+
+
+				add_character_flag = segrellion_young_griff_story_marriage_lock_added
+
+
+				# ---------------------------------------------
+				# DESTROY ANY MARRIAGE THAT BYPASSED THE TRAIT
+				# ---------------------------------------------
+
+				every_spouse = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_authorized_story_spouse
+						}
+					}
+
+
+					divorce = character:IAF_Young_Griff_1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF - MARRIAGE WATCHDOG SCHEDULER
+# =========================================================
+
+segrellion_young_griff_schedule_marriage_watchdog_effect = {
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_marriage_watchdog_queued
+				}
+			}
+
+
+			add_character_flag = {
+
+				flag = segrellion_young_griff_marriage_watchdog_queued
+
+				days = 10
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8998
+
+				days = 7
+			}
+		}
+	}
+}
+

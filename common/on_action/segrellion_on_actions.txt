@@ -24,7 +24,6 @@ monthly_global_pulse = {
 		segrellion_unicorn_returns_leo_beacon_lock
 		segrellion_arianne_marriage_lock_progression
 		segrellion_young_griff_blackfyre_progression
-		segrellion_young_griff_daemon_marriage_lock_progression
 		segrellion_daenerys_invasion_peace_guard
 		segrellion_young_griff_daenerys_pact_progression
 		segrellion_young_griff_crownlands_guard_progression
@@ -776,6 +775,12 @@ segrellion_young_griff_daemon_marriage_guard = {
 
 	effect = {
 
+		# Absolute Young Griff marriage protection.
+		# This scans his REAL current spouses instead of trusting
+		# the marriage event that created them.
+
+		segrellion_young_griff_hard_marriage_guard_effect = yes
+
 
 		# =================================================
 		# YOUNG GRIFF
@@ -1012,6 +1017,8 @@ segrellion_on_game_start_after_lobby = {
 		segrellion_initialize_random_story_rules_effect = yes
 		segrellion_setup_young_griff_blackfyre_effect = yes
 		segrellion_apply_winds_story_marriage_locks_effect = yes
+		segrellion_young_griff_hard_marriage_guard_effect = yes
+		segrellion_young_griff_schedule_marriage_watchdog_effect = yes
 		character:IAF_Young_Griff_1 ?= {
 
 			segrellion_young_griff_westeros_core_setup_effect = yes
@@ -3840,10 +3847,129 @@ segrellion_jon_targaryen_reveal_progression = {
 }
 # Engine-supported bootstrap for existing saves. Once active, 0598 checks every 30 days.
 quarterly_playable_pulse = {
-	on_actions = { segrellion_black_unicorn_post_beacon_quarterly_recovery }
+
+	on_actions = {
+
+		segrellion_black_unicorn_post_beacon_quarterly_recovery
+
+		segrellion_young_griff_marriage_watchdog_quarterly
+	}
+}
+
+
+segrellion_young_griff_marriage_watchdog_quarterly = {
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+	}
+
+
+	effect = {
+
+		segrellion_young_griff_hard_marriage_guard_effect = yes
+
+		segrellion_young_griff_schedule_marriage_watchdog_effect = yes
+	}
 }
 
 segrellion_black_unicorn_post_beacon_quarterly_recovery = {
 	trigger = { this = character:Segrellion_60 }
 	effect = { segrellion_black_unicorn_post_beacon_progression_effect = yes }
+}
+
+# =========================================================
+# YOUNG GRIFF - REMOVE STORY-SPOUSE AUTHORIZATION
+# AFTER A DIVORCE
+# =========================================================
+
+on_divorce = {
+
+	on_actions = {
+
+		segrellion_young_griff_story_spouse_divorce_cleanup
+	}
+}
+
+
+segrellion_young_griff_story_spouse_divorce_cleanup = {
+
+	effect = {
+
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					this = character:IAF_Young_Griff_1
+
+					scope:spouse = character:IAF_Young_Griff_1
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					this = character:IAF_Young_Griff_1
+				}
+
+				scope:spouse = {
+
+					remove_character_flag = segrellion_young_griff_authorized_story_spouse
+				}
+			}
+
+
+			else = {
+
+				remove_character_flag = segrellion_young_griff_authorized_story_spouse
+			}
+		}
+	}
+}
+
+# =========================================================
+# 8998 - YOUNG GRIFF MARRIAGE WATCHDOG
+#
+# Hidden permanent failsafe.
+#
+# Every seven days it verifies Young Griff's REAL marital
+# state. This catches marriages created by AGOT events,
+# arrange introductions, schemes or other scripted systems
+# even if they somehow bypass the normal on_marriage guard.
+# =========================================================
+
+segrellion_young_griff.8998 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+	}
+
+
+	immediate = {
+
+
+		remove_character_flag = segrellion_young_griff_marriage_watchdog_queued
+
+
+		# Check reality, not how the marriage was created.
+
+		segrellion_young_griff_hard_marriage_guard_effect = yes
+
+
+		# Keep watching permanently.
+
+		segrellion_young_griff_schedule_marriage_watchdog_effect = yes
+	}
 }
