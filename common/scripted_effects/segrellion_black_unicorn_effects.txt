@@ -2586,6 +2586,226 @@ segrellion_black_unicorn_abandon_current_wife_effect = {
 		save_scope_as = segrellion_black_unicorn_abandoned_wife
 	}
 
+	# =====================================================
+	# STORE THE ABANDONED WIFE PERMANENTLY
+	# =====================================================
+
+	if = {
+
+		limit = {
+			exists = scope:segrellion_black_unicorn_abandoned_wife
+		}
+
+
+		set_variable = {
+
+			name = segrellion_visenya_abandoned_wife
+
+			value = scope:segrellion_black_unicorn_abandoned_wife
+		}
+
+
+		scope:segrellion_black_unicorn_abandoned_wife = {
+
+			add_character_flag = segrellion_abandoned_by_daemon_for_visenya
+
+
+			# =================================================
+			# IMPORTANT GREAT-HOUSE WIFE
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					OR = {
+
+						this = character:Targaryen_9
+						this = character:Baratheon_10
+						this = character:Tyrell_14
+						this = character:Martell_9
+
+
+						is_landed = yes
+
+
+						father ?= {
+							highest_held_title_tier >= tier_kingdom
+						}
+
+
+						mother ?= {
+							highest_held_title_tier >= tier_kingdom
+						}
+					}
+				}
+
+
+				add_character_flag = segrellion_major_lady_abandoned_by_daemon
+
+
+				# Mark her actual House.
+
+				house ?= {
+
+					set_variable = {
+						name = segrellion_house_betrayed_by_daemon_for_visenya
+						value = yes
+					}
+
+
+					every_house_member = {
+
+						add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+
+						if = {
+
+							limit = {
+								is_allied_to = character:Segrellion_60
+							}
+
+							break_alliance = character:Segrellion_60
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# SPECIAL GREAT-HOUSE GUARANTEES
+		#
+		# These guarantee that the politically important
+		# family is marked even if the woman's own house
+		# setup is unusual because of bastardry/history.
+		# =================================================
+
+
+		# DAENERYS -> HOUSE TARGARYEN
+
+		if = {
+
+			limit = {
+				scope:segrellion_black_unicorn_abandoned_wife = character:Targaryen_9
+			}
+
+			character:Targaryen_9.house ?= {
+
+				set_variable = {
+					name = segrellion_house_betrayed_by_daemon_for_visenya
+					value = yes
+				}
+
+				every_house_member = {
+
+					add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+					if = {
+						limit = {
+							is_allied_to = character:Segrellion_60
+						}
+
+						break_alliance = character:Segrellion_60
+					}
+				}
+			}
+		}
+
+
+		# MYA STONE -> HOUSE BARATHEON
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_black_unicorn_abandoned_wife = character:Baratheon_10
+			}
+
+			character:Baratheon_3.house ?= {
+
+				set_variable = {
+					name = segrellion_house_betrayed_by_daemon_for_visenya
+					value = yes
+				}
+
+				every_house_member = {
+
+					add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+					if = {
+						limit = {
+							is_allied_to = character:Segrellion_60
+						}
+
+						break_alliance = character:Segrellion_60
+					}
+				}
+			}
+		}
+
+
+		# MARGAERY -> HOUSE TYRELL
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_black_unicorn_abandoned_wife = character:Tyrell_14
+			}
+
+			character:Tyrell_14.house ?= {
+
+				set_variable = {
+					name = segrellion_house_betrayed_by_daemon_for_visenya
+					value = yes
+				}
+
+				every_house_member = {
+
+					add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+					if = {
+						limit = {
+							is_allied_to = character:Segrellion_60
+						}
+
+						break_alliance = character:Segrellion_60
+					}
+				}
+			}
+		}
+
+
+		# ARIANNE -> HOUSE MARTELL
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_black_unicorn_abandoned_wife = character:Martell_9
+			}
+
+			character:Martell_9.house ?= {
+
+				set_variable = {
+					name = segrellion_house_betrayed_by_daemon_for_visenya
+					value = yes
+				}
+
+				every_house_member = {
+
+					add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+					if = {
+						limit = {
+							is_allied_to = character:Segrellion_60
+						}
+
+						break_alliance = character:Segrellion_60
+					}
+				}
+			}
+		}
+	}
+
 
 	if = {
 
@@ -2638,6 +2858,26 @@ segrellion_black_unicorn_abandon_current_wife_effect = {
 				}
 
 				divorce = root
+			}
+		}
+
+		if = {
+
+			limit = {
+
+				exists = var:segrellion_visenya_abandoned_wife
+
+				var:segrellion_visenya_abandoned_wife = {
+					is_alive = yes
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0174
+
+				days = 1
 			}
 		}
 
@@ -2786,6 +3026,7 @@ segrellion_black_unicorn_political_alliance_effect = {
 		character:Black_Unicorn_1 = {
 
 			add_character_flag = segrellion_black_unicorn_castellan_of_flamelands
+			segrellion_visenya_become_lady_of_flamelands_effect = yes
 		}
 	}
 
@@ -2835,6 +3076,7 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 
 	segrellion_black_unicorn_visenya_join_daemon_effect = yes
 
+	segrellion_visenya_become_lady_of_flamelands_effect = yes
 
 	segrellion_black_unicorn_record_daemon_union_effect = yes
 
@@ -3500,6 +3742,47 @@ segrellion_black_unicorn_personal_lock_effect = {
 
 				remove_trait = refusing_marriage
 			}
+		}
+	}
+}
+
+# =========================================================
+# VISENYA BECOMES A LADY OF THE FLAMELANDS
+#
+# Permanent transition away from her Skagosi warrior look.
+# Idempotent: can safely be called by multiple successful
+# Visenya routes.
+# =========================================================
+
+segrellion_visenya_become_lady_of_flamelands_effect = {
+
+	character:Black_Unicorn_1 ?= {
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_visenya_lady_of_flamelands_appearance
+				}
+			}
+
+
+			# Remove the old Skagos warrior appearance.
+
+			remove_character_flag = segrellion_black_unicorn_skagos_outfit
+
+
+			# New noble appearance.
+
+			add_character_flag = segrellion_visenya_lady_of_flamelands_appearance
+
+
+			# Visenya fills out somewhat after leaving Skagos
+			# and living permanently as a noblewoman.
+
+			change_current_weight = 20
+			change_target_weight = 20
 		}
 	}
 }

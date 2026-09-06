@@ -1,0 +1,294 @@
+# =========================================================
+# VISENYA MARRIAGE BETRAYAL
+#
+# Great Houses personally humiliated by Daemon abandoning
+# one of their important women will never willingly back him.
+#
+# If Daemon goes to war:
+# - they support his enemy if they do not dislike that enemy
+# - otherwise they remain neutral
+# =========================================================
+
+
+on_war_started = {
+
+	effect = {
+
+
+		# =================================================
+		# DAEMON IS THE ATTACKER
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				scope:attacker = character:Segrellion_60
+			}
+
+
+			every_ruler = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != character:Segrellion_60
+
+
+					OR = {
+
+						has_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+						house ?= {
+							has_variable = segrellion_house_betrayed_by_daemon_for_visenya
+						}
+					}
+
+
+					# The defender is not also an enemy of this House.
+
+					opinion = {
+
+						target = scope:defender
+
+						value >= 0
+					}
+
+
+					NOT = {
+						has_relation_rival = scope:defender
+					}
+
+
+					can_join_war_liege_vassal_check_trigger = {
+
+						WARRIOR = scope:defender
+
+						JOINER = this
+					}
+				}
+
+
+				save_scope_as = segrellion_betrayed_house_ruler
+
+
+				if = {
+
+					limit = {
+						is_allied_to = character:Segrellion_60
+					}
+
+					break_alliance = character:Segrellion_60
+				}
+
+
+				scope:war = {
+
+					add_defender = scope:segrellion_betrayed_house_ruler
+				}
+			}
+		}
+
+
+		# =================================================
+		# DAEMON IS THE DEFENDER
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				scope:defender = character:Segrellion_60
+			}
+
+
+			every_ruler = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != character:Segrellion_60
+
+
+					OR = {
+
+						has_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+						house ?= {
+							has_variable = segrellion_house_betrayed_by_daemon_for_visenya
+						}
+					}
+
+
+					# The attacker is not also an enemy of this House.
+
+					opinion = {
+
+						target = scope:attacker
+
+						value >= 0
+					}
+
+
+					NOT = {
+						has_relation_rival = scope:attacker
+					}
+
+
+					can_join_war_liege_vassal_check_trigger = {
+
+						WARRIOR = scope:attacker
+
+						JOINER = this
+					}
+				}
+
+
+				save_scope_as = segrellion_betrayed_house_ruler
+
+
+				if = {
+
+					limit = {
+						is_allied_to = character:Segrellion_60
+					}
+
+					break_alliance = character:Segrellion_60
+				}
+
+
+				scope:war = {
+
+					add_attacker = scope:segrellion_betrayed_house_ruler
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# SAFETY NET
+#
+# If another mechanic later attempts to call one of these
+# rulers into Daemon's side, remove them again.
+# =========================================================
+
+on_join_war_as_secondary = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					has_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+					house ?= {
+						has_variable = segrellion_house_betrayed_by_daemon_for_visenya
+					}
+				}
+			}
+
+
+			every_character_war = {
+
+				# =================================================
+				# JOINED DAEMON AS AN ATTACKER
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						is_attacker = root
+
+						is_attacker = character:Segrellion_60
+					}
+
+
+					primary_defender = {
+						save_scope_as = segrellion_daemon_war_opponent
+					}
+
+
+					remove_participant = root
+
+
+					if = {
+
+						limit = {
+
+							root = {
+
+								opinion = {
+
+									target = scope:segrellion_daemon_war_opponent
+
+									value >= 0
+								}
+
+								NOT = {
+									has_relation_rival = scope:segrellion_daemon_war_opponent
+								}
+							}
+						}
+
+
+						add_defender = root
+					}
+				}
+
+
+				# =================================================
+				# JOINED DAEMON AS A DEFENDER
+				# =================================================
+
+				else_if = {
+
+					limit = {
+
+						is_defender = root
+
+						is_defender = character:Segrellion_60
+					}
+
+
+					primary_attacker = {
+						save_scope_as = segrellion_daemon_war_opponent
+					}
+
+
+					remove_participant = root
+
+
+					if = {
+
+						limit = {
+
+							root = {
+
+								opinion = {
+
+									target = scope:segrellion_daemon_war_opponent
+
+									value >= 0
+								}
+
+								NOT = {
+									has_relation_rival = scope:segrellion_daemon_war_opponent
+								}
+							}
+						}
+
+
+						add_attacker = root
+					}
+				}
+			}
+		}
+	}
+}
