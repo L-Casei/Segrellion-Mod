@@ -228,7 +228,8 @@ segrellion_initialize_daenerys_aggression_effect = {
 		# =================================================
 		# PLAYER
 		#
-		# Game Rule controls AI behavior only.
+		# Game Rules control AI behavior only.
+		# The player always chooses personally.
 		# =================================================
 
 		if = {
@@ -256,12 +257,9 @@ segrellion_initialize_daenerys_aggression_effect = {
 			add_character_flag = segrellion_daenerys_invasion_event_scheduled
 			add_character_flag = segrellion_daenerys_story_opening_scheduled
 
+
 			# =================================================
 			# HARD WAR LOCK
-			#
-			# ai_war_chance only influences AI willingness.
-			# sworn_peace actually blocks the standard
-			# declare-war interaction.
 			# =================================================
 
 			if = {
@@ -277,8 +275,6 @@ segrellion_initialize_daenerys_aggression_effect = {
 			}
 
 
-			# Apply the war lock immediately. Waiting for the first monthly
-			# pulse leaves enough time for AGOT's AI to attack Dragonstone.
 			if = {
 
 				limit = {
@@ -294,8 +290,9 @@ segrellion_initialize_daenerys_aggression_effect = {
 			}
 
 
-			# Prevent vanilla / AGOT claim wars from
-			# bypassing the scripted invasion route.
+			# =================================================
+			# REMOVE BYPASS CLAIMS
+			# =================================================
 
 			if = {
 
@@ -317,103 +314,195 @@ segrellion_initialize_daenerys_aggression_effect = {
 			}
 
 
-			# =============================================
-			# CAMPAIGN PROFILE: PEACEFUL
-			#
-			# .0001 uses this profile to choose the Free Cities.
-			# =============================================
+			# =================================================
+			# DAENERYS' DESTINY
+			# =================================================
+
+
+			# =================================================
+			# FREE CITIES
+			# =================================================
 
 			if = {
 
 				limit = {
-					OR = {
-
-						has_game_rule = segrellion_daenerys_aggression_peaceful
-
-						has_character_flag = segrellion_daenerys_random_peaceful
-					}
+					has_game_rule = segrellion_daenerys_destiny_free_cities
 				}
 
 				add_character_flag = segrellion_daenerys_ai_free_cities_route
+				add_character_flag = segrellion_daenerys_destiny_free_cities
 			}
 
 
-			# =============================================
-			# CAMPAIGN PROFILE: PASSIVE
+			# =================================================
+			# DYNAMIC
 			#
-			# The 7-12 year delay is applied later at .0006.
-			# =============================================
+			# Story-weighted:
+			# 75% Westeros
+			# 25% Free Cities
+			# =================================================
 
 			else_if = {
 
 				limit = {
-					OR = {
-
-						has_game_rule = segrellion_daenerys_aggression_passive
-
-						has_character_flag = segrellion_daenerys_random_passive
-					}
+					has_game_rule = segrellion_daenerys_destiny_dynamic
 				}
 
-				add_character_flag = segrellion_daenerys_ai_slow_fleet
+				random_list = {
+
+					75 = {
+
+						add_character_flag = segrellion_daenerys_destiny_westeros
+					}
+
+					25 = {
+
+						add_character_flag = segrellion_daenerys_ai_free_cities_route
+						add_character_flag = segrellion_daenerys_destiny_free_cities
+					}
+				}
 			}
 
 
-			# =============================================
-			# CAMPAIGN PROFILE: DEFAULT
+			# =================================================
+			# RANDOM
 			#
-			# The 2-5 year delay is applied later at .0006.
-			# =============================================
+			# Pure 50 / 50.
+			# =================================================
 
 			else_if = {
 
 				limit = {
-					OR = {
-
-						has_game_rule = segrellion_daenerys_aggression_default
-
-						has_character_flag = segrellion_daenerys_random_default
-					}
+					has_game_rule = segrellion_daenerys_destiny_random
 				}
 
-				add_character_flag = segrellion_daenerys_ai_standard_fleet
+				random_list = {
+
+					50 = {
+
+						add_character_flag = segrellion_daenerys_destiny_westeros
+					}
+
+					50 = {
+
+						add_character_flag = segrellion_daenerys_ai_free_cities_route
+						add_character_flag = segrellion_daenerys_destiny_free_cities
+					}
+				}
 			}
 
 
-			# =============================================
-			# CAMPAIGN PROFILE: AGGRESSIVE
-			# =============================================
-
-			else_if = {
-
-				limit = {
-					OR = {
-
-						has_game_rule = segrellion_daenerys_aggression_aggressive
-
-						has_character_flag = segrellion_daenerys_random_aggressive
-					}
-				}
-
-				add_character_flag = segrellion_daenerys_ai_rush_crossing
-			}
-
-
-			# =============================================
-			# FALLBACK PROFILE = DEFAULT
-			# =============================================
+			# =================================================
+			# WESTEROS / FALLBACK
+			# =================================================
 
 			else = {
-				add_character_flag = segrellion_daenerys_ai_standard_fleet
+
+				add_character_flag = segrellion_daenerys_destiny_westeros
 			}
 
 
-			# Story begins promptly for every AI profile. The selected
-			# profile is consumed only when Daenerys reaches .0006 and
-			# must decide how quickly to launch the campaign.
+			# =================================================
+			# IRON THRONE INVASION TIMING
+			#
+			# Only relevant if her Destiny is Westeros.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_ai_free_cities_route
+					}
+				}
+
+
+				# =============================================
+				# PASSIVE
+				# 7-12 years before committing to the fleet.
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						OR = {
+
+							has_game_rule = segrellion_daenerys_aggression_passive
+
+							has_character_flag = segrellion_daenerys_random_passive
+						}
+					}
+
+					add_character_flag = segrellion_daenerys_ai_slow_fleet
+				}
+
+
+				# =============================================
+				# DEFAULT
+				# 2-5 years.
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						OR = {
+
+							has_game_rule = segrellion_daenerys_aggression_default
+
+							has_character_flag = segrellion_daenerys_random_default
+						}
+					}
+
+					add_character_flag = segrellion_daenerys_ai_standard_fleet
+				}
+
+
+				# =============================================
+				# AGGRESSIVE
+				# Immediate crossing.
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						OR = {
+
+							has_game_rule = segrellion_daenerys_aggression_aggressive
+
+							has_character_flag = segrellion_daenerys_random_aggressive
+						}
+					}
+
+					add_character_flag = segrellion_daenerys_ai_rush_crossing
+				}
+
+
+				# =============================================
+				# FALLBACK = DEFAULT
+				# =============================================
+
+				else = {
+
+					add_character_flag = segrellion_daenerys_ai_standard_fleet
+				}
+			}
+
+
+			# =================================================
+			# OPEN THE STORY
+			#
+			# Destiny decides which branch AI Daenerys chooses
+			# inside .0001.
+			# =================================================
 
 			trigger_event = {
+
 				id = segrellion_daenerys_invasion.0001
+
 				days = { 3 7 }
 			}
 		}
@@ -675,7 +764,7 @@ segrellion_initialize_random_story_rules_effect = {
 	}
 
 	# =====================================================
-	# DAENERYS AGGRESSION
+	# DAENERYS IRON THRONE INVASION TIMING
 	# =====================================================
 
 	if = {
@@ -700,19 +789,15 @@ segrellion_initialize_random_story_rules_effect = {
 
 			random_list = {
 
-				25 = {
-					add_character_flag = segrellion_daenerys_random_peaceful
-				}
-
-				25 = {
+				33 = {
 					add_character_flag = segrellion_daenerys_random_passive
 				}
 
-				25 = {
+				34 = {
 					add_character_flag = segrellion_daenerys_random_default
 				}
 
-				25 = {
+				33 = {
 					add_character_flag = segrellion_daenerys_random_aggressive
 				}
 			}

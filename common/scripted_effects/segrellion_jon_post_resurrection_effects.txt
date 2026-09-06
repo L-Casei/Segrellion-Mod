@@ -8,7 +8,9 @@
 
 segrellion_jon_normalize_personality_effect = {
 
-	# Remove the old Jon traits we no longer want.
+	# =====================================================
+	# REMOVE JON'S PRE-DEATH PERSONALITY
+	# =====================================================
 
 	if = {
 		limit = { has_trait = honest }
@@ -30,8 +32,15 @@ segrellion_jon_normalize_personality_effect = {
 		remove_trait = cynical
 	}
 
+	if = {
+		limit = { has_trait = stubborn }
+		remove_trait = stubborn
+	}
 
-	# Canon Segrellion Jon personality.
+
+	# =====================================================
+	# POST-RESURRECTION PERSONALITY
+	# =====================================================
 
 	if = {
 		limit = {
@@ -66,17 +75,32 @@ segrellion_jon_normalize_personality_effect = {
 	}
 
 
-	# Jon is a Dreamer.
+	# =====================================================
+	# DREAMER
+	#
+	# Jon returns at exactly Level 1.
+	# Level 1 begins at 10 XP.
+	#
+	# Remove/re-add it first so old saves cannot carry
+	# pre-resurrection Dreamer XP into the new Jon.
+	# =====================================================
 
 	if = {
 		limit = {
-			NOT = {
-				has_trait = segrellion_dreamer_trait
-			}
+			has_trait = segrellion_dreamer_trait
 		}
 
-		add_trait = segrellion_dreamer_trait
+		remove_trait = segrellion_dreamer_trait
 	}
+
+	add_trait = segrellion_dreamer_trait
+
+	add_trait_xp = {
+		trait = segrellion_dreamer_trait
+		value = 10
+	}
+
+	segrellion_sync_dreamer_visual_level_effect = yes
 }
 
 segrellion_jon_execute_surviving_mutineers_effect = {
@@ -133,11 +157,19 @@ segrellion_jon_post_resurrection_dreamer_progression_effect = {
 		}
 
 		add_trait = segrellion_dreamer_trait
+
+		add_trait_xp = {
+			trait = segrellion_dreamer_trait
+			value = 10
+		}
 	}
 
-	add_trait_xp = {
-		trait = segrellion_dreamer_trait
-		value = 25
+	else = {
+
+		add_trait_xp = {
+			trait = segrellion_dreamer_trait
+			value = 1
+		}
 	}
 
 	segrellion_sync_dreamer_visual_level_effect = yes
