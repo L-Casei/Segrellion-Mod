@@ -1373,87 +1373,172 @@ segrellion_young_griff_westeros_core_setup_effect = {
 
 
 			# =================================================
-			# PERMANENT GOLDEN COMPANY ALLIANCE
+			# NO FORMAL ALLIANCE
+			#
+			# The Golden Company is a military companion to
+			# Aegon's campaign, not a normal CK3 ally.
+			#
+			# Clean old saves that still have the previous
+			# artificial alliance.
 			# =================================================
 
 			if = {
 
 				limit = {
 
-					NOT = {
-						has_character_flag = segrellion_young_griff_abandoned_by_golden_company
-					}
+					is_allied_to = scope:segrellion_golden_company_captain
 				}
 
+				break_alliance = scope:segrellion_golden_company_captain
+			}
 
-				# The old alliance uses Aegon and the captain
-				# themselves as the persistence anchors.
-				# They are not married/related, so CK3 destroys
-				# that alliance when the game advances.
-				#
-				# Replace it with a real married pair as the
-				# persistence anchors.
+			remove_character_flag = segrellion_young_griff_golden_company_alliance_established
+		}
+	}
+}
+
+# =========================================================
+# GOLDEN COMPANY JOINS YOUNG GRIFF'S WARS
+#
+# The real AGOT Golden Company directly joins every war
+# in which Young Griff participates.
+#
+# No formal alliance is required.
+# =========================================================
+
+segrellion_young_griff_sync_golden_company_wars_effect = {
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_golden_company_in_westeros
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+				}
+
+				title:d_laamp_merc_golden_company ?= {
+
+					exists = holder
+
+					holder = {
+						is_alive = yes
+					}
+				}
+			}
+
+
+			save_scope_as = segrellion_young_griff_war_owner
+
+
+			title:d_laamp_merc_golden_company.holder = {
+
+				save_scope_as = segrellion_golden_company_war_captain
+			}
+
+
+			# =================================================
+			# CLEAN OLD ARTIFICIAL ALLIANCE
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					is_allied_to = scope:segrellion_golden_company_war_captain
+				}
+
+				break_alliance = scope:segrellion_golden_company_war_captain
+			}
+
+			remove_character_flag = segrellion_young_griff_golden_company_alliance_established
+
+
+			# =================================================
+			# JOIN ALL OF AEGON'S CURRENT WARS
+			# =================================================
+
+			every_character_war = {
+
+				# ---------------------------------------------
+				# YOUNG GRIFF IS ON ATTACKER SIDE
+				# ---------------------------------------------
 
 				if = {
 
 					limit = {
 
-						is_allied_to = scope:segrellion_golden_company_captain
+						is_attacker = scope:segrellion_young_griff_war_owner
 					}
 
 
-					break_alliance = scope:segrellion_golden_company_captain
-				}
+					# If another script somehow placed the
+					# Company on the wrong side, correct it.
 
-
-				random_ruler = {
-
-					limit = {
-
-						is_alive = yes
-						is_married = yes
-
-						this != root
-						this != scope:segrellion_golden_company_captain
-					}
-
-
-					save_scope_as = segrellion_golden_company_alliance_anchor_owner
-
-
-					random_spouse = {
+					if = {
 
 						limit = {
-							is_alive = yes
+
+							is_defender = scope:segrellion_golden_company_war_captain
 						}
 
-						save_scope_as = segrellion_golden_company_alliance_anchor_target
+						remove_participant = scope:segrellion_golden_company_war_captain
+					}
+
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_attacker = scope:segrellion_golden_company_war_captain
+							}
+						}
+
+						add_attacker = scope:segrellion_golden_company_war_captain
 					}
 				}
 
 
-				if = {
+				# ---------------------------------------------
+				# YOUNG GRIFF IS ON DEFENDER SIDE
+				# ---------------------------------------------
+
+				else_if = {
 
 					limit = {
 
-						exists = scope:segrellion_golden_company_alliance_anchor_owner
-						exists = scope:segrellion_golden_company_alliance_anchor_target
+						is_defender = scope:segrellion_young_griff_war_owner
 					}
 
 
-					allow_alliance = scope:segrellion_golden_company_captain
+					if = {
 
+						limit = {
 
-					create_alliance = {
+							is_attacker = scope:segrellion_golden_company_war_captain
+						}
 
-						target = scope:segrellion_golden_company_captain
-
-						allied_through_owner = scope:segrellion_golden_company_alliance_anchor_owner
-						allied_through_target = scope:segrellion_golden_company_alliance_anchor_target
+						remove_participant = scope:segrellion_golden_company_war_captain
 					}
 
 
-					add_character_flag = segrellion_young_griff_golden_company_alliance_established
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_defender = scope:segrellion_golden_company_war_captain
+							}
+						}
+
+						add_defender = scope:segrellion_golden_company_war_captain
+					}
 				}
 			}
 		}
@@ -3489,17 +3574,6 @@ segrellion_young_griff_golden_company_abandon_effect = {
 
 
 		scope:segrellion_golden_company_abandoning_captain ?= {
-
-			if = {
-
-				limit = {
-
-					is_allied_to = character:IAF_Young_Griff_1
-				}
-
-
-				break_alliance = character:IAF_Young_Griff_1
-			}
 
 
 			remove_character_flag = segrellion_golden_company_with_young_griff
