@@ -2502,9 +2502,6 @@ segrellion_young_griff.5000 = {
 
 			is_alive = yes
 
-			has_title = title:h_the_iron_throne
-
-
 			NOT = {
 				has_character_flag = segrellion_young_griff_blackfyre_revealed
 			}
@@ -2588,8 +2585,6 @@ segrellion_young_griff.5010 = {
 
 		is_alive = yes
 
-		has_title = title:h_the_iron_throne
-
 		has_character_flag = segrellion_young_griff_true_blackfyre
 
 		NOT = {
@@ -2647,6 +2642,8 @@ segrellion_young_griff.5010 = {
 		remove_character_flag = segrellion_young_griff_blackfyre_truth_circulating
 
 		add_character_flag = segrellion_young_griff_blackfyre_revealed
+
+		remove_character_flag = segrellion_young_griff_force_blackfyre_reveal
 
 		# =================================================
 		# THE TRUTH SPREADS THROUGH WESTEROS
@@ -3660,6 +3657,14 @@ segrellion_young_griff.6010 = {
 							is_alive = yes
 
 							this != title:h_the_iron_throne.holder
+
+
+							character:IAF_Young_Griff_1 = {
+
+								NOT = {
+									has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+								}
+							}
 						}
 
 
@@ -6717,5 +6722,239 @@ segrellion_young_griff.8160 = {
 	option = {
 
 		name = segrellion_young_griff.8160.a
+	}
+}
+
+# =========================================================
+# 9000 - THE STORM GROWS RESTLESS
+# =========================================================
+
+segrellion_young_griff.9000 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.9000.t
+	desc = segrellion_young_griff.9000.desc
+
+	theme = crown
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:e_the_stormlands
+
+		has_character_flag = segrellion_young_griff_stormlands_instability_active
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.9000.a
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 9010 - WHISPERS BENEATH THE THUNDER
+# =========================================================
+
+segrellion_young_griff.9010 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.9010.t
+	desc = segrellion_young_griff.9010.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:e_the_stormlands
+
+		has_character_flag = segrellion_young_griff_stormlands_crisis
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.9010.a
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 9020 - THE BLACK SWORDS DEPART
+# =========================================================
+
+segrellion_young_griff.9020 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.9020.t
+	desc = segrellion_young_griff.9020.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		is_at_war = no
+
+		has_title = title:e_the_stormlands
+
+		has_character_flag = segrellion_young_griff_blackfyre_revealed
+		has_character_flag = segrellion_young_griff_stormlands_crisis
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_stormlands_momentum
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_golden_company_abandonment_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_golden_company_abandonment_scheduled
+
+		segrellion_young_griff_golden_company_abandon_effect = yes
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.9020.a
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 9030 - THE STORM BREAKS
+# =========================================================
+
+segrellion_young_griff.9030 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.9030.t
+	desc = segrellion_young_griff.9030.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		is_at_war = no
+
+		has_title = title:e_the_stormlands
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+		has_character_flag = segrellion_young_griff_blackfyre_revealed
+		has_character_flag = segrellion_young_griff_stormlands_crisis
+		has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_stormlands_momentum
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_stormlands_civil_war_started
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_stormlands_civil_war_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_stormlands_civil_war_scheduled
+
+		segrellion_young_griff_start_stormlands_civil_war_effect = yes
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.9030.a
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }

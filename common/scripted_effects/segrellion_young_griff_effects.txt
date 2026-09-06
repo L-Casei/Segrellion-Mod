@@ -1243,6 +1243,7 @@ segrellion_young_griff_westeros_core_setup_effect = {
 		# saves created before the hard lock was introduced.
 
 		segrellion_young_griff_apply_scripted_war_lock_effect = yes
+		segrellion_young_griff_initialize_stormlands_instability_effect = yes
 
 
 		# =================================================
@@ -1384,18 +1385,34 @@ segrellion_young_griff_westeros_core_setup_effect = {
 				limit = {
 
 					NOT = {
-						is_allied_to = scope:segrellion_golden_company_captain
+						has_character_flag = segrellion_young_griff_abandoned_by_golden_company
 					}
 				}
 
 
-				create_alliance = {
+				# Required because Aegon and the Golden Company captain
+				# have no familial relation.
 
-					target = scope:segrellion_golden_company_captain
+				allow_alliance = scope:segrellion_golden_company_captain
 
-					allied_through_owner = root
 
-					allied_through_target = scope:segrellion_golden_company_captain
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_allied_to = scope:segrellion_golden_company_captain
+						}
+					}
+
+
+					create_alliance = {
+
+						target = scope:segrellion_golden_company_captain
+
+						allied_through_owner = root
+						allied_through_target = scope:segrellion_golden_company_captain
+					}
 				}
 			}
 		}
@@ -2887,8 +2904,9 @@ segrellion_young_griff_schedule_blackfyre_reveal_effect = {
 
 	character:IAF_Young_Griff_1 ?= {
 
+
 		# =================================================
-		# REPAIR OLD SAVES
+		# TRUE PARENTAGE ALWAYS EXISTS INTERNALLY
 		# =================================================
 
 		if = {
@@ -2902,12 +2920,16 @@ segrellion_young_griff_schedule_blackfyre_reveal_effect = {
 				}
 			}
 
+
 			add_character_flag = segrellion_young_griff_true_blackfyre
 		}
 
 
 		# =================================================
-		# PETYR BEGINS INVESTIGATING
+		# ABSOLUTE DEADLINE: 304 AC
+		#
+		# No matter what happened to the normal storyline,
+		# Aegon's identity can no longer remain hidden.
 		# =================================================
 
 		if = {
@@ -2916,31 +2938,120 @@ segrellion_young_griff_schedule_blackfyre_reveal_effect = {
 
 				is_alive = yes
 
-				has_title = title:h_the_iron_throne
+				game_start_date >= 8300.8.20
+				game_start_date < 8301.1.1
 
+				current_date >= 8304.1.1
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			remove_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+
+			add_character_flag = segrellion_young_griff_blackfyre_truth_circulating
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.5010
+			}
+		}
+
+
+		# =================================================
+		# STORMLANDS CRISIS FORCES AN EARLY REVELATION
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_young_griff_force_blackfyre_reveal
 
 				NOT = {
 					has_character_flag = segrellion_young_griff_blackfyre_revealed
 				}
 
-
 				NOT = {
 					has_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
-				}
-
-
-				character:Baelish_2 ?= {
-
-					is_alive = yes
-
-					is_adult = yes
 				}
 			}
 
 
-			# Temporary lock.
-			# If a delayed event is somehow swallowed,
-			# monthly progression eventually repairs it.
+			add_character_flag = {
+
+				flag = segrellion_young_griff_blackfyre_reveal_scheduled
+
+				days = 60
+			}
+
+
+			if = {
+
+				limit = {
+
+					character:Baelish_2 ?= {
+
+						is_alive = yes
+						is_adult = yes
+					}
+				}
+
+
+				character:Baelish_2 = {
+
+					trigger_event = {
+
+						id = segrellion_young_griff.5000
+
+						days = { 7 21 }
+					}
+				}
+			}
+
+
+			else = {
+
+				add_character_flag = segrellion_young_griff_blackfyre_truth_circulating
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.5010
+
+					days = { 7 14 }
+				}
+			}
+		}
+
+
+		# =================================================
+		# ORIGINAL ROUTE:
+		# AEGON TAKES THE IRON THRONE
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_title = title:h_the_iron_throne
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_blackfyre_reveal_scheduled
+				}
+			}
+
 
 			add_character_flag = {
 
@@ -2950,13 +3061,40 @@ segrellion_young_griff_schedule_blackfyre_reveal_effect = {
 			}
 
 
-			character:Baelish_2 = {
+			if = {
+
+				limit = {
+
+					character:Baelish_2 ?= {
+
+						is_alive = yes
+						is_adult = yes
+					}
+				}
+
+
+				character:Baelish_2 = {
+
+					trigger_event = {
+
+						id = segrellion_young_griff.5000
+
+						days = { 30 90 }
+					}
+				}
+			}
+
+
+			else = {
+
+				add_character_flag = segrellion_young_griff_blackfyre_truth_circulating
+
 
 				trigger_event = {
 
-					id = segrellion_young_griff.5000
+					id = segrellion_young_griff.5010
 
-					days = { 30 90 }
+					days = { 30 60 }
 				}
 			}
 		}
@@ -3126,6 +3264,994 @@ segrellion_young_griff_crownlands_guard_effect = {
 
 
 					add_character_flag = segrellion_young_griff_crownlands_recovered
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# YOUNG GRIFF
+# STORMLANDS INSTABILITY
+# =========================================================
+
+
+# =========================================================
+# INITIAL TIMER
+#
+# Aegon has 18 months to achieve a genuine territorial
+# conquest before the Stormlords begin losing patience.
+# =========================================================
+
+segrellion_young_griff_initialize_stormlands_instability_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+
+			has_title = title:e_the_stormlands
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_stormlands_instability_initialized
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_stormlands_instability_initialized
+
+
+		add_character_flag = {
+
+			flag = segrellion_young_griff_stormlands_momentum
+
+			months = 18
+		}
+	}
+}
+
+
+# =========================================================
+# REAL CONQUEST RESETS THE CLOCK
+#
+# Called from on_title_gain.
+# Only actual conquest/usurpation transfers count.
+# Inheritance and grants do NOT count.
+# =========================================================
+
+segrellion_young_griff_refresh_stormlands_momentum_from_title_gain_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_character_flag = segrellion_young_griff_stormlands_instability_initialized
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_stormlands_civil_war_started
+			}
+
+
+			exists = scope:title
+
+
+			scope:title = {
+
+				tier >= tier_county
+
+				is_landless_type_title = no
+			}
+
+
+			OR = {
+
+				scope:transfer_type = flag:conquest
+
+				scope:transfer_type = flag:conquest_holy_war
+
+				scope:transfer_type = flag:conquest_claim
+
+				scope:transfer_type = flag:conquest_populist
+
+				scope:transfer_type = flag:usurped
+			}
+		}
+
+
+		remove_character_flag = segrellion_young_griff_stormlands_momentum
+
+
+		add_character_flag = {
+
+			flag = segrellion_young_griff_stormlands_momentum
+
+			months = 18
+		}
+
+
+		# A real victory calms the Stormlands.
+
+		remove_character_flag = segrellion_young_griff_stormlands_instability_active
+		remove_character_flag = segrellion_young_griff_stormlands_crisis
+		remove_character_flag = segrellion_young_griff_force_blackfyre_reveal
+
+		remove_character_flag = segrellion_young_griff_stormlands_stage_1_grace
+
+		remove_character_flag = segrellion_young_griff_blackfyre_stormlands_grace
+		remove_character_flag = segrellion_young_griff_blackfyre_stormlands_grace_initialized
+
+		remove_character_flag = segrellion_young_griff_stormlands_civil_war_grace
+		remove_character_flag = segrellion_young_griff_stormlands_civil_war_grace_initialized
+
+		remove_character_flag = segrellion_young_griff_golden_company_abandonment_scheduled
+		remove_character_flag = segrellion_young_griff_stormlands_civil_war_scheduled
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_young_griff_stormlands_stagnation_modifier
+			}
+
+			remove_character_modifier = segrellion_young_griff_stormlands_stagnation_modifier
+		}
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_young_griff_stormlands_crisis_modifier
+			}
+
+			remove_character_modifier = segrellion_young_griff_stormlands_crisis_modifier
+		}
+	}
+}
+
+
+# =========================================================
+# GOLDEN COMPANY ABANDONS AEGON
+# =========================================================
+
+segrellion_young_griff_golden_company_abandon_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+			}
+		}
+
+
+		title:d_laamp_merc_golden_company ?= {
+
+			holder ?= {
+
+				save_scope_as = segrellion_golden_company_abandoning_captain
+			}
+		}
+
+
+		scope:segrellion_golden_company_abandoning_captain ?= {
+
+			if = {
+
+				limit = {
+
+					is_allied_to = character:IAF_Young_Griff_1
+				}
+
+
+				break_alliance = character:IAF_Young_Griff_1
+			}
+
+
+			remove_character_flag = segrellion_golden_company_with_young_griff
+			remove_character_flag = segrellion_golden_company_at_storms_end
+
+			add_character_flag = segrellion_golden_company_abandoned_young_griff
+
+
+			domicile ?= {
+
+				move_domicile = title:c_pentos.title_province
+			}
+
+
+			set_location = title:c_pentos.title_province
+		}
+
+
+		remove_character_flag = segrellion_young_griff_golden_company_in_westeros
+
+		add_character_flag = segrellion_young_griff_abandoned_by_golden_company
+	}
+}
+
+
+# =========================================================
+# STORMLANDS CLAIMANT CIVIL WAR
+#
+# Preferred succession:
+# 1. Mya Stone
+# 2. Edric Storm
+# 3. Stannis Baratheon
+#
+# Edric is located dynamically as Robert's son by a
+# Florent mother, so no hardcoded Edric character ID
+# is required.
+# =========================================================
+
+segrellion_young_griff_start_stormlands_civil_war_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:e_the_stormlands
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
+
+			has_character_flag = segrellion_young_griff_stormlands_crisis
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_stormlands_civil_war_started
+			}
+		}
+
+
+		# =================================================
+		# FIND EDRIC STORM
+		# =================================================
+
+		character:Baratheon_10 ?= {
+
+			father ?= {
+
+				random_child = {
+
+					limit = {
+
+						is_alive = yes
+						is_male = yes
+						is_adult = yes
+
+						mother ?= {
+
+							dynasty = dynasty:dynn_Florent
+						}
+					}
+
+
+					save_scope_as = segrellion_edric_storm
+				}
+			}
+		}
+
+
+		# =================================================
+		# CHOOSE CLAIMANT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Baratheon_10 ?= {
+
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+				}
+			}
+
+
+			character:Baratheon_10 = {
+
+				save_scope_as = segrellion_stormlands_replacement_claimant
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				scope:segrellion_edric_storm ?= {
+
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+				}
+			}
+
+
+			scope:segrellion_edric_storm = {
+
+				save_scope_as = segrellion_stormlands_replacement_claimant
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				character:Baratheon_3 ?= {
+
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+				}
+			}
+
+
+			character:Baratheon_3 = {
+
+				save_scope_as = segrellion_stormlands_replacement_claimant
+			}
+		}
+
+
+		# =================================================
+		# FIND THE LEADER OF THE STORMLORD REBELLION
+		# =================================================
+
+		random_vassal = {
+
+			limit = {
+
+				is_alive = yes
+				is_adult = yes
+				is_imprisoned = no
+
+				highest_held_title_tier >= tier_county
+
+
+				opinion = {
+
+					target = character:IAF_Young_Griff_1
+
+					value <= -20
+				}
+
+
+				NOT = {
+					this = scope:segrellion_stormlands_replacement_claimant
+				}
+			}
+
+
+			save_scope_as = segrellion_stormlands_rebel_leader
+		}
+
+
+		# Fallback if every surviving vassal somehow still likes Aegon.
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = scope:segrellion_stormlands_rebel_leader
+				}
+			}
+
+
+			random_vassal = {
+
+				limit = {
+
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+
+					highest_held_title_tier >= tier_county
+
+
+					NOT = {
+						this = scope:segrellion_stormlands_replacement_claimant
+					}
+				}
+
+
+				save_scope_as = segrellion_stormlands_rebel_leader
+			}
+		}
+
+
+		# =================================================
+		# GIVE THE CLAIM
+		# =================================================
+
+		scope:segrellion_stormlands_replacement_claimant ?= {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_claim_on = title:e_the_stormlands
+					}
+				}
+
+
+				add_pressed_claim = title:e_the_stormlands
+			}
+		}
+
+
+		# =================================================
+		# WAR
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_stormlands_replacement_claimant
+
+				exists = scope:segrellion_stormlands_rebel_leader
+			}
+
+
+			# If the claimant is unlanded, bring them into
+			# the rebel leader's court so the claim can be pressed.
+
+			scope:segrellion_stormlands_replacement_claimant = {
+
+				if = {
+
+					limit = {
+						is_landed = no
+					}
+
+
+					set_employer = scope:segrellion_stormlands_rebel_leader
+				}
+			}
+
+
+			# Landed claimant can lead personally.
+
+			if = {
+
+				limit = {
+
+					scope:segrellion_stormlands_replacement_claimant = {
+						is_landed = yes
+					}
+				}
+
+
+				scope:segrellion_stormlands_replacement_claimant = {
+
+					save_scope_as = segrellion_stormlands_war_primary_attacker
+
+
+					start_war = {
+
+						cb = claim_cb
+
+						target = character:IAF_Young_Griff_1
+
+						claimant = scope:segrellion_stormlands_replacement_claimant
+
+						target_title = title:e_the_stormlands
+					}
+				}
+			}
+
+
+			# Otherwise a Stormlord presses their claim.
+
+			else = {
+
+				scope:segrellion_stormlands_rebel_leader = {
+
+					save_scope_as = segrellion_stormlands_war_primary_attacker
+
+
+					start_war = {
+
+						cb = claim_cb
+
+						target = character:IAF_Young_Griff_1
+
+						claimant = scope:segrellion_stormlands_replacement_claimant
+
+						target_title = title:e_the_stormlands
+					}
+				}
+			}
+
+
+			# =================================================
+			# FIND CREATED WAR
+			# =================================================
+
+			scope:segrellion_stormlands_war_primary_attacker ?= {
+
+				random_character_war = {
+
+					limit = {
+
+						attacker = scope:segrellion_stormlands_war_primary_attacker
+
+
+						casus_belli = {
+
+							any_target_title = {
+
+								this = title:e_the_stormlands
+							}
+						}
+					}
+
+
+					save_scope_as = segrellion_stormlands_civil_war
+				}
+			}
+
+
+			# =================================================
+			# THE OTHER ANGRY STORMLORDS JOIN
+			# =================================================
+
+			if = {
+
+				limit = {
+					exists = scope:segrellion_stormlands_civil_war
+				}
+
+
+				every_vassal = {
+
+					limit = {
+
+						is_alive = yes
+						is_adult = yes
+						is_imprisoned = no
+
+						highest_held_title_tier >= tier_county
+
+
+						this != scope:segrellion_stormlands_war_primary_attacker
+
+
+						opinion = {
+
+							target = character:IAF_Young_Griff_1
+
+							value <= -10
+						}
+					}
+
+
+					scope:segrellion_stormlands_civil_war = {
+
+						add_attacker = prev
+					}
+				}
+
+
+				add_character_flag = segrellion_young_griff_stormlands_civil_war_started
+
+
+				scope:segrellion_stormlands_replacement_claimant = {
+
+					add_character_flag = segrellion_stormlands_replacement_claimant
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# MONTHLY PROGRESSION
+# =========================================================
+
+segrellion_young_griff_stormlands_instability_progression_effect = {
+
+	segrellion_young_griff_initialize_stormlands_instability_effect = yes
+
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				game_start_date >= 8300.8.20
+				game_start_date < 8301.1.1
+			}
+
+
+			# =================================================
+			# GOLDEN COMPANY MUST NEVER RE-ALLY AFTER LEAVING
+			# =================================================
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+				}
+
+
+				title:d_laamp_merc_golden_company ?= {
+
+					holder ?= {
+
+						if = {
+
+							limit = {
+
+								is_allied_to = character:IAF_Young_Griff_1
+							}
+
+
+							break_alliance = character:IAF_Young_Griff_1
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# SUCCESS / NO LONGER RELEVANT
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					OR = {
+
+						has_title = title:h_the_iron_throne
+
+						NOT = {
+							has_title = title:e_the_stormlands
+						}
+					}
+				}
+
+
+				remove_character_flag = segrellion_young_griff_stormlands_instability_active
+				remove_character_flag = segrellion_young_griff_stormlands_crisis
+
+				remove_character_flag = segrellion_young_griff_stormlands_stage_1_grace
+				remove_character_flag = segrellion_young_griff_blackfyre_stormlands_grace
+				remove_character_flag = segrellion_young_griff_stormlands_civil_war_grace
+
+
+				if = {
+
+					limit = {
+						has_character_modifier = segrellion_young_griff_stormlands_stagnation_modifier
+					}
+
+					remove_character_modifier = segrellion_young_griff_stormlands_stagnation_modifier
+				}
+
+
+				if = {
+
+					limit = {
+						has_character_modifier = segrellion_young_griff_stormlands_crisis_modifier
+					}
+
+					remove_character_modifier = segrellion_young_griff_stormlands_crisis_modifier
+				}
+			}
+
+
+			# =================================================
+			# STILL STUCK IN THE STORMLANDS
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					has_title = title:e_the_stormlands
+
+					NOT = {
+						has_title = title:h_the_iron_throne
+					}
+
+					has_character_flag = segrellion_young_griff_stormlands_instability_initialized
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_stormlands_civil_war_started
+					}
+				}
+
+
+				# =============================================
+				# STAGE 1
+				# 18 MONTHS WITHOUT A CONQUEST
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						is_at_war = no
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_momentum
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_instability_active
+						}
+					}
+
+
+					add_character_flag = segrellion_young_griff_stormlands_instability_active
+
+
+					add_character_flag = {
+
+						flag = segrellion_young_griff_stormlands_stage_1_grace
+
+						months = 12
+					}
+
+
+					add_character_modifier = {
+
+						modifier = segrellion_young_griff_stormlands_stagnation_modifier
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff.9000
+					}
+				}
+
+
+				# =============================================
+				# STAGE 2
+				# ONE MORE YEAR OF NOTHING
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						is_at_war = no
+
+						has_character_flag = segrellion_young_griff_stormlands_instability_active
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_momentum
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_stage_1_grace
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_crisis
+						}
+					}
+
+
+					add_character_flag = segrellion_young_griff_stormlands_crisis
+					add_character_flag = segrellion_young_griff_force_blackfyre_reveal
+
+
+					if = {
+
+						limit = {
+							has_character_modifier = segrellion_young_griff_stormlands_stagnation_modifier
+						}
+
+						remove_character_modifier = segrellion_young_griff_stormlands_stagnation_modifier
+					}
+
+
+					add_character_modifier = {
+
+						modifier = segrellion_young_griff_stormlands_crisis_modifier
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff.9010
+					}
+				}
+
+
+				# =============================================
+				# AFTER BLACKFYRE REVELATION:
+				# GOLDEN COMPANY GIVES HIM SIX MONTHS
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_young_griff_stormlands_crisis
+
+						has_character_flag = segrellion_young_griff_blackfyre_revealed
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_momentum
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_blackfyre_stormlands_grace_initialized
+						}
+					}
+
+
+					add_character_flag = segrellion_young_griff_blackfyre_stormlands_grace_initialized
+
+
+					add_character_flag = {
+
+						flag = segrellion_young_griff_blackfyre_stormlands_grace
+
+						months = 6
+					}
+				}
+
+
+				# =============================================
+				# GOLDEN COMPANY LEAVES
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						is_at_war = no
+
+						has_character_flag = segrellion_young_griff_stormlands_crisis
+
+						has_character_flag = segrellion_young_griff_blackfyre_revealed
+
+						has_character_flag = segrellion_young_griff_blackfyre_stormlands_grace_initialized
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_blackfyre_stormlands_grace
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_momentum
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_golden_company_abandonment_scheduled
+						}
+					}
+
+
+					add_character_flag = {
+
+						flag = segrellion_young_griff_golden_company_abandonment_scheduled
+
+						days = 40
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff.9020
+					}
+				}
+
+
+				# =============================================
+				# SIX MONTHS AFTER THE COMPANY LEAVES
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_civil_war_grace_initialized
+						}
+					}
+
+
+					add_character_flag = segrellion_young_griff_stormlands_civil_war_grace_initialized
+
+
+					add_character_flag = {
+
+						flag = segrellion_young_griff_stormlands_civil_war_grace
+
+						months = 6
+					}
+				}
+
+
+				# =============================================
+				# CIVIL WAR
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						is_at_war = no
+
+						has_character_flag = segrellion_young_griff_abandoned_by_golden_company
+
+						has_character_flag = segrellion_young_griff_stormlands_civil_war_grace_initialized
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_civil_war_grace
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_momentum
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_civil_war_started
+						}
+
+						NOT = {
+							has_character_flag = segrellion_young_griff_stormlands_civil_war_scheduled
+						}
+					}
+
+
+					add_character_flag = {
+
+						flag = segrellion_young_griff_stormlands_civil_war_scheduled
+
+						days = 40
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_young_griff.9030
+					}
 				}
 			}
 		}
