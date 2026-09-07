@@ -191,20 +191,69 @@ segrellion_young_griff_dragon.0010 = {
 
 	# =====================================================
 	# DRAGONSTONE
-	#
-	# It is a genuine lead, but politically impossible.
+	# Available only if Aegon personally holds Dragonstone.
 	# =====================================================
 
 	option = {
 
 		name = segrellion_young_griff_dragon.0010.a
 
+		custom_tooltip = segrellion_young_griff_dragon.0010.a.tt
+
+
 		trigger = {
-			always = no
+
+			has_title = title:c_dragonstone
 		}
 
+
 		show_as_unavailable = {
+
 			always = yes
+		}
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_dragon_search_dragonstone
+		}
+
+
+		if = {
+
+			limit = {
+
+				location = title:c_dragonstone.title_province
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragon.0040
+			}
+		}
+
+
+		else = {
+
+			start_travel_plan = {
+
+				destination = title:c_dragonstone.title_province
+
+				return_trip = yes
+
+				on_arrival_destinations = all_but_last
+
+				on_arrival_event = segrellion_young_griff_dragon.0040
+
+				on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 100
 		}
 	}
 
@@ -223,13 +272,33 @@ segrellion_young_griff_dragon.0010 = {
 		hidden_effect = {
 
 			add_character_flag = segrellion_young_griff_dragon_search_red_lake
+		}
 
+
+		if = {
+
+			limit = {
+
+				location = title:c_red_lake.title_province
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragon.0020
+			}
+		}
+
+
+		else = {
 
 			start_travel_plan = {
 
 				destination = title:c_red_lake.title_province
 
 				return_trip = yes
+
+				on_arrival_destinations = all_but_last
 
 				on_arrival_event = segrellion_young_griff_dragon.0020
 
@@ -239,6 +308,7 @@ segrellion_young_griff_dragon.0010 = {
 
 
 		ai_chance = {
+
 			base = 35
 		}
 	}
@@ -258,13 +328,33 @@ segrellion_young_griff_dragon.0010 = {
 		hidden_effect = {
 
 			add_character_flag = segrellion_young_griff_dragon_search_summerhall
+		}
 
+
+		if = {
+
+			limit = {
+
+				location = title:c_summerhall.title_province
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragon.0030
+			}
+		}
+
+
+		else = {
 
 			start_travel_plan = {
 
 				destination = title:c_summerhall.title_province
 
 				return_trip = yes
+
+				on_arrival_destinations = all_but_last
 
 				on_arrival_event = segrellion_young_griff_dragon.0030
 
@@ -274,6 +364,7 @@ segrellion_young_griff_dragon.0010 = {
 
 
 		ai_chance = {
+
 			base = 65
 		}
 	}
@@ -624,6 +715,73 @@ segrellion_young_griff_dragon.0032 = {
 	}
 }
 
+# =========================================================
+# 0040 - THE VAULTS OF DRAGONSTONE
+#
+# Dragonstone is the strongest lead.
+# This route exists only if Aegon personally controls it.
+# =========================================================
+
+segrellion_young_griff_dragon.0040 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragon.0040.t
+
+	desc = segrellion_young_griff_dragon.0040.desc
+
+	theme = dragon
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_search_dragonstone
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_found_dragon_egg
+
+		add_character_flag = segrellion_young_griff_found_dragonstone_egg
+
+
+		agot_create_weighted_dragon_egg_artifact = {
+
+			OWNER = root
+		}
+
+
+		add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+		remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
+
+		remove_variable = segrellion_young_griff_dragon_researcher
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0040.a
+	}
+}
+
 
 # =========================================================
 # 0090 - EGG SEARCH TRAVEL CANCELLED
@@ -641,6 +799,8 @@ segrellion_young_griff_dragon.0090 = {
 		remove_character_flag = segrellion_young_griff_dragon_path_chosen
 
 		remove_character_flag = segrellion_young_griff_dragon_path_egg
+
+		remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
 
 		remove_character_flag = segrellion_young_griff_dragon_search_red_lake
 
