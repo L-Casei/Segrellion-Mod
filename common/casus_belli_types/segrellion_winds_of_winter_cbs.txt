@@ -1026,7 +1026,7 @@ segrellion_stannis_northern_campaign_cb = {
 
 			spawn_army = {
 
-				name = segrellion_stannis_northern_host
+				name = segrellion_stannis_kings_host
 
 
 				men_at_arms = {
@@ -1070,7 +1070,7 @@ segrellion_stannis_northern_campaign_cb = {
 				levies = 5000
 
 
-				inheritable = no
+				inheritable = yes
 
 
 				location = title:c_deepwood.title_province
@@ -1234,16 +1234,18 @@ segrellion_stannis_northern_campaign_cb = {
 			remove_variable = segrellion_stannis_northern_war
 
 
-						# =================================================
-			# RAMSAY / CURRENT NORTHERN RULER
-			# FINAL CAPTURE FAILSAFE
+			# =================================================
+			# RAMSAY BOLTON
 			# =================================================
 
 			if = {
 
 				limit = {
 
-					scope:defender = {
+					has_global_variable = segrellion_ramsay_bolton
+
+
+					global_var:segrellion_ramsay_bolton ?= {
 
 						is_alive = yes
 
@@ -1254,7 +1256,7 @@ segrellion_stannis_northern_campaign_cb = {
 
 				imprison = {
 
-					target = scope:defender
+					target = global_var:segrellion_ramsay_bolton
 
 					type = dungeon
 				}
@@ -1314,14 +1316,14 @@ segrellion_stannis_northern_campaign_cb = {
 
 
 			# =================================================
-			# CONTINUE TO THE POLITICAL SETTLEMENT
+			# WINTERFELL HAS FALLEN
 			# =================================================
 
 			trigger_event = {
 
-				id = segrellion_stannis.1000
+				id = segrellion_stannis_south.0001
 
-				days = { 5 10 }
+				days = { 2 5 }
 			}
 		}
 

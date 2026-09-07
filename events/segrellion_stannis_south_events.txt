@@ -1,0 +1,610 @@
+namespace = segrellion_stannis_south
+
+
+# =========================================================
+# 0001 - THE BASTARD IN CHAINS
+# ROOT = STANNIS
+# =========================================================
+
+segrellion_stannis_south.0001 = {
+
+	type = character_event
+
+	title = segrellion_stannis_south.0001.t
+	desc = segrellion_stannis_south.0001.desc
+
+	theme = judgment
+
+
+	override_background = {
+
+		reference = segrellion_winterfell_great_hall
+	}
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_campaign_victory
+
+
+		has_global_variable = segrellion_ramsay_bolton
+
+
+		global_var:segrellion_ramsay_bolton ?= {
+
+			is_alive = yes
+
+			is_imprisoned = yes
+
+			prisoner_of = root
+		}
+	}
+
+
+	immediate = {
+
+		global_var:segrellion_ramsay_bolton = {
+
+			save_scope_as = segrellion_ramsay
+		}
+
+
+		if = {
+
+			limit = {
+
+				has_global_variable = segrellion_resurrected_jon
+
+
+				global_var:segrellion_resurrected_jon ?= {
+
+					is_alive = yes
+				}
+			}
+
+
+			global_var:segrellion_resurrected_jon = {
+
+				save_scope_as = segrellion_jon
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_ramsay
+
+		animation = personality_dishonorable
+	}
+
+
+	# =====================================================
+	# GIVE RAMSAY TO JON
+	# 80%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis_south.0001.a
+
+
+		trigger = {
+
+			exists = scope:segrellion_jon
+		}
+
+
+		scope:segrellion_ramsay = {
+
+			change_prison_type = house_arrest
+
+			set_prisoner = scope:segrellion_jon
+		}
+
+
+		scope:segrellion_jon = {
+
+			add_character_flag = segrellion_jon_received_ramsay
+
+
+			trigger_event = {
+
+				id = segrellion_stannis_south.0010
+
+				days = { 1 3 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# STANNIS EXECUTES RAMSAY
+	# 20%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis_south.0001.b
+
+
+		scope:segrellion_ramsay = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_character_flag = segrellion_stannis_executed_ramsay
+
+
+		trigger_event = {
+
+			id = segrellion_stannis_south.0020
+
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - THE FLAYED MAN
+# ROOT = JON
+# =========================================================
+
+segrellion_stannis_south.0010 = {
+
+	type = character_event
+
+	title = segrellion_stannis_south.0010.t
+	desc = segrellion_stannis_south.0010.desc
+
+	theme = judgment
+
+
+	override_background = {
+
+		reference = segrellion_winterfell_great_hall
+	}
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		has_global_variable = segrellion_resurrected_jon
+
+		this = global_var:segrellion_resurrected_jon
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_received_ramsay
+
+
+		global_var:segrellion_ramsay_bolton ?= {
+
+			is_alive = yes
+
+			is_imprisoned = yes
+
+			prisoner_of = root
+		}
+	}
+
+
+	immediate = {
+
+		global_var:segrellion_ramsay_bolton = {
+
+			save_scope_as = segrellion_ramsay
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_ramsay
+
+		animation = fear
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_south.0010.a
+
+
+		remove_character_flag = segrellion_jon_received_ramsay
+
+		add_character_flag = segrellion_jon_flayed_ramsay
+
+
+		scope:segrellion_ramsay = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_dread = 30
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_wolfs_cruel_justice_modifier
+
+			years = 10
+		}
+
+
+		if = {
+
+			limit = {
+
+				has_trait = compassionate
+			}
+
+			add_stress = 60
+		}
+
+
+		if = {
+
+			limit = {
+
+				has_trait = just
+			}
+
+			add_stress = 35
+		}
+
+
+		character:Baratheon_3 = {
+
+			trigger_event = {
+
+				id = segrellion_stannis_south.0020
+
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - THE NORTH RESTORED
+# ROOT = STANNIS
+# =========================================================
+
+segrellion_stannis_south.0020 = {
+
+	type = character_event
+
+	title = segrellion_stannis_south.0020.t
+	desc = segrellion_stannis_south.0020.desc
+
+	theme = crown
+
+
+	override_background = {
+
+		reference = segrellion_winterfell_great_hall
+	}
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_northern_campaign_victory
+
+		NOT = {
+
+			has_character_flag = segrellion_stannis_north_formally_restored
+		}
+
+
+		has_global_variable = segrellion_resurrected_jon
+
+
+		global_var:segrellion_resurrected_jon ?= {
+
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		global_var:segrellion_resurrected_jon = {
+
+			save_scope_as = segrellion_jon
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_jon
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_south.0020.a
+
+
+		add_character_flag = segrellion_stannis_north_formally_restored
+
+
+		scope:segrellion_jon = {
+
+			segrellion_jon_accepts_north_effect = yes
+		}
+
+
+		if = {
+
+			limit = {
+
+				scope:segrellion_jon = {
+
+					has_character_flag = segrellion_jon_restored_to_winterfell
+
+					has_title = title:e_the_north
+				}
+			}
+
+
+			scope:segrellion_jon = {
+
+				add_character_flag = segrellion_jon_lord_paramount_under_stannis
+
+				remove_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+
+				add_character_flag = segrellion_jon_stannis_result_resolved
+
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_jon_flayed_ramsay
+					}
+
+
+					every_vassal = {
+
+						if = {
+
+							limit = {
+
+								has_trait = compassionate
+							}
+
+							add_opinion = {
+
+								target = scope:segrellion_jon
+
+								modifier = segrellion_compassionate_disgusted_by_ramsay_flaying_opinion
+							}
+						}
+
+
+						if = {
+
+							limit = {
+
+								has_trait = just
+							}
+
+							add_opinion = {
+
+								target = scope:segrellion_jon
+
+								modifier = segrellion_just_disapproves_ramsay_flaying_opinion
+							}
+						}
+
+
+						if = {
+
+							limit = {
+
+								has_trait = vengeful
+							}
+
+							add_opinion = {
+
+								target = scope:segrellion_jon
+
+								modifier = segrellion_vengeful_approves_ramsay_flaying_opinion
+							}
+						}
+					}
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_stannis_south.0030
+
+				days = { 10 20 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - THE ROAD SOUTH
+# ROOT = STANNIS
+# =========================================================
+
+segrellion_stannis_south.0030 = {
+
+	type = character_event
+
+	title = segrellion_stannis_south.0030.t
+	desc = segrellion_stannis_south.0030.desc
+
+	theme = war
+
+
+	override_background = {
+
+		reference = army_camp
+	}
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_north_formally_restored
+
+		NOT = {
+
+			has_character_flag = segrellion_stannis_southern_march_started
+		}
+
+
+		has_global_variable = segrellion_resurrected_jon
+
+
+		global_var:segrellion_resurrected_jon ?= {
+
+			is_alive = yes
+
+			has_title = title:e_the_north
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = global_var:segrellion_resurrected_jon
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_south.0030.a
+
+
+		add_character_flag = segrellion_stannis_southern_march_started
+
+
+		set_location = title:c_moat_cailin.title_province
+
+
+		segrellion_start_stannis_iron_throne_war_effect = yes
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
