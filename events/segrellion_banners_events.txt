@@ -1,0 +1,100 @@
+namespace = segrellion_banners
+
+
+# =========================================================
+# 0001 - THE BANNERS ANSWER
+# =========================================================
+
+segrellion_banners.0001 = {
+
+	type = character_event
+
+	title = segrellion_banners.0001.t
+
+	desc = {
+
+		first_valid = {
+
+
+			# -------------------------------------------------
+			# SOME ACCEPTED, SOME REFUSED
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = segrellion_banners_any_accepted
+					has_character_flag = segrellion_banners_any_refused
+				}
+
+				desc = segrellion_banners.0001.desc_mixed
+			}
+
+
+			# -------------------------------------------------
+			# ALL WHO ANSWERED ACCEPTED
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = segrellion_banners_any_accepted
+
+					NOT = {
+						has_character_flag = segrellion_banners_any_refused
+					}
+				}
+
+				desc = segrellion_banners.0001.desc_accepted
+			}
+
+
+			# -------------------------------------------------
+			# NONE ACCEPTED
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_banners_any_refused
+				}
+
+				desc = segrellion_banners.0001.desc_refused
+			}
+
+
+			# -------------------------------------------------
+			# FALLBACK
+			# -------------------------------------------------
+
+			desc = segrellion_banners.0001.desc_none
+		}
+	}
+
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_banners.0001.a
+
+
+		remove_character_flag = segrellion_banners_any_accepted
+		remove_character_flag = segrellion_banners_any_refused
+	}
+}

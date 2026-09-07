@@ -68,3 +68,402 @@ vladwyn_raise_true_sentinel_veterans_effect = {
 		war = scope:vladwyn_true_sentinels_war
 	}
 }
+
+# =========================================================
+# CALL THE BANNERS
+#
+# ROOT = Liege using the decision
+#
+# Direct landed vassals may personally join the liege's
+# current external wars.
+# =========================================================
+
+segrellion_call_the_banners_effect = {
+
+	save_scope_as = segrellion_banner_liege
+
+
+	# =====================================================
+	# CLEAN TEMPORARY RESULT FLAGS
+	# =====================================================
+
+	remove_character_flag = segrellion_banners_any_accepted
+	remove_character_flag = segrellion_banners_any_refused
+
+
+	# =====================================================
+	# DETERMINE WHICH VASSALS ANSWER
+	# =====================================================
+
+	every_vassal = {
+
+		limit = {
+
+			is_alive = yes
+			is_landed = yes
+
+			is_imprisoned = no
+			is_incapable = no
+
+			highest_held_title_tier > tier_barony
+
+			NOT = {
+				government_has_flag = government_is_nw
+			}
+		}
+
+
+		save_scope_as = segrellion_banner_vassal
+
+
+		# -------------------------------------------------
+		# Only evaluate the vassal if there is at least
+		# one war they could actually join.
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+
+				scope:segrellion_banner_liege = {
+
+					any_character_war = {
+
+						is_civil_war = no
+
+						OR = {
+							primary_attacker = scope:segrellion_banner_liege
+							primary_defender = scope:segrellion_banner_liege
+						}
+
+
+						NOR = {
+
+							any_war_attacker = {
+								this = scope:segrellion_banner_vassal
+							}
+
+							any_war_defender = {
+								this = scope:segrellion_banner_vassal
+							}
+						}
+
+
+						save_temporary_scope_as = segrellion_banner_test_war
+
+
+						scope:segrellion_banner_vassal = {
+
+							NOT = {
+								is_at_war_with = scope:segrellion_banner_test_war.primary_attacker
+							}
+
+							NOT = {
+								is_at_war_with = scope:segrellion_banner_test_war.primary_defender
+							}
+						}
+					}
+				}
+			}
+
+
+			segrellion_resolve_banner_vassal_response_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# ADD ACCEPTING VASSALS TO EACH VALID WAR
+	# =====================================================
+
+	scope:segrellion_banner_liege = {
+
+		every_character_war = {
+
+			limit = {
+
+				is_civil_war = no
+
+				OR = {
+					primary_attacker = scope:segrellion_banner_liege
+					primary_defender = scope:segrellion_banner_liege
+				}
+			}
+
+
+			save_scope_as = segrellion_banner_war
+
+
+			every_in_list = {
+
+				list = segrellion_banners_accept
+
+
+				save_scope_as = segrellion_banner_vassal
+
+
+				if = {
+
+					limit = {
+
+						scope:segrellion_banner_war = {
+
+							NOR = {
+
+								any_war_attacker = {
+									this = scope:segrellion_banner_vassal
+								}
+
+								any_war_defender = {
+									this = scope:segrellion_banner_vassal
+								}
+							}
+						}
+
+
+						scope:segrellion_banner_vassal = {
+
+							NOT = {
+								is_at_war_with = scope:segrellion_banner_war.primary_attacker
+							}
+
+							NOT = {
+								is_at_war_with = scope:segrellion_banner_war.primary_defender
+							}
+						}
+					}
+
+
+					scope:segrellion_banner_war = {
+
+						set_called_to = scope:segrellion_banner_vassal
+
+
+						if = {
+
+							limit = {
+								primary_attacker = scope:segrellion_banner_liege
+							}
+
+							add_attacker = scope:segrellion_banner_vassal
+						}
+
+
+						else_if = {
+
+							limit = {
+								primary_defender = scope:segrellion_banner_liege
+							}
+
+							add_defender = scope:segrellion_banner_vassal
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# RESULT EVENT
+	# =====================================================
+
+	trigger_event = {
+		id = segrellion_banners.0001
+		days = 1
+	}
+}
+
+
+# =========================================================
+# VASSAL RESPONSE
+#
+# ROOT = individual vassal
+#
+# Willingness is primarily based on opinion of the liege.
+# =========================================================
+
+segrellion_resolve_banner_vassal_response_effect = {
+
+
+	# =====================================================
+	# DEVOTED / VERY LOYAL
+	# 60+ opinion
+	# 100% JOIN
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= 60
+			}
+		}
+
+
+		add_to_list = segrellion_banners_accept
+
+
+		scope:segrellion_banner_liege = {
+			add_character_flag = segrellion_banners_any_accepted
+		}
+	}
+
+
+	# =====================================================
+	# LOYAL
+	# 20 to 59 opinion
+	# 85% JOIN
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= 20
+			}
+		}
+
+
+		random_list = {
+
+			85 = {
+
+				add_to_list = segrellion_banners_accept
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_accepted
+				}
+			}
+
+
+			15 = {
+
+				add_to_list = segrellion_banners_refuse
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_refused
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# UNCERTAIN
+	# -20 to 19 opinion
+	# 60% JOIN
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= -20
+			}
+		}
+
+
+		random_list = {
+
+			60 = {
+
+				add_to_list = segrellion_banners_accept
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_accepted
+				}
+			}
+
+
+			40 = {
+
+				add_to_list = segrellion_banners_refuse
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_refused
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# RELUCTANT
+	# -50 to -21 opinion
+	# 30% JOIN
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= -50
+			}
+		}
+
+
+		random_list = {
+
+			30 = {
+
+				add_to_list = segrellion_banners_accept
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_accepted
+				}
+			}
+
+
+			70 = {
+
+				add_to_list = segrellion_banners_refuse
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_refused
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HOSTILE
+	# Below -50 opinion
+	# 10% JOIN
+	# =====================================================
+
+	else = {
+
+
+		random_list = {
+
+			10 = {
+
+				add_to_list = segrellion_banners_accept
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_accepted
+				}
+			}
+
+
+			90 = {
+
+				add_to_list = segrellion_banners_refuse
+
+				scope:segrellion_banner_liege = {
+					add_character_flag = segrellion_banners_any_refused
+				}
+			}
+		}
+	}
+}
