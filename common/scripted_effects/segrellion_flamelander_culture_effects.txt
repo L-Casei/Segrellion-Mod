@@ -1,0 +1,164 @@
+# =========================================================
+# FLAMELANDER CULTURE
+# =========================================================
+
+# Converts the territories that formed the original Flamelands.
+# House Segrellion itself is NOT forcibly converted, allowing the ruling
+# dynasty to retain its Valyrian identity while the realm develops its own.
+segrellion_apply_flamelander_culture_effect = {
+
+	# The new culture begins with the technological knowledge of the two
+	# principal Westerosi cultures from which the region developed.
+	culture:flamelander = {
+		get_all_innovations_from = culture:crownlander
+		get_all_innovations_from = culture:stormlander_main
+	}
+
+	# Vhalerion
+	title:d_vhalerion = {
+		every_de_jure_county = {
+			set_county_culture = culture:flamelander
+		}
+	}
+
+	# Massey's Hook
+	title:d_masseys_hook = {
+		every_de_jure_county = {
+			set_county_culture = culture:flamelander
+		}
+	}
+
+	# Wendwater Forest / the central Flamelands
+	title:d_wendwater_forest = {
+		every_de_jure_county = {
+			set_county_culture = culture:flamelander
+		}
+	}
+
+	# Baywater Woods, excluding The Gauntlet.
+	title:d_the_baywater_woods = {
+		every_de_jure_county = {
+			limit = {
+				this != title:c_the_gauntlet
+			}
+			set_county_culture = culture:flamelander
+		}
+	}
+
+	set_global_variable = {
+		name = segrellion_flamelander_culture_created
+		value = yes
+	}
+
+	title:k_flamelands = {
+		remove_variable = segrellion_flamelander_culture_waiting
+	}
+}
+
+
+# Dynamic formation path.
+# Used when the player actually takes the decision to found the Flamelands.
+# The creation date becomes the real date on which the five-year process ends.
+segrellion_create_flamelander_culture_dynamic_effect = {
+
+	culture:flamelander = {
+		reset_culture_creation_date = yes
+	}
+
+	segrellion_apply_flamelander_culture_effect = yes
+}
+
+
+# Historical formation path.
+# Aeryn founded the Flamelands on 8144.1.28, so the culture exists from
+# 8149.1.28 in starts where the kingdom was founded through title history.
+# We deliberately do not reset the culture creation date here, because the
+# culture definition already records the historical date 8149.1.28.
+segrellion_create_flamelander_culture_historical_effect = {
+
+	segrellion_apply_flamelander_culture_effect = yes
+}
+
+
+# Main progression check. It is intentionally independent of Aeryn's life,
+# so succession or an early death can never destroy the five-year timer.
+segrellion_flamelander_culture_progression_effect = {
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = segrellion_flamelander_culture_created
+			}
+
+			title:k_flamelands = {
+				exists = holder
+			}
+		}
+
+		# =====================================================
+		# DYNAMIC FOUNDATION
+		# =====================================================
+		# segrellion_flamelands_founded is set by the actual
+		# Forge the Flamelands decision. On the first monthly
+		# pulse after foundation we start a five-year title timer.
+		if = {
+			limit = {
+				has_global_variable = segrellion_flamelands_founded
+
+				title:k_flamelands = {
+					NOT = {
+						has_variable = segrellion_flamelander_culture_clock_started
+					}
+				}
+			}
+
+			title:k_flamelands = {
+				set_variable = {
+					name = segrellion_flamelander_culture_clock_started
+					value = yes
+				}
+
+				set_variable = {
+					name = segrellion_flamelander_culture_waiting
+					value = yes
+					years = 5
+				}
+			}
+		}
+
+		# Five years have elapsed since the dynamic foundation.
+		if = {
+			limit = {
+				has_global_variable = segrellion_flamelands_founded
+
+				title:k_flamelands = {
+					has_variable = segrellion_flamelander_culture_clock_started
+
+					NOT = {
+						has_variable = segrellion_flamelander_culture_waiting
+					}
+				}
+			}
+
+			segrellion_create_flamelander_culture_dynamic_effect = yes
+		}
+
+		# =====================================================
+		# HISTORICAL FOUNDATION
+		# =====================================================
+		# When loading a bookmark after Aeryn's historical
+		# foundation, the decision itself never ran. In that case
+		# the fixed historical emergence date is used instead.
+		else_if = {
+			limit = {
+				NOT = {
+					has_global_variable = segrellion_flamelands_founded
+				}
+
+				current_date >= 8149.1.28
+			}
+
+			segrellion_create_flamelander_culture_historical_effect = yes
+		}
+	}
+}
