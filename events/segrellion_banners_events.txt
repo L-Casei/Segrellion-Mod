@@ -2,99 +2,86 @@ namespace = segrellion_banners
 
 
 # =========================================================
-# 0001 - THE BANNERS ANSWER
+# 0010 - YOUR LIEGE CALLS THE BANNERS
+#
+# ROOT = human-controlled vassal
 # =========================================================
 
-segrellion_banners.0001 = {
+segrellion_banners.0010 = {
 
 	type = character_event
 
-	title = segrellion_banners.0001.t
-
-	desc = {
-
-		first_valid = {
-
-
-			# -------------------------------------------------
-			# SOME ACCEPTED, SOME REFUSED
-			# -------------------------------------------------
-
-			triggered_desc = {
-
-				trigger = {
-
-					has_character_flag = segrellion_banners_any_accepted
-					has_character_flag = segrellion_banners_any_refused
-				}
-
-				desc = segrellion_banners.0001.desc_mixed
-			}
-
-
-			# -------------------------------------------------
-			# ALL WHO ANSWERED ACCEPTED
-			# -------------------------------------------------
-
-			triggered_desc = {
-
-				trigger = {
-
-					has_character_flag = segrellion_banners_any_accepted
-
-					NOT = {
-						has_character_flag = segrellion_banners_any_refused
-					}
-				}
-
-				desc = segrellion_banners.0001.desc_accepted
-			}
-
-
-			# -------------------------------------------------
-			# NONE ACCEPTED
-			# -------------------------------------------------
-
-			triggered_desc = {
-
-				trigger = {
-					has_character_flag = segrellion_banners_any_refused
-				}
-
-				desc = segrellion_banners.0001.desc_refused
-			}
-
-
-			# -------------------------------------------------
-			# FALLBACK
-			# -------------------------------------------------
-
-			desc = segrellion_banners.0001.desc_none
-		}
-	}
-
+	title = segrellion_banners.0010.t
+	desc = segrellion_banners.0010.desc
 
 	theme = war
 
 
-	override_background = {
-		reference = army_camp
+	immediate = {
+
+		if = {
+
+			limit = {
+				exists = liege
+			}
+
+			liege = {
+				save_scope_as = segrellion_banner_liege
+			}
+		}
 	}
 
 
 	left_portrait = {
 
-		character = root
+		character = scope:segrellion_banner_liege
 		animation = personality_bold
 	}
 
 
+	right_portrait = {
+
+		character = root
+		animation = personality_honorable
+	}
+
+
+	# =====================================================
+	# ANSWER THE CALL
+	# =====================================================
+
 	option = {
 
-		name = segrellion_banners.0001.a
+		name = segrellion_banners.0010.a
+
+		trigger = {
+			exists = scope:segrellion_banner_liege
+		}
+
+		segrellion_banner_join_liege_wars_effect = yes
+	}
 
 
-		remove_character_flag = segrellion_banners_any_accepted
-		remove_character_flag = segrellion_banners_any_refused
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0010.b
+
+		trigger = {
+			exists = scope:segrellion_banner_liege
+		}
+
+		scope:segrellion_banner_liege = {
+
+			add_opinion = {
+				target = root
+				modifier = refused_call_to_war
+				opinion = -15
+				years = 5
+			}
+		}
 	}
 }

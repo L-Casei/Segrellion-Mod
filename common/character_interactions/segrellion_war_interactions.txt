@@ -1,0 +1,269 @@
+# =========================================================
+# JOIN LIEGE'S WAR
+# =========================================================
+
+segrellion_join_liege_war_interaction = {
+
+	category = interaction_category_diplomacy
+
+	interface = interfere_in_war
+	special_interaction = interfere_in_war_interaction
+
+	common_interaction = yes
+
+	interface_priority = 70
+
+	icon = alliance
+
+	desc = segrellion_join_liege_war_interaction_desc
+
+	notification_text = segrellion_join_liege_war_interaction_notification
+
+	auto_accept = yes
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		# Must be a landed ruler.
+		scope:actor = {
+
+			is_alive = yes
+			is_landed = yes
+			is_ruler = yes
+
+			is_imprisoned = no
+			is_incapable = no
+
+
+			# DIRECT LIEGE ONLY.
+			is_vassal_of = scope:recipient
+		}
+
+
+		scope:recipient = {
+
+			is_alive = yes
+			is_landed = yes
+			is_ruler = yes
+
+			is_at_war = yes
+		}
+
+
+		# =================================================
+		# GAME RULE TIER
+		# =================================================
+
+		OR = {
+
+
+			# ---------------------------------------------
+			# COUNTY OR HIGHER
+			# ---------------------------------------------
+
+			AND = {
+
+				has_game_rule = segrellion_join_liege_wars_county_or_higher
+
+				scope:recipient = {
+					highest_held_title_tier >= tier_county
+				}
+			}
+
+
+			# ---------------------------------------------
+			# DUCHY OR HIGHER
+			# ---------------------------------------------
+
+			AND = {
+
+				has_game_rule = segrellion_join_liege_wars_duchy_or_higher
+
+				scope:recipient = {
+					highest_held_title_tier >= tier_duchy
+				}
+			}
+
+
+			# ---------------------------------------------
+			# KINGDOM OR HIGHER
+			# ---------------------------------------------
+
+			AND = {
+
+				has_game_rule = segrellion_join_liege_wars_kingdom_or_higher
+
+				scope:recipient = {
+					highest_held_title_tier >= tier_kingdom
+				}
+			}
+
+
+			# ---------------------------------------------
+			# EMPIRE ONLY
+			# ---------------------------------------------
+
+			AND = {
+
+				has_game_rule = segrellion_join_liege_wars_empire_only
+
+				scope:recipient = {
+					highest_held_title_tier >= tier_empire
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# TARGET WAR
+	# =====================================================
+
+	has_valid_target = {
+		exists = scope:target
+	}
+
+
+	has_valid_target_showing_failures_only = {
+
+		scope:target = {
+
+			is_war_leader = scope:recipient
+
+			is_civil_war = no
+		}
+	}
+
+
+	can_be_picked = {
+
+		exists = scope:target
+
+
+		scope:target = {
+
+			# Liege must be leading the selected war.
+			custom_description = {
+
+				text = segrellion_join_liege_war_liege_leader_tt
+
+				is_war_leader = scope:recipient
+			}
+
+
+			# External wars only.
+			custom_description = {
+
+				text = segrellion_join_liege_war_external_tt
+
+				is_civil_war = no
+			}
+
+
+			# Actor cannot already participate.
+			custom_description = {
+
+				text = segrellion_join_liege_war_not_participant_tt
+
+				NOR = {
+
+					any_war_attacker = {
+						this = scope:actor
+					}
+
+					any_war_defender = {
+						this = scope:actor
+					}
+				}
+			}
+		}
+
+
+		# Actor cannot currently be an enemy of either side.
+		scope:actor = {
+
+			custom_description = {
+
+				text = segrellion_join_liege_war_no_conflict_tt
+
+				NOT = {
+					is_at_war_with = scope:target.primary_attacker
+				}
+
+				NOT = {
+					is_at_war_with = scope:target.primary_defender
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	on_accept = {
+
+		scope:target = {
+
+			hidden_effect = {
+
+				if = {
+
+					limit = {
+						NOT = {
+							was_called = scope:actor
+						}
+					}
+
+					set_called_to = scope:actor
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					is_attacker = scope:recipient
+				}
+
+				add_attacker = scope:actor
+			}
+
+
+			else = {
+
+				add_defender = scope:actor
+			}
+		}
+
+
+		scope:recipient = {
+
+			add_opinion = {
+				target = scope:actor
+				modifier = grateful
+				opinion = 10
+				years = 5
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_potential = {
+		always = no
+	}
+
+
+	ai_accept = {
+		base = 100
+	}
+}

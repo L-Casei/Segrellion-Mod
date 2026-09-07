@@ -467,3 +467,291 @@ segrellion_resolve_banner_vassal_response_effect = {
 		}
 	}
 }
+
+# =========================================================
+# CALL THE BANNERS
+#
+# ROOT = ruler calling the banners
+# =========================================================
+
+segrellion_call_the_banners_effect = {
+
+	save_scope_as = segrellion_banner_liege
+
+
+	every_vassal = {
+
+		limit = {
+
+			is_alive = yes
+			is_landed = yes
+
+			is_imprisoned = no
+			is_incapable = no
+
+			highest_held_title_tier > tier_barony
+
+			NOT = {
+				government_has_flag = government_is_nw
+			}
+		}
+
+
+		save_scope_as = segrellion_banner_vassal
+
+
+		# Human-controlled vassals choose for themselves.
+		if = {
+
+			limit = {
+				is_ai = no
+			}
+
+			trigger_event = {
+				id = segrellion_banners.0010
+			}
+		}
+
+
+		# AI vassals answer according to loyalty.
+		else = {
+
+			segrellion_resolve_banner_vassal_response_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# RESOLVE AI VASSAL RESPONSE
+#
+# ROOT = vassal
+# scope:segrellion_banner_liege = liege
+# =========================================================
+
+segrellion_resolve_banner_vassal_response_effect = {
+
+
+	# =====================================================
+	# VERY LOYAL
+	# Opinion 60+
+	# 100% joins
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= 60
+			}
+		}
+
+		segrellion_banner_join_liege_wars_effect = yes
+	}
+
+
+	# =====================================================
+	# LOYAL
+	# Opinion 20 to 59
+	# 85% joins
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= 20
+			}
+		}
+
+
+		random_list = {
+
+			85 = {
+				segrellion_banner_join_liege_wars_effect = yes
+			}
+
+			15 = {
+			}
+		}
+	}
+
+
+	# =====================================================
+	# UNCERTAIN
+	# Opinion -20 to 19
+	# 60% joins
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= -20
+			}
+		}
+
+
+		random_list = {
+
+			60 = {
+				segrellion_banner_join_liege_wars_effect = yes
+			}
+
+			40 = {
+			}
+		}
+	}
+
+
+	# =====================================================
+	# RELUCTANT
+	# Opinion -50 to -21
+	# 30% joins
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			opinion = {
+				target = scope:segrellion_banner_liege
+				value >= -50
+			}
+		}
+
+
+		random_list = {
+
+			30 = {
+				segrellion_banner_join_liege_wars_effect = yes
+			}
+
+			70 = {
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HOSTILE
+	# Below -50
+	# 10% joins
+	# =====================================================
+
+	else = {
+
+		random_list = {
+
+			10 = {
+				segrellion_banner_join_liege_wars_effect = yes
+			}
+
+			90 = {
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# ADD A VASSAL TO THE LIEGE'S VALID WARS
+#
+# ROOT = joining vassal
+# scope:segrellion_banner_liege = liege
+# =========================================================
+
+segrellion_banner_join_liege_wars_effect = {
+
+	save_scope_as = segrellion_banner_joiner
+
+
+	scope:segrellion_banner_liege = {
+
+		every_character_war = {
+
+			save_scope_as = segrellion_banner_war
+
+
+			if = {
+
+				limit = {
+
+					# Only external wars.
+					is_civil_war = no
+
+
+					# CRITICAL:
+					# The liege must actually lead this war.
+					# Secondary participants cannot propagate
+					# Call the Banners further downward.
+					is_war_leader = scope:segrellion_banner_liege
+
+
+					# Joiner is not already participating.
+					NOR = {
+
+						any_war_attacker = {
+							this = scope:segrellion_banner_joiner
+						}
+
+						any_war_defender = {
+							this = scope:segrellion_banner_joiner
+						}
+					}
+
+
+					# Joiner is not currently fighting either
+					# primary side of the war.
+					scope:segrellion_banner_joiner = {
+
+						NOT = {
+							is_at_war_with = scope:segrellion_banner_war.primary_attacker
+						}
+
+						NOT = {
+							is_at_war_with = scope:segrellion_banner_war.primary_defender
+						}
+					}
+				}
+
+
+				hidden_effect = {
+
+					if = {
+
+						limit = {
+							NOT = {
+								was_called = scope:segrellion_banner_joiner
+							}
+						}
+
+						set_called_to = scope:segrellion_banner_joiner
+					}
+				}
+
+
+				if = {
+
+					limit = {
+						is_attacker = scope:segrellion_banner_liege
+					}
+
+					add_attacker = scope:segrellion_banner_joiner
+				}
+
+
+				else = {
+
+					add_defender = scope:segrellion_banner_joiner
+				}
+			}
+		}
+	}
+}
