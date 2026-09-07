@@ -749,6 +749,8 @@ segrellion_jon_accepts_north_effect = {
 
 			root = {
 
+				is_landed = no
+
 				NOT = {
 					has_title = title:k_the_wall
 				}
@@ -1119,36 +1121,32 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 		segrellion_transfer_stannis_prisoners_to_jon_effect = yes
+		
+		# =================================================
+		# RAMSAY'S RECKONING
+		# =================================================
 
-		# Ramsay's reckoning.
-		title:e_the_north.holder ?= {
+		if = {
 
-			if = {
+			limit = {
 
-				limit = {
-
-					this = root
-
+				root = {
 
 					any_prisoner = {
 
 						has_character_flag = segrellion_ramsay_northern_takeover
 					}
 				}
+			}
 
+
+			root = {
 
 				trigger_event = {
 
 					id = segrellion_stannis.1030
 
 					days = { 5 10 }
-				}
-			}
-
-			else = {
-				root = {
-
-					add_character_flag = segrellion_jon_north_transfer_failed
 				}
 			}
 		}
