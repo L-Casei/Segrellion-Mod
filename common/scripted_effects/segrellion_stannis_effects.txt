@@ -546,6 +546,23 @@ segrellion_jon_accepts_north_effect = {
 	}
 
 
+	# =====================================================
+	# SAVE THE CURRENT LORD COMMANDER
+	#
+	# This may be Jon or Denys Mallister depending on how
+	# the resurrection storyline has progressed.
+	# =====================================================
+
+	title:k_the_wall.holder ?= {
+
+		save_scope_as = segrellion_current_lord_commander
+	}
+
+
+	# =====================================================
+	# PREPARE TORMUND
+	# =====================================================
+
 	character:174345 ?= {
 
 		if = {
@@ -569,52 +586,52 @@ segrellion_jon_accepts_north_effect = {
 			}
 
 
+			# ---------------------------------------------
+			# Bring Tormund into the Watch before granting
+			# him command of it.
+			# ---------------------------------------------
+
+			if = {
+
+				limit = {
+
+					is_landed = no
+
+					exists = scope:segrellion_current_lord_commander
+				}
+
+
+				set_employer = scope:segrellion_current_lord_commander
+			}
+
+
 			set_location = title:c_castle_black.title_province
+
 
 			save_scope_as = segrellion_new_lord_commander
 		}
 	}
 
 
+	# =====================================================
+	# TRANSFER THE NIGHT'S WATCH TO TORMUND
+	# =====================================================
+
 	if = {
 
 		limit = {
 
+			exists = scope:segrellion_current_lord_commander
+
 			exists = scope:segrellion_new_lord_commander
-		}
 
 
-		root = {
+			scope:segrellion_current_lord_commander = {
 
-			every_held_title = {
-
-				add_to_list = segrellion_jon_watch_titles
+				this != scope:segrellion_new_lord_commander
 			}
 		}
-	}
 
-	# =====================================================
-	# ONLY CONTINUE IF WE FOUND A NEW LORD COMMANDER
-	# =====================================================
-
-	if = {
-
-		limit = {
-
-			exists = scope:segrellion_new_lord_commander
-		}
-
-
-		# =================================================
-		# TRANSFER THE NIGHT'S WATCH
-		#
-		# k_the_wall goes first and transfers its vassals.
-		#
-		# government_base = Jon is deliberate:
-		# Jon is STILL Lord Commander and STILL Night's
-		# Watch at this exact moment, so the successor
-		# inherits the proper Watch government.
-		# =================================================
 
 		create_title_and_vassal_change = {
 
@@ -626,6 +643,10 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 
+		# =================================================
+		# THE NIGHT'S WATCH
+		# =================================================
+
 		title:k_the_wall = {
 
 			change_title_holder_include_vassals = {
@@ -634,43 +655,81 @@ segrellion_jon_accepts_north_effect = {
 
 				change = scope:segrellion_nights_watch_transfer
 
-				government_base = root
+				government_base = scope:segrellion_current_lord_commander
 			}
 		}
 
 
 		# =================================================
-		# TRANSFER EVERY OTHER WATCH TITLE JON HELD
+		# THE WALL
 		# =================================================
 
-		every_in_list = {
-
-			list = segrellion_jon_watch_titles
-
+		if = {
 
 			limit = {
 
-				this != title:k_the_wall
+				title:d_the_wall.holder ?= {
+
+					this = scope:segrellion_current_lord_commander
+				}
 			}
 
 
-			change_title_holder = {
+			title:d_the_wall = {
 
-				holder = scope:segrellion_new_lord_commander
+				change_title_holder = {
 
-				change = scope:segrellion_nights_watch_transfer
+					holder = scope:segrellion_new_lord_commander
+
+					change = scope:segrellion_nights_watch_transfer
+				}
+			}
+		}
+
+
+		# =================================================
+		# CASTLE BLACK
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:c_castle_black.holder ?= {
+
+					this = scope:segrellion_current_lord_commander
+				}
+			}
+
+
+			title:c_castle_black = {
+
+				change_title_holder = {
+
+					holder = scope:segrellion_new_lord_commander
+
+					change = scope:segrellion_nights_watch_transfer
+				}
 			}
 		}
 
 
 		resolve_title_and_vassal_change = scope:segrellion_nights_watch_transfer
+	}
 
 
-		# =================================================
-		# TORMUND BECOMES LORD COMMANDER
-		# =================================================
+	# =====================================================
+	# FORCE TORMUND'S FINAL NIGHT'S WATCH STATE
+	# =====================================================
 
-		scope:segrellion_new_lord_commander = {
+	scope:segrellion_new_lord_commander ?= {
+
+		if = {
+
+			limit = {
+
+				has_title = title:k_the_wall
+			}
 
 
 			if = {
@@ -693,6 +752,9 @@ segrellion_jon_accepts_north_effect = {
 			set_realm_capital = title:c_castle_black
 
 			set_location = title:c_castle_black.title_province
+
+
+			add_character_flag = segrellion_tormund_lord_commander
 		}
 	}
 
@@ -710,41 +772,22 @@ segrellion_jon_accepts_north_effect = {
 
 		limit = {
 
-			OR = {
-
-				exists = scope:segrellion_new_lord_commander
+			exists = scope:segrellion_new_lord_commander
 
 
-				# Resurrected Jon is already free of the Watch:
-				# his death ended the vows and succession has
-				# already installed a new Lord Commander.
+			# Tormund must genuinely hold the Watch before
+			# Jon receives the North.
 
-				AND = {
+			scope:segrellion_new_lord_commander = {
 
-					NOT = {
-						has_trait = nightswatch
-					}
-
-					is_landed = no
-
-					NOT = {
-						has_title = title:k_the_wall
-					}
-
-					NOT = {
-						has_title = title:d_the_wall
-					}
-
-					NOT = {
-						has_title = title:c_castle_black
-					}
-				}
+				has_title = title:k_the_wall
 			}
 
 
-			root = {
+			# Jon only needs to be free of Watch titles.
+			# He does NOT need to be completely unlanded.
 
-				is_landed = no
+			root = {
 
 				NOT = {
 					has_title = title:k_the_wall
