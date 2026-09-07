@@ -1,0 +1,167 @@
+# =========================================================
+# MYA STONE / DAEMON SEGRELLION
+#
+# This file deliberately loads after
+# segrellion_winds_negotiation_effects.txt and replaces the
+# old deferred-marriage check. The existing Vale option
+# segrellion_support.6020.a already calls this effect.
+# =========================================================
+
+
+# =========================================================
+# BREAK THE PROMISE CLEANLY
+# =========================================================
+
+segrellion_break_mya_daemon_marriage_pact_effect = {
+
+	character:Segrellion_60 ?= {
+
+		var:segrellion_mya_promised_bride ?= {
+
+			if = {
+				limit = {
+					has_character_flag = segrellion_mya_pact_added_refusing_marriage
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+
+			remove_character_flag = segrellion_mya_pact_added_refusing_marriage
+			remove_character_flag = segrellion_mya_promised_to_daemon_after_regency
+			remove_character_modifier = segrellion_promised_to_daemon_segrellion_modifier
+		}
+
+		remove_character_modifier = segrellion_promised_to_mya_stone_modifier
+
+		add_character_flag = segrellion_mya_marriage_pact_broken
+
+		remove_character_flag = segrellion_mya_marriage_deferred
+		remove_character_flag = segrellion_vale_marriage_pact
+		remove_character_flag = segrellion_mya_marriage_watchdog_started
+		remove_character_flag = segrellion_mya_marriage_request_sent
+		remove_character_flag = segrellion_mya_marriage_request_accepted
+
+		remove_variable = segrellion_mya_promised_bride
+		remove_variable = segrellion_mya_regency_ward
+	}
+}
+
+
+# =========================================================
+# REPLACEMENT FOR THE OLD DEFERRED-MARRIAGE CHECK
+#
+# The promise is created in:
+# events/segrellion_winds_negotiation_events.txt
+# segrellion_support.6020.a
+#
+# It must NOT turn into a marriage because Robin gets older
+# or because Mya stops being his regent. It waits until
+# Daemon actually owns e_flamelands.
+# =========================================================
+
+segrellion_check_mya_deferred_marriage_effect = {
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_mya_marriage_deferred
+				has_variable = segrellion_mya_promised_bride
+			}
+
+			var:segrellion_mya_promised_bride = {
+				save_scope_as = segrellion_mya_deferred_bride
+			}
+
+
+			# -------------------------------------------------
+			# If either side can no longer fulfil the pact,
+			# remove the marriage lock and reminder modifiers.
+			# -------------------------------------------------
+
+			if = {
+
+				limit = {
+					OR = {
+						is_alive = no
+						is_married = yes
+
+						scope:segrellion_mya_deferred_bride = {
+							is_alive = no
+						}
+
+						scope:segrellion_mya_deferred_bride = {
+							is_married = yes
+						}
+					}
+				}
+
+				segrellion_break_mya_daemon_marriage_pact_effect = yes
+			}
+
+
+			else = {
+
+				# ---------------------------------------------
+				# Visible reminder on Daemon.
+				# ---------------------------------------------
+
+				if = {
+					limit = {
+						NOT = {
+							has_character_modifier = segrellion_promised_to_mya_stone_modifier
+						}
+					}
+
+					add_character_modifier = {
+						modifier = segrellion_promised_to_mya_stone_modifier
+					}
+				}
+
+
+				# ---------------------------------------------
+				# Visible reminder on Mya.
+				# ---------------------------------------------
+
+				scope:segrellion_mya_deferred_bride = {
+
+					if = {
+						limit = {
+							NOT = {
+								has_character_modifier = segrellion_promised_to_daemon_segrellion_modifier
+							}
+						}
+
+						add_character_modifier = {
+							modifier = segrellion_promised_to_daemon_segrellion_modifier
+						}
+					}
+				}
+
+
+				# ---------------------------------------------
+				# Start one self-sustaining watchdog.
+				# It wakes every 30 days until Daemon restores
+				# the Flamelands.
+				# ---------------------------------------------
+
+				if = {
+					limit = {
+						NOT = {
+							has_character_flag = segrellion_mya_marriage_watchdog_started
+						}
+					}
+
+					add_character_flag = segrellion_mya_marriage_watchdog_started
+
+					trigger_event = {
+						id = segrellion_mya_marriage.0001
+						days = 30
+					}
+				}
+			}
+		}
+	}
+}
