@@ -1,0 +1,885 @@
+namespace = segrellion_sansa
+
+
+# =========================================================
+# 0100 - YOHN ROYCE'S FIRST LETTER
+# Root = Daemon
+# =========================================================
+
+segrellion_sansa.0100 = {
+
+	type = letter_event
+
+	sender = title:c_runestone.holder
+
+	opening = segrellion_sansa.0100.opening
+
+	title = segrellion_sansa.0100.t
+	desc = segrellion_sansa.0100.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_support_pact
+		has_character_flag = segrellion_unicorn_returns_completed
+
+		NOT = {
+			has_character_flag = segrellion_sansa_royce_first_letter_seen
+		}
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+			NOT = {
+				has_character_flag = segrellion_sansa_identity_revealed
+			}
+		}
+
+		title:c_runestone.holder ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_sansa_royce_first_letter_scheduled
+
+		add_character_flag = segrellion_sansa_royce_first_letter_seen
+
+
+		set_global_variable = {
+
+			name = segrellion_sansa_yohn_royce
+
+			value = title:c_runestone.holder
+		}
+	}
+
+
+	# =====================================================
+	# YES
+	# AI = 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0100.a
+
+		add_character_flag = segrellion_sansa_royce_preliminary_agreement
+		add_character_flag = segrellion_sansa_royce_second_letter_scheduled
+
+
+		trigger_event = {
+
+			id = segrellion_sansa.0110
+
+			days = { 30 60 }
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# NO
+	# AI = 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0100.b
+
+		add_character_flag = segrellion_sansa_royce_route_refused
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - THE SECOND LETTER
+# Root = Daemon
+# =========================================================
+
+segrellion_sansa.0110 = {
+
+	type = letter_event
+
+	sender = title:c_runestone.holder
+
+	opening = segrellion_sansa.0110.opening
+
+	title = segrellion_sansa.0110.t
+	desc = segrellion_sansa.0110.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_sansa_royce_preliminary_agreement
+		has_character_flag = segrellion_sansa_royce_second_letter_scheduled
+
+		NOT = {
+			has_character_flag = segrellion_sansa_protection_accepted
+		}
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+		}
+
+		title:c_runestone.holder ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_sansa_royce_second_letter_scheduled
+
+		add_character_flag = segrellion_sansa_royce_second_letter_seen
+	}
+
+
+	# =====================================================
+	# PROTECT SANSA
+	# 80%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0110.a
+
+		custom_tooltip = segrellion_sansa.0110.a.tt
+
+
+		add_character_flag = segrellion_sansa_extraction_in_progress
+
+
+		trigger_event = {
+
+			id = segrellion_sansa.0120
+
+			days = { 7 14 }
+		}
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# PROTECT HER IN EXCHANGE FOR MARRIAGE
+	# 18%
+	#
+	# NOT AVAILABLE IF MYA STONE HAS BEEN PROMISED
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0110.b
+
+		custom_tooltip = segrellion_sansa.0110.b.tt
+
+
+		trigger = {
+
+			is_married = no
+
+			NOT = {
+				has_character_flag = segrellion_vale_marriage_pact
+			}
+
+			NOT = {
+				has_character_flag = segrellion_mya_marriage_deferred
+			}
+
+			character:Stark_Dummy_8 ?= {
+				is_married = no
+			}
+		}
+
+
+		add_character_flag = segrellion_sansa_extraction_in_progress
+		add_character_flag = segrellion_sansa_marriage_demanded_for_protection
+
+
+		trigger_event = {
+
+			id = segrellion_sansa.0120
+
+			days = { 7 14 }
+		}
+
+
+		ai_chance = {
+			base = 18
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# 2%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0110.c
+
+		add_character_flag = segrellion_sansa_royce_route_refused
+
+		remove_character_flag = segrellion_sansa_royce_preliminary_agreement
+
+
+		ai_chance = {
+			base = 2
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - SANSA ARRIVES AT THE BEACON
+# Root = Daemon
+# =========================================================
+
+segrellion_sansa.0120 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0120.t
+	desc = segrellion_sansa.0120.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_sansa_extraction_in_progress
+
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		segrellion_sansa_arrives_in_flamelands_effect = yes
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	option = {
+
+		name = segrellion_sansa.0120.a
+
+		custom_tooltip = segrellion_sansa.0120.a.tt
+
+
+		hidden_effect = {
+
+			segrellion_start_sansa_baelish_war_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 0300 - THE WOLF OF THE RIVERLANDS
+# Root = Daemon
+# =========================================================
+
+segrellion_sansa.0300 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0300.t
+	desc = segrellion_sansa.0300.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+
+			has_title = title:k_the_riverlands
+
+			has_character_flag = segrellion_sansa_riverlands_settled
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_8
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_sansa.0300.a
+
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+
+					is_married = no
+
+					NOT = {
+						has_character_flag = segrellion_vale_marriage_pact
+					}
+
+					NOT = {
+						has_character_flag = segrellion_mya_marriage_deferred
+					}
+
+
+					character:Stark_Dummy_8 = {
+						is_married = no
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_sansa.0500
+
+					days = { 10 20 }
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0500 - A WOLF AND A UNICORN
+# Root = Daemon
+# =========================================================
+
+segrellion_sansa.0500 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0500.t
+	desc = segrellion_sansa.0500.desc
+
+	theme = romance
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+		is_married = no
+
+
+		NOT = {
+			has_character_flag = segrellion_vale_marriage_pact
+		}
+
+		NOT = {
+			has_character_flag = segrellion_mya_marriage_deferred
+		}
+
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+			is_married = no
+
+			has_title = title:k_the_riverlands
+
+			has_character_flag = segrellion_sansa_riverlands_settled
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	option = {
+
+		name = segrellion_sansa.0500.a
+
+		custom_tooltip = segrellion_sansa.0500.a.tt
+
+
+		add_character_flag = segrellion_sansa_marriage_proposal_sent
+
+
+		character:Stark_Dummy_8 = {
+
+			trigger_event = {
+
+				id = segrellion_sansa.0510
+
+				days = { 2 5 }
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_sansa.0500.b
+
+		add_character_flag = segrellion_sansa_marriage_proposal_declined_by_daemon
+	}
+}
+
+
+# =========================================================
+# 0510 - DAEMON'S PROPOSAL
+# Root = Sansa
+# =========================================================
+
+segrellion_sansa.0510 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_60
+
+	opening = segrellion_sansa.0510.opening
+
+	title = segrellion_sansa.0510.t
+	desc = segrellion_sansa.0510.desc
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Stark_Dummy_8
+
+		is_alive = yes
+		is_married = no
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+			is_married = no
+
+			has_character_flag = segrellion_sansa_marriage_proposal_sent
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0510.a
+
+		custom_tooltip = segrellion_sansa.0510.a.tt
+
+
+		if = {
+
+			limit = {
+				has_trait = refusing_marriage
+			}
+
+			remove_trait = refusing_marriage
+		}
+
+
+		character:Segrellion_60 = {
+
+			segrellion_daemon_open_story_marriage_window_effect = yes
+		}
+
+
+		marry = character:Segrellion_60
+
+
+		character:Segrellion_60 = {
+
+			segrellion_daemon_close_story_marriage_window_effect = yes
+
+			add_character_flag = segrellion_daemon_sansa_dynastic_pact
+
+			remove_character_flag = segrellion_sansa_marriage_proposal_sent
+		}
+
+
+		add_character_flag = segrellion_daemon_sansa_dynastic_pact
+
+
+		ai_chance = {
+
+			base = 0
+
+
+			modifier = {
+
+				add = 100
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				add = 1000
+
+				character:Segrellion_60 = {
+					has_character_flag = segrellion_sansa_marriage_demanded_for_protection
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0510.b
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_sansa_marriage_proposal_sent
+
+			add_character_flag = segrellion_sansa_refused_daemon_marriage
+		}
+
+
+		ai_chance = {
+
+			base = 100
+
+
+			modifier = {
+
+				factor = 0
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0
+
+				character:Segrellion_60 = {
+					has_character_flag = segrellion_sansa_marriage_demanded_for_protection
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0600 - BAELISH'S PLAN
+#
+# Sansa reaches sixteen without being extracted by Royce.
+# Root = Lord of the Riverlands / Baelish
+# =========================================================
+
+segrellion_sansa.0600 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0600.t
+	desc = segrellion_sansa.0600.desc
+
+	theme = intrigue
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		dynasty = dynasty:dynn_Baelish
+
+		has_title = title:k_the_riverlands
+
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+
+			age >= 16
+
+			NOT = {
+				has_character_flag = segrellion_sansa_identity_revealed
+			}
+		}
+
+
+		exists = global_var:segrellion_resurrected_jon
+
+
+		global_var:segrellion_resurrected_jon = {
+
+			is_alive = yes
+
+			has_title = title:e_the_north
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_baelish_sansa_choice_scheduled
+
+		add_character_flag = segrellion_baelish_sansa_choice_resolved
+
+		add_character_flag = segrellion_baelish_stannis_murder_plot_prepared
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = scheming
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# SEND SANSA TO JON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0600.a
+
+		custom_tooltip = segrellion_sansa.0600.a.tt
+
+
+		character:Stark_Dummy_8 = {
+
+			segrellion_reveal_sansa_stark_effect = yes
+
+			add_character_flag = segrellion_sansa_sent_to_jon
+
+
+			if = {
+
+				limit = {
+					is_ruler = no
+				}
+
+				set_employer = global_var:segrellion_resurrected_jon
+			}
+
+
+			set_location = global_var:segrellion_resurrected_jon.capital_province
+		}
+
+
+		if = {
+
+			limit = {
+
+				can_add_hook = {
+
+					target = global_var:segrellion_resurrected_jon
+
+					type = favor_hook
+				}
+			}
+
+			add_hook = {
+
+				type = favor_hook
+
+				target = global_var:segrellion_resurrected_jon
+			}
+		}
+
+
+		global_var:segrellion_resurrected_jon = {
+
+			trigger_event = {
+
+				id = segrellion_sansa.0610
+
+				days = { 2 5 }
+			}
+		}
+	}
+
+
+	# =====================================================
+	# KEEP ALAYNE HIDDEN
+	#
+	# This is the branch we can continue later with
+	# Baelish's larger political plan.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0600.b
+
+		add_character_flag = segrellion_baelish_kept_sansa_hidden
+	}
+}
+
+
+# =========================================================
+# 0610 - SANSA REACHES THE NORTH
+# Root = resurrected Jon
+# =========================================================
+
+segrellion_sansa.0610 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0610.t
+	desc = segrellion_sansa.0610.desc
+
+	theme = family
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		has_character_flag = segrellion_resurrected_jon
+
+		has_title = title:e_the_north
+
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_sansa_sent_to_jon
+
+			has_character_flag = segrellion_sansa_identity_revealed
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	option = {
+
+		name = segrellion_sansa.0610.a
+	}
+}

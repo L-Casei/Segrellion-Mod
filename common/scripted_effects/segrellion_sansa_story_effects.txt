@@ -1,0 +1,542 @@
+# =========================================================
+# SANSA STARK / ALAYNE STONE STORY
+# =========================================================
+
+
+# =========================================================
+# REVEAL ALAYNE AS SANSA STARK
+#
+# ROOT = Stark_Dummy_8
+# =========================================================
+
+segrellion_reveal_sansa_stark_effect = {
+
+	if = {
+		limit = {
+			exists = real_father
+		}
+
+		set_father = real_father
+	}
+
+	if = {
+		limit = {
+			exists = real_mother
+		}
+
+		set_mother = real_mother
+	}
+
+
+	# Restore the Stark identity.
+	# Stark_7 is the original historical Jon and therefore
+	# provides the correct Stark house without hardcoding
+	# an uncertain house database key.
+
+	set_house = character:Stark_7.house
+
+	change_first_name = Sansa
+
+
+	if = {
+		limit = {
+			has_trait = bastard
+		}
+
+		remove_trait = bastard
+	}
+
+	if = {
+		limit = {
+			has_trait = legitimized_bastard
+		}
+
+		remove_trait = legitimized_bastard
+	}
+
+
+	add_character_flag = segrellion_sansa_identity_revealed
+	add_character_flag = segrellion_sansa_is_true_stark
+}
+
+
+# =========================================================
+# SANSA ARRIVES IN THE FLAMELANDS
+#
+# Daemon has agreed to protect her.
+# =========================================================
+
+segrellion_sansa_arrives_in_flamelands_effect = {
+
+	character:Stark_Dummy_8 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			segrellion_reveal_sansa_stark_effect = yes
+
+			add_character_flag = segrellion_sansa_under_daemon_protection
+			add_character_flag = segrellion_sansa_arrived_flamelands
+
+
+			if = {
+				limit = {
+					is_ruler = no
+				}
+
+				set_employer = character:Segrellion_60
+			}
+
+
+			set_location = title:b_castle_farring.title_province
+		}
+	}
+
+
+	character:Segrellion_60 = {
+
+		remove_character_flag = segrellion_sansa_extraction_in_progress
+
+		add_character_flag = segrellion_sansa_protection_accepted
+	}
+}
+
+
+# =========================================================
+# START BAELISH VS VALE WAR
+# =========================================================
+
+segrellion_start_sansa_baelish_war_effect = {
+
+	if = {
+
+		limit = {
+
+			character:Stark_Dummy_8 ?= {
+				is_alive = yes
+				has_character_flag = segrellion_sansa_under_daemon_protection
+			}
+
+			title:e_the_vale.holder ?= {
+				is_alive = yes
+			}
+
+			title:k_the_riverlands.holder ?= {
+
+				is_alive = yes
+
+				dynasty = dynasty:dynn_Baelish
+
+				this != title:e_the_vale.holder
+			}
+
+			NOT = {
+				has_global_variable = segrellion_sansa_baelish_war_started
+			}
+		}
+
+
+		title:e_the_vale.holder = {
+			save_scope_as = segrellion_sansa_vale_attacker
+		}
+
+
+		title:k_the_riverlands.holder = {
+
+			save_scope_as = segrellion_sansa_baelish_defender
+
+			add_character_flag = segrellion_sansa_baelish_war_target
+		}
+
+
+		set_global_variable = {
+			name = segrellion_sansa_baelish_target
+			value = scope:segrellion_sansa_baelish_defender
+		}
+
+
+		set_global_variable = {
+			name = segrellion_sansa_baelish_war_started
+			value = yes
+		}
+
+
+		scope:segrellion_sansa_vale_attacker = {
+
+			add_character_flag = segrellion_sansa_protection_cb_authorized
+
+
+			start_war = {
+
+				cb = segrellion_sansa_protection_war_cb
+
+				target = scope:segrellion_sansa_baelish_defender
+			}
+		}
+
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_sansa_baelish_war_launched
+		}
+	}
+}
+
+
+# =========================================================
+# SANSA INHERITS / RECEIVES THE RIVERLANDS
+# =========================================================
+
+segrellion_settle_sansa_riverlands_effect = {
+
+	if = {
+
+		limit = {
+
+			character:Stark_Dummy_8 ?= {
+				is_alive = yes
+
+				has_character_flag = segrellion_sansa_identity_revealed
+
+				NOT = {
+					has_character_flag = segrellion_sansa_riverlands_settled
+				}
+			}
+		}
+
+
+		# =================================================
+		# THE FREYS REMAIN INDEPENDENT
+		#
+		# Their own conflict with Sansa comes later.
+		# =================================================
+
+		title:d_the_crossing.holder ?= {
+
+			if = {
+
+				limit = {
+					top_liege != this
+				}
+
+				becomes_independent = yes
+			}
+		}
+
+
+		# =================================================
+		# TRANSFER THE RIVERLANDS
+		# =================================================
+
+		create_title_and_vassal_change = {
+
+			type = granted
+
+			save_scope_as = segrellion_sansa_riverlands_change
+
+			add_claim_on_loss = no
+		}
+
+
+		title:k_the_riverlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = character:Stark_Dummy_8
+
+				change = scope:segrellion_sansa_riverlands_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_sansa_riverlands_change
+
+
+		character:Stark_Dummy_8 = {
+
+			set_primary_title_to = title:k_the_riverlands
+
+			add_character_flag = segrellion_sansa_riverlands_settled
+
+
+			# ---------------------------------------------
+			# SANSA'S GRATITUDE
+			# ---------------------------------------------
+
+			add_opinion = {
+
+				target = character:Segrellion_60
+
+				modifier = segrellion_sansa_saved_by_daemon_opinion
+			}
+		}
+
+
+		# =================================================
+		# DAEMON'S HOOKS
+		# =================================================
+
+		character:Segrellion_60 = {
+
+			if = {
+
+				limit = {
+
+					can_add_hook = {
+						target = character:Stark_Dummy_8
+						type = strong_favor_hook
+					}
+				}
+
+				add_hook = {
+
+					type = strong_favor_hook
+
+					target = character:Stark_Dummy_8
+				}
+			}
+
+
+			if = {
+
+				limit = {
+
+					exists = global_var:segrellion_sansa_yohn_royce
+
+					global_var:segrellion_sansa_yohn_royce = {
+						is_alive = yes
+					}
+
+					can_add_hook = {
+
+						target = global_var:segrellion_sansa_yohn_royce
+
+						type = favor_hook
+					}
+				}
+
+				add_hook = {
+
+					type = favor_hook
+
+					target = global_var:segrellion_sansa_yohn_royce
+				}
+			}
+
+
+			add_character_flag = segrellion_sansa_riverlands_restored_by_daemon
+
+
+			trigger_event = {
+
+				id = segrellion_sansa.0300
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STORY PROGRESSION
+# =========================================================
+
+segrellion_sansa_story_progression_effect = {
+
+
+	# =====================================================
+	# YOHN ROYCE CONTACTS DAEMON
+	#
+	# Only if Daemon actually secured Vale support and
+	# subsequently reclaimed the Flamelands.
+	#
+	# This happens before Sansa turns sixteen.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			current_date >= 8302.1.1
+			current_date < 8302.12.1
+
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_vale_support_pact
+
+				has_character_flag = segrellion_unicorn_returns_completed
+
+
+				NOR = {
+
+					has_character_flag = segrellion_sansa_royce_first_letter_scheduled
+
+					has_character_flag = segrellion_sansa_royce_first_letter_seen
+
+					has_character_flag = segrellion_sansa_royce_route_refused
+
+					has_character_flag = segrellion_sansa_protection_accepted
+				}
+			}
+
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				age < 16
+
+				NOT = {
+					has_character_flag = segrellion_sansa_identity_revealed
+				}
+			}
+
+
+			title:c_runestone.holder ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_sansa_royce_first_letter_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_sansa.0100
+
+				days = { 5 15 }
+			}
+		}
+	}
+
+
+	# =====================================================
+	# BAELISH DIES AFTER SANSA'S ESCAPE
+	#
+	# Handles death during the war or from any other cause.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_sansa_under_daemon_protection
+
+				NOT = {
+					has_character_flag = segrellion_sansa_riverlands_settled
+				}
+			}
+
+
+			exists = global_var:segrellion_sansa_baelish_target
+
+
+			global_var:segrellion_sansa_baelish_target = {
+				is_alive = no
+			}
+		}
+
+
+		segrellion_settle_sansa_riverlands_effect = yes
+	}
+
+
+	# =====================================================
+	# BAELISH'S FALLBACK PLAN
+	#
+	# Sansa turns sixteen in the twelfth moon of 302 AC.
+	#
+	# Only reached if the Royce/Daemon extraction has NOT
+	# taken Sansa away first.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			current_date >= 8302.12.1
+
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				age >= 16
+
+
+				NOR = {
+
+					has_character_flag = segrellion_sansa_identity_revealed
+
+					has_character_flag = segrellion_sansa_under_daemon_protection
+
+					has_character_flag = segrellion_sansa_sent_to_jon
+				}
+			}
+
+
+			title:k_the_riverlands.holder ?= {
+
+				is_alive = yes
+
+				dynasty = dynasty:dynn_Baelish
+
+				NOT = {
+					has_character_flag = segrellion_baelish_sansa_choice_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_baelish_sansa_choice_resolved
+				}
+			}
+
+
+			exists = global_var:segrellion_resurrected_jon
+
+
+			global_var:segrellion_resurrected_jon = {
+
+				is_alive = yes
+
+				has_title = title:e_the_north
+			}
+
+
+			character:Segrellion_60 ?= {
+
+				NOR = {
+
+					has_character_flag = segrellion_sansa_royce_preliminary_agreement
+
+					has_character_flag = segrellion_sansa_extraction_in_progress
+				}
+			}
+		}
+
+
+		title:k_the_riverlands.holder = {
+
+			add_character_flag = segrellion_baelish_sansa_choice_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_sansa.0600
+
+				days = { 3 10 }
+			}
+		}
+	}
+}

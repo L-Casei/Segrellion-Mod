@@ -46,6 +46,7 @@ monthly_global_pulse = {
 		segrellion_aegon_daemon_vassalage_progression
 		segrellion_black_unicorn_personal_lock_progression
 		segrellion_young_griff_golden_company_war_sync
+		segrellion_sansa_story_progression
 	}
 }
 
@@ -64,6 +65,7 @@ on_game_start_after_lobby = {
 on_birth_child = {
 	on_actions = {
 		segrellion_daemon_arianne_children
+		segrellion_daemon_sansa_children
 	}
 }
 
@@ -142,6 +144,18 @@ on_set_relation_soulmate = {
 	on_actions = {
 
 		segrellion_black_unicorn_visenya_soulmate_guard
+	}
+}
+
+# =========================================================
+# SANSA STARK STORY
+# =========================================================
+
+segrellion_sansa_story_progression = {
+
+	effect = {
+
+		segrellion_sansa_story_progression_effect = yes
 	}
 }
 
@@ -3991,5 +4005,97 @@ segrellion_young_griff.8998 = {
 		# Keep watching permanently.
 
 		segrellion_young_griff_schedule_marriage_watchdog_effect = yes
+	}
+}
+
+# =========================================================
+# DAEMON + SANSA DYNASTIC PACT
+#
+# First son = Segrellion
+# Second son = Stark
+# =========================================================
+
+segrellion_daemon_sansa_children = {
+
+	trigger = {
+
+		is_male = yes
+
+		father = character:Segrellion_60
+		mother = character:Stark_Dummy_8
+
+
+		character:Segrellion_60 = {
+			has_character_flag = segrellion_daemon_sansa_dynastic_pact
+		}
+
+
+		character:Stark_Dummy_8 = {
+			has_character_flag = segrellion_daemon_sansa_dynastic_pact
+		}
+	}
+
+
+	effect = {
+
+
+		# =================================================
+		# FIRST SON -> SEGRELLION
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Segrellion_60 = {
+
+					NOT = {
+						has_character_flag = segrellion_daemon_sansa_first_son_born
+					}
+				}
+			}
+
+
+			set_house = father.house
+
+			add_character_flag = segrellion_daemon_sansa_first_son
+
+
+			character:Segrellion_60 = {
+
+				add_character_flag = segrellion_daemon_sansa_first_son_born
+			}
+		}
+
+
+		# =================================================
+		# SECOND SON -> STARK
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				character:Segrellion_60 = {
+
+					has_character_flag = segrellion_daemon_sansa_first_son_born
+
+					NOT = {
+						has_character_flag = segrellion_daemon_sansa_second_son_born
+					}
+				}
+			}
+
+
+			set_house = mother.house
+
+			add_character_flag = segrellion_daemon_sansa_second_son
+
+
+			character:Segrellion_60 = {
+
+				add_character_flag = segrellion_daemon_sansa_second_son_born
+			}
+		}
 	}
 }

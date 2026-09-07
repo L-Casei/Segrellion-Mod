@@ -2195,3 +2195,304 @@ segrellion_aegon_flamelands_submission_cb = {
 
 	on_primary_defender_death = inherit
 }
+
+# =========================================================
+# SANSA STARK - WAR AGAINST BAELISH
+#
+# Vale + Royce + anti-Baelish Riverlords
+# vs Petyr Baelish and his hired swords.
+# =========================================================
+
+segrellion_sansa_protection_war_cb = {
+
+	icon = invasion
+	group = invasion
+
+	combine_into_one = no
+
+	allow_hostages = no
+
+
+	# =====================================================
+	# ATTACKER
+	# =====================================================
+
+	allowed_for_character = {
+
+		this = title:e_the_vale.holder
+
+		has_character_flag = segrellion_sansa_protection_cb_authorized
+	}
+
+
+	# =====================================================
+	# DEFENDER
+	# =====================================================
+
+	allowed_against_character = {
+
+		exists = global_var:segrellion_sansa_baelish_target
+
+		scope:defender = global_var:segrellion_sansa_baelish_target
+	}
+
+
+	valid_to_start = {
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_sansa_under_daemon_protection
+		}
+	}
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_sansa_protection_cb_authorized
+
+			add_character_flag = segrellion_sansa_vale_war_active
+		}
+
+
+		scope:defender = {
+
+			add_character_flag = segrellion_sansa_baelish_war_active
+		}
+
+
+		# =================================================
+		# YOHN ROYCE
+		# =================================================
+
+		title:c_runestone.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+
+				scope:war = {
+
+					add_attacker = title:c_runestone.holder
+				}
+			}
+		}
+
+
+		# =================================================
+		# HOUSE DARRY
+		# =================================================
+
+		title:c_darry.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+
+				scope:war = {
+
+					add_attacker = title:c_darry.holder
+				}
+			}
+		}
+
+
+		# =================================================
+		# HOUSE VANCE OF ATRANTA
+		# =================================================
+
+		title:c_atranta.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+
+				scope:war = {
+
+					add_attacker = title:c_atranta.holder
+				}
+			}
+		}
+
+
+		# =================================================
+		# HOUSE MALLISTER
+		# =================================================
+
+		title:c_seagard.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+
+				scope:war = {
+
+					add_attacker = title:c_seagard.holder
+				}
+			}
+		}
+
+
+		# =================================================
+		# BAELISH'S HIRED SWORDS
+		#
+		# 5,000 mercenary troops.
+		# =================================================
+
+		scope:defender = {
+
+			spawn_army = {
+
+				name = segrellion_baelish_hired_swords
+
+				men_at_arms = {
+
+					type = armored_footmen
+
+					men = 700
+				}
+
+				men_at_arms = {
+
+					type = pikemen_unit
+
+					men = 700
+				}
+
+				men_at_arms = {
+
+					type = bowmen
+
+					men = 600
+				}
+
+				levies = 3000
+
+				inheritable = no
+
+				location = scope:defender.capital_province
+				origin = scope:defender.capital_province
+
+				war = scope:war
+			}
+		}
+	}
+
+
+	# =====================================================
+	# VICTORY
+	#
+	# Baelish's political game ends here.
+	# =====================================================
+
+	on_victory_desc = {
+		desc = segrellion_sansa_protection_war_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_sansa_vale_war_active
+		}
+
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_sansa_baelish_war_active
+
+			add_character_flag = segrellion_sansa_baelish_defeated
+
+
+			death = {
+
+				death_reason = death_execution
+			}
+		}
+
+
+		segrellion_settle_sansa_riverlands_effect = yes
+	}
+
+
+	# =====================================================
+	# DEFEAT
+	# =====================================================
+
+	on_defeat_desc = {
+		desc = segrellion_sansa_protection_war_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_sansa_vale_war_active
+		}
+
+		scope:defender = {
+			remove_character_flag = segrellion_sansa_baelish_war_active
+		}
+
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_sansa_rescue_war_lost
+		}
+	}
+
+
+	# =====================================================
+	# WHITE PEACE
+	# =====================================================
+
+	on_white_peace_desc = {
+		desc = segrellion_sansa_protection_war_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_sansa_vale_war_active
+		}
+
+		scope:defender = {
+			remove_character_flag = segrellion_sansa_baelish_war_active
+		}
+	}
+}
