@@ -577,6 +577,19 @@ segrellion_daenerys_invasion.0003 = {
 			modifier = segrellion_daenerys_invasion_provisions_modifier
 		}
 
+		# =================================================
+		# SUPPLIES FOR THE GREAT WESTWARD MARCH
+		# =================================================
+
+		every_army = {
+
+			limit = {
+				army_owner = root
+			}
+
+			add_supply = 3000
+		}
+
 
 		start_travel_plan = {
 
@@ -759,7 +772,7 @@ segrellion_daenerys_invasion.0005 = {
 }
 
 # =========================================================
-# 0006 - THE COST OF THE CROSSING
+# 0006 - THE PRICE OF THE NARROW SEA
 # =========================================================
 
 segrellion_daenerys_invasion.0006 = {
@@ -795,14 +808,14 @@ segrellion_daenerys_invasion.0006 = {
 		}
 
 		NOT = {
-			has_character_flag = segrellion_daenerys_rushed_crossing
+			has_character_flag = segrellion_daenerys_aurane_route_chosen
 		}
 	}
 
 
 	left_portrait = {
 		character = root
-		animation = personality_bold
+		animation = thinking
 	}
 
 
@@ -812,18 +825,8 @@ segrellion_daenerys_invasion.0006 = {
 	}
 
 
-	lower_right_portrait = {
-		character = character:IAF_Torgo_Nudho_1
-		animation = personality_honorable
-	}
-
-
 	# =====================================================
-	# PREPARE THE DRAGON FLEET
-	#
-	# For AI Daenerys, this is the point where the aggression
-	# profile controls campaign timing. Her story and movement
-	# to Pentos have already happened.
+	# BUILD OUR OWN FLEET
 	# =====================================================
 
 	option = {
@@ -868,9 +871,6 @@ segrellion_daenerys_invasion.0006 = {
 		}
 
 
-		# Strategic/default AI waits 2-5 years here, after the
-		# opening story, before committing resources to the fleet.
-
 		else_if = {
 
 			limit = {
@@ -889,9 +889,6 @@ segrellion_daenerys_invasion.0006 = {
 			}
 		}
 
-
-		# Players control their own pace and begin construction
-		# immediately when they choose this option.
 
 		else = {
 
@@ -922,7 +919,7 @@ segrellion_daenerys_invasion.0006 = {
 
 
 	# =====================================================
-	# SAIL IMMEDIATELY
+	# AURANE WATERS
 	# =====================================================
 
 	option = {
@@ -932,28 +929,50 @@ segrellion_daenerys_invasion.0006 = {
 		custom_tooltip = segrellion_daenerys_invasion.0006.b.tt
 
 
+		add_character_flag = segrellion_daenerys_aurane_route_chosen
+
+
 		ai_chance = {
 
-			base = 0
+			base = 5
 
 			modifier = {
 
-				add = 100
+				add = 95
 
 				has_character_flag = segrellion_daenerys_ai_rush_crossing
 			}
 		}
 
 
-		add_character_flag = segrellion_daenerys_rushed_crossing
-
-
-		segrellion_daenerys_abandon_army_for_early_crossing_effect = yes
-
-
 		trigger_event = {
-			id = segrellion_daenerys_invasion.0010
-			days = { 2 5 }
+
+			id = segrellion_daenerys_invasion.0015
+
+			days = { 5 12 }
+		}
+	}
+
+
+	# =====================================================
+	# EURON GREYJOY
+	# NOT IMPLEMENTED YET
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0006.c
+
+		custom_tooltip = segrellion_daenerys_invasion.0006.c.tt
+
+
+		trigger = {
+			always = no
+		}
+
+
+		ai_chance = {
+			base = 0
 		}
 	}
 }
@@ -1401,6 +1420,82 @@ segrellion_daenerys_invasion.0013 = {
 
 		ai_chance = {
 			base = 0
+		}
+	}
+}
+
+# =========================================================
+# 0015 - THE BASTARD OF DRIFTWOOD
+#
+# Aurane Waters agrees to provide enough ships to transport
+# most, but not all, of Daenerys' host.
+# =========================================================
+
+segrellion_daenerys_invasion.0015 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0015.t
+	desc = segrellion_daenerys_invasion.0015.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_aurane_route_chosen
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_aurane_fleet_secured
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_invasion.0015.a
+
+		custom_tooltip = segrellion_daenerys_invasion.0015.a.tt
+
+
+		add_character_flag = segrellion_daenerys_aurane_fleet_secured
+
+		add_character_flag = segrellion_daenerys_aurane_crossing_85_percent
+
+
+		# The fleet is sufficient for roughly 85% of the host.
+		# For now we model the unavailable transport capacity
+		# primarily through the mass of levies rather than
+		# destroying Daenerys' unique permanent MAA regiments.
+
+		segrellion_daenerys_aurane_crossing_losses_effect = yes
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0010
+
+			days = { 3 7 }
 		}
 	}
 }

@@ -1,0 +1,240 @@
+# =========================================================
+# DAENERYS - MARIC MASSEY INFORMANT NETWORK
+# =========================================================
+
+
+segrellion_daenerys_massey_news_progression_effect = {
+
+	character:Targaryen_9 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				game_start_date = 8300.8.20
+
+				has_character_flag = segrellion_daenerys_camped_at_pentos
+			}
+
+
+			# =================================================
+			# FIRST CONTACT
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_massey_network_established
+					}
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_massey_contact_scheduled
+					}
+				}
+
+
+				add_character_flag = segrellion_daenerys_massey_contact_scheduled
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_massey.0001
+
+					days = { 5 12 }
+				}
+			}
+
+
+			# =================================================
+			# INFORMATION EVENTS
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_massey_network_established
+
+					has_game_rule = segrellion_story_news_events_enabled
+				}
+
+
+				# =============================================
+				# DAEMON TAKES THE FLAMELANDS
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_news_daemon_flamelands
+						}
+
+						character:Segrellion_60 ?= {
+
+							is_alive = yes
+
+							OR = {
+								has_title = title:e_flamelands
+								has_title = title:k_flamelands
+							}
+						}
+					}
+
+
+					add_character_flag = segrellion_daenerys_news_daemon_flamelands
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_massey.0010
+
+						days = { 2 6 }
+					}
+				}
+
+
+				# =============================================
+				# AEGON TAKES THE IRON THRONE
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_news_aegon_throne
+						}
+
+						title:h_the_iron_throne.holder ?= {
+							this = character:IAF_Young_Griff_1
+						}
+					}
+
+
+					add_character_flag = segrellion_daenerys_news_aegon_throne
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_massey.0020
+
+						days = { 2 6 }
+					}
+				}
+
+
+				# =============================================
+				# STANNIS TAKES THE NORTH
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_news_stannis_north
+						}
+
+						title:e_the_north.holder ?= {
+							this = character:Baratheon_3
+						}
+					}
+
+
+					add_character_flag = segrellion_daenerys_news_stannis_north
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_massey.0030
+
+						days = { 2 6 }
+					}
+				}
+
+
+				# =============================================
+				# JON TAKES THE NORTH
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_news_jon_north
+						}
+
+
+						OR = {
+
+							title:e_the_north.holder ?= {
+								this = character:Stark_7
+							}
+
+
+							AND = {
+
+								has_global_variable = segrellion_resurrected_jon
+
+								title:e_the_north.holder ?= {
+									this = global_var:segrellion_resurrected_jon
+								}
+							}
+						}
+					}
+
+
+					add_character_flag = segrellion_daenerys_news_jon_north
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_massey.0040
+
+						days = { 2 6 }
+					}
+				}
+
+
+				# =============================================
+				# AEGON REVEALED AS BLACKFYRE
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_news_aegon_blackfyre
+						}
+
+						character:IAF_Young_Griff_1 ?= {
+
+							is_alive = yes
+
+							has_character_flag = segrellion_young_griff_blackfyre_revealed
+						}
+					}
+
+
+					add_character_flag = segrellion_daenerys_news_aegon_blackfyre
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_massey.0050
+
+						days = { 2 6 }
+					}
+				}
+			}
+		}
+	}
+}

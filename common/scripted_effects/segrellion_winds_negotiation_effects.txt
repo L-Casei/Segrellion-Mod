@@ -200,16 +200,12 @@ segrellion_setup_daenerys_300_effect = {
 # =========================================================
 
 # =========================================================
-# DAENERYS - MISSING HISTORICAL FOLLOWERS
+# DAENERYS - HISTORICAL FOLLOWERS
 #
-# Missandei and Torgo Nudho already exist as historical
-# characters in the 300 AC bookmark, but can spawn without
-# a proper employer/camp.
+# Missandei and Torgo Nudho must remain attached to
+# Daenerys' camp after AGOT's adventurer cleanup.
 #
-# This effect repairs them and places both permanently in
-# Daenerys' landless court and entourage.
-#
-# It is safe to run repeatedly from the monthly fallback.
+# Safe to run repeatedly from the existing monthly repair.
 # =========================================================
 
 segrellion_setup_daenerys_followers_effect = {
@@ -222,21 +218,9 @@ segrellion_setup_daenerys_followers_effect = {
 
 			current_date < 8301.1.1
 
-
 			character:Targaryen_9 ?= {
-
 				is_alive = yes
 			}
-		}
-
-
-		# =================================================
-		# DAENERYS
-		# =================================================
-
-		character:Targaryen_9 = {
-
-			save_scope_as = daenerys_camp_owner
 		}
 
 
@@ -249,40 +233,29 @@ segrellion_setup_daenerys_followers_effect = {
 			if = {
 
 				limit = {
-
 					is_alive = yes
-
-
-					NOT = {
-
-						is_courtier_of = character:Targaryen_9
-					}
+					is_landed = no
 				}
 
 
-				# Daenerys becomes Missandei's employer.
+				set_variable = {
+					name = target_employer
+					value = character:Targaryen_9
+				}
 
-				set_employer = scope:daenerys_camp_owner
-
-
-				# Roads to Power:
-				# explicitly register her in Daenerys'
-				# court / camp entourage.
+				set_employer = character:Targaryen_9
 
 				add_to_court_and_entourage_effect = yes
 
+				return_to_court = yes
 
-				# Physically move her back to Daenerys'
-				# current camp rather than leaving her
-				# stranded where AGOT created her.
-
-				return_home = yes
+				add_character_flag = segrellion_daenerys_historical_follower
 			}
 		}
 
 
 		# =================================================
-		# TORGO NUDHO - GREY WORM
+		# TORGO NUDHO
 		# =================================================
 
 		character:IAF_Torgo_Nudho_1 ?= {
@@ -290,31 +263,23 @@ segrellion_setup_daenerys_followers_effect = {
 			if = {
 
 				limit = {
-
 					is_alive = yes
-
-
-					NOT = {
-
-						is_courtier_of = character:Targaryen_9
-					}
+					is_landed = no
 				}
 
 
-				# Daenerys becomes Torgo Nudho's employer.
+				set_variable = {
+					name = target_employer
+					value = character:Targaryen_9
+				}
 
-				set_employer = scope:daenerys_camp_owner
-
-
-				# Explicitly attach him to the camp
-				# entourage.
+				set_employer = character:Targaryen_9
 
 				add_to_court_and_entourage_effect = yes
 
+				return_to_court = yes
 
-				# Bring him physically to Daenerys.
-
-				return_home = yes
+				add_character_flag = segrellion_daenerys_historical_follower
 			}
 		}
 	}
@@ -2405,3 +2370,43 @@ segrellion_young_griff_schedule_marriage_watchdog_effect = {
 	}
 }
 
+
+# =========================================================
+# DAENERYS - AURANE WATERS CROSSING
+#
+# Aurane can transport roughly 85% of the host.
+#
+# Do NOT destroy Daenerys' unique Unsullied / Dothraki MAA.
+# The loss is represented through the large body of levies
+# that cannot be embarked.
+# =========================================================
+
+segrellion_daenerys_aurane_crossing_losses_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_aurane_crossing_losses_applied
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_aurane_crossing_losses_applied
+
+
+		every_army = {
+
+			limit = {
+				army_owner = root
+			}
+
+			damage_levies = {
+				value = 0.15
+			}
+		}
+	}
+}
