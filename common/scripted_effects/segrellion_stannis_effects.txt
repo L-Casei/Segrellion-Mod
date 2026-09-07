@@ -536,93 +536,55 @@ segrellion_jon_accepts_north_effect = {
 
 
 	# =====================================================
-	# FIND THE NEXT LORD COMMANDER
+	# TORMUND GIANTSBANE
+	# NEXT LORD COMMANDER
 	# =====================================================
 
 	root = {
 
 		remove_character_flag = segrellion_jon_north_transfer_failed
+	}
 
 
-		# -------------------------------------------------
-		# FIRST CHOICE:
-		# A landed Black Brother under Jon.
-		# -------------------------------------------------
+	character:174345 ?= {
 
-		ordered_vassal_or_below = {
+		if = {
 
 			limit = {
 
 				is_alive = yes
-				is_adult = yes
-
-				has_trait = nightswatch
-
-				this != root
-			}
-
-			order_by = prowess
-
-			position = 0
-
-			check_range_bounds = no
-
-			save_scope_as = segrellion_new_lord_commander
-		}
-
-
-		# -------------------------------------------------
-		# FALLBACK:
-		# An unlanded Black Brother in Jon's court.
-		# -------------------------------------------------
-
-		if = {
-
-			limit = {
-
-				NOT = {
-					exists = scope:segrellion_new_lord_commander
-				}
 			}
 
 
-			ordered_courtier = {
+			if = {
 
 				limit = {
 
-					is_alive = yes
-					is_adult = yes
-
-					has_trait = nightswatch
-
-					this != root
+					NOT = {
+						has_trait = nightswatch
+					}
 				}
 
-				order_by = prowess
-
-				position = 0
-
-				check_range_bounds = no
-
-				save_scope_as = segrellion_new_lord_commander
+				add_trait = nightswatch
 			}
+
+
+			set_location = title:c_castle_black.title_province
+
+			save_scope_as = segrellion_new_lord_commander
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_new_lord_commander
 		}
 
 
-		# -------------------------------------------------
-		# SAVE EVERY TITLE JON CURRENTLY HOLDS.
-		#
-		# At this point Jon has NOT received Winterfell,
-		# therefore everything here belongs to the Watch.
-		# -------------------------------------------------
-
-		if = {
-
-			limit = {
-
-				exists = scope:segrellion_new_lord_commander
-			}
-
+		root = {
 
 			every_held_title = {
 
@@ -630,7 +592,6 @@ segrellion_jon_accepts_north_effect = {
 			}
 		}
 	}
-
 
 	# =====================================================
 	# ONLY CONTINUE IF WE FOUND A NEW LORD COMMANDER
@@ -706,12 +667,32 @@ segrellion_jon_accepts_north_effect = {
 
 
 		# =================================================
-		# CASTLE BLACK REMAINS THE WATCH CAPITAL
+		# TORMUND BECOMES LORD COMMANDER
 		# =================================================
 
 		scope:segrellion_new_lord_commander = {
 
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_trait = nightswatch
+					}
+				}
+
+				add_trait = nightswatch
+			}
+
+
+			change_government = nights_watch_government
+
+			set_primary_title_to = title:k_the_wall
+
 			set_realm_capital = title:c_castle_black
+
+			set_location = title:c_castle_black.title_province
 		}
 	}
 
