@@ -107,34 +107,23 @@ segrellion_decision.0002 = {
 }
 
 segrellion_decision.0003 = {
+
 	type = character_event
-	title = segrellion_decision.0003.t
-	desc = segrellion_decision.0003.desc
-	theme = war
-	override_background = { reference = army_camp }
+	hidden = yes
 
-	left_portrait = {
-		character = root
-		animation = personality_bold
-	}
+	immediate = {
 
-	option = {
-		name = segrellion_decision.0003.a
-		set_global_variable = {
-			name = segrellion_unicorn_riders_unlocked
-			value = yes
+		if = {
+			limit = {
+				NOT = {
+					has_character_flag = segrellion_unicorn_riders_recruitment_unlocked
+				}
+			}
+
+			add_character_flag = segrellion_unicorn_riders_recruitment_unlocked
 		}
-		create_maa_regiment = {
-			type = segrellion_unicorn_riders
-			check_can_recruit = no
-			size = 3
-		}
-		add_prestige = 300
-		add_martial_lifestyle_xp = 150
-		add_character_modifier = {
-			modifier = segrellion_masters_of_the_heavy_charge_modifier
-			years = 10
-		}
+
+		trigger_event = segrellion_unicorn_riders.0001
 	}
 }
 
