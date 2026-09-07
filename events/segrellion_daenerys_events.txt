@@ -804,11 +804,33 @@ segrellion_daenerys_invasion.0006 = {
 		has_character_flag = segrellion_daenerys_camped_at_pentos
 
 		NOT = {
-			has_character_flag = segrellion_daenerys_fleet_project_active
+			has_character_flag = segrellion_daenerys_fleet_strategy_chosen
 		}
 
 		NOT = {
-			has_character_flag = segrellion_daenerys_aurane_route_chosen
+			has_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_waiting_at_pentos
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = var:segrellion_daenerys_fleet_readiness
+				}
+			}
+
+			set_variable = {
+				name = segrellion_daenerys_fleet_readiness
+				value = 20
+			}
 		}
 	}
 
@@ -820,13 +842,19 @@ segrellion_daenerys_invasion.0006 = {
 
 
 	right_portrait = {
-		character = character:Selmy_3
+		character = character:Lannister_8
 		animation = personality_rational
 	}
 
 
+	lower_right_portrait = {
+		character = character:Selmy_3
+		animation = personality_honorable
+	}
+
+
 	# =====================================================
-	# BUILD OUR OWN FLEET
+	# BUILD THE DRAGON FLEET
 	# =====================================================
 
 	option = {
@@ -836,84 +864,34 @@ segrellion_daenerys_invasion.0006 = {
 		custom_tooltip = segrellion_daenerys_invasion.0006.a.tt
 
 
+		add_character_flag = segrellion_daenerys_fleet_strategy_chosen
+
+		add_character_flag = segrellion_daenerys_fleet_project_active
+
+
+		title:c_pentos.title_province = {
+
+			plan_great_project = {
+
+				founder = root
+
+				great_project_type = segrellion_daenerys_dragon_fleet
+
+				save_scope_as = segrellion_daenerys_dragon_fleet_project
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0013
+
+			days = { 7 14 }
+		}
+
+
 		ai_chance = {
-
 			base = 100
-
-			modifier = {
-
-				factor = 0
-
-				has_character_flag = segrellion_daenerys_ai_rush_crossing
-			}
-		}
-
-
-		if = {
-
-			limit = {
-
-				is_ai = yes
-
-				has_character_flag = segrellion_daenerys_ai_slow_fleet
-			}
-
-
-			add_character_flag = segrellion_daenerys_delayed_fleet_preparation
-
-
-			trigger_event = {
-
-				id = segrellion_daenerys_invasion.0014
-
-				days = { 2555 4380 }
-			}
-		}
-
-
-		else_if = {
-
-			limit = {
-				is_ai = yes
-			}
-
-
-			add_character_flag = segrellion_daenerys_delayed_fleet_preparation
-
-
-			trigger_event = {
-
-				id = segrellion_daenerys_invasion.0014
-
-				days = { 730 1825 }
-			}
-		}
-
-
-		else = {
-
-			add_character_flag = segrellion_daenerys_fleet_project_active
-
-
-			title:c_pentos.title_province = {
-
-				plan_great_project = {
-
-					founder = root
-
-					great_project_type = segrellion_daenerys_dragon_fleet
-
-					save_scope_as = segrellion_daenerys_dragon_fleet_project
-				}
-			}
-
-
-			trigger_event = {
-
-				id = segrellion_daenerys_invasion.0013
-
-				days = { 7 14 }
-			}
 		}
 	}
 
@@ -929,34 +907,28 @@ segrellion_daenerys_invasion.0006 = {
 		custom_tooltip = segrellion_daenerys_invasion.0006.b.tt
 
 
+		add_character_flag = segrellion_daenerys_fleet_strategy_chosen
+
 		add_character_flag = segrellion_daenerys_aurane_route_chosen
-
-
-		ai_chance = {
-
-			base = 5
-
-			modifier = {
-
-				add = 95
-
-				has_character_flag = segrellion_daenerys_ai_rush_crossing
-			}
-		}
 
 
 		trigger_event = {
 
-			id = segrellion_daenerys_invasion.0015
+			id = segrellion_daenerys_invasion.0500
 
 			days = { 5 12 }
+		}
+
+
+		ai_chance = {
+			base = 0
 		}
 	}
 
 
 	# =====================================================
 	# EURON GREYJOY
-	# NOT IMPLEMENTED YET
+	# FUTURE ROUTE
 	# =====================================================
 
 	option = {
@@ -1170,28 +1142,19 @@ segrellion_daenerys_invasion.0007 = {
 	}
 
 
-		option = {
+	option = {
 
-			name = segrellion_daenerys_invasion.0007.a
-
-
-			# =====================================================
-			# PROVISIONS FOR THE CROSSING
-			# =====================================================
-
-			domicile ?= {
-
-				change_provisions = 10000
-			}
+		name = segrellion_daenerys_invasion.0007.a
 
 
-			trigger_event = {
+		domicile ?= {
 
-				id = segrellion_daenerys_invasion.0010
-
-				days = { 2 4 }
-			}
+			change_provisions = 10000
 		}
+
+
+		add_character_flag = segrellion_daenerys_waiting_at_pentos
+	}
 }
 
 # =========================================================
@@ -1425,18 +1388,15 @@ segrellion_daenerys_invasion.0013 = {
 }
 
 # =========================================================
-# 0015 - THE BASTARD OF DRIFTWOOD
-#
-# Aurane Waters agrees to provide enough ships to transport
-# most, but not all, of Daenerys' host.
+# 0500 - THE BASTARD'S FLEET
 # =========================================================
 
-segrellion_daenerys_invasion.0015 = {
+segrellion_daenerys_invasion.0500 = {
 
 	type = character_event
 
-	title = segrellion_daenerys_invasion.0015.t
-	desc = segrellion_daenerys_invasion.0015.desc
+	title = segrellion_daenerys_invasion.0500.t
+	desc = segrellion_daenerys_invasion.0500.desc
 
 	theme = diplomacy
 
@@ -1457,7 +1417,13 @@ segrellion_daenerys_invasion.0015 = {
 
 		is_alive = yes
 
+		has_character_flag = segrellion_daenerys_camped_at_pentos
+
 		has_character_flag = segrellion_daenerys_aurane_route_chosen
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_crossing_committed
+		}
 
 		NOT = {
 			has_character_flag = segrellion_daenerys_aurane_fleet_secured
@@ -1473,30 +1439,96 @@ segrellion_daenerys_invasion.0015 = {
 
 	option = {
 
-		name = segrellion_daenerys_invasion.0015.a
+		name = segrellion_daenerys_invasion.0500.a
 
-		custom_tooltip = segrellion_daenerys_invasion.0015.a.tt
+		custom_tooltip = segrellion_daenerys_invasion.0500.a.tt
 
 
 		add_character_flag = segrellion_daenerys_aurane_fleet_secured
-
 		add_character_flag = segrellion_daenerys_aurane_crossing_85_percent
+	}
+}
+
+# =========================================================
+# 0510 - CREWS SECURED
+# =========================================================
+
+segrellion_daenerys_invasion.0510 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0510.t
+	desc = segrellion_daenerys_invasion.0510.desc
+
+	theme = stewardship
 
 
-		# The fleet is sufficient for roughly 85% of the host.
-		# For now we model the unavailable transport capacity
-		# primarily through the mass of levies rather than
-		# destroying Daenerys' unique permanent MAA regiments.
-
-		segrellion_daenerys_aurane_crossing_losses_effect = yes
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
 
 
-		trigger_event = {
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
 
-			id = segrellion_daenerys_invasion.0010
 
-			days = { 3 7 }
-		}
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+
+	right_portrait = {
+		character = character:Selmy_3
+		animation = personality_rational
+	}
+
+
+	option = {
+		name = segrellion_daenerys_invasion.0510.a
+	}
+}
+
+
+# =========================================================
+# 0520 - HORSE TRANSPORTS SECURED
+# =========================================================
+
+segrellion_daenerys_invasion.0520 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_invasion.0520.t
+	desc = segrellion_daenerys_invasion.0520.desc
+
+	theme = stewardship
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+
+	right_portrait = {
+		character = character:IAF_Torgo_Nudho_1
+		animation = personality_honorable
+	}
+
+
+	option = {
+		name = segrellion_daenerys_invasion.0520.a
 	}
 }
 
@@ -1541,36 +1573,6 @@ segrellion_daenerys_invasion.0010 = {
 		animation = personality_rational
 	}
 
-	
-	immediate = {
-		
-		title:d_masseys_hook.holder ?= {
-
-			save_scope_as = masseys_hook_lord
-
-		}
-
-
-		# Fallback in case the duchy itself has no direct holder.
-
-		if = {
-
-			limit = {
-
-				NOT = {
-					exists = scope:masseys_hook_lord
-				}
-			}
-
-			title:c_stonedance.holder ?= {
-
-				save_scope_as = masseys_hook_lord
-			}
-		}
-	}
-
-
-
 	trigger = {
 
 		this = character:Targaryen_9
@@ -1580,6 +1582,8 @@ segrellion_daenerys_invasion.0010 = {
 		has_character_flag = segrellion_daenerys_camped_at_pentos
 
 		has_character_flag = segrellion_daenerys_invasion_committed
+
+		has_character_flag = segrellion_daenerys_crossing_committed
 
 		NOT = {
 			has_character_flag = segrellion_daenerys_landing_chosen
@@ -2303,6 +2307,8 @@ segrellion_daenerys_invasion.0018 = {
 
 		# Daenerys has left Pentos for good.
 		remove_character_flag = segrellion_daenerys_camped_at_pentos
+		remove_character_flag = segrellion_daenerys_waiting_at_pentos
+		remove_character_flag = segrellion_daenerys_fleet_project_active
 		remove_character_flag = segrellion_daenerys_delayed_fleet_preparation
 		remove_character_flag = segrellion_daenerys_passive_fleet_preparation
 
@@ -2767,6 +2773,7 @@ segrellion_daenerys_invasion.0091 = {
 		remove_character_flag = segrellion_daenerys_landing_flamelands
 		remove_character_flag = segrellion_daenerys_landing_masseys_hook
 		remove_character_flag = segrellion_daenerys_landing_beacon
+		remove_character_flag = segrellion_daenerys_crossing_committed
 
 		# AI safety: a cancelled crossing returns the staging camp
 		# to Pentos before another landing attempt is made.
@@ -2793,11 +2800,6 @@ segrellion_daenerys_invasion.0091 = {
 	option = {
 
 		name = segrellion_daenerys_invasion.0091.a
-
-		trigger_event = {
-			id = segrellion_daenerys_invasion.0010
-			days = 7
-		}
 	}
 }
 

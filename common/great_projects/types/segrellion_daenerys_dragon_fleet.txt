@@ -1,6 +1,18 @@
 # =========================================================
 # DAENERYS TARGARYEN
 # THE DRAGON FLEET
+#
+# TRANSPORT READINESS:
+#
+# Base                            20%
+# Fleet hulls funded             +20 = 40%
+# Provisions funded              +10 = 50%
+# Armaments funded               +10 = 60%
+# Experienced crews funded       +15 = 75%
+# Horse transports funded        +15 = 90%
+# Project completed                    100%
+#
+# Aurane Waters is handled separately at 85%.
 # =========================================================
 
 segrellion_daenerys_dragon_fleet = {
@@ -20,7 +32,6 @@ segrellion_daenerys_dragon_fleet = {
 	}
 
 
-	# Only Daenerys sees this project.
 	is_shown = {
 
 		this = character:Targaryen_9
@@ -29,7 +40,6 @@ segrellion_daenerys_dragon_fleet = {
 	}
 
 
-	# The project is event-created.
 	can_start_planning = {
 		always = no
 	}
@@ -58,6 +68,10 @@ segrellion_daenerys_dragon_fleet = {
 			has_character_flag = segrellion_daenerys_fleet_project_active
 
 			NOT = {
+				has_character_flag = segrellion_daenerys_crossing_committed
+			}
+
+			NOT = {
 				has_character_flag = segrellion_daenerys_landed_in_westeros
 			}
 		}
@@ -69,13 +83,11 @@ segrellion_daenerys_dragon_fleet = {
 	}
 
 
-	# Roughly 21 months.
+	# Roughly 21 months once the project is moving.
 	construction_time = 640
 
 
-	# Optional troops may be bought during most of construction.
 	contribution_threshold = 80
-
 
 	contributor_cooldown = 0
 
@@ -102,6 +114,12 @@ segrellion_daenerys_dragon_fleet = {
 			add_character_flag = segrellion_daenerys_dragon_fleet_completed
 
 
+			set_variable = {
+				name = segrellion_daenerys_fleet_readiness
+				value = 100
+			}
+
+
 			trigger_event = {
 				id = segrellion_daenerys_invasion.0007
 				days = 1
@@ -118,8 +136,9 @@ segrellion_daenerys_dragon_fleet = {
 
 
 		# =================================================
-		# 1. SHIPS
-		# 1000 GOLD
+		# 1. FLEET HULLS
+		#
+		# +20%
 		# =================================================
 
 		ships = {
@@ -131,8 +150,47 @@ segrellion_daenerys_dragon_fleet = {
 				gold = 1000
 			}
 
+
 			on_contribution_funded = {
+
 				scope:founder ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_fleet_ships_funded
+							}
+						}
+
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									exists = var:segrellion_daenerys_fleet_readiness
+								}
+							}
+
+							set_variable = {
+								name = segrellion_daenerys_fleet_readiness
+								value = 20
+							}
+						}
+
+
+						change_variable = {
+							name = segrellion_daenerys_fleet_readiness
+							add = 20
+						}
+
+
+						add_character_flag = segrellion_daenerys_fleet_ships_funded
+					}
+
+
 					trigger_event = {
 						id = segrellion_daenerys_invasion.0008
 						days = 1
@@ -150,8 +208,9 @@ segrellion_daenerys_dragon_fleet = {
 
 
 		# =================================================
-		# 2. SUPPLIES
-		# 250 GOLD
+		# 2. PROVISIONS
+		#
+		# +10%
 		# =================================================
 
 		supplies = {
@@ -163,8 +222,47 @@ segrellion_daenerys_dragon_fleet = {
 				gold = 250
 			}
 
+
 			on_contribution_funded = {
+
 				scope:founder ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_fleet_supplies_funded
+							}
+						}
+
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									exists = var:segrellion_daenerys_fleet_readiness
+								}
+							}
+
+							set_variable = {
+								name = segrellion_daenerys_fleet_readiness
+								value = 20
+							}
+						}
+
+
+						change_variable = {
+							name = segrellion_daenerys_fleet_readiness
+							add = 10
+						}
+
+
+						add_character_flag = segrellion_daenerys_fleet_supplies_funded
+					}
+
+
 					trigger_event = {
 						id = segrellion_daenerys_invasion.0009
 						days = 1
@@ -183,7 +281,8 @@ segrellion_daenerys_dragon_fleet = {
 
 		# =================================================
 		# 3. ARMAMENTS
-		# 400 GOLD
+		#
+		# +10%
 		# =================================================
 
 		armaments = {
@@ -195,8 +294,47 @@ segrellion_daenerys_dragon_fleet = {
 				gold = 400
 			}
 
+
 			on_contribution_funded = {
+
 				scope:founder ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_fleet_armaments_funded
+							}
+						}
+
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									exists = var:segrellion_daenerys_fleet_readiness
+								}
+							}
+
+							set_variable = {
+								name = segrellion_daenerys_fleet_readiness
+								value = 20
+							}
+						}
+
+
+						change_variable = {
+							name = segrellion_daenerys_fleet_readiness
+							add = 10
+						}
+
+
+						add_character_flag = segrellion_daenerys_fleet_armaments_funded
+					}
+
+
 					trigger_event = {
 						id = segrellion_daenerys_invasion.0011
 						days = 1
@@ -214,9 +352,152 @@ segrellion_daenerys_dragon_fleet = {
 
 
 		# =================================================
+		# 4. EXPERIENCED CREWS
+		#
+		# +15%
+		# =================================================
+
+		crews = {
+
+			is_required = yes
+
+
+			cost = {
+				gold = 300
+			}
+
+
+			on_contribution_funded = {
+
+				scope:founder ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_fleet_crews_funded
+							}
+						}
+
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									exists = var:segrellion_daenerys_fleet_readiness
+								}
+							}
+
+							set_variable = {
+								name = segrellion_daenerys_fleet_readiness
+								value = 20
+							}
+						}
+
+
+						change_variable = {
+							name = segrellion_daenerys_fleet_readiness
+							add = 15
+						}
+
+
+						add_character_flag = segrellion_daenerys_fleet_crews_funded
+					}
+
+
+					trigger_event = {
+						id = segrellion_daenerys_invasion.0510
+						days = 1
+					}
+				}
+			}
+
+
+			ai_check_interval = 1
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+
+
+		# =================================================
+		# 5. HORSE TRANSPORTS
+		#
+		# +15%
+		# =================================================
+
+		horse_transports = {
+
+			is_required = yes
+
+
+			cost = {
+				gold = 350
+			}
+
+
+			on_contribution_funded = {
+
+				scope:founder ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_fleet_horse_transports_funded
+							}
+						}
+
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									exists = var:segrellion_daenerys_fleet_readiness
+								}
+							}
+
+							set_variable = {
+								name = segrellion_daenerys_fleet_readiness
+								value = 20
+							}
+						}
+
+
+						change_variable = {
+							name = segrellion_daenerys_fleet_readiness
+							add = 15
+						}
+
+
+						add_character_flag = segrellion_daenerys_fleet_horse_transports_funded
+					}
+
+
+					trigger_event = {
+						id = segrellion_daenerys_invasion.0520
+						days = 1
+					}
+				}
+			}
+
+
+			ai_check_interval = 1
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+
+
+		# =================================================
 		# OPTIONAL
 		# PENTOSHI REINFORCEMENTS
-		# 1250 GOLD
 		# =================================================
 
 		pentoshi_reinforcements = {
@@ -232,12 +513,18 @@ segrellion_daenerys_dragon_fleet = {
 			on_contribution_funded = {
 
 				scope:founder ?= {
+
 					add_character_flag = segrellion_daenerys_bought_pentoshi_reinforcements
+
+
+					trigger_event = {
+						id = segrellion_daenerys_invasion.0012
+						days = 1
+					}
 				}
 			}
 
 
-			# Don't automatically give the AI another 4k men.
 			ai_will_do = {
 				value = 0
 			}

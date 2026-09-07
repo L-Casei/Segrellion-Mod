@@ -1,0 +1,258 @@
+# =========================================================
+# DAENERYS - SAIL FOR WESTEROS
+# =========================================================
+
+segrellion_daenerys_sail_for_westeros_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_found_kingdom.dds"
+	}
+
+	decision_group_type = major
+
+
+	desc = segrellion_daenerys_sail_for_westeros_decision_desc
+
+	selection_tooltip = segrellion_daenerys_sail_for_westeros_decision_tooltip
+
+	confirm_text = segrellion_daenerys_sail_for_westeros_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Targaryen_9
+
+		has_character_flag = segrellion_daenerys_invasion_committed
+
+		has_character_flag = segrellion_daenerys_camped_at_pentos
+
+
+		OR = {
+
+			has_character_flag = segrellion_daenerys_fleet_strategy_chosen
+
+			has_character_flag = segrellion_daenerys_fleet_project_active
+
+			has_character_flag = segrellion_daenerys_dragon_fleet_completed
+
+			has_character_flag = segrellion_daenerys_aurane_route_chosen
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_crossing_committed
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_alive = yes
+
+		is_imprisoned = no
+
+		is_incapable = no
+
+
+		NOT = {
+			exists = current_travel_plan
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+
+		# -------------------------------------------------
+		# 100%
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_dragon_fleet_completed
+			}
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_100_tt
+		}
+
+
+		# -------------------------------------------------
+		# 85% - AURANE WATERS
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_aurane_fleet_secured
+			}
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_85_tt
+		}
+
+
+		# -------------------------------------------------
+		# 90%
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 90
+			}
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_90_tt
+		}
+
+
+		# -------------------------------------------------
+		# 75%
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 75
+			}
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_75_tt
+		}
+
+
+		# -------------------------------------------------
+		# 60%
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 60
+			}
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_60_tt
+		}
+
+
+		# -------------------------------------------------
+		# 50%
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 50
+			}
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_50_tt
+		}
+
+
+		# -------------------------------------------------
+		# 40%
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 40
+			}
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_40_tt
+		}
+
+
+		# -------------------------------------------------
+		# 20%
+		# -------------------------------------------------
+
+		else = {
+
+			custom_tooltip = segrellion_daenerys_crossing_capacity_20_tt
+		}
+
+
+		hidden_effect = {
+
+			segrellion_daenerys_apply_crossing_capacity_effect = yes
+
+
+			# An unfinished fleet remains behind in Pentos.
+			remove_character_flag = segrellion_daenerys_fleet_project_active
+
+			remove_character_flag = segrellion_daenerys_waiting_at_pentos
+
+
+			add_character_flag = segrellion_daenerys_crossing_committed
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0010
+
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	#
+	# AI Daenerys NEVER leaves early.
+	# =====================================================
+
+	ai_check_interval = 30
+
+
+	ai_potential = {
+
+		this = character:Targaryen_9
+
+		is_ai = yes
+
+		has_character_flag = segrellion_daenerys_dragon_fleet_completed
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+	}
+
+
+	ai_will_do = {
+		base = 100
+	}
+
+
+	sort_order = 20
+}

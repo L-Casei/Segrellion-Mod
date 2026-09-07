@@ -1440,6 +1440,52 @@ segrellion_stannis_try_become_landless_effect = {
 			}
 		}
 
+		# =================================================
+		# PRESERVE STANNIS' REAL PHYSICAL LOCATION
+		#
+		# The landless camp must appear where Stannis
+		# actually is, not on the Dragonstone title he
+		# has just lost.
+		# =================================================
+
+		character:Baratheon_3 = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						location = title:c_dragonstone.title_province
+					}
+				}
+
+
+				location ?= {
+					save_scope_as = segrellion_stannis_landless_camp_location
+				}
+			}
+		}
+
+
+		# If his location cannot be recovered, Castle Black
+		# is the safe canonical northern fallback.
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = scope:segrellion_stannis_landless_camp_location
+				}
+			}
+
+
+			title:c_castle_black.title_province = {
+
+				save_scope_as = segrellion_stannis_landless_camp_location
+			}
+		}
+
 
 		# =================================================
 		# CREATE STANNIS' LANDLESS HOST
@@ -1452,6 +1498,17 @@ segrellion_stannis_try_become_landless_effect = {
 				REASON = flag:voluntary
 
 				FLAVOR_CHAR = character:Baratheon_3
+			}
+
+
+			# Restore his actual northern position.
+
+			set_location = scope:segrellion_stannis_landless_camp_location
+
+
+			domicile ?= {
+
+				move_domicile = scope:segrellion_stannis_landless_camp_location
 			}
 
 

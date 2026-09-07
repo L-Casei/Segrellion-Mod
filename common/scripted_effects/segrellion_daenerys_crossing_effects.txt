@@ -1,0 +1,476 @@
+# =========================================================
+# DAENERYS - NARROW SEA CROSSING CAPACITY
+#
+# ROOT = Daenerys
+#
+# These reductions are applied ONCE when she commits
+# to the crossing.
+# =========================================================
+
+
+# =========================================================
+# MAIN ROUTER
+# =========================================================
+
+segrellion_daenerys_apply_crossing_capacity_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_crossing_capacity_applied
+			}
+		}
+
+
+		# =================================================
+		# 100%
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_dragon_fleet_completed
+			}
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_100
+		}
+
+
+		# =================================================
+		# 85% - AURANE
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_aurane_fleet_secured
+			}
+
+			segrellion_daenerys_crossing_85_effect = yes
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_85
+		}
+
+
+		# =================================================
+		# 90%
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 90
+			}
+
+			segrellion_daenerys_crossing_90_effect = yes
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_90
+		}
+
+
+		# =================================================
+		# 75%
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 75
+			}
+
+			segrellion_daenerys_crossing_75_effect = yes
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_75
+		}
+
+
+		# =================================================
+		# 60%
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 60
+			}
+
+			segrellion_daenerys_crossing_60_effect = yes
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_60
+		}
+
+
+		# =================================================
+		# 50%
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 50
+			}
+
+			segrellion_daenerys_crossing_50_effect = yes
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_50
+		}
+
+
+		# =================================================
+		# 40%
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				exists = var:segrellion_daenerys_fleet_readiness
+
+				var:segrellion_daenerys_fleet_readiness >= 40
+			}
+
+			segrellion_daenerys_crossing_40_effect = yes
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_40
+		}
+
+
+		# =================================================
+		# 20%
+		# =================================================
+
+		else = {
+
+			segrellion_daenerys_crossing_20_effect = yes
+
+			add_character_flag = segrellion_daenerys_crossing_capacity_20
+		}
+
+
+		add_character_flag = segrellion_daenerys_crossing_capacity_applied
+	}
+}
+
+
+# =========================================================
+# 20%
+#
+# Only the core professional infantry can realistically
+# be transported.
+# =========================================================
+
+segrellion_daenerys_crossing_20_effect = {
+
+	every_maa_regiment = {
+
+		limit = {
+			is_maa_type = dothraki_screamers
+		}
+
+		destroy_maa_regiment = yes
+	}
+
+
+	every_maa_regiment = {
+
+		limit = {
+			is_maa_type = levies
+		}
+
+		destroy_maa_regiment = yes
+	}
+}
+
+
+# =========================================================
+# 40%
+#
+# Unsullied + roughly 2,000 levies.
+# Dothraki remain behind.
+# =========================================================
+
+segrellion_daenerys_crossing_40_effect = {
+
+	every_maa_regiment = {
+
+		limit = {
+			is_maa_type = dothraki_screamers
+		}
+
+		destroy_maa_regiment = yes
+	}
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+		}
+
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -35
+				reinforce = no
+			}
+		}
+	}
+
+
+	else = {
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -55
+				reinforce = no
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 50%
+#
+# Unsullied + roughly 3,000 levies.
+# Dothraki remain behind.
+# =========================================================
+
+segrellion_daenerys_crossing_50_effect = {
+
+	every_maa_regiment = {
+
+		limit = {
+			is_maa_type = dothraki_screamers
+		}
+
+		destroy_maa_regiment = yes
+	}
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+		}
+
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -25
+				reinforce = no
+			}
+		}
+	}
+
+
+	else = {
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -45
+				reinforce = no
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 60%
+#
+# The Dothraki can now cross.
+# Roughly 2,500 levies accompany them.
+# =========================================================
+
+segrellion_daenerys_crossing_60_effect = {
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+		}
+
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -30
+				reinforce = no
+			}
+		}
+	}
+
+
+	else = {
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -50
+				reinforce = no
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 75%
+# =========================================================
+
+segrellion_daenerys_crossing_75_effect = {
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+		}
+
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -15
+				reinforce = no
+			}
+		}
+	}
+
+
+	else = {
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -35
+				reinforce = no
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 85% - AURANE WATERS
+# =========================================================
+
+segrellion_daenerys_crossing_85_effect = {
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+		}
+
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -5
+				reinforce = no
+			}
+		}
+	}
+
+
+	else = {
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -25
+				reinforce = no
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 90%
+# =========================================================
+
+segrellion_daenerys_crossing_90_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_sent_daemon_reinforcements
+			}
+		}
+
+
+		random_maa_regiment = {
+
+			limit = {
+				is_maa_type = levies
+			}
+
+			change_maa_regiment_size = {
+				size = -20
+				reinforce = no
+			}
+		}
+	}
+}
