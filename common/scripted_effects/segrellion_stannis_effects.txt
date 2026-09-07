@@ -547,10 +547,7 @@ segrellion_jon_accepts_north_effect = {
 
 
 	# =====================================================
-	# SAVE THE CURRENT LORD COMMANDER
-	#
-	# This may be Jon or Denys Mallister depending on how
-	# the resurrection storyline has progressed.
+	# JON MUST CURRENTLY COMMAND THE WATCH
 	# =====================================================
 
 	title:k_the_wall.holder ?= {
@@ -586,27 +583,18 @@ segrellion_jon_accepts_north_effect = {
 			}
 
 
-			# ---------------------------------------------
-			# Bring Tormund into the Watch before granting
-			# him command of it.
-			# ---------------------------------------------
-
 			if = {
 
 				limit = {
 
 					is_landed = no
-
-					exists = scope:segrellion_current_lord_commander
 				}
 
-
-				set_employer = scope:segrellion_current_lord_commander
+				set_employer = root
 			}
 
 
 			set_location = title:c_castle_black.title_province
-
 
 			save_scope_as = segrellion_new_lord_commander
 		}
@@ -614,7 +602,10 @@ segrellion_jon_accepts_north_effect = {
 
 
 	# =====================================================
-	# TRANSFER THE NIGHT'S WATCH TO TORMUND
+	# SAVE EVERY TITLE JON CURRENTLY HOLDS
+	#
+	# At this point Jon should only hold Night's Watch
+	# titles. This is the method that previously worked.
 	# =====================================================
 
 	if = {
@@ -627,8 +618,36 @@ segrellion_jon_accepts_north_effect = {
 
 
 			scope:segrellion_current_lord_commander = {
+				this = root
+			}
+		}
 
-				this != scope:segrellion_new_lord_commander
+
+		root = {
+
+			every_held_title = {
+
+				add_to_list = segrellion_jon_watch_titles
+			}
+		}
+	}
+
+
+	# =====================================================
+	# TRANSFER EVERY WATCH TITLE TO TORMUND
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_new_lord_commander
+
+			any_in_list = {
+
+				list = segrellion_jon_watch_titles
+
+				always = yes
 			}
 		}
 
@@ -643,73 +662,16 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 
-		# =================================================
-		# THE NIGHT'S WATCH
-		# =================================================
+		every_in_list = {
 
-		title:k_the_wall = {
+			list = segrellion_jon_watch_titles
 
-			change_title_holder_include_vassals = {
+
+			change_title_holder = {
 
 				holder = scope:segrellion_new_lord_commander
 
 				change = scope:segrellion_nights_watch_transfer
-
-				government_base = scope:segrellion_current_lord_commander
-			}
-		}
-
-
-		# =================================================
-		# THE WALL
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				title:d_the_wall.holder ?= {
-
-					this = scope:segrellion_current_lord_commander
-				}
-			}
-
-
-			title:d_the_wall = {
-
-				change_title_holder = {
-
-					holder = scope:segrellion_new_lord_commander
-
-					change = scope:segrellion_nights_watch_transfer
-				}
-			}
-		}
-
-
-		# =================================================
-		# CASTLE BLACK
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				title:c_castle_black.holder ?= {
-
-					this = scope:segrellion_current_lord_commander
-				}
-			}
-
-
-			title:c_castle_black = {
-
-				change_title_holder = {
-
-					holder = scope:segrellion_new_lord_commander
-
-					change = scope:segrellion_nights_watch_transfer
-				}
 			}
 		}
 
@@ -719,7 +681,7 @@ segrellion_jon_accepts_north_effect = {
 
 
 	# =====================================================
-	# FORCE TORMUND'S FINAL NIGHT'S WATCH STATE
+	# TORMUND BECOMES LORD COMMANDER
 	# =====================================================
 
 	scope:segrellion_new_lord_commander ?= {
@@ -753,11 +715,9 @@ segrellion_jon_accepts_north_effect = {
 
 			set_location = title:c_castle_black.title_province
 
-
 			add_character_flag = segrellion_tormund_lord_commander
 		}
 	}
-
 
 	# =====================================================
 	# ABSOLUTE SAFETY GATE
@@ -1157,36 +1117,43 @@ segrellion_jon_accepts_north_effect = {
 			}
 			add_character_flag = segrellion_jon_pledged_to_stannis_iron_throne
 		}
-	}
 
-	segrellion_transfer_stannis_prisoners_to_jon_effect = yes
+		segrellion_transfer_stannis_prisoners_to_jon_effect = yes
 
+		# Ramsay's reckoning.
+		title:e_the_north.holder ?= {
 
-	# Ramsay's reckoning.
-	title:e_the_north.holder ?= {
+			if = {
 
-		if = {
+				limit = {
 
-			limit = {
-
-				this = root
+					this = root
 
 
-				any_prisoner = {
+					any_prisoner = {
 
-					has_character_flag = segrellion_ramsay_northern_takeover
+						has_character_flag = segrellion_ramsay_northern_takeover
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_stannis.1030
+
+					days = { 5 10 }
 				}
 			}
 
+			else = {
+				root = {
 
-			trigger_event = {
-
-				id = segrellion_stannis.1030
-
-				days = { 5 10 }
+					add_character_flag = segrellion_jon_north_transfer_failed
+				}
 			}
 		}
 	}
+
 
 
 	# =====================================================
