@@ -1,0 +1,431 @@
+namespace = segrellion_mya_marriage
+
+
+# =========================================================
+# 0001 - WATCHDOG
+#
+# Root = Daemon Segrellion
+#
+# Started by segrellion_support.6020.a through the existing
+# segrellion_check_mya_deferred_marriage_effect call.
+# =========================================================
+
+segrellion_mya_marriage.0001 = {
+
+	hidden = yes
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_mya_marriage_deferred
+		has_variable = segrellion_mya_promised_bride
+	}
+
+	immediate = {
+
+		var:segrellion_mya_promised_bride = {
+			save_scope_as = segrellion_mya_promised_bride
+		}
+
+
+		# -------------------------------------------------
+		# The pact has become impossible.
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					is_alive = no
+					is_married = yes
+
+					scope:segrellion_mya_promised_bride = {
+						is_alive = no
+					}
+
+					scope:segrellion_mya_promised_bride = {
+						is_married = yes
+					}
+				}
+			}
+
+			segrellion_break_mya_daemon_marriage_pact_effect = yes
+		}
+
+
+		# -------------------------------------------------
+		# Daemon has restored the Flamelands.
+		# The promise now comes due.
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				has_title = title:e_flamelands
+
+				NOT = {
+					has_character_flag = segrellion_mya_marriage_request_sent
+				}
+
+				has_variable = segrellion_mya_regency_ward
+
+				var:segrellion_mya_regency_ward = {
+					is_alive = yes
+				}
+			}
+
+			add_character_flag = segrellion_mya_marriage_request_sent
+
+			trigger_event = {
+				id = segrellion_mya_marriage.0010
+				days = 1
+			}
+		}
+
+
+		# -------------------------------------------------
+		# The saved Robin/ward no longer exists.
+		# The original pact can no longer be fulfilled.
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				OR = {
+
+					NOT = {
+						has_variable = segrellion_mya_regency_ward
+					}
+
+					var:segrellion_mya_regency_ward ?= {
+						is_alive = no
+					}
+				}
+			}
+
+			segrellion_break_mya_daemon_marriage_pact_effect = yes
+		}
+
+
+		# -------------------------------------------------
+		# Still waiting for the Flamelands.
+		# -------------------------------------------------
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_mya_marriage.0001
+				days = 30
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - A PROMISE COMES DUE
+#
+# Root = Daemon
+# Daemon orders a raven sent to the Eyrie.
+# =========================================================
+
+segrellion_mya_marriage.0010 = {
+
+	type = character_event
+
+	title = segrellion_mya_marriage.0010.t
+	desc = segrellion_mya_marriage.0010.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+		is_married = no
+
+		has_title = title:e_flamelands
+		has_character_flag = segrellion_mya_marriage_deferred
+		has_character_flag = segrellion_mya_marriage_request_sent
+
+		has_variable = segrellion_mya_promised_bride
+		has_variable = segrellion_mya_regency_ward
+
+		var:segrellion_mya_promised_bride = {
+			is_alive = yes
+			is_married = no
+		}
+
+		var:segrellion_mya_regency_ward = {
+			is_alive = yes
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_mya_promised_bride
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_mya_marriage.0010.a
+
+		var:segrellion_mya_regency_ward = {
+
+			trigger_event = {
+				id = segrellion_mya_marriage.0020
+				days = { 2 4 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - A RAVEN FROM THE BEACON
+#
+# Root = Robin Arryn / the Vale ruler saved when the pact
+# was originally made.
+#
+# 90% accept
+# 10% refuse
+# =========================================================
+
+segrellion_mya_marriage.0020 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_60
+
+	opening = segrellion_mya_marriage.0020.opening
+
+	title = segrellion_mya_marriage.0020.t
+	desc = segrellion_mya_marriage.0020.desc
+
+	theme = marriage
+
+	trigger = {
+
+		is_alive = yes
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+			is_married = no
+			has_title = title:e_flamelands
+			has_character_flag = segrellion_mya_marriage_deferred
+			has_character_flag = segrellion_mya_marriage_request_sent
+			has_variable = segrellion_mya_promised_bride
+		}
+
+		character:Baratheon_10 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Baratheon_10
+		animation = personality_honorable
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_mya_marriage.0020.a
+
+		ai_chance = {
+			base = 90
+		}
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_mya_marriage_request_accepted
+
+			trigger_event = {
+				id = segrellion_mya_marriage.0030
+				days = { 2 4 }
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_mya_marriage.0020.b
+
+		ai_chance = {
+			base = 10
+		}
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_robin_refused_daemon_mya_marriage_opinion
+		}
+
+		add_opinion = {
+			target = character:Baratheon_10
+			modifier = segrellion_robin_refused_mya_marriage_opinion
+		}
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_mya_marriage.0040
+				days = 1
+			}
+		}
+
+		segrellion_break_mya_daemon_marriage_pact_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0030 - THE EYRIE CONSENTS
+#
+# Root = Daemon
+# Mya leaves the Vale and the existing marriage effect
+# performs the court transfer and wedding.
+# =========================================================
+
+segrellion_mya_marriage.0030 = {
+
+	type = character_event
+
+	title = segrellion_mya_marriage.0030.t
+	desc = segrellion_mya_marriage.0030.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+		is_married = no
+
+		has_title = title:e_flamelands
+		has_character_flag = segrellion_mya_marriage_deferred
+		has_character_flag = segrellion_mya_marriage_request_accepted
+
+		character:Baratheon_10 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Baratheon_10
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_mya_marriage.0030.a
+
+		segrellion_complete_mya_daemon_marriage_effect = yes
+
+		remove_character_modifier = segrellion_promised_to_mya_stone_modifier
+
+		remove_character_flag = segrellion_mya_marriage_watchdog_started
+		remove_character_flag = segrellion_mya_marriage_request_sent
+		remove_character_flag = segrellion_mya_marriage_request_accepted
+		remove_character_flag = segrellion_vale_marriage_pact
+
+		character:Baratheon_10 ?= {
+			remove_character_modifier = segrellion_promised_to_daemon_segrellion_modifier
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - THE EYRIE REFUSES
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_mya_marriage.0040 = {
+
+	type = character_event
+
+	title = segrellion_mya_marriage.0040.t
+	desc = segrellion_mya_marriage.0040.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+		has_character_flag = segrellion_mya_marriage_pact_broken
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = character:Baratheon_10
+		animation = sadness
+	}
+
+	option = {
+		name = segrellion_mya_marriage.0040.a
+	}
+}
