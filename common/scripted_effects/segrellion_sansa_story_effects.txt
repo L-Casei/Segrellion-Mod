@@ -11,7 +11,12 @@
 
 segrellion_reveal_sansa_stark_effect = {
 
+	# =====================================================
+	# TRUE PARENTS
+	# =====================================================
+
 	if = {
+
 		limit = {
 			exists = real_father
 		}
@@ -20,6 +25,7 @@ segrellion_reveal_sansa_stark_effect = {
 	}
 
 	if = {
+
 		limit = {
 			exists = real_mother
 		}
@@ -28,17 +34,43 @@ segrellion_reveal_sansa_stark_effect = {
 	}
 
 
-	# Restore the Stark identity.
-	# Stark_7 is the original historical Jon and therefore
-	# provides the correct Stark house without hardcoding
-	# an uncertain house database key.
+	# =====================================================
+	# HOUSE STARK
+	#
+	# Stark_8 is the original historical Sansa.
+	# Stark_Dummy_8 is her continuation as Alayne.
+	# =====================================================
 
-	set_house = character:Stark_7.house
+	set_house = character:Stark_8.house
 
-	change_first_name = Sansa
 
+	# =====================================================
+	# RESTORE SANSA'S TRUE NAME
+	# =====================================================
+
+	change_first_name = {
+		template_character = character:Stark_8
+	}
+
+	set_regnal_name = Sansa
+
+
+	# =====================================================
+	# REMOVE "STONE"
+	#
+	# AGOT literally gives disguised Sansa nick_stone.
+	# Removing bastard alone therefore does NOT remove it.
+	# =====================================================
+
+	remove_nickname = yes
+
+
+	# =====================================================
+	# SHE IS NOT A BASTARD
+	# =====================================================
 
 	if = {
+
 		limit = {
 			has_trait = bastard
 		}
@@ -47,6 +79,7 @@ segrellion_reveal_sansa_stark_effect = {
 	}
 
 	if = {
+
 		limit = {
 			has_trait = legitimized_bastard
 		}
@@ -115,35 +148,51 @@ segrellion_start_sansa_baelish_war_effect = {
 		limit = {
 
 			character:Stark_Dummy_8 ?= {
+
 				is_alive = yes
+
 				has_character_flag = segrellion_sansa_under_daemon_protection
 			}
 
+
 			title:e_the_vale.holder ?= {
-				is_alive = yes
-			}
-
-			title:k_the_riverlands.holder ?= {
 
 				is_alive = yes
 
-				dynasty = dynasty:dynn_Baelish
-
-				this != title:e_the_vale.holder
+				NOT = {
+					has_character_flag = segrellion_sansa_vale_war_active
+				}
 			}
 
-			NOT = {
-				has_global_variable = segrellion_sansa_baelish_war_started
+
+			character:Baelish_2 ?= {
+
+				is_alive = yes
+
+				has_title = title:e_the_riverlands
+
+				NOT = {
+					has_character_flag = segrellion_sansa_baelish_war_active
+				}
+			}
+
+
+			character:Segrellion_60 = {
+
+				NOT = {
+					has_character_flag = segrellion_sansa_baelish_war_resolved
+				}
 			}
 		}
 
 
 		title:e_the_vale.holder = {
+
 			save_scope_as = segrellion_sansa_vale_attacker
 		}
 
 
-		title:k_the_riverlands.holder = {
+		character:Baelish_2 = {
 
 			save_scope_as = segrellion_sansa_baelish_defender
 
@@ -152,14 +201,10 @@ segrellion_start_sansa_baelish_war_effect = {
 
 
 		set_global_variable = {
+
 			name = segrellion_sansa_baelish_target
-			value = scope:segrellion_sansa_baelish_defender
-		}
 
-
-		set_global_variable = {
-			name = segrellion_sansa_baelish_war_started
-			value = yes
+			value = character:Baelish_2
 		}
 
 
@@ -173,12 +218,9 @@ segrellion_start_sansa_baelish_war_effect = {
 				cb = segrellion_sansa_protection_war_cb
 
 				target = scope:segrellion_sansa_baelish_defender
+
+				target_title = title:e_the_riverlands
 			}
-		}
-
-
-		character:Segrellion_60 = {
-			add_character_flag = segrellion_sansa_baelish_war_launched
 		}
 	}
 }
@@ -239,7 +281,11 @@ segrellion_settle_sansa_riverlands_effect = {
 		}
 
 
-		title:k_the_riverlands = {
+		# =================================================
+		# LORD PARAMOUNTCY OF THE RIVERLANDS
+		# =================================================
+
+		title:e_the_riverlands = {
 
 			change_title_holder_include_vassals = {
 
@@ -250,12 +296,42 @@ segrellion_settle_sansa_riverlands_effect = {
 		}
 
 
+		# =================================================
+		# KINGDOM-TIER RIVERLANDS TITLE
+		#
+		# Petyr can hold both in this bookmark.
+		# Preserve the complete Riverlands settlement.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:k_the_riverlands.holder ?= {
+
+					this = global_var:segrellion_sansa_baelish_target
+				}
+			}
+
+
+			title:k_the_riverlands = {
+
+				change_title_holder = {
+
+					holder = character:Stark_Dummy_8
+
+					change = scope:segrellion_sansa_riverlands_change
+				}
+			}
+		}
+
+
 		resolve_title_and_vassal_change = scope:segrellion_sansa_riverlands_change
 
 
 		character:Stark_Dummy_8 = {
 
-			set_primary_title_to = title:k_the_riverlands
+			set_primary_title_to = title:e_the_riverlands
 
 			add_character_flag = segrellion_sansa_riverlands_settled
 
@@ -349,10 +425,10 @@ segrellion_sansa_story_progression_effect = {
 	# =====================================================
 	# YOHN ROYCE CONTACTS DAEMON
 	#
-	# Only if Daemon actually secured Vale support and
-	# subsequently reclaimed the Flamelands.
+	# The story no longer has a hard upper date.
 	#
-	# This happens before Sansa turns sixteen.
+	# If Daemon chose the Vale route, Royce waits until
+	# Daemon has actually reclaimed the Flamelands.
 	# =====================================================
 
 	if = {
@@ -360,7 +436,6 @@ segrellion_sansa_story_progression_effect = {
 		limit = {
 
 			current_date >= 8302.1.1
-			current_date < 8302.12.1
 
 
 			character:Segrellion_60 ?= {
@@ -381,6 +456,8 @@ segrellion_sansa_story_progression_effect = {
 					has_character_flag = segrellion_sansa_royce_route_refused
 
 					has_character_flag = segrellion_sansa_protection_accepted
+
+					has_character_flag = segrellion_sansa_extraction_in_progress
 				}
 			}
 
@@ -388,8 +465,6 @@ segrellion_sansa_story_progression_effect = {
 			character:Stark_Dummy_8 ?= {
 
 				is_alive = yes
-
-				age < 16
 
 				NOT = {
 					has_character_flag = segrellion_sansa_identity_revealed
@@ -412,8 +487,68 @@ segrellion_sansa_story_progression_effect = {
 
 				id = segrellion_sansa.0100
 
-				days = { 5 15 }
+				days = { 30 90 }
 			}
+		}
+	}
+
+	# =====================================================
+	# SANSA / BAELISH WAR FAILSAFE
+	#
+	# If Sansa already reached the Beacon but the scripted
+	# war failed to launch, retry automatically.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_sansa_under_daemon_protection
+			}
+
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_sansa_protection_accepted
+
+				NOT = {
+					has_character_flag = segrellion_sansa_baelish_war_resolved
+				}
+			}
+
+
+			character:Baelish_2 ?= {
+
+				is_alive = yes
+
+				has_title = title:e_the_riverlands
+
+				NOT = {
+					has_character_flag = segrellion_sansa_baelish_war_active
+				}
+			}
+
+
+			title:e_the_vale.holder ?= {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_sansa_vale_war_active
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			segrellion_start_sansa_baelish_war_effect = yes
 		}
 	}
 
@@ -516,11 +651,33 @@ segrellion_sansa_story_progression_effect = {
 
 			character:Segrellion_60 ?= {
 
+				# If Daemon chose the Vale route, Baelish's
+				# fallback waits. Royce gets first chance
+				# once Daemon has reclaimed the Flamelands.
+
+				OR = {
+
+					is_alive = no
+
+					has_character_flag = segrellion_sansa_royce_route_refused
+
+					NOT = {
+						has_character_flag = segrellion_vale_support_pact
+					}
+				}
+
+
 				NOR = {
+
+					has_character_flag = segrellion_sansa_royce_first_letter_scheduled
+
+					has_character_flag = segrellion_sansa_royce_first_letter_seen
 
 					has_character_flag = segrellion_sansa_royce_preliminary_agreement
 
 					has_character_flag = segrellion_sansa_extraction_in_progress
+
+					has_character_flag = segrellion_sansa_protection_accepted
 				}
 			}
 		}

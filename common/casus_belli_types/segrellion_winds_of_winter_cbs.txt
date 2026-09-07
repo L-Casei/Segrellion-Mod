@@ -2208,13 +2208,20 @@ segrellion_sansa_protection_war_cb = {
 	icon = invasion
 	group = invasion
 
-	combine_into_one = no
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
 
 	allow_hostages = no
 
 
+	war_name = "segrellion_sansa_protection_war_cb_war_name"
+	cb_name = "segrellion_sansa_protection_war_cb_name"
+
+
 	# =====================================================
 	# ATTACKER
+	# THE VALE
 	# =====================================================
 
 	allowed_for_character = {
@@ -2227,17 +2234,42 @@ segrellion_sansa_protection_war_cb = {
 
 	# =====================================================
 	# DEFENDER
+	# PETYR BAELISH
 	# =====================================================
 
 	allowed_against_character = {
 
-		exists = global_var:segrellion_sansa_baelish_target
-
-		scope:defender = global_var:segrellion_sansa_baelish_target
+		scope:defender = character:Baelish_2
 	}
 
 
+	# =====================================================
+	# TARGET
+	# =====================================================
+
+	target_titles = all
+
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+	ignore_effect = change_title_holder
+
+
 	valid_to_start = {
+
+		scope:target = {
+			this = title:e_the_riverlands
+		}
+
+
+		scope:defender = {
+
+			is_alive = yes
+
+			has_title = title:e_the_riverlands
+		}
+
 
 		character:Stark_Dummy_8 ?= {
 
@@ -2248,9 +2280,47 @@ segrellion_sansa_protection_war_cb = {
 	}
 
 
+	should_invalidate = {
+
+		OR = {
+
+			scope:attacker = {
+				is_alive = no
+			}
+
+			scope:defender = {
+				is_alive = no
+			}
+
+			scope:defender = {
+
+				NOT = {
+					has_title = title:e_the_riverlands
+				}
+			}
+		}
+	}
+
+
+	cost = {
+	}
+
+
+	# =====================================================
+	# WAR STARTS
+	# =====================================================
+
 	on_declaration = {
 
 		on_declared_war = yes
+
+
+		set_global_variable = {
+
+			name = segrellion_sansa_baelish_war_started
+
+			value = yes
+		}
 
 
 		scope:attacker = {
@@ -2267,8 +2337,15 @@ segrellion_sansa_protection_war_cb = {
 		}
 
 
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_sansa_baelish_war_launched
+		}
+
+
 		# =================================================
-		# YOHN ROYCE
+		# YOHN ROYCE - RUNESTONE
+		# SUPPORTS SANSA
 		# =================================================
 
 		title:c_runestone.holder ?= {
@@ -2284,9 +2361,61 @@ segrellion_sansa_protection_war_cb = {
 				}
 
 
-				scope:war = {
+				scope:war ?= {
 
 					add_attacker = title:c_runestone.holder
+				}
+			}
+		}
+
+
+		# =================================================
+		# LADY WAYNWOOD - IRONOAKS
+		# SUPPORTS SANSA
+		# =================================================
+
+		title:c_ironoaks.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+
+				scope:war ?= {
+
+					add_attacker = title:c_ironoaks.holder
+				}
+			}
+		}
+
+
+		# =================================================
+		# LORD LYONEL CORBRAY - HEART'S HOME
+		# SUPPORTS LITTLEFINGER
+		# =================================================
+
+		title:c_hearts_home.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+
+				scope:war ?= {
+
+					add_defender = title:c_hearts_home.holder
 				}
 			}
 		}
@@ -2309,7 +2438,7 @@ segrellion_sansa_protection_war_cb = {
 				}
 
 
-				scope:war = {
+				scope:war ?= {
 
 					add_attacker = title:c_darry.holder
 				}
@@ -2318,7 +2447,7 @@ segrellion_sansa_protection_war_cb = {
 
 
 		# =================================================
-		# HOUSE VANCE OF ATRANTA
+		# HOUSE VANCE - ATRANTA
 		# =================================================
 
 		title:c_atranta.holder ?= {
@@ -2334,7 +2463,7 @@ segrellion_sansa_protection_war_cb = {
 				}
 
 
-				scope:war = {
+				scope:war ?= {
 
 					add_attacker = title:c_atranta.holder
 				}
@@ -2343,7 +2472,32 @@ segrellion_sansa_protection_war_cb = {
 
 
 		# =================================================
-		# HOUSE MALLISTER
+		# HOUSE VANCE - WAYFARER'S REST
+		# =================================================
+
+		title:c_wayfarers_rest.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+
+				scope:war ?= {
+
+					add_attacker = title:c_wayfarers_rest.holder
+				}
+			}
+		}
+
+
+		# =================================================
+		# HOUSE MALLISTER - SEAGARD
 		# =================================================
 
 		title:c_seagard.holder ?= {
@@ -2359,7 +2513,7 @@ segrellion_sansa_protection_war_cb = {
 				}
 
 
-				scope:war = {
+				scope:war ?= {
 
 					add_attacker = title:c_seagard.holder
 				}
@@ -2368,9 +2522,9 @@ segrellion_sansa_protection_war_cb = {
 
 
 		# =================================================
-		# BAELISH'S HIRED SWORDS
+		# BAELISH'S MERCENARIES
 		#
-		# 5,000 mercenary troops.
+		# 5,000 hired swords.
 		# =================================================
 
 		scope:defender = {
@@ -2379,12 +2533,14 @@ segrellion_sansa_protection_war_cb = {
 
 				name = segrellion_baelish_hired_swords
 
+
 				men_at_arms = {
 
 					type = armored_footmen
 
 					men = 700
 				}
+
 
 				men_at_arms = {
 
@@ -2393,6 +2549,7 @@ segrellion_sansa_protection_war_cb = {
 					men = 700
 				}
 
+
 				men_at_arms = {
 
 					type = bowmen
@@ -2400,12 +2557,17 @@ segrellion_sansa_protection_war_cb = {
 					men = 600
 				}
 
+
 				levies = 3000
+
 
 				inheritable = no
 
+
 				location = scope:defender.capital_province
+
 				origin = scope:defender.capital_province
+
 
 				war = scope:war
 			}
@@ -2414,12 +2576,11 @@ segrellion_sansa_protection_war_cb = {
 
 
 	# =====================================================
-	# VICTORY
-	#
-	# Baelish's political game ends here.
+	# VALE VICTORY
 	# =====================================================
 
 	on_victory_desc = {
+
 		desc = segrellion_sansa_protection_war_victory_desc
 	}
 
@@ -2437,24 +2598,46 @@ segrellion_sansa_protection_war_cb = {
 			remove_character_flag = segrellion_sansa_baelish_war_active
 
 			add_character_flag = segrellion_sansa_baelish_defeated
+		}
 
 
-			death = {
+		# Transfer the Riverlands before Petyr's death so
+		# CK3 succession cannot send the titles elsewhere.
 
-				death_reason = death_execution
+		segrellion_settle_sansa_riverlands_effect = yes
+
+
+		scope:defender = {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				death = {
+
+					death_reason = death_execution
+
+					killer = scope:attacker
+				}
 			}
 		}
 
 
-		segrellion_settle_sansa_riverlands_effect = yes
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_sansa_baelish_war_resolved
+		}
 	}
 
 
 	# =====================================================
-	# DEFEAT
+	# BAELISH VICTORY
 	# =====================================================
 
 	on_defeat_desc = {
+
 		desc = segrellion_sansa_protection_war_defeat_desc
 	}
 
@@ -2462,16 +2645,22 @@ segrellion_sansa_protection_war_cb = {
 	on_defeat = {
 
 		scope:attacker = {
+
 			remove_character_flag = segrellion_sansa_vale_war_active
 		}
 
+
 		scope:defender = {
+
 			remove_character_flag = segrellion_sansa_baelish_war_active
 		}
 
 
 		character:Segrellion_60 = {
+
 			add_character_flag = segrellion_sansa_rescue_war_lost
+
+			add_character_flag = segrellion_sansa_baelish_war_resolved
 		}
 	}
 
@@ -2481,11 +2670,33 @@ segrellion_sansa_protection_war_cb = {
 	# =====================================================
 
 	on_white_peace_desc = {
+
 		desc = segrellion_sansa_protection_war_white_peace_desc
 	}
 
 
 	on_white_peace = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_sansa_vale_war_active
+		}
+
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_sansa_baelish_war_active
+		}
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_sansa_baelish_war_resolved
+		}
+	}
+
+
+	on_invalidated = {
 
 		scope:attacker = {
 			remove_character_flag = segrellion_sansa_vale_war_active
@@ -2495,4 +2706,7 @@ segrellion_sansa_protection_war_cb = {
 			remove_character_flag = segrellion_sansa_baelish_war_active
 		}
 	}
+
+
+	transfer_behavior = transfer
 }
