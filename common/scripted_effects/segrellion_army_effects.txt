@@ -79,6 +79,75 @@ segrellion_call_the_banners_effect = {
 
 	save_scope_as = segrellion_banner_liege
 
+	# =====================================================
+	# DIRECT VASSALS ALREADY FIGHTING AGAINST THEIR LIEGE
+	# =====================================================
+
+	every_vassal = {
+
+		limit = {
+
+			is_alive = yes
+			is_landed = yes
+
+			is_imprisoned = no
+
+			highest_held_title_tier > tier_barony
+
+			NOT = {
+				government_has_flag = government_is_nw
+			}
+		}
+
+		save_temporary_scope_as = segrellion_banner_enemy_candidate
+
+
+		scope:segrellion_banner_liege = {
+
+			every_character_war = {
+
+				limit = {
+
+					is_civil_war = no
+
+					is_war_leader = scope:segrellion_banner_liege
+
+
+					OR = {
+
+						# Liege is attacker, vassal joined defenders.
+						AND = {
+
+							is_attacker = scope:segrellion_banner_liege
+
+							any_war_defender = {
+								this = scope:segrellion_banner_enemy_candidate
+							}
+						}
+
+
+						# Liege is defender, vassal joined attackers.
+						AND = {
+
+							NOT = {
+								is_attacker = scope:segrellion_banner_liege
+							}
+
+							any_war_attacker = {
+								this = scope:segrellion_banner_enemy_candidate
+							}
+						}
+					}
+				}
+
+
+				scope:segrellion_banner_enemy_candidate = {
+					segrellion_banner_joined_enemy_effect = yes
+				}
+			}
+		}
+	}
+
 
 	every_vassal = {
 
@@ -143,6 +212,127 @@ segrellion_call_the_banners_effect = {
 
 
 # =========================================================
+# BANNER OATHBREAKER
+#
+# ROOT = vassal who refused the call
+# scope:segrellion_banner_liege = liege
+# =========================================================
+
+segrellion_banner_refuse_liege_effect = {
+
+	add_character_modifier = {
+		modifier = segrellion_banner_oathbreaker_modifier
+		years = 10
+	}
+
+	add_character_flag = segrellion_banner_oathbreaker_unpunished
+
+
+	# =====================================================
+	# LIEGE OPINION
+	# =====================================================
+
+	scope:segrellion_banner_liege = {
+
+		add_opinion = {
+			target = root
+			modifier = segrellion_banner_refused_call_opinion
+		}
+
+
+		# =================================================
+		# LOYAL CO-VASSALS DESPISE THE OATHBREAKER
+		# =================================================
+
+		every_vassal = {
+
+			limit = {
+
+				this != root
+
+				is_alive = yes
+
+				OR = {
+
+					has_trait = loyal
+
+					opinion = {
+						target = scope:segrellion_banner_liege
+						value >= 50
+					}
+				}
+			}
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_banner_oathbreaker_fellow_vassal_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# BANNER JOINS THE ENEMY
+#
+# ROOT = treacherous vassal
+# scope:segrellion_banner_liege = liege
+# =========================================================
+
+segrellion_banner_joined_enemy_effect = {
+
+	add_character_modifier = {
+		modifier = segrellion_banner_oathbreaker_modifier
+		years = 20
+	}
+
+	add_character_flag = segrellion_banner_oathbreaker_unpunished
+
+
+	# =====================================================
+	# LIEGE OPINION
+	# =====================================================
+
+	scope:segrellion_banner_liege = {
+
+		add_opinion = {
+			target = root
+			modifier = segrellion_banner_joined_enemy_opinion
+		}
+
+
+		# =================================================
+		# LOYAL CO-VASSALS DESPISE THE TRAITOR
+		# =================================================
+
+		every_vassal = {
+
+			limit = {
+
+				this != root
+
+				is_alive = yes
+
+				OR = {
+
+					has_trait = loyal
+
+					opinion = {
+						target = scope:segrellion_banner_liege
+						value >= 50
+					}
+				}
+			}
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_banner_traitor_fellow_vassal_opinion
+			}
+		}
+	}
+}
+
+# =========================================================
 # RESOLVE AI VASSAL RESPONSE
 #
 # ROOT = vassal
@@ -153,12 +343,60 @@ segrellion_resolve_banner_vassal_response_effect = {
 
 
 	# =====================================================
+	# LOYAL TRAIT
+	# 95% answers the call
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_trait = loyal
+		}
+
+		random_list = {
+
+			95 = {
+				segrellion_banner_join_liege_wars_effect = yes
+			}
+
+			5 = {
+				segrellion_banner_refuse_liege_effect = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DISLOYAL TRAIT
+	# 20% answers the call
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			has_trait = disloyal
+		}
+
+		random_list = {
+
+			20 = {
+				segrellion_banner_join_liege_wars_effect = yes
+			}
+
+			80 = {
+				segrellion_banner_refuse_liege_effect = yes
+			}
+		}
+	}
+
+
+	# =====================================================
 	# VERY LOYAL
 	# Opinion 60+
 	# 100% joins
 	# =====================================================
 
-	if = {
+	else_if = {
 
 		limit = {
 
@@ -188,7 +426,6 @@ segrellion_resolve_banner_vassal_response_effect = {
 			}
 		}
 
-
 		random_list = {
 
 			85 = {
@@ -196,6 +433,7 @@ segrellion_resolve_banner_vassal_response_effect = {
 			}
 
 			15 = {
+				segrellion_banner_refuse_liege_effect = yes
 			}
 		}
 	}
@@ -217,7 +455,6 @@ segrellion_resolve_banner_vassal_response_effect = {
 			}
 		}
 
-
 		random_list = {
 
 			60 = {
@@ -225,6 +462,7 @@ segrellion_resolve_banner_vassal_response_effect = {
 			}
 
 			40 = {
+				segrellion_banner_refuse_liege_effect = yes
 			}
 		}
 	}
@@ -246,7 +484,6 @@ segrellion_resolve_banner_vassal_response_effect = {
 			}
 		}
 
-
 		random_list = {
 
 			30 = {
@@ -254,6 +491,7 @@ segrellion_resolve_banner_vassal_response_effect = {
 			}
 
 			70 = {
+				segrellion_banner_refuse_liege_effect = yes
 			}
 		}
 	}
@@ -274,6 +512,7 @@ segrellion_resolve_banner_vassal_response_effect = {
 			}
 
 			90 = {
+				segrellion_banner_refuse_liege_effect = yes
 			}
 		}
 	}

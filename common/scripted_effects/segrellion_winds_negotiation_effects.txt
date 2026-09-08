@@ -2280,38 +2280,14 @@ segrellion_young_griff_hard_marriage_guard_effect = {
 				}
 			}
 
-
 			# =================================================
 			# NORMAL STATE
-			#
-			# Young Griff is NEVER allowed to marry randomly.
 			# =================================================
 
 			else = {
 
-
 				# ---------------------------------------------
-				# PREVENT NORMAL AI MATCHMAKING
-				# ---------------------------------------------
-
-				if = {
-
-					limit = {
-
-						NOT = {
-							has_trait = refusing_marriage
-						}
-					}
-
-					add_trait = refusing_marriage
-				}
-
-
-				add_character_flag = segrellion_young_griff_story_marriage_lock_added
-
-
-				# ---------------------------------------------
-				# DESTROY ANY MARRIAGE THAT BYPASSED THE TRAIT
+				# DESTROY ANY UNAUTHORIZED MARRIAGE
 				# ---------------------------------------------
 
 				every_spouse = {
@@ -2323,8 +2299,61 @@ segrellion_young_griff_hard_marriage_guard_effect = {
 						}
 					}
 
-
 					divorce = character:IAF_Young_Griff_1
+				}
+
+
+				# ---------------------------------------------
+				# UNMARRIED
+				# Keep normal AI matchmaking locked.
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+						is_married = no
+					}
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_trait = refusing_marriage
+							}
+						}
+
+						add_trait = refusing_marriage
+					}
+
+					add_character_flag = segrellion_young_griff_story_marriage_lock_added
+				}
+
+
+				# ---------------------------------------------
+				# LEGITIMATELY MARRIED
+				# Remove the story marriage lock.
+				# ---------------------------------------------
+
+				else_if = {
+
+					limit = {
+
+						is_married = yes
+
+						has_character_flag = segrellion_young_griff_story_marriage_lock_added
+					}
+
+					if = {
+
+						limit = {
+							has_trait = refusing_marriage
+						}
+
+						remove_trait = refusing_marriage
+					}
+
+					remove_character_flag = segrellion_young_griff_story_marriage_lock_added
 				}
 			}
 		}

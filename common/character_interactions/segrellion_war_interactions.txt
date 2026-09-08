@@ -38,6 +38,8 @@ segrellion_join_liege_war_interaction = {
 			is_imprisoned = no
 			is_incapable = no
 
+			# Barons do not participate in this system.
+			highest_held_title_tier >= tier_county
 
 			# DIRECT LIEGE ONLY.
 			is_vassal_of = scope:recipient
@@ -51,6 +53,10 @@ segrellion_join_liege_war_interaction = {
 			is_ruler = yes
 
 			is_at_war = yes
+
+			NOT = {
+				has_character_flag = segrellion_sansa_baelish_war_active
+			}
 		}
 
 
@@ -59,20 +65,6 @@ segrellion_join_liege_war_interaction = {
 		# =================================================
 
 		OR = {
-
-
-			# ---------------------------------------------
-			# COUNTY OR HIGHER
-			# ---------------------------------------------
-
-			AND = {
-
-				has_game_rule = segrellion_join_liege_wars_county_or_higher
-
-				scope:recipient = {
-					highest_held_title_tier >= tier_county
-				}
-			}
 
 
 			# ---------------------------------------------
@@ -262,6 +254,106 @@ segrellion_join_liege_war_interaction = {
 		always = no
 	}
 
+
+	ai_accept = {
+		base = 100
+	}
+}
+
+# =========================================================
+# PUNISH OATHBREAKER
+# =========================================================
+
+segrellion_punish_oathbreaker_interaction = {
+
+	category = interaction_category_hostile
+
+	common_interaction = yes
+
+	interface_priority = 90
+
+	icon = imprison
+
+	desc = segrellion_punish_oathbreaker_interaction_desc
+
+	auto_accept = yes
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		scope:actor = {
+
+			is_alive = yes
+			is_landed = yes
+			is_ruler = yes
+
+			is_imprisoned = no
+			is_incapable = no
+		}
+
+
+		scope:recipient = {
+
+			is_alive = yes
+
+			is_vassal_of = scope:actor
+
+			has_character_flag = segrellion_banner_oathbreaker_unpunished
+
+			is_imprisoned = no
+		}
+	}
+
+
+	# =====================================================
+	# VALID
+	# =====================================================
+
+	is_valid_showing_failures_only = {
+
+		scope:recipient = {
+
+			is_vassal_of = scope:actor
+
+			has_character_flag = segrellion_banner_oathbreaker_unpunished
+
+			is_imprisoned = no
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	on_accept = {
+
+		scope:actor = {
+
+			imprison = {
+				target = scope:recipient
+				type = house_arrest
+			}
+		}
+
+
+		scope:recipient = {
+			remove_character_flag = segrellion_banner_oathbreaker_unpunished
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_potential = {
+		always = no
+	}
 
 	ai_accept = {
 		base = 100
