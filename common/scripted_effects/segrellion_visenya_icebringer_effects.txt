@@ -23,6 +23,13 @@ segrellion_daemon_visenya_swap_swords_effect = {
 
 			exists = global_var:segrellion_icebringer
 			exists = global_var:segrellion_trueflame
+			# Only exchange the blades actually held by this couple.
+			global_var:segrellion_icebringer = {
+				artifact_owner = { this = character:Black_Unicorn_1 }
+			}
+			global_var:segrellion_trueflame = {
+				artifact_owner = { this = character:Segrellion_60 }
+			}
 		}
 
 
@@ -32,13 +39,12 @@ segrellion_daemon_visenya_swap_swords_effect = {
 
 		global_var:segrellion_icebringer = {
 
-			set_artifact_owner = {
+			set_owner = {
 
 				target = character:Segrellion_60
 				generate_history = yes
 			}
 
-			equip_artifact_to_owner_replace = yes
 		}
 
 
@@ -48,15 +54,18 @@ segrellion_daemon_visenya_swap_swords_effect = {
 
 		global_var:segrellion_trueflame = {
 
-			set_artifact_owner = {
+			set_owner = {
 
 				target = character:Black_Unicorn_1
 				generate_history = yes
 			}
 
-			equip_artifact_to_owner_replace = yes
 		}
 
+
+		# Transfer both swords before replacing either equipped weapon.
+		global_var:segrellion_icebringer = { equip_artifact_to_owner_replace = yes }
+		global_var:segrellion_trueflame = { equip_artifact_to_owner_replace = yes }
 
 		# =================================================
 		# CLEAN VISENYA'S OLD ACTIVE ICEBRINGER STATE
