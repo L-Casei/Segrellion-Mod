@@ -1,0 +1,697 @@
+namespace = segrellion_daenerys_aurane
+
+
+# =========================================================
+# 0001 - THE DRAGON QUEEN'S OFFER
+#
+# ROOT = Aurane Waters
+#
+# 80% negotiate
+# 20% refuse
+# =========================================================
+
+segrellion_daenerys_aurane.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0001.t
+	desc = segrellion_daenerys_aurane.0001.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Velaryon_5
+
+		is_alive = yes
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# ACCEPT NEGOTIATIONS
+	# 80%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0001.a
+
+
+		add_character_flag = segrellion_aurane_daenerys_negotiation_open
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_aurane.0020
+
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# 20%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0001.b
+
+
+		add_character_flag = segrellion_aurane_refused_daenerys
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_end_failed_aurane_negotiation_effect = yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_aurane.0010
+
+				days = { 1 3 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - AURANE REFUSES
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_aurane.0010 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0010.t
+	desc = segrellion_daenerys_aurane.0010.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_angry
+	}
+
+
+	right_portrait = {
+
+		character = character:Velaryon_5
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0010.a
+	}
+}
+
+
+# =========================================================
+# 0020 - THE PRICE OF A FLEET
+#
+# ROOT = Aurane
+#
+# 60% = 2,000 gold
+# 30% = Driftmark + Lord Paramountcy
+# 10% = Daenerys' hand
+# =========================================================
+
+segrellion_daenerys_aurane.0020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0020.t
+	desc = segrellion_daenerys_aurane.0020.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# GOLD
+	# 60%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0020.a
+
+
+		add_character_flag = segrellion_aurane_demanded_gold
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_aurane.0030
+
+				days = { 1 3 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+
+	# =====================================================
+	# LAND
+	# 30%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0020.b
+
+
+		add_character_flag = segrellion_aurane_demanded_land
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_aurane.0040
+
+				days = { 1 3 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# MARRIAGE
+	# 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0020.c
+
+
+		trigger = {
+
+			character:Targaryen_9 ?= {
+
+				is_alive = yes
+
+				is_married = no
+			}
+		}
+
+
+		add_character_flag = segrellion_aurane_demanded_daenerys_marriage
+
+
+		# Aurane commits fully to the proposal.
+		# His current marriage is ended before he asks Daenerys.
+
+		every_spouse = {
+			divorce = prev
+		}
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_aurane.0050
+
+				days = { 1 3 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - 2,000 GOLD
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_aurane.0030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0030.t
+	desc = segrellion_daenerys_aurane.0030.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Velaryon_5
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0030.a
+
+
+		add_gold = -2000
+
+
+		character:Velaryon_5 = {
+
+			add_gold = 2000
+
+			add_character_flag = segrellion_aurane_received_daenerys_gold
+		}
+
+
+		add_character_flag = segrellion_daenerys_paid_aurane_2000
+
+
+		segrellion_daenerys_finalize_aurane_deal_effect = yes
+
+
+		ai_chance = {
+
+			base = 0
+
+
+			modifier = {
+
+				add = 100
+
+				has_character_flag = segrellion_daenerys_ai_super_aggressive
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0030.b
+
+
+		segrellion_daenerys_end_failed_aurane_negotiation_effect = yes
+
+
+		ai_chance = {
+
+			base = 100
+
+
+			modifier = {
+
+				factor = 0
+
+				has_character_flag = segrellion_daenerys_ai_super_aggressive
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - DRIFTMARK AND A LORD PARAMOUNTCY
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_aurane.0040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0040.t
+	desc = segrellion_daenerys_aurane.0040.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Velaryon_5
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0040.a
+
+
+		add_character_flag = segrellion_daenerys_promised_aurane_driftmark
+
+		add_character_flag = segrellion_daenerys_promised_aurane_paramountcy
+
+		add_character_flag = segrellion_daenerys_aurane_land_promise_active
+
+
+		character:Velaryon_5 = {
+
+			add_character_flag = segrellion_aurane_has_daenerys_land_promise
+		}
+
+
+		segrellion_daenerys_finalize_aurane_deal_effect = yes
+
+
+		ai_chance = {
+
+			base = 0
+
+
+			modifier = {
+
+				add = 100
+
+				has_character_flag = segrellion_daenerys_ai_super_aggressive
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0040.b
+
+
+		segrellion_daenerys_end_failed_aurane_negotiation_effect = yes
+
+
+		ai_chance = {
+
+			base = 100
+
+
+			modifier = {
+
+				factor = 0
+
+				has_character_flag = segrellion_daenerys_ai_super_aggressive
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0050 - A QUEEN FOR A FLEET
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_aurane.0050 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0050.t
+	desc = segrellion_daenerys_aurane.0050.desc
+
+	theme = romance
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Velaryon_5
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	#
+	# PLAYER ONLY IN PRACTICE.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0050.a
+
+
+		trigger = {
+
+			is_married = no
+
+			character:Velaryon_5 ?= {
+				is_alive = yes
+				is_married = no
+			}
+		}
+
+
+		marry_matrilineal = character:Velaryon_5
+
+
+		add_character_flag = segrellion_daenerys_married_aurane_for_fleet
+
+
+		character:Velaryon_5 = {
+
+			add_character_flag = segrellion_aurane_married_daenerys_for_fleet
+		}
+
+
+		segrellion_daenerys_finalize_aurane_deal_effect = yes
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	#
+	# SUPER AGGRESSIVE STILL REFUSES THIS.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0050.b
+
+
+		segrellion_daenerys_end_failed_aurane_negotiation_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0100 - A PROMISE UNKEPT
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_aurane.0100 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0100.t
+	desc = segrellion_daenerys_aurane.0100.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_angry
+	}
+
+
+	right_portrait = {
+
+		character = character:Velaryon_5
+
+		animation = personality_angry
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_aurane_land_promise_active
+
+		add_character_flag = segrellion_daenerys_broke_aurane_land_promise
+
+
+		character:Velaryon_5 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				add_character_flag = segrellion_aurane_betrayed_by_daenerys
+
+
+				add_opinion = {
+
+					target = root
+
+					modifier = segrellion_aurane_broken_promise_opinion
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0100.a
+
+		add_prestige = -1000
+	}
+}

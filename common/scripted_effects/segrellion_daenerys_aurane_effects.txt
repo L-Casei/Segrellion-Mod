@@ -1,0 +1,229 @@
+# =========================================================
+# DAENERYS / AURANE WATERS
+# =========================================================
+
+
+# =========================================================
+# NEGOTIATION FAILED
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_end_failed_aurane_negotiation_effect = {
+
+	remove_character_flag = segrellion_daenerys_aurane_negotiation_active
+
+	add_character_flag = segrellion_daenerys_aurane_negotiation_resolved
+
+	add_character_flag = segrellion_daenerys_aurane_negotiation_failed
+}
+
+
+# =========================================================
+# NEGOTIATION SUCCESS
+#
+# ROOT = Daenerys
+#
+# Aurane's fleet carries 85% of the host.
+# There is NO manual Sail for Westeros decision.
+# =========================================================
+
+segrellion_daenerys_finalize_aurane_deal_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_aurane_deal_accepted
+			}
+		}
+
+
+		remove_character_flag = segrellion_daenerys_aurane_negotiation_active
+
+		remove_character_flag = segrellion_daenerys_aurane_negotiation_failed
+
+		remove_character_flag = segrellion_daenerys_waiting_at_pentos
+
+		remove_character_flag = segrellion_daenerys_fleet_project_active
+
+
+		add_character_flag = segrellion_daenerys_aurane_negotiation_resolved
+
+		add_character_flag = segrellion_daenerys_aurane_deal_accepted
+
+		add_character_flag = segrellion_daenerys_aurane_fleet_secured
+
+		add_character_flag = segrellion_daenerys_aurane_crossing_85_percent
+
+
+		# Apply the previously-defined 85% crossing loss.
+
+		segrellion_daenerys_apply_crossing_capacity_effect = yes
+
+
+		add_character_flag = segrellion_daenerys_crossing_committed
+
+
+		# Immediately continue into the existing landing choice.
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0010
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# LAND PROMISE
+#
+# Aurane must eventually receive:
+#
+# - Driftmark
+# - A kingdom-tier title or higher
+#
+# Once Daenerys takes the Iron Throne she has two years
+# to fulfil the promise.
+# =========================================================
+
+segrellion_daenerys_aurane_land_promise_progression_effect = {
+
+	character:Targaryen_9 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_daenerys_aurane_land_promise_active
+			}
+
+
+			# =================================================
+			# AURANE DIED
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					character:Velaryon_5 ?= {
+						is_alive = no
+					}
+				}
+
+
+				remove_character_flag = segrellion_daenerys_aurane_land_promise_active
+
+				add_character_flag = segrellion_daenerys_aurane_land_promise_void
+			}
+
+
+			# =================================================
+			# PROMISE FULFILLED
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					character:Velaryon_5 ?= {
+
+						is_alive = yes
+
+						has_title = title:c_driftmark
+
+						highest_held_title_tier >= tier_kingdom
+					}
+				}
+
+
+				remove_character_flag = segrellion_daenerys_aurane_land_promise_active
+
+				remove_character_flag = segrellion_daenerys_aurane_land_promise_clock_started
+
+				remove_variable = segrellion_daenerys_aurane_land_promise_waiting
+
+				add_character_flag = segrellion_daenerys_aurane_land_promise_fulfilled
+
+
+				character:Velaryon_5 = {
+
+					remove_character_flag = segrellion_aurane_has_daenerys_land_promise
+
+					add_character_flag = segrellion_aurane_land_promise_fulfilled
+				}
+			}
+
+
+			# =================================================
+			# DAENERYS TAKES THE THRONE
+			# START TWO-YEAR CLOCK
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					has_title = title:h_the_iron_throne
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_aurane_land_promise_clock_started
+					}
+				}
+
+
+				add_character_flag = segrellion_daenerys_aurane_land_promise_clock_started
+
+
+				set_variable = {
+
+					name = segrellion_daenerys_aurane_land_promise_waiting
+
+					value = yes
+
+					years = 2
+				}
+			}
+
+
+			# =================================================
+			# TWO YEARS EXPIRED
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_aurane_land_promise_clock_started
+
+					NOT = {
+						has_variable = segrellion_daenerys_aurane_land_promise_waiting
+					}
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_aurane_land_promise_confrontation_seen
+					}
+				}
+
+
+				add_character_flag = segrellion_daenerys_aurane_land_promise_confrontation_seen
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_aurane.0100
+
+					days = 1
+				}
+			}
+		}
+	}
+}

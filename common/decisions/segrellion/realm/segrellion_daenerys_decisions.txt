@@ -50,6 +50,14 @@ segrellion_daenerys_sail_for_westeros_decision = {
 		NOT = {
 			has_character_flag = segrellion_daenerys_crossing_committed
 		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_aurane_negotiation_active
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_aurane_deal_accepted
+		}
 	}
 
 
@@ -90,20 +98,6 @@ segrellion_daenerys_sail_for_westeros_decision = {
 			}
 
 			custom_tooltip = segrellion_daenerys_crossing_capacity_100_tt
-		}
-
-
-		# -------------------------------------------------
-		# 85% - AURANE WATERS
-		# -------------------------------------------------
-
-		else_if = {
-
-			limit = {
-				has_character_flag = segrellion_daenerys_aurane_fleet_secured
-			}
-
-			custom_tooltip = segrellion_daenerys_crossing_capacity_85_tt
 		}
 
 
@@ -241,10 +235,27 @@ segrellion_daenerys_sail_for_westeros_decision = {
 
 		is_ai = yes
 
-		has_character_flag = segrellion_daenerys_dragon_fleet_completed
+
+		OR = {
+
+			has_character_flag = segrellion_daenerys_dragon_fleet_completed
+
+
+			AND = {
+
+				has_character_flag = segrellion_daenerys_ai_super_aggressive
+
+				has_character_flag = segrellion_daenerys_aurane_negotiation_failed
+			}
+		}
+
 
 		NOT = {
 			has_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_aurane_negotiation_active
 		}
 	}
 

@@ -891,7 +891,21 @@ segrellion_daenerys_invasion.0006 = {
 
 
 		ai_chance = {
+
 			base = 100
+
+
+			modifier = {
+
+				factor = 0
+
+				OR = {
+
+					has_character_flag = segrellion_daenerys_ai_super_aggressive
+
+					has_game_rule = segrellion_daenerys_aggression_super_aggressive
+				}
+			}
 		}
 	}
 
@@ -907,21 +921,50 @@ segrellion_daenerys_invasion.0006 = {
 		custom_tooltip = segrellion_daenerys_invasion.0006.b.tt
 
 
+		trigger = {
+
+			character:Velaryon_5 ?= {
+
+				is_alive = yes
+
+				is_adult = yes
+
+				is_imprisoned = no
+			}
+		}
+
+
 		add_character_flag = segrellion_daenerys_fleet_strategy_chosen
 
 		add_character_flag = segrellion_daenerys_aurane_route_chosen
+
+		add_character_flag = segrellion_daenerys_aurane_negotiation_active
 
 
 		trigger_event = {
 
 			id = segrellion_daenerys_invasion.0500
 
-			days = { 5 12 }
+			days = { 3 7 }
 		}
 
 
 		ai_chance = {
+
 			base = 0
+
+
+			modifier = {
+
+				add = 100
+
+				OR = {
+
+					has_character_flag = segrellion_daenerys_ai_super_aggressive
+
+					has_game_rule = segrellion_daenerys_aggression_super_aggressive
+				}
+			}
 		}
 	}
 
@@ -1388,7 +1431,7 @@ segrellion_daenerys_invasion.0013 = {
 }
 
 # =========================================================
-# 0500 - THE BASTARD'S FLEET
+# 0500 - AN OFFER TO THE LORD OF THE WATERS
 # =========================================================
 
 segrellion_daenerys_invasion.0500 = {
@@ -1417,23 +1460,27 @@ segrellion_daenerys_invasion.0500 = {
 
 		is_alive = yes
 
-		has_character_flag = segrellion_daenerys_camped_at_pentos
+		has_character_flag = segrellion_daenerys_aurane_negotiation_active
 
-		has_character_flag = segrellion_daenerys_aurane_route_chosen
-
-		NOT = {
-			has_character_flag = segrellion_daenerys_crossing_committed
-		}
-
-		NOT = {
-			has_character_flag = segrellion_daenerys_aurane_fleet_secured
+		character:Velaryon_5 ?= {
+			is_alive = yes
 		}
 	}
 
 
 	left_portrait = {
+
 		character = root
+
 		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Velaryon_5
+
+		animation = personality_bold
 	}
 
 
@@ -1441,11 +1488,16 @@ segrellion_daenerys_invasion.0500 = {
 
 		name = segrellion_daenerys_invasion.0500.a
 
-		custom_tooltip = segrellion_daenerys_invasion.0500.a.tt
 
+		character:Velaryon_5 = {
 
-		add_character_flag = segrellion_daenerys_aurane_fleet_secured
-		add_character_flag = segrellion_daenerys_aurane_crossing_85_percent
+			trigger_event = {
+
+				id = segrellion_daenerys_aurane.0001
+
+				days = { 2 5 }
+			}
+		}
 	}
 }
 
