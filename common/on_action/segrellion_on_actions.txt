@@ -38,7 +38,6 @@ monthly_global_pulse = {
 		segrellion_stannis_opening_after_lobby
 		segrellion_stannis_opening_recovery
 		segrellion_jon_body_in_ice_failsafe
-		segrellion_jon_wait_for_stannis_progression
 		segrellion_young_griff_opening_progression
 		segrellion_young_griff_post_conquest_progression
 		segrellion_young_griff_unicorn_returns_notice_fallback
@@ -379,6 +378,10 @@ on_combat_end_winner = {
 		segrellion_unicorn_returns_clifford_battle_check
 
 		segrellion_stannis_ramsay_battle_capture
+
+		segrellion_ramsay_defeats_stannis_battle_check
+
+		segrellion_jon_ramsay_battle_capture
 	}
 }
 
@@ -2127,6 +2130,12 @@ segrellion_young_griff_blackfyre_reveal_on_title_gain = {
 # check, but physical location acts as the failsafe.
 # =========================================================
 
+# =========================================================
+# STANNIS DEFEATS RAMSAY IN BATTLE
+#
+# ROOT = victorious combat_side
+# =========================================================
+
 segrellion_stannis_ramsay_battle_capture = {
 
 	trigger = {
@@ -2139,32 +2148,16 @@ segrellion_stannis_ramsay_battle_capture = {
 		}
 
 
-		title:e_the_north.holder ?= {
+		has_global_variable = segrellion_ramsay_bolton
+
+
+		global_var:segrellion_ramsay_bolton ?= {
 
 			is_alive = yes
-
-			is_imprisoned = no
-
-			has_character_flag = segrellion_ramsay_northern_takeover
 		}
 
 
-		# =================================================
-		# THIS MUST BE STANNIS' NORTHERN CAMPAIGN
-		# =================================================
-
-		combat = {
-
-			combat_war = {
-
-				primary_attacker = character:Baratheon_3
-			}
-		}
-
-
-		# =================================================
-		# STANNIS PERSONALLY WON THE BATTLE
-		# =================================================
+		# Stannis must personally be on the winning side.
 
 		OR = {
 
@@ -2180,39 +2173,21 @@ segrellion_stannis_ramsay_battle_capture = {
 		}
 
 
-		# =================================================
-		# RAMSAY WAS PRESENT ON THE LOSING SIDE
-		#
-		# First try the normal combat-side checks.
-		#
-		# Failsafe:
-		# Ramsay's physical character location is the same
-		# province as Stannis, who is personally commanding
-		# the victorious army.
-		# =================================================
+		# Ramsay must personally be on the losing side.
 
-		OR = {
+		enemy_side = {
 
-			enemy_side = {
+			OR = {
 
-				OR = {
+				any_side_commander = {
 
-					any_side_commander = {
-
-						this = title:e_the_north.holder
-					}
-
-					any_side_knight = {
-
-						this = title:e_the_north.holder
-					}
+					this = global_var:segrellion_ramsay_bolton
 				}
-			}
 
+				any_side_knight = {
 
-			title:e_the_north.holder = {
-
-				location = character:Baratheon_3.location
+					this = global_var:segrellion_ramsay_bolton
+				}
 			}
 		}
 	}
@@ -2220,7 +2195,7 @@ segrellion_stannis_ramsay_battle_capture = {
 
 	effect = {
 
-		title:e_the_north.holder = {
+		global_var:segrellion_ramsay_bolton = {
 
 			save_scope_as = segrellion_ramsay_battle_prisoner
 		}
@@ -2234,12 +2209,269 @@ segrellion_stannis_ramsay_battle_capture = {
 
 				type = dungeon
 			}
+
+			add_character_flag = segrellion_stannis_defeated_ramsay_personally
+
+
+			# Immediately win Stannis' Northern Campaign.
+
+			every_character_war = {
+
+				limit = {
+
+					using_cb = segrellion_stannis_northern_campaign_cb
+
+					casus_belli = {
+
+						primary_attacker = character:Baratheon_3
+
+						primary_defender = scope:segrellion_ramsay_battle_prisoner
+					}
+				}
+
+				end_war = attacker
+			}
 		}
 
 
 		scope:segrellion_ramsay_battle_prisoner = {
 
 			add_character_flag = segrellion_ramsay_captured_by_stannis_in_battle
+		}
+	}
+}
+
+# =========================================================
+# RAMSAY DEFEATS STANNIS IN BATTLE
+#
+# ROOT = victorious combat_side
+# =========================================================
+
+segrellion_ramsay_defeats_stannis_battle_check = {
+
+	trigger = {
+
+		character:Baratheon_3 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_stannis_northern_campaign_active
+		}
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+		}
+
+
+		has_global_variable = segrellion_ramsay_bolton
+
+
+		global_var:segrellion_ramsay_bolton ?= {
+
+			is_alive = yes
+		}
+
+
+		# Ramsay is personally on the winning side.
+
+		OR = {
+
+			any_side_commander = {
+
+				this = global_var:segrellion_ramsay_bolton
+			}
+
+			any_side_knight = {
+
+				this = global_var:segrellion_ramsay_bolton
+			}
+		}
+
+
+		# Stannis is personally on the losing side.
+
+		enemy_side = {
+
+			OR = {
+
+				any_side_commander = {
+
+					this = character:Baratheon_3
+				}
+
+				any_side_knight = {
+
+					this = character:Baratheon_3
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Baratheon_3 = {
+
+			# Guarantees that Shireen inherits Stannis' side
+			# when the CB processes on_primary_attacker_death.
+
+			set_designated_heir = character:Baratheon_13
+
+
+			add_character_flag = segrellion_stannis_slain_by_ramsay
+
+
+			death = {
+
+				death_reason = death_battle
+
+				killer = global_var:segrellion_ramsay_bolton
+			}
+		}
+
+
+		title:d_the_drench.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+				}
+
+				trigger_event = {
+
+					id = segrellion_stannis_fall.0001
+
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# JON DEFEATS RAMSAY AFTER STANNIS' DEATH
+#
+# ROOT = victorious combat_side
+# =========================================================
+
+segrellion_jon_ramsay_battle_capture = {
+
+	trigger = {
+
+		character:Baratheon_3 ?= {
+
+			is_alive = no
+		}
+
+
+		has_global_variable = segrellion_resurrected_jon
+
+		has_global_variable = segrellion_ramsay_bolton
+
+
+		global_var:segrellion_resurrected_jon ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_jon_joined_shireen_northern_war
+		}
+
+
+		global_var:segrellion_ramsay_bolton ?= {
+
+			is_alive = yes
+		}
+
+
+		# Jon personally won.
+
+		OR = {
+
+			any_side_commander = {
+
+				this = global_var:segrellion_resurrected_jon
+			}
+
+			any_side_knight = {
+
+				this = global_var:segrellion_resurrected_jon
+			}
+		}
+
+
+		# Ramsay personally lost.
+
+		enemy_side = {
+
+			OR = {
+
+				any_side_commander = {
+
+					this = global_var:segrellion_ramsay_bolton
+				}
+
+				any_side_knight = {
+
+					this = global_var:segrellion_ramsay_bolton
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		global_var:segrellion_ramsay_bolton = {
+
+			save_scope_as = segrellion_ramsay_jon_battle_prisoner
+		}
+
+
+		global_var:segrellion_resurrected_jon = {
+
+			imprison = {
+
+				target = scope:segrellion_ramsay_jon_battle_prisoner
+
+				type = dungeon
+			}
+
+
+			add_character_flag = segrellion_jon_defeated_ramsay_after_stannis_death
+
+
+			every_character_war = {
+
+				limit = {
+
+					using_cb = segrellion_stannis_northern_campaign_cb
+
+					casus_belli = {
+
+						primary_defender = scope:segrellion_ramsay_jon_battle_prisoner
+					}
+				}
+
+				end_war = attacker
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_stannis_fall.0020
+
+				days = 1
+			}
+		}
+
+
+		scope:segrellion_ramsay_jon_battle_prisoner = {
+
+			add_character_flag = segrellion_ramsay_captured_by_jon_in_battle
 		}
 	}
 }
@@ -2954,89 +3186,6 @@ segrellion_jon_resurrection_progression = {
             }
         }
     }
-}
-
-# =========================================================
-# STANNIS - SCRIPTED BATTLE DEATH
-# =========================================================
-
-segrellion_stannis_northern_battle_winner = {
-
-	effect = {
-
-		every_side_commander = {
-
-			limit = {
-
-				this = character:Baratheon_3
-
-				is_alive = yes
-
-				has_character_flag = segrellion_stannis_northern_campaign_active
-
-				NOT = {
-					has_character_flag = segrellion_stannis_battle_death_pending
-				}
-			}
-
-
-			random = {
-
-				chance = 10
-
-
-				add_character_flag = segrellion_stannis_battle_death_pending
-
-
-				trigger_event = {
-
-					id = segrellion_stannis.0080
-
-					days = 1
-				}
-			}
-		}
-	}
-}
-
-
-segrellion_stannis_northern_battle_loser = {
-
-	effect = {
-
-		every_side_commander = {
-
-			limit = {
-
-				this = character:Baratheon_3
-
-				is_alive = yes
-
-				has_character_flag = segrellion_stannis_northern_campaign_active
-
-				NOT = {
-					has_character_flag = segrellion_stannis_battle_death_pending
-				}
-			}
-
-
-			random = {
-
-				chance = 65
-
-
-				add_character_flag = segrellion_stannis_battle_death_pending
-
-
-				trigger_event = {
-
-					id = segrellion_stannis.0080
-
-					days = 1
-				}
-			}
-		}
-	}
 }
 
 # =========================================================

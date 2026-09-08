@@ -1315,18 +1315,32 @@ segrellion_stannis_northern_campaign_cb = {
 			# THIS WAS MISSING FROM THE ACTUAL CB.
 			# =================================================
 
-			segrellion_stannis_secure_north_after_victory_effect = yes
+			if = {
+
+				limit = {
+					this = character:Baratheon_3
+				}
+
+				segrellion_stannis_secure_north_after_victory_effect = yes
+			}
 
 
 			# =================================================
 			# WINTERFELL HAS FALLEN
 			# =================================================
 
-			trigger_event = {
+			if = {
 
-				id = segrellion_stannis.1000
+				limit = {
+					this = character:Baratheon_3
+				}
 
-				days = { 5 10 }
+				trigger_event = {
+
+					id = segrellion_stannis.1000
+
+					days = 1
+				}
 			}
 		}
 
@@ -1463,7 +1477,7 @@ segrellion_stannis_northern_campaign_cb = {
 	transfer_behavior = transfer
 
 
-	on_primary_attacker_death = invalidate
+	on_primary_attacker_death = inherit
 	on_primary_defender_death = defeat
 
 

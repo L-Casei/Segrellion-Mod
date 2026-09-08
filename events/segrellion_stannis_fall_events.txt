@@ -1,0 +1,434 @@
+namespace = segrellion_stannis_fall
+
+
+# =========================================================
+# THE KING IS DEAD
+#
+# ROOT = Davos
+# =========================================================
+
+segrellion_stannis_fall.0001 = {
+
+	type = character_event
+
+	title = segrellion_stannis_fall.0001.t
+	desc = segrellion_stannis_fall.0001.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = title:d_the_drench.holder
+
+
+		character:Baratheon_3 ?= {
+
+			is_alive = no
+
+			has_character_flag = segrellion_stannis_slain_by_ramsay
+		}
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+		}
+
+
+		has_global_variable = segrellion_resurrected_jon
+
+
+		global_var:segrellion_resurrected_jon ?= {
+
+			is_alive = yes
+		}
+
+
+		has_global_variable = segrellion_ramsay_bolton
+
+
+		global_var:segrellion_ramsay_bolton ?= {
+
+			is_alive = yes
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_fall.0001.a
+
+
+		global_var:segrellion_resurrected_jon = {
+
+			trigger_event = {
+
+				id = segrellion_stannis_fall.0010
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# DAVOS' LETTER
+#
+# ROOT = resurrected Jon
+# =========================================================
+
+segrellion_stannis_fall.0010 = {
+
+	type = character_event
+
+	title = segrellion_stannis_fall.0010.t
+	desc = segrellion_stannis_fall.0010.desc
+
+	theme = war
+
+
+	trigger = {
+
+		has_global_variable = segrellion_resurrected_jon
+
+		this = global_var:segrellion_resurrected_jon
+
+
+		is_alive = yes
+
+
+		character:Baratheon_3 ?= {
+
+			is_alive = no
+		}
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+		}
+
+
+		has_global_variable = segrellion_ramsay_bolton
+
+
+		global_var:segrellion_ramsay_bolton ?= {
+
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Baratheon_13 = {
+
+			every_character_war = {
+
+				limit = {
+
+					using_cb = segrellion_stannis_northern_campaign_cb
+
+
+					casus_belli = {
+
+						primary_defender = global_var:segrellion_ramsay_bolton
+					}
+				}
+
+
+				save_scope_as = segrellion_shireen_northern_war
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_fall.0010.a
+
+
+		trigger = {
+
+			exists = scope:segrellion_shireen_northern_war
+		}
+
+
+		add_character_flag = segrellion_jon_joined_shireen_northern_war
+
+		remove_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+
+
+		scope:segrellion_shireen_northern_war = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_participant = root
+					}
+				}
+
+				add_attacker = root
+			}
+		}
+
+
+		# =================================================
+		# JON'S ARMY
+		#
+		# Verified AGOT MAA:
+		# wildling_raiders
+		# nw_rangers
+		# nw_trackers
+		# =================================================
+
+		spawn_army = {
+
+			name = segrellion_jon_northern_host
+
+
+			men_at_arms = {
+
+				type = wildling_raiders
+
+				men = 1500
+			}
+
+
+			men_at_arms = {
+
+				type = nw_rangers
+
+				men = 1000
+			}
+
+
+			men_at_arms = {
+
+				type = nw_trackers
+
+				men = 500
+			}
+
+
+			levies = 4000
+
+
+			inheritable = yes
+
+			uses_supply = yes
+
+
+			location = title:c_castle_black.title_province
+
+			origin = title:c_castle_black.title_province
+
+
+			war = scope:segrellion_shireen_northern_war
+
+			war_keep_on_attacker_victory = yes
+
+
+			save_scope_as = segrellion_jon_northern_host_army
+		}
+
+
+		scope:segrellion_jon_northern_host_army ?= {
+
+			assign_commander = root
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_fall.0010.b
+
+
+		trigger = {
+
+			NOT = {
+
+				exists = scope:segrellion_shireen_northern_war
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# RAMSAY IN CHAINS
+#
+# ROOT = Jon
+# =========================================================
+
+segrellion_stannis_fall.0020 = {
+
+	type = character_event
+
+	title = segrellion_stannis_fall.0020.t
+	desc = segrellion_stannis_fall.0020.desc
+
+	theme = war
+
+
+	trigger = {
+
+		has_character_flag = segrellion_jon_defeated_ramsay_after_stannis_death
+
+
+		has_global_variable = segrellion_ramsay_bolton
+
+
+		global_var:segrellion_ramsay_bolton ?= {
+
+			is_alive = yes
+
+			is_imprisoned = yes
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_fall.0020.a
+
+
+		global_var:segrellion_ramsay_bolton = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_dread = 30
+
+
+		trigger_event = {
+
+			id = segrellion_stannis_fall.0030
+
+			days = { 2 4 }
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# THE KING IN THE NORTH
+#
+# ROOT = Jon
+# =========================================================
+
+segrellion_stannis_fall.0030 = {
+
+	type = character_event
+
+	title = segrellion_stannis_fall.0030.t
+	desc = segrellion_stannis_fall.0030.desc
+
+	theme = crown
+
+
+	trigger = {
+
+		has_character_flag = segrellion_jon_defeated_ramsay_after_stannis_death
+
+		is_alive = yes
+	}
+
+
+	option = {
+
+		name = segrellion_stannis_fall.0030.a
+
+
+		# Transfer the Watch, remove Jon's vows,
+		# restore Winterfell and the North.
+
+		segrellion_jon_accepts_north_effect = yes
+
+
+		remove_character_flag = segrellion_jon_lord_paramount_under_stannis
+
+		remove_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+
+
+		add_character_flag = segrellion_jon_king_in_the_north
+
+		add_character_flag = segrellion_jon_stannis_result_resolved
+
+		add_character_flag = segrellion_north_abandoned_shireen_for_jon
+
+
+		# Shireen's Northern cause is finished.
+		# She does NOT lose unrelated claims.
+
+		character:Baratheon_13 ?= {
+
+			if = {
+
+				limit = {
+
+					has_claim_on = title:e_the_north
+				}
+
+				remove_claim = title:e_the_north
+			}
+
+
+			if = {
+
+				limit = {
+
+					has_claim_on = title:k_the_north
+				}
+
+				remove_claim = title:k_the_north
+			}
+
+
+			add_character_flag = segrellion_shireen_abandoned_northern_claim
+
+			add_character_flag = segrellion_shireen_supports_jon_in_north
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
