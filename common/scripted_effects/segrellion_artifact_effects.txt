@@ -3390,82 +3390,308 @@ segrellion_create_vhalyrax_lost_egg_effect = {
 }
 
 
+# =========================================================
+# VHAL INVESTIGATION ARTIFACTS
+# =========================================================
+
+
 # ---------------------------------------------------------
 # SCALE OF AZURON
-# GREEN / MASTERWORK
 # ---------------------------------------------------------
 
 segrellion_create_artifact_azuron_dragon_scale_effect = {
 
 	$OWNER$ = {
-
-		create_artifact = {
-
-			template = segrellion_artifact_azuron_dragon_scale
-
-			save_scope_as = newly_created_artifact
-		}
+		save_scope_as = owner
 	}
 
 
-	scope:newly_created_artifact ?= {
+	if = {
 
-		set_owner = $OWNER$
+		limit = {
 
-		set_artifact_rarity_masterwork = yes
+			NOT = {
+				exists = global_var:segrellion_azuron_dragon_scale
+			}
+		}
+
+
+		save_scope_value_as = {
+			name = quality
+			value = 70
+		}
+
+		save_scope_value_as = {
+			name = wealth
+			value = 55
+		}
+
+
+		scope:owner = {
+
+			create_artifact = {
+
+				name = segrellion_azuron_dragon_scale_name
+				description = segrellion_azuron_dragon_scale_desc
+
+				type = miscellaneous
+
+				visuals = segrellion_azuron_dragon_scale_visuals
+				template = segrellion_azuron_dragon_scale_template
+
+				wealth = scope:wealth
+				quality = scope:quality
+
+				modifier = segrellion_azuron_dragon_scale_modifier
+
+				save_scope_as = newly_created_artifact
+
+				decaying = no
+			}
+		}
+
+
+		scope:newly_created_artifact ?= {
+
+			set_owner = {
+
+				target = scope:owner
+
+				history = {
+					type = discovered
+					actor = scope:owner
+					recipient = scope:owner
+				}
+			}
+
+
+			set_artifact_rarity_masterwork = yes
+
+
+			set_global_variable = {
+				name = segrellion_azuron_dragon_scale
+				value = this
+			}
+
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = segrellion_azuron_dragon_scale_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = traditional_house_owner
+				value = house:house_Segrellion
+			}
+		}
 	}
 }
 
 
 # ---------------------------------------------------------
 # HISTORY OF OLD VALYRIA
-# GREEN / MASTERWORK
 # ---------------------------------------------------------
 
 segrellion_create_old_valyria_history_book_effect = {
 
 	$OWNER$ = {
-
-		create_artifact = {
-
-			template = segrellion_old_valyria_history_book_template
-
-			save_scope_as = newly_created_artifact
-		}
+		save_scope_as = owner
 	}
 
 
-	scope:newly_created_artifact ?= {
+	if = {
 
-		set_owner = $OWNER$
+		limit = {
 
-		set_artifact_rarity_masterwork = yes
+			NOT = {
+				exists = global_var:segrellion_old_valyria_history_book
+			}
+		}
+
+
+		save_scope_value_as = {
+			name = quality
+			value = 85
+		}
+
+		save_scope_value_as = {
+			name = wealth
+			value = 80
+		}
+
+
+		scope:owner = {
+
+			create_artifact = {
+
+				name = segrellion_old_valyria_history_book_name
+				description = segrellion_old_valyria_history_book_desc
+
+				type = journal
+
+				visuals = segrellion_old_valyria_history_book_visuals
+				template = segrellion_old_valyria_history_book_template
+
+				wealth = scope:wealth
+				quality = scope:quality
+
+				modifier = segrellion_old_valyria_history_book_modifier
+
+				save_scope_as = newly_created_artifact
+
+				decaying = no
+			}
+		}
+
+
+		scope:newly_created_artifact ?= {
+
+			set_owner = {
+
+				target = scope:owner
+
+				history = {
+					type = discovered
+					actor = scope:owner
+					recipient = scope:owner
+				}
+			}
+
+
+			set_artifact_rarity_masterwork = yes
+
+
+			set_global_variable = {
+				name = segrellion_old_valyria_history_book
+				value = this
+			}
+
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = segrellion_old_valyria_history_book_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = traditional_house_owner
+				value = house:house_Segrellion
+			}
+		}
 	}
 }
 
 
 # ---------------------------------------------------------
 # DIADEM OF THE BLUE FLOWER
+# AEMMA SEGRELLION
 # ---------------------------------------------------------
 
 segrellion_create_blue_flower_diadem_effect = {
 
 	$OWNER$ = {
-
-		create_artifact = {
-
-			template = segrellion_blue_flower_diadem_template
-
-			save_scope_as = newly_created_artifact
-		}
+		save_scope_as = owner
 	}
 
 
-	scope:newly_created_artifact ?= {
+	if = {
 
-		set_owner = $OWNER$
+		limit = {
 
-		set_artifact_rarity_masterwork = yes
+			NOT = {
+				exists = global_var:segrellion_blue_flower_diadem
+			}
+		}
+
+
+		save_scope_value_as = {
+			name = quality
+			value = 90
+		}
+
+		save_scope_value_as = {
+			name = wealth
+			value = 90
+		}
+
+
+		scope:owner = {
+
+			create_artifact = {
+
+				name = segrellion_blue_flower_diadem_name
+				description = segrellion_blue_flower_diadem_desc
+
+				type = helmet
+
+				visuals = segrellion_blue_flower_diadem_visuals
+				template = segrellion_blue_flower_diadem_template
+
+				wealth = scope:wealth
+				quality = scope:quality
+
+				modifier = segrellion_blue_flower_diadem_modifier
+
+				save_scope_as = newly_created_artifact
+
+				decaying = no
+			}
+		}
+
+
+		scope:newly_created_artifact ?= {
+
+			set_owner = {
+
+				target = scope:owner
+
+				history = {
+					type = discovered
+					actor = scope:owner
+					recipient = scope:owner
+				}
+			}
+
+
+			set_artifact_rarity_masterwork = yes
+
+
+			set_global_variable = {
+				name = segrellion_blue_flower_diadem
+				value = this
+			}
+
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = segrellion_blue_flower_diadem_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = traditional_house_owner
+				value = house:house_Segrellion
+			}
+		}
 	}
 }
 
@@ -3477,20 +3703,94 @@ segrellion_create_blue_flower_diadem_effect = {
 segrellion_create_alysanne_memorandum_effect = {
 
 	$OWNER$ = {
-
-		create_artifact = {
-
-			template = segrellion_alysanne_memorandum_template
-
-			save_scope_as = newly_created_artifact
-		}
+		save_scope_as = owner
 	}
 
 
-	scope:newly_created_artifact ?= {
+	if = {
 
-		set_owner = $OWNER$
+		limit = {
 
-		set_artifact_rarity_masterwork = yes
+			NOT = {
+				exists = global_var:segrellion_alysanne_memorandum
+			}
+		}
+
+
+		save_scope_value_as = {
+			name = quality
+			value = 80
+		}
+
+		save_scope_value_as = {
+			name = wealth
+			value = 65
+		}
+
+
+		scope:owner = {
+
+			create_artifact = {
+
+				name = segrellion_alysanne_memorandum_name
+				description = segrellion_alysanne_memorandum_desc
+
+				type = journal
+
+				visuals = segrellion_alysanne_memorandum_visuals
+				template = segrellion_alysanne_memorandum_template
+
+				wealth = scope:wealth
+				quality = scope:quality
+
+				modifier = segrellion_alysanne_memorandum_modifier
+
+				save_scope_as = newly_created_artifact
+
+				decaying = no
+			}
+		}
+
+
+		scope:newly_created_artifact ?= {
+
+			set_owner = {
+
+				target = scope:owner
+
+				history = {
+					type = discovered
+					actor = scope:owner
+					recipient = scope:owner
+				}
+			}
+
+
+			set_artifact_rarity_masterwork = yes
+
+
+			set_global_variable = {
+				name = segrellion_alysanne_memorandum
+				value = this
+			}
+
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = segrellion_alysanne_memorandum_artifact
+				value = yes
+			}
+
+
+			set_variable = {
+				name = traditional_house_owner
+				value = house:house_Segrellion
+			}
+		}
 	}
 }
