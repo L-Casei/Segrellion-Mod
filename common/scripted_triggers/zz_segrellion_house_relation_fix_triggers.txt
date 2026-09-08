@@ -1,0 +1,36 @@
+house_relation_is_valid_to_keep_trigger = {
+	$HOUSE$ ?= { save_temporary_scope_as = house_1_temp }
+	$OTHER_HOUSE$ ?= { save_temporary_scope_as = house_2_temp }
+
+	trigger_if = {
+		limit = {
+			exists = scope:house_1_temp
+			exists = scope:house_2_temp
+		}
+
+		scope:house_1_temp = {
+			NOT = { this = scope:house_2_temp }
+		}
+
+		OR = {
+			# Targaryen historical relations must survive exile / diplomatic range
+			scope:house_1_temp = {
+				house_dynasty = dynasty:dynn_Targaryen
+			}
+			scope:house_2_temp = {
+				house_dynasty = dynasty:dynn_Targaryen
+			}
+
+			# Vanilla behaviour for every other House
+			scope:house_1_temp = {
+				house_head = {
+					in_diplomatic_range = scope:house_2_temp.house_head
+				}
+			}
+		}
+	}
+
+	trigger_else = {
+		always = no
+	}
+}
