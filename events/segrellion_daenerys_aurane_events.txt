@@ -354,22 +354,30 @@ segrellion_daenerys_aurane.0030 = {
 
 		name = segrellion_daenerys_aurane.0030.a
 
+		custom_tooltip = segrellion_daenerys_aurane.0030.a.tt
 
-		add_gold = -2000
+
+		hidden_effect = {
+
+			pay_short_term_gold = {
+
+				target = character:Velaryon_5
+
+				gold = 2000
+			}
 
 
-		character:Velaryon_5 = {
+			character:Velaryon_5 = {
 
-			add_gold = 2000
+				add_character_flag = segrellion_aurane_received_daenerys_gold
+			}
 
-			add_character_flag = segrellion_aurane_received_daenerys_gold
+
+			add_character_flag = segrellion_daenerys_paid_aurane_2000
+
+
+			segrellion_daenerys_finalize_aurane_deal_effect = yes
 		}
-
-
-		add_character_flag = segrellion_daenerys_paid_aurane_2000
-
-
-		segrellion_daenerys_finalize_aurane_deal_effect = yes
 
 
 		ai_chance = {
@@ -396,7 +404,23 @@ segrellion_daenerys_aurane.0030 = {
 		name = segrellion_daenerys_aurane.0030.b
 
 
-		segrellion_daenerys_end_failed_aurane_negotiation_effect = yes
+		hidden_effect = {
+
+			segrellion_daenerys_end_failed_aurane_negotiation_effect = yes
+
+
+			remove_character_flag = segrellion_daenerys_fleet_strategy_chosen
+
+			remove_character_flag = segrellion_daenerys_aurane_route_chosen
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_aurane.0031
+
+				days = 1
+			}
+		}
 
 
 		ai_chance = {
@@ -410,6 +434,100 @@ segrellion_daenerys_aurane.0030 = {
 
 				has_character_flag = segrellion_daenerys_ai_super_aggressive
 			}
+		}
+	}
+}
+
+# =========================================================
+# 0031 - THEN WE BUILD OUR OWN
+#
+# ROOT = Daenerys
+#
+# Aurane's price was refused.
+# Daenerys must now build the Dragon Fleet at Pentos.
+# =========================================================
+
+segrellion_daenerys_aurane.0031 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_aurane.0031.t
+	desc = segrellion_daenerys_aurane.0031.desc
+
+	theme = war
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_aurane_negotiation_failed
+
+		has_character_flag = segrellion_daenerys_waiting_at_pentos
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_fleet_project_active
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_aurane_fleet_secured
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_aurane.0031.a
+
+		custom_tooltip = segrellion_daenerys_aurane.0031.a.tt
+
+
+		add_character_flag = segrellion_daenerys_fleet_strategy_chosen
+
+		add_character_flag = segrellion_daenerys_fleet_project_active
+
+
+		title:c_pentos.title_province = {
+
+			plan_great_project = {
+
+				founder = root
+
+				great_project_type = segrellion_daenerys_dragon_fleet
+
+				save_scope_as = segrellion_daenerys_dragon_fleet_project
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0013
+
+			days = { 7 14 }
+		}
+
+
+		ai_chance = {
+
+			base = 100
 		}
 	}
 }

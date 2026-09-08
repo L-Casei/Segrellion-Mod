@@ -2145,20 +2145,31 @@ segrellion_stannis_ramsay_battle_capture = {
 
 			is_alive = yes
 
-			has_character_flag = segrellion_stannis_northern_campaign_active
+
+			OR = {
+
+				has_character_flag = segrellion_stannis_northern_campaign_active
+
+				has_variable = segrellion_stannis_northern_war
+			}
 		}
 
 
-		has_global_variable = segrellion_ramsay_bolton
+		# =================================================
+		# RAMSAY IS THE CURRENT BOLTON RULER OF THE NORTH
+		# =================================================
 
-
-		global_var:segrellion_ramsay_bolton ?= {
+		title:e_the_north.holder ?= {
 
 			is_alive = yes
+
+			has_character_flag = segrellion_ramsay_northern_takeover
 		}
 
 
-		# Stannis must personally be on the winning side.
+		# =================================================
+		# STANNIS IS PERSONALLY ON THE WINNING SIDE
+		# =================================================
 
 		OR = {
 
@@ -2167,6 +2178,7 @@ segrellion_stannis_ramsay_battle_capture = {
 				this = character:Baratheon_3
 			}
 
+
 			any_side_knight = {
 
 				this = character:Baratheon_3
@@ -2174,21 +2186,36 @@ segrellion_stannis_ramsay_battle_capture = {
 		}
 
 
-		# Ramsay must personally be on the losing side.
+		# =================================================
+		# RAMSAY IS IN THE BATTLE
+		#
+		# First use combat-side detection.
+		# Physical location is the failsafe.
+		# =================================================
 
-		enemy_side = {
+		OR = {
 
-			OR = {
+			enemy_side = {
 
-				any_side_commander = {
+				OR = {
 
-					this = global_var:segrellion_ramsay_bolton
+					any_side_commander = {
+
+						has_character_flag = segrellion_ramsay_northern_takeover
+					}
+
+
+					any_side_knight = {
+
+						has_character_flag = segrellion_ramsay_northern_takeover
+					}
 				}
+			}
 
-				any_side_knight = {
 
-					this = global_var:segrellion_ramsay_bolton
-				}
+			title:e_the_north.holder = {
+
+				location = character:Baratheon_3.location
 			}
 		}
 	}
@@ -2196,7 +2223,7 @@ segrellion_stannis_ramsay_battle_capture = {
 
 	effect = {
 
-		global_var:segrellion_ramsay_bolton = {
+		title:e_the_north.holder = {
 
 			save_scope_as = segrellion_ramsay_battle_prisoner
 		}
@@ -2211,24 +2238,15 @@ segrellion_stannis_ramsay_battle_capture = {
 				type = dungeon
 			}
 
+
 			add_character_flag = segrellion_stannis_defeated_ramsay_personally
 
 
-			# Immediately win Stannis' Northern Campaign.
+			# =============================================
+			# THIS IS THE ACTUAL NORTHERN WAR SAVED BY THE CB
+			# =============================================
 
-			every_character_war = {
-
-				limit = {
-
-					using_cb = segrellion_stannis_northern_campaign_cb
-
-					casus_belli = {
-
-						primary_attacker = character:Baratheon_3
-
-						primary_defender = scope:segrellion_ramsay_battle_prisoner
-					}
-				}
+			var:segrellion_stannis_northern_war ?= {
 
 				end_war = attacker
 			}
@@ -2256,7 +2274,13 @@ segrellion_ramsay_defeats_stannis_battle_check = {
 
 			is_alive = yes
 
-			has_character_flag = segrellion_stannis_northern_campaign_active
+
+			OR = {
+
+				has_character_flag = segrellion_stannis_northern_campaign_active
+
+				has_variable = segrellion_stannis_northern_war
+			}
 		}
 
 
@@ -2266,32 +2290,36 @@ segrellion_ramsay_defeats_stannis_battle_check = {
 		}
 
 
-		has_global_variable = segrellion_ramsay_bolton
-
-
-		global_var:segrellion_ramsay_bolton ?= {
+		title:e_the_north.holder ?= {
 
 			is_alive = yes
+
+			has_character_flag = segrellion_ramsay_northern_takeover
 		}
 
 
-		# Ramsay is personally on the winning side.
+		# =================================================
+		# RAMSAY IS PERSONALLY ON THE WINNING SIDE
+		# =================================================
 
 		OR = {
 
 			any_side_commander = {
 
-				this = global_var:segrellion_ramsay_bolton
+				has_character_flag = segrellion_ramsay_northern_takeover
 			}
+
 
 			any_side_knight = {
 
-				this = global_var:segrellion_ramsay_bolton
+				has_character_flag = segrellion_ramsay_northern_takeover
 			}
 		}
 
 
-		# Stannis is personally on the losing side.
+		# =================================================
+		# STANNIS IS PERSONALLY ON THE LOSING SIDE
+		# =================================================
 
 		enemy_side = {
 
@@ -2301,6 +2329,7 @@ segrellion_ramsay_defeats_stannis_battle_check = {
 
 					this = character:Baratheon_3
 				}
+
 
 				any_side_knight = {
 
@@ -2313,13 +2342,15 @@ segrellion_ramsay_defeats_stannis_battle_check = {
 
 	effect = {
 
+		title:e_the_north.holder = {
+
+			save_scope_as = segrellion_ramsay_battle_winner
+		}
+
+
 		character:Baratheon_3 = {
 
-			# Guarantees that Shireen inherits Stannis' side
-			# when the CB processes on_primary_attacker_death.
-
 			set_designated_heir = character:Baratheon_13
-
 
 			add_character_flag = segrellion_stannis_slain_by_ramsay
 
@@ -2328,7 +2359,7 @@ segrellion_ramsay_defeats_stannis_battle_check = {
 
 				death_reason = death_battle
 
-				killer = global_var:segrellion_ramsay_bolton
+				killer = scope:segrellion_ramsay_battle_winner
 			}
 		}
 
@@ -2338,9 +2369,9 @@ segrellion_ramsay_defeats_stannis_battle_check = {
 			if = {
 
 				limit = {
-
 					is_alive = yes
 				}
+
 
 				trigger_event = {
 
@@ -2364,14 +2395,11 @@ segrellion_jon_ramsay_battle_capture = {
 	trigger = {
 
 		character:Baratheon_3 ?= {
-
 			is_alive = no
 		}
 
 
 		has_global_variable = segrellion_resurrected_jon
-
-		has_global_variable = segrellion_ramsay_bolton
 
 
 		global_var:segrellion_resurrected_jon ?= {
@@ -2382,13 +2410,17 @@ segrellion_jon_ramsay_battle_capture = {
 		}
 
 
-		global_var:segrellion_ramsay_bolton ?= {
+		title:e_the_north.holder ?= {
 
 			is_alive = yes
+
+			has_character_flag = segrellion_ramsay_northern_takeover
 		}
 
 
-		# Jon personally won.
+		# =================================================
+		# JON WINS PERSONALLY
+		# =================================================
 
 		OR = {
 
@@ -2397,6 +2429,7 @@ segrellion_jon_ramsay_battle_capture = {
 				this = global_var:segrellion_resurrected_jon
 			}
 
+
 			any_side_knight = {
 
 				this = global_var:segrellion_resurrected_jon
@@ -2404,7 +2437,9 @@ segrellion_jon_ramsay_battle_capture = {
 		}
 
 
-		# Ramsay personally lost.
+		# =================================================
+		# RAMSAY IS PERSONALLY ON THE LOSING SIDE
+		# =================================================
 
 		enemy_side = {
 
@@ -2412,12 +2447,13 @@ segrellion_jon_ramsay_battle_capture = {
 
 				any_side_commander = {
 
-					this = global_var:segrellion_ramsay_bolton
+					has_character_flag = segrellion_ramsay_northern_takeover
 				}
+
 
 				any_side_knight = {
 
-					this = global_var:segrellion_ramsay_bolton
+					has_character_flag = segrellion_ramsay_northern_takeover
 				}
 			}
 		}
@@ -2426,7 +2462,7 @@ segrellion_jon_ramsay_battle_capture = {
 
 	effect = {
 
-		global_var:segrellion_ramsay_bolton = {
+		title:e_the_north.holder = {
 
 			save_scope_as = segrellion_ramsay_jon_battle_prisoner
 		}
@@ -2443,7 +2479,10 @@ segrellion_jon_ramsay_battle_capture = {
 
 
 			add_character_flag = segrellion_jon_defeated_ramsay_after_stannis_death
+		}
 
+
+		character:Baratheon_13 ?= {
 
 			every_character_war = {
 
@@ -2451,21 +2490,15 @@ segrellion_jon_ramsay_battle_capture = {
 
 					using_cb = segrellion_stannis_northern_campaign_cb
 
+
 					casus_belli = {
 
 						primary_defender = scope:segrellion_ramsay_jon_battle_prisoner
 					}
 				}
 
+
 				end_war = attacker
-			}
-
-
-			trigger_event = {
-
-				id = segrellion_stannis_fall.0020
-
-				days = 1
 			}
 		}
 
@@ -2473,6 +2506,17 @@ segrellion_jon_ramsay_battle_capture = {
 		scope:segrellion_ramsay_jon_battle_prisoner = {
 
 			add_character_flag = segrellion_ramsay_captured_by_jon_in_battle
+		}
+
+
+		global_var:segrellion_resurrected_jon = {
+
+			trigger_event = {
+
+				id = segrellion_stannis_fall.0020
+
+				days = 1
+			}
 		}
 	}
 }
@@ -4387,6 +4431,36 @@ segrellion_jon_nights_watch_status_guard = {
 segrellion_ramsay_war_lock_progression = {
 
 	effect = {
+
+		# =================================================
+		# SAVE-COMPATIBLE RAMSAY SCOPE REPAIR
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_global_variable = segrellion_ramsay_bolton
+				}
+
+
+				title:e_the_north.holder ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_ramsay_northern_takeover
+				}
+			}
+
+
+			set_global_variable = {
+
+				name = segrellion_ramsay_bolton
+
+				value = title:e_the_north.holder
+			}
+		}
 
 		if = {
 

@@ -971,35 +971,31 @@ segrellion_stannis.1000 = {
 
 	immediate = {
 
-		if = {
+		# =================================================
+		# FIND THE ACTUAL JON CURRENTLY COMMANDING THE WATCH
+		#
+		# Do not depend on the historical Jon/global runtime
+		# distinction here.
+		# =================================================
 
-			limit = {
-				has_global_variable = segrellion_resurrected_jon
-			}
+		title:k_the_wall.holder ?= {
 
-			global_var:segrellion_resurrected_jon ?= {
+			if = {
 
-				if = {
+				limit = {
 
-					limit = {
-						is_alive = yes
-					}
-
-					save_scope_as = stannis_jon
-				}
-			}
-		}
-
-
-		else_if = {
-
-			limit = {
-				character:Stark_7 ?= {
 					is_alive = yes
-				}
-			}
 
-			character:Stark_7 = {
+
+					OR = {
+
+						this = character:Stark_7
+
+						has_character_flag = segrellion_canonical_current_jon
+					}
+				}
+
+
 				save_scope_as = stannis_jon
 			}
 		}
@@ -1140,8 +1136,6 @@ segrellion_stannis.1010 = {
 		character:Baratheon_3 ?= {
 
 			is_alive = yes
-
-			has_title = title:k_the_wall
 
 			has_character_flag = segrellion_stannis_northern_campaign_victory
 		}
