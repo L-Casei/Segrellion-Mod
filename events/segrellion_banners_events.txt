@@ -77,3 +77,168 @@ segrellion_banners.0010 = {
 		segrellion_banner_refuse_liege_effect = yes
 	}
 }
+
+# =========================================================
+# 0100 - JUDGMENT OF AN OATHBREAKER
+#
+# ROOT = Daemon Segrellion
+# =========================================================
+
+segrellion_banners.0100 = {
+
+	type = character_event
+
+
+	title = segrellion_banners.0100.t
+
+	desc = segrellion_banners.0100.desc
+
+	theme = war
+
+
+	immediate = {
+
+		random_prisoner = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_unicorn_returns_pending_judgment
+			}
+
+			save_scope_as = segrellion_oathbreaker_for_judgment
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_oathbreaker_for_judgment
+	}
+
+
+	# =====================================================
+	# EXECUTE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0100.a
+
+
+		scope:segrellion_oathbreaker_for_judgment = {
+
+			remove_character_flag = segrellion_unicorn_returns_pending_judgment
+			remove_character_flag = segrellion_unicorn_returns_traitor
+			remove_character_flag = segrellion_banner_fought_against_liege
+			remove_character_flag = segrellion_banner_oathbreaker_unpunished
+
+
+			death = {
+				death_reason = death_execution
+				killer = root
+			}
+		}
+	}
+
+
+	# =====================================================
+	# SEND HIM TO THE NIGHT'S WATCH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0100.b
+
+
+		trigger = {
+
+			scope:segrellion_oathbreaker_for_judgment = {
+				is_male = yes
+			}
+		}
+
+
+		scope:segrellion_oathbreaker_for_judgment = {
+			segrellion_sentence_unicorn_oathbreaker_to_wall_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# EXILE HER TO ESSOS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0100.c
+
+
+		trigger = {
+
+			scope:segrellion_oathbreaker_for_judgment = {
+				is_female = yes
+			}
+		}
+
+
+		scope:segrellion_oathbreaker_for_judgment = {
+			segrellion_sentence_unicorn_oathbreaker_to_essos_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# PARDON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0100.d
+
+
+		scope:segrellion_oathbreaker_for_judgment = {
+			segrellion_spare_unicorn_oathbreaker_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# NEXT OATHBREAKER
+	# =====================================================
+
+	after = {
+
+		if = {
+
+			limit = {
+
+				any_prisoner = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_unicorn_returns_pending_judgment
+				}
+			}
+
+
+			trigger_event = {
+				id = segrellion_banners.0100
+				days = 1
+			}
+		}
+
+
+		else = {
+
+			remove_character_flag = segrellion_unicorn_returns_judgment_session_active
+
+			remove_character_flag = segrellion_unicorn_returns_judgments_available
+		}
+	}
+}

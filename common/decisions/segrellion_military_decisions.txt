@@ -140,12 +140,38 @@ segrellion_call_the_banners_decision = {
 
 		highest_held_title_tier >= tier_duchy
 
-		any_vassal = {
+		OR = {
 
-			is_alive = yes
-			is_landed = yes
+			any_vassal = {
 
-			highest_held_title_tier > tier_barony
+				is_alive = yes
+				is_landed = yes
+
+				highest_held_title_tier > tier_barony
+			}
+
+
+			# Unicorn Returns special call:
+			# Gaunt and Pyle may answer Daemon even though
+			# they currently stand with Leo Stormflame.
+
+			AND = {
+
+				this = character:Segrellion_60
+
+				has_character_flag = segrellion_unicorn_returns_war_active
+
+				OR = {
+
+					title:c_the_gauntlet.holder ?= {
+						is_alive = yes
+					}
+
+					title:c_greyhelm.holder ?= {
+						is_alive = yes
+					}
+				}
+			}
 		}
 	}
 
@@ -188,14 +214,36 @@ segrellion_call_the_banners_decision = {
 
 			text = segrellion_call_the_banners_vassal_requirement
 
-			any_vassal = {
+			OR = {
 
-				is_alive = yes
-				is_landed = yes
-				is_imprisoned = no
-				is_incapable = no
+				any_vassal = {
 
-				highest_held_title_tier > tier_barony
+					is_alive = yes
+					is_landed = yes
+					is_imprisoned = no
+					is_incapable = no
+
+					highest_held_title_tier > tier_barony
+				}
+
+
+				AND = {
+
+					this = character:Segrellion_60
+
+					has_character_flag = segrellion_unicorn_returns_war_active
+
+					OR = {
+
+						title:c_the_gauntlet.holder ?= {
+							is_alive = yes
+						}
+
+						title:c_greyhelm.holder ?= {
+							is_alive = yes
+						}
+					}
+				}
 			}
 		}
 	}
@@ -258,14 +306,36 @@ segrellion_call_the_banners_decision = {
 		}
 
 
-		any_vassal = {
+		OR = {
 
-			is_alive = yes
-			is_landed = yes
-			is_imprisoned = no
-			is_incapable = no
+			any_vassal = {
 
-			highest_held_title_tier > tier_barony
+				is_alive = yes
+				is_landed = yes
+				is_imprisoned = no
+				is_incapable = no
+
+				highest_held_title_tier > tier_barony
+			}
+
+
+			AND = {
+
+				this = character:Segrellion_60
+
+				has_character_flag = segrellion_unicorn_returns_war_active
+
+				OR = {
+
+					title:c_the_gauntlet.holder ?= {
+						is_alive = yes
+					}
+
+					title:c_greyhelm.holder ?= {
+						is_alive = yes
+					}
+				}
+			}
 		}
 	}
 
@@ -276,4 +346,81 @@ segrellion_call_the_banners_decision = {
 
 
 	sort_order = 1001
+}
+
+# =========================================================
+# JUDGE THE OATHBREAKERS
+# =========================================================
+
+segrellion_judge_unicorn_oathbreakers_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_call_the_banners_decision.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+
+	desc = segrellion_judge_unicorn_oathbreakers_decision_desc
+
+	selection_tooltip = segrellion_judge_unicorn_oathbreakers_decision_tooltip
+
+	confirm_text = segrellion_judge_unicorn_oathbreakers_decision_confirm
+
+
+	is_shown = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_unicorn_returns_completed
+
+		has_character_flag = segrellion_unicorn_returns_judgments_available
+
+		NOT = {
+			has_character_flag = segrellion_unicorn_returns_judgment_session_active
+		}
+	}
+
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+		is_incapable = no
+
+
+		any_prisoner = {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_unicorn_returns_pending_judgment
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_unicorn_returns_judgment_session_active
+
+
+		trigger_event = {
+			id = segrellion_banners.0100
+		}
+	}
+
+
+	ai_check_interval = 30
+
+
+	ai_potential = {
+		always = no
+	}
+
+
+	ai_will_do = {
+		base = 0
+	}
+
+
+	sort_order = 1002
 }

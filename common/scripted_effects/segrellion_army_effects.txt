@@ -80,6 +80,27 @@ segrellion_call_the_banners_effect = {
 	save_scope_as = segrellion_banner_liege
 
 	# =====================================================
+	# UNICORN RETURNS
+	#
+	# Gaunt and Pyle initially support Leo Stormflame,
+	# but if Daemon formally calls his banners they answer.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			has_character_flag = segrellion_unicorn_returns_war_active
+
+			has_variable = segrellion_unicorn_returns_war
+		}
+
+		segrellion_unicorn_returns_gaunt_pyle_answer_call_effect = yes
+	}
+
+	# =====================================================
 	# DIRECT VASSALS ALREADY FIGHTING AGAINST THEIR LIEGE
 	# =====================================================
 
@@ -293,6 +314,32 @@ segrellion_banner_joined_enemy_effect = {
 	}
 
 	add_character_flag = segrellion_banner_oathbreaker_unpunished
+
+	add_character_flag = segrellion_banner_fought_against_liege
+
+
+	# =====================================================
+	# UNICORN RETURNS TRAITOR
+	#
+	# Only characters who actually fought against Daemon
+	# receive this flag.
+	# Neutral refusals DO NOT receive it.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			scope:segrellion_banner_liege = {
+
+				this = character:Segrellion_60
+
+				has_character_flag = segrellion_unicorn_returns_war_active
+			}
+		}
+
+		add_character_flag = segrellion_unicorn_returns_traitor
+	}
 
 
 	# =====================================================
@@ -617,6 +664,259 @@ segrellion_banner_join_liege_wars_effect = {
 					add_defender = scope:segrellion_banner_joiner
 				}
 			}
+		}
+	}
+}
+
+
+# =========================================================
+# UNICORN RETURNS
+# GAUNT & PYLE ANSWER DAEMON'S CALL
+#
+# ROOT = Daemon
+# =========================================================
+
+segrellion_unicorn_returns_gaunt_pyle_answer_call_effect = {
+
+
+	# =====================================================
+	# HOUSE GAUNT
+	# =====================================================
+
+	title:c_the_gauntlet.holder ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			save_scope_as = segrellion_unicorn_returns_called_gaunt
+		}
+	}
+
+
+	scope:segrellion_unicorn_returns_called_gaunt ?= {
+
+		root = {
+
+			var:segrellion_unicorn_returns_war ?= {
+
+				# Remove Gaunt from Leo's side.
+
+				if = {
+
+					limit = {
+
+						any_war_defender = {
+							this = scope:segrellion_unicorn_returns_called_gaunt
+						}
+					}
+
+					remove_participant = scope:segrellion_unicorn_returns_called_gaunt
+				}
+
+
+				# Mark the formal summons.
+
+				hidden_effect = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								was_called = scope:segrellion_unicorn_returns_called_gaunt
+							}
+						}
+
+						set_called_to = scope:segrellion_unicorn_returns_called_gaunt
+					}
+				}
+
+
+				# Gaunt answers Daemon.
+
+				if = {
+
+					limit = {
+
+						NOT = {
+
+							any_war_attacker = {
+								this = scope:segrellion_unicorn_returns_called_gaunt
+							}
+						}
+					}
+
+					add_attacker = scope:segrellion_unicorn_returns_called_gaunt
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_unicorn_returns_answered_daemon_call
+	}
+
+
+	# =====================================================
+	# HOUSE PYLE
+	# =====================================================
+
+	title:c_greyhelm.holder ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			save_scope_as = segrellion_unicorn_returns_called_pyle
+		}
+	}
+
+
+	scope:segrellion_unicorn_returns_called_pyle ?= {
+
+		root = {
+
+			var:segrellion_unicorn_returns_war ?= {
+
+				# Remove Pyle from Leo's side.
+
+				if = {
+
+					limit = {
+
+						any_war_defender = {
+							this = scope:segrellion_unicorn_returns_called_pyle
+						}
+					}
+
+					remove_participant = scope:segrellion_unicorn_returns_called_pyle
+				}
+
+
+				# Mark the formal summons.
+
+				hidden_effect = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								was_called = scope:segrellion_unicorn_returns_called_pyle
+							}
+						}
+
+						set_called_to = scope:segrellion_unicorn_returns_called_pyle
+					}
+				}
+
+
+				# Pyle answers Daemon.
+
+				if = {
+
+					limit = {
+
+						NOT = {
+
+							any_war_attacker = {
+								this = scope:segrellion_unicorn_returns_called_pyle
+							}
+						}
+					}
+
+					add_attacker = scope:segrellion_unicorn_returns_called_pyle
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_unicorn_returns_answered_daemon_call
+	}
+}
+
+
+# =========================================================
+# UNICORN RETURNS
+# IMPRISON ALL TRUE TRAITORS AFTER VICTORY
+#
+# Only characters who actually fought against Daemon.
+# Neutral Oathbreakers are ignored.
+# =========================================================
+
+segrellion_imprison_unicorn_returns_traitors_effect = {
+
+
+	every_living_character = {
+
+		limit = {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_unicorn_returns_traitor
+		}
+
+
+		save_scope_as = segrellion_unicorn_returns_traitor_to_arrest
+
+
+		# If another ruler currently holds the traitor,
+		# transfer them into Daemon's custody.
+
+		if = {
+
+			limit = {
+				is_imprisoned = yes
+			}
+
+			release_from_prison = yes
+		}
+
+
+		add_character_flag = {
+			flag = block_imprisonment_event
+			days = 2
+		}
+
+
+		character:Segrellion_60 = {
+
+			imprison = {
+				target = scope:segrellion_unicorn_returns_traitor_to_arrest
+				type = dungeon
+			}
+		}
+
+
+		add_character_flag = segrellion_unicorn_returns_pending_judgment
+
+		remove_character_flag = segrellion_banner_oathbreaker_unpunished
+	}
+
+
+	# =====================================================
+	# UNLOCK THE JUDGMENT DECISION
+	# =====================================================
+
+	character:Segrellion_60 = {
+
+		if = {
+
+			limit = {
+
+				any_prisoner = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_unicorn_returns_pending_judgment
+				}
+			}
+
+			add_character_flag = segrellion_unicorn_returns_judgments_available
 		}
 	}
 }

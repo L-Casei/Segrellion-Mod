@@ -414,6 +414,221 @@ segrellion_unicorn_returns_cb = {
 			}
 		}
 
+		# =========================================================
+		# FLAMELANDS HOUSES
+		#
+		# The realm turns against House Stormflame.
+		# Gaunt and Pyle remain loyal to Leo.
+		# Landed Stormflames remain loyal to their own house.
+		# =========================================================
+
+		scope:defender = {
+
+			# =====================================================
+			# MOST FLAMELANDS HOUSES JOIN DAEMON
+			# =====================================================
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+					is_landed = yes
+
+					highest_held_title_tier > tier_barony
+
+					this != scope:attacker
+					this != scope:defender
+
+					NOT = {
+						government_has_flag = government_is_nw
+					}
+
+					# House Stormflame remains with Leo.
+					NOT = {
+						house = house:house_Stormflame
+					}
+
+					# House Gaunt remains with Leo.
+					NOT = {
+						has_title = title:c_the_gauntlet
+					}
+
+					# House Pyle remains with Leo.
+					NOT = {
+						has_title = title:c_greyhelm
+					}
+				}
+
+
+				save_temporary_scope_as = segrellion_unicorn_returns_daemon_house
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOR = {
+
+								any_war_attacker = {
+									this = scope:segrellion_unicorn_returns_daemon_house
+								}
+
+								any_war_defender = {
+									this = scope:segrellion_unicorn_returns_daemon_house
+								}
+							}
+						}
+
+						add_attacker = scope:segrellion_unicorn_returns_daemon_house
+					}
+				}
+			}
+
+
+			# =====================================================
+			# LANDED STORMFLAMES JOIN LEO
+			# =====================================================
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+					is_landed = yes
+
+					highest_held_title_tier > tier_barony
+
+					this != scope:attacker
+					this != scope:defender
+
+					house = house:house_Stormflame
+				}
+
+
+				save_temporary_scope_as = segrellion_unicorn_returns_stormflame_house
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOR = {
+
+								any_war_attacker = {
+									this = scope:segrellion_unicorn_returns_stormflame_house
+								}
+
+								any_war_defender = {
+									this = scope:segrellion_unicorn_returns_stormflame_house
+								}
+							}
+						}
+
+						add_defender = scope:segrellion_unicorn_returns_stormflame_house
+					}
+				}
+			}
+		}
+
+
+		# =========================================================
+		# HOUSE GAUNT SUPPORTS LEO STORMFLAME
+		# =========================================================
+
+		title:c_the_gauntlet.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+				save_scope_as = segrellion_unicorn_returns_gaunt
+			}
+		}
+
+
+		scope:segrellion_unicorn_returns_gaunt ?= {
+
+			scope:war ?= {
+
+				if = {
+
+					limit = {
+
+						NOR = {
+
+							any_war_attacker = {
+								this = scope:segrellion_unicorn_returns_gaunt
+							}
+
+							any_war_defender = {
+								this = scope:segrellion_unicorn_returns_gaunt
+							}
+						}
+					}
+
+					add_defender = scope:segrellion_unicorn_returns_gaunt
+				}
+			}
+		}
+
+
+		# =========================================================
+		# HOUSE PYLE SUPPORTS LEO STORMFLAME
+		# =========================================================
+
+		title:c_greyhelm.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+					this != scope:defender
+				}
+
+				save_scope_as = segrellion_unicorn_returns_pyle
+			}
+		}
+
+
+		scope:segrellion_unicorn_returns_pyle ?= {
+
+			scope:war ?= {
+
+				if = {
+
+					limit = {
+
+						NOR = {
+
+							any_war_attacker = {
+								this = scope:segrellion_unicorn_returns_pyle
+							}
+
+							any_war_defender = {
+								this = scope:segrellion_unicorn_returns_pyle
+							}
+						}
+					}
+
+					add_defender = scope:segrellion_unicorn_returns_pyle
+				}
+			}
+		}
+
 		# =================================================
 		# STORMFLAME ALLIES
 		# =================================================
@@ -478,6 +693,10 @@ segrellion_unicorn_returns_cb = {
 			remove_character_flag = segrellion_unicorn_returns_war_active
 
 			add_character_flag = segrellion_unicorn_returns_completed
+
+			hidden_effect = {
+				segrellion_imprison_unicorn_returns_traitors_effect = yes
+			}
 
 			# =========================================================
 			# VISENYA SEGRELLION
@@ -2728,4 +2947,259 @@ segrellion_sansa_protection_war_cb = {
 
 
 	transfer_behavior = transfer
+}
+
+# =========================================================
+# CONFISCATE TITLES FROM A CONDEMNED OATHBREAKER
+#
+# ROOT = condemned traitor
+# =========================================================
+
+segrellion_confiscate_unicorn_oathbreaker_titles_effect = {
+
+	if = {
+
+		limit = {
+			is_landed = yes
+		}
+
+
+		create_title_and_vassal_change = {
+			type = revoked
+			save_scope_as = segrellion_unicorn_oathbreaker_title_change
+			add_claim_on_loss = no
+		}
+
+
+		every_held_title = {
+
+			limit = {
+
+				is_landless_type_title = no
+
+				is_noble_family_title = no
+			}
+
+
+			change_title_holder = {
+
+				holder = character:Segrellion_60
+
+				change = scope:segrellion_unicorn_oathbreaker_title_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_unicorn_oathbreaker_title_change
+	}
+}
+
+
+# =========================================================
+# SENTENCE: THE NIGHT'S WATCH
+#
+# ROOT = condemned male traitor
+# =========================================================
+
+segrellion_sentence_unicorn_oathbreaker_to_wall_effect = {
+
+
+	segrellion_confiscate_unicorn_oathbreaker_titles_effect = yes
+
+
+	remove_character_flag = segrellion_unicorn_returns_pending_judgment
+	remove_character_flag = segrellion_unicorn_returns_traitor
+	remove_character_flag = segrellion_banner_fought_against_liege
+	remove_character_flag = segrellion_banner_oathbreaker_unpunished
+
+	remove_character_modifier = segrellion_banner_oathbreaker_modifier
+
+
+	add_character_flag = segrellion_sent_to_wall_by_daemon
+
+
+	if = {
+
+		limit = {
+			is_imprisoned = yes
+		}
+
+		release_from_prison = yes
+	}
+
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_trait = nightswatch
+			}
+		}
+
+		add_trait = nightswatch
+	}
+
+
+	if = {
+
+		limit = {
+
+			is_ruler = no
+
+			title:k_the_wall.holder ?= {
+				is_alive = yes
+			}
+		}
+
+		set_employer = title:k_the_wall.holder
+
+		set_location = title:k_the_wall.holder.capital_province
+	}
+}
+
+
+# =========================================================
+# SENTENCE: EXILE
+#
+# ROOT = condemned female traitor
+# =========================================================
+
+segrellion_sentence_unicorn_oathbreaker_to_essos_effect = {
+
+
+	segrellion_confiscate_unicorn_oathbreaker_titles_effect = yes
+
+
+	remove_character_flag = segrellion_unicorn_returns_pending_judgment
+	remove_character_flag = segrellion_unicorn_returns_traitor
+	remove_character_flag = segrellion_banner_fought_against_liege
+	remove_character_flag = segrellion_banner_oathbreaker_unpunished
+
+	remove_character_modifier = segrellion_banner_oathbreaker_modifier
+
+
+	add_character_flag = segrellion_exiled_to_essos_by_daemon
+
+
+	if = {
+
+		limit = {
+			is_imprisoned = yes
+		}
+
+		release_from_prison = yes
+	}
+
+
+	banish = yes
+}
+
+
+# =========================================================
+# SENTENCE: PARDON
+#
+# ROOT = pardoned traitor
+# =========================================================
+
+segrellion_spare_unicorn_oathbreaker_effect = {
+
+
+	save_scope_as = segrellion_spared_unicorn_oathbreaker
+
+
+	remove_character_flag = segrellion_unicorn_returns_pending_judgment
+	remove_character_flag = segrellion_unicorn_returns_traitor
+	remove_character_flag = segrellion_banner_fought_against_liege
+	remove_character_flag = segrellion_banner_oathbreaker_unpunished
+
+	remove_character_modifier = segrellion_banner_oathbreaker_modifier
+
+
+	if = {
+
+		limit = {
+			is_imprisoned = yes
+		}
+
+		release_from_prison = yes
+	}
+
+
+	add_character_modifier = {
+		modifier = segrellion_spared_by_liege_modifier
+		years = 10
+	}
+
+
+	# =====================================================
+	# DAEMON'S VASSALS RESPECT HIS MERCY
+	# =====================================================
+
+	character:Segrellion_60 = {
+
+		save_scope_as = segrellion_merciful_unicorn_liege
+
+
+		every_vassal = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			add_opinion = {
+
+				target = scope:segrellion_merciful_unicorn_liege
+
+				modifier = segrellion_liege_showed_mercy_opinion
+			}
+		}
+
+
+		# =================================================
+		# OTHER VASSALS DESPISE THE PARDONED TRAITOR
+		# =================================================
+
+		every_vassal = {
+
+			limit = {
+
+				is_alive = yes
+
+				this != scope:segrellion_spared_unicorn_oathbreaker
+			}
+
+			add_opinion = {
+
+				target = scope:segrellion_spared_unicorn_oathbreaker
+
+				modifier = segrellion_spared_oathbreaker_fellow_vassal_opinion
+			}
+		}
+
+
+		# =================================================
+		# LOYALTY HOOK
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				can_add_hook = {
+
+					type = loyalty_hook
+
+					target = scope:segrellion_spared_unicorn_oathbreaker
+				}
+			}
+
+			add_hook = {
+
+				type = loyalty_hook
+
+				target = scope:segrellion_spared_unicorn_oathbreaker
+			}
+		}
+	}
 }
