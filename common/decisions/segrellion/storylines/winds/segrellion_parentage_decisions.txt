@@ -192,50 +192,83 @@ segrellion_expose_my_true_parentage_decision = {
 
 		this = character:Segrellion_60
 
+		is_alive = yes
+
 		is_adult = yes
-		is_ruler = yes
 
-		knows_self_royal_bastard_secret = yes
+		has_character_flag = segrellion_daemon_parentage_known
 
-		any_known_secret = {
+		NOT = {
+			has_character_flag = segrellion_daemon_parentage_publicly_revealed
+		}
 
-			secret_type = secret_unmarried_illegitimate_child
-
-			secret_target = {
-
-				this = root
-
-				real_paternal_held_iron_throne_claim = yes
-			}
-
-			can_be_exposed_by = root
+		NOT = {
+			owns_story_of_type = agot_royal_bastard_story
 		}
 	}
 
 
 	is_valid = {
-
-		is_adult = yes
-		is_ruler = yes
-
-		real_paternal_held_iron_throne_claim = yes
-
-		knows_self_royal_bastard_secret = yes
-
-		any_known_secret = {
-
-			secret_type = secret_unmarried_illegitimate_child
-
-			secret_target = {
-				this = root
-			}
-
-			can_be_exposed_by = root
-		}
+		always = yes
 	}
 
 
 	effect = {
+
+		# =====================================================
+		# REUSE HUGH'S EXISTING SECRET IF HE HAS IT
+		# =====================================================
+
+		character:Segrellion_43 ?= {
+
+			random_known_secret = {
+
+				limit = {
+
+					secret_type = secret_unmarried_illegitimate_child
+
+					secret_target = {
+						this = character:Segrellion_60
+					}
+				}
+
+				reveal_to = character:Segrellion_60
+			}
+		}
+
+
+		# =====================================================
+		# IF NO MECHANICAL SECRET EXISTS FOR DAEMON YET,
+		# CREATE IT NOW.
+		#
+		# THIS IS DELIBERATELY DONE ONLY WHEN THE PLAYER
+		# ACTUALLY CHOOSES TO REVEAL HIS PARENTAGE.
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+
+					any_known_secret = {
+
+						secret_type = secret_unmarried_illegitimate_child
+
+						secret_target = {
+							this = character:Segrellion_60
+						}
+					}
+				}
+			}
+
+			segrellion_create_daemon_parentage_secret_effect = yes
+		}
+
+
+		# =====================================================
+		# GET THE SECRET FOR AGOT'S NATIVE PUBLIC REVEAL
+		# =====================================================
 
 		random_known_secret = {
 
@@ -244,7 +277,9 @@ segrellion_expose_my_true_parentage_decision = {
 				secret_type = secret_unmarried_illegitimate_child
 
 				secret_target = {
-					this = root
+
+					this = character:Segrellion_60
+
 					real_paternal_held_iron_throne_claim = yes
 				}
 
@@ -257,11 +292,32 @@ segrellion_expose_my_true_parentage_decision = {
 
 		save_scope_as = revealer
 
-		trigger_event = {
-			id = agot_events_bastard.0950
-			days = { 7 14 }
+
+		# =====================================================
+		# PUBLIC REVELATION
+		# =====================================================
+
+		if = {
+
+			limit = {
+				exists = scope:heritage_secret
+			}
+
+
+			trigger_event = {
+				id = agot_events_bastard.0950
+			}
+
+
+			add_character_flag = segrellion_daemon_parentage_known
+
+			add_character_flag = segrellion_daemon_parentage_publicly_revealed
+
+
+			segrellion_daemon_try_start_parentage_identity_chain_effect = yes
 		}
 	}
+
 
 	ai_potential = {
 		always = no

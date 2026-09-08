@@ -130,17 +130,9 @@ segrellion_daemon_parentage.0002 = {
 
 	immediate = {
 
-		# Daemon reads Daena's letter himself and becomes
-		# the sole knower of his AGOT heritage secret.
-
-		segrellion_create_daemon_parentage_secret_effect = yes
-
-
-		# Our own narrative bookkeeping.
-
 		add_character_flag = segrellion_daemon_parentage_known
+
 		add_character_flag = segrellion_daemon_parentage_known_daemon_only
-		segrellion_daemon_try_start_parentage_identity_chain_effect = yes
 	}
 
 
@@ -195,32 +187,9 @@ segrellion_daemon_parentage.0003 = {
 
 	immediate = {
 
-		# =================================================
-		# HUGH FINALLY TELLS DAEMON
-		# =================================================
-
 		character:Segrellion_43 = {
 
-			# Safety for old saves / interrupted chains.
-
 			segrellion_create_daemon_parentage_secret_effect = yes
-
-
-			random_known_secret = {
-
-				limit = {
-
-					secret_type = secret_unmarried_illegitimate_child
-
-					secret_target = {
-						this = character:Segrellion_60
-					}
-				}
-
-
-				reveal_to = root
-			}
-
 
 			add_character_flag = told_true_parentage
 
@@ -230,16 +199,9 @@ segrellion_daemon_parentage.0003 = {
 		}
 
 
-		# =================================================
-		# ONLY NOW DOES DAEMON KNOW
-		# =================================================
-
 		add_character_flag = segrellion_daemon_parentage_known
 
 		add_character_flag = segrellion_daemon_parentage_known_with_hugh
-
-
-		segrellion_daemon_try_start_parentage_identity_chain_effect = yes
 	}
 
 
@@ -623,6 +585,13 @@ segrellion_daemon_parentage.0100 = {
 		is_alive = yes
 
 		has_character_flag = segrellion_daemon_parentage_known
+
+		OR = {
+
+			has_character_flag = segrellion_daemon_parentage_publicly_revealed
+
+			owns_story_of_type = agot_royal_bastard_story
+		}
 
 		NOT = {
 			has_character_flag = segrellion_daemon_parentage_identity_chain_started
