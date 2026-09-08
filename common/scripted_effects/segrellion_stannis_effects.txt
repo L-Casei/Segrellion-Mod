@@ -538,6 +538,8 @@ segrellion_setup_stannis_northern_campaign_effect = {
 # =========================================================
 
 segrellion_jon_accepts_north_effect = {
+	clear_saved_scope = segrellion_new_lord_commander
+	clear_saved_scope = segrellion_current_lord_commander
 
 
 	# =====================================================
@@ -565,46 +567,62 @@ segrellion_jon_accepts_north_effect = {
 	# PREPARE TORMUND
 	# =====================================================
 
-	character:174345 ?= {
-
-		if = {
-
-			limit = {
-
-				is_alive = yes
-			}
-
+	if = {
+		limit = { has_title = title:k_the_wall }
+		character:Giantsbane_1 ?= {
 
 			if = {
 
 				limit = {
 
-					NOT = {
-						has_trait = nightswatch
+					is_alive = yes
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = nightswatch
+						}
 					}
+
+					add_trait = nightswatch
 				}
 
-				add_trait = nightswatch
-			}
 
+				if = {
 
-			if = {
+					limit = {
 
-				limit = {
+						is_landed = no
+					}
 
-					is_landed = no
+					set_employer = root
 				}
 
-				set_employer = root
+
+				set_location = title:c_castle_black.title_province
+
+				save_scope_as = segrellion_new_lord_commander
 			}
-
-
-			set_location = title:c_castle_black.title_province
-
+		}
+	}
+	else = {
+		title:k_the_wall.holder ?= { save_scope_as = segrellion_new_lord_commander }
+	}
+	# If Tormund has died, choose an adult brother of the Watch.
+	if = {
+		limit = {
+			has_title = title:k_the_wall
+			NOT = { exists = scope:segrellion_new_lord_commander }
+		}
+		random_courtier = {
+			limit = { is_alive = yes is_adult = yes is_landed = no has_trait = nightswatch }
 			save_scope_as = segrellion_new_lord_commander
 		}
 	}
-
 
 	# =====================================================
 	# SAVE EVERY TITLE JON CURRENTLY HOLDS
@@ -720,7 +738,10 @@ segrellion_jon_accepts_north_effect = {
 
 			set_location = title:c_castle_black.title_province
 
-			add_character_flag = segrellion_tormund_lord_commander
+			if = {
+				limit = { this = character:Giantsbane_1 }
+				add_character_flag = segrellion_tormund_lord_commander
+			}
 		}
 	}
 
@@ -1136,7 +1157,11 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 		segrellion_transfer_stannis_prisoners_to_jon_effect = yes
-		
+		character:Baratheon_3 = {
+			trigger_event = { id = segrellion_stannis.1020 days = 20 }
+		}
+
+
 		# =================================================
 		# RAMSAY'S RECKONING
 		# =================================================
@@ -1190,77 +1215,77 @@ segrellion_jon_accepts_north_effect = {
 		}
 	}
 
-	# =========================================================
-	# SNAPSHOT STANNIS' HOUSEHOLD
-	#
-	# Called immediately before Stannis may lose Dragonstone.
-	#
-	# We preserve:
-	#
-	# - his courtiers;
-	# - his wife;
-	# - his living children;
-	#
-	# Melisandre requires no hardcoded ID if she is already
-	# part of Stannis' court.
-	# =========================================================
+}
 
-	segrellion_snapshot_stannis_retinue_effect = {
+# =========================================================
+# SNAPSHOT STANNIS' HOUSEHOLD
+#
+# Called immediately before Stannis may lose Dragonstone.
+#
+# We preserve:
+#
+# - his courtiers;
+# - his wife;
+# - his living children;
+#
+# Melisandre requires no hardcoded ID if she is already
+# part of Stannis' court.
+# =========================================================
 
-
-		character:Baratheon_3 ?= {
-
-
-			# =================================================
-			# COURTIERS
-			# =================================================
-
-			every_courtier = {
-
-				limit = {
-
-					is_alive = yes
-				}
+segrellion_snapshot_stannis_retinue_effect = {
 
 
-				add_to_list = segrellion_stannis_retinue
+	character:Baratheon_3 ?= {
+
+
+		# =================================================
+		# COURTIERS
+		# =================================================
+
+		every_courtier = {
+
+			limit = {
+
+				is_alive = yes
 			}
 
 
-			# =================================================
-			# WIFE
-			# =================================================
-
-			every_spouse = {
-
-				limit = {
-
-					is_alive = yes
-				}
+			add_to_list = segrellion_stannis_retinue
+		}
 
 
-				add_to_list = segrellion_stannis_family
+		# =================================================
+		# WIFE
+		# =================================================
+
+		every_spouse = {
+
+			limit = {
+
+				is_alive = yes
 			}
 
 
-			# =================================================
-			# CHILDREN
-			# =================================================
-
-			every_child = {
-
-				limit = {
-
-					is_alive = yes
-				}
+			add_to_list = segrellion_stannis_family
+		}
 
 
-				add_to_list = segrellion_stannis_family
+		# =================================================
+		# CHILDREN
+		# =================================================
+
+		every_child = {
+
+			limit = {
+
+				is_alive = yes
 			}
+
+
+			add_to_list = segrellion_stannis_family
 		}
 	}
 }
-
 # =========================================================
 # STANNIS SECURES THE NORTH
 #
@@ -1685,7 +1710,7 @@ segrellion_stannis_try_become_landless_effect = {
 
 segrellion_transfer_stannis_prisoners_to_jon_effect = {
 
-	
+
 
 	character:Baratheon_3 = {
 
@@ -1803,5 +1828,22 @@ segrellion_start_stannis_iron_throne_war_effect = {
 
 			target_title = title:h_the_iron_throne
 		}
+	}
+}
+
+# Resolve the living Jon, preferring the resurrected runtime character.
+segrellion_resolve_stannis_jon_effect = {
+	clear_saved_scope = stannis_jon
+	if = {
+		limit = { global_var:segrellion_resurrected_jon ?= { is_alive = yes } exists = global_var:segrellion_resurrected_jon }
+		global_var:segrellion_resurrected_jon = { save_scope_as = stannis_jon }
+	}
+	else_if = {
+		limit = { character:Stark_7 = { is_alive = yes } }
+		character:Stark_7 = { save_scope_as = stannis_jon }
+	}
+	else_if = {
+		limit = { title:k_the_wall.holder ?= { is_alive = yes has_character_flag = segrellion_canonical_current_jon } }
+		title:k_the_wall.holder ?= { save_scope_as = stannis_jon }
 	}
 }

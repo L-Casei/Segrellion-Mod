@@ -210,38 +210,7 @@ segrellion_stannis.0001 = {
 
 	immediate = {
 
-		if = {
-
-			limit = {
-				has_global_variable = segrellion_resurrected_jon
-			}
-
-			global_var:segrellion_resurrected_jon ?= {
-
-				if = {
-
-					limit = {
-						is_alive = yes
-					}
-
-					save_scope_as = stannis_jon
-				}
-			}
-		}
-
-
-		else_if = {
-
-			limit = {
-				character:Stark_7 ?= {
-					is_alive = yes
-				}
-			}
-
-			character:Stark_7 = {
-				save_scope_as = stannis_jon
-			}
-		}
+		segrellion_resolve_stannis_jon_effect = yes
 
 		title:k_the_wall.holder ?= {
 
@@ -851,38 +820,7 @@ segrellion_stannis.0900 = {
 
 	immediate = {
 
-		if = {
-
-			limit = {
-				has_global_variable = segrellion_resurrected_jon
-			}
-
-			global_var:segrellion_resurrected_jon ?= {
-
-				if = {
-
-					limit = {
-						is_alive = yes
-					}
-
-					save_scope_as = stannis_jon
-				}
-			}
-		}
-
-
-		else_if = {
-
-			limit = {
-				character:Stark_7 ?= {
-					is_alive = yes
-				}
-			}
-
-			character:Stark_7 = {
-				save_scope_as = stannis_jon
-			}
-		}
+		segrellion_resolve_stannis_jon_effect = yes
 	}
 
 
@@ -971,35 +909,7 @@ segrellion_stannis.1000 = {
 
 	immediate = {
 
-		# =================================================
-		# FIND THE ACTUAL JON CURRENTLY COMMANDING THE WATCH
-		#
-		# Do not depend on the historical Jon/global runtime
-		# distinction here.
-		# =================================================
-
-		title:k_the_wall.holder ?= {
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-
-					OR = {
-
-						this = character:Stark_7
-
-						has_character_flag = segrellion_canonical_current_jon
-					}
-				}
-
-
-				save_scope_as = stannis_jon
-			}
-		}
-
+		segrellion_resolve_stannis_jon_effect = yes
 
 		title:e_the_north.holder ?= {
 
@@ -1125,13 +1035,18 @@ segrellion_stannis.1010 = {
 
 			this = character:Stark_7
 
+			this = global_var:segrellion_resurrected_jon
+
 			has_character_flag = segrellion_canonical_current_jon
 		}
 
 
 		is_alive = yes
 
-		has_title = title:k_the_wall
+		OR = {
+			has_title = title:k_the_wall
+			is_landed = no
+		}
 
 		character:Baratheon_3 ?= {
 
@@ -1197,6 +1112,13 @@ segrellion_stannis.1010 = {
 
 
 		segrellion_jon_accepts_north_effect = yes
+		if = {
+			limit = { has_character_flag = segrellion_jon_north_transfer_failed }
+			remove_character_flag = segrellion_jon_stannis_north_offer_seen
+			remove_character_flag = segrellion_jon_stannis_result_resolved
+			add_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+			trigger_event = { id = segrellion_stannis.1010 days = 30 }
+		}
 
 
 		ai_chance = {
@@ -1276,26 +1198,17 @@ segrellion_stannis.1020 = {
 	}
 
 
+	trigger = {
+		this = character:Baratheon_3
+		is_alive = yes
+		has_character_flag = segrellion_stannis_restored_stark_north
+		NOT = { has_character_flag = segrellion_stannis_jon_restoration_announced }
+	}
+
 	immediate = {
+		add_character_flag = segrellion_stannis_jon_restoration_announced
 
-		if = {
-
-			limit = {
-				has_global_variable = segrellion_resurrected_jon
-			}
-
-			global_var:segrellion_resurrected_jon ?= {
-				save_scope_as = stannis_jon
-			}
-		}
-
-
-		else = {
-
-			character:Stark_7 = {
-				save_scope_as = stannis_jon
-			}
-		}
+		segrellion_resolve_stannis_jon_effect = yes
 	}
 
 
@@ -1367,24 +1280,7 @@ segrellion_stannis.1021 = {
 
 	immediate = {
 
-		if = {
-
-			limit = {
-				has_global_variable = segrellion_resurrected_jon
-			}
-
-			global_var:segrellion_resurrected_jon ?= {
-				save_scope_as = stannis_jon
-			}
-		}
-
-
-		else = {
-
-			character:Stark_7 = {
-				save_scope_as = stannis_jon
-			}
-		}
+		segrellion_resolve_stannis_jon_effect = yes
 	}
 
 
@@ -1449,6 +1345,8 @@ segrellion_stannis.1030 = {
 		OR = {
 
 			this = character:Stark_7
+
+			this = global_var:segrellion_resurrected_jon
 
 			has_character_flag = segrellion_canonical_current_jon
 		}
@@ -1557,7 +1455,6 @@ segrellion_stannis.1030 = {
 				}
 			}
 		}
-	}
 
 
 	# =====================================================
@@ -1635,6 +1532,8 @@ segrellion_stannis.1030 = {
 			}
 		}
 	}
+
+}
 
 # =========================================================
 # 1100 - THE BLOOD OF WINTERFELL
