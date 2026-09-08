@@ -396,6 +396,7 @@ on_join_war_as_secondary = {
 	on_actions = {
 
 		segrellion_ramsay_war_lock_on_join
+		segrellion_banner_enemy_join_check
 	}
 }
 
@@ -4542,6 +4543,86 @@ segrellion_ramsay_war_lock_on_join = {
 			scope:war = {
 
 				remove_participant = root
+			}
+		}
+	}
+}
+
+# =========================================================
+# CALL THE BANNERS - VASSAL JOINS THE ENEMY
+#
+# ROOT = character who just joined the war
+# scope:war = war they joined
+# =========================================================
+
+segrellion_banner_enemy_join_check = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+				is_landed = yes
+
+				exists = liege
+
+				liege = {
+
+					is_alive = yes
+					is_landed = yes
+				}
+
+				scope:war ?= {
+
+					is_civil_war = no
+				}
+			}
+
+
+			liege = {
+				save_scope_as = segrellion_banner_liege
+			}
+
+
+			if = {
+
+				limit = {
+
+					scope:war = {
+
+						is_war_leader = scope:segrellion_banner_liege
+
+
+						OR = {
+
+							# Vassal joined defenders while liege leads attackers.
+							AND = {
+
+								is_attacker = scope:segrellion_banner_liege
+
+								any_war_defender = {
+									this = root
+								}
+							}
+
+
+							# Vassal joined attackers while liege leads defenders.
+							AND = {
+
+								is_defender = scope:segrellion_banner_liege
+
+								any_war_attacker = {
+									this = root
+								}
+							}
+						}
+					}
+				}
+
+
+				segrellion_banner_joined_enemy_effect = yes
 			}
 		}
 	}
