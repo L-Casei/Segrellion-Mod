@@ -3,8 +3,7 @@
 # =========================================================
 
 # Converts the territories that formed the original Flamelands.
-# House Segrellion itself is NOT forcibly converted, allowing the ruling
-# dynasty to retain its Valyrian identity while the realm develops its own.
+# House Segrellion and the de jure nobility adopt the regional identity.
 segrellion_apply_flamelander_culture_effect = {
 
 	# The new culture begins with the technological knowledge of the two
@@ -45,6 +44,11 @@ segrellion_apply_flamelander_culture_effect = {
 		}
 	}
 
+	if = {
+		limit = { NOT = { has_global_variable = segrellion_flamelander_nobility_adopted } }
+		segrellion_apply_flamelander_nobility_effect = yes
+	}
+
 	set_global_variable = {
 		name = segrellion_flamelander_culture_created
 		value = yes
@@ -71,9 +75,9 @@ segrellion_create_flamelander_culture_dynamic_effect = {
 
 # Historical formation path.
 # Aeryn founded the Flamelands on 8144.1.28, so the culture exists from
-# 8149.1.28 in starts where the kingdom was founded through title history.
+# 8144.1.28 in starts where the kingdom was founded through title history.
 # We deliberately do not reset the culture creation date here, because the
-# culture definition already records the historical date 8149.1.28.
+# culture definition already records the historical date 8144.1.28.
 segrellion_create_flamelander_culture_historical_effect = {
 
 	segrellion_apply_flamelander_culture_effect = yes
@@ -83,6 +87,16 @@ segrellion_create_flamelander_culture_historical_effect = {
 # Main progression check. It is intentionally independent of Aeryn's life,
 # so succession or an early death can never destroy the five-year timer.
 segrellion_flamelander_culture_progression_effect = {
+
+    # Historical adoption and migration for saves where the culture already exists.
+    if = {
+        limit = {
+            current_date >= 8144.1.28
+            title:k_flamelands = { exists = holder }
+            NOT = { has_global_variable = segrellion_flamelander_nobility_adopted }
+        }
+        segrellion_apply_flamelander_nobility_effect = yes
+    }
 
 	if = {
 		limit = {
@@ -155,10 +169,48 @@ segrellion_flamelander_culture_progression_effect = {
 					has_global_variable = segrellion_flamelands_founded
 				}
 
-				current_date >= 8149.1.28
+				current_date >= 8144.1.28
 			}
 
 			segrellion_create_flamelander_culture_historical_effect = yes
 		}
 	}
+}
+
+# Character scope: include children so the first succession preserves the culture.
+segrellion_convert_flamelander_lord_effect = {
+    set_culture = culture:flamelander
+    every_child = {
+        limit = { is_alive = yes }
+        set_culture = culture:flamelander
+    }
+}
+
+# Global scope. Use the current de jure map, including later border changes.
+# Applied once per campaign, also upgrading saves with the old county-only setup.
+segrellion_apply_flamelander_nobility_effect = {
+    dynasty:dynn_Segrellion = {
+        every_dynasty_member = {
+            limit = { is_alive = yes }
+            set_culture = culture:flamelander
+        }
+    }
+    title:k_flamelands = {
+        every_de_jure_county = {
+            if = {
+                limit = { exists = holder }
+                holder = { segrellion_convert_flamelander_lord_effect = yes }
+            }
+            de_jure_liege = {
+                if = {
+                    limit = { exists = holder }
+                    holder = { segrellion_convert_flamelander_lord_effect = yes }
+                }
+            }
+        }
+    }
+    set_global_variable = {
+        name = segrellion_flamelander_nobility_adopted
+        value = yes
+    }
 }
