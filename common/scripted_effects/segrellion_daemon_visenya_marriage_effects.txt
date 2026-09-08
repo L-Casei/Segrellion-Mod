@@ -1,0 +1,20 @@
+# Character scope: only Daemon, after a successful marriage to Visenya.
+# Safe to call from both scripted weddings and the general marriage hook.
+segrellion_daemon_visenya_marriage_traits_effect = {
+    if = {
+        limit = {
+            this = character:Segrellion_60
+            is_spouse_of = character:Black_Unicorn_1
+        }
+        if = {
+            limit = { has_trait = lustful }
+            remove_trait = lustful
+        }
+        if = {
+            limit = {
+                NOT = { has_trait = temperate }
+            }
+            add_trait = temperate
+        }
+    }
+}
