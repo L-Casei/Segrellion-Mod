@@ -1,0 +1,1653 @@
+namespace = segrellion_visenya_icebringer
+
+
+# =========================================================
+# 1000 - FIRST REQUEST DISPATCHER
+#
+# THREE POSSIBLE OPENINGS:
+#
+# 1010 = Daemon already wielded Icebringer on Skagos
+# 1020 = Visenya agrees, but warns him
+# 1030 = Visenya refuses
+# =========================================================
+
+segrellion_visenya_icebringer.1000 = {
+
+	type = character_event
+	hidden = yes
+
+
+	immediate = {
+
+		# =================================================
+		# PATH I
+		#
+		# Daemon defeated Visenya and already held
+		# Icebringer in his hands.
+		# She KNOWS the blade accepted him.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_daemon_won_duel
+
+				has_character_flag = segrellion_black_unicorn_saw_icebringer
+			}
+
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1010
+			}
+		}
+
+
+		# =================================================
+		# NORMAL ROUTE
+		#
+		# Whether Visenya immediately accepts depends
+		# privately on how she currently feels about Daemon.
+		# No probability is shown to the player.
+		# =================================================
+
+		else = {
+
+			if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 = {
+
+						opinion = {
+							target = root
+							value >= 70
+						}
+					}
+				}
+
+
+				random_list = {
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1020
+						}
+					}
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1030
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 = {
+
+						opinion = {
+							target = root
+							value >= 35
+						}
+					}
+				}
+
+
+				random_list = {
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1020
+						}
+					}
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1030
+						}
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					20 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1020
+						}
+					}
+
+					80 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1030
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1010 - PATH I
+# SHE ALREADY KNOWS ICEBRINGER ACCEPTS DAEMON
+# =========================================================
+
+segrellion_visenya_icebringer.1010 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1010.t
+	desc = segrellion_visenya_icebringer.1010.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = admiration
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1010.a
+
+		custom_tooltip = segrellion_visenya_icebringer_swap_tt
+
+
+		hidden_effect = {
+
+			segrellion_daemon_visenya_swap_swords_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1020 - VISENYA ACCEPTS
+# BUT DOES NOT KNOW IF THE BLADE WILL
+# =========================================================
+
+segrellion_visenya_icebringer.1020 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1020.t
+	desc = segrellion_visenya_icebringer.1020.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1020.a
+
+		custom_tooltip = segrellion_visenya_icebringer_acceptance_unknown_tt
+
+
+		hidden_effect = {
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1021
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1021 - ICEBRINGER ACCEPTS DAEMON
+# =========================================================
+
+segrellion_visenya_icebringer.1021 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1021.t
+	desc = segrellion_visenya_icebringer.1021.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	immediate = {
+
+		segrellion_daemon_visenya_swap_swords_effect = yes
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1021.a
+
+		custom_tooltip = segrellion_visenya_icebringer_accepted_daemon_tt
+	}
+}
+
+
+# =========================================================
+# 1030 - VISENYA REFUSES
+# =========================================================
+
+segrellion_visenya_icebringer.1030 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1030.t
+	desc = segrellion_visenya_icebringer.1030.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# DIPLOMACY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1030.a
+
+		custom_tooltip = segrellion_visenya_icebringer_diplomacy_tt
+
+
+		hidden_effect = {
+
+			# Even excellent Diplomacy has limited power here.
+			# Visenya simply does not care very much about
+			# dead tradition.
+
+			if = {
+
+				limit = {
+					diplomacy >= 25
+				}
+
+				random_list = {
+
+					50 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1040
+						}
+					}
+
+					50 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1041
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					diplomacy >= 20
+				}
+
+				random_list = {
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1040
+						}
+					}
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1041
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					diplomacy >= 15
+				}
+
+				random_list = {
+
+					30 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1040
+						}
+					}
+
+					70 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1041
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					diplomacy >= 10
+				}
+
+				random_list = {
+
+					20 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1040
+						}
+					}
+
+					80 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1041
+						}
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					10 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1040
+						}
+					}
+
+					90 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1041
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# MARTIAL
+	#
+	# ALWAYS FAILS.
+	# VISENYA REFUSES THE DUEL ITSELF.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1030.b
+
+		custom_tooltip = segrellion_visenya_icebringer_martial_tt
+
+
+		hidden_effect = {
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1051
+			}
+		}
+	}
+
+
+	# =====================================================
+	# INTRIGUE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1030.c
+
+		custom_tooltip = segrellion_visenya_icebringer_intrigue_tt
+
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+					intrigue >= 25
+				}
+
+				random_list = {
+
+					85 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1060
+						}
+					}
+
+					15 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1061
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					intrigue >= 20
+				}
+
+				random_list = {
+
+					75 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1060
+						}
+					}
+
+					25 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1061
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					intrigue >= 15
+				}
+
+				random_list = {
+
+					65 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1060
+						}
+					}
+
+					35 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1061
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					intrigue >= 10
+				}
+
+				random_list = {
+
+					55 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1060
+						}
+					}
+
+					45 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1061
+						}
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1060
+						}
+					}
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1061
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1040 - DIPLOMACY SUCCESS
+# =========================================================
+
+segrellion_visenya_icebringer.1040 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1040.t
+	desc = segrellion_visenya_icebringer.1040.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1040.a
+
+		custom_tooltip = segrellion_visenya_icebringer_swap_tt
+
+
+		hidden_effect = {
+
+			segrellion_daemon_visenya_swap_swords_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1041 - DIPLOMACY FAILURE
+# =========================================================
+
+segrellion_visenya_icebringer.1041 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1041.t
+	desc = segrellion_visenya_icebringer.1041.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = disappointment
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1041.a
+
+		custom_tooltip = segrellion_visenya_icebringer_retry_five_years_tt
+
+
+		hidden_effect = {
+
+			segrellion_visenya_icebringer_first_failure_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1051 - MARTIAL FAILURE
+# VISENYA WILL NOT EVEN ACCEPT THE DUEL
+# =========================================================
+
+segrellion_visenya_icebringer.1051 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1051.t
+	desc = segrellion_visenya_icebringer.1051.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = laugh
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1051.a
+
+		custom_tooltip = segrellion_visenya_icebringer_retry_five_years_tt
+
+
+		hidden_effect = {
+
+			segrellion_visenya_icebringer_first_failure_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1060 - INTRIGUE SUCCESS
+# THEY SLEEP TOGETHER AND VISENYA GIVES HIM THE BLADE
+# =========================================================
+
+segrellion_visenya_icebringer.1060 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1060.t
+	desc = segrellion_visenya_icebringer.1060.desc
+
+	theme = romance
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = admiration
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = flirtation_left
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1060.a
+
+		custom_tooltip = segrellion_you_lay_with_visenya_tt
+		custom_tooltip = segrellion_visenya_icebringer_swap_tt
+
+
+		hidden_effect = {
+
+			segrellion_daemon_visenya_swap_swords_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1061 - INTRIGUE FAILURE
+#
+# HE DOES NOT GET THE SWORD.
+# THEY STILL SLEEP TOGETHER.
+# =========================================================
+
+segrellion_visenya_icebringer.1061 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1061.t
+	desc = segrellion_visenya_icebringer.1061.desc
+
+	theme = romance
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = admiration
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = flirtation_left
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1061.a
+
+		custom_tooltip = segrellion_you_lay_with_visenya_tt
+		custom_tooltip = segrellion_visenya_icebringer_retry_five_years_tt
+
+
+		hidden_effect = {
+
+			segrellion_visenya_icebringer_first_failure_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# =========================================================
+#
+# SECOND ATTEMPT
+#
+# =========================================================
+# =========================================================
+
+
+# =========================================================
+# 1100 - SECOND REQUEST DISPATCHER
+# =========================================================
+
+segrellion_visenya_icebringer.1100 = {
+
+	type = character_event
+	hidden = yes
+
+
+	immediate = {
+
+		# Defensive old-save branch.
+		# Normally this Daemon would have succeeded on
+		# the first attempt.
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_black_unicorn_daemon_won_duel
+
+				has_character_flag = segrellion_black_unicorn_saw_icebringer
+			}
+
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1110
+			}
+		}
+
+
+		else = {
+
+			if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 = {
+
+						opinion = {
+							target = root
+							value >= 70
+						}
+					}
+				}
+
+
+				random_list = {
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1120
+						}
+					}
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1130
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 = {
+
+						opinion = {
+							target = root
+							value >= 35
+						}
+					}
+				}
+
+
+				random_list = {
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1120
+						}
+					}
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1130
+						}
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					20 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1120
+						}
+					}
+
+					80 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1130
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1110 - SECOND REQUEST
+# OLD PATH I EDGE CASE
+# =========================================================
+
+segrellion_visenya_icebringer.1110 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1110.t
+	desc = segrellion_visenya_icebringer.1110.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = admiration
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1110.a
+
+		custom_tooltip = segrellion_visenya_icebringer_swap_tt
+
+
+		hidden_effect = {
+
+			segrellion_daemon_visenya_swap_swords_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1120 - VISENYA FINALLY AGREES
+# =========================================================
+
+segrellion_visenya_icebringer.1120 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1120.t
+	desc = segrellion_visenya_icebringer.1120.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1120.a
+
+		custom_tooltip = segrellion_visenya_icebringer_acceptance_unknown_tt
+
+
+		hidden_effect = {
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1121
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1121 - ICEBRINGER ACCEPTS DAEMON
+# SECOND REQUEST VERSION
+# =========================================================
+
+segrellion_visenya_icebringer.1121 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1121.t
+	desc = segrellion_visenya_icebringer.1121.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	immediate = {
+
+		segrellion_daemon_visenya_swap_swords_effect = yes
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1121.a
+
+		custom_tooltip = segrellion_visenya_icebringer_accepted_daemon_tt
+	}
+}
+
+
+# =========================================================
+# 1130 - VISENYA REFUSES AGAIN
+# =========================================================
+
+segrellion_visenya_icebringer.1130 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1130.t
+	desc = segrellion_visenya_icebringer.1130.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# DIPLOMACY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1130.a
+
+		custom_tooltip = segrellion_visenya_icebringer_diplomacy_second_tt
+
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+					diplomacy >= 25
+				}
+
+				random_list = {
+
+					50 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1140
+						}
+					}
+
+					50 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1141
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					diplomacy >= 20
+				}
+
+				random_list = {
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1140
+						}
+					}
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1141
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					diplomacy >= 15
+				}
+
+				random_list = {
+
+					30 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1140
+						}
+					}
+
+					70 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1141
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					diplomacy >= 10
+				}
+
+				random_list = {
+
+					20 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1140
+						}
+					}
+
+					80 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1141
+						}
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					10 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1140
+						}
+					}
+
+					90 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1141
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# MARTIAL
+	# =====================================================
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1130.b
+
+		custom_tooltip = segrellion_visenya_icebringer_martial_second_tt
+
+
+		hidden_effect = {
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1151
+			}
+		}
+	}
+
+
+	# =====================================================
+	# INTRIGUE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1130.c
+
+		custom_tooltip = segrellion_visenya_icebringer_intrigue_second_tt
+
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+					intrigue >= 25
+				}
+
+				random_list = {
+
+					85 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1160
+						}
+					}
+
+					15 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1161
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					intrigue >= 20
+				}
+
+				random_list = {
+
+					75 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1160
+						}
+					}
+
+					25 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1161
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					intrigue >= 15
+				}
+
+				random_list = {
+
+					65 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1160
+						}
+					}
+
+					35 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1161
+						}
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					intrigue >= 10
+				}
+
+				random_list = {
+
+					55 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1160
+						}
+					}
+
+					45 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1161
+						}
+					}
+				}
+			}
+
+
+			else = {
+
+				random_list = {
+
+					40 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1160
+						}
+					}
+
+					60 = {
+						trigger_event = {
+							id = segrellion_visenya_icebringer.1161
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1140 - SECOND DIPLOMACY SUCCESS
+# =========================================================
+
+segrellion_visenya_icebringer.1140 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1140.t
+	desc = segrellion_visenya_icebringer.1140.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1140.a
+
+		custom_tooltip = segrellion_visenya_icebringer_swap_tt
+
+
+		hidden_effect = {
+
+			segrellion_daemon_visenya_swap_swords_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1141 - SECOND DIPLOMACY FAILURE
+# =========================================================
+
+segrellion_visenya_icebringer.1141 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1141.t
+	desc = segrellion_visenya_icebringer.1141.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = disappointment
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1141.a
+
+		custom_tooltip = segrellion_visenya_icebringer_final_refusal_tt
+
+
+		hidden_effect = {
+
+			segrellion_visenya_icebringer_final_failure_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1151 - SECOND MARTIAL FAILURE
+# =========================================================
+
+segrellion_visenya_icebringer.1151 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1151.t
+	desc = segrellion_visenya_icebringer.1151.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1151.a
+
+		custom_tooltip = segrellion_visenya_icebringer_final_refusal_tt
+
+
+		hidden_effect = {
+
+			segrellion_visenya_icebringer_final_failure_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1160 - SECOND INTRIGUE SUCCESS
+# =========================================================
+
+segrellion_visenya_icebringer.1160 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1160.t
+	desc = segrellion_visenya_icebringer.1160.desc
+
+	theme = romance
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = admiration
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = flirtation_left
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1160.a
+
+		custom_tooltip = segrellion_you_lay_with_visenya_tt
+		custom_tooltip = segrellion_visenya_icebringer_swap_tt
+
+
+		hidden_effect = {
+
+			segrellion_daemon_visenya_swap_swords_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 1161 - SECOND INTRIGUE FAILURE
+#
+# THEY STILL SLEEP TOGETHER.
+# ICEBRINGER STAYS WITH VISENYA FOREVER.
+# =========================================================
+
+segrellion_visenya_icebringer.1161 = {
+
+	type = character_event
+
+	title = segrellion_visenya_icebringer.1161.t
+	desc = segrellion_visenya_icebringer.1161.desc
+
+	theme = romance
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = admiration
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = flirtation_left
+	}
+
+
+	option = {
+
+		name = segrellion_visenya_icebringer.1161.a
+
+		custom_tooltip = segrellion_you_lay_with_visenya_tt
+		custom_tooltip = segrellion_visenya_icebringer_final_refusal_tt
+
+
+		hidden_effect = {
+
+			segrellion_visenya_icebringer_final_failure_effect = yes
+		}
+	}
+}

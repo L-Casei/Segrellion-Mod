@@ -1,0 +1,206 @@
+# =========================================================
+# ASK VISENYA FOR ICEBRINGER
+# =========================================================
+
+segrellion_ask_visenya_for_icebringer_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_ask_visenya_for_icebringer_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	sort_order = 81
+
+	desc = segrellion_ask_visenya_for_icebringer_decision_desc
+
+	selection_tooltip = segrellion_ask_visenya_for_icebringer_decision_tooltip
+
+	confirm_text = segrellion_ask_visenya_for_icebringer_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+		is_adult = yes
+
+		is_spouse_of = character:Black_Unicorn_1
+
+
+		# First attempt has never been made.
+
+		NOT = {
+			has_character_flag = segrellion_asked_visenya_for_icebringer_once
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_visenya_gave_icebringer_to_daemon
+		}
+
+
+		# Daemon owns Trueflame.
+
+		any_character_artifact = {
+			has_variable = segrellion_trueflame_artifact
+		}
+
+
+		# Visenya owns Icebringer.
+
+		character:Black_Unicorn_1 = {
+
+			is_alive = yes
+			is_adult = yes
+
+			any_character_artifact = {
+				has_variable = segrellion_icebringer_artifact
+			}
+		}
+	}
+
+
+	is_valid = {
+		always = yes
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		hidden_effect = {
+
+			segrellion_find_icebringer_effect = yes
+			segrellion_find_trueflame_effect = yes
+
+			add_character_flag = segrellion_asked_visenya_for_icebringer_once
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1000
+			}
+		}
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+# =========================================================
+# ASK AGAIN FOR ICEBRINGER
+#
+# Only appears five years after a failed first attempt.
+# =========================================================
+
+segrellion_ask_visenya_for_icebringer_again_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_ask_visenya_for_icebringer_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	sort_order = 82
+
+	desc = segrellion_ask_visenya_for_icebringer_again_decision_desc
+
+	selection_tooltip = segrellion_ask_visenya_for_icebringer_again_decision_tooltip
+
+	confirm_text = segrellion_ask_visenya_for_icebringer_again_decision_confirm
+
+
+	is_shown = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+		is_adult = yes
+
+		is_spouse_of = character:Black_Unicorn_1
+
+
+		has_character_flag = segrellion_asked_visenya_for_icebringer_once
+
+		has_character_flag = segrellion_visenya_icebringer_first_attempt_failed
+
+
+		# Hidden for exactly five years after the first failure.
+
+		NOT = {
+			has_character_flag = segrellion_visenya_icebringer_retry_cooldown
+		}
+
+
+		# No third attempt.
+
+		NOT = {
+			has_character_flag = segrellion_visenya_icebringer_final_refusal
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_visenya_gave_icebringer_to_daemon
+		}
+
+
+		any_character_artifact = {
+			has_variable = segrellion_trueflame_artifact
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			is_alive = yes
+			is_adult = yes
+
+			any_character_artifact = {
+				has_variable = segrellion_icebringer_artifact
+			}
+		}
+	}
+
+
+	is_valid = {
+		always = yes
+	}
+
+
+	effect = {
+
+		hidden_effect = {
+
+			segrellion_find_icebringer_effect = yes
+			segrellion_find_trueflame_effect = yes
+
+			add_character_flag = segrellion_asked_visenya_for_icebringer_twice
+
+			trigger_event = {
+				id = segrellion_visenya_icebringer.1100
+			}
+		}
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

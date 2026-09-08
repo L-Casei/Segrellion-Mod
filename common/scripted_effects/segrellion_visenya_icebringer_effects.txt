@@ -1,0 +1,123 @@
+# =========================================================
+# DAEMON + VISENYA
+# ICEBRINGER / TRUEFLAME EXCHANGE
+# =========================================================
+
+
+# =========================================================
+# SWAP ICEBRINGER AND TRUEFLAME
+#
+# Icebringer -> Daemon
+# Trueflame  -> Visenya
+# =========================================================
+
+segrellion_daemon_visenya_swap_swords_effect = {
+
+	segrellion_find_icebringer_effect = yes
+	segrellion_find_trueflame_effect = yes
+
+
+	if = {
+
+		limit = {
+
+			exists = global_var:segrellion_icebringer
+			exists = global_var:segrellion_trueflame
+		}
+
+
+		# =================================================
+		# ICEBRINGER -> DAEMON
+		# =================================================
+
+		global_var:segrellion_icebringer = {
+
+			set_artifact_owner = {
+
+				target = character:Segrellion_60
+				generate_history = yes
+			}
+
+			equip_artifact_to_owner_replace = yes
+		}
+
+
+		# =================================================
+		# TRUEFLAME -> VISENYA
+		# =================================================
+
+		global_var:segrellion_trueflame = {
+
+			set_artifact_owner = {
+
+				target = character:Black_Unicorn_1
+				generate_history = yes
+			}
+
+			equip_artifact_to_owner_replace = yes
+		}
+
+
+		# =================================================
+		# CLEAN VISENYA'S OLD ACTIVE ICEBRINGER STATE
+		# =================================================
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_icebringer_state_rejected
+			remove_character_flag = segrellion_icebringer_state_partial
+			remove_character_flag = segrellion_icebringer_state_accepted
+
+			remove_character_modifier = segrellion_icebringer_rejection_modifier
+
+			add_character_flag = segrellion_visenya_received_trueflame
+		}
+
+
+		# =================================================
+		# DAEMON
+		# =================================================
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_visenya_gave_icebringer_to_daemon
+
+			remove_character_flag = segrellion_visenya_icebringer_first_attempt_failed
+			remove_character_flag = segrellion_visenya_icebringer_retry_cooldown
+		}
+
+
+		# Recalculate Icebringer against its new bearer.
+		# Daemon is a canon bearer and therefore receives
+		# full acceptance.
+
+		segrellion_refresh_icebringer_affinity_effect = yes
+	}
+}
+
+
+# =========================================================
+# FIRST ATTEMPT FAILED
+# SECOND ATTEMPT UNLOCKS IN FIVE YEARS
+# =========================================================
+
+segrellion_visenya_icebringer_first_failure_effect = {
+
+	add_character_flag = segrellion_visenya_icebringer_first_attempt_failed
+
+	add_character_flag = {
+		flag = segrellion_visenya_icebringer_retry_cooldown
+		years = 5
+	}
+}
+
+
+# =========================================================
+# SECOND ATTEMPT FAILED
+# NO THIRD ATTEMPT
+# =========================================================
+
+segrellion_visenya_icebringer_final_failure_effect = {
+
+	add_character_flag = segrellion_visenya_icebringer_final_refusal
+}
