@@ -1439,10 +1439,123 @@ segrellion_finish_vale_debt_effect = {
 # =========================================================
 
 # =========================================================
+# DAENERYS - CUSTOM HISTORICAL FOLLOWERS
+#
+# Missandei and Torgo Nudho are OUR historical characters.
+# They are attached directly to Daenerys' court/camp AFTER
+# the adventurer setup has created her real landless court.
+# =========================================================
+
+segrellion_force_daenerys_custom_followers_effect = {
+
+	if = {
+
+		limit = {
+
+			game_start_date = 8300.8.20
+
+			character:Targaryen_9 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		# =================================================
+		# MISSANDEI
+		# =================================================
+
+		character:Targaryen_9 = {
+
+			if = {
+
+				limit = {
+
+					character:IAF_Missandei_1 ?= {
+
+						is_alive = yes
+						is_landed = no
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+				}
+
+				add_courtier = character:IAF_Missandei_1
+			}
+		}
+
+
+		character:IAF_Missandei_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_courtier_of = character:Targaryen_9
+				}
+
+				return_to_court = yes
+
+				add_character_flag = segrellion_daenerys_historical_follower
+			}
+		}
+
+
+		# =================================================
+		# TORGO NUDHO
+		# =================================================
+
+		character:Targaryen_9 = {
+
+			if = {
+
+				limit = {
+
+					character:IAF_Torgo_Nudho_1 ?= {
+
+						is_alive = yes
+						is_landed = no
+
+						NOT = {
+							is_courtier_of = character:Targaryen_9
+						}
+					}
+				}
+
+				add_courtier = character:IAF_Torgo_Nudho_1
+			}
+		}
+
+
+		character:IAF_Torgo_Nudho_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_courtier_of = character:Targaryen_9
+				}
+
+				return_to_court = yes
+
+				add_character_flag = segrellion_daenerys_historical_follower
+			}
+		}
+	}
+}
+
+# =========================================================
 # DAENERYS - HISTORICAL CAMP FOLLOWERS
 # =========================================================
 
 segrellion_setup_daenerys_followers_effect = {
+
+	segrellion_force_daenerys_custom_followers_effect = yes
 
 	if = {
 
