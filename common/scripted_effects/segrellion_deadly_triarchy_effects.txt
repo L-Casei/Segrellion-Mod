@@ -323,3 +323,186 @@ segrellion_dissolve_deadly_triarchy_effect = {
         }
     }
 }
+
+
+# =========================================================
+# OATHBREAKER OF THE TRIARCHY
+#
+# ROOT = aggressor
+#
+# scope:segrellion_triarchy_oathbreaker
+# scope:segrellion_triarchy_defender
+# scope:segrellion_triarchy_third_member
+# scope:segrellion_triarchy_betrayal_war
+# =========================================================
+
+segrellion_deadly_triarchy_oathbreaker_effect = {
+
+	# =====================================================
+	# BREAK THE AGGRESSOR'S PLACE IN THE TRIARCHY
+	# =====================================================
+
+	remove_character_flag = segrellion_deadly_triarchy_formed
+
+	add_character_flag = segrellion_deadly_triarchy_oathbreaker
+
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_deadly_triarchy_modifier
+		}
+
+		remove_character_modifier = segrellion_deadly_triarchy_modifier
+	}
+
+
+	# =====================================================
+	# MASSIVE POLITICAL PENALTY
+	# =====================================================
+
+	add_legitimacy = -300
+
+
+	add_character_modifier = {
+		modifier = segrellion_oathbreaker_of_the_triarchy_modifier
+		years = 20
+	}
+
+
+	# =====================================================
+	# REMOVE OLD TRIARCHY FRIENDSHIP
+	# =====================================================
+
+	remove_opinion = {
+		target = scope:segrellion_triarchy_defender
+		modifier = segrellion_deadly_triarchy_opinion
+	}
+
+
+	scope:segrellion_triarchy_defender = {
+
+		remove_opinion = {
+			target = scope:segrellion_triarchy_oathbreaker
+			modifier = segrellion_deadly_triarchy_opinion
+		}
+	}
+
+
+	scope:segrellion_triarchy_third_member ?= {
+
+		remove_opinion = {
+			target = scope:segrellion_triarchy_oathbreaker
+			modifier = segrellion_deadly_triarchy_opinion
+		}
+
+		scope:segrellion_triarchy_oathbreaker = {
+
+			remove_opinion = {
+				target = scope:segrellion_triarchy_third_member
+				modifier = segrellion_deadly_triarchy_opinion
+			}
+		}
+	}
+
+
+	# =====================================================
+	# -100 BETWEEN OATHBREAKER AND BOTH OTHER MEMBERS
+	# =====================================================
+
+	add_opinion = {
+		target = scope:segrellion_triarchy_defender
+		modifier = segrellion_deadly_triarchy_oathbreaker_opinion
+	}
+
+
+	scope:segrellion_triarchy_defender = {
+
+		add_opinion = {
+			target = scope:segrellion_triarchy_oathbreaker
+			modifier = segrellion_deadly_triarchy_oathbreaker_opinion
+		}
+	}
+
+
+	scope:segrellion_triarchy_third_member ?= {
+
+		add_opinion = {
+			target = scope:segrellion_triarchy_oathbreaker
+			modifier = segrellion_deadly_triarchy_oathbreaker_opinion
+		}
+
+
+		scope:segrellion_triarchy_oathbreaker = {
+
+			add_opinion = {
+				target = scope:segrellion_triarchy_third_member
+				modifier = segrellion_deadly_triarchy_oathbreaker_opinion
+			}
+		}
+	}
+
+
+	# =====================================================
+	# THIRD MEMBER MUST DEFEND THE VICTIM
+	# =====================================================
+
+	scope:segrellion_triarchy_third_member ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+				is_landed = yes
+
+				has_character_flag = segrellion_deadly_triarchy_formed
+
+				NOT = {
+					is_at_war_with = scope:segrellion_triarchy_defender
+				}
+			}
+
+
+			scope:segrellion_triarchy_betrayal_war = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							any_war_attacker = {
+								this = scope:segrellion_triarchy_third_member
+							}
+						}
+
+						NOT = {
+							any_war_defender = {
+								this = scope:segrellion_triarchy_third_member
+							}
+						}
+					}
+
+
+					hidden_effect = {
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									was_called = scope:segrellion_triarchy_third_member
+								}
+							}
+
+							set_called_to = scope:segrellion_triarchy_third_member
+						}
+					}
+
+
+					add_defender = scope:segrellion_triarchy_third_member
+				}
+			}
+		}
+	}
+}
