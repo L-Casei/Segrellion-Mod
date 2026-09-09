@@ -387,6 +387,17 @@ segrellion_setup_stannis_northern_campaign_effect = {
 			add_character_flag = segrellion_stannis_north_story_initialized
 			add_character_flag = segrellion_stannis_preparing_northern_campaign
 
+			# Renly's murder is not publicly known.
+
+			if = {
+
+				limit = {
+					has_trait = kinslayer
+				}
+
+				remove_trait = kinslayer
+			}
+
 
 			set_location = title:c_castle_black.title_province
 
@@ -1025,48 +1036,57 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 
-		# =================================================
-		# JON MUST BE INDEPENDENT
+		# =========================================================
+		# JON RULES WINTERFELL UNDER STANNIS
 		#
-		# No Tommen.
-		# No Young Griff.
-		# No Iron Throne.
-		# =================================================
+		# Stannis temporarily remains Lord of the North.
+		# Jon does NOT become an independent King yet.
+		# =========================================================
 
 		if = {
 
 			limit = {
 
-				root = {
-
-					NOT = {
-						is_independent_ruler = yes
-					}
+				character:Baratheon_3 ?= {
+					is_alive = yes
 				}
+
+				title:e_the_north.holder = root
 			}
 
+			# Stannis remains the political overlord of the North
+			# until the Northern lords acclaim Jon themselves.
+
+			title:e_the_north = {
+				grant_title = character:Baratheon_3
+			}
+
+			create_title_and_vassal_change = {
+
+				type = swear_fealty
+
+				save_scope_as = segrellion_jon_stannis_vassal_change
+
+				add_claim_on_loss = no
+			}
 
 			root = {
 
+				change_liege = {
 
-				create_title_and_vassal_change = {
+					liege = character:Baratheon_3
 
-					type = independency
-
-					save_scope_as = segrellion_jon_independence_change
-
-					add_claim_on_loss = no
+					change = scope:segrellion_jon_stannis_vassal_change
 				}
 
+				set_primary_title_to = title:d_winterfell
 
-				becomes_independent = {
+				add_character_flag = segrellion_jon_lord_of_winterfell_under_stannis
 
-					change = scope:segrellion_jon_independence_change
-				}
-
-
-				resolve_title_and_vassal_change = scope:segrellion_jon_independence_change
+				add_character_flag = segrellion_jon_lord_paramount_under_stannis
 			}
+
+			resolve_title_and_vassal_change = scope:segrellion_jon_stannis_vassal_change
 		}
 
 
@@ -1077,8 +1097,6 @@ segrellion_jon_accepts_north_effect = {
 		# =================================================
 
 		root = {
-
-			set_primary_title_to = title:e_the_north
 
 			set_realm_capital = title:c_winterfell
 

@@ -3293,6 +3293,128 @@ segrellion_stannis_frey_campaign_cb = {
 				value = scope:war
 			}
 
+			# =========================================================
+			# REED
+			# =========================================================
+
+			title:c_greywater_watch.holder ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						this != scope:attacker
+
+						this != scope:defender
+					}
+
+					save_scope_as = segrellion_stannis_reed_ally
+				}
+			}
+
+
+			scope:segrellion_stannis_reed_ally ?= {
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = scope:segrellion_stannis_reed_ally
+							}
+						}
+
+						add_attacker = scope:segrellion_stannis_reed_ally
+					}
+				}
+			}
+
+
+			# =========================================================
+			# MANDERLY
+			# =========================================================
+
+			title:c_white_harbor.holder ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						this != scope:attacker
+
+						this != scope:defender
+					}
+
+					save_scope_as = segrellion_stannis_manderly_ally
+				}
+			}
+
+
+			scope:segrellion_stannis_manderly_ally ?= {
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = scope:segrellion_stannis_manderly_ally
+							}
+						}
+
+						add_attacker = scope:segrellion_stannis_manderly_ally
+					}
+				}
+			}
+
+
+			# =========================================================
+			# MALLISTER
+			# =========================================================
+
+			title:c_seagard.holder ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						this != scope:attacker
+
+						this != scope:defender
+					}
+
+					save_scope_as = segrellion_stannis_mallister_ally
+				}
+			}
+
+
+			scope:segrellion_stannis_mallister_ally ?= {
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = scope:segrellion_stannis_mallister_ally
+							}
+						}
+
+						add_attacker = scope:segrellion_stannis_mallister_ally
+					}
+				}
+			}
+
 
 			# =================================================
 			# STANNIS' LAST HOST
@@ -3335,9 +3457,9 @@ segrellion_stannis_frey_campaign_cb = {
 				uses_supply = yes
 
 
-				location = scope:attacker.capital_province
+				location = title:b_moat_cailin.title_province
 
-				origin = scope:attacker.capital_province
+				origin = title:b_moat_cailin.title_province
 
 
 				war = scope:war

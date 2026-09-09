@@ -2,11 +2,9 @@ namespace = segrellion_jon_frey
 
 
 # =========================================================
-# 0010 - THE KING IS DEAD
+# 0010 - STANNIS IS DEAD
 #
-# Stannis is dead.
-# His cause dies with him.
-# The North now looks to Jon.
+# Jon receives the news.
 # =========================================================
 
 segrellion_jon_frey.0010 = {
@@ -15,228 +13,6 @@ segrellion_jon_frey.0010 = {
 
 	title = segrellion_jon_frey.0010.t
 	desc = segrellion_jon_frey.0010.desc
-
-	theme = crown
-
-
-	override_background = {
-		reference = segrellion_castle_black_great_hall
-	}
-
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-
-	trigger = {
-
-		is_alive = yes
-
-
-		character:Baratheon_3 ?= {
-
-			is_alive = no
-
-			has_character_flag = segrellion_stannis_murdered_by_baelish
-		}
-	}
-
-
-	left_portrait = {
-
-		character = root
-
-		animation = personality_rational
-	}
-
-
-	option = {
-
-		name = segrellion_jon_frey.0010.a
-
-
-		# =================================================
-		# JON MUST RULE THE NORTH
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				NOT = {
-					has_title = title:e_the_north
-				}
-			}
-
-			segrellion_jon_accepts_north_effect = yes
-		}
-
-
-		remove_character_flag = segrellion_jon_lord_paramount_under_stannis
-
-		remove_character_flag = segrellion_jon_waiting_for_stannis_northern_result
-
-
-		add_character_flag = segrellion_jon_king_in_the_north
-
-		add_character_flag = segrellion_jon_stannis_result_resolved
-
-		add_character_flag = segrellion_north_abandoned_shireen_for_jon
-
-
-		# =================================================
-		# SHIREEN HAS NO NORTHERN CAUSE
-		# =================================================
-
-		character:Baratheon_13 ?= {
-
-			if = {
-
-				limit = {
-					has_claim_on = title:e_the_north
-				}
-
-				remove_claim = title:e_the_north
-			}
-
-
-			if = {
-
-				limit = {
-					has_claim_on = title:k_the_north
-				}
-
-				remove_claim = title:k_the_north
-			}
-
-
-			add_character_flag = segrellion_shireen_abandoned_northern_claim
-
-			add_character_flag = segrellion_shireen_stannis_cause_disbanded
-		}
-
-
-		trigger_event = {
-
-			id = segrellion_jon_frey.0020
-
-			days = { 3 6 }
-		}
-
-
-		ai_chance = {
-			base = 100
-		}
-	}
-}
-
-
-# =========================================================
-# 0020 - THE NORTH REMEMBERS
-#
-# Jon declares before his lords that the Red Wedding
-# will finally be answered.
-# =========================================================
-
-segrellion_jon_frey.0020 = {
-
-	type = character_event
-
-	title = segrellion_jon_frey.0020.t
-	desc = segrellion_jon_frey.0020.desc
-
-	theme = war
-
-
-	override_background = {
-		reference = army_camp
-	}
-
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-
-	trigger = {
-
-		is_alive = yes
-
-		has_character_flag = segrellion_jon_king_in_the_north
-
-
-		title:d_the_crossing = {
-			exists = holder
-		}
-	}
-
-
-	immediate = {
-
-		title:d_the_crossing.holder = {
-
-			save_scope_as = segrellion_jon_frey_target
-		}
-	}
-
-
-	left_portrait = {
-
-		character = root
-
-		animation = personality_honorable
-	}
-
-
-	right_portrait = {
-
-		character = scope:segrellion_jon_frey_target
-
-		animation = worry
-	}
-
-
-	option = {
-
-		name = segrellion_jon_frey.0020.a
-
-		custom_tooltip = segrellion_jon_frey.0020.a.tt
-
-
-		add_character_flag = segrellion_jon_red_wedding_revenge_authorized
-
-
-		start_war = {
-
-			cb = segrellion_jon_red_wedding_revenge_cb
-
-			target = scope:segrellion_jon_frey_target
-
-			target_title = title:d_the_crossing
-		}
-
-
-		ai_chance = {
-			base = 100
-		}
-	}
-}
-
-
-# =========================================================
-# 0030 - THE WOLF'S JUDGMENT
-#
-# All adult Frey men older than sixteen are executed.
-# Women and boys live.
-# =========================================================
-
-segrellion_jon_frey.0030 = {
-
-	type = character_event
-
-	title = segrellion_jon_frey.0030.t
-	desc = segrellion_jon_frey.0030.desc
 
 	theme = death
 
@@ -250,151 +26,19 @@ segrellion_jon_frey.0030 = {
 
 		is_alive = yes
 
-		has_character_flag = segrellion_jon_red_wedding_avenged
-	}
+		has_title = title:d_winterfell
 
 
-	left_portrait = {
+		character:Baratheon_3 ?= {
 
-		character = root
+			is_alive = no
 
-		animation = personality_rational
-	}
-
-
-	option = {
-
-		name = segrellion_jon_frey.0030.a
-
-
-		title:d_the_crossing.holder.house = {
-
-			every_house_member = {
-
-				limit = {
-
-					is_alive = yes
-
-					is_male = yes
-
-					age > 16
-				}
-
-
-				death = {
-
-					death_reason = death_execution
-
-					killer = root
-				}
-			}
+			has_character_flag = segrellion_stannis_murdered_by_baelish
 		}
 
 
-		add_dread = 35
-
-		add_prestige = 500
-
-
-		add_character_flag = segrellion_jon_frey_men_executed
-
-
-		trigger_event = {
-
-			id = segrellion_jon_frey.0040
-
-			days = { 5 10 }
-		}
-
-
-		ai_chance = {
-			base = 100
-		}
-	}
-}
-
-
-# =========================================================
-# 0040 - A MOCKINGBIRD ON THE THRONE
-#
-# Young Griff is gone.
-# Petyr Baelish has seized the Iron Throne.
-# =========================================================
-
-segrellion_jon_frey.0040 = {
-
-	type = character_event
-
-	title = segrellion_jon_frey.0040.t
-	desc = segrellion_jon_frey.0040.desc
-
-	theme = intrigue
-
-
-	trigger = {
-
-		is_alive = yes
-
-		has_character_flag = segrellion_jon_frey_men_executed
-
-
-		character:Baelish_2 ?= {
-			is_alive = yes
-		}
-	}
-
-
-	immediate = {
-
-		# =================================================
-		# YOUNG GRIFF MUST BE DEAD BY THIS POINT
-		# =================================================
-
-		character:IAF_Young_Griff_1 ?= {
-
-			if = {
-
-				limit = {
-					is_alive = yes
-				}
-
-
-				death = {
-
-					death_reason = death_murder
-
-					killer = character:Baelish_2
-
-					secret = no
-				}
-			}
-		}
-
-
-		# =================================================
-		# BAELISH TAKES THE IRON THRONE
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				title:h_the_iron_throne.holder != character:Baelish_2
-			}
-
-
-			title:h_the_iron_throne = {
-
-				grant_title = character:Baelish_2
-			}
-		}
-
-
-		character:Baelish_2 = {
-
-			set_primary_title_to = title:h_the_iron_throne
-
-			add_character_flag = segrellion_baelish_on_iron_throne
+		NOT = {
+			has_character_flag = segrellion_jon_winterfell_council_called
 		}
 	}
 
@@ -417,12 +61,300 @@ segrellion_jon_frey.0040 = {
 
 	option = {
 
-		name = segrellion_jon_frey.0040.a
+		name = segrellion_jon_frey.0010.a
+
+		custom_tooltip = segrellion_jon_frey.0010.a.tt
+
+
+		add_character_flag = segrellion_jon_winterfell_council_called
+
+		remove_character_flag = segrellion_jon_stannis_death_news_scheduled
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - THE KING IN THE NORTH
+#
+# Fired when the Winterfell Council activity begins
+# after the Northern lords have gathered.
+# =========================================================
+
+segrellion_jon_frey.0020 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0020.t
+	desc = segrellion_jon_frey.0020.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_winterfell_council_called
+
+		NOT = {
+			has_character_flag = segrellion_jon_king_in_the_north
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# LORD UMBER
+		# =================================================
+
+		title:c_last_hearth.holder ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = segrellion_council_umber
+			}
+		}
+
+
+		# =================================================
+		# LORD MANDERLY
+		# =================================================
+
+		title:c_white_harbor.holder ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = segrellion_council_manderly
+			}
+		}
+
+
+		# =================================================
+		# ROBETT GLOVER
+		# =================================================
+
+		character:Glover_6 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = segrellion_council_robett
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_council_umber
+
+		animation = personality_bold
+	}
+
+
+	lower_left_portrait = {
+
+		character = scope:segrellion_council_manderly
+
+		animation = personality_honorable
+	}
+
+
+	lower_right_portrait = {
+
+		character = scope:segrellion_council_robett
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0020.a
+
+		custom_tooltip = segrellion_jon_frey.0020.a.tt
+
+
+		# =================================================
+		# THE NORTH PASSES TO JON
+		# =================================================
+
+		title:e_the_north = {
+
+			grant_title = root
+		}
+
+
+		root = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_independent_ruler = yes
+					}
+				}
+
+
+				create_title_and_vassal_change = {
+
+					type = independency
+
+					save_scope_as = segrellion_jon_final_independence_change
+
+					add_claim_on_loss = no
+				}
+
+
+				becomes_independent = {
+
+					change = scope:segrellion_jon_final_independence_change
+				}
+
+
+				resolve_title_and_vassal_change = scope:segrellion_jon_final_independence_change
+			}
+
+
+			set_primary_title_to = title:e_the_north
+
+
+			remove_character_flag = segrellion_jon_lord_paramount_under_stannis
+
+			remove_character_flag = segrellion_jon_lord_of_winterfell_under_stannis
+
+
+			add_character_flag = segrellion_jon_king_in_the_north
+
+			add_character_flag = segrellion_jon_stannis_result_resolved
+
+			add_character_flag = segrellion_jon_red_wedding_revenge_pending
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_trait = segrellion_king_in_the_north_trait
+					}
+				}
+
+				add_trait = segrellion_king_in_the_north_trait
+			}
+
+
+			add_prestige = 1500
+
+			add_legitimacy = 500
+
+			add_dread = 15
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_north_united_modifier
+
+				years = 10
+			}
+
+
+			# =============================================
+			# +100 WITH THE NORTHERN LORDS
+			# =============================================
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+				}
+
+
+				add_opinion = {
+
+					target = root
+
+					modifier = segrellion_acclaimed_king_in_the_north_opinion
+				}
+			}
+		}
+
+
+		# =================================================
+		# END THE COUNCIL ACTIVITY
+		# =================================================
+
+		involved_activity ?= {
+
+			set_variable = {
+
+				name = activity_invalidated
+
+				value = yes
+			}
+		}
+
+
+		# =================================================
+		# NEWS TO WESTEROS
+		# =================================================
+
+		every_ruler = {
+
+			limit = {
+
+				is_alive = yes
+
+				this != root
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0021
+
+				days = { 1 3 }
+			}
+		}
 
 
 		trigger_event = {
 
-			id = segrellion_jon_frey.0050
+			id = segrellion_jon_frey.0030
 
 			days = { 5 10 }
 		}
@@ -436,22 +368,60 @@ segrellion_jon_frey.0040 = {
 
 
 # =========================================================
-# 0050 - THE VALE REMEMBERS
-#
-# Yohn Royce offers the Vale's swords to Jon.
-#
-# STOP HERE.
-# The war for the Iron Throne comes later.
+# 0021 - NEWS: A KING IN THE NORTH
 # =========================================================
 
-segrellion_jon_frey.0050 = {
+segrellion_jon_frey.0021 = {
 
 	type = character_event
 
-	title = segrellion_jon_frey.0050.t
-	desc = segrellion_jon_frey.0050.desc
+	title = segrellion_jon_frey.0021.t
+	desc = segrellion_jon_frey.0021.desc
 
-	theme = diplomacy
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	immediate = {
+
+		title:e_the_north.holder ?= {
+
+			save_scope_as = segrellion_news_jon
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:segrellion_news_jon
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0021.a
+	}
+}
+
+
+# =========================================================
+# 0030 - THE RED WEDDING WILL BE AVENGED
+# =========================================================
+
+segrellion_jon_frey.0030 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0030.t
+	desc = segrellion_jon_frey.0030.desc
+
+	theme = war
 
 
 	override_icon = {
@@ -465,18 +435,337 @@ segrellion_jon_frey.0050 = {
 
 		has_character_flag = segrellion_jon_king_in_the_north
 
-		has_character_flag = segrellion_jon_red_wedding_avenged
+		has_character_flag = segrellion_jon_red_wedding_revenge_pending
 
 
-		character:Baelish_2 ?= {
+		title:d_the_crossing = {
+			exists = holder
+		}
+	}
 
+
+	immediate = {
+
+		title:d_the_crossing.holder = {
+
+			save_scope_as = segrellion_jon_frey_enemy
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_jon_frey_enemy
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0030.a
+
+		custom_tooltip = segrellion_jon_frey.0030.a.tt
+
+
+		remove_character_flag = segrellion_jon_red_wedding_revenge_pending
+
+		add_character_flag = segrellion_jon_frey_extermination_war_active
+
+		add_character_flag = segrellion_disable_call_the_banners
+
+
+		# =================================================
+		# VANILLA ERADICATE HOUSE CB
+		# =================================================
+
+		start_war = {
+
+			cb = eradicate_house_cb
+
+			target = scope:segrellion_jon_frey_enemy
+		}
+
+
+		# =================================================
+		# FIND THE WAR WE JUST CREATED
+		# =================================================
+
+		every_character_war = {
+
+			limit = {
+
+				using_cb = eradicate_house_cb
+
+				casus_belli = {
+
+					primary_defender = scope:segrellion_jon_frey_enemy
+				}
+			}
+
+
+			save_scope_as = segrellion_jon_frey_war
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_jon_frey_war
+			}
+
+
+			set_variable = {
+
+				name = segrellion_jon_frey_war
+
+				value = scope:segrellion_jon_frey_war
+			}
+
+
+			# =============================================
+			# EVERY MAJOR NORTHERN LORD JOINS
+			# =============================================
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					highest_held_title_tier >= tier_duchy
+				}
+
+
+				save_temporary_scope_as = segrellion_jon_northern_banner
+
+
+				scope:segrellion_jon_frey_war = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = scope:segrellion_jon_northern_banner
+							}
+						}
+
+						add_attacker = scope:segrellion_jon_northern_banner
+					}
+				}
+			}
+
+
+			# =============================================
+			# THE BASTARD KING ARMY - EXACTLY 5000
+			# =============================================
+
+			spawn_army = {
+
+				name = segrellion_bastard_king_army
+
+
+				men_at_arms = {
+
+					type = armored_horsemen
+
+					men = 500
+				}
+
+
+				men_at_arms = {
+
+					type = armored_footmen
+
+					men = 1200
+				}
+
+
+				men_at_arms = {
+
+					type = pikemen_unit
+
+					men = 700
+				}
+
+
+				men_at_arms = {
+
+					type = bowmen
+
+					men = 800
+				}
+
+
+				men_at_arms = {
+
+					type = trebuchet
+
+					men = 300
+				}
+
+
+				levies = 1500
+
+
+				inheritable = yes
+
+				uses_supply = yes
+
+
+				location = title:b_moat_cailin.title_province
+
+				origin = title:b_moat_cailin.title_province
+
+
+				war = scope:segrellion_jon_frey_war
+
+				war_keep_on_attacker_victory = yes
+
+
+				save_scope_as = segrellion_bastard_king_host
+			}
+
+
+			scope:segrellion_bastard_king_host ?= {
+
+				assign_commander = root
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_bastard_king_campaign_modifier
+
+			years = 2
+		}
+
+
+		# Jon and the host have reached the Neck.
+
+		trigger_event = {
+
+			id = segrellion_jon_frey.0040
+
+			days = { 5 10 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - A LETTER FROM THE VALE
+#
+# Wylis Manderly brings Yohn Royce's letter.
+# =========================================================
+
+segrellion_jon_frey.0040 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0040.t
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Baelish_2 ?= {
+
+						is_alive = yes
+
+						OR = {
+
+							has_title = title:e_the_riverlands
+
+							has_title = title:h_the_iron_throne
+						}
+					}
+
+
+					title:e_the_vale.holder ?= {
+
+						is_at_war_with = character:Baelish_2
+					}
+				}
+
+				desc = segrellion_jon_frey.0040.desc_active_war
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Baelish_2 ?= {
+
+						is_alive = yes
+
+						OR = {
+
+							has_title = title:e_the_riverlands
+
+							has_title = title:h_the_iron_throne
+						}
+					}
+				}
+
+				desc = segrellion_jon_frey.0040.desc_baelish
+			}
+
+
+			desc = segrellion_jon_frey.0040.desc_normal
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_frey_extermination_war_active
+
+		NOT = {
+			has_character_flag = segrellion_jon_vale_letter_received
+		}
+
+
+		character:Manderly_7 ?= {
 			is_alive = yes
-
-			has_title = title:h_the_iron_throne
 		}
 
 
 		title:c_runestone.holder ?= {
+			is_alive = yes
+		}
+
+
+		title:e_the_vale.holder ?= {
 			is_alive = yes
 		}
 	}
@@ -487,6 +776,26 @@ segrellion_jon_frey.0050 = {
 		title:c_runestone.holder = {
 
 			save_scope_as = segrellion_jon_yohn_royce
+		}
+
+
+		title:e_the_vale.holder = {
+
+			save_scope_as = segrellion_jon_vale_ruler
+		}
+
+
+		character:Stark_Dummy_8 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+				}
+
+				save_scope_as = segrellion_jon_sansa
+			}
 		}
 	}
 
@@ -501,6 +810,14 @@ segrellion_jon_frey.0050 = {
 
 	right_portrait = {
 
+		character = character:Manderly_7
+
+		animation = personality_honorable
+	}
+
+
+	lower_right_portrait = {
+
 		character = scope:segrellion_jon_yohn_royce
 
 		animation = personality_honorable
@@ -509,17 +826,92 @@ segrellion_jon_frey.0050 = {
 
 	option = {
 
-		name = segrellion_jon_frey.0050.a
+		name = segrellion_jon_frey.0040.a
 
-		custom_tooltip = segrellion_jon_frey.0050.a.tt
+		custom_tooltip = segrellion_jon_frey.0040.a.tt
 
+
+		add_character_flag = segrellion_jon_vale_letter_received
+
+		add_character_flag = segrellion_vale_supports_jon_against_freys
 
 		add_character_flag = segrellion_vale_supports_jon_against_baelish
 
 
 		scope:segrellion_jon_yohn_royce = {
 
-			add_character_flag = segrellion_yohn_royce_supports_jon_claim
+			add_character_flag = segrellion_yohn_royce_supports_jon
+		}
+
+
+		# =================================================
+		# FORMAL ALLIANCE WITH THE VALE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_allied_to = scope:segrellion_jon_vale_ruler
+				}
+			}
+
+
+			create_alliance = {
+
+				target = scope:segrellion_jon_vale_ruler
+
+				allied_through_owner = root
+
+				allied_through_target = scope:segrellion_jon_vale_ruler
+			}
+		}
+
+
+		# =================================================
+		# THE VALE JOINS THE FREY WAR
+		# =================================================
+
+		var:segrellion_jon_frey_war ?= {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_participant = scope:segrellion_jon_vale_ruler
+					}
+				}
+
+				add_attacker = scope:segrellion_jon_vale_ruler
+			}
+		}
+
+
+		# =================================================
+		# SANSA
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_jon_sansa
+
+				scope:segrellion_jon_sansa = {
+
+					is_alive = yes
+				}
+			}
+
+
+			add_character_flag = segrellion_jon_knows_sansa_is_alive
+
+			scope:segrellion_jon_sansa = {
+
+				add_character_flag = segrellion_sansa_known_alive_to_jon
+			}
 		}
 
 

@@ -2568,22 +2568,29 @@ segrellion_stannis.1210 = {
 		}
 
 
-		# =================================================
-		# JON WILL HEAR OF THE KING'S DEATH
-		# =================================================
+		# =========================================================
+		# INFORM JON
+		#
+		# Do NOT depend on the resurrection global variable here.
+		# Jon is now mechanically identified through Winterfell.
+		# =========================================================
 
-		if = {
+		title:d_winterfell.holder ?= {
 
-			limit = {
+			if = {
 
-				has_global_variable = segrellion_resurrected_jon
+				limit = {
 
-				global_var:segrellion_resurrected_jon ?= {
 					is_alive = yes
-				}
-			}
 
-			global_var:segrellion_resurrected_jon = {
+					NOT = {
+						has_character_flag = segrellion_jon_stannis_death_news_scheduled
+					}
+				}
+
+
+				add_character_flag = segrellion_jon_stannis_death_news_scheduled
+
 
 				trigger_event = {
 
@@ -2606,6 +2613,70 @@ segrellion_stannis.1210 = {
 			killer = character:Baelish_2
 
 			secret = no
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 1220 - THE SHADOW OF STORM'S END
+# =========================================================
+
+segrellion_stannis.1220 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1220.t
+	desc = segrellion_stannis.1220.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = worry
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_stannis_renly_truth_revealed
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.1220.a
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_trait = kinslayer
+				}
+			}
+
+			add_trait = kinslayer
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_renly_murder_revealed_modifier
 		}
 
 

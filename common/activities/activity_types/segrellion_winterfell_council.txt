@@ -1,0 +1,171 @@
+activity_segrellion_winterfell_council = {
+
+	is_shown = {
+
+		has_character_flag = segrellion_jon_winterfell_council_called
+
+		NOT = {
+			has_character_flag = segrellion_jon_king_in_the_north
+		}
+	}
+
+
+	can_start = {
+
+		is_alive = yes
+
+		is_adult = yes
+
+		is_landed = yes
+
+		has_title = title:d_winterfell
+
+		has_character_flag = segrellion_jon_winterfell_council_called
+	}
+
+
+	can_start_showing_failures_only = {
+
+		is_available_adult = yes
+	}
+
+
+	is_valid = {
+
+		NOT = {
+			has_variable = activity_invalidated
+		}
+
+		scope:host = {
+
+			is_alive = yes
+
+			has_title = title:d_winterfell
+		}
+	}
+
+
+	# =====================================================
+	# WINTERFELL ONLY
+	# =====================================================
+
+	province_filter = realm
+
+	ai_province_filter = realm
+
+
+	is_location_valid = {
+
+		this = title:c_winterfell.title_province
+	}
+
+
+	# =====================================================
+	# TWO MONTHS BEFORE THE COUNCIL BEGINS
+	# =====================================================
+
+	wait_time_before_start = {
+		days = 60
+	}
+
+
+	max_guest_arrival_delay_time = {
+		days = 30
+	}
+
+
+	# =====================================================
+	# NORTHERN LORDS
+	# =====================================================
+
+	max_guests = 100
+
+
+	guest_invite_rules = {
+
+		rules = {
+
+			10 = activity_invite_rule_vassals
+
+			5 = activity_invite_rule_close_family
+
+			5 = activity_invite_rule_courtiers
+		}
+	}
+
+
+	can_be_activity_guest = {
+
+		is_alive = yes
+
+		is_adult = yes
+
+		is_available = yes
+
+		is_landed = yes
+
+
+		OR = {
+
+			liege = title:e_the_north.holder
+
+			top_liege = title:e_the_north.holder
+
+			this = title:e_the_north.holder
+		}
+	}
+
+
+	guest_join_chance = {
+
+		base = 100
+
+		base_activity_modifier = yes
+	}
+
+
+	# =====================================================
+	# THE COUNCIL
+	# =====================================================
+
+	phases = {
+
+		segrellion_winterfell_council_phase = {
+
+			is_predefined = yes
+
+
+			on_phase_active = {
+
+				if = {
+
+					limit = {
+
+						this = scope:host
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_jon_frey.0020
+
+						days = 1
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI JON WILL ORGANIZE IT IMMEDIATELY
+	# =====================================================
+
+	ai_check_interval = 1
+
+
+	ai_will_do = {
+
+		value = 1000
+	}
+}
