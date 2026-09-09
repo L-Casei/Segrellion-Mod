@@ -1,0 +1,58 @@
+# CK3 has quarterly_playable_pulse, not monthly_global_pulse.
+# Only the two story recipients seed the checks, including in existing saves.
+quarterly_playable_pulse = {
+	on_actions = { segrellion_story_letters_quarterly }
+}
+
+segrellion_story_letters_quarterly = {
+	trigger = {
+		OR = {
+			this = character:Segrellion_60
+			segrellion_is_current_jon_trigger = yes
+		}
+	}
+	on_actions = {
+		segrellion_sansa_story_progression
+		segrellion_jon_stannis_death_news_progression
+		delay = { days = 30 }
+		segrellion_sansa_story_progression
+		segrellion_jon_stannis_death_news_progression
+		delay = { days = 60 }
+		segrellion_sansa_story_progression
+		segrellion_jon_stannis_death_news_progression
+	}
+}
+
+on_game_start_after_lobby = {
+	on_actions = {
+		segrellion_sansa_story_progression
+		segrellion_jon_stannis_death_news_progression
+	}
+}
+
+on_birthday = {
+	on_actions = { segrellion_sansa_sixteenth_birthday }
+}
+segrellion_sansa_sixteenth_birthday = {
+	trigger = {
+		this = character:Stark_Dummy_8
+		age >= 16
+	}
+	on_actions = { segrellion_sansa_story_progression }
+}
+
+on_death = {
+	on_actions = { segrellion_stannis_death_letter }
+}
+segrellion_stannis_death_letter = {
+	trigger = { this = character:Baratheon_3 }
+	effect = {
+		segrellion_resolve_stannis_jon_effect = yes
+		scope:stannis_jon ?= {
+			trigger_event = {
+				on_action = segrellion_jon_stannis_death_news_progression
+				days = 1
+			}
+		}
+	}
+}

@@ -1,4 +1,4 @@
-﻿namespace = segrellion_stannis
+ï»¿namespace = segrellion_stannis
 
 
 # =========================================================
@@ -2724,41 +2724,14 @@ segrellion_stannis.1210 = {
 		# Schedule this BEFORE Stannis is killed.
 		# =================================================
 
-		character:Stark_7 ?= {
-			# Keep the murder evidence on the living recipient before death cleanup.
+		segrellion_resolve_stannis_jon_effect = yes
+		scope:stannis_jon ?= {
 			add_character_flag = segrellion_jon_stannis_death_news_pending
 			segrellion_jon_clear_stannis_political_liege_effect = yes
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					NOT = {
-						has_character_flag = segrellion_jon_winterfell_council_called
-					}
-
-					NOT = {
-						has_character_flag = segrellion_jon_stannis_death_news_scheduled
-					}
-				}
-
-
-				add_character_flag = {
-
-					flag = segrellion_jon_stannis_death_news_scheduled
-
-					days = 10
-				}
-
-
-				trigger_event = {
-
-					id = segrellion_jon_frey.0010
-
-					days = 1
-				}
+			# Evaluate the news after the death, on the living recipient.
+			trigger_event = {
+				on_action = segrellion_jon_stannis_death_news_progression
+				days = 1
 			}
 		}
 

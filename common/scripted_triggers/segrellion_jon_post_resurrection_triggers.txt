@@ -11,3 +11,16 @@ segrellion_jon_is_murder_mutineer_trigger = {
 	}
 }
 
+
+# The historical Jon stays dead when the runtime Jon is created.
+segrellion_is_current_jon_trigger = {
+	is_alive = yes
+	OR = {
+		AND = { exists = global_var:segrellion_resurrected_jon this = global_var:segrellion_resurrected_jon }
+		AND = {
+			this = character:Stark_7
+			NOT = { exists = global_var:segrellion_resurrected_jon global_var:segrellion_resurrected_jon ?= { is_alive = yes } }
+		}
+		has_character_flag = segrellion_canonical_current_jon
+	}
+}

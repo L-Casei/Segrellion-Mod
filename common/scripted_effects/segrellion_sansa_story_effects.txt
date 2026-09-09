@@ -444,6 +444,43 @@ segrellion_settle_sansa_riverlands_effect = {
 # =========================================================
 
 segrellion_sansa_story_progression_effect = {
+	# Convert legacy permanent queue flags once. Allow any old queued letter
+	# its full delay before retrying; seen flags prevent duplicate delivery.
+	character:Segrellion_60 ?= {
+		if = {
+			limit = { NOT = { has_character_flag = segrellion_sansa_letter_queue_v2 } }
+			add_character_flag = segrellion_sansa_letter_queue_v2
+			if = {
+				limit = { has_character_flag = segrellion_sansa_royce_first_letter_scheduled }
+				remove_character_flag = segrellion_sansa_royce_first_letter_scheduled
+				add_character_flag = { flag = segrellion_sansa_royce_first_letter_scheduled days = 100 }
+			}
+			if = {
+				limit = { has_character_flag = segrellion_sansa_royce_second_letter_scheduled }
+				remove_character_flag = segrellion_sansa_royce_second_letter_scheduled
+				add_character_flag = { flag = segrellion_sansa_royce_second_letter_scheduled days = 75 }
+			}
+		}
+		if = {
+			limit = {
+				is_alive = yes
+				has_character_flag = segrellion_sansa_royce_preliminary_agreement
+				NOR = {
+					has_character_flag = segrellion_sansa_royce_second_letter_scheduled
+					has_character_flag = segrellion_sansa_royce_second_letter_seen
+					has_character_flag = segrellion_sansa_royce_route_refused
+					has_character_flag = segrellion_sansa_protection_accepted
+				}
+				exists = character:Stark_Dummy_8
+				character:Stark_Dummy_8 = { is_alive = yes }
+				exists = title:c_runestone.holder
+				title:c_runestone.holder = { is_alive = yes }
+			}
+			add_character_flag = { flag = segrellion_sansa_royce_second_letter_scheduled days = 75 }
+			trigger_event = { id = segrellion_sansa.0110 days = { 30 60 } }
+		}
+	}
+
 
 
 	# =====================================================
@@ -483,8 +520,10 @@ segrellion_sansa_story_progression_effect = {
 			}
 
 
-			character:Stark_Dummy_8 ?= {
+			exists = character:Stark_Dummy_8
+			character:Stark_Dummy_8 = {
 
+				age >= 16
 				is_alive = yes
 
 				NOT = {
@@ -493,7 +532,8 @@ segrellion_sansa_story_progression_effect = {
 			}
 
 
-			title:c_runestone.holder ?= {
+			exists = title:c_runestone.holder
+			title:c_runestone.holder = {
 				is_alive = yes
 			}
 		}
@@ -501,14 +541,14 @@ segrellion_sansa_story_progression_effect = {
 
 		character:Segrellion_60 = {
 
-			add_character_flag = segrellion_sansa_royce_first_letter_scheduled
+			add_character_flag = { flag = segrellion_sansa_royce_first_letter_scheduled days = 15 }
 
 
 			trigger_event = {
 
 				id = segrellion_sansa.0100
 
-				days = { 30 90 }
+				days = { 1 3 }
 			}
 		}
 	}

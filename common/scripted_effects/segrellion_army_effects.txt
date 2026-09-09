@@ -244,10 +244,25 @@ segrellion_banner_refuse_liege_effect = {
 	save_scope_as = segrellion_banner_refuser
 
 
-	add_character_modifier = {
-		modifier = segrellion_banner_oathbreaker_modifier
-		years = 10
+	# =====================================================
+	# LIGHT OATHBREAKER
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_modifier = segrellion_banner_oathbreaker_modifier
+			}
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_banner_oathbreaker_minor_modifier
+			years = 10
+		}
 	}
+
 
 	add_character_flag = segrellion_banner_oathbreaker_unpunished
 
@@ -292,6 +307,15 @@ segrellion_banner_refuse_liege_effect = {
 				modifier = segrellion_banner_oathbreaker_fellow_vassal_opinion
 			}
 		}
+
+
+		# =================================================
+		# RESPONSE LETTER
+		# =================================================
+
+		trigger_event = {
+			id = segrellion_banners.0021
+		}
 	}
 }
 
@@ -308,10 +332,25 @@ segrellion_banner_joined_enemy_effect = {
 	save_scope_as = segrellion_banner_traitor
 
 
+	# =====================================================
+	# FULL OATHBREAKER
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+		}
+
+		remove_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+	}
+
+
 	add_character_modifier = {
 		modifier = segrellion_banner_oathbreaker_modifier
 		years = 20
 	}
+
 
 	add_character_flag = segrellion_banner_oathbreaker_unpunished
 
@@ -320,10 +359,6 @@ segrellion_banner_joined_enemy_effect = {
 
 	# =====================================================
 	# UNICORN RETURNS TRAITOR
-	#
-	# Only characters who actually fought against Daemon
-	# receive this flag.
-	# Neutral refusals DO NOT receive it.
 	# =====================================================
 
 	if = {
@@ -380,6 +415,34 @@ segrellion_banner_joined_enemy_effect = {
 			add_opinion = {
 				target = scope:segrellion_banner_traitor
 				modifier = segrellion_banner_traitor_fellow_vassal_opinion
+			}
+		}
+	}
+
+
+	# =====================================================
+	# BETRAYAL LETTER
+	# Prevent duplicate letters from the call + on_action
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_banner_betrayal_letter_sent
+			}
+		}
+
+		add_character_flag = {
+			flag = segrellion_banner_betrayal_letter_sent
+			days = 30
+		}
+
+		scope:segrellion_banner_liege = {
+
+			trigger_event = {
+				id = segrellion_banners.0022
 			}
 		}
 	}
@@ -664,6 +727,17 @@ segrellion_banner_join_liege_wars_effect = {
 					add_defender = scope:segrellion_banner_joiner
 				}
 			}
+		}
+	}
+
+	# =====================================================
+	# RESPONSE LETTER TO THE LIEGE
+	# =====================================================
+
+	scope:segrellion_banner_liege = {
+
+		trigger_event = {
+			id = segrellion_banners.0020
 		}
 	}
 }
