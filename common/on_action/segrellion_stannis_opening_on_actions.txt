@@ -1,0 +1,28 @@
+# The initial handoff remains in segrellion_on_actions.txt.
+# Retry after the router's 45-day lease, using native CK3 hooks.
+on_game_start_after_lobby = {
+	on_actions = {
+		delay = { days = 60 }
+		segrellion_stannis_opening_recovery
+	}
+}
+
+# Also repairs existing games where the opening or its setup never ran.
+quarterly_playable_pulse = {
+	on_actions = { segrellion_stannis_opening_quarterly }
+}
+
+segrellion_stannis_opening_quarterly = {
+	trigger = {
+		this = character:Baratheon_3
+		game_start_date = 8300.8.20
+		is_alive = yes
+		NOT = { has_character_flag = segrellion_stannis_opening_seen }
+		NOT = { has_character_flag = segrellion_stannis_northern_campaign_started }
+	}
+	on_actions = {
+		segrellion_stannis_opening_after_lobby
+		delay = { days = 60 }
+		segrellion_stannis_opening_recovery
+	}
+}
