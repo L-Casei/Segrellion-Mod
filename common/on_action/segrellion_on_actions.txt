@@ -3798,6 +3798,10 @@ segrellion_young_griff_unicorn_returns_notice_fallback = {
 
 # =========================================================
 # TOMMEN BARATHEON - HARD NO OFFENSIVE WARS
+#
+# Startup / save recovery guard.
+# Real-time wars are blocked by:
+# segrellion_tommen_war_guard_on_actions.txt
 # =========================================================
 
 segrellion_tommen_peace_guard = {
@@ -3807,6 +3811,7 @@ segrellion_tommen_peace_guard = {
 		character:Baratheon_7 ?= {
 
 			if = {
+
 				limit = {
 
 					is_alive = yes
@@ -3816,10 +3821,14 @@ segrellion_tommen_peace_guard = {
 					game_start_date < 8301.1.1
 				}
 
+
 				save_scope_as = segrellion_tommen_war_guard
 
+
 				if = {
+
 					limit = {
+
 						NOT = {
 							has_character_flag = sworn_peace
 						}
@@ -3828,10 +3837,14 @@ segrellion_tommen_peace_guard = {
 					add_character_flag = sworn_peace
 				}
 
+
 				add_character_flag = segrellion_tommen_scripted_wars_only
 
+
 				every_character_war = {
+
 					limit = {
+
 						primary_attacker = scope:segrellion_tommen_war_guard
 					}
 

@@ -1031,9 +1031,8 @@ segrellion_stannis.1010 = {
 
 	trigger = {
 
-		this = character:Stark_7
+		segrellion_is_current_jon_trigger = yes
 
-		is_alive = yes
 		is_available = yes
 
 		character:Baratheon_3 ?= {
@@ -1147,7 +1146,6 @@ segrellion_stannis.1010 = {
 # 1011 - JON HAS ACCEPTED
 #
 # Root = Stannis
-# The answer returns three days after Jon accepts.
 # =========================================================
 
 segrellion_stannis.1011 = {
@@ -1176,14 +1174,7 @@ segrellion_stannis.1011 = {
 
 		is_alive = yes
 
-
-		character:Stark_7 ?= {
-
-			is_alive = yes
-
-			has_character_flag = segrellion_jon_accepted_stannis_north_offer
-		}
-
+		has_character_flag = segrellion_stannis_jon_answer_scheduled
 
 		NOT = {
 			has_character_flag = segrellion_stannis_received_jon_acceptance
@@ -1198,8 +1189,12 @@ segrellion_stannis.1011 = {
 		add_character_flag = segrellion_stannis_received_jon_acceptance
 
 
-		# The actual transfer is executed with Jon as event root.
-		character:Stark_7 = {
+		# Resolve the ACTUAL living Jon.
+		segrellion_resolve_stannis_jon_effect = yes
+
+
+		scope:stannis_jon ?= {
+
 			trigger_event = segrellion_stannis.1012
 		}
 	}
@@ -1208,13 +1203,15 @@ segrellion_stannis.1011 = {
 	left_portrait = {
 
 		character = root
+
 		animation = personality_rational
 	}
 
 
 	right_portrait = {
 
-		character = character:Stark_7
+		character = scope:stannis_jon
+
 		animation = personality_honorable
 	}
 
@@ -1245,13 +1242,16 @@ segrellion_stannis.1011 = {
 		name = segrellion_stannis.1011.b
 
 		trigger = {
+
 			is_ai = no
+
+			exists = scope:stannis_jon
 		}
 
 		custom_tooltip = segrellion_stannis.1011.b.tt
 
 
-		set_player_character = character:Stark_7
+		set_player_character = scope:stannis_jon
 
 
 		ai_chance = {
@@ -1274,9 +1274,7 @@ segrellion_stannis.1012 = {
 
 	trigger = {
 
-		this = character:Stark_7
-
-		is_alive = yes
+		segrellion_is_current_jon_trigger = yes
 
 		has_character_flag = segrellion_jon_accepted_stannis_north_offer
 

@@ -70,17 +70,37 @@ segrellion_sansa_arrives_in_flamelands_effect = {
 	character:Stark_Dummy_8 ?= {
 
 		if = {
+
 			limit = {
-				is_ruler = no
+				is_alive = yes
 			}
 
-			set_employer = character:Segrellion_60
+
+			segrellion_reveal_sansa_stark_effect = yes
+
+			add_character_flag = segrellion_sansa_under_daemon_protection
+			add_character_flag = segrellion_sansa_arrived_flamelands
+
+
+			if = {
+
+				limit = {
+					is_ruler = no
+				}
+
+				set_employer = character:Segrellion_60
+			}
+
+
+			# Defensive cleanup after the disguise is removed.
+
+			set_house = character:Stark_8.house
+
+			remove_nickname = yes
+
+
+			set_location = title:b_castle_farring.title_province
 		}
-
-		set_house = character:Stark_8.house
-		remove_nickname = yes
-
-		set_location = title:b_castle_farring.title_province
 	}
 
 

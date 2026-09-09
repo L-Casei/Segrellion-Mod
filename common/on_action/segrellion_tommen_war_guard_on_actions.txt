@@ -1,0 +1,47 @@
+# =========================================================
+# TOMMEN BARATHEON - HARD OFFENSIVE WAR BLOCK
+#
+# Any autonomous offensive war started by Tommen during
+# the 300 AC storyline is invalidated immediately.
+# =========================================================
+
+
+on_war_started = {
+
+	on_actions = {
+		segrellion_tommen_block_offensive_war
+	}
+}
+
+
+segrellion_tommen_block_offensive_war = {
+
+	trigger = {
+
+		exists = scope:war
+		exists = scope:attacker
+
+
+		scope:attacker = character:Baratheon_7
+
+
+		character:Baratheon_7 ?= {
+
+			is_alive = yes
+
+			is_ai = yes
+
+			game_start_date >= 8300.8.20
+			game_start_date < 8301.1.1
+		}
+	}
+
+
+	effect = {
+
+		scope:war = {
+
+			end_war = invalidated
+		}
+	}
+}
