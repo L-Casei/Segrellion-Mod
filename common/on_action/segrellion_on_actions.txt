@@ -52,6 +52,7 @@ monthly_global_pulse = {
 		segrellion_daenerys_aurane_land_promise_progression
 		segrellion_daenerys_ai_invasion_failsafe
 		segrellion_stannis_renly_truth_progression
+		segrellion_jon_stannis_death_news_progression
 	}
 }
 
@@ -4667,6 +4668,50 @@ segrellion_stannis_renly_truth_progression = {
 					id = segrellion_stannis.1220
 
 					days = { 5 15 }
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# JON - STANNIS DEATH NEWS FAILSAFE
+# =========================================================
+
+segrellion_jon_stannis_death_news_progression = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				character:Baratheon_3 ?= {
+
+					is_alive = no
+
+					has_character_flag = segrellion_stannis_murdered_by_baelish
+				}
+
+
+				character:Stark_7 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_jon_winterfell_council_called
+					}
+				}
+			}
+
+
+			character:Stark_7 = {
+
+				trigger_event = {
+
+					id = segrellion_jon_frey.0010
+
+					days = 1
 				}
 			}
 		}
