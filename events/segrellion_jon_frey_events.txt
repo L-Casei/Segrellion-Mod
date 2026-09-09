@@ -1,0 +1,530 @@
+namespace = segrellion_jon_frey
+
+
+# =========================================================
+# 0010 - THE KING IS DEAD
+#
+# Stannis is dead.
+# His cause dies with him.
+# The North now looks to Jon.
+# =========================================================
+
+segrellion_jon_frey.0010 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0010.t
+	desc = segrellion_jon_frey.0010.desc
+
+	theme = crown
+
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+
+		character:Baratheon_3 ?= {
+
+			is_alive = no
+
+			has_character_flag = segrellion_stannis_murdered_by_baelish
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0010.a
+
+
+		# =================================================
+		# JON MUST RULE THE NORTH
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_title = title:e_the_north
+				}
+			}
+
+			segrellion_jon_accepts_north_effect = yes
+		}
+
+
+		remove_character_flag = segrellion_jon_lord_paramount_under_stannis
+
+		remove_character_flag = segrellion_jon_waiting_for_stannis_northern_result
+
+
+		add_character_flag = segrellion_jon_king_in_the_north
+
+		add_character_flag = segrellion_jon_stannis_result_resolved
+
+		add_character_flag = segrellion_north_abandoned_shireen_for_jon
+
+
+		# =================================================
+		# SHIREEN HAS NO NORTHERN CAUSE
+		# =================================================
+
+		character:Baratheon_13 ?= {
+
+			if = {
+
+				limit = {
+					has_claim_on = title:e_the_north
+				}
+
+				remove_claim = title:e_the_north
+			}
+
+
+			if = {
+
+				limit = {
+					has_claim_on = title:k_the_north
+				}
+
+				remove_claim = title:k_the_north
+			}
+
+
+			add_character_flag = segrellion_shireen_abandoned_northern_claim
+
+			add_character_flag = segrellion_shireen_stannis_cause_disbanded
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_jon_frey.0020
+
+			days = { 3 6 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - THE NORTH REMEMBERS
+#
+# Jon declares before his lords that the Red Wedding
+# will finally be answered.
+# =========================================================
+
+segrellion_jon_frey.0020 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0020.t
+	desc = segrellion_jon_frey.0020.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_king_in_the_north
+
+
+		title:d_the_crossing = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		title:d_the_crossing.holder = {
+
+			save_scope_as = segrellion_jon_frey_target
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_jon_frey_target
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0020.a
+
+		custom_tooltip = segrellion_jon_frey.0020.a.tt
+
+
+		add_character_flag = segrellion_jon_red_wedding_revenge_authorized
+
+
+		start_war = {
+
+			cb = segrellion_jon_red_wedding_revenge_cb
+
+			target = scope:segrellion_jon_frey_target
+
+			target_title = title:d_the_crossing
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - THE WOLF'S JUDGMENT
+#
+# All adult Frey men older than sixteen are executed.
+# Women and boys live.
+# =========================================================
+
+segrellion_jon_frey.0030 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0030.t
+	desc = segrellion_jon_frey.0030.desc
+
+	theme = death
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_red_wedding_avenged
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0030.a
+
+
+		title:d_the_crossing.holder.house = {
+
+			every_house_member = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_male = yes
+
+					age > 16
+				}
+
+
+				death = {
+
+					death_reason = death_execution
+
+					killer = root
+				}
+			}
+		}
+
+
+		add_dread = 35
+
+		add_prestige = 500
+
+
+		add_character_flag = segrellion_jon_frey_men_executed
+
+
+		trigger_event = {
+
+			id = segrellion_jon_frey.0040
+
+			days = { 5 10 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - A MOCKINGBIRD ON THE THRONE
+#
+# Young Griff is gone.
+# Petyr Baelish has seized the Iron Throne.
+# =========================================================
+
+segrellion_jon_frey.0040 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0040.t
+	desc = segrellion_jon_frey.0040.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_frey_men_executed
+
+
+		character:Baelish_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# YOUNG GRIFF MUST BE DEAD BY THIS POINT
+		# =================================================
+
+		character:IAF_Young_Griff_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				death = {
+
+					death_reason = death_murder
+
+					killer = character:Baelish_2
+
+					secret = no
+				}
+			}
+		}
+
+
+		# =================================================
+		# BAELISH TAKES THE IRON THRONE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:h_the_iron_throne.holder != character:Baelish_2
+			}
+
+
+			title:h_the_iron_throne = {
+
+				grant_title = character:Baelish_2
+			}
+		}
+
+
+		character:Baelish_2 = {
+
+			set_primary_title_to = title:h_the_iron_throne
+
+			add_character_flag = segrellion_baelish_on_iron_throne
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = worry
+	}
+
+
+	right_portrait = {
+
+		character = character:Baelish_2
+
+		animation = personality_dishonorable
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0040.a
+
+
+		trigger_event = {
+
+			id = segrellion_jon_frey.0050
+
+			days = { 5 10 }
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0050 - THE VALE REMEMBERS
+#
+# Yohn Royce offers the Vale's swords to Jon.
+#
+# STOP HERE.
+# The war for the Iron Throne comes later.
+# =========================================================
+
+segrellion_jon_frey.0050 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0050.t
+	desc = segrellion_jon_frey.0050.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_king_in_the_north
+
+		has_character_flag = segrellion_jon_red_wedding_avenged
+
+
+		character:Baelish_2 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		title:c_runestone.holder ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		title:c_runestone.holder = {
+
+			save_scope_as = segrellion_jon_yohn_royce
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_jon_yohn_royce
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0050.a
+
+		custom_tooltip = segrellion_jon_frey.0050.a.tt
+
+
+		add_character_flag = segrellion_vale_supports_jon_against_baelish
+
+
+		scope:segrellion_jon_yohn_royce = {
+
+			add_character_flag = segrellion_yohn_royce_supports_jon_claim
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}

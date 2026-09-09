@@ -3203,3 +3203,384 @@ segrellion_spare_unicorn_oathbreaker_effect = {
 		}
 	}
 }
+
+# =========================================================
+# STANNIS BARATHEON
+# WAR AGAINST THE FREYS
+# =========================================================
+
+segrellion_stannis_frey_campaign_cb = {
+
+	icon = invasion
+
+	group = invasion
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+	allow_hostages = no
+
+
+	# =====================================================
+	# STANNIS ONLY
+	# =====================================================
+
+	allowed_for_character = {
+
+		this = character:Baratheon_3
+
+		has_character_flag = segrellion_stannis_frey_campaign_authorized
+	}
+
+
+	# =====================================================
+	# THE CROSSING
+	# =====================================================
+
+	allowed_against_character = {
+
+		scope:defender = title:d_the_crossing.holder
+	}
+
+
+	target_titles = all
+
+	target_title_tier = duchy
+
+	target_de_jure_regions_above = no
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:d_the_crossing
+		}
+	}
+
+
+	# =====================================================
+	# THE WAR DIES WITH STANNIS
+	#
+	# Shireen does NOT inherit it.
+	# =====================================================
+
+	on_primary_attacker_death = invalidate
+
+	on_primary_defender_death = inherit
+
+
+	# =====================================================
+	# DECLARATION
+	# =====================================================
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_frey_campaign_authorized
+
+			add_character_flag = segrellion_stannis_frey_campaign_active
+
+
+			set_variable = {
+
+				name = segrellion_stannis_frey_war
+
+				value = scope:war
+			}
+
+
+			# =================================================
+			# STANNIS' LAST HOST
+			# =================================================
+
+			spawn_army = {
+
+				name = segrellion_stannis_riverlands_host
+
+
+				men_at_arms = {
+
+					type = armored_horsemen
+
+					men = 400
+				}
+
+
+				men_at_arms = {
+
+					type = armored_footmen
+
+					men = 800
+				}
+
+
+				men_at_arms = {
+
+					type = bowmen
+
+					men = 700
+				}
+
+
+				levies = 2500
+
+
+				inheritable = no
+
+				uses_supply = yes
+
+
+				location = scope:attacker.capital_province
+
+				origin = scope:attacker.capital_province
+
+
+				war = scope:war
+
+
+				save_scope_as = segrellion_stannis_last_host
+			}
+
+
+			scope:segrellion_stannis_last_host ?= {
+
+				assign_commander = character:Baratheon_3
+			}
+
+
+			# =================================================
+			# BAELISH'S PLOT
+			# =================================================
+
+			trigger_event = {
+
+				id = segrellion_stannis.1210
+
+				days = { 12 20 }
+			}
+		}
+	}
+
+
+	on_victory_desc = {
+		desc = segrellion_stannis_frey_campaign_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_frey_campaign_active
+
+			remove_variable = segrellion_stannis_frey_war
+		}
+	}
+
+
+	on_white_peace_desc = {
+		desc = segrellion_stannis_frey_campaign_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_frey_campaign_active
+
+			remove_variable = segrellion_stannis_frey_war
+		}
+	}
+
+
+	on_defeat_desc = {
+		desc = segrellion_stannis_frey_campaign_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_stannis_frey_campaign_active
+
+			remove_variable = segrellion_stannis_frey_war
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+	attacker_allies_inherit = no
+
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_stannis_frey_campaign_war_name"
+
+	war_name_base = "segrellion_stannis_frey_campaign_war_name_base"
+
+	cb_name = "segrellion_stannis_frey_campaign_cb_name"
+
+
+	interface_priority = 100
+}
+
+# =========================================================
+# JON SNOW
+# THE RED WEDDING MUST BE ANSWERED
+# =========================================================
+
+segrellion_jon_red_wedding_revenge_cb = {
+
+	icon = invasion
+
+	group = invasion
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+	allow_hostages = no
+
+
+	allowed_for_character = {
+
+		has_character_flag = segrellion_jon_king_in_the_north
+
+		has_character_flag = segrellion_jon_red_wedding_revenge_authorized
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = title:d_the_crossing.holder
+	}
+
+
+	target_titles = all
+
+	target_title_tier = duchy
+
+	target_de_jure_regions_above = no
+
+
+	# This is punishment, not conquest.
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:d_the_crossing
+		}
+	}
+
+
+	on_primary_attacker_death = invalidate
+
+	on_primary_defender_death = inherit
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_red_wedding_revenge_authorized
+
+			add_character_flag = segrellion_jon_red_wedding_revenge_active
+
+
+			set_variable = {
+
+				name = segrellion_jon_red_wedding_war
+
+				value = scope:war
+			}
+		}
+	}
+
+
+	on_victory_desc = {
+		desc = segrellion_jon_red_wedding_revenge_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_red_wedding_revenge_active
+
+			remove_variable = segrellion_jon_red_wedding_war
+
+			add_character_flag = segrellion_jon_red_wedding_avenged
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0030
+
+				days = 1
+			}
+		}
+	}
+
+
+	on_white_peace_desc = {
+		desc = segrellion_jon_red_wedding_revenge_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_red_wedding_revenge_active
+
+			remove_variable = segrellion_jon_red_wedding_war
+		}
+	}
+
+
+	on_defeat_desc = {
+		desc = segrellion_jon_red_wedding_revenge_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_red_wedding_revenge_active
+
+			remove_variable = segrellion_jon_red_wedding_war
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+	attacker_allies_inherit = yes
+
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_jon_red_wedding_revenge_war_name"
+
+	war_name_base = "segrellion_jon_red_wedding_revenge_war_name_base"
+
+	cb_name = "segrellion_jon_red_wedding_revenge_cb_name"
+
+
+	interface_priority = 100
+}

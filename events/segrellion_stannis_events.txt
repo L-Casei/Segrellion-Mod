@@ -1232,31 +1232,21 @@ segrellion_stannis.1020 = {
 
 		name = segrellion_stannis.1020.a
 
+		remove_character_flag = segrellion_stannis_ready_for_iron_throne
 
-		add_character_flag = segrellion_stannis_ready_for_iron_throne
+		add_character_flag = segrellion_stannis_riverlands_campaign_committed
 
-
-		if = {
-
-			limit = {
-
-				is_ai = yes
-
-				NOT = {
-					has_character_modifier = segrellion_stannis_waiting_for_iron_throne_ai_modifier
-				}
-			}
-
-			add_character_modifier = {
-				modifier = segrellion_stannis_waiting_for_iron_throne_ai_modifier
-			}
-		}
 
 		trigger_event = {
 
-			id = segrellion_stannis.2000
+			id = segrellion_stannis.1200
 
 			days = { 5 10 }
+		}
+
+
+		ai_chance = {
+			base = 100
 		}
 	}
 }
@@ -2389,6 +2379,238 @@ segrellion_stannis.0610 = {
 					add_attacker = root
 				}
 			}
+		}
+	}
+}
+
+# =========================================================
+# 1200 - SOUTH OF THE NECK
+#
+# Stannis turns toward the Crossing.
+# The Freys will answer for the Red Wedding.
+# =========================================================
+
+segrellion_stannis.1200 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1200.t
+	desc = segrellion_stannis.1200.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_riverlands_campaign_committed
+
+
+		title:d_the_crossing = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		title:d_the_crossing.holder = {
+			save_scope_as = segrellion_stannis_frey_target
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_stannis_frey_target
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.1200.a
+
+		custom_tooltip = segrellion_stannis.1200.a.tt
+
+
+		add_character_flag = segrellion_stannis_frey_campaign_authorized
+
+
+		start_war = {
+
+			cb = segrellion_stannis_frey_campaign_cb
+
+			target = scope:segrellion_stannis_frey_target
+
+			target_title = title:d_the_crossing
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 1210 - THE KNIFE BEHIND THE KING
+#
+# Petyr Baelish removes Stannis before his campaign
+# against the Freys can truly begin.
+# =========================================================
+
+segrellion_stannis.1210 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1210.t
+	desc = segrellion_stannis.1210.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stannis_frey_campaign_active
+
+
+		character:Baelish_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = worry
+	}
+
+
+	right_portrait = {
+
+		character = character:Baelish_2
+
+		animation = personality_dishonorable
+	}
+
+
+	option = {
+
+		name = segrellion_stannis.1210.a
+
+
+		add_character_flag = segrellion_stannis_murdered_by_baelish
+
+
+		# =================================================
+		# STANNIS' CLAIM DIES WITH HIM
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_claim_on = title:h_the_iron_throne
+			}
+
+			remove_claim = title:h_the_iron_throne
+		}
+
+
+		# =================================================
+		# SHIREEN DOES NOT INHERIT HIS POLITICAL CAUSE
+		# =================================================
+
+		character:Baratheon_13 ?= {
+
+			add_character_flag = segrellion_shireen_stannis_cause_disbanded
+
+			remove_character_flag = segrellion_stannis_ready_for_iron_throne
+		}
+
+
+		# =================================================
+		# JON WILL HEAR OF THE KING'S DEATH
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_global_variable = segrellion_resurrected_jon
+
+				global_var:segrellion_resurrected_jon ?= {
+					is_alive = yes
+				}
+			}
+
+			global_var:segrellion_resurrected_jon = {
+
+				trigger_event = {
+
+					id = segrellion_jon_frey.0010
+
+					days = 1
+				}
+			}
+		}
+
+
+		# =================================================
+		# PETYR'S MURDER
+		# =================================================
+
+		death = {
+
+			death_reason = death_murder
+
+			killer = character:Baelish_2
+
+			secret = no
+		}
+
+
+		ai_chance = {
+			base = 100
 		}
 	}
 }
