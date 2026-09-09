@@ -1,6 +1,15 @@
 activity_segrellion_winterfell_council = {
 
+	sort_order = 100
+
+
+	# =====================================================
+	# SHOWN ONLY FOR JON AFTER STANNIS' DEATH
+	# =====================================================
+
 	is_shown = {
+
+		this = character:Stark_7
 
 		has_character_flag = segrellion_jon_winterfell_council_called
 
@@ -10,25 +19,43 @@ activity_segrellion_winterfell_council = {
 	}
 
 
-	can_start = {
-
-		is_alive = yes
-
-		is_adult = yes
-
-		is_landed = yes
-
-		has_title = title:d_winterfell
-
-		has_character_flag = segrellion_jon_winterfell_council_called
-	}
-
+	# =====================================================
+	# PLANNING / START REQUIREMENTS
+	# =====================================================
 
 	can_start_showing_failures_only = {
 
 		is_available_adult = yes
+
+		is_landed = yes
+
+		has_title = title:d_winterfell
 	}
 
+
+	can_plan = {
+
+		is_available_adult = yes
+
+		is_landed = yes
+
+		has_title = title:d_winterfell
+	}
+
+
+	can_start = {
+
+		is_available_adult = yes
+
+		is_landed = yes
+
+		has_title = title:d_winterfell
+	}
+
+
+	# =====================================================
+	# VALIDITY
+	# =====================================================
 
 	is_valid = {
 
@@ -36,31 +63,68 @@ activity_segrellion_winterfell_council = {
 			has_variable = activity_invalidated
 		}
 
+
 		scope:host = {
 
 			is_alive = yes
 
+			is_capable_adult = yes
+
+			is_imprisoned = no
+
+			is_landed = yes
+
 			has_title = title:d_winterfell
+		}
+
+
+		trigger_if = {
+
+			limit = {
+				is_current_phase_active = yes
+			}
+
+			has_attending_activity_guests = yes
 		}
 	}
 
+
 	# =====================================================
-	# ACTIVITY BACKGROUND
+	# ACTIVITY HEADER BACKGROUND
 	# =====================================================
 
 	background = {
 
-		texture = "gfx/interface/illustrations/event_scenes/segrellion_winterfell_council.dds"
+		texture = "gfx/interface/illustrations/activity_header_backgrounds/activity_segrellion_winterfell_council.dds"
 	}
 
 
 	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+
+		gold = {
+			value = 25
+		}
+	}
+
+
+	# =====================================================
+	# LOCATION
 	# WINTERFELL ONLY
 	# =====================================================
+
+	is_single_location = yes
+
 
 	province_filter = realm
 
 	ai_province_filter = realm
+
+
+	max_route_deviation_mult = 1.0
 
 
 	is_location_valid = {
@@ -69,22 +133,92 @@ activity_segrellion_winterfell_council = {
 	}
 
 
+	province_description = {
+
+		desc = activity_segrellion_winterfell_council_province_desc
+	}
+
+
+	max_province_icons = 1
+
+
+	province_score = {
+
+		value = 0
+
+
+		if = {
+
+			limit = {
+
+				this = title:c_winterfell.title_province
+			}
+
+			add = 1000
+		}
+	}
+
+
 	# =====================================================
-	# TWO MONTHS BEFORE THE COUNCIL BEGINS
+	# PREPARATION TIME
+	# LORDS GATHER FOR TWO MONTHS
 	# =====================================================
 
 	wait_time_before_start = {
+
 		days = 60
 	}
 
 
 	max_guest_arrival_delay_time = {
+
 		days = 30
 	}
 
 
 	# =====================================================
-	# NORTHERN LORDS
+	# ACTIVITY OPTIONS
+	# =====================================================
+
+	options = {
+
+		segrellion_winterfell_council_scope = {
+
+			segrellion_winterfell_council_scope_full = {
+
+				default = yes
+
+
+				ai_will_do = {
+
+					value = 100
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HOST INTENT
+	# USE VANILLA LEGITIMACY INTENT
+	# =====================================================
+
+	host_intents = {
+
+		intents = {
+			legitimacy_intent
+		}
+
+		default = legitimacy_intent
+
+		player_defaults = {
+			legitimacy_intent
+		}
+	}
+
+
+	# =====================================================
+	# GUESTS
 	# =====================================================
 
 	max_guests = 100
@@ -96,9 +230,9 @@ activity_segrellion_winterfell_council = {
 
 			10 = activity_invite_rule_vassals
 
-			5 = activity_invite_rule_close_family
+			3 = activity_invite_rule_close_family
 
-			5 = activity_invite_rule_courtiers
+			2 = activity_invite_rule_courtiers
 		}
 	}
 
@@ -113,14 +247,24 @@ activity_segrellion_winterfell_council = {
 
 		is_landed = yes
 
+		in_diplomatic_range = scope:host
+
+
+		# IMPORTANT:
+		# Do NOT use e_the_north.holder here.
+		# Stannis is dead and title succession may have moved it.
+		#
+		# The Northern lords are underneath Jon.
 
 		OR = {
 
-			liege = title:e_the_north.holder
+			liege = scope:host
 
-			top_liege = title:e_the_north.holder
 
-			this = title:e_the_north.holder
+			any_liege_or_above = {
+
+				this = scope:host
+			}
 		}
 	}
 
@@ -134,7 +278,7 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# THE COUNCIL
+	# THE COUNCIL PHASE
 	# =====================================================
 
 	phases = {
@@ -142,6 +286,22 @@ activity_segrellion_winterfell_council = {
 		segrellion_winterfell_council_phase = {
 
 			is_predefined = yes
+
+			order = 1
+
+			location_source = pickable
+
+
+			can_pick = {
+
+				scope:province = title:c_winterfell.title_province
+			}
+
+
+			is_valid = {
+
+				scope:province = title:c_winterfell.title_province
+			}
 
 
 			on_phase_active = {
@@ -167,7 +327,7 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# AI JON WILL ORGANIZE IT IMMEDIATELY
+	# AI JON
 	# =====================================================
 
 	ai_check_interval = 1
