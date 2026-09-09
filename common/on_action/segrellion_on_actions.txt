@@ -9,6 +9,7 @@ on_game_start = {
 
 monthly_global_pulse = {
 	on_actions = {
+		segrellion_tommen_peace_guard
 		segrellion_trueflame_historical_progression
 		segrellion_rhaegar_historical_progression
 		vladwyn_canon_story_progression
@@ -42,7 +43,6 @@ monthly_global_pulse = {
 		segrellion_young_griff_opening_progression
 		segrellion_young_griff_post_conquest_progression
 		segrellion_young_griff_unicorn_returns_notice_fallback
-		segrellion_tommen_peace_guard
 		segrellion_massey_secret_support_progression
 		segrellion_young_griff_deerfield_progression
 		segrellion_aegon_daemon_vassalage_progression
@@ -106,6 +106,7 @@ on_war_invalidated = {
 
 on_marriage = {
 	on_actions = {
+		segrellion_daemon_marriage_cleanup
 		segrellion_daenerys_marriage_guard
 		segrellion_arianne_marriage_guard
 		segrellion_young_griff_daemon_marriage_guard
@@ -3049,6 +3050,39 @@ segrellion_second_war_register_contender = {
 }
 
 # =========================================================
+# DAEMON - MARRIAGE CLEANUP
+# =========================================================
+
+segrellion_daemon_marriage_cleanup = {
+
+	effect = {
+
+		if = {
+			limit = {
+
+				OR = {
+					this = character:Segrellion_60
+					scope:spouse = character:Segrellion_60
+				}
+			}
+
+			character:Segrellion_60 = {
+
+				if = {
+					limit = {
+						has_trait = refusing_marriage
+					}
+
+					remove_trait = refusing_marriage
+				}
+
+				add_character_flag = segrellion_daemon_refusing_marriage_resolved
+			}
+		}
+	}
+}
+
+# =========================================================
 # STANNIS - IRON THRONE WAR SETUP
 #
 # The North and the Vale are committed to Stannis'
@@ -3764,6 +3798,10 @@ segrellion_young_griff_unicorn_returns_notice_fallback = {
 # He must not independently launch random CK3 wars.
 # =========================================================
 
+# =========================================================
+# TOMMEN BARATHEON - HARD NO OFFENSIVE WARS
+# =========================================================
+
 segrellion_tommen_peace_guard = {
 
 	effect = {
@@ -3771,20 +3809,36 @@ segrellion_tommen_peace_guard = {
 		character:Baratheon_7 ?= {
 
 			if = {
-
 				limit = {
 
 					is_alive = yes
+					is_ai = yes
 
-					NOT = {
-						has_character_flag = sworn_peace
-					}
+					game_start_date >= 8300.8.20
+					game_start_date < 8301.1.1
 				}
 
+				save_scope_as = segrellion_tommen_war_guard
 
-				add_character_flag = sworn_peace
+				if = {
+					limit = {
+						NOT = {
+							has_character_flag = sworn_peace
+						}
+					}
 
-				add_character_flag = segrellion_tommen_no_offensive_wars
+					add_character_flag = sworn_peace
+				}
+
+				add_character_flag = segrellion_tommen_scripted_wars_only
+
+				every_character_war = {
+					limit = {
+						primary_attacker = scope:segrellion_tommen_war_guard
+					}
+
+					end_war = invalidated
+				}
 			}
 		}
 	}

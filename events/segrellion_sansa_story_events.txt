@@ -326,11 +326,302 @@ segrellion_sansa.0120 = {
 
 		custom_tooltip = segrellion_sansa.0120.a.tt
 
-
 		hidden_effect = {
 
 			segrellion_start_sansa_baelish_war_effect = yes
+
+			add_character_flag = segrellion_sansa_war_appeal_scheduled
+
+			trigger_event = {
+				id = segrellion_sansa.0130
+				days = { 3 6 }
+			}
 		}
+	}
+}
+
+# =========================================================
+# 0130 - THE VALE CALLS
+# =========================================================
+
+segrellion_sansa.0130 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0130.t
+	desc = segrellion_sansa.0130.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+
+		has_character_flag = segrellion_sansa_war_appeal_scheduled
+
+		NOT = {
+			has_character_flag = segrellion_sansa_war_appeal_resolved
+		}
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_sansa_under_daemon_protection
+		}
+
+		character:Baelish_2 ?= {
+			is_alive = yes
+		}
+
+		has_variable = segrellion_sansa_vale_war
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_sansa_war_appeal_scheduled
+
+		character:Stark_Dummy_8 = {
+			set_location = root.location
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# HELP WITHOUT PAYMENT
+	# 25%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0130.a
+
+		custom_tooltip = segrellion_sansa.0130.a.tt
+
+		add_character_flag = segrellion_sansa_war_appeal_resolved
+		add_character_flag = segrellion_sansa_daemon_helped_without_price
+
+		segrellion_daemon_join_sansa_vale_war_effect = yes
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+
+	# =====================================================
+	# HELP FOR A PRICE
+	# 70%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0130.b
+
+		custom_tooltip = segrellion_sansa.0130.b.tt
+
+		add_character_flag = segrellion_sansa_war_price_requested
+
+		trigger_event = {
+			id = segrellion_sansa.0140
+			days = 1
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# 5%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0130.c
+
+		custom_tooltip = segrellion_sansa.0130.c.tt
+
+		add_character_flag = segrellion_sansa_war_appeal_resolved
+		add_character_flag = segrellion_sansa_daemon_refused_vale_war
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+# =========================================================
+# 0140 - THE PRICE OF A BANNER
+# =========================================================
+
+segrellion_sansa.0140 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0140.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					has_character_flag = segrellion_sansa_price_marriage_offer
+				}
+
+				desc = segrellion_sansa.0140.desc_marriage
+			}
+
+			triggered_desc = {
+				trigger = {
+					has_character_flag = segrellion_sansa_price_debt_offer
+				}
+
+				desc = segrellion_sansa.0140.desc_debt
+			}
+		}
+	}
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+
+		has_character_flag = segrellion_sansa_war_price_requested
+
+		NOT = {
+			has_character_flag = segrellion_sansa_war_appeal_resolved
+		}
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+		}
+
+		has_variable = segrellion_sansa_vale_war
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_sansa_price_marriage_offer
+		remove_character_flag = segrellion_sansa_price_debt_offer
+
+		if = {
+			limit = {
+
+				is_married = no
+
+				character:Stark_Dummy_8 = {
+					is_married = no
+				}
+			}
+
+			if = {
+				limit = {
+					has_character_flag = segrellion_vale_debt_active
+				}
+
+				random_list = {
+
+					90 = {
+						add_character_flag = segrellion_sansa_price_marriage_offer
+					}
+
+					10 = {
+						add_character_flag = segrellion_sansa_price_debt_offer
+					}
+				}
+			}
+
+			else = {
+				add_character_flag = segrellion_sansa_price_marriage_offer
+			}
+		}
+
+		else = {
+			add_character_flag = segrellion_sansa_price_debt_offer
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Stark_Dummy_8
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# SANSA OFFERS MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0140.a
+
+		trigger = {
+			has_character_flag = segrellion_sansa_price_marriage_offer
+		}
+
+		custom_tooltip = segrellion_sansa.0140.a.tt
+
+		remove_character_flag = segrellion_sansa_war_price_requested
+
+		add_character_flag = segrellion_sansa_war_appeal_resolved
+		add_character_flag = segrellion_sansa_marriage_for_vale_war
+
+		segrellion_daemon_marry_sansa_for_vale_war_effect = yes
+
+		segrellion_daemon_join_sansa_vale_war_effect = yes
+	}
+
+
+	# =====================================================
+	# SANSA CLEARS THE VALE DEBT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa.0140.b
+
+		trigger = {
+			has_character_flag = segrellion_sansa_price_debt_offer
+		}
+
+		custom_tooltip = segrellion_sansa.0140.b.tt
+
+		remove_character_flag = segrellion_sansa_war_price_requested
+
+		add_character_flag = segrellion_sansa_war_appeal_resolved
+		add_character_flag = segrellion_sansa_debt_price_for_vale_war
+
+		segrellion_sansa_clear_vale_debt_effect = yes
+
+		segrellion_daemon_join_sansa_vale_war_effect = yes
 	}
 }
 

@@ -1700,6 +1700,20 @@ segrellion_daenerys_invasion.0010 = {
 
 		name = segrellion_daenerys_invasion.0010.a
 
+		trigger = {
+
+			custom_description = {
+
+				text = segrellion_daenerys_invasion.0010.a.requirement
+
+				segrellion_daenerys_dragonstone_landing_available_trigger = yes
+			}
+		}
+
+		show_as_unavailable = {
+			always = yes
+		}
+
 		custom_tooltip = segrellion_daenerys_invasion.0010.a.tt
 
 		ai_chance = {
@@ -1802,11 +1816,11 @@ segrellion_daenerys_invasion.0010 = {
 	# =====================================================
 	# MASSEY'S HOOK
 	#
-	# Default eastern landing.
-	#
-	# Hidden if House Stormflame controls the duchy.
-	# Replaced by the Beacon option if Daemon controls
+	# Third landing route while Daemon does not control
 	# the Flamelands.
+	#
+	# Always visible in that scenario.
+	# Disabled if House Stormflame has closed the Hook.
 	# =====================================================
 
 	option = {
@@ -1816,12 +1830,19 @@ segrellion_daenerys_invasion.0010 = {
 
 		trigger = {
 
-			NOT = {
-				segrellion_daemon_controls_flamelands_trigger = yes
+			custom_description = {
+
+				text = segrellion_daenerys_invasion.0010.c_massey.requirement
+
+				segrellion_daenerys_masseys_hook_landing_available_trigger = yes
 			}
+		}
+
+
+		show_as_unavailable = {
 
 			NOT = {
-				segrellion_stormflame_controls_masseys_hook_trigger = yes
+				segrellion_daemon_controls_flamelands_trigger = yes
 			}
 		}
 
@@ -1851,7 +1872,9 @@ segrellion_daenerys_invasion.0010 = {
 
 
 		add_character_flag = segrellion_daenerys_landing_chosen
+
 		add_character_flag = segrellion_daenerys_landing_flamelands
+
 		add_character_flag = segrellion_daenerys_landing_masseys_hook
 
 
@@ -1865,6 +1888,7 @@ segrellion_daenerys_invasion.0010 = {
 			destination = title:c_stonedance.title_province
 
 			return_trip = no
+
 			travel_with_domicile = yes
 
 			on_arrival_event = segrellion_daenerys_invasion.0018
@@ -1878,26 +1902,35 @@ segrellion_daenerys_invasion.0010 = {
 	# =====================================================
 	# THE BEACON
 	#
-	# If Daemon has restored the Flamelands, the normal
-	# Massey's Hook route becomes a direct voyage to him.
+	# Replaces Massey's Hook whenever Daemon controls
+	# the Flamelands.
+	#
+	# The option remains visible even when unavailable.
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_invasion.0010.c_beacon
 
+
 		trigger = {
-			segrellion_daenerys_beacon_negotiation_available_trigger = yes
+
+			custom_description = {
+
+				text = segrellion_daenerys_invasion.0010.c_beacon.requirement
+
+				segrellion_daenerys_beacon_route_available_trigger = yes
+			}
 		}
+
+
+		show_as_unavailable = {
+
+			segrellion_daemon_controls_flamelands_trigger = yes
+		}
+
 
 		custom_tooltip = segrellion_daenerys_invasion.0010.c_beacon.tt
-
-		add_character_flag = segrellion_daenerys_beacon_negotiation_started
-
-		trigger_event = {
-			id = segrellion_daenerys_massey.0100
-			days = 1
-		}
 
 
 		ai_chance = {
@@ -1916,9 +1949,6 @@ segrellion_daenerys_invasion.0010 = {
 			}
 
 
-			# Stannis being absent from Dragonstone overrides
-			# every alternative landing for AI Daenerys.
-
 			modifier = {
 
 				factor = 0
@@ -1935,13 +1965,67 @@ segrellion_daenerys_invasion.0010 = {
 		}
 
 
-		add_character_flag = segrellion_daenerys_landing_chosen
-		add_character_flag = segrellion_daenerys_landing_flamelands
-		add_character_flag = segrellion_daenerys_landing_beacon
+		# =================================================
+		# DAEMON HAS ALREADY OPENED THE BEACON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				segrellion_daenerys_beacon_direct_landing_available_trigger = yes
+			}
 
 
-		add_character_modifier = {
-			modifier = segrellion_daenerys_invasion_provisions_modifier
+			remove_character_flag = segrellion_daenerys_beacon_invitation_ready
+
+			remove_character_flag = segrellion_daenerys_beacon_negotiation_started
+
+
+			add_character_flag = segrellion_daenerys_landing_chosen
+
+			add_character_flag = segrellion_daenerys_landing_flamelands
+
+			add_character_flag = segrellion_daenerys_landing_beacon
+
+
+			add_character_modifier = {
+				modifier = segrellion_daenerys_invasion_provisions_modifier
+			}
+
+
+			start_travel_plan = {
+
+				destination = title:c_farring_cross.title_province
+
+				return_trip = no
+
+				travel_with_domicile = yes
+
+				on_arrival_event = segrellion_daenerys_invasion.0018
+
+				on_arrival_destinations = last
+
+				on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+			}
+		}
+
+
+		# =================================================
+		# DAEMON MUST FIRST BE CONTACTED THROUGH MASSEY
+		# =================================================
+
+		else = {
+
+			add_character_flag = segrellion_daenerys_beacon_negotiation_started
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_massey.0100
+
+				days = 1
+			}
 		}
 	}
 }

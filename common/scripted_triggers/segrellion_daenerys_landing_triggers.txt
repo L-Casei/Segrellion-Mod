@@ -38,19 +38,81 @@ segrellion_daemon_daenerys_reinforcement_route_used_trigger = {
 		has_character_flag = segrellion_daemon_supports_daenerys_claim_without_marriage
 
 		has_character_flag = segrellion_pledged_to_daenerys
+
+		has_character_flag = segrellion_daemon_accepts_daenerys_beacon_negotiation
+
+		has_character_flag = segrellion_daemon_refused_daenerys_beacon_negotiation
 	}
 }
 
+
+# =========================================================
+# DRAGONSTONE LANDING
+#
+# Always shown in Where the Dragon Lands.
+# Disabled while Stannis is personally on Dragonstone.
+# =========================================================
+
+segrellion_daenerys_dragonstone_landing_available_trigger = {
+
+	NOT = {
+
+		character:Baratheon_3 ?= {
+
+			is_alive = yes
+
+			location = title:c_dragonstone.title_province
+		}
+	}
+}
+
+
+# =========================================================
+# MASSEY'S HOOK LANDING
+#
+# Used as the third landing route while Daemon does NOT
+# control the Flamelands.
+# =========================================================
+
+segrellion_daenerys_masseys_hook_landing_available_trigger = {
+
+	NOT = {
+		segrellion_daemon_controls_flamelands_trigger = yes
+	}
+
+	NOT = {
+		segrellion_stormflame_controls_masseys_hook_trigger = yes
+	}
+}
+
+
+# =========================================================
+# BEACON NEGOTIATION
+#
+# Daemon must actually hold the Flamelands.
+# This only controls whether NEW negotiations can begin.
+# =========================================================
+
 segrellion_daenerys_beacon_negotiation_available_trigger = {
+
+	segrellion_daemon_controls_flamelands_trigger = yes
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_beacon_negotiation_refused
+	}
+
 
 	character:Segrellion_60 = {
 
 		is_alive = yes
+
 		is_landed = yes
+
 
 		NOT = {
 			segrellion_daemon_daenerys_reinforcement_route_used_trigger = yes
 		}
+
 
 		OR = {
 
@@ -88,5 +150,62 @@ segrellion_daenerys_beacon_negotiation_available_trigger = {
 				has_character_flag = segrellion_young_griff_blackfyre_revealed
 			}
 		}
+	}
+}
+
+
+# =========================================================
+# BEACON DIRECT LANDING
+#
+# No new negotiation is needed if:
+# - Daemon already invited Daenerys;
+# - Daemon is already pledged to Daenerys;
+# - Daemon already supports her claim;
+# - Daemon is her husband.
+# =========================================================
+
+segrellion_daenerys_beacon_direct_landing_available_trigger = {
+
+	segrellion_daemon_controls_flamelands_trigger = yes
+
+
+	OR = {
+
+		has_character_flag = segrellion_daenerys_beacon_invitation_ready
+
+
+		character:Segrellion_60 = {
+
+			OR = {
+
+				has_character_flag = segrellion_pledged_to_daenerys
+
+				has_character_flag = segrellion_daemon_supports_daenerys_claim_without_marriage
+
+				is_spouse_of = character:Targaryen_9
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# BEACON ROUTE
+#
+# The button is usable if Daenerys may either:
+# - land directly; or
+# - begin the Massey -> Daemon negotiation chain.
+# =========================================================
+
+segrellion_daenerys_beacon_route_available_trigger = {
+
+	segrellion_daemon_controls_flamelands_trigger = yes
+
+
+	OR = {
+
+		segrellion_daenerys_beacon_direct_landing_available_trigger = yes
+
+		segrellion_daenerys_beacon_negotiation_available_trigger = yes
 	}
 }

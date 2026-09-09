@@ -619,8 +619,12 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 
 		agot_bond_dragon_relation_effect = {
-
 			ACTOR = scope:rhaegon_owner
+			DRAGON = scope:rhaegon
+		}
+
+		segrellion_black_unicorn_silent_set_dragon_rider_effect = {
+			RIDER = scope:rhaegon_owner
 			DRAGON = scope:rhaegon
 		}
 
@@ -3458,6 +3462,93 @@ segrellion_visenya_become_lady_of_flamelands_effect = {
 
 			change_current_weight = 20
 			change_target_weight = 20
+		}
+	}
+}
+
+
+# =========================================================
+# RHAEGON - SILENT DRAGONRIDER SETUP
+# =========================================================
+
+segrellion_black_unicorn_silent_set_dragon_rider_effect = {
+
+	$RIDER$ = {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			set_variable = {
+				name = current_dragon
+				value = $DRAGON$
+			}
+		}
+
+		if = {
+			limit = {
+				has_trait = dragonless_dragonrider
+			}
+
+			remove_trait = dragonless_dragonrider
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_trait = dragonrider
+				}
+			}
+
+			add_trait = dragonrider
+		}
+
+		add_trait_xp = {
+			trait = dragonrider
+			track = dragon_bond
+
+			value = {
+				integer_range = {
+					min = 5
+					max = 15
+				}
+			}
+		}
+
+		create_character_memory = {
+			type = agot_tamed_a_dragon
+
+			participants = {
+				tamed_dragon = $DRAGON$
+			}
+		}
+
+		add_character_flag = segrellion_rhaegon_silent_rider_initialized
+	}
+
+	$DRAGON$ = {
+
+		if = {
+			limit = {
+				is_alive = yes
+
+				$RIDER$ = {
+					is_alive = yes
+				}
+			}
+
+			set_variable = {
+				name = current_rider
+				value = $RIDER$
+			}
+
+			clear_variable_list = current_rider_list
+
+			add_to_variable_list = {
+				name = current_rider_list
+				target = var:current_rider
+			}
 		}
 	}
 }

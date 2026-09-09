@@ -5,18 +5,12 @@
 
 # =========================================================
 # REVEAL ALAYNE AS SANSA STARK
-#
 # ROOT = Stark_Dummy_8
 # =========================================================
 
 segrellion_reveal_sansa_stark_effect = {
 
-	# =====================================================
-	# TRUE PARENTS
-	# =====================================================
-
 	if = {
-
 		limit = {
 			exists = real_father
 		}
@@ -25,7 +19,6 @@ segrellion_reveal_sansa_stark_effect = {
 	}
 
 	if = {
-
 		limit = {
 			exists = real_mother
 		}
@@ -33,44 +26,7 @@ segrellion_reveal_sansa_stark_effect = {
 		set_mother = real_mother
 	}
 
-
-	# =====================================================
-	# HOUSE STARK
-	#
-	# Stark_8 is the original historical Sansa.
-	# Stark_Dummy_8 is her continuation as Alayne.
-	# =====================================================
-
-	set_house = character:Stark_8.house
-
-
-	# =====================================================
-	# RESTORE SANSA'S TRUE NAME
-	# =====================================================
-
-	change_first_name = {
-		template_character = character:Stark_8
-	}
-
-	set_regnal_name = Sansa
-
-
-	# =====================================================
-	# REMOVE "STONE"
-	#
-	# AGOT literally gives disguised Sansa nick_stone.
-	# Removing bastard alone therefore does NOT remove it.
-	# =====================================================
-
-	remove_nickname = yes
-
-
-	# =====================================================
-	# SHE IS NOT A BASTARD
-	# =====================================================
-
 	if = {
-
 		limit = {
 			has_trait = bastard
 		}
@@ -79,7 +35,6 @@ segrellion_reveal_sansa_stark_effect = {
 	}
 
 	if = {
-
 		limit = {
 			has_trait = legitimized_bastard
 		}
@@ -87,6 +42,17 @@ segrellion_reveal_sansa_stark_effect = {
 		remove_trait = legitimized_bastard
 	}
 
+	change_first_name = {
+		template_character = character:Stark_8
+	}
+
+	set_regnal_name = Sansa
+
+	remove_nickname = yes
+
+	set_house = character:Stark_8.house
+
+	remove_nickname = yes
 
 	add_character_flag = segrellion_sansa_identity_revealed
 	add_character_flag = segrellion_sansa_is_true_stark
@@ -105,26 +71,16 @@ segrellion_sansa_arrives_in_flamelands_effect = {
 
 		if = {
 			limit = {
-				is_alive = yes
+				is_ruler = no
 			}
 
-			segrellion_reveal_sansa_stark_effect = yes
-
-			add_character_flag = segrellion_sansa_under_daemon_protection
-			add_character_flag = segrellion_sansa_arrived_flamelands
-
-
-			if = {
-				limit = {
-					is_ruler = no
-				}
-
-				set_employer = character:Segrellion_60
-			}
-
-
-			set_location = title:b_castle_farring.title_province
+			set_employer = character:Segrellion_60
 		}
+
+		set_house = character:Stark_8.house
+		remove_nickname = yes
+
+		set_location = title:b_castle_farring.title_province
 	}
 
 
@@ -212,14 +168,36 @@ segrellion_start_sansa_baelish_war_effect = {
 
 			add_character_flag = segrellion_sansa_protection_cb_authorized
 
-
 			start_war = {
-
 				cb = segrellion_sansa_protection_war_cb
-
 				target = scope:segrellion_sansa_baelish_defender
-
 				target_title = title:e_the_riverlands
+			}
+
+			every_character_war = {
+				limit = {
+
+					using_cb = segrellion_sansa_protection_war_cb
+
+					primary_attacker = scope:segrellion_sansa_vale_attacker
+					primary_defender = scope:segrellion_sansa_baelish_defender
+				}
+
+				save_scope_as = segrellion_sansa_vale_war
+			}
+		}
+
+		if = {
+			limit = {
+				exists = scope:segrellion_sansa_vale_war
+			}
+
+			character:Segrellion_60 = {
+
+				set_variable = {
+					name = segrellion_sansa_vale_war
+					value = scope:segrellion_sansa_vale_war
+				}
 			}
 		}
 	}
@@ -756,5 +734,110 @@ segrellion_sansa_story_progression_effect = {
 				days = { 3 10 }
 			}
 		}
+	}
+}
+
+
+# =========================================================
+# DAEMON JOINS THE VALE WAR
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daemon_join_sansa_vale_war_effect = {
+
+	if = {
+		limit = {
+
+			this = character:Segrellion_60
+
+			has_variable = segrellion_sansa_vale_war
+
+			NOT = {
+				has_character_flag = segrellion_sansa_daemon_joined_vale_war
+			}
+		}
+
+		var:segrellion_sansa_vale_war = {
+			add_attacker = character:Segrellion_60
+		}
+
+		add_character_flag = segrellion_sansa_daemon_joined_vale_war
+	}
+}
+
+
+# =========================================================
+# SANSA SETTLES DAEMON'S VALE DEBT
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_sansa_clear_vale_debt_effect = {
+
+	if = {
+		limit = {
+
+			this = character:Segrellion_60
+
+			has_character_flag = segrellion_vale_debt_active
+		}
+
+		add_character_flag = segrellion_vale_debt_forgiven_through_sansa
+
+		segrellion_finish_vale_debt_effect = yes
+	}
+}
+
+
+# =========================================================
+# DAEMON MARRIES SANSA FOR THE VALE WAR
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daemon_marry_sansa_for_vale_war_effect = {
+
+	if = {
+		limit = {
+
+			this = character:Segrellion_60
+
+			is_married = no
+
+			character:Stark_Dummy_8 ?= {
+				is_alive = yes
+				is_married = no
+			}
+		}
+
+		if = {
+			limit = {
+				has_trait = refusing_marriage
+			}
+
+			remove_trait = refusing_marriage
+		}
+
+		character:Stark_Dummy_8 = {
+
+			if = {
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+
+		segrellion_daemon_open_story_marriage_window_effect = yes
+
+		character:Stark_Dummy_8 = {
+
+			marry = character:Segrellion_60
+
+			add_character_flag = segrellion_daemon_sansa_dynastic_pact
+		}
+
+		add_character_flag = segrellion_daemon_sansa_dynastic_pact
+
+		segrellion_daemon_close_story_marriage_window_effect = yes
 	}
 }
