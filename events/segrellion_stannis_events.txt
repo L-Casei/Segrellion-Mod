@@ -2567,13 +2567,11 @@ segrellion_stannis.1210 = {
 			remove_character_flag = segrellion_stannis_ready_for_iron_throne
 		}
 
-
-		# =========================================================
-		# INFORM JON
+		# =================================================
+		# JON MUST RECEIVE THE NEWS
 		#
-		# Do NOT depend on the resurrection global variable here.
-		# Jon is now mechanically identified through Winterfell.
-		# =========================================================
+		# Schedule this BEFORE Stannis is killed.
+		# =================================================
 
 		character:Stark_7 ?= {
 
@@ -2586,9 +2584,20 @@ segrellion_stannis.1210 = {
 					NOT = {
 						has_character_flag = segrellion_jon_winterfell_council_called
 					}
+
+					NOT = {
+						has_character_flag = segrellion_jon_stannis_death_news_scheduled
+					}
 				}
 
-				add_character_flag = segrellion_jon_stannis_death_news_scheduled
+
+				add_character_flag = {
+
+					flag = segrellion_jon_stannis_death_news_scheduled
+
+					days = 10
+				}
+
 
 				trigger_event = {
 
