@@ -996,13 +996,7 @@ segrellion_stannis.1000 = {
 # 1010 - THE NAME OF STARK
 #
 # Root = Jon
-#
-# Stannis offers Jon release from his vows,
-# legitimacy, Winterfell and the North.
-#
-# AI:
-# 90% - Accept
-# 10% - Refuse
+# Arrives 3 days after Stannis sends the offer.
 # =========================================================
 
 segrellion_stannis.1010 = {
@@ -1012,11 +1006,11 @@ segrellion_stannis.1010 = {
 	title = segrellion_stannis.1010.t
 	desc = segrellion_stannis.1010.desc
 
-	theme = crown
+	theme = diplomacy
 
 
 	override_background = {
-		reference = segrellion_winterfell_great_hall
+		reference = segrellion_castle_black_great_hall
 	}
 
 
@@ -1027,32 +1021,17 @@ segrellion_stannis.1010 = {
 
 	trigger = {
 
-		NOT = {
-			has_character_flag = segrellion_jon_stannis_north_offer_seen
-		}
-
-		OR = {
-
-			this = character:Stark_7
-
-			this = global_var:segrellion_resurrected_jon
-
-			has_character_flag = segrellion_canonical_current_jon
-		}
-
+		this = character:Stark_7
 
 		is_alive = yes
-
-		OR = {
-			has_title = title:k_the_wall
-			is_landed = no
-		}
+		is_available = yes
 
 		character:Baratheon_3 ?= {
-
 			is_alive = yes
+		}
 
-			has_character_flag = segrellion_stannis_northern_campaign_victory
+		NOT = {
+			has_character_flag = segrellion_jon_stannis_north_offer_seen
 		}
 	}
 
@@ -1060,10 +1039,7 @@ segrellion_stannis.1010 = {
 	immediate = {
 
 		remove_character_flag = segrellion_jon_stannis_north_offer_scheduled
-
 		remove_character_flag = segrellion_jon_waiting_for_stannis_northern_result
-
-		add_character_flag = segrellion_jon_stannis_result_resolved
 
 		add_character_flag = segrellion_jon_stannis_north_offer_seen
 
@@ -1071,37 +1047,18 @@ segrellion_stannis.1010 = {
 		character:Baratheon_3 = {
 			save_scope_as = jon_stannis
 		}
-
-
-		title:e_the_north.holder ?= {
-			save_scope_as = jon_bolton_lord
-		}
 	}
 
 
 	left_portrait = {
 
-		character = root
-
-		animation = thinking
-	}
-
-
-	right_portrait = {
-
 		character = character:Baratheon_3
-
 		animation = personality_rational
 	}
 
 
 	# =====================================================
 	# ACCEPT
-	#
-	# Jon leaves the Watch, is legitimized and receives
-	# Winterfell and the North.
-	#
-	# AI chance: 90%
 	# =====================================================
 
 	option = {
@@ -1111,30 +1068,32 @@ segrellion_stannis.1010 = {
 		custom_tooltip = segrellion_stannis.1010.a.tt
 
 
-		segrellion_jon_accepts_north_effect = yes
-		if = {
-			limit = { has_character_flag = segrellion_jon_north_transfer_failed }
-			remove_character_flag = segrellion_jon_stannis_north_offer_seen
-			remove_character_flag = segrellion_jon_stannis_result_resolved
-			add_character_flag = segrellion_jon_waiting_for_stannis_northern_result
-			trigger_event = { id = segrellion_stannis.1010 days = 30 }
+		add_character_flag = segrellion_jon_stannis_result_resolved
+		add_character_flag = segrellion_jon_accepted_stannis_north_offer
+
+
+		character:Baratheon_3 = {
+
+			add_character_flag = {
+				flag = segrellion_stannis_jon_answer_scheduled
+				days = 10
+			}
+
+			trigger_event = {
+				id = segrellion_stannis.1011
+				days = 3
+			}
 		}
 
 
 		ai_chance = {
-
-			base = 90
+			base = 1000
 		}
 	}
 
 
 	# =====================================================
 	# REFUSE
-	#
-	# Jon remains Lord Commander of the Night's Watch.
-	# Stannis keeps temporary custody of the North.
-	#
-	# AI chance: 10%
 	# =====================================================
 
 	option = {
@@ -1144,38 +1103,228 @@ segrellion_stannis.1010 = {
 		custom_tooltip = segrellion_stannis.1010.b.tt
 
 
-		add_character_flag = segrellion_jon_refused_north
+		add_character_flag = segrellion_jon_stannis_result_resolved
 
 
-		# Jon remains in the Watch.
-		# Nothing is transferred and his vows remain intact.
-
-		give_nickname = nick_segrellion_lord_snow
-
-
-		character:Baratheon_3 = {
-
-			add_character_flag = segrellion_stannis_jon_refused_north
-
-			add_character_flag = segrellion_stannis_searching_northern_heir
+		trigger = {
+			has_trait = honorable
+		}
 
 
-			trigger_event = {
+		add_stress = 75
 
-				id = segrellion_stannis.1021
 
-				days = { 5 10 }
+		character:Baratheon_3 ?= {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = insulted_opinion
+
+				opinion = -30
 			}
 		}
 
 
 		ai_chance = {
-
-			base = 10
+			base = 0
 		}
 	}
 }
 
+# =========================================================
+# 1011 - JON HAS ACCEPTED
+#
+# Root = Stannis
+# The answer returns three days after Jon accepts.
+# =========================================================
+
+segrellion_stannis.1011 = {
+
+	type = character_event
+
+	title = segrellion_stannis.1011.t
+	desc = segrellion_stannis.1011.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_castle_black_great_hall
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Baratheon_3
+
+		is_alive = yes
+
+
+		character:Stark_7 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_jon_accepted_stannis_north_offer
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_stannis_received_jon_acceptance
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_stannis_jon_answer_scheduled
+
+		add_character_flag = segrellion_stannis_received_jon_acceptance
+
+
+		# The actual transfer is executed with Jon as event root.
+		character:Stark_7 = {
+			trigger_event = segrellion_stannis.1012
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_7
+		animation = personality_honorable
+	}
+
+
+	# =====================================================
+	# KEEP PLAYING STANNIS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1011.a
+
+		custom_tooltip = segrellion_stannis.1011.a.tt
+
+
+		ai_chance = {
+			base = 1000
+		}
+	}
+
+
+	# =====================================================
+	# SWITCH TO JON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_stannis.1011.b
+
+		trigger = {
+			is_ai = no
+		}
+
+		custom_tooltip = segrellion_stannis.1011.b.tt
+
+
+		set_player_character = character:Stark_7
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# =========================================================
+# 1012 - JON NORTH TRANSFER
+#
+# Root = Jon
+# Hidden mechanical transfer.
+# =========================================================
+
+segrellion_stannis.1012 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Stark_7
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_accepted_stannis_north_offer
+
+		NOT = {
+			has_character_flag = segrellion_jon_north_handover_completed
+		}
+
+
+		character:Baratheon_3 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		segrellion_jon_accepts_north_effect = yes
+
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_jon_north_transfer_failed
+			}
+
+
+			trigger_event = {
+				id = segrellion_stannis.1012
+				days = 10
+			}
+		}
+
+
+		else = {
+
+			remove_character_flag = segrellion_jon_accepted_stannis_north_offer
+
+			add_character_flag = segrellion_jon_north_handover_completed
+
+
+			# Northern lords approve of Stannis restoring a Stark.
+			every_vassal = {
+
+				limit = {
+					is_landed = yes
+				}
+
+
+				add_opinion = {
+
+					target = character:Baratheon_3
+
+					modifier = segrellion_stannis_restored_stark_north_opinion
+				}
+			}
+		}
+	}
+}
 
 # =========================================================
 # 1020 - A STARK IN WINTERFELL
