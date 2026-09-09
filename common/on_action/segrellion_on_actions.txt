@@ -50,6 +50,7 @@ monthly_global_pulse = {
 		segrellion_sansa_story_progression
 		segrellion_ramsay_war_lock_progression
 		segrellion_daenerys_aurane_land_promise_progression
+		segrellion_daenerys_ai_invasion_failsafe
 	}
 }
 
@@ -328,6 +329,101 @@ segrellion_daenerys_followers_progression = {
 	effect = {
 		segrellion_setup_daenerys_followers_effect = yes
 		segrellion_setup_daenerys_dragons_300_effect = yes
+	}
+}
+
+# =========================================================
+# DAENERYS AI - INVASION FAILSAFE
+# =========================================================
+
+segrellion_daenerys_ai_invasion_failsafe = {
+
+	effect = {
+
+		character:Targaryen_9 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+					is_ai = yes
+
+					game_start_date >= 8300.8.20
+					game_start_date < 8301.1.1
+
+					has_character_flag = segrellion_daenerys_invasion_committed
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_landed_in_westeros
+					}
+				}
+
+
+				# =================================================
+				# AI FLEET FINANCING
+				#
+				# Required fleet contributions cost 2300 gold.
+				# AI receives one emergency treasury injection.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_daenerys_fleet_project_active
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_dragon_fleet_completed
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_ai_fleet_funding_failsafe_used
+						}
+					}
+
+					add_gold = 3000
+
+					add_character_flag = segrellion_daenerys_ai_fleet_funding_failsafe_used
+				}
+
+
+				# =================================================
+				# COMPLETED FLEET MUST LEAD TO WESTEROS
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_daenerys_dragon_fleet_completed
+
+						has_character_flag = segrellion_daenerys_camped_at_pentos
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_crossing_committed
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landing_chosen
+						}
+					}
+
+
+					segrellion_daenerys_apply_crossing_capacity_effect = yes
+
+					remove_character_flag = segrellion_daenerys_waiting_at_pentos
+
+					add_character_flag = segrellion_daenerys_crossing_committed
+
+
+					trigger_event = {
+						id = segrellion_daenerys_invasion.0010
+						days = 1
+					}
+				}
+			}
+		}
 	}
 }
 
