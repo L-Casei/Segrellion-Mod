@@ -1,13 +1,27 @@
-﻿# White Shadow callbacks extracted without changing behavior.
-# Engine hook registrations remain in segrellion_on_actions.txt.
+﻿# =========================================================
+# WHITE SHADOW - 106 AC
+# =========================================================
+
+
+# =========================================================
+# ALEX INTRO
+# =========================================================
 
 segrellion_intro_on_player_select_destiny_confirmed = {
+
 	effect = {
+
 		if = {
+
 			limit = {
+
 				this = character:Segrellion_1
-				NOT = { has_character_flag = segrellion_intro_event_seen }
+
+				NOT = {
+					has_character_flag = segrellion_intro_event_seen
+				}
 			}
+
 			trigger_event = {
 				id = segrellion_intro.0001
 				days = 3
@@ -15,14 +29,25 @@ segrellion_intro_on_player_select_destiny_confirmed = {
 		}
 	}
 }
+
 
 segrellion_intro_yearly_fallback = {
+
 	effect = {
+
 		every_player = {
+
 			limit = {
+
 				this = character:Segrellion_1
-				NOT = { has_character_flag = segrellion_intro_event_seen }
+
+				game_start_date = 8106.4.19
+
+				NOT = {
+					has_character_flag = segrellion_intro_event_seen
+				}
 			}
+
 			trigger_event = {
 				id = segrellion_intro.0001
 				days = 3
@@ -31,150 +56,630 @@ segrellion_intro_yearly_fallback = {
 	}
 }
 
-segrellion_first_stepstones_attacker_victory = {
-	trigger = {
-		exists = scope:war
-		scope:war = {
-			has_variable = segrellion_tracked_first_stepstones_war
-		}
-		character:Segrellion_1 ?= {
-			is_alive = yes
-			has_character_flag = segrellion_stepstones_war_joined
-			NOR = {
-				has_character_flag = segrellion_stepstones_story_completed
-				has_character_flag = segrellion_stepstones_aftermath_pending
-			}
-		}
-	}
-	effect = {
-		character:Segrellion_1 ?= {
-			add_character_flag = segrellion_stepstones_daemon_won
-			add_character_flag = segrellion_stepstones_aftermath_pending
-			trigger_event = {
-				id = segrellion_intro.0006
-				days = 3
-			}
-		}
-	}
-}
 
-segrellion_first_stepstones_no_victory = {
-	trigger = {
-		exists = scope:war
-		scope:war = {
-			has_variable = segrellion_tracked_first_stepstones_war
-		}
-		character:Segrellion_1 ?= {
-			is_alive = yes
-			has_character_flag = segrellion_stepstones_war_joined
-			NOR = {
-				has_character_flag = segrellion_stepstones_story_completed
-				has_character_flag = segrellion_stepstones_aftermath_pending
-			}
-		}
-	}
-	effect = {
-		character:Segrellion_1 ?= {
-			add_character_flag = segrellion_stepstones_daemon_failed
-			add_character_flag = segrellion_stepstones_aftermath_pending
-			trigger_event = {
-				id = segrellion_intro.0008
-				days = 3
-			}
-		}
-	}
-}
-
-segrellion_restless_for_war_monthly_check = {
-	effect = {
-		character:Segrellion_1 ?= {
-			if = {
-				limit = {
-					is_alive = yes
-					has_character_flag = segrellion_restless_for_war_path
-					NOT = { has_character_flag = segrellion_restless_for_war_answered_call }
-				}
-				if = {
-					limit = {
-						character:Targaryen_61 ?= {
-							any_character_war = {
-								primary_attacker ?= prev
-							}
-						}
-					}
-					character:Targaryen_61 = {
-						random_character_war = {
-							limit = {
-								primary_attacker ?= prev
-							}
-							add_attacker = root
-							root = {
-								add_character_flag = segrellion_restless_for_war_answered_call
-							}
-						}
-					}
-				}
-				else_if = {
-					limit = {
-						character:Velaryon_31 ?= {
-							any_character_war = {
-								primary_attacker ?= prev
-							}
-						}
-					}
-					character:Velaryon_31 = {
-						random_character_war = {
-							limit = {
-								primary_attacker ?= prev
-							}
-							add_attacker = root
-							root = {
-								add_character_flag = segrellion_restless_for_war_answered_call
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
+# =========================================================
+# TRISTAN VLADWYN - 106 STARTUP
+# =========================================================
 
 vladwyn_8106_startup = {
-    effect = {
-        every_player = {
-            limit = {
-                this = character:Vladwyn_1
-                game_start_date = 8106.4.19
-                NOT = { has_character_flag = vladwyn_sentinels_path_resolved }
-                NOT = { has_character_flag = vladwyn_sentinels_path_queued }
-            }
 
-            # -------------------------------------------------
-            # FAILSAFE:
-            # Tristan MUST begin as a Landless Adventurer.
-            # If AGOT/startup has reduced him to a courtier,
-            # remove him from that court and rebuild his camp.
-            # -------------------------------------------------
-            if = {
-                limit = {
-                    has_dlc_feature = roads_to_power
-                    NOT = { is_landless_adventurer = yes }
-                }
+	effect = {
 
-                move_to_pool = yes
+		if = {
 
-                create_landless_adventurer_title_effect = {
-                    REASON = flag:historical
-                    FLAVOR_CHAR = this
-                }
-            }
+			limit = {
+				game_start_date = 8106.4.19
+			}
 
-            add_character_flag = vladwyn_sentinels_path_queued
+			character:Vladwyn_1 ?= {
 
-            trigger_event = {
-                id = segrellion_sentinel.0001
-                days = 1
-            }
-        }
-    }
+				if = {
+
+					limit = {
+						is_alive = yes
+
+						NOT = {
+							has_character_flag = vladwyn_106_startup_applied
+						}
+					}
+
+					add_character_flag = vladwyn_106_startup_applied
+
+
+					# =========================================
+					# CANON
+					# =========================================
+
+					if = {
+
+						limit = {
+							has_game_rule = segrellion_tristan_106_start_canon
+						}
+
+
+						# If Tristan himself was selected in the
+						# bookmark, move the player to Alex before
+						# destroying the adventurer title.
+						if = {
+
+							limit = {
+								is_ai = no
+								has_multiple_players = no
+							}
+
+							add_internal_flag = special
+							set_player_character = character:Segrellion_1
+						}
+
+
+						# Multiplayer safety:
+						# do not destroy a human Tristan's only
+						# playable title in multiplayer.
+						if = {
+
+							limit = {
+
+								OR = {
+									is_ai = yes
+									has_multiple_players = no
+								}
+							}
+
+
+							primary_title ?= {
+								save_scope_as = vladwyn_106_old_camp
+							}
+
+
+							if = {
+
+								limit = {
+									exists = scope:vladwyn_106_old_camp
+								}
+
+								destroy_title = scope:vladwyn_106_old_camp
+							}
+
+
+							set_employer = character:Segrellion_1
+
+
+							remove_character_flag = vladwyn_landless_route_unlocked
+							remove_character_flag = vladwyn_open_road_taken
+							remove_character_flag = vladwyn_adventurer_events_unlocked
+
+
+							add_character_flag = vladwyn_106_canon_start
+							add_character_flag = kingsguard_ambition
+
+
+							if = {
+
+								limit = {
+									NOT = {
+										has_trait = refusing_marriage
+									}
+								}
+
+								add_trait = refusing_marriage
+							}
+
+
+							if = {
+
+								limit = {
+									NOT = {
+										has_character_modifier = training_for_kingsguard
+									}
+								}
+
+								add_character_modifier = {
+									modifier = training_for_kingsguard
+								}
+							}
+
+
+							if = {
+
+								limit = {
+
+									character:Segrellion_1 ?= {
+										is_alive = yes
+									}
+
+									NOT = {
+										has_relation_best_friend = character:Segrellion_1
+									}
+								}
+
+								set_relation_best_friend = {
+									target = character:Segrellion_1
+									reason = best_friend_childhood_oath
+									copy_reason = friend
+								}
+							}
+
+
+							if = {
+
+								limit = {
+
+									NOT = {
+										has_character_flag = vladwyn_sword_of_sentinel_start_granted
+									}
+								}
+
+								segrellion_create_artifact_sword_of_the_sentinel_effect = {
+									OWNER = this
+								}
+
+								add_character_flag = vladwyn_sword_of_sentinel_start_granted
+							}
+						}
+					}
+
+
+					# =========================================
+					# THE OPEN ROAD
+					# =========================================
+
+					else_if = {
+
+						limit = {
+							has_game_rule = segrellion_tristan_106_start_landless
+						}
+
+
+						if = {
+
+							limit = {
+
+								has_dlc_feature = roads_to_power
+
+								NOT = {
+									is_landless_adventurer = yes
+								}
+							}
+
+							move_to_pool = yes
+
+							create_landless_adventurer_title_effect = {
+								REASON = flag:historical
+								FLAVOR_CHAR = this
+							}
+						}
+
+
+						add_character_flag = vladwyn_106_landless_start
+						add_character_flag = vladwyn_landless_route_unlocked
+						add_character_flag = vladwyn_open_road_taken
+						add_character_flag = vladwyn_adventurer_events_unlocked
+
+
+						remove_character_flag = kingsguard_ambition
+						remove_character_modifier = training_for_kingsguard
+
+
+						primary_title ?= {
+
+							save_title_name_change_data = {
+								TRANSFER_VAR = yes
+							}
+
+							reset_title_prefix = yes
+
+							set_title_name = vladwyn_the_honorables_name
+						}
+
+
+						add_prestige = 200
+						add_martial_lifestyle_xp = 250
+
+
+						add_character_modifier = {
+							modifier = vladwyn_wandering_knight_modifier
+							years = 8
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STEPSTONES - LATER WAR START
+# =========================================================
+
+segrellion_stepstones_followup_war_started = {
+
+	trigger = {
+
+		exists = scope:war
+
+
+		character:Segrellion_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_stepstones_campaign_active
+
+			NOT = {
+				has_character_flag = segrellion_stepstones_story_completed
+			}
+		}
+
+
+		scope:war = {
+
+			OR = {
+
+				AND = {
+
+					using_cb = daemon_stepstones_second_war
+
+					OR = {
+						primary_attacker ?= character:Targaryen_61
+						primary_attacker ?= character:Velaryon_31
+					}
+				}
+
+
+				AND = {
+
+					using_cb = triarchy_anti_daemon_war
+
+					primary_defender ?= character:Targaryen_61
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		scope:war = {
+
+
+			# =============================================
+			# DAEMON'S SECOND STEPSTONES WAR
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					using_cb = daemon_stepstones_second_war
+
+					OR = {
+						primary_attacker ?= character:Targaryen_61
+						primary_attacker ?= character:Velaryon_31
+					}
+				}
+
+
+				set_variable = {
+					name = segrellion_tracked_second_stepstones_war
+					value = yes
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_participant = character:Segrellion_1
+						}
+					}
+
+					add_attacker = character:Segrellion_1
+				}
+
+
+				character:Segrellion_1 = {
+
+					add_character_flag = segrellion_stepstones_second_war_joined
+
+					trigger_event = {
+						id = segrellion_intro.0101
+						days = 1
+					}
+				}
+			}
+
+
+			# =============================================
+			# TRIARCHY COUNTERATTACK
+			# =============================================
+
+			else_if = {
+
+				limit = {
+
+					using_cb = triarchy_anti_daemon_war
+
+					primary_defender ?= character:Targaryen_61
+				}
+
+
+				set_variable = {
+					name = segrellion_tracked_triarchy_stepstones_war
+					value = yes
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_participant = character:Segrellion_1
+						}
+					}
+
+					add_defender = character:Segrellion_1
+				}
+
+
+				character:Segrellion_1 = {
+
+					add_character_flag = segrellion_stepstones_triarchy_war_joined
+
+					trigger_event = {
+						id = segrellion_intro.0101
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STEPSTONES - ATTACKER VICTORY
+# =========================================================
+
+segrellion_stepstones_attacker_victory = {
+
+	trigger = {
+
+		exists = scope:war
+
+		scope:war = {
+
+			OR = {
+				has_variable = segrellion_tracked_first_stepstones_war
+				has_variable = segrellion_tracked_second_stepstones_war
+				has_variable = segrellion_tracked_triarchy_stepstones_war
+			}
+		}
+	}
+
+
+	effect = {
+
+
+		# =============================================
+		# FIRST WAR WON BY DAEMON
+		# =============================================
+
+		if = {
+
+			limit = {
+
+				scope:war = {
+					has_variable = segrellion_tracked_first_stepstones_war
+				}
+
+				character:Segrellion_1 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_stepstones_first_war_completed
+					}
+				}
+			}
+
+
+			character:Segrellion_1 = {
+
+				add_character_flag = segrellion_stepstones_daemon_won
+				add_character_flag = segrellion_stepstones_first_war_completed
+				add_character_flag = segrellion_stepstones_aftermath_pending
+
+				trigger_event = {
+					id = segrellion_intro.0006
+					days = 3
+				}
+			}
+		}
+
+
+		# =============================================
+		# SECOND WAR WON
+		# =============================================
+
+		else_if = {
+
+			limit = {
+
+				scope:war = {
+					has_variable = segrellion_tracked_second_stepstones_war
+				}
+
+				character:Segrellion_1 ?= {
+					has_character_flag = segrellion_stepstones_campaign_active
+				}
+			}
+
+
+			character:Segrellion_1 = {
+
+				add_character_flag = segrellion_stepstones_second_war_completed
+
+				trigger_event = {
+					id = segrellion_intro.0190
+					days = 180
+				}
+			}
+		}
+
+
+		# =============================================
+		# TRIARCHY WON ITS COUNTERATTACK
+		# DAEMON LOST
+		# =============================================
+
+		else_if = {
+
+			limit = {
+
+				scope:war = {
+					has_variable = segrellion_tracked_triarchy_stepstones_war
+				}
+			}
+
+
+			character:Segrellion_1 ?= {
+
+				add_character_flag = segrellion_stepstones_daemon_failed
+				add_character_flag = segrellion_stepstones_aftermath_pending
+
+				trigger_event = {
+					id = segrellion_intro.0008
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STEPSTONES - DEFENDER VICTORY
+# =========================================================
+
+segrellion_stepstones_defender_victory = {
+
+	trigger = {
+
+		exists = scope:war
+
+		scope:war = {
+
+			OR = {
+				has_variable = segrellion_tracked_first_stepstones_war
+				has_variable = segrellion_tracked_second_stepstones_war
+				has_variable = segrellion_tracked_triarchy_stepstones_war
+			}
+		}
+	}
+
+
+	effect = {
+
+
+		# First/second Daemon war:
+		# defender victory means Daemon lost.
+
+		if = {
+
+			limit = {
+
+				scope:war = {
+
+					OR = {
+						has_variable = segrellion_tracked_first_stepstones_war
+						has_variable = segrellion_tracked_second_stepstones_war
+					}
+				}
+			}
+
+
+			character:Segrellion_1 ?= {
+
+				add_character_flag = segrellion_stepstones_daemon_failed
+				add_character_flag = segrellion_stepstones_aftermath_pending
+
+				trigger_event = {
+					id = segrellion_intro.0008
+					days = 3
+				}
+			}
+		}
+
+
+		# Triarchy attacks Daemon:
+		# defender victory means Daemon held the islands.
+
+		else_if = {
+
+			limit = {
+
+				scope:war = {
+					has_variable = segrellion_tracked_triarchy_stepstones_war
+				}
+			}
+
+
+			character:Segrellion_1 ?= {
+
+				trigger_event = {
+					id = segrellion_intro.0103
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STEPSTONES - WHITE PEACE / INVALIDATED
+# =========================================================
+
+segrellion_stepstones_no_victory = {
+
+	trigger = {
+
+		exists = scope:war
+
+		scope:war = {
+
+			OR = {
+				has_variable = segrellion_tracked_first_stepstones_war
+				has_variable = segrellion_tracked_second_stepstones_war
+				has_variable = segrellion_tracked_triarchy_stepstones_war
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Segrellion_1 ?= {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_stepstones_story_completed
+					}
+				}
+
+				add_character_flag = segrellion_stepstones_daemon_failed
+				add_character_flag = segrellion_stepstones_aftermath_pending
+
+				trigger_event = {
+					id = segrellion_intro.0008
+					days = 3
+				}
+			}
+		}
+	}
 }

@@ -86,11 +86,17 @@ segrellion_intro.0002 = {
 	}
 
 	option = {
+		
 		name = segrellion_intro.0002.a
 		ai_chance = { base = 80 }
+
 		add_character_flag = segrellion_chose_stepstones
 		add_character_flag = segrellion_stepstones_war_joined
+		add_character_flag = segrellion_stepstones_route_active
+		add_character_flag = segrellion_stepstones_campaign_active
+
 		add_prestige = 75
+
 		custom_tooltip = segrellion_stepstones_route_started_tt
 		hidden_effect = {
 			if = {
@@ -98,38 +104,66 @@ segrellion_intro.0002 = {
 					character:Targaryen_61 ?= { is_alive = yes }
 					title:d_first_stepstones.holder ?= { exists = this }
 				}
+
 				character:Targaryen_61 = {
+
 					if = {
+
 						limit = {
+
 							NOT = {
+
 								any_character_war = {
+
+									using_cb = daemon_stepstones_first_war
+
 									primary_attacker ?= prev
 								}
 							}
 						}
+
 						start_war = {
+
 							casus_belli = daemon_stepstones_first_war
+
 							target = title:d_first_stepstones.holder
+
 							claimant = this
+
 							target_title = title:d_first_stepstones
 						}
 					}
+
+
 					random_character_war = {
+
 						limit = {
+
+							using_cb = daemon_stepstones_first_war
+
 							primary_attacker ?= prev
 						}
-						set_variable = { name = segrellion_tracked_first_stepstones_war value = yes }
-						add_attacker = root
-						root = {
-							add_character_flag = segrellion_stepstones_war_joined
-							trigger_event = {
-								id = segrellion_intro.0090
-								days = { 10 14 }
-							}
+
+
+						set_variable = {
+							name = segrellion_tracked_first_stepstones_war
+							value = yes
 						}
+
+
+						add_attacker = root
+
+
+						root = {
+
+							add_character_flag = segrellion_stepstones_war_joined
+						}
+
+
 						save_scope_as = segrellion_stepstones_war
 					}
 				}
+
 				spawn_army = {
 					levies = 1000
 					location = root.capital_province
@@ -155,116 +189,91 @@ segrellion_intro.0002 = {
 	}
 }
 
-segrellion_intro.0090 = {
-	type = character_event
-	hidden = yes
-
-	trigger = {
-		is_alive = yes
-		has_character_flag = segrellion_stepstones_war_joined
-		NOR = {
-			has_character_flag = segrellion_stepstones_story_completed
-			has_character_flag = segrellion_stepstones_aftermath_pending
-		}
-	}
-
-	immediate = {
-		if = {
-			limit = {
-				OR = {
-					any_character_war = {
-						has_variable = segrellion_tracked_first_stepstones_war
-					}
-					character:Targaryen_61 ?= {
-						any_character_war = {
-							has_variable = segrellion_tracked_first_stepstones_war
-						}
-					}
-				}
-			}
-			trigger_event = {
-				id = segrellion_intro.0090
-				days = { 10 14 }
-			}
-		}
-		else_if = {
-			limit = {
-				character:Targaryen_61 ?= {
-					OR = {
-						has_title = title:d_first_stepstones
-						has_title = title:k_the_stepstones
-					}
-				}
-			}
-			add_character_flag = segrellion_stepstones_daemon_won
-			add_character_flag = segrellion_stepstones_aftermath_pending
-			trigger_event = {
-				id = segrellion_intro.0006
-				days = 3
-			}
-		}
-		else = {
-			add_character_flag = segrellion_stepstones_daemon_failed
-			add_character_flag = segrellion_stepstones_aftermath_pending
-			trigger_event = {
-				id = segrellion_intro.0008
-				days = 3
-			}
-		}
-	}
-}
-
 segrellion_intro.0006 = {
+
 	type = character_event
+
 	title = segrellion_intro.0006.t
 	desc = segrellion_intro.0006.desc
+
 	theme = war
 
-	override_background = { reference = army_camp }
+
+	override_background = {
+		reference = army_camp
+	}
+
 
 	left_portrait = {
 		character = root
 		animation = personality_rational
 	}
 
+
 	right_portrait = {
 		character = character:Targaryen_61
 		animation = personality_bold
 	}
 
+
 	trigger = {
-		OR = {
-			has_character_flag = segrellion_chose_stepstones
-			has_character_flag = segrellion_stepstones_war_joined
+
+		has_character_flag = segrellion_stepstones_first_war_completed
+
+		NOT = {
+			has_character_flag = segrellion_stepstones_story_completed
 		}
-		NOT = { has_character_flag = segrellion_stepstones_story_completed }
 	}
 
+
 	immediate = {
-		add_character_flag = segrellion_stepstones_story_completed
+
 		remove_character_flag = segrellion_stepstones_aftermath_pending
 	}
 
+
+	# =====================================================
+	# CONTINUE WITH DAEMON
+	# =====================================================
+
 	option = {
+
 		name = segrellion_intro.0006.a
-		ai_chance = { base = 65 }
+
+		ai_chance = {
+			base = 65
+		}
+
+
+		add_character_flag = segrellion_restless_for_war_path
+		add_character_flag = segrellion_stepstones_campaign_active
+		add_character_flag = segrellion_targaryen_service_remembered
+
+
 		add_character_modifier = {
 			modifier = segrellion_restless_for_war_modifier
 			years = 5
 		}
+
+
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
 		custom_tooltip = segrellion_stepstones_daemon_friendship_tt
-		add_character_flag = segrellion_restless_for_war_path
-		add_character_flag = segrellion_targaryen_service_remembered
+
+
 		hidden_effect = {
+
 			character:Targaryen_61 ?= {
+
 				if = {
+
 					limit = {
+
 						NOR = {
 							has_relation_friend = root
 							has_relation_best_friend = root
 						}
 					}
+
 					set_relation_friend = {
 						target = root
 						reason = segrellion_stepstones_brothers_in_arms
@@ -272,7 +281,10 @@ segrellion_intro.0006 = {
 				}
 			}
 		}
+
+
 		character:Targaryen_63 ?= {
+
 			add_opinion = {
 				target = root
 				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
@@ -280,26 +292,54 @@ segrellion_intro.0006 = {
 		}
 	}
 
+
+	# =====================================================
+	# RETURN HOME
+	# =====================================================
+
 	option = {
+
 		name = segrellion_intro.0006.b
-		ai_chance = { base = 35 }
+
+		ai_chance = {
+			base = 35
+		}
+
+
+		add_character_flag = segrellion_homeward_purpose_path
+		add_character_flag = segrellion_stepstones_campaign_abandoned
+		add_character_flag = segrellion_stepstones_story_completed
+		add_character_flag = segrellion_targaryen_service_remembered
+
+
+		remove_character_flag = segrellion_stepstones_campaign_active
+		remove_character_flag = segrellion_stepstones_route_active
+
+
 		add_character_modifier = {
 			modifier = segrellion_homeward_purpose_modifier
 			years = 5
 		}
+
+
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
 		custom_tooltip = segrellion_stepstones_daemon_friendship_tt
-		add_character_flag = segrellion_homeward_purpose_path
-		add_character_flag = segrellion_targaryen_service_remembered
+
+
 		hidden_effect = {
+
 			character:Targaryen_61 ?= {
+
 				if = {
+
 					limit = {
+
 						NOR = {
 							has_relation_friend = root
 							has_relation_best_friend = root
 						}
 					}
+
 					set_relation_friend = {
 						target = root
 						reason = segrellion_stepstones_brothers_in_arms
@@ -307,7 +347,10 @@ segrellion_intro.0006 = {
 				}
 			}
 		}
+
+
 		character:Targaryen_63 ?= {
+
 			add_opinion = {
 				target = root
 				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
@@ -344,8 +387,12 @@ segrellion_intro.0008 = {
 
 	immediate = {
 		add_character_flag = segrellion_stepstones_story_completed
-		remove_character_flag = segrellion_stepstones_aftermath_pending
+		add_character_flag = segrellion_stepstones_campaign_failed
 		add_character_flag = segrellion_targaryen_service_remembered
+
+		remove_character_flag = segrellion_stepstones_campaign_active
+		remove_character_flag = segrellion_stepstones_route_active
+		remove_character_flag = segrellion_stepstones_aftermath_pending
 	}
 
 	option = {
@@ -478,6 +525,262 @@ segrellion_intro.0005 = {
 			add_county_modifier = {
 				modifier = segrellion_foundations_of_vhalerion_county_modifier
 				years = 15
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DAEMON CALLS ALEX BACK TO THE STEPSTONES
+# =========================================================
+
+segrellion_intro.0101 = {
+
+	type = character_event
+
+	title = segrellion_intro.0101.t
+	desc = segrellion_intro.0101.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_61
+		animation = personality_bold
+	}
+
+
+	trigger = {
+
+		has_character_flag = segrellion_stepstones_campaign_active
+
+		NOT = {
+			has_character_flag = segrellion_stepstones_story_completed
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_intro.0101.a
+
+		add_prestige = 50
+	}
+}
+
+
+# =========================================================
+# FINAL VICTORY IN THE STEPSTONES
+# =========================================================
+
+segrellion_intro.0103 = {
+
+	type = character_event
+
+	title = segrellion_intro.0103.t
+	desc = segrellion_intro.0103.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_61
+		animation = personality_bold
+	}
+
+
+	trigger = {
+
+		has_character_flag = segrellion_stepstones_campaign_active
+
+		NOT = {
+			has_character_flag = segrellion_stepstones_story_completed
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_stepstones_story_completed
+		add_character_flag = segrellion_stepstones_campaign_completed
+
+		remove_character_flag = segrellion_stepstones_campaign_active
+		remove_character_flag = segrellion_stepstones_route_active
+		remove_character_flag = segrellion_stepstones_aftermath_pending
+	}
+
+
+	option = {
+
+		name = segrellion_intro.0103.a
+
+
+		add_prestige = 750
+		add_martial_lifestyle_xp = 500
+
+
+		character:Targaryen_61 ?= {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOR = {
+						has_relation_friend = root
+						has_relation_best_friend = root
+					}
+				}
+
+				set_relation_friend = {
+					target = root
+					reason = segrellion_stepstones_brothers_in_arms
+				}
+			}
+		}
+
+
+		character:Targaryen_63 ?= {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STEPSTONES CAMPAIGN CLOSURE FAILSAFE
+# =========================================================
+
+segrellion_intro.0190 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_stepstones_campaign_active
+		has_character_flag = segrellion_stepstones_second_war_completed
+
+		NOT = {
+			has_character_flag = segrellion_stepstones_story_completed
+		}
+	}
+
+
+	immediate = {
+
+
+		# Daemon died before the campaign was resolved.
+
+		if = {
+
+			limit = {
+
+				character:Targaryen_61 ?= {
+					is_alive = no
+				}
+			}
+
+			add_character_flag = segrellion_stepstones_daemon_failed
+			add_character_flag = segrellion_stepstones_aftermath_pending
+
+			trigger_event = {
+				id = segrellion_intro.0008
+				days = 1
+			}
+		}
+
+
+		# A Triarchy counter-war is currently active.
+		# Its normal war-result hooks will resolve the story.
+
+		else_if = {
+
+			limit = {
+
+				character:Targaryen_61 ?= {
+
+					any_character_war = {
+
+						using_cb = triarchy_anti_daemon_war
+
+						primary_defender ?= prev
+					}
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_intro.0190
+				days = 90
+			}
+		}
+
+
+		# Daemon has consolidated the Stepstones and no
+		# counter-war remains.
+
+		else_if = {
+
+			limit = {
+
+				character:Targaryen_61 ?= {
+
+					is_alive = yes
+
+					has_title = title:k_the_stepstones
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_intro.0103
+				days = 1
+			}
+		}
+
+
+		# AGOT has not resolved its scenario yet.
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_intro.0190
+				days = 180
 			}
 		}
 	}
