@@ -33,10 +33,14 @@ segrellion_jon_frey.0010 = {
 
 			is_alive = no
 
-			has_character_flag = segrellion_stannis_murdered_by_baelish
+		}
+		OR = {
+			has_character_flag = segrellion_jon_stannis_death_news_pending
+			character:Baratheon_3 = { has_dead_character_flag = segrellion_stannis_murdered_by_baelish }
 		}
 
 
+		NOT = { has_character_flag = segrellion_jon_stannis_death_news_received }
 		NOT = {
 			has_character_flag = segrellion_jon_winterfell_council_called
 		}
@@ -44,6 +48,8 @@ segrellion_jon_frey.0010 = {
 
 	immediate = {
 
+		add_character_flag = segrellion_jon_stannis_death_news_received
+		remove_character_flag = segrellion_jon_stannis_death_news_pending
 		remove_character_flag = segrellion_jon_stannis_death_news_scheduled
 	}
 
@@ -217,9 +223,9 @@ segrellion_jon_frey.0020 = {
 		# THE NORTH PASSES TO JON
 		# =================================================
 
-		title:e_the_north = {
-
-			grant_title = root
+		if = {
+			limit = { NOT = { has_title = title:e_the_north } }
+			title:e_the_north = { grant_title = root }
 		}
 
 
@@ -254,7 +260,14 @@ segrellion_jon_frey.0020 = {
 				resolve_title_and_vassal_change = scope:segrellion_jon_final_independence_change
 			}
 
-			change_government = feudal_government
+			segrellion_jon_clear_stannis_political_liege_effect = yes
+			agot_mw_clear_data_effect = yes
+			remove_character_flag = bookmark_independent
+			remove_character_flag = segrellion_jon_coronation_locked_until_council
+			remove_character_flag = agot_start_historical_coronation_cooldown
+			remove_character_flag = segrellion_jon_stannis_death_news_pending
+			remove_character_flag = segrellion_jon_stannis_death_news_scheduled
+			segrellion_jon_update_northern_government_effect = yes
 
 			set_primary_title_to = title:e_the_north
 

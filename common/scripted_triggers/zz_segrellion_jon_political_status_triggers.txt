@@ -1,0 +1,25 @@
+# AGOT 0.5.2.1: 00_agot_triggers.txt. Preserve its MW checks and add only
+# Jon's pre-Council interregnum. Native Westerosi flavorization and both
+# coronation systems therefore continue to regard him as a lord.
+agot_is_independent_ruler = {
+	custom_description = {
+		text = "is_independent_ruler"
+		AND = {
+			is_independent_ruler = yes
+			NOT = { has_variable = agot_pwl_direct }
+			NOT = { has_character_flag = bookmark_independent }
+			NOT = { segrellion_jon_pre_council_trigger = yes }
+		}
+	}
+}
+
+segrellion_jon_pre_council_trigger = {
+	this = character:Stark_7
+	is_alive = yes
+	OR = {
+		has_character_flag = segrellion_jon_coronation_locked_until_council
+		has_character_flag = segrellion_jon_lord_paramount_under_stannis
+		has_character_flag = segrellion_jon_restored_to_winterfell
+	}
+	NOT = { has_character_flag = segrellion_jon_king_in_the_north }
+}

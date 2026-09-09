@@ -569,7 +569,7 @@ segrellion_jon_accepts_north_effect = {
 		# Jon must NEVER begin a coronation while Stannis rules the North.
 		add_character_flag = segrellion_jon_coronation_locked_until_council
 
-		add_character_flag = agot_start_historical_coronation_cooldown
+		remove_character_flag = agot_start_historical_coronation_cooldown
 	}
 
 
@@ -1045,60 +1045,7 @@ segrellion_jon_accepts_north_effect = {
 		}
 
 
-		# =========================================================
-		# JON RULES WINTERFELL UNDER STANNIS
-		#
-		# Stannis temporarily remains Lord of the North.
-		# Jon does NOT become an independent King yet.
-		# =========================================================
-
-		if = {
-
-			limit = {
-
-				character:Baratheon_3 ?= {
-					is_alive = yes
-				}
-
-				title:e_the_north.holder = root
-			}
-
-			# Stannis remains the political overlord of the North
-			# until the Northern lords acclaim Jon themselves.
-
-			title:e_the_north = {
-				grant_title = character:Baratheon_3
-			}
-
-			create_title_and_vassal_change = {
-
-				type = swear_fealty
-
-				save_scope_as = segrellion_jon_stannis_vassal_change
-
-				add_claim_on_loss = no
-			}
-
-			root = {
-
-				change_liege = {
-
-					liege = character:Baratheon_3
-
-					change = scope:segrellion_jon_stannis_vassal_change
-				}
-
-				change_government = lp_feudal_government
-
-				set_primary_title_to = title:k_winterfell
-
-				add_character_flag = segrellion_jon_lord_of_winterfell_under_stannis
-
-				add_character_flag = segrellion_jon_lord_paramount_under_stannis
-			}
-
-			resolve_title_and_vassal_change = scope:segrellion_jon_stannis_vassal_change
-		}
+		segrellion_jon_pre_council_status_effect = yes
 
 
 		# =================================================
@@ -1874,5 +1821,74 @@ segrellion_resolve_stannis_jon_effect = {
 	else_if = {
 		limit = { title:k_the_wall.holder ?= { is_alive = yes has_character_flag = segrellion_canonical_current_jon } }
 		title:k_the_wall.holder ?= { save_scope_as = stannis_jon }
+	}
+}
+
+# Jon keeps empire-tier North. A claimant without a hegemony cannot be his
+# mechanical liege; AGOT's pre-war liege variables represent that allegiance.
+# THIS = Jon (the monthly pulse has no character ROOT). Also repairs the previous handover in existing saves.
+segrellion_jon_pre_council_status_effect = {
+	add_character_flag = segrellion_jon_coronation_locked_until_council
+	remove_character_flag = agot_start_historical_coronation_cooldown
+	if = {
+		limit = { character:Baratheon_3 = { is_alive = yes } }
+		if = {
+			limit = { title:e_the_north.holder ?= character:Baratheon_3 }
+			title:e_the_north = { grant_title = character:Stark_7 }
+		}
+		if = {
+			limit = { title:k_winterfell.holder ?= character:Baratheon_3 }
+			title:k_winterfell = { grant_title = character:Stark_7 }
+		}
+		if = {
+			limit = { NOT = { exists = liege liege = character:Baratheon_3 } }
+			set_variable = { name = agot_pwl_direct value = character:Baratheon_3 }
+			set_variable = { name = agot_pwl_top value = character:Baratheon_3 }
+			add_character_flag = segrellion_jon_stannis_political_liege
+			# Native effect checks rank before attempting actual vassalage.
+			agot_reassign_pwl_direct_effect = yes
+		}
+		if = {
+			limit = { exists = liege liege = character:Baratheon_3 }
+			segrellion_jon_clear_stannis_political_liege_effect = yes
+		}
+		add_character_flag = segrellion_jon_lord_of_winterfell_under_stannis
+		add_character_flag = segrellion_jon_lord_paramount_under_stannis
+	}
+	if = {
+		limit = { has_title = title:e_the_north }
+		set_primary_title_to = title:e_the_north
+	}
+	segrellion_jon_update_northern_government_effect = yes
+}
+
+# Follow AGOT's paramountcy eligibility rather than equating government with rank.
+segrellion_jon_update_northern_government_effect = {
+	if = {
+		limit = { agot_is_valid_lp_feudal_government_target = yes }
+		if = {
+			limit = { NOT = { has_government = lp_feudal_government } }
+			change_government = lp_feudal_government
+		}
+	}
+	else_if = {
+		limit = { NOT = { has_government = feudal_government } }
+		change_government = feudal_government
+	}
+	agot_on_change_government_data_effect = { SCOPE = this }
+}
+
+segrellion_jon_clear_stannis_political_liege_effect = {
+	if = {
+		limit = { has_character_flag = segrellion_jon_stannis_political_liege }
+		if = {
+			limit = { var:agot_pwl_direct ?= character:Baratheon_3 }
+			remove_variable = agot_pwl_direct
+		}
+		if = {
+			limit = { var:agot_pwl_top ?= character:Baratheon_3 }
+			remove_variable = agot_pwl_top
+		}
+		remove_character_flag = segrellion_jon_stannis_political_liege
 	}
 }

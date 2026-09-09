@@ -2103,6 +2103,8 @@ segrellion_stannis_ramsay_battle_capture = {
 			is_alive = yes
 
 			has_character_flag = segrellion_ramsay_northern_takeover
+			is_imprisoned = no
+			NOT = { has_character_flag = segrellion_ramsay_captured_by_stannis_in_battle }
 		}
 
 
@@ -2128,8 +2130,7 @@ segrellion_stannis_ramsay_battle_capture = {
 		# =================================================
 		# RAMSAY IS IN THE BATTLE
 		#
-		# First use combat-side detection.
-		# Physical location is the failsafe.
+		# Require a participant on the losing combat side.
 		# =================================================
 
 		OR = {
@@ -2151,11 +2152,6 @@ segrellion_stannis_ramsay_battle_capture = {
 				}
 			}
 
-
-			title:e_the_north.holder = {
-
-				location = character:Baratheon_3.location
-			}
 		}
 	}
 
@@ -3531,7 +3527,7 @@ segrellion_jon_wait_for_stannis_progression = {
 
 							id = segrellion_stannis.1010
 
-							days = 1
+							days = 3
 						}
 					}
 
@@ -4680,54 +4676,34 @@ segrellion_stannis_renly_truth_progression = {
 # =========================================================
 
 segrellion_jon_stannis_death_news_progression = {
-
 	effect = {
-
-		if = {
-
-			limit = {
-
-				character:Baratheon_3 ?= {
-
-					is_alive = no
-
-					has_character_flag = segrellion_stannis_murdered_by_baelish
+		character:Stark_7 ?= {
+			if = {
+				limit = {
+					segrellion_jon_pre_council_trigger = yes
+					has_title = title:d_winterfell
+					NOT = { has_trait = nightswatch }
 				}
-
-
-				character:Stark_7 ?= {
-
-					is_alive = yes
-
-
-					NOT = {
-						has_character_flag = segrellion_jon_winterfell_council_called
-					}
-
-
-					NOT = {
-						has_character_flag = segrellion_jon_stannis_death_news_scheduled
-					}
-				}
+				segrellion_jon_pre_council_status_effect = yes
 			}
-
-
-			character:Stark_7 = {
-
-				add_character_flag = {
-
-					flag = segrellion_jon_stannis_death_news_scheduled
-
-					days = 10
+			if = {
+				limit = {
+					is_alive = yes
+					character:Baratheon_3 = { is_alive = no }
+					OR = {
+						has_character_flag = segrellion_jon_stannis_death_news_pending
+						character:Baratheon_3 = { has_dead_character_flag = segrellion_stannis_murdered_by_baelish }
+					}
+					NOR = {
+						has_character_flag = segrellion_jon_winterfell_council_called
+						has_character_flag = segrellion_jon_stannis_death_news_received
+						has_character_flag = segrellion_jon_stannis_death_news_scheduled
+						has_character_flag = segrellion_jon_king_in_the_north
+					}
 				}
-
-
-				trigger_event = {
-
-					id = segrellion_jon_frey.0010
-
-					days = 1
-				}
+				add_character_flag = segrellion_jon_stannis_death_news_pending
+				add_character_flag = { flag = segrellion_jon_stannis_death_news_scheduled days = 10 }
+				trigger_event = { id = segrellion_jon_frey.0010 days = 1 }
 			}
 		}
 	}
