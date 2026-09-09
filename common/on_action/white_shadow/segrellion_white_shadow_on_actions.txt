@@ -76,6 +76,7 @@ vladwyn_8106_startup = {
 				if = {
 
 					limit = {
+
 						is_alive = yes
 
 						NOT = {
@@ -86,9 +87,11 @@ vladwyn_8106_startup = {
 					add_character_flag = vladwyn_106_startup_applied
 
 
-					# =========================================
-					# CANON
-					# =========================================
+					# =================================================
+					# CANON ROUTE
+					# Tristan begins at Alex's side.
+					# No Kingsguard preparation yet.
+					# =================================================
 
 					if = {
 
@@ -97,9 +100,39 @@ vladwyn_8106_startup = {
 						}
 
 
+						add_character_flag = vladwyn_106_canon_start
+						add_character_flag = vladwyn_sentinels_path_resolved
+
+						remove_character_flag = vladwyn_sentinels_path_queued
+						remove_character_flag = vladwyn_landless_route_unlocked
+						remove_character_flag = vladwyn_open_road_taken
+						remove_character_flag = vladwyn_adventurer_events_unlocked
+
+						remove_character_flag = kingsguard_ambition
+
+
+						if = {
+
+							limit = {
+								has_character_modifier = training_for_kingsguard
+							}
+
+							remove_character_modifier = training_for_kingsguard
+						}
+
+
+						if = {
+
+							limit = {
+								has_trait = refusing_marriage
+							}
+
+							remove_trait = refusing_marriage
+						}
+
+
 						# If Tristan himself was selected in the
-						# bookmark, move the player to Alex before
-						# destroying the adventurer title.
+						# bookmark, move the player to Alex first.
 						if = {
 
 							limit = {
@@ -112,9 +145,29 @@ vladwyn_8106_startup = {
 						}
 
 
-						# Multiplayer safety:
-						# do not destroy a human Tristan's only
-						# playable title in multiplayer.
+						# Save and destroy Tristan's adventurer camp.
+						primary_title ?= {
+							save_scope_as = vladwyn_106_old_camp
+						}
+
+
+						if = {
+
+							limit = {
+
+								exists = scope:vladwyn_106_old_camp
+
+								OR = {
+									is_ai = yes
+									has_multiple_players = no
+								}
+							}
+
+							destroy_title = scope:vladwyn_106_old_camp
+						}
+
+
+						# Tristan joins Alex's court.
 						if = {
 
 							limit = {
@@ -125,103 +178,37 @@ vladwyn_8106_startup = {
 								}
 							}
 
-
-							primary_title ?= {
-								save_scope_as = vladwyn_106_old_camp
-							}
-
-
-							if = {
-
-								limit = {
-									exists = scope:vladwyn_106_old_camp
-								}
-
-								destroy_title = scope:vladwyn_106_old_camp
-							}
-
-
 							set_employer = character:Segrellion_1
+						}
 
 
-							remove_character_flag = vladwyn_landless_route_unlocked
-							remove_character_flag = vladwyn_open_road_taken
-							remove_character_flag = vladwyn_adventurer_events_unlocked
+						# Alex and Tristan are already deeply bonded.
+						if = {
 
+							limit = {
 
-							add_character_flag = vladwyn_106_canon_start
-							add_character_flag = kingsguard_ambition
-
-
-							if = {
-
-								limit = {
-									NOT = {
-										has_trait = refusing_marriage
-									}
+								character:Segrellion_1 ?= {
+									is_alive = yes
 								}
 
-								add_trait = refusing_marriage
-							}
-
-
-							if = {
-
-								limit = {
-									NOT = {
-										has_character_modifier = training_for_kingsguard
-									}
-								}
-
-								add_character_modifier = {
-									modifier = training_for_kingsguard
+								NOT = {
+									has_relation_best_friend = character:Segrellion_1
 								}
 							}
 
-
-							if = {
-
-								limit = {
-
-									character:Segrellion_1 ?= {
-										is_alive = yes
-									}
-
-									NOT = {
-										has_relation_best_friend = character:Segrellion_1
-									}
-								}
-
-								set_relation_best_friend = {
-									target = character:Segrellion_1
-									reason = best_friend_childhood_oath
-									copy_reason = friend
-								}
-							}
-
-
-							if = {
-
-								limit = {
-
-									NOT = {
-										has_character_flag = vladwyn_sword_of_sentinel_start_granted
-									}
-								}
-
-								segrellion_create_artifact_sword_of_the_sentinel_effect = {
-									OWNER = this
-								}
-
-								add_character_flag = vladwyn_sword_of_sentinel_start_granted
+							set_relation_best_friend = {
+								target = character:Segrellion_1
+								reason = best_friend_childhood_oath
+								copy_reason = friend
 							}
 						}
 					}
 
 
-					# =========================================
-					# THE OPEN ROAD
-					# =========================================
+					# =================================================
+					# NON-CANON ROUTE
+					# The Open Road
+					# =================================================
 
 					else_if = {
 
@@ -254,10 +241,9 @@ vladwyn_8106_startup = {
 						add_character_flag = vladwyn_landless_route_unlocked
 						add_character_flag = vladwyn_open_road_taken
 						add_character_flag = vladwyn_adventurer_events_unlocked
+						add_character_flag = vladwyn_sentinels_path_resolved
 
-
-						remove_character_flag = kingsguard_ambition
-						remove_character_modifier = training_for_kingsguard
+						remove_character_flag = vladwyn_sentinels_path_queued
 
 
 						primary_title ?= {
@@ -267,7 +253,6 @@ vladwyn_8106_startup = {
 							}
 
 							reset_title_prefix = yes
-
 							set_title_name = vladwyn_the_honorables_name
 						}
 
@@ -287,6 +272,322 @@ vladwyn_8106_startup = {
 	}
 }
 
+# =========================================================
+# TRISTAN VLADWYN CANON STORYLINE
+# 106 AC -> AEGON III
+# =========================================================
+
+vladwyn_canon_story_progression = {
+
+	effect = {
+
+		character:Vladwyn_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = vladwyn_106_canon_start
+
+					NOT = {
+						has_character_flag = vladwyn_canon_story_completed
+					}
+				}
+
+
+				# =================================================
+				# 114 AC
+				# RHAENYRA & LAENOR'S WEDDING
+				# TRISTAN MEETS ELYSE SUNGLASS
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8114.1.1
+
+						NOT = {
+							has_character_flag = vladwyn_met_elyse_sunglass
+						}
+
+						NOT = {
+							has_character_flag = vladwyn_elyse_meeting_queued
+						}
+
+						character:IAF_Sunglass_2 ?= {
+							is_alive = yes
+						}
+
+						character:Segrellion_1 ?= {
+							is_alive = yes
+						}
+					}
+
+					add_character_flag = vladwyn_elyse_meeting_queued
+
+					character:Segrellion_1 = {
+
+						trigger_event = {
+							id = vladwyn_canon.1000
+							days = 1
+						}
+					}
+				}
+
+
+				# =================================================
+				# MARRIAGE FAILSAFE
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8114.6.1
+
+						has_character_flag = vladwyn_met_elyse_sunglass
+
+						NOT = {
+							has_character_flag = vladwyn_married_elyse_sunglass
+						}
+
+						NOT = {
+							has_character_flag = vladwyn_elyse_marriage_queued
+						}
+
+						character:IAF_Sunglass_2 ?= {
+							is_alive = yes
+						}
+
+						character:Segrellion_1 ?= {
+							is_alive = yes
+						}
+					}
+
+					add_character_flag = vladwyn_elyse_marriage_queued
+
+					character:Segrellion_1 = {
+
+						trigger_event = {
+							id = vladwyn_canon.1010
+							days = 1
+						}
+					}
+				}
+
+
+				# =================================================
+				# 122 AC
+				# ELYSE DIES
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8122.1.1
+
+						has_character_flag = vladwyn_married_elyse_sunglass
+
+						NOT = {
+							has_character_flag = vladwyn_elyse_died
+						}
+
+						NOT = {
+							has_character_flag = vladwyn_elyse_death_queued
+						}
+
+						character:IAF_Sunglass_2 ?= {
+							is_alive = yes
+						}
+
+						character:Segrellion_1 ?= {
+							is_alive = yes
+						}
+					}
+
+					add_character_flag = vladwyn_elyse_death_queued
+
+					character:Segrellion_1 = {
+
+						trigger_event = {
+							id = vladwyn_canon.1020
+							days = 1
+						}
+					}
+				}
+
+
+				# If Elyse died through some other mechanic,
+				# continue the canon storyline anyway.
+				else_if = {
+
+					limit = {
+
+						current_date >= 8122.1.1
+
+						has_character_flag = vladwyn_married_elyse_sunglass
+
+						NOT = {
+							has_character_flag = vladwyn_elyse_died
+						}
+
+						character:IAF_Sunglass_2 ?= {
+							is_alive = no
+						}
+					}
+
+					add_character_flag = vladwyn_elyse_died
+					add_character_flag = vladwyn_tristan_widowed
+
+
+					if = {
+
+						limit = {
+							NOT = {
+								has_trait = refusing_marriage
+							}
+						}
+
+						add_trait = refusing_marriage
+					}
+				}
+
+
+				# =================================================
+				# 123 AC
+				# RHAENYRA CALLS TRISTAN TO DRAGONSTONE
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8123.1.1
+
+						has_character_flag = vladwyn_elyse_died
+
+						NOT = {
+							has_character_flag = vladwyn_rhaenyra_household_captain
+						}
+
+						NOT = {
+							has_character_flag = vladwyn_rhaenyra_service_queued
+						}
+
+						character:Targaryen_63 ?= {
+							is_alive = yes
+							is_landed = yes
+						}
+
+						character:Segrellion_1 ?= {
+							is_alive = yes
+						}
+					}
+
+					add_character_flag = vladwyn_rhaenyra_service_queued
+
+					character:Segrellion_1 = {
+
+						trigger_event = {
+							id = vladwyn_canon.1030
+							days = 1
+						}
+					}
+				}
+
+
+				# =================================================
+				# DANCE OF THE DRAGONS
+				# BLACK QUEENSGUARD
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8129.1.1
+
+						has_character_flag = vladwyn_rhaenyra_household_captain
+
+						NOT = {
+							has_character_flag = vladwyn_black_queensguard_lord_commander
+						}
+
+						NOT = {
+							has_character_flag = vladwyn_black_queensguard_queued
+						}
+
+						character:Targaryen_63 ?= {
+							is_alive = yes
+							is_at_war = yes
+						}
+
+						character:Segrellion_1 ?= {
+							is_alive = yes
+						}
+					}
+
+					add_character_flag = vladwyn_black_queensguard_queued
+
+					character:Segrellion_1 = {
+
+						trigger_event = {
+							id = vladwyn_canon.1040
+							days = 1
+						}
+					}
+				}
+
+
+				# =================================================
+				# AEGON III TAKES THE IRON THRONE
+				# TRISTAN BECOMES REAL LORD COMMANDER
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8131.1.1
+
+						NOT = {
+							has_character_flag = vladwyn_tristan_served_kingsguard
+						}
+
+						NOT = {
+							has_character_flag = vladwyn_aegon_iii_kingsguard_queued
+						}
+
+						character:Targaryen_78 ?= {
+
+							is_alive = yes
+
+							has_title = title:e_the_iron_throne
+						}
+
+						character:Segrellion_1 ?= {
+							is_alive = yes
+						}
+					}
+
+					add_character_flag = vladwyn_aegon_iii_kingsguard_queued
+
+					character:Segrellion_1 = {
+
+						trigger_event = {
+							id = vladwyn_canon.1050
+							days = 1
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 # =========================================================
 # STEPSTONES - LATER WAR START

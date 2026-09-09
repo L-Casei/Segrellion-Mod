@@ -1,0 +1,614 @@
+namespace = vladwyn_canon
+
+
+# =========================================================
+# 114 AC
+# RHAENYRA'S WEDDING
+# =========================================================
+
+vladwyn_canon.1000 = {
+
+	type = character_event
+
+	title = vladwyn_canon.1000.t
+	desc = vladwyn_canon.1000.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = character:Vladwyn_1
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+		character = character:IAF_Sunglass_2
+		animation = personality_compassionate
+	}
+
+
+	trigger = {
+
+		character:Vladwyn_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = vladwyn_106_canon_start
+
+			NOT = {
+				has_character_flag = vladwyn_met_elyse_sunglass
+			}
+		}
+
+		character:IAF_Sunglass_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Vladwyn_1 = {
+
+			add_character_flag = vladwyn_met_elyse_sunglass
+
+			remove_character_flag = vladwyn_elyse_meeting_queued
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_canon.1000.a
+
+
+		character:Vladwyn_1 = {
+
+			add_prestige = 50
+		}
+
+
+		trigger_event = {
+			id = vladwyn_canon.1010
+			days = { 60 120 }
+		}
+	}
+}
+
+
+# =========================================================
+# TRISTAN AND ELYSE MARRY
+# =========================================================
+
+vladwyn_canon.1010 = {
+
+	type = character_event
+
+	title = vladwyn_canon.1010.t
+	desc = vladwyn_canon.1010.desc
+
+	theme = family
+
+
+	left_portrait = {
+		character = character:Vladwyn_1
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+		character = character:IAF_Sunglass_2
+		animation = personality_compassionate
+	}
+
+
+	trigger = {
+
+		character:Vladwyn_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = vladwyn_met_elyse_sunglass
+
+			NOT = {
+				has_character_flag = vladwyn_married_elyse_sunglass
+			}
+		}
+
+		character:IAF_Sunglass_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Vladwyn_1 = {
+
+			remove_character_flag = vladwyn_elyse_marriage_queued
+
+
+			# Remove any non-canon marriage which may have
+			# happened before the storyline reached 114 AC.
+
+			if = {
+
+				limit = {
+					is_married = yes
+				}
+
+				every_spouse = {
+
+					limit = {
+						NOT = {
+							this = character:IAF_Sunglass_2
+						}
+					}
+
+					divorce = character:Vladwyn_1
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					exists = betrothed
+				}
+
+				break_betrothal = betrothed
+			}
+		}
+
+
+		character:IAF_Sunglass_2 = {
+
+			if = {
+
+				limit = {
+					is_married = yes
+				}
+
+				every_spouse = {
+
+					limit = {
+						NOT = {
+							this = character:Vladwyn_1
+						}
+					}
+
+					divorce = character:IAF_Sunglass_2
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					exists = betrothed
+				}
+
+				break_betrothal = betrothed
+			}
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_canon.1010.a
+
+
+		hidden_effect = {
+
+			character:IAF_Sunglass_2 = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							any_spouse = {
+								this = character:Vladwyn_1
+							}
+						}
+					}
+
+					add_spouse = character:Vladwyn_1
+				}
+			}
+
+
+			character:Vladwyn_1 = {
+
+				add_character_flag = vladwyn_married_elyse_sunglass
+				add_character_flag = vladwyn_canon_family_started
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 122 AC
+# ELYSE DIES
+# =========================================================
+
+vladwyn_canon.1020 = {
+
+	type = character_event
+
+	title = vladwyn_canon.1020.t
+	desc = vladwyn_canon.1020.desc
+
+	theme = family
+
+
+	left_portrait = {
+		character = character:Vladwyn_1
+		animation = sadness
+	}
+
+
+	right_portrait = {
+		character = character:IAF_Sunglass_2
+		animation = sadness
+	}
+
+
+	trigger = {
+
+		character:Vladwyn_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = vladwyn_married_elyse_sunglass
+
+			NOT = {
+				has_character_flag = vladwyn_elyse_died
+			}
+		}
+
+		character:IAF_Sunglass_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Vladwyn_1 = {
+			remove_character_flag = vladwyn_elyse_death_queued
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_canon.1020.a
+
+
+		hidden_effect = {
+
+			character:IAF_Sunglass_2 = {
+				death = natural
+			}
+
+
+			character:Vladwyn_1 = {
+
+				add_character_flag = vladwyn_elyse_died
+				add_character_flag = vladwyn_tristan_widowed
+				add_character_flag = vladwyn_tristan_vowed_no_second_marriage
+
+
+				if = {
+
+					limit = {
+						NOT = {
+							has_trait = refusing_marriage
+						}
+					}
+
+					add_trait = refusing_marriage
+				}
+
+
+				add_stress = 60
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 123 AC
+# RHAENYRA'S SWORN SWORD
+# =========================================================
+
+vladwyn_canon.1030 = {
+
+	type = character_event
+
+	title = vladwyn_canon.1030.t
+	desc = vladwyn_canon.1030.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = character:Targaryen_63
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Vladwyn_1
+		animation = personality_honorable
+	}
+
+
+	trigger = {
+
+		character:Vladwyn_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = vladwyn_elyse_died
+
+			NOT = {
+				has_character_flag = vladwyn_rhaenyra_household_captain
+			}
+		}
+
+		character:Targaryen_63 ?= {
+			is_alive = yes
+			is_landed = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Vladwyn_1 = {
+			remove_character_flag = vladwyn_rhaenyra_service_queued
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_canon.1030.a
+
+
+		hidden_effect = {
+
+			character:Vladwyn_1 = {
+
+				set_employer = character:Targaryen_63
+
+				add_character_flag = vladwyn_rhaenyra_sworn_sword
+				add_character_flag = vladwyn_rhaenyra_master_at_arms
+				add_character_flag = vladwyn_rhaenyra_household_captain
+
+
+				add_character_modifier = {
+					modifier = vladwyn_rhaenyra_household_captain_modifier
+				}
+			}
+
+
+			character:Targaryen_63 = {
+
+				assign_councillor_type = {
+					type = councillor_marshal
+					target = character:Vladwyn_1
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_relation_friend = character:Vladwyn_1
+						}
+
+						NOT = {
+							has_relation_best_friend = character:Vladwyn_1
+						}
+					}
+
+					set_relation_friend = {
+						target = character:Vladwyn_1
+						reason = friend_shared_interests
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DANCE OF THE DRAGONS
+# LORD COMMANDER OF THE BLACK QUEENSGUARD
+#
+# IMPORTANT:
+# This is intentionally NOT the official AGOT Kingsguard.
+# =========================================================
+
+vladwyn_canon.1040 = {
+
+	type = character_event
+
+	title = vladwyn_canon.1040.t
+	desc = vladwyn_canon.1040.desc
+
+	theme = war
+
+
+	left_portrait = {
+		character = character:Targaryen_63
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Vladwyn_1
+		animation = personality_honorable
+	}
+
+
+	trigger = {
+
+		character:Vladwyn_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = vladwyn_rhaenyra_household_captain
+
+			NOT = {
+				has_character_flag = vladwyn_black_queensguard_lord_commander
+			}
+		}
+
+		character:Targaryen_63 ?= {
+			is_alive = yes
+			is_at_war = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Vladwyn_1 = {
+			remove_character_flag = vladwyn_black_queensguard_queued
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_canon.1040.a
+
+
+		hidden_effect = {
+
+			character:Vladwyn_1 = {
+
+				add_character_flag = vladwyn_black_queensguard
+				add_character_flag = vladwyn_black_queensguard_lord_commander
+
+
+				remove_character_modifier = vladwyn_rhaenyra_household_captain_modifier
+
+
+				add_character_modifier = {
+					modifier = vladwyn_black_queensguard_lord_commander_modifier
+				}
+
+
+				give_nickname = nick_vladwyn_the_black_sentinel
+
+				add_prestige = 500
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# AEGON III
+# LORD COMMANDER OF THE REAL KINGSGUARD
+# =========================================================
+
+vladwyn_canon.1050 = {
+
+	type = character_event
+
+	title = vladwyn_canon.1050.t
+	desc = vladwyn_canon.1050.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = character:Targaryen_78
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+		character = character:Vladwyn_1
+		animation = personality_honorable
+	}
+
+
+	trigger = {
+
+		character:Vladwyn_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = vladwyn_106_canon_start
+
+			NOT = {
+				has_character_flag = vladwyn_tristan_served_kingsguard
+			}
+		}
+
+		character:Targaryen_78 ?= {
+
+			is_alive = yes
+
+			has_title = title:e_the_iron_throne
+		}
+	}
+
+
+	immediate = {
+
+		character:Vladwyn_1 = {
+			remove_character_flag = vladwyn_aegon_iii_kingsguard_queued
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_canon.1050.a
+
+
+		hidden_effect = {
+
+			character:Vladwyn_1 = {
+
+				remove_character_modifier = vladwyn_black_queensguard_lord_commander_modifier
+				remove_character_modifier = vladwyn_rhaenyra_household_captain_modifier
+
+				remove_character_flag = vladwyn_black_queensguard_lord_commander
+
+				add_character_flag = vladwyn_tristan_served_kingsguard
+				add_character_flag = vladwyn_tristan_aegon_iii_lord_commander
+				add_character_flag = vladwyn_tristan_restored_kings_landing
+				add_character_flag = vladwyn_canon_story_completed
+
+				add_prestige = 1000
+			}
+
+
+			agot_join_kingsguard_effect = {
+				KINGSGUARD = character:Vladwyn_1
+				KING = character:Targaryen_78
+			}
+
+
+			agot_assign_lord_commander_effect = {
+				COMMANDER = character:Vladwyn_1
+				KING = character:Targaryen_78
+			}
+		}
+	}
+}
