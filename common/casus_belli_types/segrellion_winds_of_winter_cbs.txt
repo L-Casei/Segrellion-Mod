@@ -692,7 +692,55 @@ segrellion_unicorn_returns_cb = {
 
 			remove_character_flag = segrellion_unicorn_returns_war_active
 
+			segrellion_sansa_story_progression_effect = yes
+
 			add_character_flag = segrellion_unicorn_returns_completed
+
+			title:d_masseys_hook.holder ?= {
+				if = {
+					limit = {
+						is_alive = yes
+					}
+
+					save_scope_as = massey_lord
+
+					if = {
+						limit = {
+							has_character_modifier = segrellion_defiant_against_stormflames_modifier
+						}
+						remove_character_modifier = segrellion_defiant_against_stormflames_modifier
+					}
+
+					if = {
+						limit = {
+							NOT = {
+								has_character_modifier = segrellion_loyal_to_the_unicorn_modifier
+							}
+						}
+
+						add_character_modifier = {
+							modifier = segrellion_loyal_to_the_unicorn_modifier
+						}
+					}
+
+					house:house_Segrellion = {
+						every_house_member = {
+							limit = {
+								is_alive = yes
+							}
+
+							save_scope_as = segrellion_house_member
+
+							scope:massey_lord = {
+								add_opinion = {
+									target = scope:segrellion_house_member
+									modifier = segrellion_massey_loyal_to_house_segrellion_opinion
+								}
+							}
+						}
+					}
+				}
+			}
 
 			hidden_effect = {
 				segrellion_imprison_unicorn_returns_traitors_effect = yes
