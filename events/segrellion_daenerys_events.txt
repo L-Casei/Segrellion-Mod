@@ -1672,6 +1672,22 @@ segrellion_daenerys_invasion.0010 = {
 			domicile ?= {
 				move_domicile = title:c_pentos.title_province
 			}
+
+		}
+
+		domicile ?= {
+
+			change_provisions = 10000
+		}
+
+
+		every_army = {
+
+			limit = {
+				army_owner = root
+			}
+
+			add_supply = 10000
 		}
 	}
 
@@ -1870,13 +1886,18 @@ segrellion_daenerys_invasion.0010 = {
 
 		name = segrellion_daenerys_invasion.0010.c_beacon
 
-
 		trigger = {
-			segrellion_daemon_controls_flamelands_trigger = yes
+			segrellion_daenerys_beacon_negotiation_available_trigger = yes
 		}
 
-
 		custom_tooltip = segrellion_daenerys_invasion.0010.c_beacon.tt
+
+		add_character_flag = segrellion_daenerys_beacon_negotiation_started
+
+		trigger_event = {
+			id = segrellion_daenerys_massey.0100
+			days = 1
+		}
 
 
 		ai_chance = {
@@ -1921,23 +1942,6 @@ segrellion_daenerys_invasion.0010 = {
 
 		add_character_modifier = {
 			modifier = segrellion_daenerys_invasion_provisions_modifier
-		}
-
-
-		start_travel_plan = {
-
-			destination = title:c_farring_cross.title_province
-
-			return_trip = no
-			travel_with_domicile = yes
-
-			# IMPORTANT:
-			# Meeting with Daemon BEFORE the normal landing event.
-			on_arrival_event = segrellion_daenerys_invasion.0018
-
-			on_arrival_destinations = last
-
-			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
 		}
 	}
 }
@@ -2520,6 +2524,45 @@ segrellion_daenerys_invasion.0018 = {
 				}
 			}
 
+			if = {
+
+				limit = {
+					segrellion_daenerys_shireen_dragonstone_scenario_trigger = yes
+				}
+
+				character:Baratheon_13 = {
+
+					imprison = {
+						target = this
+						imprisoner = character:Targaryen_9
+					}
+				}
+
+				character:Baratheon_13 = {
+
+					mother ?= {
+
+						if = {
+
+							limit = {
+								is_alive = yes
+							}
+
+							imprison = {
+								target = this
+								imprisoner = character:Targaryen_9
+							}
+						}
+					}
+				}
+
+				add_character_flag = segrellion_daenerys_captured_shireen
+
+				trigger_event = {
+					id = segrellion_daenerys_dragonstone.0001
+					days = 1
+				}
+			}
 
 			resolve_title_and_vassal_change = scope:segrellion_daenerys_dragonstone_change
 

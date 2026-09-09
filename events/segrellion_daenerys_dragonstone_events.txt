@@ -1,0 +1,239 @@
+namespace = segrellion_daenerys_dragonstone
+
+
+# =========================================================
+# THE DRAGON RETURNS TO DRAGONSTONE
+# =========================================================
+
+segrellion_daenerys_dragonstone.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_dragonstone.0001.t
+	desc = segrellion_daenerys_dragonstone.0001.desc
+
+	theme = realm
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Baratheon_13
+		animation = worry
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		has_character_flag = segrellion_daenerys_captured_shireen
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_dragonstone_shireen_arrival_seen
+	}
+
+	option = {
+
+		name = segrellion_daenerys_dragonstone.0001.a
+
+		trigger_event = {
+			id = segrellion_daenerys_dragonstone.0002
+			days = 7
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# THE DAUGHTER OF STANNIS
+# =========================================================
+
+segrellion_daenerys_dragonstone.0002 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_dragonstone.0002.t
+	desc = segrellion_daenerys_dragonstone.0002.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Baratheon_13
+		animation = worry
+	}
+
+
+	# =====================================================
+	# DAVOS + JON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_dragonstone.0002.a
+
+		add_character_flag = segrellion_daenerys_invited_davos_and_jon
+
+
+		character:Seaworth_1 ?= {
+
+			add_character_flag = segrellion_davos_invited_to_dragonstone
+		}
+
+
+		if = {
+
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
+			}
+
+			global_var:segrellion_resurrected_jon ?= {
+
+				add_character_flag = segrellion_jon_invited_to_dragonstone
+			}
+		}
+
+        segrellion_prepare_davos_for_dragonstone_story_effect = yes
+
+		trigger_event = {
+			id = segrellion_daenerys_dragonstone.0010
+			days = 1
+		}
+
+
+		ai_chance = {
+
+			base = 1000
+		}
+	}
+
+
+	# =====================================================
+	# EXILE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_dragonstone.0002.b
+
+
+		character:Baratheon_13 = {
+
+			release_from_prison = yes
+
+			set_location = title:c_pentos.title_province
+
+			add_character_flag = segrellion_exiled_to_essos
+		}
+
+
+		character:Baratheon_13 = {
+
+			mother ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					release_from_prison = yes
+
+					set_location = title:c_pentos.title_province
+
+					add_character_flag = segrellion_exiled_to_essos
+				}
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 40
+		}
+	}
+
+
+	# =====================================================
+	# EXECUTE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_dragonstone.0002.c
+
+
+		character:Baratheon_13 = {
+
+			death = {
+				death_reason = death_execution
+				killer = character:Targaryen_9
+			}
+		}
+
+
+		character:Baratheon_13 = {
+
+			mother ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+					death = {
+						death_reason = death_execution
+						killer = character:Targaryen_9
+					}
+				}
+			}
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+
+# =========================================================
+# A LETTER TO THE NORTH
+# =========================================================
+
+segrellion_daenerys_dragonstone.0010 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_dragonstone.0010.t
+	desc = segrellion_daenerys_dragonstone.0010.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_daenerys_dragonstone.0010.a
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}

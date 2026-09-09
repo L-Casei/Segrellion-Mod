@@ -267,3 +267,542 @@ segrellion_daenerys_massey.0050 = {
 		name = segrellion_daenerys_massey.0050.a
 	}
 }
+
+# =========================================================
+# DAENERYS -> MASSEY -> DAEMON
+# =========================================================
+
+
+# =========================================================
+# 0100 - TYRION'S PROPOSAL
+# =========================================================
+
+segrellion_daenerys_massey.0100 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0100.t
+	desc = segrellion_daenerys_massey.0100.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		has_character_flag = segrellion_daenerys_beacon_negotiation_started
+	}
+
+	immediate = {
+
+		title:d_masseys_hook.holder ?= {
+			save_scope_as = daenerys_massey_contact
+		}
+
+
+		if = {
+
+			limit = {
+				NOT = {
+					exists = scope:daenerys_massey_contact
+				}
+			}
+
+			title:c_stonedance.holder ?= {
+				save_scope_as = daenerys_massey_contact
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_daenerys_massey.0100.a
+
+		scope:daenerys_massey_contact ?= {
+
+			trigger_event = {
+				id = segrellion_daenerys_massey.0110
+				days = 2
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - MASSEY RECEIVES TYRION'S LETTER
+# =========================================================
+
+segrellion_daenerys_massey.0110 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0110.t
+	desc = segrellion_daenerys_massey.0110.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	immediate = {
+
+		save_scope_as = daenerys_massey_contact
+	}
+
+	option = {
+
+		name = segrellion_daenerys_massey.0110.a
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_massey.0120
+				days = 2
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - DAEMON DECIDES
+# =========================================================
+
+segrellion_daenerys_massey.0120 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0120.t
+	desc = segrellion_daenerys_massey.0120.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_massey.0120.a
+
+
+		add_character_flag = segrellion_daemon_accepts_daenerys_beacon_negotiation
+
+
+		title:d_masseys_hook.holder ?= {
+
+			trigger_event = {
+				id = segrellion_daenerys_massey.0130
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 60
+
+
+			modifier = {
+
+				add = 250
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 160
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -50
+				}
+			}
+
+
+			modifier = {
+
+				add = 100
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -1
+				}
+			}
+
+
+			modifier = {
+
+				add = 150
+
+				OR = {
+					has_character_flag = segrellion_daemon_aegon_fealty_refused
+					has_character_flag = segrellion_daemon_rejected_aegon_ultimatum
+					has_character_flag = segrellion_daemon_defied_aegon
+				}
+			}
+
+
+			modifier = {
+
+				add = 120
+
+				title:h_the_iron_throne.holder != character:IAF_Young_Griff_1
+			}
+
+
+			modifier = {
+
+				add = 75
+
+				is_married = no
+			}
+
+
+			modifier = {
+
+				add = 75
+
+				NOT = {
+					has_character_flag = segrellion_deadly_triarchy_formed
+				}
+			}
+
+
+			modifier = {
+
+				add = 150
+
+				character:IAF_Young_Griff_1 = {
+					is_alive = no
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_massey.0120.b
+
+		add_character_flag = segrellion_daemon_refused_daenerys_beacon_negotiation
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_massey.0135
+				days = 3
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 25
+
+
+			modifier = {
+
+				factor = 0.05
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.2
+
+				is_married = no
+			}
+
+
+			modifier = {
+
+				factor = 0.2
+
+				title:h_the_iron_throne.holder != character:IAF_Young_Griff_1
+			}
+
+
+			modifier = {
+
+				factor = 0.1
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -25
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE AND WARN AEGON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_massey.0120.c
+
+
+		trigger = {
+
+			character:IAF_Young_Griff_1 = {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			opinion = {
+				target = character:IAF_Young_Griff_1
+				value >= 60
+			}
+
+
+			OR = {
+
+				has_character_flag = segrellion_pledged_to_young_griff
+
+				has_character_flag = segrellion_deadly_triarchy_formed
+
+				has_character_flag = segrellion_daemon_aegon_fealty_accepted
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_warned_aegon_about_daenerys
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_massey.0140
+				days = 2
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_massey.0135
+				days = 3
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 1
+
+			modifier = {
+
+				add = 5
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 80
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0130 - MASSEY RECEIVES DAEMON'S YES
+# =========================================================
+
+segrellion_daenerys_massey.0130 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0130.t
+	desc = segrellion_daenerys_massey.0130.desc
+
+	theme = diplomacy
+
+	option = {
+
+		name = segrellion_daenerys_massey.0130.a
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_massey.0150
+				days = 3
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0135 - DAEMON REFUSES
+# =========================================================
+
+segrellion_daenerys_massey.0135 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0135.t
+	desc = segrellion_daenerys_massey.0135.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_daenerys_massey.0135.a
+
+		remove_character_flag = segrellion_daenerys_beacon_negotiation_started
+
+		add_character_flag = segrellion_daenerys_beacon_negotiation_refused
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0140 - AEGON IS WARNED
+# =========================================================
+
+segrellion_daenerys_massey.0140 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0140.t
+	desc = segrellion_daenerys_massey.0140.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_aegon_knows_daenerys_sought_beacon
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_daemon_warned_aegon_opinion
+		}
+	}
+
+	option = {
+
+		name = segrellion_daenerys_massey.0140.a
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0150 - THE BEACON IS OPEN
+# =========================================================
+
+segrellion_daenerys_massey.0150 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0150.t
+	desc = segrellion_daenerys_massey.0150.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_beacon_negotiation_started
+
+		add_character_flag = segrellion_daenerys_beacon_invitation_ready
+	}
+
+	option = {
+
+		name = segrellion_daenerys_massey.0150.a
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}

@@ -1,0 +1,92 @@
+segrellion_daenerys_shireen_dragonstone_scenario_trigger = {
+
+	character:Baratheon_3 = {
+		is_alive = no
+	}
+
+	character:Baratheon_13 = {
+
+		is_alive = yes
+
+		OR = {
+
+			has_title = title:k_dragonstone
+			has_title = title:d_dragonstone
+			has_title = title:c_dragonstone
+		}
+	}
+}
+
+segrellion_daemon_daenerys_reinforcement_route_used_trigger = {
+
+	OR = {
+
+		has_character_flag = segrellion_negotiation_pending_daenerys
+
+		has_character_flag = segrellion_waiting_for_daenerys_answer
+
+		has_character_flag = segrellion_daemon_offered_oath_to_daenerys
+
+		has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
+
+		has_character_flag = segrellion_daemon_refused_daenerys_terms
+
+		has_character_flag = segrellion_daenerys_refused_support
+
+		has_character_flag = segrellion_daenerys_support_route_closed
+
+		has_character_flag = segrellion_daemon_supports_daenerys_claim_without_marriage
+
+		has_character_flag = segrellion_pledged_to_daenerys
+	}
+}
+
+segrellion_daenerys_beacon_negotiation_available_trigger = {
+
+	character:Segrellion_60 = {
+
+		is_alive = yes
+		is_landed = yes
+
+		NOT = {
+			segrellion_daemon_daenerys_reinforcement_route_used_trigger = yes
+		}
+
+		OR = {
+
+			is_ai = no
+
+
+			opinion = {
+				target = character:IAF_Young_Griff_1
+				value <= -1
+			}
+
+
+			has_character_flag = segrellion_daemon_aegon_fealty_refused
+
+			has_character_flag = segrellion_daemon_rejected_aegon_ultimatum
+
+			has_character_flag = segrellion_daemon_defied_aegon
+
+
+			AND = {
+
+				has_character_flag = segrellion_daemon_aegon_status_resolved
+
+				NOT = {
+					has_character_flag = segrellion_daemon_aegon_fealty_accepted
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daemon_forced_to_submit_to_aegon
+				}
+			}
+
+
+			character:IAF_Young_Griff_1 = {
+				has_character_flag = segrellion_young_griff_blackfyre_revealed
+			}
+		}
+	}
+}

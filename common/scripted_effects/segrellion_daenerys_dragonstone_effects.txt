@@ -1,0 +1,69 @@
+segrellion_prepare_davos_for_dragonstone_story_effect = {
+
+	character:Seaworth_1 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			random_child = {
+
+				limit = {
+
+					is_alive = yes
+					is_male = yes
+					is_adult = yes
+				}
+
+				save_scope_as = davos_living_son
+			}
+
+
+			if = {
+
+				limit = {
+
+					exists = scope:davos_living_son
+
+					character:Seaworth_1 = {
+						has_title = title:d_the_drench
+					}
+				}
+
+				create_title_and_vassal_change = {
+
+					type = granted
+					save_scope_as = segrellion_davos_succession_change
+				}
+
+				title:d_the_drench = {
+
+					change_title_holder = {
+
+						holder = scope:davos_living_son
+						change = scope:segrellion_davos_succession_change
+					}
+				}
+
+				resolve_title_and_vassal_change = scope:segrellion_davos_succession_change
+			}
+
+
+			if = {
+
+				limit = {
+					has_global_variable = segrellion_resurrected_jon
+				}
+
+				global_var:segrellion_resurrected_jon ?= {
+
+					add_courtier = character:Seaworth_1
+				}
+
+				return_to_court = yes
+			}
+		}
+	}
+}
