@@ -2,8 +2,6 @@ activity_segrellion_winterfell_council = {
 
 	sort_order = 100
 
-	icon = "gfx/interface/icons/activities/activity_segrellion_winterfell_council_icon.dds"
-
 	# =====================================================
 	# SHOWN ONLY FOR JON AFTER STANNIS' DEATH
 	# =====================================================
@@ -225,51 +223,63 @@ activity_segrellion_winterfell_council = {
 	max_guests = 100
 
 
+	# =====================================================
+	# INVITATION GROUPS
+	#
+	# Great Northern Lords are selected automatically.
+	# The player may additionally summon Counts, Barons,
+	# family, friends and members of the Night's Watch.
+	# =====================================================
+
 	guest_invite_rules = {
 
 		rules = {
 
-			10 = activity_invite_rule_vassals
+			2 = activity_invite_rule_segrellion_northern_counts
 
-			3 = activity_invite_rule_close_family
+			3 = activity_invite_rule_segrellion_northern_barons
 
-			2 = activity_invite_rule_courtiers
+			2 = activity_invite_rule_close_family
+
+			2 = activity_invite_rule_friends
+
+			3 = activity_invite_rule_segrellion_nights_watch
+		}
+
+
+		defaults = {
+
+			1 = activity_invite_rule_segrellion_northern_great_lords
 		}
 	}
 
+
+	# =====================================================
+	# WHO MAY ATTEND
+	#
+	# Do NOT restrict this to Jon's current vassals.
+	# The council represents the political North as a whole.
+	# =====================================================
 
 	can_be_activity_guest = {
 
-		is_alive = yes
-
 		is_adult = yes
-
-		is_available = yes
-
-		is_landed = yes
 
 		in_diplomatic_range = scope:host
 
-
-		OR = {
-
-			liege = scope:host
-
-			top_liege = scope:host
-
-			any_liege_or_above = {
-
-				this = scope:host
-			}
-		}
+		is_pool_guest = no
 	}
 
+
+	# =====================================================
+	# ATTENDANCE
+	#
+	# Anyone formally summoned to this council attends.
+	# =====================================================
 
 	guest_join_chance = {
 
 		base = 100
-
-		base_activity_modifier = yes
 	}
 
 

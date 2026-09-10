@@ -1,0 +1,41 @@
+# =========================================================
+# WINTERFELL COUNCIL
+# NORTHERN LORD FILTERS
+# =========================================================
+
+
+# Any landed ruler whose primary title belongs de jure
+# to the North.
+
+segrellion_is_northern_lord_for_council_trigger = {
+
+	is_landed = yes
+
+	OR = {
+
+		primary_title = {
+
+			title:e_the_north = {
+				is_de_jure_liege_or_above_target = prev
+			}
+		}
+
+		primary_title = {
+
+			title:k_the_north = {
+				is_de_jure_liege_or_above_target = prev
+			}
+		}
+	}
+}
+
+
+# Dukes, Kings and Emperors of the North.
+# These are the principal lords of the council.
+
+segrellion_is_northern_great_lord_for_council_trigger = {
+
+	segrellion_is_northern_lord_for_council_trigger = yes
+
+	highest_held_title_tier >= tier_duchy
+}
