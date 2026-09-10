@@ -97,8 +97,19 @@ segrellion_daenerys_beacon_negotiation_available_trigger = {
 
 	segrellion_daemon_controls_flamelands_trigger = yes
 
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_beacon_negotiation_started
+	}
+
+
 	NOT = {
 		has_character_flag = segrellion_daenerys_beacon_negotiation_refused
+	}
+
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_beacon_invitation_ready
 	}
 
 
@@ -111,44 +122,6 @@ segrellion_daenerys_beacon_negotiation_available_trigger = {
 
 		NOT = {
 			segrellion_daemon_daenerys_reinforcement_route_used_trigger = yes
-		}
-
-
-		OR = {
-
-			is_ai = no
-
-
-			opinion = {
-				target = character:IAF_Young_Griff_1
-				value <= -1
-			}
-
-
-			has_character_flag = segrellion_daemon_aegon_fealty_refused
-
-			has_character_flag = segrellion_daemon_rejected_aegon_ultimatum
-
-			has_character_flag = segrellion_daemon_defied_aegon
-
-
-			AND = {
-
-				has_character_flag = segrellion_daemon_aegon_status_resolved
-
-				NOT = {
-					has_character_flag = segrellion_daemon_aegon_fealty_accepted
-				}
-
-				NOT = {
-					has_character_flag = segrellion_daemon_forced_to_submit_to_aegon
-				}
-			}
-
-
-			character:IAF_Young_Griff_1 = {
-				has_character_flag = segrellion_young_griff_blackfyre_revealed
-			}
 		}
 	}
 }
@@ -185,27 +158,5 @@ segrellion_daenerys_beacon_direct_landing_available_trigger = {
 				is_spouse_of = character:Targaryen_9
 			}
 		}
-	}
-}
-
-
-# =========================================================
-# BEACON ROUTE
-#
-# The button is usable if Daenerys may either:
-# - land directly; or
-# - begin the Massey -> Daemon negotiation chain.
-# =========================================================
-
-segrellion_daenerys_beacon_route_available_trigger = {
-
-	segrellion_daemon_controls_flamelands_trigger = yes
-
-
-	OR = {
-
-		segrellion_daenerys_beacon_direct_landing_available_trigger = yes
-
-		segrellion_daenerys_beacon_negotiation_available_trigger = yes
 	}
 }
