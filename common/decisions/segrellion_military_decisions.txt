@@ -192,36 +192,30 @@ segrellion_call_the_banners_decision = {
 
 		is_at_war = yes
 
-		custom_description = {
 
-			text = segrellion_call_the_banners_scripted_army_blocked_tt
+		# =================================================
+		# HIDDEN STORY RESTRICTIONS
+		# =================================================
+
+		hidden_trigger = {
 
 			NOT = {
 				has_character_flag = segrellion_disable_call_the_banners
 			}
 		}
 
-		custom_description = {
 
-			text = segrellion_call_the_banners_baelish_blocked_tt
+		hidden_trigger = {
 
 			NOT = {
 				has_character_flag = segrellion_sansa_baelish_war_active
 			}
 		}
 
-		custom_description = {
 
-			text = segrellion_call_the_banners_war_requirement
-
-			any_character_war = {
-
-				is_civil_war = no
-
-				is_war_leader = root
-			}
-		}
-
+		# =================================================
+		# ELIGIBLE BANNERS
+		# =================================================
 
 		custom_description = {
 
@@ -315,14 +309,6 @@ segrellion_call_the_banners_decision = {
 		highest_held_title_tier >= tier_duchy
 
 
-		any_character_war = {
-
-			is_civil_war = no
-
-			is_war_leader = root
-		}
-
-
 		OR = {
 
 			any_vassal = {
@@ -358,7 +344,186 @@ segrellion_call_the_banners_decision = {
 
 
 	ai_will_do = {
-		base = 100
+
+		base = 10
+
+
+		# =================================================
+		# OWN WAR
+		#
+		# If this ruler actually leads the war, calling the
+		# banners becomes substantially more attractive.
+		# =================================================
+
+		modifier = {
+
+			factor = 6
+
+			any_character_war = {
+				is_war_leader = root
+			}
+		}
+
+
+		# =================================================
+		# DEFENSIVE WAR
+		#
+		# Defending your own realm is especially important.
+		# =================================================
+
+		modifier = {
+
+			factor = 2
+
+			any_character_war = {
+
+				is_war_leader = root
+
+				NOT = {
+					is_attacker = root
+				}
+			}
+		}
+
+
+		# =================================================
+		# LOYAL TO THEIR OWN LIEGE
+		#
+		# A Duke fighting for a liege they respect is more
+		# willing to mobilize their own banners.
+		# =================================================
+
+		modifier = {
+
+			factor = 2
+
+			exists = liege
+
+			opinion = {
+				target = liege
+				value >= 50
+			}
+		}
+
+
+		modifier = {
+
+			factor = 1.5
+
+			exists = liege
+
+			opinion = {
+				target = liege
+				value >= 20
+			}
+		}
+
+
+		# =================================================
+		# HOSTILE TO THEIR OWN LIEGE
+		# =================================================
+
+		modifier = {
+
+			factor = 0.5
+
+			exists = liege
+
+			opinion = {
+				target = liege
+				value < 0
+			}
+		}
+
+
+		modifier = {
+
+			factor = 0.25
+
+			exists = liege
+
+			opinion = {
+				target = liege
+				value <= -50
+			}
+		}
+
+
+		# =================================================
+		# PERSONALITY
+		# =================================================
+
+		modifier = {
+
+			factor = 1.5
+
+			has_trait = loyal
+		}
+
+
+		modifier = {
+
+			factor = 0.5
+
+			has_trait = disloyal
+		}
+
+
+		# =================================================
+		# EXPECTED RESPONSE FROM THEIR BANNERS
+		# =================================================
+
+		modifier = {
+
+			factor = 1.5
+
+			any_vassal = {
+
+				is_alive = yes
+				is_landed = yes
+
+				highest_held_title_tier > tier_barony
+
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+		}
+
+
+		modifier = {
+
+			factor = 0.5
+
+			NOT = {
+
+				any_vassal = {
+
+					is_alive = yes
+					is_landed = yes
+
+					highest_held_title_tier > tier_barony
+
+					opinion = {
+						target = root
+						value >= 0
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# STORY WAR
+		# =================================================
+
+		modifier = {
+
+			factor = 10
+
+			has_character_flag = segrellion_unicorn_returns_war_active
+		}
 	}
 
 

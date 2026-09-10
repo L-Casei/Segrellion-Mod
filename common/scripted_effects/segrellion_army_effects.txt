@@ -129,11 +129,6 @@ segrellion_call_the_banners_effect = {
 
 				limit = {
 
-					is_civil_war = no
-
-					is_war_leader = scope:segrellion_banner_liege
-
-
 					OR = {
 
 						# Liege is attacker, vassal joined defenders.
@@ -187,20 +182,37 @@ segrellion_call_the_banners_effect = {
 			}
 
 
-			# Only summon vassals who can join at least one current war.
+			# The caller only needs to participate in the war.
+			# They do not need to be the primary war leader.
+
 			save_temporary_scope_as = segrellion_banner_candidate
+
 			scope:segrellion_banner_liege = {
+
 				any_character_war = {
-					is_civil_war = no
-					is_war_leader = scope:segrellion_banner_liege
+
 					NOR = {
-						any_war_attacker = { this = scope:segrellion_banner_candidate }
-						any_war_defender = { this = scope:segrellion_banner_candidate }
+
+						any_war_attacker = {
+							this = scope:segrellion_banner_candidate
+						}
+
+						any_war_defender = {
+							this = scope:segrellion_banner_candidate
+						}
 					}
+
 					save_temporary_scope_as = segrellion_banner_candidate_war
+
 					scope:segrellion_banner_candidate = {
-						NOT = { is_at_war_with = scope:segrellion_banner_candidate_war.primary_attacker }
-						NOT = { is_at_war_with = scope:segrellion_banner_candidate_war.primary_defender }
+
+						NOT = {
+							is_at_war_with = scope:segrellion_banner_candidate_war.primary_attacker
+						}
+
+						NOT = {
+							is_at_war_with = scope:segrellion_banner_candidate_war.primary_defender
+						}
 					}
 				}
 			}
@@ -643,17 +655,6 @@ segrellion_banner_join_liege_wars_effect = {
 			if = {
 
 				limit = {
-
-					# Only external wars.
-					is_civil_war = no
-
-
-					# CRITICAL:
-					# The liege must actually lead this war.
-					# Secondary participants cannot propagate
-					# Call the Banners further downward.
-					is_war_leader = scope:segrellion_banner_liege
-
 
 					# Joiner is not already participating.
 					NOR = {
