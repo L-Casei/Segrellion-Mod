@@ -204,6 +204,28 @@ segrellion_aegon_daemon.0001 = {
 
 		custom_tooltip = segrellion_aegon_daemon.0001.c.tt
 
+		trigger = {
+
+			OR = {
+
+				is_ai = no
+
+
+				NOT = {
+
+					AND = {
+
+						has_character_flag = segrellion_young_griff_supports_daemon
+
+
+						character:Segrellion_60 = {
+
+							has_character_flag = segrellion_pledged_to_young_griff
+						}
+					}
+				}
+			}
+		}
 
 		character:Segrellion_60 = {
 
@@ -211,7 +233,6 @@ segrellion_aegon_daemon.0001 = {
 
 			add_character_flag = segrellion_daemon_independence_tolerated_by_aegon
 		}
-
 
 		add_character_flag = segrellion_young_griff_flamelands_submission_resolved
 
@@ -310,6 +331,7 @@ segrellion_aegon_daemon.0002 = {
 
 		segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
 
+
 		add_character_flag = segrellion_daemon_aegon_fealty_accepted
 
 		add_character_flag = segrellion_daemon_aegon_status_resolved
@@ -323,16 +345,43 @@ segrellion_aegon_daemon.0002 = {
 		}
 
 
+		# Mutual wartime support starts the personal Aegon/Daemon chain.
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_pledged_to_young_griff
+
+
+				character:IAF_Young_Griff_1 = {
+
+					has_character_flag = segrellion_young_griff_supports_daemon
+				}
+			}
+
+
+			add_character_flag = {
+
+				flag = segrellion_daemon_aegon_appointment_story_scheduled
+
+				days = 30
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0006
+
+				days = 1
+			}
+		}
+
+
 		ai_chance = {
 
 			base = 50
 
-
-			# Exact 75 / 25:
-			#
-			# Aegon helped Daemon.
-			# Daemon helped Aegon.
-			# Daemon likes Aegon.
 
 			modifier = {
 
@@ -343,6 +392,7 @@ segrellion_aegon_daemon.0002 = {
 
 
 				character:IAF_Young_Griff_1 = {
+
 					has_character_flag = segrellion_young_griff_supports_daemon
 				}
 
@@ -367,6 +417,33 @@ segrellion_aegon_daemon.0002 = {
 		name = segrellion_aegon_daemon.0002.b
 
 		custom_tooltip = segrellion_aegon_daemon.0002.b.tt
+
+
+		# If both men fought for one another, AI Daemon
+		# will NEVER reject Aegon's peaceful settlement.
+
+		trigger = {
+
+			OR = {
+
+				is_ai = no
+
+
+				NOT = {
+
+					AND = {
+
+						has_character_flag = segrellion_pledged_to_young_griff
+
+
+						character:IAF_Young_Griff_1 = {
+
+							has_character_flag = segrellion_young_griff_supports_daemon
+						}
+					}
+				}
+			}
+		}
 
 
 		add_character_flag = segrellion_daemon_aegon_fealty_refused
@@ -397,6 +474,7 @@ segrellion_aegon_daemon.0002 = {
 
 
 				character:IAF_Young_Griff_1 = {
+
 					has_character_flag = segrellion_young_griff_supports_daemon
 				}
 
@@ -750,6 +828,396 @@ segrellion_aegon_daemon.0005 = {
 		ai_chance = {
 			base = 30
 		}
+	}
+}
+
+# =========================================================
+# 0006 - THE KING'S HAND
+#
+# Root = Daemon
+# Mutual support route.
+# =========================================================
+
+segrellion_aegon_daemon.0006 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0006.t
+
+	desc = segrellion_aegon_daemon.0006.desc
+
+	theme = crown
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+		has_character_flag = segrellion_daemon_aegon_hand_and_regent
+
+		has_character_flag = segrellion_pledged_to_young_griff
+
+
+		NOT = {
+
+			has_character_flag = segrellion_daemon_aegon_appointment_story_resolved
+		}
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_supports_daemon
+
+			has_character_flag = segrellion_young_griff_daemon_hand_and_regent
+		}
+
+
+		liege ?= character:IAF_Young_Griff_1
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_daemon_aegon_appointment_story_scheduled
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0006.a
+
+		custom_tooltip = segrellion_aegon_daemon.0006.a.tt
+
+
+		add_character_flag = segrellion_daemon_aegon_hand_event_seen
+
+
+		trigger_event = {
+
+			id = segrellion_aegon_daemon.0007
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0007 - THE KING'S REGENT
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_aegon_daemon.0007 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0007.t
+
+	desc = segrellion_aegon_daemon.0007.desc
+
+	theme = realm
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daemon_aegon_hand_event_seen
+
+		has_character_flag = segrellion_daemon_aegon_hand_and_regent
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_daemon_hand_and_regent
+		}
+
+
+		liege ?= character:IAF_Young_Griff_1
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0007.a
+
+		custom_tooltip = segrellion_aegon_daemon.0007.a.tt
+
+
+		add_character_flag = segrellion_daemon_aegon_regent_event_seen
+
+
+		trigger_event = {
+
+			id = segrellion_aegon_daemon.0008
+
+			days = { 1 2 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0008 - A FRIEND BEFORE A VASSAL
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_aegon_daemon.0008 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0008.t
+
+	desc = segrellion_aegon_daemon.0008.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daemon_aegon_regent_event_seen
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		liege ?= character:IAF_Young_Griff_1
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0008.a
+
+		custom_tooltip = segrellion_aegon_daemon.0008.a.tt
+
+
+		character:IAF_Young_Griff_1 = {
+
+
+			if = {
+
+				limit = {
+
+					has_relation_nemesis = root
+				}
+
+
+				remove_relation_nemesis = root
+			}
+
+
+			if = {
+
+				limit = {
+
+					has_relation_rival = root
+				}
+
+
+				remove_relation_rival = root
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOR = {
+
+						has_relation_friend = root
+
+						has_relation_best_friend = root
+					}
+				}
+
+
+				set_relation_friend = root
+			}
+
+
+			add_character_flag = segrellion_young_griff_daemon_friend
+		}
+
+
+		add_character_flag = segrellion_daemon_aegon_friend
+
+
+		trigger_event = {
+
+			id = segrellion_aegon_daemon.0009
+
+			days = { 2 4 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0009 - THE KING'S CONFIDENCE
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_aegon_daemon.0009 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0009.t
+
+	desc = segrellion_aegon_daemon.0009.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daemon_aegon_friend
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_daemon_friend
+		}
+
+
+		liege ?= character:IAF_Young_Griff_1
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0009.a
+
+		custom_tooltip = segrellion_aegon_daemon.0009.a.tt
+
+
+		character:IAF_Young_Griff_1 = {
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						has_relation_best_friend = root
+					}
+				}
+
+
+				set_relation_best_friend = root
+			}
+
+
+			add_character_flag = segrellion_young_griff_daemon_confidant
+
+			add_character_flag = segrellion_young_griff_daemon_appointment_story_resolved
+		}
+
+
+		remove_character_flag = segrellion_daemon_aegon_appointment_story_scheduled
+
+		add_character_flag = segrellion_daemon_aegon_confidant
+
+		add_character_flag = segrellion_daemon_aegon_appointment_story_resolved
 	}
 }
 

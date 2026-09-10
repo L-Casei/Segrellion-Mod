@@ -27,10 +27,17 @@ segrellion_story_letters_quarterly = {
 }
 
 on_game_start_after_lobby = {
+
 	on_actions = {
+
 		segrellion_sansa_story_progression
+
 		segrellion_jon_stannis_death_news_progression
+
 		segrellion_aegon_daemon_vassalage_progression
+
+		segrellion_aegon_daemon_appointment_recovery
+
 		segrellion_dynasty_splendor_repair
 	}
 }
@@ -86,7 +93,79 @@ segrellion_aegon_daemon_quarterly_recovery = {
 
 		segrellion_aegon_daemon_vassalage_progression
 
-		segrellion_dynasty_splendor_repair
+		segrellion_aegon_daemon_appointment_recovery
+	}
+}
+
+segrellion_aegon_daemon_appointment_recovery = {
+
+	trigger = {
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_supports_daemon
+
+			has_character_flag = segrellion_young_griff_daemon_hand_and_regent
+
+
+			NOT = {
+
+				has_character_flag = segrellion_young_griff_daemon_appointment_story_resolved
+			}
+		}
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			liege ?= character:IAF_Young_Griff_1
+
+			has_character_flag = segrellion_pledged_to_young_griff
+
+			has_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+			has_character_flag = segrellion_daemon_aegon_hand_and_regent
+
+
+			NOT = {
+
+				has_character_flag = segrellion_daemon_aegon_appointment_story_resolved
+			}
+
+
+			NOT = {
+
+				has_character_flag = segrellion_daemon_aegon_appointment_story_scheduled
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Segrellion_60 = {
+
+			add_character_flag = {
+
+				flag = segrellion_daemon_aegon_appointment_story_scheduled
+
+				days = 30
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0006
+
+				days = { 2 4 }
+			}
+		}
 	}
 }
 
