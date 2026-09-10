@@ -5071,41 +5071,30 @@ segrellion_stannis_renly_truth_progression = {
 }
 
 # =========================================================
-# JON - STANNIS DEATH NEWS FAILSAFE
+# JON - STANNIS DEATH NEWS RECOVERY
+#
+# Recovery only.
+# Normal storyline delivery comes DIRECTLY from 1210.
 # =========================================================
 
 segrellion_jon_stannis_death_news_progression = {
+
 	effect = {
-		segrellion_resolve_stannis_jon_effect = yes
-		scope:stannis_jon ?= {
-			if = {
-				limit = {
-					segrellion_jon_pre_council_trigger = yes
-					has_title = title:d_winterfell
-					NOT = { has_trait = nightswatch }
+
+		if = {
+
+			limit = {
+
+				character:Baratheon_3 ?= {
+
+					is_alive = no
+
+					has_dead_character_flag = segrellion_stannis_murdered_by_baelish
 				}
-				segrellion_jon_pre_council_status_effect = yes
 			}
-			if = {
-				limit = {
-					is_alive = yes
-					character:Baratheon_3 = { is_alive = no }
-					OR = {
-						has_character_flag = segrellion_jon_stannis_death_news_pending
-						character:Baratheon_3 = { has_dead_character_flag = segrellion_stannis_murdered_by_baelish }
-						segrellion_jon_pre_council_trigger = yes
-					}
-					NOR = {
-						has_character_flag = segrellion_jon_winterfell_council_called
-						has_character_flag = segrellion_jon_stannis_death_news_received
-						has_character_flag = segrellion_jon_stannis_death_news_scheduled
-						has_character_flag = segrellion_jon_king_in_the_north
-					}
-				}
-				add_character_flag = segrellion_jon_stannis_death_news_pending
-				add_character_flag = { flag = segrellion_jon_stannis_death_news_scheduled days = 10 }
-				trigger_event = { id = segrellion_jon_frey.0010 days = 1 }
-			}
+
+
+			segrellion_schedule_stannis_death_news_for_jon_effect = yes
 		}
 	}
 }

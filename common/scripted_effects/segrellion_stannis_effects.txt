@@ -1893,3 +1893,241 @@ segrellion_jon_clear_stannis_political_liege_effect = {
 		remove_character_flag = segrellion_jon_stannis_political_liege
 	}
 }
+
+
+# =========================================================
+# STANNIS DEATH -> JON STORY HANDOFF
+#
+# Finds the ACTUAL living Jon and schedules the letter.
+# This may be called before or after Stannis dies.
+# =========================================================
+
+segrellion_schedule_stannis_death_news_for_jon_effect = {
+
+	# =====================================================
+	# RESURRECTED RUNTIME JON
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			exists = global_var:segrellion_resurrected_jon
+
+			global_var:segrellion_resurrected_jon ?= {
+				is_alive = yes
+			}
+		}
+
+
+		global_var:segrellion_resurrected_jon = {
+
+			if = {
+
+				limit = {
+
+					NOR = {
+
+						has_character_flag = segrellion_jon_stannis_death_news_received
+
+						has_character_flag = segrellion_jon_winterfell_council_called
+
+						has_character_flag = segrellion_jon_stannis_death_news_scheduled
+
+						has_character_flag = segrellion_jon_king_in_the_north
+					}
+				}
+
+
+				add_character_flag = segrellion_jon_stannis_death_news_pending
+
+
+				add_character_flag = {
+
+					flag = segrellion_jon_stannis_death_news_scheduled
+
+					days = 10
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_jon_frey.0010
+
+					days = 1
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HISTORICAL JON
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			character:Stark_7 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Stark_7 = {
+
+			if = {
+
+				limit = {
+
+					NOR = {
+
+						has_character_flag = segrellion_jon_stannis_death_news_received
+
+						has_character_flag = segrellion_jon_winterfell_council_called
+
+						has_character_flag = segrellion_jon_stannis_death_news_scheduled
+
+						has_character_flag = segrellion_jon_king_in_the_north
+					}
+				}
+
+
+				add_character_flag = segrellion_jon_stannis_death_news_pending
+
+
+				add_character_flag = {
+
+					flag = segrellion_jon_stannis_death_news_scheduled
+
+					days = 10
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_jon_frey.0010
+
+					days = 1
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# FALLBACK: CURRENT LORD COMMANDER IS OUR JON
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			title:k_the_wall.holder ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_canonical_current_jon
+			}
+		}
+
+
+		title:k_the_wall.holder = {
+
+			if = {
+
+				limit = {
+
+					NOR = {
+
+						has_character_flag = segrellion_jon_stannis_death_news_received
+
+						has_character_flag = segrellion_jon_winterfell_council_called
+
+						has_character_flag = segrellion_jon_stannis_death_news_scheduled
+
+						has_character_flag = segrellion_jon_king_in_the_north
+					}
+				}
+
+
+				add_character_flag = segrellion_jon_stannis_death_news_pending
+
+
+				add_character_flag = {
+
+					flag = segrellion_jon_stannis_death_news_scheduled
+
+					days = 10
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_jon_frey.0010
+
+					days = 1
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# FINAL FALLBACK: JON ALREADY HOLDS THE NORTH
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			title:e_the_north.holder ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_canonical_current_jon
+			}
+		}
+
+
+		title:e_the_north.holder = {
+
+			if = {
+
+				limit = {
+
+					NOR = {
+
+						has_character_flag = segrellion_jon_stannis_death_news_received
+
+						has_character_flag = segrellion_jon_winterfell_council_called
+
+						has_character_flag = segrellion_jon_stannis_death_news_scheduled
+
+						has_character_flag = segrellion_jon_king_in_the_north
+					}
+				}
+
+
+				add_character_flag = segrellion_jon_stannis_death_news_pending
+
+
+				add_character_flag = {
+
+					flag = segrellion_jon_stannis_death_news_scheduled
+
+					days = 10
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_jon_frey.0010
+
+					days = 1
+				}
+			}
+		}
+	}
+}

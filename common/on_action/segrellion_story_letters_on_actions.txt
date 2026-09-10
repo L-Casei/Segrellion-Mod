@@ -48,61 +48,13 @@ on_death = {
 segrellion_stannis_death_letter = {
 
 	trigger = {
+
 		this = character:Baratheon_3
 	}
 
+
 	effect = {
 
-		# Resolve the actual living Jon, including resurrected Jon.
-		segrellion_resolve_stannis_jon_effect = yes
-
-		scope:stannis_jon ?= {
-
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					character:Baratheon_3 = {
-						is_alive = no
-					}
-
-					OR = {
-
-						has_character_flag = segrellion_jon_stannis_death_news_pending
-
-						character:Baratheon_3 = {
-							has_dead_character_flag = segrellion_stannis_murdered_by_baelish
-						}
-
-						segrellion_jon_pre_council_trigger = yes
-					}
-
-					NOR = {
-
-						has_character_flag = segrellion_jon_winterfell_council_called
-
-						has_character_flag = segrellion_jon_stannis_death_news_received
-
-						has_character_flag = segrellion_jon_stannis_death_news_scheduled
-
-						has_character_flag = segrellion_jon_king_in_the_north
-					}
-				}
-
-				add_character_flag = segrellion_jon_stannis_death_news_pending
-
-				add_character_flag = {
-					flag = segrellion_jon_stannis_death_news_scheduled
-					days = 10
-				}
-
-				trigger_event = {
-					id = segrellion_jon_frey.0010
-					days = 1
-				}
-			}
-		}
+		segrellion_schedule_stannis_death_news_for_jon_effect = yes
 	}
 }
