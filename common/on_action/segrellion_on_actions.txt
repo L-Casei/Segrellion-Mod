@@ -62,7 +62,6 @@ on_game_start_after_lobby = {
         vladwyn_8106_startup
 		segrellion_tommen_peace_guard
 		segrellion_black_unicorn_personal_lock_progression
-		segrellion_white_port_startup
     }
 }
 
@@ -133,7 +132,6 @@ on_title_gain = {
 		segrellion_black_unicorn_post_beacon_title_gain
 		segrellion_young_griff_stormlands_momentum_title_gain
 		segrellion_daenerys_massey_news_progression
-		segrellion_white_port_title_gain
 	}
 }
 
@@ -5225,50 +5223,5 @@ segrellion_jon_baelish_same_county_capture_check = {
 				}
 			}
 		}
-	}
-}
-
-# =========================================================
-# WHITE PORT
-# COUNTY HOLDER BENEFITS
-# =========================================================
-
-segrellion_white_port_startup = {
-
-	effect = {
-
-		title:c_winded_glade.holder ?= {
-
-			segrellion_refresh_white_port_county_holder_effect = yes
-		}
-	}
-}
-
-
-segrellion_white_port_title_gain = {
-
-	trigger = {
-
-		exists = scope:title
-
-		scope:title = title:c_winded_glade
-	}
-
-
-	effect = {
-
-		# Remove White Port privileges from the previous holder.
-
-		scope:previous_holder ?= {
-
-			remove_character_modifier = segrellion_white_port_maritime_access_01_modifier
-
-			remove_character_modifier = segrellion_white_port_maritime_access_02_modifier
-		}
-
-
-		# Apply the correct level to the new holder.
-
-		segrellion_refresh_white_port_county_holder_effect = yes
 	}
 }
