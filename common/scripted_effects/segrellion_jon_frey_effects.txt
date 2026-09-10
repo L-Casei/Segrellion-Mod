@@ -1,0 +1,286 @@
+segrellion_jon_secure_sansa_in_vale_effect = {
+
+	if = {
+
+		limit = {
+			is_alive = yes
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_sansa_identity_revealed
+				}
+			}
+
+			segrellion_reveal_sansa_stark_effect = yes
+		}
+
+
+		add_character_flag = segrellion_sansa_under_royce_protection
+
+		add_character_flag = segrellion_sansa_rescued_by_vale_lords
+
+		add_character_flag = segrellion_sansa_jon_route_claimed
+
+
+		if = {
+
+			limit = {
+
+				is_ruler = no
+
+				title:c_runestone.holder ?= {
+					is_alive = yes
+				}
+			}
+
+			set_employer = title:c_runestone.holder
+		}
+
+
+		set_location = title:b_runestone.title_province
+	}
+}
+
+
+segrellion_jon_execute_adult_freys_effect = {
+
+	dynasty:dynn_Frey = {
+
+		every_dynasty_member = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_female = no
+
+				age >= 16
+			}
+
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+	}
+}
+
+
+segrellion_jon_take_baelish_riverlands_effect = {
+
+	create_title_and_vassal_change = {
+
+		type = conquest
+
+		save_scope_as = segrellion_jon_riverlands_conquest_change
+
+		add_claim_on_loss = no
+	}
+
+
+	title:e_the_riverlands = {
+
+		change_title_holder_include_vassals = {
+
+			holder = root
+
+			change = scope:segrellion_jon_riverlands_conquest_change
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
+			title:k_the_riverlands.holder ?= {
+				this = character:Baelish_2
+			}
+		}
+
+
+		title:k_the_riverlands = {
+
+			change_title_holder = {
+
+				holder = root
+
+				change = scope:segrellion_jon_riverlands_conquest_change
+			}
+		}
+	}
+
+
+	title:d_riverrun = {
+
+		change_title_holder_include_vassals = {
+
+			holder = root
+
+			change = scope:segrellion_jon_riverlands_conquest_change
+		}
+	}
+
+
+	title:c_riverrun = {
+
+		change_title_holder = {
+
+			holder = root
+
+			change = scope:segrellion_jon_riverlands_conquest_change
+		}
+	}
+
+
+	title:d_harrenhal = {
+
+		change_title_holder_include_vassals = {
+
+			holder = root
+
+			change = scope:segrellion_jon_riverlands_conquest_change
+		}
+	}
+
+
+	title:c_harrenhal = {
+
+		change_title_holder = {
+
+			holder = root
+
+			change = scope:segrellion_jon_riverlands_conquest_change
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_jon_riverlands_conquest_change
+
+
+	add_character_flag = segrellion_jon_temporarily_holds_riverlands
+
+	add_character_flag = segrellion_jon_temporarily_holds_riverrun
+
+	add_character_flag = segrellion_jon_temporarily_holds_harrenhal
+}
+
+
+segrellion_jon_restore_edmure_tully_effect = {
+
+	if = {
+
+		limit = {
+
+			character:Tully_7 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Tully_7 = {
+					is_imprisoned = yes
+				}
+			}
+
+			character:Tully_7 = {
+				release_from_prison = yes
+			}
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = granted
+
+			save_scope_as = segrellion_jon_edmure_restoration_change
+
+			add_claim_on_loss = no
+		}
+
+
+		title:e_the_riverlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = character:Tully_7
+
+				change = scope:segrellion_jon_edmure_restoration_change
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				title:k_the_riverlands.holder ?= {
+					this = root
+				}
+			}
+
+
+			title:k_the_riverlands = {
+
+				change_title_holder = {
+
+					holder = character:Tully_7
+
+					change = scope:segrellion_jon_edmure_restoration_change
+				}
+			}
+		}
+
+
+		title:d_riverrun = {
+
+			change_title_holder_include_vassals = {
+
+				holder = character:Tully_7
+
+				change = scope:segrellion_jon_edmure_restoration_change
+			}
+		}
+
+
+		title:c_riverrun = {
+
+			change_title_holder = {
+
+				holder = character:Tully_7
+
+				change = scope:segrellion_jon_edmure_restoration_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_jon_edmure_restoration_change
+
+
+		character:Tully_7 = {
+
+			set_primary_title_to = title:e_the_riverlands
+
+			add_character_flag = segrellion_edmure_restored_to_riverlands
+		}
+
+
+		add_character_flag = segrellion_jon_restored_edmure_tully
+
+		remove_character_flag = segrellion_jon_temporarily_holds_riverlands
+
+		remove_character_flag = segrellion_jon_temporarily_holds_riverrun
+	}
+}

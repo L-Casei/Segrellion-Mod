@@ -3691,14 +3691,20 @@ segrellion_jon_red_wedding_revenge_cb = {
 
 			remove_character_flag = segrellion_jon_red_wedding_revenge_active
 
+			remove_character_flag = segrellion_jon_frey_extermination_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
 			remove_variable = segrellion_jon_red_wedding_war
+
+			remove_variable = segrellion_jon_frey_war
 
 			add_character_flag = segrellion_jon_red_wedding_avenged
 
 
 			trigger_event = {
 
-				id = segrellion_jon_frey.0030
+				id = segrellion_jon_frey.0060
 
 				days = 1
 			}
@@ -3717,7 +3723,13 @@ segrellion_jon_red_wedding_revenge_cb = {
 
 			remove_character_flag = segrellion_jon_red_wedding_revenge_active
 
+			remove_character_flag = segrellion_jon_frey_extermination_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
 			remove_variable = segrellion_jon_red_wedding_war
+
+			remove_variable = segrellion_jon_frey_war
 		}
 	}
 
@@ -3733,10 +3745,31 @@ segrellion_jon_red_wedding_revenge_cb = {
 
 			remove_character_flag = segrellion_jon_red_wedding_revenge_active
 
+			remove_character_flag = segrellion_jon_frey_extermination_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
 			remove_variable = segrellion_jon_red_wedding_war
+
+			remove_variable = segrellion_jon_frey_war
 		}
 	}
 
+	on_invalidated = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_red_wedding_revenge_active
+
+			remove_character_flag = segrellion_jon_frey_extermination_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
+			remove_variable = segrellion_jon_red_wedding_war
+
+			remove_variable = segrellion_jon_frey_war
+		}
+	}
 
 	transfer_behavior = transfer
 
@@ -3750,6 +3783,597 @@ segrellion_jon_red_wedding_revenge_cb = {
 	war_name_base = "segrellion_jon_red_wedding_revenge_war_name_base"
 
 	cb_name = "segrellion_jon_red_wedding_revenge_cb_name"
+
+
+	interface_priority = 100
+}
+
+# =========================================================
+# JON SNOW
+# WAR FOR THE RIVERLANDS AGAINST BAELISH
+# =========================================================
+
+segrellion_jon_baelish_riverlands_cb = {
+
+	icon = invasion
+
+	group = invasion
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+	allow_hostages = no
+
+
+	allowed_for_character = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_king_in_the_north
+
+		has_character_flag = segrellion_jon_baelish_riverlands_cb_authorized
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = character:Baelish_2
+	}
+
+
+	target_titles = all
+
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:e_the_riverlands
+		}
+
+
+		scope:defender = {
+
+			is_alive = yes
+
+			has_title = title:e_the_riverlands
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+		}
+	}
+
+
+	should_invalidate = {
+
+		OR = {
+
+			scope:attacker = {
+				is_alive = no
+			}
+
+			scope:defender = {
+				is_alive = no
+			}
+
+			scope:defender = {
+
+				NOT = {
+					has_title = title:e_the_riverlands
+				}
+			}
+		}
+	}
+
+
+	cost = {
+	}
+
+
+	on_primary_attacker_death = invalidate
+
+	on_primary_defender_death = invalidate
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_baelish_riverlands_cb_authorized
+
+			add_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+			add_character_flag = segrellion_disable_call_the_banners
+
+
+			set_variable = {
+
+				name = segrellion_jon_baelish_riverlands_war
+
+				value = scope:war
+			}
+		}
+
+
+		scope:defender = {
+
+			add_character_flag = segrellion_baelish_jon_riverlands_war_active
+		}
+
+
+		title:e_the_vale.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:e_the_vale.holder
+							}
+						}
+
+						add_attacker = title:e_the_vale.holder
+					}
+				}
+			}
+		}
+
+
+		title:c_runestone.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:c_runestone.holder
+							}
+						}
+
+						add_attacker = title:c_runestone.holder
+					}
+				}
+			}
+		}
+
+
+		title:c_ironoaks.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:c_ironoaks.holder
+							}
+						}
+
+						add_attacker = title:c_ironoaks.holder
+					}
+				}
+			}
+		}
+
+
+		title:c_darry.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+
+					NOT = {
+						dynasty = dynasty:dynn_Lannister
+					}
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:c_darry.holder
+							}
+						}
+
+						add_attacker = title:c_darry.holder
+					}
+				}
+			}
+		}
+
+
+		title:c_atranta.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+
+					NOT = {
+						dynasty = dynasty:dynn_Lannister
+					}
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:c_atranta.holder
+							}
+						}
+
+						add_attacker = title:c_atranta.holder
+					}
+				}
+			}
+		}
+
+
+		title:c_wayfarers_rest.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+
+					NOT = {
+						dynasty = dynasty:dynn_Lannister
+					}
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:c_wayfarers_rest.holder
+							}
+						}
+
+						add_attacker = title:c_wayfarers_rest.holder
+					}
+				}
+			}
+		}
+
+
+		title:c_seagard.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+
+					NOT = {
+						dynasty = dynasty:dynn_Lannister
+					}
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:c_seagard.holder
+							}
+						}
+
+						add_attacker = title:c_seagard.holder
+					}
+				}
+			}
+		}
+
+
+		dynasty:dynn_Blackwood = {
+
+			every_dynasty_member = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					top_liege = scope:defender
+				}
+
+
+				save_temporary_scope_as = segrellion_jon_blackwood_supporter
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = scope:segrellion_jon_blackwood_supporter
+							}
+						}
+
+						add_attacker = scope:segrellion_jon_blackwood_supporter
+					}
+				}
+			}
+		}
+
+
+		title:c_hearts_home.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+				}
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:c_hearts_home.holder
+							}
+						}
+
+						add_defender = title:c_hearts_home.holder
+					}
+				}
+			}
+		}
+
+
+		scope:defender = {
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					dynasty = dynasty:dynn_Lannister
+				}
+
+
+				save_temporary_scope_as = segrellion_jon_lannister_riverlands_supporter
+
+
+				scope:war ?= {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = scope:segrellion_jon_lannister_riverlands_supporter
+							}
+						}
+
+						add_defender = scope:segrellion_jon_lannister_riverlands_supporter
+					}
+				}
+			}
+		}
+	}
+
+
+	on_victory_desc = {
+
+		desc = segrellion_jon_baelish_riverlands_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:attacker = {
+
+			segrellion_jon_take_baelish_riverlands_effect = yes
+
+			remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
+			remove_variable = segrellion_jon_baelish_riverlands_war
+
+			add_character_flag = segrellion_jon_baelish_riverlands_war_resolved
+
+			add_character_flag = segrellion_jon_baelish_riverlands_war_won
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0090
+
+				days = 1
+			}
+		}
+
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_baelish_jon_riverlands_war_active
+		}
+	}
+
+
+	on_white_peace_desc = {
+
+		desc = segrellion_jon_baelish_riverlands_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
+			remove_variable = segrellion_jon_baelish_riverlands_war
+		}
+
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_baelish_jon_riverlands_war_active
+		}
+	}
+
+
+	on_defeat_desc = {
+
+		desc = segrellion_jon_baelish_riverlands_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
+			remove_variable = segrellion_jon_baelish_riverlands_war
+		}
+
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_baelish_jon_riverlands_war_active
+		}
+	}
+
+
+	on_invalidated = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+			remove_character_flag = segrellion_disable_call_the_banners
+
+			remove_variable = segrellion_jon_baelish_riverlands_war
+		}
+
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_baelish_jon_riverlands_war_active
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+	attacker_allies_inherit = no
+
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_jon_baelish_riverlands_war_name"
+
+	war_name_base = "segrellion_jon_baelish_riverlands_war_name_base"
+
+	cb_name = "segrellion_jon_baelish_riverlands_cb_name"
 
 
 	interface_priority = 100

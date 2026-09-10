@@ -495,23 +495,22 @@ segrellion_jon_frey.0030 = {
 
 		custom_tooltip = segrellion_jon_frey.0030.a.tt
 
-
 		remove_character_flag = segrellion_jon_red_wedding_revenge_pending
 
 		add_character_flag = segrellion_jon_frey_extermination_war_active
 
 		add_character_flag = segrellion_disable_call_the_banners
 
+		add_character_flag = segrellion_jon_red_wedding_revenge_authorized
 
-		# =================================================
-		# VANILLA ERADICATE HOUSE CB
-		# =================================================
 
 		start_war = {
 
-			cb = eradicate_house_cb
+			cb = segrellion_jon_red_wedding_revenge_cb
 
 			target = scope:segrellion_jon_frey_enemy
+
+			target_title = title:d_the_crossing
 		}
 
 
@@ -523,12 +522,11 @@ segrellion_jon_frey.0030 = {
 
 			limit = {
 
-				using_cb = eradicate_house_cb
+				using_cb = segrellion_jon_red_wedding_revenge_cb
 
-				casus_belli = {
+				primary_attacker = root
 
-					primary_defender = scope:segrellion_jon_frey_enemy
-				}
+				primary_defender = scope:segrellion_jon_frey_enemy
 			}
 
 
@@ -928,11 +926,535 @@ segrellion_jon_frey.0040 = {
 
 			add_character_flag = segrellion_jon_knows_sansa_is_alive
 
+
 			scope:segrellion_jon_sansa = {
 
 				add_character_flag = segrellion_sansa_known_alive_to_jon
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+
+							has_character_flag = segrellion_sansa_under_daemon_protection
+						}
+
+						NOT = {
+
+							has_character_flag = segrellion_sansa_sent_to_jon
+						}
+					}
+
+					segrellion_jon_secure_sansa_in_vale_effect = yes
+				}
 			}
 		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0060 - THE JUDGMENT OF HOUSE FREY
+# =========================================================
+
+segrellion_jon_frey.0060 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0060.t
+	desc = segrellion_jon_frey.0060.desc
+
+	theme = war
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_red_wedding_avenged
+
+		NOT = {
+			has_character_flag = segrellion_jon_frey_judgment_complete
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0060.a
+
+		custom_tooltip = segrellion_jon_frey.0060.a.tt
+
+
+		segrellion_jon_execute_adult_freys_effect = yes
+
+		add_character_flag = segrellion_jon_frey_judgment_complete
+
+
+		if = {
+
+			limit = {
+
+				character:Baelish_2 ?= {
+
+					is_alive = yes
+
+					has_title = title:e_the_riverlands
+
+					NOT = {
+						has_title = title:h_the_iron_throne
+					}
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0070
+
+				days = { 7 14 }
+			}
+		}
+
+		else_if = {
+
+			limit = {
+
+				character:Baelish_2 ?= {
+
+					is_alive = yes
+
+					has_title = title:h_the_iron_throne
+				}
+			}
+
+
+			add_character_flag = segrellion_jon_baelish_iron_throne_branch_pending
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0070 - THE RIVERLANDS
+# =========================================================
+
+segrellion_jon_frey.0070 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0070.t
+	desc = segrellion_jon_frey.0070.desc
+
+	theme = war
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_red_wedding_avenged
+
+		has_character_flag = segrellion_vale_supports_jon_against_baelish
+
+
+		NOT = {
+			has_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+		}
+
+		NOT = {
+			has_character_flag = segrellion_jon_baelish_riverlands_war_resolved
+		}
+
+
+		character:Baelish_2 ?= {
+
+			is_alive = yes
+
+			has_title = title:e_the_riverlands
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+		}
+	}
+
+
+	immediate = {
+
+		character:Baelish_2 = {
+			save_scope_as = segrellion_jon_baelish_enemy
+		}
+
+
+		title:c_runestone.holder ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = segrellion_jon_baelish_yohn
+			}
+		}
+
+
+		character:Tully_7 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				save_scope_as = segrellion_jon_edmure
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_jon_baelish_enemy
+
+		animation = personality_dishonorable
+	}
+
+
+	lower_right_portrait = {
+
+		character = scope:segrellion_jon_baelish_yohn
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0070.a
+
+		custom_tooltip = segrellion_jon_frey.0070.a.tt
+
+
+		add_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+
+		add_character_flag = segrellion_jon_baelish_riverlands_cb_authorized
+
+		add_character_flag = segrellion_disable_call_the_banners
+
+
+		start_war = {
+
+			cb = segrellion_jon_baelish_riverlands_cb
+
+			target = scope:segrellion_jon_baelish_enemy
+
+			target_title = title:e_the_riverlands
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0080 - BAELISH WITHIN REACH
+# =========================================================
+
+segrellion_jon_frey.0080 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0080.t
+	desc = segrellion_jon_frey.0080.desc
+
+	theme = war
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+		NOT = {
+			has_character_flag = segrellion_jon_baelish_same_county_capture_seen
+		}
+
+
+		character:Baelish_2 ?= {
+
+			is_alive = yes
+
+			location.county = root.location.county
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_jon_baelish_same_county_capture_seen
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Baelish_2
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0080.a
+
+		custom_tooltip = segrellion_jon_frey.0080.a.tt
+
+
+		imprison = {
+
+			target = character:Baelish_2
+
+			type = dungeon
+		}
+
+
+		var:segrellion_jon_baelish_riverlands_war ?= {
+
+			end_war = attacker
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0090 - THE END OF LITTLEFINGER
+# =========================================================
+
+segrellion_jon_frey.0090 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0090.t
+	desc = segrellion_jon_frey.0090.desc
+
+	theme = war
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_baelish_riverlands_war_won
+
+		NOT = {
+			has_character_flag = segrellion_jon_baelish_executed
+		}
+
+
+		character:Baelish_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Baelish_2
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0090.a
+
+		custom_tooltip = segrellion_jon_frey.0090.a.tt
+
+
+		character:Baelish_2 = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_baelish_executed
+
+
+		if = {
+
+			limit = {
+
+				character:Tully_7 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0100
+
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0100 - THE TROUT RETURNS
+# =========================================================
+
+segrellion_jon_frey.0100 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0100.t
+	desc = segrellion_jon_frey.0100.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_baelish_executed
+
+		NOT = {
+			has_character_flag = segrellion_jon_restored_edmure_tully
+		}
+
+
+		character:Tully_7 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		character:Tully_7 = {
+			save_scope_as = segrellion_jon_edmure_restoration
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_jon_edmure_restoration
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0100.a
+
+		custom_tooltip = segrellion_jon_frey.0100.a.tt
+
+
+		segrellion_jon_restore_edmure_tully_effect = yes
 
 
 		ai_chance = {
