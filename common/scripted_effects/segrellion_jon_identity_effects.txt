@@ -177,7 +177,7 @@ segrellion_jon_choose_jon_snow_effect = {
 	change_first_name = Jon
 
 
-	set_house = character:Stark_7.house
+	set_house = character:Stark_3.house
 
 
 	if = {
@@ -317,6 +317,22 @@ segrellion_jon_resolve_identity_from_game_rule_effect = {
 
 				segrellion_jon_choose_jon_snow_effect = yes
 			}
+		}
+	}
+}
+
+# Recognize the reveal without choosing a house for the player.
+# AI also resolves while unlanded, without relying on decision evaluation.
+segrellion_jon_revealed_identity_progression_effect = {
+	if = {
+		limit = {
+			segrellion_jon_true_parentage_revealed_trigger = yes
+			NOT = { has_character_flag = segrellion_jon_identity_chosen }
+		}
+		add_character_flag = segrellion_jon_targaryen_revealed
+		if = {
+			limit = { is_ai = yes is_adult = yes }
+			segrellion_jon_resolve_identity_from_game_rule_effect = yes
 		}
 	}
 }

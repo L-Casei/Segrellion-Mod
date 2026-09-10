@@ -3493,45 +3493,8 @@ segrellion_jon_resurrection_progression = {
         # JON IS DEAD BUT THE HANDOFF WAS LOST
         # =================================================
 
-        character:Melisandre_1 ?= {
+        # Recovery is handled by segrellion_jon_body_in_ice_failsafe below.
 
-            if = {
-
-                limit = {
-
-                    is_alive = yes
-
-
-                    character:Stark_7 = {
-
-                        is_alive = no
-
-                        has_character_flag = segrellion_jon_murdered_by_watch
-                    }
-
-
-                    has_global_variable = segrellion_jon_resurrection_pending
-
-
-                    NOT = {
-                        has_global_variable = segrellion_jon_resurrection_chain_handed_off
-                    }
-
-
-                    NOT = {
-                        has_global_variable = segrellion_resurrected_jon
-                    }
-                }
-
-
-                trigger_event = {
-
-                    id = segrellion_jon_resurrection.0090
-
-                    days = 1
-                }
-            }
-        }
     }
 }
 
@@ -4384,61 +4347,16 @@ segrellion_black_unicorn_visenya_soulmate_guard = {
 # =========================================================
 
 segrellion_jon_targaryen_reveal_progression = {
-
 	effect = {
-
 		if = {
-			limit = {
-
-				has_global_variable = segrellion_resurrected_jon
-
-				global_var:segrellion_resurrected_jon ?= {
-
-					is_alive = yes
-
-					NOT = {
-						has_character_flag = segrellion_jon_targaryen_revealed
-					}
-
-					OR = {
-
-						dynasty ?= dynasty:dynn_Targaryen
-
-						character:Stark_7 = {
-							dynasty ?= dynasty:dynn_Targaryen
-						}
-					}
-				}
-			}
-
-
+			limit = { global_var:segrellion_resurrected_jon ?= { is_alive = yes } }
 			global_var:segrellion_resurrected_jon = {
-
-				# If AGOT changed the historical Jon's house,
-				# mirror that change onto our resurrected Jon.
-
-				if = {
-					limit = {
-
-						character:Stark_7 = {
-							dynasty ?= dynasty:dynn_Targaryen
-						}
-
-						NOT = {
-							dynasty ?= dynasty:dynn_Targaryen
-						}
-					}
-
-					set_house = character:Stark_7.house
-				}
-
-
-				add_character_flag = segrellion_jon_targaryen_revealed
-
-				trigger_event = {
-					id = segrellion_jon.1350
-					days = 1
-				}
+				segrellion_jon_revealed_identity_progression_effect = yes
+			}
+		}
+		else = {
+			character:Stark_7 ?= {
+				segrellion_jon_revealed_identity_progression_effect = yes
 			}
 		}
 	}

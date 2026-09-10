@@ -42,6 +42,19 @@ segrellion_jon_true_parentage_revealed_trigger = {
 		has_character_flag = segrellion_jon_targaryen_revealed
 
 		father = character:Targaryen_3
+		dynasty ?= dynasty:dynn_Targaryen
+
+		# AGOT may reveal the historical Jon rather than the resurrected character.
+		AND = {
+			exists = global_var:segrellion_resurrected_jon
+			this = global_var:segrellion_resurrected_jon
+			character:Stark_7 = {
+				OR = {
+					father = character:Targaryen_3
+					dynasty ?= dynasty:dynn_Targaryen
+				}
+			}
+		}
 	}
 }
 
