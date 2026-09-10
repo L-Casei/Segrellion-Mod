@@ -10,23 +10,21 @@
 
 segrellion_reveal_sansa_stark_effect = {
 
-	if = {
-		limit = {
-			exists = real_father
-		}
+	# =====================================================
+	# RESTORE SANSA'S TRUE PARENTS
+	# =====================================================
 
-		set_father = real_father
-	}
+	set_father = character:Stark_3
 
-	if = {
-		limit = {
-			exists = real_mother
-		}
+	set_mother = character:Tully_4
 
-		set_mother = real_mother
-	}
+
+	# =====================================================
+	# REMOVE ALAYNE'S BASTARD STATUS
+	# =====================================================
 
 	if = {
+
 		limit = {
 			has_trait = bastard
 		}
@@ -34,7 +32,9 @@ segrellion_reveal_sansa_stark_effect = {
 		remove_trait = bastard
 	}
 
+
 	if = {
+
 		limit = {
 			has_trait = legitimized_bastard
 		}
@@ -42,19 +42,45 @@ segrellion_reveal_sansa_stark_effect = {
 		remove_trait = legitimized_bastard
 	}
 
-	change_first_name = {
-		template_character = character:Stark_8
+
+	# =====================================================
+	# REMOVE "STONE"
+	# Canon Children gives Alayne nick_stone.
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_nickname = nick_stone
+		}
+
+		remove_nickname = yes
 	}
 
-	set_regnal_name = Sansa
 
-	remove_nickname = yes
+	# =====================================================
+	# RESTORE SANSA STARK
+	# =====================================================
+
+	change_first_name = Sansa
 
 	set_house = character:Stark_8.house
 
-	remove_nickname = yes
+
+	# Defensive second cleanup after changing House.
+
+	if = {
+
+		limit = {
+			has_nickname = nick_stone
+		}
+
+		remove_nickname = yes
+	}
+
 
 	add_character_flag = segrellion_sansa_identity_revealed
+
 	add_character_flag = segrellion_sansa_is_true_stark
 }
 
@@ -96,7 +122,14 @@ segrellion_sansa_arrives_in_flamelands_effect = {
 
 			set_house = character:Stark_8.house
 
-			remove_nickname = yes
+			if = {
+
+				limit = {
+					has_nickname = nick_stone
+				}
+
+				remove_nickname = yes
+			}
 
 
 			set_location = title:b_castle_farring.title_province
