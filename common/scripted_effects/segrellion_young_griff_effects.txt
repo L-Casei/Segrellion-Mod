@@ -584,342 +584,157 @@ segrellion_young_griff_place_jon_connington_effect = {
 
 segrellion_young_griff_force_iron_throne_progression_effect = {
 
-	character:IAF_Young_Griff_1 ?= {
+	# =====================================================
+	# NOTHING TO DO IF AEGON ALREADY HOLDS THE IRON THRONE
+	# =====================================================
+
+	if = {
+		limit = {
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+	# =====================================================
+	# PATH 2
+	#
+	# AEGON REMAINED WITH DAEMON.
+	#
+	# IMPORTANT:
+	# Never jump directly into the throne war here.
+	# Path 2 MUST preserve:
+	#
+	# 7000 -> Aegon remembers the debt
+	# 7010 -> parchment letter to Daemon
+	# 7020 -> Daemon's answer
+	# Varys preparation
+	# 6000 -> actual invasion
+	# 6010 -> supporters are attached
+	# 6020 -> parchment confirmation to Daemon
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			has_character_flag = segrellion_young_griff_canon_path_2
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_iron_throne_war_started
+			}
+		}
+
+		# -------------------------------------------------
+		# AEGON HELPED DAEMON RESTORE THE FLAMELANDS.
+		#
+		# The Blood Debt scene and Daemon's letter are
+		# mandatory before the Iron Throne invasion.
+		# -------------------------------------------------
 
 		if = {
 
 			limit = {
-				is_alive = yes
-			}
 
+				has_character_flag = segrellion_young_griff_supports_daemon
 
-			# =================================================
-			# REPAIR MISSING CANON PATH
-			#
-			# If Aegon remained with Daemon until the
-			# restoration was resolved, he belongs to Path 2.
-			# =================================================
+				character:Segrellion_60 ?= {
 
-			if = {
+					is_alive = yes
 
-				limit = {
+					has_title = title:e_flamelands
 
-					has_character_flag = segrellion_young_griff_supports_daemon
-
-					NOR = {
-						has_character_flag = segrellion_young_griff_canon_path_1
-						has_character_flag = segrellion_young_griff_canon_path_2
-					}
-
-					character:Segrellion_60 ?= {
-
-						OR = {
-							has_character_flag = segrellion_unicorn_returns_completed
-							has_character_flag = segrellion_unicorn_returns_resolved
-						}
-					}
+					has_character_flag = segrellion_unicorn_returns_completed
 				}
 
-
-				add_character_flag = segrellion_young_griff_canon_path_2
-
-				remove_character_flag = segrellion_young_griff_canon_path_1
-			}
-
-
-			# =================================================
-			# PATH 2 - REPAIR POSTWAR STATE
-			# =================================================
-
-			if = {
-
-				limit = {
-
-					has_character_flag = segrellion_young_griff_canon_path_2
-
-					character:Segrellion_60 ?= {
-
-						OR = {
-							has_character_flag = segrellion_unicorn_returns_completed
-							has_character_flag = segrellion_unicorn_returns_resolved
-						}
-					}
+				NOT = {
+					has_character_flag = segrellion_young_griff_blood_debt_resolved
 				}
 
-
-				if = {
-
-					limit = {
-
-						NOT = {
-							has_character_flag = segrellion_young_griff_supports_daemon
-						}
-					}
-
-
-					add_character_flag = segrellion_young_griff_supports_daemon
-				}
-
-
-				if = {
-
-					limit = {
-
-						NOT = {
-							has_character_flag = segrellion_young_griff_daemon_war_resolved
-						}
-					}
-
-
-					add_character_flag = segrellion_young_griff_daemon_war_resolved
-
-					remove_character_flag = segrellion_young_griff_waiting_for_daemon
-
-					add_character_flag = segrellion_young_griff_free_for_iron_throne
+				NOT = {
+					has_character_flag = segrellion_young_griff_blood_debt_event_scheduled
 				}
 			}
 
+			remove_character_flag = segrellion_young_griff_invasion_event_failed
+			remove_character_flag = segrellion_young_griff_invasion_event_requested
+			remove_character_flag = segrellion_young_griff_invasion_event_scheduled
 
-			# =================================================
-			# PATH 1 - RECOVER 7900
-			# =================================================
-
-			if = {
-
-				limit = {
-
-					is_imprisoned = no
-
-					has_character_flag = segrellion_young_griff_canon_path_1
-
-					has_character_flag = segrellion_young_griff_free_for_iron_throne
-
-
-					OR = {
-
-						has_character_flag = segrellion_young_griff_left_daemon_stannis
-
-						has_character_flag = segrellion_young_griff_left_daemon_daenerys
-
-						has_character_flag = segrellion_young_griff_left_daemon_dorne
-
-						has_character_flag = segrellion_young_griff_left_daemon_vale
-					}
-
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
-					}
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_independent_throne_path_started
-					}
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_iron_throne_war_started
-					}
-
-					NOT = {
-						has_title = title:h_the_iron_throne
-					}
-				}
-
-
-				add_character_flag = {
-					flag = segrellion_young_griff_independent_throne_path_scheduled
-					days = 210
-				}
-
-
-				trigger_event = {
-
-					id = segrellion_young_griff.7900
-
-					months = 6
-				}
+			add_character_flag = {
+				flag = segrellion_young_griff_blood_debt_event_scheduled
+				days = 30
 			}
 
-
-			# =================================================
-			# PATH 1 - RECOVER 7910
-			# =================================================
-
-			if = {
-
-				limit = {
-
-					is_imprisoned = no
-
-					has_character_flag = segrellion_young_griff_canon_path_1
-
-					has_character_flag = segrellion_young_griff_independent_throne_path_started
-
-					has_character_flag = segrellion_young_griff_varys_contacted
-
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_independent_varys_seen
-					}
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_independent_varys_scheduled
-					}
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_iron_throne_war_started
-					}
-
-					NOT = {
-						has_title = title:h_the_iron_throne
-					}
-				}
-
-
-				add_character_flag = {
-					flag = segrellion_young_griff_independent_varys_scheduled
-					days = 30
-				}
-
-
-				trigger_event = {
-
-					id = segrellion_young_griff.7910
-
-					days = 1
-				}
-			}
-
-
-			# =================================================
-			# PATH 2 - DEBT / VARYS HANDOFF
-			# =================================================
-
-			if = {
-
-				limit = {
-
-					is_imprisoned = no
-
-					has_character_flag = segrellion_young_griff_canon_path_2
-
-					has_character_flag = segrellion_young_griff_daemon_war_resolved
-
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_iron_throne_war_started
-					}
-
-					NOT = {
-						has_title = title:h_the_iron_throne
-					}
-				}
-
-
-				# ---------------------------------------------
-				# DAEMON WON
-				# ---------------------------------------------
-
-				if = {
-
-					limit = {
-
-						character:Segrellion_60 ?= {
-							is_alive = yes
-							has_title = title:e_flamelands
-						}
-					}
-
-
-					# Blood Debt somehow disappeared.
-					# Restore it.
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_character_flag = segrellion_young_griff_blood_debt_resolved
-							}
-
-							NOT = {
-								has_character_flag = segrellion_young_griff_blood_debt_event_scheduled
-							}
-						}
-
-
-						add_character_flag = {
-							flag = segrellion_young_griff_blood_debt_event_scheduled
-							days = 10
-						}
-
-
-						trigger_event = {
-
-							id = segrellion_young_griff.7000
-
-							days = 1
-						}
-					}
-
-
-					else_if = {
-
-						limit = {
-							has_character_flag = segrellion_young_griff_blood_debt_resolved
-						}
-
-
-						segrellion_young_griff_try_schedule_path_2_varys_effect = yes
-					}
-				}
-
-
-				# ---------------------------------------------
-				# DAEMON LOST / DIED
-				# ---------------------------------------------
-
-				else = {
-
-					segrellion_young_griff_try_schedule_path_2_varys_effect = yes
-				}
-			}
-
-
-			# =================================================
-			# WAR CREATION FAILED
-			#
-			# .6010 detected that start_war did not actually
-			# create a war.
-			#
-			# Do not attempt to replay a Varys event that has
-			# already been marked as seen. Retry the actual war.
-			# =================================================
-
-			if = {
-
-				limit = {
-
-					is_imprisoned = no
-
-					has_character_flag = segrellion_young_griff_invasion_event_failed
-
-
-					NOT = {
-						has_character_flag = segrellion_young_griff_iron_throne_war_started
-					}
-
-					NOT = {
-						has_title = title:h_the_iron_throne
-					}
-				}
-
-
-				remove_character_flag = segrellion_young_griff_invasion_event_failed
-
-
-				segrellion_young_griff_start_path_1_throne_war_effect = yes
+			trigger_event = {
+				id = segrellion_young_griff.7000
+				days = { 1 3 }
 			}
 		}
+
+		# -------------------------------------------------
+		# DAEMON ALREADY ANSWERED.
+		# Continue through the proper Path 2 Varys chain.
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+
+				has_character_flag = segrellion_young_griff_blood_debt_resolved
+			}
+
+			remove_character_flag = segrellion_young_griff_invasion_event_failed
+			remove_character_flag = segrellion_young_griff_invasion_event_requested
+
+			segrellion_young_griff_try_schedule_path_2_varys_effect = yes
+		}
+
+		# -------------------------------------------------
+		# PATH 2 WITHOUT A VALID DAEMON DEBT SCENE.
+		#
+		# Continue the Path 2 story, but NEVER convert it
+		# into Path 1 merely as a failsafe.
+		# -------------------------------------------------
+
+		else = {
+
+			remove_character_flag = segrellion_young_griff_invasion_event_failed
+			remove_character_flag = segrellion_young_griff_invasion_event_requested
+
+			segrellion_young_griff_try_schedule_path_2_varys_effect = yes
+		}
+	}
+
+	# =====================================================
+	# PATH 1
+	#
+	# Only the independent/abandoned-Daemon route may use
+	# the direct Path 1 recovery.
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			OR = {
+
+				has_character_flag = segrellion_young_griff_canon_path_1
+
+				has_character_flag = segrellion_daemon_was_defeated
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_iron_throne_war_started
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_invasion_war_created
+			}
+		}
+
+		remove_character_flag = segrellion_young_griff_invasion_event_failed
+		remove_character_flag = segrellion_young_griff_invasion_event_requested
+		remove_character_flag = segrellion_young_griff_invasion_event_scheduled
+
+		segrellion_young_griff_start_path_1_throne_war_effect = yes
 	}
 }
 

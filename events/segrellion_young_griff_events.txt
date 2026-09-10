@@ -3072,7 +3072,7 @@ segrellion_young_griff.7000 = {
 		}
 
 		ai_chance = {
-			base = 90
+			base = 100
 		}
 	}
 
@@ -3081,25 +3081,21 @@ segrellion_young_griff.7000 = {
 
 		name = segrellion_young_griff.7000.b
 
-		add_character_flag = segrellion_young_griff_blood_debt_resolved
+		trigger = {
+			is_ai = no
+		}
 
+		add_character_flag = segrellion_young_griff_blood_debt_resolved
 
 		segrellion_young_griff_try_schedule_path_2_varys_effect = yes
 
-
-		# Varys' post-Flamelands scene must happen regardless
-		# of whether Aegon chooses to call in Daemon's debt.
-
 		trigger_event = {
-
 			id = segrellion_young_griff.0170
-
 			days = { 2 5 }
 		}
 
-
 		ai_chance = {
-			base = 10
+			base = 0
 		}
 	}
 }
@@ -3197,19 +3193,23 @@ segrellion_young_griff.7010 = {
 			}
 		}
 
-		ai_chance = {
+		trigger = {
 
-			base = 30
+			OR = {
 
-
-			modifier = {
-
-				add = -25
+				is_ai = no
 
 				character:IAF_Young_Griff_1 = {
-					has_character_flag = segrellion_young_griff_supports_daemon
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_supports_daemon
+					}
 				}
 			}
+		}
+
+		ai_chance = {
+			base = 0
 		}
 	}
 }
