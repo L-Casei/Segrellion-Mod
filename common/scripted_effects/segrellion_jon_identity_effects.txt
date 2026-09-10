@@ -1,0 +1,322 @@
+# =========================================================
+# JON SNOW - REVEALED IDENTITY
+# =========================================================
+
+
+# =========================================================
+# COMMON CLEANUP
+# =========================================================
+
+segrellion_jon_identity_clear_previous_choice_effect = {
+
+	remove_character_flag = segrellion_jon_identity_aemon_targaryen
+	remove_character_flag = segrellion_jon_identity_aegon_targaryen
+	remove_character_flag = segrellion_jon_identity_jon_stark
+	remove_character_flag = segrellion_jon_identity_jon_snow
+
+	remove_character_flag = segrellion_jon_accepts_targaryen_blood
+	remove_character_flag = segrellion_jon_rejects_targaryen_blood
+}
+
+
+# =========================================================
+# FINALIZE
+# =========================================================
+
+segrellion_jon_identity_finalize_effect = {
+
+	add_character_flag = segrellion_jon_identity_chosen
+
+	if = {
+
+		limit = {
+			NOT = {
+				has_character_flag = segrellion_jon_targaryen_revealed
+			}
+		}
+
+		add_character_flag = segrellion_jon_targaryen_revealed
+	}
+
+
+	# Preserve the existing post-reveal storyline.
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_jon_dragon_in_the_wolf_done
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_jon.1350
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# AEMON TARGARYEN
+# =========================================================
+
+segrellion_jon_choose_aemon_targaryen_effect = {
+
+	segrellion_jon_identity_clear_previous_choice_effect = yes
+
+
+	change_first_name = Aemon
+
+
+	if = {
+
+		limit = {
+			has_nickname = nick_snow
+		}
+
+		remove_nickname = yes
+	}
+
+
+	set_house = character:Targaryen_3.house
+
+
+	add_character_flag = segrellion_jon_identity_aemon_targaryen
+
+	add_character_flag = segrellion_jon_accepts_targaryen_blood
+
+
+	segrellion_jon_identity_finalize_effect = yes
+}
+
+
+# =========================================================
+# AEGON TARGARYEN
+# =========================================================
+
+segrellion_jon_choose_aegon_targaryen_effect = {
+
+	segrellion_jon_identity_clear_previous_choice_effect = yes
+
+
+	change_first_name = Aegon
+
+
+	if = {
+
+		limit = {
+			has_nickname = nick_snow
+		}
+
+		remove_nickname = yes
+	}
+
+
+	set_house = character:Targaryen_3.house
+
+
+	add_character_flag = segrellion_jon_identity_aegon_targaryen
+
+	add_character_flag = segrellion_jon_accepts_targaryen_blood
+
+
+	segrellion_jon_identity_finalize_effect = yes
+}
+
+
+# =========================================================
+# JON STARK
+#
+# Only called if Jon has been legitimized.
+# =========================================================
+
+segrellion_jon_choose_jon_stark_effect = {
+
+	segrellion_jon_identity_clear_previous_choice_effect = yes
+
+
+	change_first_name = Jon
+
+
+	if = {
+
+		limit = {
+			has_nickname = nick_snow
+		}
+
+		remove_nickname = yes
+	}
+
+
+	set_house = character:Stark_3.house
+
+
+	add_character_flag = segrellion_jon_identity_jon_stark
+
+	add_character_flag = segrellion_jon_rejects_targaryen_blood
+
+
+	segrellion_jon_identity_finalize_effect = yes
+}
+
+
+# =========================================================
+# JON SNOW
+#
+# He may choose this even if he has been legitimized.
+# Legitimization itself is NOT removed.
+# =========================================================
+
+segrellion_jon_choose_jon_snow_effect = {
+
+	segrellion_jon_identity_clear_previous_choice_effect = yes
+
+
+	change_first_name = Jon
+
+
+	set_house = character:Stark_7.house
+
+
+	if = {
+
+		limit = {
+			NOT = {
+				has_nickname = nick_snow
+			}
+		}
+
+		give_nickname = nick_snow
+	}
+
+
+	add_character_flag = segrellion_jon_identity_jon_snow
+
+	add_character_flag = segrellion_jon_rejects_targaryen_blood
+
+
+	segrellion_jon_identity_finalize_effect = yes
+}
+
+
+# =========================================================
+# AI - RESOLVE FROM GAME RULE
+# =========================================================
+
+segrellion_jon_resolve_identity_from_game_rule_effect = {
+
+
+	# =====================================================
+	# AEMON TARGARYEN
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_game_rule = segrellion_jon_identity_aemon_targaryen
+		}
+
+		segrellion_jon_choose_aemon_targaryen_effect = yes
+	}
+
+
+	# =====================================================
+	# AEGON TARGARYEN
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			has_game_rule = segrellion_jon_identity_aegon_targaryen
+		}
+
+		segrellion_jon_choose_aegon_targaryen_effect = yes
+	}
+
+
+	# =====================================================
+	# JON STARK
+	#
+	# If this preset is selected but Jon has never been
+	# legitimized, he remains Jon Snow instead.
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			has_game_rule = segrellion_jon_identity_jon_stark
+		}
+
+		if = {
+
+			limit = {
+				segrellion_jon_can_choose_stark_identity_trigger = yes
+			}
+
+			segrellion_jon_choose_jon_stark_effect = yes
+		}
+
+		else = {
+
+			segrellion_jon_choose_jon_snow_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# JON SNOW
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			has_game_rule = segrellion_jon_identity_jon_snow
+		}
+
+		segrellion_jon_choose_jon_snow_effect = yes
+	}
+
+
+	# =====================================================
+	# RANDOM
+	#
+	# Every VALID identity has equal weight.
+	# Jon Stark automatically disappears from the pool
+	# unless Jon has been legitimized.
+	# =====================================================
+
+	else = {
+
+		random_list = {
+
+			100 = {
+
+				segrellion_jon_choose_aemon_targaryen_effect = yes
+			}
+
+
+			100 = {
+
+				segrellion_jon_choose_aegon_targaryen_effect = yes
+			}
+
+
+			100 = {
+
+				trigger = {
+					segrellion_jon_can_choose_stark_identity_trigger = yes
+				}
+
+				segrellion_jon_choose_jon_stark_effect = yes
+			}
+
+
+			100 = {
+
+				segrellion_jon_choose_jon_snow_effect = yes
+			}
+		}
+	}
+}

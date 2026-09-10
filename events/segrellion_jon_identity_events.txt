@@ -1,0 +1,130 @@
+namespace = segrellion_jon_identity
+
+
+# =========================================================
+# 0001 - THE NAME I CHOOSE
+#
+# ROOT = Jon
+# =========================================================
+
+segrellion_jon_identity.0001 = {
+
+	type = character_event
+
+
+	title = segrellion_jon_identity.0001.t
+
+	desc = segrellion_jon_identity.0001.desc
+
+
+	theme = dynasty
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = contemplation
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		segrellion_jon_true_parentage_revealed_trigger = yes
+
+		NOT = {
+			has_character_flag = segrellion_jon_identity_chosen
+		}
+	}
+
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_jon_targaryen_revealed
+				}
+			}
+
+			add_character_flag = segrellion_jon_targaryen_revealed
+		}
+	}
+
+
+	# =====================================================
+	# AEMON TARGARYEN
+	# =====================================================
+
+	option = {
+
+		name = segrellion_jon_identity.0001.a
+
+		custom_tooltip = segrellion_jon_identity.0001.a.tt
+
+
+		segrellion_jon_choose_aemon_targaryen_effect = yes
+	}
+
+
+	# =====================================================
+	# AEGON TARGARYEN
+	# =====================================================
+
+	option = {
+
+		name = segrellion_jon_identity.0001.b
+
+		custom_tooltip = segrellion_jon_identity.0001.b.tt
+
+
+		segrellion_jon_choose_aegon_targaryen_effect = yes
+	}
+
+
+	# =====================================================
+	# JON STARK
+	# ONLY IF LEGITIMIZED
+	# =====================================================
+
+	option = {
+
+		name = segrellion_jon_identity.0001.c
+
+		custom_tooltip = segrellion_jon_identity.0001.c.tt
+
+
+		trigger = {
+
+			segrellion_jon_can_choose_stark_identity_trigger = yes
+		}
+
+
+		segrellion_jon_choose_jon_stark_effect = yes
+	}
+
+
+	# =====================================================
+	# JON SNOW
+	# ALWAYS AVAILABLE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_jon_identity.0001.d
+
+		custom_tooltip = segrellion_jon_identity.0001.d.tt
+
+
+		segrellion_jon_choose_jon_snow_effect = yes
+	}
+}
