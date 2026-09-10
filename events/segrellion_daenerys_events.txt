@@ -1902,10 +1902,14 @@ segrellion_daenerys_invasion.0010 = {
 	# =====================================================
 	# THE BEACON
 	#
-	# Always visible while Daemon controls the Flamelands.
+	# ONE BUTTON, TWO POSSIBLE ROUTES:
 	#
-	# Direct landing requires Daemon to have already opened
-	# the Beacon to Daenerys.
+	# 1. Daemon previously received Daenerys' support when
+	#    reclaiming the Flamelands:
+	#       -> Sail directly to the Beacon.
+	#
+	# 2. Daemon and Daenerys have had no relevant contact:
+	#       -> Begin negotiations through Massey's Hook.
 	# =====================================================
 
 	option = {
@@ -1919,7 +1923,7 @@ segrellion_daenerys_invasion.0010 = {
 
 				text = segrellion_daenerys_invasion.0010.c_beacon.requirement
 
-				segrellion_daenerys_beacon_direct_landing_available_trigger = yes
+				segrellion_daenerys_beacon_route_available_trigger = yes
 			}
 		}
 
@@ -1938,6 +1942,9 @@ segrellion_daenerys_invasion.0010 = {
 			base = 60
 
 
+			# Daemon already fought for the Flamelands with
+			# Daenerys' support. This is the natural landing.
+
 			modifier = {
 
 				add = 100
@@ -1949,6 +1956,9 @@ segrellion_daenerys_invasion.0010 = {
 			}
 
 
+			# If Dragonstone is effectively open,
+			# AI Daenerys strongly prefers it.
+
 			modifier = {
 
 				factor = 0
@@ -1965,142 +1975,82 @@ segrellion_daenerys_invasion.0010 = {
 		}
 
 
-		remove_character_flag = segrellion_daenerys_beacon_invitation_ready
+		# =================================================
+		# ROUTE 1
+		# DAEMON ALREADY OWES HIS RESTORATION TO DAENERYS
+		#
+		# OR negotiations have already succeeded.
+		#
+		# Sail directly to the Flamelands.
+		# =================================================
 
-		remove_character_flag = segrellion_daenerys_beacon_negotiation_started
+		if = {
+
+			limit = {
+
+				segrellion_daenerys_beacon_direct_landing_available_trigger = yes
+			}
 
 
-		add_character_flag = segrellion_daenerys_landing_chosen
+			remove_character_flag = segrellion_daenerys_beacon_invitation_ready
 
-		add_character_flag = segrellion_daenerys_landing_flamelands
-
-		add_character_flag = segrellion_daenerys_landing_beacon
+			remove_character_flag = segrellion_daenerys_beacon_negotiation_started
 
 
-		add_character_modifier = {
-			modifier = segrellion_daenerys_invasion_provisions_modifier
+			add_character_flag = segrellion_daenerys_landing_chosen
+
+			add_character_flag = segrellion_daenerys_landing_flamelands
+
+			add_character_flag = segrellion_daenerys_landing_beacon
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_daenerys_invasion_provisions_modifier
+			}
+
+
+			start_travel_plan = {
+
+				destination = title:c_farring_cross.title_province
+
+				return_trip = no
+
+				travel_with_domicile = yes
+
+				on_arrival_event = segrellion_daenerys_invasion.0018
+
+				on_arrival_destinations = last
+
+				on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+			}
 		}
 
 
-		start_travel_plan = {
+		# =================================================
+		# ROUTE 2
+		# NO PREVIOUS CONTACT
+		#
+		# The same Beacon button starts negotiations.
+		# =================================================
 
-			destination = title:c_farring_cross.title_province
+		else_if = {
 
-			return_trip = no
-
-			travel_with_domicile = yes
-
-			on_arrival_event = segrellion_daenerys_invasion.0018
-
-			on_arrival_destinations = last
-
-			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
-		}
-	}
-
-	# =====================================================
-	# NEGOTIATE WITH DAEMON
-	#
-	# Always displayed while Daemon controls the Flamelands.
-	#
-	# If the Beacon has not already been opened, Daenerys
-	# may send word through Massey's Hook and ask Daemon
-	# for terms before committing her landing.
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_invasion.0010.d_negotiate_daemon
-
-
-		trigger = {
-
-			custom_description = {
-
-				text = segrellion_daenerys_invasion.0010.d_negotiate_daemon.requirement
+			limit = {
 
 				segrellion_daenerys_beacon_negotiation_available_trigger = yes
 			}
-		}
 
 
-		show_as_unavailable = {
-
-			segrellion_daemon_controls_flamelands_trigger = yes
-		}
+			add_character_flag = segrellion_daenerys_beacon_negotiation_started
 
 
-		custom_tooltip = segrellion_daenerys_invasion.0010.d_negotiate_daemon.tt
+			trigger_event = {
 
+				id = segrellion_daenerys_massey.0100
 
-		ai_chance = {
-
-			# Same weight the Beacon negotiation route already had.
-			base = 60
-
-
-			# Daenerys is more inclined to seek Daemon if
-			# his relationship with Aegon has deteriorated.
-
-			modifier = {
-
-				add = 50
-
-				character:Segrellion_60 = {
-
-					opinion = {
-						target = character:IAF_Young_Griff_1
-						value <= -25
-					}
-				}
+				days = 1
 			}
-
-
-			modifier = {
-
-				add = 75
-
-				character:Segrellion_60 = {
-
-					OR = {
-
-						has_character_flag = segrellion_daemon_aegon_fealty_refused
-
-						has_character_flag = segrellion_daemon_rejected_aegon_ultimatum
-
-						has_character_flag = segrellion_daemon_defied_aegon
-					}
-				}
-			}
-
-
-			# If Stannis is alive but has abandoned Dragonstone,
-			# Daenerys strongly prefers simply taking Dragonstone.
-
-			modifier = {
-
-				factor = 0
-
-				character:Baratheon_3 ?= {
-
-					is_alive = yes
-
-					NOT = {
-						location = title:c_dragonstone.title_province
-					}
-				}
-			}
-		}
-
-
-		add_character_flag = segrellion_daenerys_beacon_negotiation_started
-
-
-		trigger_event = {
-
-			id = segrellion_daenerys_massey.0100
-
-			days = 1
 		}
 	}
 }

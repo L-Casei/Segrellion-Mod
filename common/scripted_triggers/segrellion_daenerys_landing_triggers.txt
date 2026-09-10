@@ -1,87 +1,32 @@
-segrellion_daenerys_shireen_dragonstone_scenario_trigger = {
+# =========================================================
+# BEACON DIRECT LANDING
+#
+# Direct route only if:
+#
+# - Daemon controls the Flamelands
+# - Daenerys already has an invitation from the later
+#   negotiation chain
+#
+# OR
+#
+# - Daemon previously asked Daenerys for reinforcements
+#   to reclaim the Flamelands and pledged himself to her
+# =========================================================
 
-	character:Baratheon_3 = {
-		is_alive = no
-	}
+segrellion_daenerys_beacon_direct_landing_available_trigger = {
 
-	character:Baratheon_13 = {
+	segrellion_daemon_controls_flamelands_trigger = yes
 
-		is_alive = yes
-
-		OR = {
-
-			has_title = title:k_dragonstone
-			has_title = title:d_dragonstone
-			has_title = title:c_dragonstone
-		}
-	}
-}
-
-segrellion_daemon_daenerys_reinforcement_route_used_trigger = {
 
 	OR = {
 
-		has_character_flag = segrellion_negotiation_pending_daenerys
-
-		has_character_flag = segrellion_waiting_for_daenerys_answer
-
-		has_character_flag = segrellion_daemon_offered_oath_to_daenerys
-
-		has_character_flag = segrellion_daemon_offered_marriage_to_daenerys
-
-		has_character_flag = segrellion_daemon_refused_daenerys_terms
-
-		has_character_flag = segrellion_daenerys_refused_support
-
-		has_character_flag = segrellion_daenerys_support_route_closed
-
-		has_character_flag = segrellion_daemon_supports_daenerys_claim_without_marriage
-
-		has_character_flag = segrellion_pledged_to_daenerys
-
-		has_character_flag = segrellion_daemon_accepts_daenerys_beacon_negotiation
-
-		has_character_flag = segrellion_daemon_refused_daenerys_beacon_negotiation
-	}
-}
+		has_character_flag = segrellion_daenerys_beacon_invitation_ready
 
 
-# =========================================================
-# DRAGONSTONE LANDING
-#
-# Always shown in Where the Dragon Lands.
-# Disabled while Stannis is personally on Dragonstone.
-# =========================================================
+		character:Segrellion_60 = {
 
-segrellion_daenerys_dragonstone_landing_available_trigger = {
-
-	NOT = {
-
-		character:Baratheon_3 ?= {
-
-			is_alive = yes
-
-			location = title:c_dragonstone.title_province
+			has_character_flag = segrellion_pledged_to_daenerys
 		}
-	}
-}
-
-
-# =========================================================
-# MASSEY'S HOOK LANDING
-#
-# Used as the third landing route while Daemon does NOT
-# control the Flamelands.
-# =========================================================
-
-segrellion_daenerys_masseys_hook_landing_available_trigger = {
-
-	NOT = {
-		segrellion_daemon_controls_flamelands_trigger = yes
-	}
-
-	NOT = {
-		segrellion_stormflame_controls_masseys_hook_trigger = yes
 	}
 }
 
@@ -89,8 +34,9 @@ segrellion_daenerys_masseys_hook_landing_available_trigger = {
 # =========================================================
 # BEACON NEGOTIATION
 #
-# Daemon must actually hold the Flamelands.
-# This only controls whether NEW negotiations can begin.
+# If Daemon controls the Flamelands but he and Daenerys
+# have had no previous reinforcement / political contact,
+# Daenerys may attempt to negotiate with him.
 # =========================================================
 
 segrellion_daenerys_beacon_negotiation_available_trigger = {
@@ -128,35 +74,25 @@ segrellion_daenerys_beacon_negotiation_available_trigger = {
 
 
 # =========================================================
-# BEACON DIRECT LANDING
+# BEACON OPTION
 #
-# No new negotiation is needed if:
-# - Daemon already invited Daenerys;
-# - Daemon is already pledged to Daenerys;
-# - Daemon already supports her claim;
-# - Daemon is her husband.
+# ONE BUTTON.
+#
+# It is usable when:
+# - Daenerys may sail directly to Daemon
+# OR
+# - Daenerys may attempt negotiations with him
 # =========================================================
 
-segrellion_daenerys_beacon_direct_landing_available_trigger = {
+segrellion_daenerys_beacon_route_available_trigger = {
 
 	segrellion_daemon_controls_flamelands_trigger = yes
 
 
 	OR = {
 
-		has_character_flag = segrellion_daenerys_beacon_invitation_ready
+		segrellion_daenerys_beacon_direct_landing_available_trigger = yes
 
-
-		character:Segrellion_60 = {
-
-			OR = {
-
-				has_character_flag = segrellion_pledged_to_daenerys
-
-				has_character_flag = segrellion_daemon_supports_daenerys_claim_without_marriage
-
-				is_spouse_of = character:Targaryen_9
-			}
-		}
+		segrellion_daenerys_beacon_negotiation_available_trigger = yes
 	}
 }
