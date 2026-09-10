@@ -4869,7 +4869,7 @@ segrellion_ramsay_war_lock_on_start = {
 	effect = {
 
 		# =================================================
-		# RAMSAY MUST NEVER START AN UNRELATED WAR
+		# RAMSAY MUST NEVER START A WAR
 		# =================================================
 
 		if = {
@@ -4878,12 +4878,7 @@ segrellion_ramsay_war_lock_on_start = {
 
 				scope:attacker ?= {
 
-					OR = {
-
-						has_character_flag = segrellion_ramsay_northern_takeover
-
-						has_character_flag = segrellion_ramsay_war_locked
-					}
+					has_character_flag = segrellion_ramsay_war_locked
 				}
 			}
 
@@ -4891,6 +4886,48 @@ segrellion_ramsay_war_lock_on_start = {
 			scope:war = {
 
 				end_war = white_peace
+			}
+		}
+
+
+		# =================================================
+		# RAMSAY CANNOT BE CALLED INTO THIS WAR
+		#
+		# Mark him as already called before anyone can
+		# actually send the interaction.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_global_variable = segrellion_ramsay_bolton
+
+
+				global_var:segrellion_ramsay_bolton ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_ramsay_war_locked
+				}
+			}
+
+
+			scope:war = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+
+							is_participant = global_var:segrellion_ramsay_bolton
+						}
+					}
+
+
+					set_called_to = global_var:segrellion_ramsay_bolton
+				}
 			}
 		}
 	}
@@ -4908,16 +4945,7 @@ segrellion_ramsay_war_lock_on_join = {
 
 			limit = {
 
-				OR = {
-
-					has_character_flag = segrellion_ramsay_northern_takeover
-
-					has_character_flag = segrellion_ramsay_war_locked
-
-					global_var:segrellion_ramsay_bolton ?= {
-						this = root
-					}
-				}
+				has_character_flag = segrellion_ramsay_war_locked
 			}
 
 
