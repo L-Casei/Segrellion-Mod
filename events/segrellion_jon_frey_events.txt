@@ -4,17 +4,20 @@ namespace = segrellion_jon_frey
 # =========================================================
 # 0010 - STANNIS IS DEAD
 #
-# Jon receives the news.
+# Davos sends Jon the news by raven.
+# Unlocks the Winterfell Council activity.
 # =========================================================
 
 segrellion_jon_frey.0010 = {
 
-	type = character_event
+	type = letter_event
+
+	sender = title:d_the_drench.holder
+
+	opening = segrellion_jon_frey.0010.opening
 
 	title = segrellion_jon_frey.0010.t
 	desc = segrellion_jon_frey.0010.desc
-
-	theme = death
 
 
 	override_icon = {
@@ -30,44 +33,39 @@ segrellion_jon_frey.0010 = {
 
 
 		character:Baratheon_3 ?= {
-
 			is_alive = no
-
 		}
+
+
 		OR = {
+
 			has_character_flag = segrellion_jon_stannis_death_news_pending
-			character:Baratheon_3 = { has_dead_character_flag = segrellion_stannis_murdered_by_baelish }
+
+			character:Baratheon_3 = {
+				has_dead_character_flag = segrellion_stannis_murdered_by_baelish
+			}
+
 			segrellion_jon_pre_council_trigger = yes
 		}
 
 
-		NOT = { has_character_flag = segrellion_jon_stannis_death_news_received }
+		NOT = {
+			has_character_flag = segrellion_jon_stannis_death_news_received
+		}
+
 		NOT = {
 			has_character_flag = segrellion_jon_winterfell_council_called
 		}
 	}
 
+
 	immediate = {
 
 		add_character_flag = segrellion_jon_stannis_death_news_received
+
 		remove_character_flag = segrellion_jon_stannis_death_news_pending
+
 		remove_character_flag = segrellion_jon_stannis_death_news_scheduled
-	}
-
-
-	left_portrait = {
-
-		character = root
-
-		animation = worry
-	}
-
-
-	right_portrait = {
-
-		character = character:Baelish_2
-
-		animation = personality_dishonorable
 	}
 
 
@@ -88,7 +86,6 @@ segrellion_jon_frey.0010 = {
 		}
 	}
 }
-
 
 # =========================================================
 # 0020 - THE KING IN THE NORTH
