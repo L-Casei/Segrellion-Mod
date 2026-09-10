@@ -2,8 +2,9 @@ activity_segrellion_winterfell_council = {
 
 	sort_order = 100
 
+
 	# =====================================================
-	# SHOWN ONLY FOR JON AFTER STANNIS' DEATH
+	# STORY AVAILABILITY
 	# =====================================================
 
 	is_shown = {
@@ -19,77 +20,36 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# PLANNING / START REQUIREMENTS
+	# NO VISIBLE REQUIREMENTS
 	# =====================================================
 
 	can_start_showing_failures_only = {
-
-		is_available_adult = yes
-
-		is_landed = yes
-
-		has_title = title:d_winterfell
+		always = yes
 	}
-
 
 	can_plan = {
-
-		is_available_adult = yes
-
-		is_landed = yes
-
-		has_title = title:d_winterfell
+		always = yes
 	}
 
-
 	can_start = {
-
-		is_available_adult = yes
-
-		is_landed = yes
-
-		has_title = title:d_winterfell
+		always = yes
 	}
 
 
 	# =====================================================
-	# VALIDITY
+	# RUNTIME VALIDITY ONLY
 	# =====================================================
 
 	is_valid = {
 
-		NOT = {
-			has_variable = activity_invalidated
-		}
-
-
 		scope:host = {
-
 			is_alive = yes
-
-			is_capable_adult = yes
-
-			is_imprisoned = no
-
-			is_landed = yes
-
-			has_title = title:d_winterfell
-		}
-
-
-		trigger_if = {
-
-			limit = {
-				is_current_phase_active = yes
-			}
-
-			has_attending_activity_guests = yes
 		}
 	}
 
 
 	# =====================================================
-	# ACTIVITY HEADER BACKGROUND
+	# ACTIVITY HEADER
 	# =====================================================
 
 	background = {
@@ -104,24 +64,20 @@ activity_segrellion_winterfell_council = {
 
 	cost = {
 
-		gold = {
-			value = 25
+		prestige = {
+			value = 300
 		}
 	}
 
 
 	# =====================================================
-	# LOCATION
 	# WINTERFELL ONLY
 	# =====================================================
 
 	is_single_location = yes
 
-
 	province_filter = realm
-
 	ai_province_filter = realm
-
 
 	max_route_deviation_mult = 1.0
 
@@ -145,11 +101,9 @@ activity_segrellion_winterfell_council = {
 
 		value = 0
 
-
 		if = {
 
 			limit = {
-
 				this = title:c_winterfell.title_province
 			}
 
@@ -159,59 +113,32 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# PREPARATION TIME
-	# LORDS GATHER FOR TWO MONTHS
+	# PREPARATION
 	# =====================================================
 
 	wait_time_before_start = {
-
 		days = 60
 	}
 
-
 	max_guest_arrival_delay_time = {
-
 		days = 30
 	}
 
 
 	# =====================================================
-	# ACTIVITY OPTIONS
-	# =====================================================
-
-	options = {
-
-		segrellion_winterfell_council_scope = {
-
-			segrellion_winterfell_council_scope_full = {
-
-				default = yes
-
-
-				ai_will_do = {
-
-					value = 100
-				}
-			}
-		}
-	}
-
-
-	# =====================================================
 	# HOST INTENT
-	# USE VANILLA LEGITIMACY INTENT
 	# =====================================================
 
 	host_intents = {
 
 		intents = {
-			legitimacy_intent
+			segrellion_winterfell_council_intent
 		}
 
-		default = legitimacy_intent
+		default = segrellion_winterfell_council_intent
 
 		player_defaults = {
-			legitimacy_intent
+			segrellion_winterfell_council_intent
 		}
 	}
 
@@ -223,21 +150,11 @@ activity_segrellion_winterfell_council = {
 	max_guests = 100
 
 
-	# =====================================================
-	# INVITATION GROUPS
-	#
-	# Great Northern Lords are selected automatically.
-	# The player may additionally summon Counts, Barons,
-	# family, friends and members of the Night's Watch.
-	# =====================================================
-
 	guest_invite_rules = {
 
 		rules = {
 
 			2 = activity_invite_rule_segrellion_northern_counts
-
-			3 = activity_invite_rule_segrellion_northern_barons
 
 			2 = activity_invite_rule_close_family
 
@@ -254,13 +171,6 @@ activity_segrellion_winterfell_council = {
 	}
 
 
-	# =====================================================
-	# WHO MAY ATTEND
-	#
-	# Do NOT restrict this to Jon's current vassals.
-	# The council represents the political North as a whole.
-	# =====================================================
-
 	can_be_activity_guest = {
 
 		is_adult = yes
@@ -271,25 +181,23 @@ activity_segrellion_winterfell_council = {
 	}
 
 
-	# =====================================================
-	# ATTENDANCE
-	#
-	# Anyone formally summoned to this council attends.
-	# =====================================================
-
 	guest_join_chance = {
-
 		base = 100
 	}
 
 
 	# =====================================================
-	# THE COUNCIL PHASE
+	# PHASES
 	# =====================================================
 
 	phases = {
 
-		segrellion_winterfell_council_phase = {
+
+		# -------------------------------------------------
+		# I - THE LORDS ARRIVE
+		# -------------------------------------------------
+
+		segrellion_winterfell_council_arrivals_phase = {
 
 			is_predefined = yes
 
@@ -299,29 +207,179 @@ activity_segrellion_winterfell_council = {
 
 
 			can_pick = {
-
 				scope:province = title:c_winterfell.title_province
 			}
 
 
 			is_valid = {
-
 				scope:province = title:c_winterfell.title_province
 			}
 
 
 			on_phase_active = {
 
-				scope:host = {
+				if = {
+
+					limit = {
+						this = scope:host
+					}
+
+					scope:activity = {
+
+						progress_activity_phase_after = {
+							days = 5
+						}
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# II - THE DEBATE
+		# -------------------------------------------------
+
+		segrellion_winterfell_council_debate_phase = {
+
+			is_predefined = yes
+
+			order = 2
+
+			location_source = pickable
+
+
+			can_pick = {
+				scope:province = title:c_winterfell.title_province
+			}
+
+
+			is_valid = {
+				scope:province = title:c_winterfell.title_province
+			}
+
+
+			on_phase_active = {
+
+				if = {
+
+					limit = {
+						this = scope:host
+					}
+
+					scope:activity = {
+
+						progress_activity_phase_after = {
+							days = 7
+						}
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# III - THE PROPOSALS
+		# -------------------------------------------------
+
+		segrellion_winterfell_council_proposals_phase = {
+
+			is_predefined = yes
+
+			order = 3
+
+			location_source = pickable
+
+
+			can_pick = {
+				scope:province = title:c_winterfell.title_province
+			}
+
+
+			is_valid = {
+				scope:province = title:c_winterfell.title_province
+			}
+
+
+			on_phase_active = {
+
+				if = {
+
+					limit = {
+						this = scope:host
+					}
+
+					scope:activity = {
+
+						progress_activity_phase_after = {
+							days = 5
+						}
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# IV - THE PROCLAMATION
+		# -------------------------------------------------
+
+		segrellion_winterfell_council_proclamation_phase = {
+
+			is_predefined = yes
+
+			order = 4
+
+			location_source = pickable
+
+
+			can_pick = {
+				scope:province = title:c_winterfell.title_province
+			}
+
+
+			is_valid = {
+				scope:province = title:c_winterfell.title_province
+			}
+
+
+			on_phase_active = {
+
+				if = {
+
+					limit = {
+						this = scope:host
+					}
+
+
+					scope:activity = {
+
+						progress_activity_phase_after = {
+							days = 4
+						}
+					}
+
 
 					trigger_event = {
-
 						id = segrellion_jon_frey.0020
-
 						days = 1
 					}
 				}
 			}
+		}
+	}
+
+
+	# =====================================================
+	# COMPLETION
+	# =====================================================
+
+	on_complete = {
+
+		scope:host = {
+
+			remove_character_flag = segrellion_jon_winterfell_council_called
+
+			add_character_flag = segrellion_jon_winterfell_council_completed
 		}
 	}
 

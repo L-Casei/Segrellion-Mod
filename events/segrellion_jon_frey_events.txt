@@ -78,6 +78,54 @@ segrellion_jon_frey.0010 = {
 }
 
 # =========================================================
+# JON SNOW
+# WINTERFELL IS HIS
+# =========================================================
+
+segrellion_jon_frey.0015 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0015.t
+
+	desc = segrellion_jon_frey.0015.desc
+
+	theme = crown
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_restored_to_winterfell
+
+		has_title = title:e_the_north
+
+		has_title = title:d_winterfell
+	}
+
+
+	immediate = {
+
+		set_location = title:c_winterfell.title_province
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0015.a
+	}
+}
+
+# =========================================================
 # 0020 - THE KING IN THE NORTH
 #
 # Fired when the Winterfell Council activity begins
@@ -86,7 +134,7 @@ segrellion_jon_frey.0010 = {
 
 segrellion_jon_frey.0020 = {
 
-	type = character_event
+	type = activity_event
 
 	title = segrellion_jon_frey.0020.t
 	desc = segrellion_jon_frey.0020.desc
@@ -325,21 +373,6 @@ segrellion_jon_frey.0020 = {
 
 
 		# =================================================
-		# END THE COUNCIL ACTIVITY
-		# =================================================
-
-		involved_activity ?= {
-
-			set_variable = {
-
-				name = activity_invalidated
-
-				value = yes
-			}
-		}
-
-
-		# =================================================
 		# NEWS TO WESTEROS
 		# =================================================
 
@@ -347,9 +380,15 @@ segrellion_jon_frey.0020 = {
 
 			limit = {
 
+				this != root
+
 				is_alive = yes
 
-				this != root
+				is_independent_ruler = yes
+
+				highest_held_title_tier >= tier_kingdom
+
+				in_diplomatic_range = root
 			}
 
 
