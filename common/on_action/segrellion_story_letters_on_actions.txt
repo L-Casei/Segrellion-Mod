@@ -1,7 +1,10 @@
 # CK3 has quarterly_playable_pulse, not monthly_global_pulse.
 # Only the two story recipients seed the checks, including in existing saves.
 quarterly_playable_pulse = {
-	on_actions = { segrellion_story_letters_quarterly }
+	on_actions = {
+		segrellion_story_letters_quarterly
+		segrellion_aegon_daemon_quarterly_recovery
+	}
 }
 
 segrellion_story_letters_quarterly = {
@@ -27,6 +30,8 @@ on_game_start_after_lobby = {
 	on_actions = {
 		segrellion_sansa_story_progression
 		segrellion_jon_stannis_death_news_progression
+		segrellion_aegon_daemon_vassalage_progression
+		segrellion_dynasty_splendor_repair
 	}
 }
 
@@ -42,7 +47,10 @@ segrellion_sansa_sixteenth_birthday = {
 }
 
 on_death = {
-	on_actions = { segrellion_stannis_death_letter }
+	on_actions = {
+		segrellion_stannis_death_letter
+		segrellion_aegon_daemon_death_handoff
+	}
 }
 
 segrellion_stannis_death_letter = {
@@ -56,5 +64,82 @@ segrellion_stannis_death_letter = {
 	effect = {
 
 		segrellion_schedule_stannis_death_news_for_jon_effect = yes
+	}
+}
+
+segrellion_aegon_daemon_quarterly_recovery = {
+
+	trigger = {
+
+		OR = {
+
+			this = character:IAF_Young_Griff_1
+
+			this = character:Segrellion_60
+
+			dynasty = dynasty:dynn_Segrellion
+		}
+	}
+
+
+	on_actions = {
+
+		segrellion_aegon_daemon_vassalage_progression
+
+		segrellion_dynasty_splendor_repair
+	}
+}
+
+
+segrellion_dynasty_splendor_repair = {
+
+	effect = {
+
+		segrellion_set_historical_splendor_effect = yes
+	}
+}
+
+
+segrellion_aegon_daemon_death_handoff = {
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+			has_character_flag = segrellion_daemon_aegon_hand_and_regent
+
+
+			NOT = {
+				has_character_flag = segrellion_daemon_aegon_death_claim_pending
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daemon_aegon_succession_resolved
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_death_claim_pending
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0010
+
+				days = 1
+			}
+		}
 	}
 }

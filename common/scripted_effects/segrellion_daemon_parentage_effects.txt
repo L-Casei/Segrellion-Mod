@@ -313,6 +313,125 @@ segrellion_daemon_try_start_parentage_identity_chain_effect = {
 	}
 }
 
+segrellion_daemon_force_public_parentage_reveal_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			is_alive = yes
+
+
+			NOR = {
+
+				has_character_flag = segrellion_daemon_parentage_publicly_revealed
+
+				owns_story_of_type = agot_royal_bastard_story
+			}
+		}
+
+
+		segrellion_create_daemon_parentage_secret_effect = yes
+
+
+		random_known_secret = {
+
+			limit = {
+
+				secret_type = secret_unmarried_illegitimate_child
+
+
+				secret_target = {
+
+					this = character:Segrellion_60
+
+					is_adult = yes
+				}
+			}
+
+
+			save_scope_as = heritage_secret
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:heritage_secret
+			}
+
+
+			save_scope_as = revealer
+
+
+			add_character_flag = royal_bastard
+
+			add_character_flag = awaiting_bastardry_result
+
+			add_character_flag = segrellion_daemon_parentage_known
+
+
+			trigger_event = {
+
+				id = agot_events_bastard.0950
+
+				days = 1
+			}
+		}
+
+
+		else = {
+
+			set_real_father = character:Targaryen_1
+
+			set_father = character:Targaryen_1
+
+
+			add_character_flag = segrellion_daemon_parentage_known
+
+			add_character_flag = segrellion_daemon_parentage_publicly_revealed
+		}
+	}
+}
+
+
+segrellion_daemon_claim_after_aegon_death_effect = {
+
+	segrellion_daemon_accept_targaryen_claim_effect = yes
+
+
+	add_character_flag = segrellion_daemon_aegon_succession_resolved
+
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_identity_chain_started
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daemon_parentage_banner_resolved
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_parentage_identity_chain_started
+
+
+		trigger_event = {
+
+			id = segrellion_daemon_parentage.0110
+
+			days = { 10 16 }
+		}
+	}
+}
+
 # =========================================================
 # DAEMON ACCEPTS HIS TARGARYEN CLAIM
 #
@@ -833,6 +952,8 @@ segrellion_daemon_become_vhalaryen_effect = {
 		set_dynasty_name = dynn_Vhalaryen
 
 		set_coa = dynn_Vhalaryen
+
+		add_dynasty_prestige = 16000
 	}
 
 
@@ -865,6 +986,8 @@ segrellion_daemon_become_targellion_effect = {
 		set_dynasty_name = dynn_Targellion
 
 		set_coa = dynn_Targellion
+
+		add_dynasty_prestige = 16000
 	}
 
 
@@ -895,6 +1018,8 @@ segrellion_daemon_become_drakoryn_effect = {
 		set_dynasty_name = dynn_Drakoryn
 
 		set_coa = dynn_Drakoryn
+
+		add_dynasty_prestige = 16000
 	}
 
 

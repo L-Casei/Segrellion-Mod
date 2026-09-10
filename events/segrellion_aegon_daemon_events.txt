@@ -308,6 +308,7 @@ segrellion_aegon_daemon.0002 = {
 
 		segrellion_daemon_swear_fealty_to_aegon_effect = yes
 
+		segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
 
 		add_character_flag = segrellion_daemon_aegon_fealty_accepted
 
@@ -748,6 +749,154 @@ segrellion_aegon_daemon.0005 = {
 
 		ai_chance = {
 			base = 30
+		}
+	}
+}
+
+# =========================================================
+# 0010 - THE KING IS DEAD
+# ROOT = Daemon
+# =========================================================
+
+segrellion_aegon_daemon.0010 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0010.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					NOR = {
+
+						has_character_flag = segrellion_daemon_parentage_publicly_revealed
+
+						owns_story_of_type = agot_royal_bastard_story
+					}
+				}
+
+				desc = segrellion_aegon_daemon.0010.desc_hidden
+			}
+
+
+			desc = segrellion_aegon_daemon.0010.desc_public
+		}
+	}
+
+
+	theme = crown
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+
+		has_character_flag = segrellion_daemon_aegon_death_claim_pending
+
+		has_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+		has_character_flag = segrellion_daemon_aegon_hand_and_regent
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = no
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_daemon_aegon_succession_resolved
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daemon_aegon_death_claim_pending
+	}
+
+
+	left_portrait = root
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0010.a
+
+
+		trigger = {
+
+			NOR = {
+
+				has_character_flag = segrellion_daemon_parentage_publicly_revealed
+
+				owns_story_of_type = agot_royal_bastard_story
+			}
+		}
+
+
+		custom_tooltip = segrellion_aegon_daemon.0010.a.tt
+
+
+		segrellion_daemon_force_public_parentage_reveal_effect = yes
+
+		segrellion_daemon_claim_after_aegon_death_effect = yes
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0010.b
+
+
+		trigger = {
+
+			OR = {
+
+				has_character_flag = segrellion_daemon_parentage_publicly_revealed
+
+				owns_story_of_type = agot_royal_bastard_story
+			}
+		}
+
+
+		custom_tooltip = segrellion_aegon_daemon.0010.b.tt
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_daemon_parentage_known
+				}
+			}
+
+
+			add_character_flag = segrellion_daemon_parentage_known
+		}
+
+
+		segrellion_daemon_claim_after_aegon_death_effect = yes
+
+
+		ai_chance = {
+
+			base = 100
 		}
 	}
 }
