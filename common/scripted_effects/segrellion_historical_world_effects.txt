@@ -56,6 +56,8 @@ segrellion_fix_historical_flamelands_capital_effect = {
 
 segrellion_set_historical_splendor_effect = {
 
+	segrellion_repair_historical_renown_effect = yes
+
 	dynasty:dynn_Segrellion = {
 
 
@@ -141,9 +143,9 @@ segrellion_set_historical_splendor_effect = {
 # =========================================================
 # HISTORICAL SEGRELLION DYNASTY LEGACIES
 #
-# Historical renown is granted together with the legacy
-# that consumed it. This means later bookmarks inherit
-# both the earned renown and the historical purchases,
+# Historical legacy purchases are reconciled once at startup.
+# Later bookmarks retain
+# their historical purchases and Level of Splendor,
 # rather than beginning with a negative renown balance.
 #
 # 106 AC = 250
@@ -366,4 +368,47 @@ segrellion_black_moon_house_feud_effect = {
 			value = yes
 		}
 	}
+}
+# Historical legacy costs must not leave the starting dynasty in debt.
+# Called after legacy setup and on loading existing saves. The dynasty
+# marker prevents later gameplay spending from being refunded repeatedly.
+segrellion_repair_historical_renown_effect = {
+    dynasty:dynn_Segrellion = {
+        if = {
+            limit = {
+                current_date >= 8106.4.18
+                has_dynasty_perk = segrellion_legacy_1
+                NOT = { has_variable = segrellion_historical_renown_reconciled }
+            }
+
+            if = {
+                limit = { dynasty_prestige < 0 }
+
+                set_variable = {
+                    name = segrellion_splendor_before_renown_repair
+                    value = dynasty_prestige_level
+                }
+
+                # Refund exactly the deficit, not a fixed 16,000-point reward.
+                add_dynasty_prestige = {
+                    value = dynasty_prestige
+                    multiply = -1
+                }
+
+                # Renown compensation must not raise the existing Splendor tier.
+                while = {
+                    limit = {
+                        dynasty_prestige_level > var:segrellion_splendor_before_renown_repair
+                    }
+                    add_dynasty_prestige_level = -1
+                }
+                remove_variable = segrellion_splendor_before_renown_repair
+            }
+
+            set_variable = {
+                name = segrellion_historical_renown_reconciled
+                value = yes
+            }
+        }
+    }
 }

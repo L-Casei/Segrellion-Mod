@@ -2409,21 +2409,18 @@ segrellion_young_griff_try_schedule_daemon_submission_effect = {
 
 
 			NOT = {
-				has_character_flag = segrellion_young_griff_flamelands_submission_story_started
-			}
-
-			NOT = {
 				has_character_flag = segrellion_young_griff_flamelands_submission_resolved
 			}
 
 			NOT = {
-				has_character_flag = segrellion_young_griff_flamelands_submission_queued
+				has_character_flag = segrellion_young_griff_daemon_submission_retry_cooldown
 			}
 
 
 			character:Segrellion_60 ?= {
 
 				is_alive = yes
+
 
 				OR = {
 
@@ -2432,6 +2429,7 @@ segrellion_young_griff_try_schedule_daemon_submission_effect = {
 					has_title = title:k_flamelands
 				}
 
+
 				NOT = {
 					has_character_flag = segrellion_daemon_aegon_status_resolved
 				}
@@ -2439,13 +2437,39 @@ segrellion_young_griff_try_schedule_daemon_submission_effect = {
 		}
 
 
-		add_character_flag = segrellion_young_griff_flamelands_submission_queued
+		# =================================================
+		# OLD BROKEN STATE CLEANUP
+		#
+		# These flags must NEVER permanently prevent
+		# the settlement from retrying.
+		# =================================================
+
+		remove_character_flag = segrellion_young_griff_flamelands_submission_queued
+
+		remove_character_flag = segrellion_young_griff_flamelands_submission_story_started
 
 
-		# Legacy cleanup from the old scheduler.
 		character:Segrellion_60 = {
 
 			remove_character_flag = segrellion_daemon_aegon_status_scheduled
+		}
+
+
+		# =================================================
+		# RETRY COOLDOWN
+		#
+		# Prevent duplicates while the current attempt
+		# is travelling through 0001 -> 0002/0003.
+		#
+		# If anything gets lost, the story repairs itself
+		# later instead of being permanently dead.
+		# =================================================
+
+		add_character_flag = {
+
+			flag = segrellion_young_griff_daemon_submission_retry_cooldown
+
+			days = 120
 		}
 
 
@@ -2951,28 +2975,171 @@ segrellion_daemon_becomes_aegons_hand_and_regent_effect = {
 
 		character:IAF_Young_Griff_1 = {
 
-			assign_councillor_type = {
+			# =================================================
+			# REPAIR THE OLD REGENT BUG
+			#
+			# The previous version actively STARTED a regency
+			# when Daemon was appointed.
+			#
+			# That is NOT what we want.
+			#
+			# Daemon is the DESIGNATED Regent.
+			# He only becomes active Regent when Aegon actually
+			# requires a regency.
+			#
+			# This block only repairs saves in which our old
+			# effect already created the bad active regency.
+			# =================================================
 
-				type = councillor_castellan
+			if = {
 
-				target = character:Segrellion_60
+				limit = {
 
-				fire_on_actions = yes
+					has_active_diarchy = yes
+
+					has_character_flag = segrellion_young_griff_daemon_hand_and_regent
+
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_daemon_regency_semantics_repaired
+					}
+				}
+
+
+				end_diarchy = yes
 			}
 
 
+			# =================================================
+			# HAND OF THE KING
+			#
+			# AGOT uses councillor_castellan for this office
+			# under the Iron Throne.
+			#
+			# CRITICAL:
+			# remove_existing_councillor = yes
+			#
+			# Without this, the previous Hand can simply remain
+			# in office and Daemon's appointment fails.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						exists = cp:councillor_castellan
+					}
+				}
+
+
+				assign_councillor_type = {
+
+					remove_existing_councillor = yes
+
+					type = councillor_castellan
+
+					target = character:Segrellion_60
+
+					fire_on_actions = yes
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					cp:councillor_castellan != character:Segrellion_60
+				}
+
+
+				assign_councillor_type = {
+
+					remove_existing_councillor = yes
+
+					type = councillor_castellan
+
+					target = character:Segrellion_60
+
+					fire_on_actions = yes
+				}
+			}
+
+
+			# =================================================
+			# DESIGNATED REGENT
+			#
+			# DO NOT:
+			#
+			# try_start_diarchy = regency
+			# set_diarch = ...
+			#
+			# Those effects actively create a regency.
+			# =================================================
+
 			designate_diarch = character:Segrellion_60
-
-			try_start_diarchy = regency
-
-			set_diarch = character:Segrellion_60
 
 
 			add_character_flag = segrellion_young_griff_daemon_hand_and_regent
+
+			add_character_flag = segrellion_young_griff_daemon_regency_semantics_repaired
 		}
 
 
 		add_character_flag = segrellion_daemon_aegon_hand_and_regent
+	}
+}
+
+# =========================================================
+# AEGON / DAEMON OFFICE GUARD
+#
+# Repairs:
+# - old saves
+# - AGOT replacing Daemon as Hand
+# - lost councillor state after realm reconstruction
+#
+# Does NOT create a regency.
+# =========================================================
+
+segrellion_daemon_aegon_office_guard_effect = {
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				liege ?= character:IAF_Young_Griff_1
+
+				has_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+
+				OR = {
+
+					has_character_flag = segrellion_daemon_aegon_hand_and_regent
+
+
+					character:IAF_Young_Griff_1 = {
+
+						has_character_flag = segrellion_young_griff_daemon_hand_and_regent
+					}
+				}
+
+
+				character:IAF_Young_Griff_1 ?= {
+
+					is_alive = yes
+
+					has_title = title:h_the_iron_throne
+				}
+			}
+
+
+			segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
+		}
 	}
 }
 
