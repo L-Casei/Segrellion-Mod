@@ -183,6 +183,7 @@ segrellion_setup_daenerys_300_effect = {
 				}
 
 				segrellion_initialize_daenerys_aggression_effect = yes
+				segrellion_initialize_daenerys_invasion_timing_effect = yes
 			}
 
 		}
@@ -478,6 +479,100 @@ segrellion_setup_daenerys_dragons_300_effect = {
 				}
 			}
 		}
+	}
+}
+
+# ============================================================
+# DAENERYS - INVASION TIMING PROFILE
+# ============================================================
+
+segrellion_initialize_daenerys_invasion_timing_effect = {
+
+	remove_character_flag = segrellion_daenerys_invasion_profile_passive
+	remove_character_flag = segrellion_daenerys_invasion_profile_default
+	remove_character_flag = segrellion_daenerys_invasion_profile_aggressive
+	remove_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+
+
+	if = {
+
+		limit = {
+			has_game_rule = segrellion_daenerys_invasion_passive
+		}
+
+		add_character_flag = segrellion_daenerys_invasion_profile_passive
+	}
+
+	else_if = {
+
+		limit = {
+			has_game_rule = segrellion_daenerys_invasion_default
+		}
+
+		add_character_flag = segrellion_daenerys_invasion_profile_default
+	}
+
+	else_if = {
+
+		limit = {
+			has_game_rule = segrellion_daenerys_invasion_aggressive
+		}
+
+		add_character_flag = segrellion_daenerys_invasion_profile_aggressive
+	}
+
+	else_if = {
+
+		limit = {
+			has_game_rule = segrellion_daenerys_invasion_super_aggressive
+		}
+
+		add_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+	}
+
+	else = {
+
+		# Random is resolved once per campaign.
+		# It does NOT reroll Daenerys' behaviour every month.
+
+		random_list = {
+
+			15 = {
+				add_character_flag = segrellion_daenerys_invasion_profile_passive
+			}
+
+			50 = {
+				add_character_flag = segrellion_daenerys_invasion_profile_default
+			}
+
+			25 = {
+				add_character_flag = segrellion_daenerys_invasion_profile_aggressive
+			}
+
+			10 = {
+				add_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+			}
+		}
+	}
+}
+
+
+# ============================================================
+# DAENERYS - AI COMMIT TO WESTEROS
+# ============================================================
+
+segrellion_daenerys_ai_commit_westeros_crossing_effect = {
+
+	segrellion_daenerys_apply_crossing_capacity_effect = yes
+
+	remove_character_flag = segrellion_daenerys_fleet_project_active
+	remove_character_flag = segrellion_daenerys_waiting_at_pentos
+
+	add_character_flag = segrellion_daenerys_crossing_committed
+
+	trigger_event = {
+		id = segrellion_daenerys_invasion.0010
+		days = 1
 	}
 }
 

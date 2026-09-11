@@ -750,16 +750,33 @@ segrellion_daenerys_ai_invasion_failsafe = {
 					add_character_flag = segrellion_daenerys_ai_fleet_funding_failsafe_used
 				}
 
-
 				# =================================================
-				# COMPLETED FLEET MUST LEAD TO WESTEROS
+				# INVASION TIMING PROFILE RECOVERY
 				# =================================================
 
 				if = {
 
 					limit = {
 
-						has_character_flag = segrellion_daenerys_dragon_fleet_completed
+						NOR = {
+							has_character_flag = segrellion_daenerys_invasion_profile_passive
+							has_character_flag = segrellion_daenerys_invasion_profile_default
+							has_character_flag = segrellion_daenerys_invasion_profile_aggressive
+							has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+						}
+					}
+
+					segrellion_initialize_daenerys_invasion_timing_effect = yes
+				}
+
+
+				# =================================================
+				# AI INVASION OF WESTEROS
+				# =================================================
+
+				if = {
+
+					limit = {
 
 						has_character_flag = segrellion_daenerys_camped_at_pentos
 
@@ -770,19 +787,201 @@ segrellion_daenerys_ai_invasion_failsafe = {
 						NOT = {
 							has_character_flag = segrellion_daenerys_landing_chosen
 						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landed_in_westeros
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_aurane_negotiation_active
+						}
 					}
 
 
-					segrellion_daenerys_apply_crossing_capacity_effect = yes
+					# =================================================
+					# SUPER AGGRESSIVE
+					#
+					# May sail as soon as roughly 40% of the fleet
+					# capacity is available.
+					# =================================================
 
-					remove_character_flag = segrellion_daenerys_waiting_at_pentos
+					if = {
 
-					add_character_flag = segrellion_daenerys_crossing_committed
+						limit = {
+
+							has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+
+							var:segrellion_daenerys_fleet_readiness >= 40
+						}
 
 
-					trigger_event = {
-						id = segrellion_daenerys_invasion.0010
-						days = 1
+						if = {
+
+							limit = {
+								current_date >= 8303.1.1
+							}
+
+							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+						}
+
+						else = {
+
+							random = {
+
+								chance = 60
+
+								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+							}
+						}
+					}
+
+
+					# =================================================
+					# AGGRESSIVE
+					#
+					# At least half of the intended invasion fleet.
+					# Aurane/Euron-style shortcuts therefore allow
+					# a genuinely early invasion.
+					# =================================================
+
+					else_if = {
+
+						limit = {
+
+							has_character_flag = segrellion_daenerys_invasion_profile_aggressive
+
+							var:segrellion_daenerys_fleet_readiness >= 50
+						}
+
+
+						if = {
+
+							limit = {
+								current_date >= 8304.1.1
+							}
+
+							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+						}
+
+						else = {
+
+							random = {
+
+								chance = 25
+
+								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+							}
+						}
+					}
+
+
+					# =================================================
+					# DEFAULT
+					#
+					# Canonical pacing:
+					# starts considering Westeros in mid 303 AC,
+					# becomes increasingly likely through 304 AC,
+					# and will sail by 305 AC.
+					# =================================================
+
+					else_if = {
+
+						limit = {
+
+							has_character_flag = segrellion_daenerys_invasion_profile_default
+
+							var:segrellion_daenerys_fleet_readiness >= 75
+
+							current_date >= 8303.6.1
+						}
+
+
+						if = {
+
+							limit = {
+								current_date >= 8305.1.1
+							}
+
+							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+						}
+
+						else_if = {
+
+							limit = {
+								current_date >= 8304.7.1
+							}
+
+							random = {
+
+								chance = 16
+
+								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+							}
+						}
+
+						else_if = {
+
+							limit = {
+								current_date >= 8304.1.1
+							}
+
+							random = {
+
+								chance = 8
+
+								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+							}
+						}
+
+						else = {
+
+							random = {
+
+								chance = 4
+
+								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+							}
+						}
+					}
+
+
+					# =================================================
+					# PASSIVE
+					#
+					# Daenerys wants almost the entire invasion force
+					# assembled before she risks the crossing.
+					# =================================================
+
+					else_if = {
+
+						limit = {
+
+							has_character_flag = segrellion_daenerys_invasion_profile_passive
+
+							var:segrellion_daenerys_fleet_readiness >= 90
+
+							current_date >= 8305.1.1
+						}
+
+
+						if = {
+
+							limit = {
+								current_date >= 8306.1.1
+							}
+
+							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+						}
+
+						else = {
+
+							random = {
+
+								chance = 5
+
+								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+							}
+						}
 					}
 				}
 			}
