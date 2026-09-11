@@ -4,7 +4,9 @@ namespace = segrellion_aegon_daemon
 # =========================================================
 # 0001 - THE FLAMELANDS QUESTION
 #
-# Root = Young Griff
+# ROOT = YOUNG GRIFF
+#
+# Fires shortly after Aegon takes the Iron Throne.
 # =========================================================
 
 segrellion_aegon_daemon.0001 = {
@@ -19,24 +21,34 @@ segrellion_aegon_daemon.0001 = {
 		first_valid = {
 
 
-			# Daemon actually fought for Aegon's crown.
+			# =================================================
+			# DAEMON HAD ALREADY PLEDGED HIMSELF TO AEGON
+			# =================================================
 
 			triggered_desc = {
 
 				trigger = {
 
-					character:Segrellion_60 = {
+					OR = {
 
-						has_character_flag = segrellion_pledged_to_young_griff
+						has_character_flag = segrellion_young_griff_daemon_oath_secured
+
+
+						character:Segrellion_60 = {
+
+							has_character_flag = segrellion_pledged_to_young_griff
+						}
 					}
 				}
+
 
 				desc = segrellion_aegon_daemon.0001.desc_friend
 			}
 
 
-			# They reached this point without Daemon
-			# fighting for Aegon's throne.
+			# =================================================
+			# NO PRIOR OATH
+			# =================================================
 
 			desc = segrellion_aegon_daemon.0001.desc_hostile
 		}
@@ -55,18 +67,21 @@ segrellion_aegon_daemon.0001 = {
 		has_title = title:h_the_iron_throne
 
 
+		NOT = {
+			has_character_flag = segrellion_young_griff_flamelands_submission_resolved
+		}
+
+
 		character:Segrellion_60 ?= {
 
 			is_alive = yes
 
-			has_title = title:e_flamelands
-
 
 			OR = {
 
-				is_independent_ruler = yes
+				has_title = title:e_flamelands
 
-				liege ?= character:IAF_Young_Griff_1
+				has_title = title:k_flamelands
 			}
 
 
@@ -79,6 +94,9 @@ segrellion_aegon_daemon.0001 = {
 
 	on_trigger_fail = {
 
+		remove_character_flag = segrellion_young_griff_flamelands_submission_queued
+
+
 		character:Segrellion_60 ?= {
 
 			remove_character_flag = segrellion_daemon_aegon_status_scheduled
@@ -88,13 +106,15 @@ segrellion_aegon_daemon.0001 = {
 
 	immediate = {
 
+		remove_character_flag = segrellion_young_griff_flamelands_submission_queued
+
+		add_character_flag = segrellion_young_griff_flamelands_submission_story_started
+
+
 		character:Segrellion_60 = {
 
 			remove_character_flag = segrellion_daemon_aegon_status_scheduled
 		}
-
-
-		add_character_flag = segrellion_young_griff_flamelands_submission_story_started
 	}
 
 
@@ -117,7 +137,18 @@ segrellion_aegon_daemon.0001 = {
 	# =====================================================
 	# PEACEFUL REQUEST
 	#
-	# Available because Daemon fought for Aegon.
+	# Daemon previously swore himself to Aegon's cause.
+	#
+	# The oath is stored on BOTH sides:
+	#
+	# Daemon:
+	# segrellion_pledged_to_young_griff
+	#
+	# Aegon:
+	# segrellion_young_griff_daemon_oath_secured
+	#
+	# Either one is enough here so a missing mirrored flag
+	# cannot murder the storyline.
 	# =====================================================
 
 	option = {
@@ -129,9 +160,15 @@ segrellion_aegon_daemon.0001 = {
 
 		trigger = {
 
-			character:Segrellion_60 = {
+			OR = {
 
-				has_character_flag = segrellion_pledged_to_young_griff
+				has_character_flag = segrellion_young_griff_daemon_oath_secured
+
+
+				character:Segrellion_60 = {
+
+					has_character_flag = segrellion_pledged_to_young_griff
+				}
 			}
 		}
 
@@ -145,13 +182,14 @@ segrellion_aegon_daemon.0001 = {
 
 				id = segrellion_aegon_daemon.0002
 
-				days = { 2 5 }
+				days = { 2 4 }
 			}
 		}
 
 
 		ai_chance = {
-			base = 90
+
+			base = 100
 		}
 	}
 
@@ -159,7 +197,7 @@ segrellion_aegon_daemon.0001 = {
 	# =====================================================
 	# ULTIMATUM
 	#
-	# Daemon did NOT fight for Aegon.
+	# Only if there was never an oath between them.
 	# =====================================================
 
 	option = {
@@ -171,9 +209,13 @@ segrellion_aegon_daemon.0001 = {
 
 		trigger = {
 
-			character:Segrellion_60 = {
+			NOR = {
 
-				NOT = {
+				has_character_flag = segrellion_young_griff_daemon_oath_secured
+
+
+				character:Segrellion_60 = {
+
 					has_character_flag = segrellion_pledged_to_young_griff
 				}
 			}
@@ -189,19 +231,25 @@ segrellion_aegon_daemon.0001 = {
 
 				id = segrellion_aegon_daemon.0003
 
-				days = { 2 5 }
+				days = { 2 4 }
 			}
 		}
 
 
 		ai_chance = {
+
 			base = 80
 		}
 	}
 
 
 	# =====================================================
-	# LEAVE THE FLAMELANDS INDEPENDENT
+	# ALLOW THE FLAMELANDS TO REMAIN INDEPENDENT
+	#
+	# A human Aegon can always choose this.
+	#
+	# AI Aegon cannot choose this if Daemon had already
+	# pledged himself to Aegon's cause.
 	# =====================================================
 
 	option = {
@@ -210,6 +258,7 @@ segrellion_aegon_daemon.0001 = {
 
 		custom_tooltip = segrellion_aegon_daemon.0001.c.tt
 
+
 		trigger = {
 
 			OR = {
@@ -217,29 +266,29 @@ segrellion_aegon_daemon.0001 = {
 				is_ai = no
 
 
-				NOT = {
+				NOR = {
 
-					AND = {
-
-						has_character_flag = segrellion_young_griff_supports_daemon
+					has_character_flag = segrellion_young_griff_daemon_oath_secured
 
 
-						character:Segrellion_60 = {
+					character:Segrellion_60 = {
 
-							has_character_flag = segrellion_pledged_to_young_griff
-						}
+						has_character_flag = segrellion_pledged_to_young_griff
 					}
 				}
 			}
 		}
+
 
 		character:Segrellion_60 = {
 
 			if = {
 
 				limit = {
+
 					liege ?= character:IAF_Young_Griff_1
 				}
+
 
 				becomes_independent = yes
 			}
@@ -250,10 +299,12 @@ segrellion_aegon_daemon.0001 = {
 			add_character_flag = segrellion_daemon_independence_tolerated_by_aegon
 		}
 
+
 		add_character_flag = segrellion_young_griff_flamelands_submission_resolved
 
 
 		ai_chance = {
+
 			base = 20
 		}
 	}
@@ -288,16 +339,20 @@ segrellion_aegon_daemon.0002 = {
 
 		is_alive = yes
 
-		has_title = title:e_flamelands
+
+		OR = {
+
+			has_title = title:e_flamelands
+
+			has_title = title:k_flamelands
+		}
+
 
 		has_character_flag = segrellion_daemon_aegon_peaceful_request_pending
 
 
-		OR = {
-
-			is_independent_ruler = yes
-
-			liege ?= character:IAF_Young_Griff_1
+		NOT = {
+			has_character_flag = segrellion_daemon_aegon_status_resolved
 		}
 
 
@@ -376,7 +431,16 @@ segrellion_aegon_daemon.0002 = {
 
 			limit = {
 
-				has_character_flag = segrellion_pledged_to_young_griff
+				OR = {
+
+					has_character_flag = segrellion_pledged_to_young_griff
+
+
+					character:IAF_Young_Griff_1 = {
+
+						has_character_flag = segrellion_young_griff_daemon_oath_secured
+					}
+				}
 
 
 				character:IAF_Young_Griff_1 = {
@@ -551,16 +615,20 @@ segrellion_aegon_daemon.0003 = {
 
 		is_alive = yes
 
-		has_title = title:e_flamelands
+
+		OR = {
+
+			has_title = title:e_flamelands
+
+			has_title = title:k_flamelands
+		}
+
 
 		has_character_flag = segrellion_daemon_aegon_ultimatum_pending
 
 
-		OR = {
-
-			is_independent_ruler = yes
-
-			liege ?= character:IAF_Young_Griff_1
+		NOT = {
+			has_character_flag = segrellion_daemon_aegon_status_resolved
 		}
 
 

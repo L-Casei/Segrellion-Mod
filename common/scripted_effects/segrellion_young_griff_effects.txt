@@ -2381,6 +2381,84 @@ segrellion_young_griff_schedule_cersei_settlement_effect = {
 }
 
 # =========================================================
+# YOUNG GRIFF -> DAEMON
+# FLAMELANDS SUBMISSION STORY SCHEDULER
+#
+# ROOT = Young Griff
+#
+# This is deliberately simple:
+# Aegon has the Iron Throne.
+# Daemon is alive and rules the Flamelands.
+# The story has not been resolved yet.
+#
+# It does NOT care whether AGOT has already mechanically
+# attached Daemon to Aegon.
+# =========================================================
+
+segrellion_young_griff_try_schedule_daemon_submission_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_flamelands_submission_story_started
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_flamelands_submission_resolved
+			}
+
+			NOT = {
+				has_character_flag = segrellion_young_griff_flamelands_submission_queued
+			}
+
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				OR = {
+
+					has_title = title:e_flamelands
+
+					has_title = title:k_flamelands
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daemon_aegon_status_resolved
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_flamelands_submission_queued
+
+
+		# Legacy cleanup from the old scheduler.
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_aegon_status_scheduled
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_aegon_daemon.0001
+
+			days = 3
+		}
+	}
+}
+
+# =========================================================
 # POST-CONQUEST STORY RECOVERY
 #
 # Repairs broken saves and lost delayed events:

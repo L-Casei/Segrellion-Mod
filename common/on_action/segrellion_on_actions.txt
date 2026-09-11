@@ -3936,6 +3936,8 @@ segrellion_young_griff_post_conquest_progression = {
 		character:IAF_Young_Griff_1 ?= {
 
 			segrellion_young_griff_post_conquest_chain_recovery_effect = yes
+
+			segrellion_young_griff_try_schedule_daemon_submission_effect = yes
 		}
 	}
 }
@@ -4256,67 +4258,11 @@ segrellion_young_griff_deerfield_progression = {
 
 segrellion_aegon_daemon_vassalage_progression = {
 
-	trigger = {
+	effect = {
 
 		character:IAF_Young_Griff_1 ?= {
 
-			is_alive = yes
-
-			has_title = title:h_the_iron_throne
-		}
-
-
-		character:Segrellion_60 ?= {
-
-			is_alive = yes
-
-			has_title = title:e_flamelands
-
-
-			# Daemon may still be truly independent,
-			# or AGOT may already have mechanically placed
-			# him beneath Aegon after the Iron Throne war.
-			OR = {
-
-				is_independent_ruler = yes
-
-				liege ?= character:IAF_Young_Griff_1
-			}
-
-
-			NOT = {
-				has_character_flag = segrellion_daemon_aegon_status_scheduled
-			}
-
-
-			NOT = {
-				has_character_flag = segrellion_daemon_aegon_status_resolved
-			}
-		}
-	}
-
-
-	effect = {
-
-		character:Segrellion_60 = {
-
-			add_character_flag = {
-
-				flag = segrellion_daemon_aegon_status_scheduled
-
-				days = 30
-			}
-		}
-
-
-		character:IAF_Young_Griff_1 = {
-
-			trigger_event = {
-
-				id = segrellion_aegon_daemon.0001
-
-				days = { 3 7 }
-			}
+			segrellion_young_griff_try_schedule_daemon_submission_effect = yes
 		}
 	}
 }
