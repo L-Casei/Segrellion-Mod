@@ -686,115 +686,11 @@ segrellion_sansa_story_progression_effect = {
 		segrellion_settle_sansa_riverlands_effect = yes
 	}
 
-
 	# =====================================================
-	# BAELISH'S FALLBACK PLAN
-	#
-	# Sansa turns sixteen in the twelfth moon of 302 AC.
-	#
-	# Only reached if the Royce/Daemon extraction has NOT
-	# taken Sansa away first.
+	# SANSA / JON ROUTE
 	# =====================================================
 
-	if = {
-
-		limit = {
-
-			current_date >= 8302.12.1
-
-
-			character:Stark_Dummy_8 ?= {
-
-				is_alive = yes
-
-				age >= 16
-
-
-				NOR = {
-
-					has_character_flag = segrellion_sansa_identity_revealed
-
-					has_character_flag = segrellion_sansa_under_daemon_protection
-
-					has_character_flag = segrellion_sansa_sent_to_jon
-				}
-			}
-
-
-			title:k_the_riverlands.holder ?= {
-
-				is_alive = yes
-
-				dynasty = dynasty:dynn_Baelish
-
-				NOT = {
-					has_character_flag = segrellion_baelish_sansa_choice_scheduled
-				}
-
-				NOT = {
-					has_character_flag = segrellion_baelish_sansa_choice_resolved
-				}
-			}
-
-
-			exists = global_var:segrellion_resurrected_jon
-
-
-			global_var:segrellion_resurrected_jon = {
-
-				is_alive = yes
-
-				has_title = title:e_the_north
-			}
-
-
-			character:Segrellion_60 ?= {
-
-				# If Daemon chose the Vale route, Baelish's
-				# fallback waits. Royce gets first chance
-				# once Daemon has reclaimed the Flamelands.
-
-				OR = {
-
-					is_alive = no
-
-					has_character_flag = segrellion_sansa_royce_route_refused
-
-					NOT = {
-						has_character_flag = segrellion_vale_support_pact
-					}
-				}
-
-
-				NOR = {
-
-					has_character_flag = segrellion_sansa_royce_first_letter_scheduled
-
-					has_character_flag = segrellion_sansa_royce_first_letter_seen
-
-					has_character_flag = segrellion_sansa_royce_preliminary_agreement
-
-					has_character_flag = segrellion_sansa_extraction_in_progress
-
-					has_character_flag = segrellion_sansa_protection_accepted
-				}
-			}
-		}
-
-
-		title:k_the_riverlands.holder = {
-
-			add_character_flag = segrellion_baelish_sansa_choice_scheduled
-
-
-			trigger_event = {
-
-				id = segrellion_sansa.0600
-
-				days = { 3 10 }
-			}
-		}
-	}
+	segrellion_sansa_jon_story_progression_effect = yes
 }
 
 

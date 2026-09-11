@@ -1,0 +1,136 @@
+# =========================================================
+# INVITE LITTLEFINGER TO WINTERFELL
+# =========================================================
+
+segrellion_invite_baelish_to_winterfell_decision = {
+
+	decision_group_type = major
+
+
+	desc = segrellion_invite_baelish_to_winterfell_decision_desc
+
+	selection_tooltip = segrellion_invite_baelish_to_winterfell_decision_tooltip
+
+
+	is_shown = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_sansa_baelish_trap_available
+
+
+		NOT = {
+			has_character_flag = segrellion_baelish_winterfell_invitation_sent
+		}
+
+		NOT = {
+			has_character_flag = segrellion_baelish_winterfell_judgment_resolved
+		}
+
+
+		character:Baelish_2 ?= {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_baelish_discovered_sansa_rescue_plot
+			}
+		}
+
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	is_valid = {
+
+		is_alive = yes
+
+		is_adult = yes
+
+		has_character_flag = segrellion_jon_king_in_the_north
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_baelish_winterfell_invitation_sent
+
+		remove_character_flag = segrellion_sansa_baelish_trap_available
+
+
+		character:Baelish_2 = {
+
+			trigger_event = {
+				id = segrellion_sansa_jon.0100
+				days = { 1 3 }
+			}
+		}
+	}
+
+
+	ai_check_interval = 3
+
+
+	ai_will_do = {
+		base = 1000
+	}
+}
+
+
+# =========================================================
+# DECIDE LITTLEFINGER'S FATE
+# =========================================================
+
+segrellion_judge_baelish_at_winterfell_decision = {
+
+	decision_group_type = major
+
+
+	desc = segrellion_judge_baelish_at_winterfell_decision_desc
+
+	selection_tooltip = segrellion_judge_baelish_at_winterfell_decision_tooltip
+
+
+	is_shown = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_baelish_winterfell_judgment_ready
+
+		NOT = {
+			has_character_flag = segrellion_baelish_winterfell_judgment_resolved
+		}
+
+
+		character:Baelish_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	is_valid = {
+
+		is_alive = yes
+
+		is_adult = yes
+	}
+
+
+	effect = {
+
+		trigger_event = {
+			id = segrellion_sansa_jon.0130
+		}
+	}
+
+
+	ai_check_interval = 1
+
+
+	ai_will_do = {
+		base = 1000
+	}
+}

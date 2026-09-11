@@ -1,0 +1,918 @@
+namespace = segrellion_sansa_jon
+
+
+# =========================================================
+# 0001 - YOHN ROYCE ORGANIZES THE RESCUE
+# ROOT = Yohn Royce
+# =========================================================
+
+segrellion_sansa_jon.0001 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0001.t
+	desc = segrellion_sansa_jon.0001.desc
+
+	theme = intrigue
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = title:c_runestone.holder
+
+		is_alive = yes
+
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_sansa_identity_revealed
+			}
+
+			has_character_flag = segrellion_sansa_vale_rescue_attempt_scheduled
+		}
+
+
+		title:e_the_north.holder ?= {
+
+			segrellion_is_current_jon_trigger = yes
+
+			has_character_flag = segrellion_jon_king_in_the_north
+		}
+	}
+
+
+	immediate = {
+
+		character:Stark_Dummy_8 = {
+
+			remove_character_flag = segrellion_sansa_vale_rescue_attempt_scheduled
+
+			add_character_flag = segrellion_sansa_vale_rescue_attempt_resolved
+		}
+
+
+		segrellion_sansa_jon_mark_rescue_supporters_effect = yes
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Stark_Dummy_8
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_sansa_jon.0001.a
+
+
+		hidden_effect = {
+
+			random_list = {
+
+				# =========================================
+				# SUCCESS
+				# =========================================
+
+				40 = {
+
+					modifier = {
+						factor = 1.35
+						intrigue >= 12
+					}
+
+					modifier = {
+						factor = 1.25
+						intrigue >= 16
+					}
+
+					modifier = {
+						factor = 1.20
+						has_trait = patient
+					}
+
+					modifier = {
+						factor = 1.20
+						character:Stark_Dummy_8 = {
+							intrigue >= 10
+						}
+					}
+
+					modifier = {
+						factor = 1.25
+						character:Baelish_2 = {
+							is_at_war = yes
+						}
+					}
+
+					modifier = {
+						factor = 0.75
+						character:Baelish_2 = {
+							intrigue >= 16
+						}
+					}
+
+					modifier = {
+						factor = 0.75
+						character:Baelish_2 = {
+							has_trait = deceitful
+						}
+					}
+
+
+					trigger_event = {
+						id = segrellion_sansa_jon.0002
+						days = { 2 5 }
+					}
+				}
+
+
+				# =========================================
+				# CLEAN FAILURE
+				# =========================================
+
+				35 = {
+
+					modifier = {
+						factor = 1.20
+
+						AND = {
+
+							intrigue >= 12
+
+							character:Baelish_2 = {
+								intrigue >= 14
+							}
+						}
+					}
+
+
+					trigger_event = {
+						id = segrellion_sansa_jon.0003
+						days = { 2 5 }
+					}
+				}
+
+
+				# =========================================
+				# GRAVE FAILURE
+				# =========================================
+
+				25 = {
+
+					modifier = {
+						factor = 1.50
+
+						character:Baelish_2 = {
+							intrigue >= 16
+						}
+					}
+
+					modifier = {
+						factor = 1.30
+
+						character:Baelish_2 = {
+							has_trait = deceitful
+						}
+					}
+
+					modifier = {
+						factor = 1.25
+
+						character:Baelish_2 = {
+							has_trait = paranoid
+						}
+					}
+
+					modifier = {
+						factor = 0.65
+
+						character:Baelish_2 = {
+							is_at_war = yes
+						}
+					}
+
+
+					trigger_event = {
+						id = segrellion_sansa_jon.0004
+						days = { 2 5 }
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0002 - SUCCESS
+# ROOT = Yohn
+# =========================================================
+
+segrellion_sansa_jon.0002 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0002.t
+	desc = segrellion_sansa_jon.0002.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	immediate = {
+
+		segrellion_sansa_jon_rescue_success_effect = yes
+	}
+
+
+	option = {
+		name = segrellion_sansa_jon.0002.a
+	}
+}
+
+
+# =========================================================
+# 0003 - CLEAN FAILURE
+# ROOT = Yohn
+# =========================================================
+
+segrellion_sansa_jon.0003 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0003.t
+	desc = segrellion_sansa_jon.0003.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	immediate = {
+
+		segrellion_sansa_jon_clean_failure_effect = yes
+	}
+
+
+	option = {
+		name = segrellion_sansa_jon.0003.a
+	}
+}
+
+
+# =========================================================
+# 0004 - GRAVE FAILURE
+# ROOT = Yohn
+# =========================================================
+
+segrellion_sansa_jon.0004 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0004.t
+	desc = segrellion_sansa_jon.0004.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	right_portrait = {
+		character = character:Baelish_2
+		animation = scheming
+	}
+
+
+	immediate = {
+
+		segrellion_sansa_jon_grave_failure_effect = yes
+	}
+
+
+	option = {
+		name = segrellion_sansa_jon.0004.a
+	}
+}
+
+
+# =========================================================
+# 0010 - SANSA SECRETLY REACHES WINTERFELL
+# ROOT = Jon
+# =========================================================
+
+segrellion_sansa_jon.0010 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0010.t
+	desc = segrellion_sansa_jon.0010.desc
+
+	theme = family
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_sansa_secretly_rescued_to_north
+
+			NOT = {
+				has_character_flag = segrellion_sansa_identity_revealed
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	option = {
+		name = segrellion_sansa_jon.0010.a
+	}
+}
+
+
+# =========================================================
+# 0020 - YOHN TELLS JON THE TRUTH
+#
+# CLEAN FAILURE ONLY
+# =========================================================
+
+segrellion_sansa_jon.0020 = {
+
+	type = letter_event
+
+	sender = title:c_runestone.holder
+
+	opening = segrellion_sansa_jon.0020.opening
+
+	title = segrellion_sansa_jon.0020.t
+	desc = segrellion_sansa_jon.0020.desc
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_sansa_truth_letter_pending
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+		}
+
+		character:Baelish_2 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_sansa_truth_letter_pending
+
+		add_character_flag = segrellion_sansa_identity_known_to_jon
+
+		add_character_flag = segrellion_sansa_baelish_trap_available
+
+
+		character:Stark_Dummy_8 = {
+			add_character_flag = segrellion_sansa_identity_known_to_jon
+		}
+	}
+
+
+	option = {
+		name = segrellion_sansa_jon.0020.a
+	}
+}
+
+
+# =========================================================
+# 0030 - THE PLOT WAS DISCOVERED
+#
+# GRAVE FAILURE
+# =========================================================
+
+segrellion_sansa_jon.0030 = {
+
+	type = letter_event
+
+	sender = title:c_runestone.holder
+
+	opening = segrellion_sansa_jon.0030.opening
+
+	title = segrellion_sansa_jon.0030.t
+	desc = segrellion_sansa_jon.0030.desc
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_sansa_grave_failure_news_pending
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_sansa_grave_failure_news_pending
+
+		add_character_flag = segrellion_sansa_identity_known_to_jon
+
+		add_character_flag = segrellion_sansa_baelish_trap_impossible
+
+
+		character:Stark_Dummy_8 = {
+			add_character_flag = segrellion_sansa_identity_known_to_jon
+		}
+	}
+
+
+	option = {
+		name = segrellion_sansa_jon.0030.a
+	}
+}
+
+
+# =========================================================
+# 0100 - BAELISH RECEIVES JON'S FALSE INVITATION
+# ROOT = Baelish
+# =========================================================
+
+segrellion_sansa_jon.0100 = {
+
+	type = letter_event
+
+	sender = title:e_the_north.holder
+
+	opening = segrellion_sansa_jon.0100.opening
+
+	title = segrellion_sansa_jon.0100.t
+	desc = segrellion_sansa_jon.0100.desc
+
+
+	trigger = {
+
+		this = character:Baelish_2
+
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = segrellion_baelish_discovered_sansa_rescue_plot
+		}
+
+		title:e_the_north.holder ?= {
+			has_character_flag = segrellion_baelish_winterfell_invitation_sent
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa_jon.0100.a
+
+
+		add_character_flag = segrellion_baelish_accepted_winterfell_invitation
+
+
+		title:e_the_north.holder = {
+
+			add_character_flag = segrellion_baelish_travelling_to_winterfell
+
+
+			trigger_event = {
+				id = segrellion_sansa_jon.0110
+				days = { 18 30 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 95
+		}
+	}
+
+
+	# =====================================================
+	# DECLINE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa_jon.0100.b
+
+
+		title:e_the_north.holder = {
+
+			remove_character_flag = segrellion_baelish_winterfell_invitation_sent
+
+			add_character_flag = segrellion_baelish_refused_winterfell_invitation
+
+
+			segrellion_sansa_jon_schedule_riverlands_war_effect = {
+				DAYS = 90
+			}
+		}
+
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - LITTLEFINGER ARRIVES AT WINTERFELL
+# ROOT = Jon
+# =========================================================
+
+segrellion_sansa_jon.0110 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0110.t
+	desc = segrellion_sansa_jon.0110.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_baelish_travelling_to_winterfell
+
+
+		character:Baelish_2 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_baelish_accepted_winterfell_invitation
+		}
+
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_baelish_travelling_to_winterfell
+
+
+		character:Baelish_2 = {
+
+			set_location = title:c_winterfell.title_province
+
+			add_character_flag = segrellion_baelish_at_winterfell
+		}
+
+
+		character:Stark_Dummy_8 = {
+
+			set_location = title:c_winterfell.title_province
+
+			add_character_flag = segrellion_sansa_at_winterfell_with_baelish
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+		character = character:Baelish_2
+		animation = personality_rational
+	}
+
+
+	lower_right_portrait = {
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	option = {
+
+		name = segrellion_sansa_jon.0110.a
+
+
+		trigger_event = {
+			id = segrellion_sansa_jon.0120
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - JON AND LITTLEFINGER SPEAK
+# =========================================================
+
+segrellion_sansa_jon.0120 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0120.t
+	desc = segrellion_sansa_jon.0120.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		character:Baelish_2 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_baelish_at_winterfell
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Baelish_2
+		animation = scheming
+	}
+
+
+	option = {
+
+		name = segrellion_sansa_jon.0120.a
+
+
+		add_character_flag = segrellion_baelish_winterfell_judgment_ready
+	}
+}
+
+
+# =========================================================
+# 0130 - LITTLEFINGER'S FATE
+# ROOT = Jon
+# =========================================================
+
+segrellion_sansa_jon.0130 = {
+
+	type = character_event
+
+	title = segrellion_sansa_jon.0130.t
+	desc = segrellion_sansa_jon.0130.desc
+
+	theme = crown
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_baelish_winterfell_judgment_ready
+
+
+		character:Baelish_2 ?= {
+			is_alive = yes
+		}
+
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_baelish_winterfell_judgment_ready
+
+		add_character_flag = segrellion_baelish_winterfell_judgment_resolved
+
+
+		# =================================================
+		# SANSA STAYS WITH JON IN EVERY OUTCOME.
+		#
+		# PUBLICLY SHE IS STILL ALAYNE STONE.
+		# =================================================
+
+		character:Stark_Dummy_8 = {
+
+			if = {
+
+				limit = {
+					is_ruler = no
+				}
+
+				set_employer = root
+			}
+
+
+			set_location = title:c_winterfell.title_province
+
+			add_character_flag = segrellion_sansa_kept_by_jon_at_winterfell
+
+			add_character_flag = segrellion_sansa_identity_known_to_jon
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Baelish_2
+		animation = worry
+	}
+
+
+	lower_right_portrait = {
+		character = character:Stark_Dummy_8
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# LET BAELISH LEAVE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa_jon.0130.a
+
+		custom_tooltip = segrellion_sansa_jon.0130.a.tt
+
+
+		character:Baelish_2 = {
+
+			remove_character_flag = segrellion_baelish_at_winterfell
+
+			add_character_flag = segrellion_baelish_humiliated_at_winterfell
+
+			add_character_flag = segrellion_baelish_anti_north_intrigue_active
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_baelish_humiliated_by_jon_opinion
+			}
+
+
+			set_location = capital_province
+		}
+
+
+		segrellion_sansa_jon_schedule_riverlands_war_effect = {
+			DAYS = 90
+		}
+	}
+
+
+	# =====================================================
+	# EXECUTE BAELISH
+	#
+	# ONLY RESURRECTED JON GETS THIS OPTION.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa_jon.0130.b
+
+		custom_tooltip = segrellion_sansa_jon.0130.b.tt
+
+
+		trigger = {
+
+			has_trait = segrellion_resurrected_trait
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_jon_executed_littlefinger_modifier
+
+			years = 10
+		}
+
+
+		character:Baelish_2 = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = root
+			}
+		}
+
+
+		segrellion_sansa_jon_schedule_riverlands_war_effect = {
+			DAYS = 60
+		}
+	}
+
+
+	# =====================================================
+	# IMPRISON BAELISH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_sansa_jon.0130.c
+
+		custom_tooltip = segrellion_sansa_jon.0130.c.tt
+
+
+		imprison = {
+
+			target = character:Baelish_2
+
+			type = dungeon
+		}
+
+
+		character:Baelish_2 = {
+
+			add_character_flag = segrellion_baelish_imprisoned_by_jon
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_baelish_imprisoned_by_jon_opinion
+			}
+		}
+
+
+		segrellion_sansa_jon_schedule_riverlands_war_effect = {
+			DAYS = 120
+		}
+	}
+}

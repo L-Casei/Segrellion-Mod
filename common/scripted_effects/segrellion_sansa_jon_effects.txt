@@ -1,0 +1,729 @@
+# =========================================================
+# SANSA STARK / JON SNOW ROUTE
+#
+# IMPORTANT:
+# Sansa remains PUBLICLY Alayne Stone until the final
+# Riverlands settlement.
+# =========================================================
+
+
+# =========================================================
+# MARK THE VALE LORDS SUPPORTING YOHN'S RESCUE
+#
+# ROOT = Yohn Royce
+# =========================================================
+
+segrellion_sansa_jon_mark_rescue_supporters_effect = {
+
+	add_character_flag = segrellion_sansa_vale_rescue_supporter
+
+
+	title:e_the_vale.holder ?= {
+
+		random_vassal_or_below = {
+
+			limit = {
+
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+
+				highest_held_title_tier >= tier_county
+
+				this != root
+
+				NOT = {
+					dynasty = dynasty:dynn_Baelish
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_vale_rescue_supporter
+				}
+
+				opinion = {
+					target = root
+					value >= 0
+				}
+			}
+
+
+			add_character_flag = segrellion_sansa_vale_rescue_supporter
+		}
+
+
+		random_vassal_or_below = {
+
+			limit = {
+
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+
+				highest_held_title_tier >= tier_county
+
+				this != root
+
+				NOT = {
+					dynasty = dynasty:dynn_Baelish
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_vale_rescue_supporter
+				}
+
+				opinion = {
+					target = root
+					value >= 0
+				}
+			}
+
+
+			add_character_flag = segrellion_sansa_vale_rescue_supporter
+		}
+	}
+}
+
+
+# =========================================================
+# SUCCESS
+#
+# ROOT = Yohn Royce
+#
+# Sansa reaches Jon, but she remains publicly Alayne Stone.
+# =========================================================
+
+segrellion_sansa_jon_rescue_success_effect = {
+
+	add_character_flag = segrellion_sansa_vale_rescue_success
+
+
+	character:Stark_Dummy_8 = {
+
+		add_character_flag = segrellion_sansa_vale_rescue_attempt_resolved
+
+		add_character_flag = segrellion_sansa_secretly_rescued_to_north
+
+		add_character_flag = segrellion_sansa_identity_known_to_jon
+
+		add_character_flag = segrellion_sansa_identity_known_to_vale
+
+
+		remove_character_modifier = segrellion_sansa_under_baelish_guard_modifier
+
+
+		if = {
+
+			limit = {
+				is_ruler = no
+			}
+
+			set_employer = title:e_the_north.holder
+		}
+
+
+		set_location = title:c_winterfell.title_province
+	}
+
+
+	title:e_the_north.holder = {
+
+		add_character_flag = segrellion_sansa_secretly_arrived_north
+
+		segrellion_sansa_jon_schedule_riverlands_war_effect = {
+			DAYS = 120
+		}
+
+
+		trigger_event = {
+			id = segrellion_sansa_jon.0010
+			days = { 1 3 }
+		}
+	}
+}
+
+
+# =========================================================
+# CLEAN FAILURE
+#
+# ROOT = Yohn Royce
+#
+# Baelish stops the escape but does NOT discover the plot.
+# No second rescue attempt.
+# =========================================================
+
+segrellion_sansa_jon_clean_failure_effect = {
+
+	add_character_flag = segrellion_sansa_vale_rescue_clean_failure
+
+
+	character:Stark_Dummy_8 = {
+
+		add_character_flag = segrellion_sansa_vale_rescue_attempt_resolved
+
+		add_character_flag = segrellion_sansa_identity_known_to_vale
+	}
+
+
+	title:e_the_north.holder = {
+
+		add_character_flag = segrellion_sansa_truth_letter_pending
+
+
+		trigger_event = {
+			id = segrellion_sansa_jon.0020
+			days = { 3 7 }
+		}
+	}
+}
+
+
+# =========================================================
+# GRAVE FAILURE
+#
+# ROOT = Yohn Royce
+#
+# Baelish discovers the conspiracy.
+# =========================================================
+
+segrellion_sansa_jon_grave_failure_effect = {
+
+	add_character_flag = segrellion_sansa_vale_rescue_grave_failure
+
+
+	character:Stark_Dummy_8 = {
+
+		add_character_flag = segrellion_sansa_vale_rescue_attempt_resolved
+
+		add_character_flag = segrellion_sansa_identity_known_to_vale
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_sansa_under_baelish_guard_modifier
+
+			years = 5
+		}
+	}
+
+
+	character:Baelish_2 = {
+
+		add_character_flag = segrellion_baelish_discovered_sansa_rescue_plot
+
+		add_character_flag = segrellion_baelish_vale_revenge_pending
+	}
+
+
+	title:e_the_vale.holder ?= {
+
+		every_vassal_or_below = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_sansa_vale_rescue_supporter
+			}
+
+
+			save_temporary_scope_as = segrellion_sansa_rescue_plotter
+
+
+			character:Baelish_2 = {
+
+				add_opinion = {
+
+					target = scope:segrellion_sansa_rescue_plotter
+
+					modifier = segrellion_baelish_discovered_rescue_plot_opinion
+				}
+			}
+		}
+	}
+
+
+	character:Baelish_2 = {
+
+		segrellion_baelish_start_vale_revenge_murder_effect = yes
+	}
+
+
+	title:e_the_north.holder = {
+
+		add_character_flag = segrellion_sansa_grave_failure_news_pending
+
+
+		segrellion_sansa_jon_schedule_riverlands_war_effect = {
+			DAYS = 150
+		}
+
+
+		trigger_event = {
+			id = segrellion_sansa_jon.0030
+			days = { 3 7 }
+		}
+	}
+}
+
+
+# =========================================================
+# BAELISH RETALIATION AGAINST YOHN / CONSPIRATORS
+#
+# ROOT = Baelish
+# =========================================================
+
+segrellion_baelish_start_vale_revenge_murder_effect = {
+
+	if = {
+
+		limit = {
+
+			title:c_runestone.holder ?= {
+
+				is_alive = yes
+			}
+
+
+			can_start_scheme = {
+
+				type = murder
+
+				target_character = title:c_runestone.holder
+			}
+		}
+
+
+		start_scheme = {
+
+			type = murder
+
+			target_character = title:c_runestone.holder
+		}
+
+
+		add_character_flag = segrellion_baelish_vale_revenge_scheme_started
+	}
+
+
+	else = {
+
+		title:e_the_vale.holder ?= {
+
+			random_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_sansa_vale_rescue_supporter
+				}
+
+
+				save_scope_as = segrellion_baelish_revenge_target
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_baelish_revenge_target
+
+
+				can_start_scheme = {
+
+					type = murder
+
+					target_character = scope:segrellion_baelish_revenge_target
+				}
+			}
+
+
+			start_scheme = {
+
+				type = murder
+
+				target_character = scope:segrellion_baelish_revenge_target
+			}
+
+
+			add_character_flag = segrellion_baelish_vale_revenge_scheme_started
+		}
+	}
+}
+
+
+# =========================================================
+# SCHEDULE THE RIVERLANDS WAR
+#
+# ROOT = Jon
+# =========================================================
+
+segrellion_sansa_jon_schedule_riverlands_war_effect = {
+
+	add_character_flag = segrellion_sansa_jon_riverlands_war_pending
+
+
+	add_character_flag = {
+
+		flag = segrellion_sansa_jon_riverlands_war_delay
+
+		days = $DAYS$
+	}
+}
+
+
+# =========================================================
+# STORY PROGRESSION
+# =========================================================
+
+segrellion_sansa_jon_story_progression_effect = {
+
+	# =====================================================
+	# START THE SINGLE VALE RESCUE ATTEMPT
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			title:e_the_north.holder ?= {
+
+				segrellion_is_current_jon_trigger = yes
+
+				is_alive = yes
+
+				has_character_flag = segrellion_jon_king_in_the_north
+			}
+
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				age >= 16
+
+
+				NOT = {
+					has_character_flag = segrellion_sansa_identity_revealed
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_vale_rescue_attempt_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_vale_rescue_attempt_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_under_daemon_protection
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_sent_to_jon
+				}
+			}
+
+
+			title:c_runestone.holder ?= {
+
+				is_alive = yes
+				is_adult = yes
+			}
+
+
+			# =================================================
+			# DAEMON MUST NOT HAVE AN ACTIVE VALE ROUTE.
+			#
+			# Valid if:
+			# - he never chose the Vale
+			# - he died
+			# - or he explicitly refused Royce
+			# =================================================
+
+			OR = {
+
+				character:Segrellion_60 = {
+					is_alive = no
+				}
+
+				character:Segrellion_60 = {
+
+					NOT = {
+						has_character_flag = segrellion_vale_support_pact
+					}
+				}
+
+				character:Segrellion_60 = {
+
+					has_character_flag = segrellion_sansa_royce_route_refused
+				}
+			}
+		}
+
+
+		character:Stark_Dummy_8 = {
+
+			add_character_flag = segrellion_sansa_vale_rescue_attempt_scheduled
+		}
+
+
+		title:c_runestone.holder = {
+
+			trigger_event = {
+				id = segrellion_sansa_jon.0001
+				days = { 5 15 }
+			}
+		}
+	}
+
+
+	# =====================================================
+	# RETRY BAELISH'S REVENGE SCHEME IF IT COULD NOT START
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Baelish_2 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_baelish_vale_revenge_pending
+
+				NOT = {
+					has_character_flag = segrellion_baelish_vale_revenge_scheme_started
+				}
+			}
+		}
+
+
+		character:Baelish_2 = {
+
+			segrellion_baelish_start_vale_revenge_murder_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# BAELISH ESCAPES / BECOMES FREE AFTER JON IMPRISONED HIM
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Baelish_2 ?= {
+
+				is_alive = yes
+
+				is_imprisoned = no
+
+				has_character_flag = segrellion_baelish_imprisoned_by_jon
+
+				NOT = {
+					has_character_flag = segrellion_baelish_escape_revenge_started
+				}
+			}
+
+
+			title:e_the_north.holder ?= {
+
+				is_alive = yes
+
+				segrellion_is_current_jon_trigger = yes
+			}
+		}
+
+
+		character:Baelish_2 = {
+
+			if = {
+
+				limit = {
+
+					can_start_scheme = {
+
+						type = murder
+
+						target_character = title:e_the_north.holder
+					}
+				}
+
+
+				start_scheme = {
+
+					type = murder
+
+					target_character = title:e_the_north.holder
+				}
+
+
+				add_character_flag = segrellion_baelish_escape_revenge_started
+			}
+		}
+	}
+
+
+	# =====================================================
+	# BEGIN THE NORTH + VALE WAR FOR THE RIVERLANDS
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			title:e_the_north.holder ?= {
+
+				is_alive = yes
+
+				segrellion_is_current_jon_trigger = yes
+
+				has_character_flag = segrellion_sansa_jon_riverlands_war_pending
+
+				NOT = {
+					has_character_flag = segrellion_sansa_jon_riverlands_war_delay
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_jon_riverlands_war_active
+				}
+			}
+
+
+			title:e_the_riverlands.holder ?= {
+
+				is_alive = yes
+
+				this != title:e_the_north.holder
+			}
+
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+			}
+		}
+
+
+		title:e_the_north.holder = {
+
+			add_character_flag = segrellion_sansa_jon_riverlands_war_authorized
+
+
+			start_war = {
+
+				cb = segrellion_jon_remove_baelish_riverlands_cb
+
+				target = title:e_the_riverlands.holder
+
+				target_title = title:e_the_riverlands
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# JON ROUTE - SANSA RECEIVES THE RIVERLANDS
+#
+# ROOT = Jon
+#
+# Called ONLY after victory.
+# This is where Sansa finally becomes PUBLICLY Sansa Stark.
+# =========================================================
+
+segrellion_sansa_jon_settle_riverlands_effect = {
+
+	character:Stark_Dummy_8 = {
+
+		segrellion_reveal_sansa_stark_effect = yes
+
+		remove_character_modifier = segrellion_sansa_under_baelish_guard_modifier
+	}
+
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_sansa_jon_riverlands_change
+
+		add_claim_on_loss = no
+	}
+
+
+	title:e_the_riverlands = {
+
+		change_title_holder_include_vassals = {
+
+			holder = character:Stark_Dummy_8
+
+			change = scope:segrellion_sansa_jon_riverlands_change
+		}
+	}
+
+
+	title:k_the_riverlands = {
+
+		change_title_holder = {
+
+			holder = character:Stark_Dummy_8
+
+			change = scope:segrellion_sansa_jon_riverlands_change
+		}
+	}
+
+
+	title:d_harrenhal = {
+
+		change_title_holder_include_vassals = {
+
+			holder = character:Stark_Dummy_8
+
+			change = scope:segrellion_sansa_jon_riverlands_change
+		}
+	}
+
+
+	title:c_harrenhal = {
+
+		change_title_holder = {
+
+			holder = character:Stark_Dummy_8
+
+			change = scope:segrellion_sansa_jon_riverlands_change
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_sansa_jon_riverlands_change
+
+
+	character:Stark_Dummy_8 = {
+
+		set_primary_title_to = title:e_the_riverlands
+
+		add_character_flag = segrellion_sansa_riverlands_settled
+
+		add_character_flag = segrellion_sansa_riverlands_restored_by_jon
+
+
+		add_opinion = {
+
+			target = root
+
+			modifier = segrellion_sansa_restored_by_jon_opinion
+		}
+	}
+
+
+	remove_character_flag = segrellion_sansa_jon_riverlands_war_pending
+
+	remove_character_flag = segrellion_sansa_jon_riverlands_war_active
+
+	add_character_flag = segrellion_sansa_jon_riverlands_war_won
+}

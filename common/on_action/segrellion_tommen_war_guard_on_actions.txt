@@ -10,6 +10,7 @@ on_war_started = {
 
 	on_actions = {
 		segrellion_tommen_block_offensive_war
+		segrellion_baelish_anti_north_war_meddling
 	}
 }
 
@@ -42,6 +43,146 @@ segrellion_tommen_block_offensive_war = {
 		scope:war = {
 
 			end_war = invalidated
+		}
+	}
+}
+
+# =========================================================
+# BAELISH - VENDETTA AGAINST THE NORTH
+# =========================================================
+
+segrellion_baelish_anti_north_war_meddling = {
+
+	trigger = {
+
+		exists = scope:war
+		exists = scope:attacker
+		exists = scope:defender
+
+
+		character:Baelish_2 ?= {
+
+			is_alive = yes
+
+			is_landed = yes
+
+			is_imprisoned = no
+
+			has_character_flag = segrellion_baelish_anti_north_intrigue_active
+		}
+
+
+		title:e_the_north.holder ?= {
+
+			is_alive = yes
+
+			segrellion_is_current_jon_trigger = yes
+		}
+
+
+		scope:attacker != character:Baelish_2
+
+		scope:defender != character:Baelish_2
+	}
+
+
+	effect = {
+
+		# =================================================
+		# NORTH IS ATTACKING AN OUTSIDER
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					scope:attacker = title:e_the_north.holder
+
+					scope:attacker = {
+
+						top_liege = title:e_the_north.holder
+					}
+				}
+
+
+				NOR = {
+
+					scope:defender = title:e_the_north.holder
+
+					scope:defender = {
+
+						top_liege = title:e_the_north.holder
+					}
+				}
+			}
+
+
+			scope:war = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_participant = character:Baelish_2
+						}
+					}
+
+
+					add_defender = character:Baelish_2
+				}
+			}
+		}
+
+
+		# =================================================
+		# NORTH IS DEFENDING AGAINST AN OUTSIDER
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				OR = {
+
+					scope:defender = title:e_the_north.holder
+
+					scope:defender = {
+
+						top_liege = title:e_the_north.holder
+					}
+				}
+
+
+				NOR = {
+
+					scope:attacker = title:e_the_north.holder
+
+					scope:attacker = {
+
+						top_liege = title:e_the_north.holder
+					}
+				}
+			}
+
+
+			scope:war = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_participant = character:Baelish_2
+						}
+					}
+
+
+					add_attacker = character:Baelish_2
+				}
+			}
 		}
 	}
 }

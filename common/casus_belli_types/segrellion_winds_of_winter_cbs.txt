@@ -4136,3 +4136,174 @@ segrellion_jon_baelish_riverlands_cb = {
 
 	interface_priority = 100
 }
+
+# =========================================================
+# THE NORTH AND VALE BREAK LITTLEFINGER'S RULE
+# =========================================================
+
+segrellion_jon_remove_baelish_riverlands_cb = {
+
+	icon = invasion
+
+	group = invasion
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+	allow_hostages = no
+
+
+	war_name = "segrellion_jon_remove_baelish_riverlands_cb_war_name"
+
+	cb_name = "segrellion_jon_remove_baelish_riverlands_cb_name"
+
+
+	allowed_for_character = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_sansa_jon_riverlands_war_authorized
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = title:e_the_riverlands.holder
+
+		scope:defender != scope:attacker
+	}
+
+
+	target_titles = all
+
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = title:e_the_riverlands
+	}
+
+
+	cost = {
+		prestige = 0
+	}
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_sansa_jon_riverlands_war_authorized
+
+			remove_character_flag = segrellion_sansa_jon_riverlands_war_pending
+
+			add_character_flag = segrellion_sansa_jon_riverlands_war_active
+
+
+			set_variable = {
+
+				name = segrellion_sansa_jon_riverlands_war
+
+				value = scope:war
+			}
+		}
+
+
+		scope:defender = {
+
+			add_character_flag = segrellion_disable_call_the_banners
+		}
+
+
+		title:e_the_vale.holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+				}
+
+
+				scope:war = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = title:e_the_vale.holder
+							}
+						}
+
+
+						add_attacker = title:e_the_vale.holder
+					}
+				}
+			}
+		}
+	}
+
+
+	on_victory = {
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_disable_call_the_banners
+		}
+
+
+		scope:attacker = {
+
+			segrellion_sansa_jon_settle_riverlands_effect = yes
+		}
+	}
+
+
+	on_white_peace = {
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_disable_call_the_banners
+		}
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_sansa_jon_riverlands_war_active
+
+			add_character_flag = segrellion_sansa_jon_riverlands_war_failed
+		}
+	}
+
+
+	on_defeat = {
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_disable_call_the_banners
+		}
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_sansa_jon_riverlands_war_active
+
+			add_character_flag = segrellion_sansa_jon_riverlands_war_failed
+		}
+	}
+}
