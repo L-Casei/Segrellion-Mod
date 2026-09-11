@@ -153,6 +153,33 @@ on_set_relation_soulmate = {
 	}
 }
 
+on_title_lost = {
+
+	on_actions = {
+
+		segrellion_young_griff_crownlands_guard_on_title_lost
+	}
+}
+
+
+segrellion_young_griff_crownlands_guard_on_title_lost = {
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+	}
+
+
+	effect = {
+
+		segrellion_young_griff_crownlands_guard_effect = yes
+	}
+}
+
 # =========================================================
 # SANSA STARK STORY
 # =========================================================
@@ -4037,11 +4064,6 @@ segrellion_aegon_daemon_vassalage_progression = {
 			is_alive = yes
 
 			has_title = title:h_the_iron_throne
-
-
-			NOT = {
-				has_character_flag = segrellion_young_griff_flamelands_submission_resolved
-			}
 		}
 
 
@@ -4049,9 +4071,18 @@ segrellion_aegon_daemon_vassalage_progression = {
 
 			is_alive = yes
 
-			is_independent_ruler = yes
-
 			has_title = title:e_flamelands
+
+
+			# Daemon may still be truly independent,
+			# or AGOT may already have mechanically placed
+			# him beneath Aegon after the Iron Throne war.
+			OR = {
+
+				is_independent_ruler = yes
+
+				liege ?= character:IAF_Young_Griff_1
+			}
 
 
 			NOT = {
@@ -4085,7 +4116,7 @@ segrellion_aegon_daemon_vassalage_progression = {
 
 				id = segrellion_aegon_daemon.0001
 
-				days = { 7 14 }
+				days = { 3 7 }
 			}
 		}
 	}

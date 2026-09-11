@@ -59,9 +59,15 @@ segrellion_aegon_daemon.0001 = {
 
 			is_alive = yes
 
-			is_independent_ruler = yes
-
 			has_title = title:e_flamelands
+
+
+			OR = {
+
+				is_independent_ruler = yes
+
+				liege ?= character:IAF_Young_Griff_1
+			}
 
 
 			NOT = {
@@ -229,6 +235,16 @@ segrellion_aegon_daemon.0001 = {
 
 		character:Segrellion_60 = {
 
+			if = {
+
+				limit = {
+					liege ?= character:IAF_Young_Griff_1
+				}
+
+				becomes_independent = yes
+			}
+
+
 			add_character_flag = segrellion_daemon_aegon_status_resolved
 
 			add_character_flag = segrellion_daemon_independence_tolerated_by_aegon
@@ -272,11 +288,17 @@ segrellion_aegon_daemon.0002 = {
 
 		is_alive = yes
 
-		is_independent_ruler = yes
-
 		has_title = title:e_flamelands
 
 		has_character_flag = segrellion_daemon_aegon_peaceful_request_pending
+
+
+		OR = {
+
+			is_independent_ruler = yes
+
+			liege ?= character:IAF_Young_Griff_1
+		}
 
 
 		character:IAF_Young_Griff_1 ?= {
@@ -327,9 +349,10 @@ segrellion_aegon_daemon.0002 = {
 		custom_tooltip = segrellion_aegon_daemon.0002.a.tt
 
 
-		segrellion_daemon_swear_fealty_to_aegon_effect = yes
+		# If AGOT has not already attached Daemon to Aegon,
+		# perform the actual fealty transfer now.
 
-		segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
+		segrellion_daemon_swear_fealty_to_aegon_effect = yes
 
 
 		add_character_flag = segrellion_daemon_aegon_fealty_accepted
@@ -345,7 +368,9 @@ segrellion_aegon_daemon.0002 = {
 		}
 
 
-		# Mutual wartime support starts the personal Aegon/Daemon chain.
+		# Do NOT appoint Hand/Regent in the same tick as the
+		# liege transfer. The appointment event does it once
+		# the political state has fully settled.
 
 		if = {
 
@@ -386,7 +411,6 @@ segrellion_aegon_daemon.0002 = {
 			modifier = {
 
 				add = 25
-
 
 				has_character_flag = segrellion_pledged_to_young_griff
 
@@ -445,6 +469,14 @@ segrellion_aegon_daemon.0002 = {
 			}
 		}
 
+		if = {
+
+			limit = {
+				liege ?= character:IAF_Young_Griff_1
+			}
+
+			becomes_independent = yes
+		}
 
 		add_character_flag = segrellion_daemon_aegon_fealty_refused
 
@@ -519,11 +551,17 @@ segrellion_aegon_daemon.0003 = {
 
 		is_alive = yes
 
-		is_independent_ruler = yes
-
 		has_title = title:e_flamelands
 
 		has_character_flag = segrellion_daemon_aegon_ultimatum_pending
+
+
+		OR = {
+
+			is_independent_ruler = yes
+
+			liege ?= character:IAF_Young_Griff_1
+		}
 
 
 		character:IAF_Young_Griff_1 ?= {
@@ -610,6 +648,14 @@ segrellion_aegon_daemon.0003 = {
 
 		custom_tooltip = segrellion_aegon_daemon.0003.b.tt
 
+		if = {
+
+			limit = {
+				liege ?= character:IAF_Young_Griff_1
+			}
+
+			becomes_independent = yes
+		}
 
 		add_character_flag = segrellion_daemon_rejected_aegon_ultimatum
 
@@ -857,13 +903,10 @@ segrellion_aegon_daemon.0006 = {
 
 		has_character_flag = segrellion_daemon_aegon_fealty_accepted
 
-		has_character_flag = segrellion_daemon_aegon_hand_and_regent
-
 		has_character_flag = segrellion_pledged_to_young_griff
 
 
 		NOT = {
-
 			has_character_flag = segrellion_daemon_aegon_appointment_story_resolved
 		}
 
@@ -875,8 +918,6 @@ segrellion_aegon_daemon.0006 = {
 			has_title = title:h_the_iron_throne
 
 			has_character_flag = segrellion_young_griff_supports_daemon
-
-			has_character_flag = segrellion_young_griff_daemon_hand_and_regent
 		}
 
 
@@ -887,6 +928,17 @@ segrellion_aegon_daemon.0006 = {
 	on_trigger_fail = {
 
 		remove_character_flag = segrellion_daemon_aegon_appointment_story_scheduled
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_daemon_aegon_appointment_story_scheduled
+
+
+		# The liege transfer is definitely complete now.
+		# Appoint Daemon mechanically before showing the story.
+
+		segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
 	}
 
 
@@ -951,22 +1003,25 @@ segrellion_aegon_daemon.0007 = {
 
 		has_character_flag = segrellion_daemon_aegon_hand_event_seen
 
-		has_character_flag = segrellion_daemon_aegon_hand_and_regent
-
 
 		character:IAF_Young_Griff_1 ?= {
 
 			is_alive = yes
 
 			has_title = title:h_the_iron_throne
-
-			has_character_flag = segrellion_young_griff_daemon_hand_and_regent
 		}
 
 
 		liege ?= character:IAF_Young_Griff_1
 	}
 
+	immediate = {
+
+		# Second mechanical pass in case AGOT rebuilt
+		# council/regency state between events.
+
+		segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
+	}
 
 	left_portrait = {
 

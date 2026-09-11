@@ -101,7 +101,6 @@ segrellion_aegon_daemon_appointment_recovery = {
 
 	trigger = {
 
-
 		character:IAF_Young_Griff_1 ?= {
 
 			is_alive = yes
@@ -109,14 +108,6 @@ segrellion_aegon_daemon_appointment_recovery = {
 			has_title = title:h_the_iron_throne
 
 			has_character_flag = segrellion_young_griff_supports_daemon
-
-			has_character_flag = segrellion_young_griff_daemon_hand_and_regent
-
-
-			NOT = {
-
-				has_character_flag = segrellion_young_griff_daemon_appointment_story_resolved
-			}
 		}
 
 
@@ -130,17 +121,13 @@ segrellion_aegon_daemon_appointment_recovery = {
 
 			has_character_flag = segrellion_daemon_aegon_fealty_accepted
 
-			has_character_flag = segrellion_daemon_aegon_hand_and_regent
-
 
 			NOT = {
-
 				has_character_flag = segrellion_daemon_aegon_appointment_story_resolved
 			}
 
 
 			NOT = {
-
 				has_character_flag = segrellion_daemon_aegon_appointment_story_scheduled
 			}
 		}
@@ -151,6 +138,11 @@ segrellion_aegon_daemon_appointment_recovery = {
 
 		character:Segrellion_60 = {
 
+			# Repair the actual offices first.
+
+			segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
+
+
 			add_character_flag = {
 
 				flag = segrellion_daemon_aegon_appointment_story_scheduled
@@ -159,11 +151,79 @@ segrellion_aegon_daemon_appointment_recovery = {
 			}
 
 
-			trigger_event = {
+			# Resume exactly where a lost delayed event stopped.
 
-				id = segrellion_aegon_daemon.0006
+			if = {
 
-				days = { 2 4 }
+				limit = {
+
+					has_character_flag = segrellion_daemon_aegon_hand_event_seen
+
+					NOT = {
+						has_character_flag = segrellion_daemon_aegon_regent_event_seen
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_aegon_daemon.0007
+
+					days = { 1 2 }
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daemon_aegon_regent_event_seen
+
+					NOT = {
+						has_character_flag = segrellion_daemon_aegon_friend
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_aegon_daemon.0008
+
+					days = { 1 2 }
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daemon_aegon_friend
+
+					NOT = {
+						has_character_flag = segrellion_daemon_aegon_appointment_story_resolved
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_aegon_daemon.0009
+
+					days = { 1 2 }
+				}
+			}
+
+
+			else = {
+
+				trigger_event = {
+
+					id = segrellion_aegon_daemon.0006
+
+					days = { 1 2 }
+				}
 			}
 		}
 	}

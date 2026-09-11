@@ -45,7 +45,7 @@ segrellion_reveal_sansa_stark_effect = {
 
 	# =====================================================
 	# REMOVE "STONE"
-	# Canon Children gives Alayne nick_stone.
+	# Older setups may use nick_stone; current AGOT uses surname_stone.
 	# =====================================================
 
 	if = {
@@ -62,7 +62,12 @@ segrellion_reveal_sansa_stark_effect = {
 	# RESTORE SANSA STARK
 	# =====================================================
 
-	change_first_name = Sansa
+	# Remove AGOT's hidden bastard surname, including inactive traits.
+	agot_remove_bastard_nickname_effect = yes
+	remove_trait = surname_stone
+
+	# Restore the canonical name from the original Sansa character.
+	change_first_name = { template_character = character:Stark_8 }
 
 	set_house = character:Stark_8.house
 
@@ -80,6 +85,8 @@ segrellion_reveal_sansa_stark_effect = {
 
 
 	add_character_flag = segrellion_sansa_identity_revealed
+
+	add_character_flag = segrellion_sansa_name_restored
 
 	add_character_flag = segrellion_sansa_is_true_stark
 }

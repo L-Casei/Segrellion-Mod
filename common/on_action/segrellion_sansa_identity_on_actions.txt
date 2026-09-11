@@ -1,0 +1,26 @@
+# Repair revealed Sansa in existing saves; leave her disguise intact before reveal.
+on_game_start_after_lobby = {
+	on_actions = {
+		delay = { days = 1 }
+		segrellion_sansa_revealed_name_recovery
+	}
+}
+
+monthly_global_pulse = {
+	on_actions = { segrellion_sansa_revealed_name_recovery }
+}
+
+segrellion_sansa_revealed_name_recovery = {
+	effect = {
+		character:Stark_Dummy_8 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					has_character_flag = segrellion_sansa_identity_revealed
+					NOT = { has_character_flag = segrellion_sansa_name_restored }
+				}
+				segrellion_reveal_sansa_stark_effect = yes
+			}
+		}
+	}
+}

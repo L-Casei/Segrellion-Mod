@@ -15,9 +15,48 @@ segrellion_winds.0001 = {
 
 	theme = war
 
+
 	override_icon = {
+
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_unicorn_returns_event_pending
+
+
+		NOT = {
+			has_title = title:e_flamelands
+		}
+
+
+		title:e_flamelands = {
+
+			exists = holder
+
+			holder = {
+
+				is_alive = yes
+
+				this != character:Segrellion_60
+			}
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_unicorn_returns_event_pending
+
+		remove_character_flag = segrellion_unicorn_returns_cb_authorized
+	}
+
 
 	left_portrait = root
 
@@ -25,7 +64,17 @@ segrellion_winds.0001 = {
 	immediate = {
 
 		title:e_flamelands.holder ?= {
-			save_scope_as = flamelands_defender
+
+			if = {
+
+				limit = {
+
+					this != root
+				}
+
+
+				save_scope_as = flamelands_defender
+			}
 		}
 	}
 
@@ -34,23 +83,59 @@ segrellion_winds.0001 = {
 
 		name = segrellion_winds.0001.a
 
+
 		remove_character_flag = segrellion_unicorn_returns_event_pending
 
-		add_character_flag = segrellion_unicorn_returns_cb_authorized
 
 		custom_tooltip = segrellion_unicorn_returns_war_begins_tt
 
-		start_war = {
-			cb = segrellion_unicorn_returns_cb
-			target = scope:flamelands_defender
-			target_title = title:e_flamelands
+
+		if = {
+
+			limit = {
+
+				exists = scope:flamelands_defender
+
+
+				scope:flamelands_defender = {
+
+					is_alive = yes
+
+					this != root
+				}
+
+
+				NOT = {
+					has_title = title:e_flamelands
+				}
+			}
+
+
+			add_character_flag = segrellion_unicorn_returns_cb_authorized
+
+
+			start_war = {
+
+				cb = segrellion_unicorn_returns_cb
+
+				target = scope:flamelands_defender
+
+				target_title = title:e_flamelands
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_winds.0399
+
+				days = 1
+			}
 		}
 
-		trigger_event = {
 
-			id = segrellion_winds.0399
+		else = {
 
-			days = 1
+			remove_character_flag = segrellion_unicorn_returns_cb_authorized
 		}
 	}
 }
