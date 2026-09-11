@@ -253,8 +253,6 @@ segrellion_winterfell_council_kingmaker_intent = {
 
 	is_target_valid = {
 
-		this != scope:target
-
 		scope:target = {
 
 			is_alive = yes
@@ -263,8 +261,6 @@ segrellion_winterfell_council_kingmaker_intent = {
 			NOT = {
 				has_trait = nightswatch
 			}
-
-			involved_activity ?= root.involved_activity
 		}
 	}
 
@@ -328,13 +324,33 @@ segrellion_winterfell_council_kingmaker_intent = {
 		}
 
 		if = {
+
 			limit = {
+
 				scope:target = {
+
 					has_trait = nightswatch
+
+					NOT = {
+						segrellion_is_current_jon_trigger = yes
+					}
 				}
 			}
 
 			add = -1000
+		}
+
+
+		if = {
+
+			limit = {
+
+				scope:target = {
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+			add = 500
 		}
 	}
 

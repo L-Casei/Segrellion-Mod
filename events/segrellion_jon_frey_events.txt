@@ -78,6 +78,88 @@ segrellion_jon_frey.0010 = {
 }
 
 # =========================================================
+# 0014 - A STARK IN WINTERFELL
+#
+# Public recognition of Jon's restoration as Lord of
+# Winterfell and ruler of the North.
+# =========================================================
+
+segrellion_jon_frey.0014 = {
+
+	type = character_event
+
+	title = segrellion_jon_frey.0014.t
+	desc = segrellion_jon_frey.0014.desc
+
+	theme = crown
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		is_alive = yes
+
+		has_character_flag = segrellion_jon_restored_to_winterfell
+
+		has_title = title:e_the_north
+
+		has_title = title:d_winterfell
+	}
+
+
+	immediate = {
+
+		set_location = title:c_winterfell.title_province
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_jon_winterfell_recognition_rewards_granted
+				}
+			}
+
+
+			add_character_flag = segrellion_jon_winterfell_recognition_rewards_granted
+
+
+			add_prestige = 3000
+
+			add_piety = 1000
+
+
+			dynasty ?= {
+
+				add_dynasty_prestige = 500
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_jon_frey.0014.a
+
+
+		trigger_event = {
+
+			id = segrellion_jon_frey.0015
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
 # JON SNOW
 # WINTERFELL IS HIS
 # =========================================================

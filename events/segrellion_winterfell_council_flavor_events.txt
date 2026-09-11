@@ -1,0 +1,3470 @@
+namespace = segrellion_winterfell_council
+
+
+# =========================================================
+# COMMON DESIGN
+#
+# All events:
+# - fire for the host
+# - select ACTUAL attending characters
+# - show those characters
+# - use real backgrounds
+# - alter opinions / prestige / piety / dread / modifiers
+# - alter the political Council variables
+# =========================================================
+
+
+
+# =========================================================
+# PHASE I
+# THE LORDS ARRIVE
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6001 - A QUESTION OF PRECEDENCE
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6001 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6001.t
+	desc = segrellion_winterfell_council.6001.desc
+
+	theme = realm
+
+	override_background = {
+		reference = throne_room
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = disgust
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6001.a
+
+		custom_tooltip = segrellion_winterfell_council.6001.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+
+				modifier = segrellion_council_supported_me_opinion
+			}
+
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6001.b
+
+		custom_tooltip = segrellion_winterfell_council.6001.b.tt
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+
+				modifier = segrellion_council_supported_me_opinion
+			}
+
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6001.c
+
+		custom_tooltip = segrellion_winterfell_council.6001.c.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:council_lord_b
+
+				modifier = segrellion_council_reconciled_us_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:council_lord_a
+
+				modifier = segrellion_council_reconciled_us_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_mediator_modifier
+			years = 3
+		}
+
+
+		add_prestige = 75
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6002 - STEEL AT THE GATE
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6002 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6002.t
+	desc = segrellion_winterfell_council.6002.desc
+
+	theme = realm
+
+	override_background = {
+		reference = courtyard
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6002.a
+
+		custom_tooltip = segrellion_winterfell_council.6002.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_denied_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6002.b
+
+		custom_tooltip = segrellion_winterfell_council.6002.b.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6002.c
+
+		custom_tooltip = segrellion_winterfell_council.6002.c.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_mediator_modifier
+			years = 3
+		}
+
+
+		add_prestige = 75
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6003 - OLD BLOOD, OLD WOUNDS
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6003 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6003.t
+	desc = segrellion_winterfell_council.6003.desc
+
+	theme = realm
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = disgust
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6003.a
+
+		custom_tooltip = segrellion_winterfell_council.6003.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:council_lord_b
+				modifier = segrellion_council_reconciled_us_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:council_lord_a
+				modifier = segrellion_council_reconciled_us_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_mediator_modifier
+			years = 3
+		}
+
+
+		add_prestige = 100
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6003.b
+
+		custom_tooltip = segrellion_winterfell_council.6003.b.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:council_lord_b
+				modifier = segrellion_council_grudge_deepened_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:council_lord_a
+				modifier = segrellion_council_grudge_deepened_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6003.c
+
+		custom_tooltip = segrellion_winterfell_council.6003.c.tt
+
+
+		add_prestige = 25
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6004 - BLACK CLOAKS AT WINTERFELL
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6004 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6004.t
+	desc = segrellion_winterfell_council.6004.desc
+
+	theme = realm
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				this != scope:host
+
+				is_alive = yes
+				is_adult = yes
+
+				has_trait = nightswatch
+			}
+
+
+			any_attending_character = {
+
+				this != scope:host
+
+				is_alive = yes
+				is_adult = yes
+
+				NOT = {
+					has_trait = nightswatch
+				}
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+
+					is_alive = yes
+					is_adult = yes
+
+					has_trait = nightswatch
+				}
+
+				save_scope_as = council_black_brother
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_black_brother
+
+					is_alive = yes
+					is_adult = yes
+
+					NOT = {
+						has_trait = nightswatch
+					}
+				}
+
+				save_scope_as = council_northern_lord
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_black_brother
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_northern_lord
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6004.a
+
+		custom_tooltip = segrellion_winterfell_council.6004.a.tt
+
+
+		scope:council_black_brother = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:council_northern_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 2
+			}
+		}
+
+
+		add_piety = 75
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_winter_planner_modifier
+			years = 3
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6004.b
+
+		custom_tooltip = segrellion_winterfell_council.6004.b.tt
+
+
+		scope:council_black_brother = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_northern_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 1
+			}
+		}
+
+
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6004.c
+
+		custom_tooltip = segrellion_winterfell_council.6004.c.tt
+
+
+		scope:council_black_brother = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_denied_me_opinion
+			}
+		}
+
+
+		scope:council_northern_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# PHASE II
+# THE DEBATE
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6101 - GRANARIES BEFORE CROWNS
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6101 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6101.t
+	desc = segrellion_winterfell_council.6101.desc
+
+	theme = realm
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6101.a
+
+		custom_tooltip = segrellion_winterfell_council.6101.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_winter_planner_modifier
+			years = 5
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 1
+			}
+		}
+
+
+		add_prestige = 75
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6101.b
+
+		custom_tooltip = segrellion_winterfell_council.6101.b.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+
+
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6101.c
+
+		custom_tooltip = segrellion_winterfell_council.6101.c.tt
+
+
+		add_dread = 5
+		add_prestige = 100
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6102 - MOAT CAILIN
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6102 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6102.t
+	desc = segrellion_winterfell_council.6102.desc
+
+	theme = war
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6102.a
+
+		custom_tooltip = segrellion_winterfell_council.6102.a.tt
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_war_planner_modifier
+			years = 5
+		}
+
+
+		add_prestige = 100
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6102.b
+
+		custom_tooltip = segrellion_winterfell_council.6102.b.tt
+
+
+		add_prestige = 50
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6102.c
+
+		custom_tooltip = segrellion_winterfell_council.6102.c.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 1
+			}
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 1
+			}
+		}
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6103 - THE PRICE OF VENGEANCE
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6103 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6103.t
+	desc = segrellion_winterfell_council.6103.desc
+
+	theme = war
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+
+				OR = {
+					has_trait = vengeful
+					has_trait = wrathful
+					has_character_flag = segrellion_red_wedding_survivor
+					has_character_flag = segrellion_red_wedding_bereaved
+				}
+			}
+
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+
+					is_alive = yes
+					is_adult = yes
+
+					OR = {
+						has_trait = vengeful
+						has_trait = wrathful
+						has_character_flag = segrellion_red_wedding_survivor
+						has_character_flag = segrellion_red_wedding_bereaved
+					}
+				}
+
+				save_scope_as = council_vengeful_lord
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_vengeful_lord
+
+					is_alive = yes
+					is_adult = yes
+				}
+
+				save_scope_as = council_other_lord
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_vengeful_lord
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_other_lord
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6103.a
+
+		custom_tooltip = segrellion_winterfell_council.6103.a.tt
+
+
+		scope:council_vengeful_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:council_other_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 2
+			}
+		}
+
+
+		add_prestige = 75
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6103.b
+
+		custom_tooltip = segrellion_winterfell_council.6103.b.tt
+
+
+		scope:council_vengeful_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_other_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+		}
+
+
+		add_piety = 50
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6103.c
+
+		custom_tooltip = segrellion_winterfell_council.6103.c.tt
+
+
+		scope:council_vengeful_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_denied_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6104 - FREE FOLK IN THE HALL
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6104 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6104.t
+	desc = segrellion_winterfell_council.6104.desc
+
+	theme = realm
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+
+				culture = {
+					agot_is_wildling_culture = yes
+				}
+			}
+
+
+			any_attending_character = {
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+
+				NOT = {
+					culture = {
+						agot_is_wildling_culture = yes
+					}
+				}
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+
+					is_alive = yes
+					is_adult = yes
+
+					culture = {
+						agot_is_wildling_culture = yes
+					}
+				}
+
+				save_scope_as = council_free_folk
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_free_folk
+
+					is_alive = yes
+					is_adult = yes
+
+					NOT = {
+						culture = {
+							agot_is_wildling_culture = yes
+						}
+					}
+				}
+
+				save_scope_as = council_northern_lord
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_free_folk
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_northern_lord
+		animation = disgust
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6104.a
+
+		custom_tooltip = segrellion_winterfell_council.6104.a.tt
+
+
+		scope:council_free_folk = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:council_northern_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 2
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6104.b
+
+		custom_tooltip = segrellion_winterfell_council.6104.b.tt
+
+
+		scope:council_free_folk = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_northern_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 1
+			}
+		}
+
+
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6104.c
+
+		custom_tooltip = segrellion_winterfell_council.6104.c.tt
+
+
+		scope:council_free_folk = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_denied_me_opinion
+			}
+		}
+
+
+		scope:council_northern_lord = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6105 - COIN FROM THE SOUTH
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6105 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6105.t
+	desc = segrellion_winterfell_council.6105.desc
+
+	theme = stewardship
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6105.a
+
+		custom_tooltip = segrellion_winterfell_council.6105.a.tt
+
+
+		add_gold = 75
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_winter_planner_modifier
+			years = 3
+		}
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6105.b
+
+		custom_tooltip = segrellion_winterfell_council.6105.b.tt
+
+
+		add_gold = 125
+		add_prestige = 50
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6105.c
+
+		custom_tooltip = segrellion_winterfell_council.6105.c.tt
+
+
+		add_prestige = 100
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6106 - WHAT TO DO WITH THE BOLTON MEN
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6106 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6106.t
+	desc = segrellion_winterfell_council.6106.desc
+
+	theme = realm
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6106.a
+
+		custom_tooltip = segrellion_winterfell_council.6106.a.tt
+
+
+		add_piety = 75
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6106.b
+
+		custom_tooltip = segrellion_winterfell_council.6106.b.tt
+
+
+		add_dread = 5
+		add_prestige = 75
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 2
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6106.c
+
+		custom_tooltip = segrellion_winterfell_council.6106.c.tt
+
+
+		add_prestige = 100
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_mediator_modifier
+			years = 3
+		}
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# PHASE III
+# THE PROPOSALS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6201 - A NORTHERN COMPACT
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6201 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6201.t
+	desc = segrellion_winterfell_council.6201.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = admiration
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6201.a
+
+		custom_tooltip = segrellion_winterfell_council.6201.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:council_lord_b
+				modifier = segrellion_council_shared_cause_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:council_lord_a
+				modifier = segrellion_council_shared_cause_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_northern_consensus_modifier
+			years = 5
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6201.b
+
+		custom_tooltip = segrellion_winterfell_council.6201.b.tt
+
+
+		scope:host = {
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6201.c
+
+		custom_tooltip = segrellion_winterfell_council.6201.c.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6202 - WARDS OF THE NORTH
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6202 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6202.t
+	desc = segrellion_winterfell_council.6202.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = admiration
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6202.a
+
+		custom_tooltip = segrellion_winterfell_council.6202.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:council_lord_b
+				modifier = segrellion_council_shared_cause_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:council_lord_a
+				modifier = segrellion_council_shared_cause_opinion
+			}
+		}
+
+
+		add_prestige = 75
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6202.b
+
+		custom_tooltip = segrellion_winterfell_council.6202.b.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+		}
+
+
+		scope:host = {
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+
+		add_prestige = 50
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6202.c
+
+		custom_tooltip = segrellion_winterfell_council.6202.c.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6203 - WHO COMMANDS THE HOST?
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6203 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6203.t
+	desc = segrellion_winterfell_council.6203.desc
+
+	theme = war
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				weight = {
+					base = martial
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				weight = {
+					base = martial
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6203.a
+
+		custom_tooltip = segrellion_winterfell_council.6203.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6203.b
+
+		custom_tooltip = segrellion_winterfell_council.6203.b.tt
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6203.c
+
+		custom_tooltip = segrellion_winterfell_council.6203.c.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:council_lord_b
+				modifier = segrellion_council_shared_cause_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:council_lord_a
+				modifier = segrellion_council_shared_cause_opinion
+			}
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_war_planner_modifier
+			years = 5
+		}
+
+
+		add_prestige = 100
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6204 - NAME THE ENEMY
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6204 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6204.t
+	desc = segrellion_winterfell_council.6204.desc
+
+	theme = war
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6204.a
+
+		custom_tooltip = segrellion_winterfell_council.6204.a.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 3
+			}
+		}
+
+
+		add_prestige = 75
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6204.b
+
+		custom_tooltip = segrellion_winterfell_council.6204.b.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 3
+			}
+		}
+
+
+		add_piety = 75
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6204.c
+
+		custom_tooltip = segrellion_winterfell_council.6204.c.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 3
+			}
+		}
+
+
+		add_prestige = 100
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6205 - A CROWN OR A COUNCIL?
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6205 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6205.t
+	desc = segrellion_winterfell_council.6205.desc
+
+	theme = realm
+
+	override_background = {
+		reference = throne_room
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6205.a
+
+		custom_tooltip = segrellion_winterfell_council.6205.a.tt
+
+
+		scope:host = {
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 3
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_northern_consensus_modifier
+			years = 5
+		}
+
+
+		add_prestige = 125
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6205.b
+
+		custom_tooltip = segrellion_winterfell_council.6205.b.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 3
+			}
+		}
+
+
+		add_prestige = 75
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6205.c
+
+		custom_tooltip = segrellion_winterfell_council.6205.c.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 1
+			}
+
+			change_variable = {
+
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+		}
+
+
+		add_prestige = 50
+	}
+}
+
+
+
+# =========================================================
+# PHASE IV
+# PROCLAMATION
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6301 - THE LAST VOICES
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6301 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6301.t
+	desc = segrellion_winterfell_council.6301.desc
+
+	theme = realm
+
+	override_background = {
+		reference = throne_room
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				count >= 2
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_a
+			}
+
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					this != scope:council_lord_a
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+				}
+
+				save_scope_as = council_lord_b
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:council_lord_a
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_lord_b
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6301.a
+
+		custom_tooltip = segrellion_winterfell_council.6301.a.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_respected_me_opinion
+			}
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_northern_consensus_modifier
+			years = 3
+		}
+
+
+		add_prestige = 100
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6301.b
+
+		custom_tooltip = segrellion_winterfell_council.6301.b.tt
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_supported_me_opinion
+			}
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6301.c
+
+		custom_tooltip = segrellion_winterfell_council.6301.c.tt
+
+
+		add_dread = 3
+		add_prestige = 50
+
+
+		scope:council_lord_a = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:council_lord_b = {
+
+			add_opinion = {
+
+				target = scope:host
+				modifier = segrellion_council_slighted_me_opinion
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6302 - THE HALL STANDS
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6302 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6302.t
+	desc = segrellion_winterfell_council.6302.desc
+
+	theme = realm
+
+	override_background = {
+		reference = throne_room
+	}
+
+	cooldown = {
+		years = 1
+	}
+
+
+	trigger = {
+
+		this = scope:host
+
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				this != scope:host
+				is_alive = yes
+				is_adult = yes
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:activity = {
+
+			random_attending_character = {
+
+				limit = {
+
+					this != scope:host
+					is_alive = yes
+					is_adult = yes
+				}
+
+				save_scope_as = council_last_speaker
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = scope:host
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:council_last_speaker
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6302.a
+
+		custom_tooltip = segrellion_winterfell_council.6302.a.tt
+
+
+		scope:host = {
+
+			change_variable = {
+
+				name = segrellion_council_king_support
+				add = 3
+			}
+		}
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+
+
+		add_prestige = 150
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6302.b
+
+		custom_tooltip = segrellion_winterfell_council.6302.b.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_wall_support
+				add = 3
+			}
+		}
+
+
+		add_piety = 100
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.6302.c
+
+		custom_tooltip = segrellion_winterfell_council.6302.c.tt
+
+
+		scope:activity = {
+
+			change_variable = {
+
+				name = segrellion_council_no_crown_support
+				add = 3
+			}
+		}
+
+
+		add_prestige = 75
+	}
+}
