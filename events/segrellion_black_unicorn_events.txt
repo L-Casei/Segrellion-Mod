@@ -6258,19 +6258,6 @@ segrellion_black_unicorn.0560 = {
 
 
 	immediate = {
-
-		# They appear inside Visenya's settlement.
-		# They are NOT Daemon's courtiers yet.
-
-		character:Stark_Dummy_11 = {
-			set_location = character:Black_Unicorn_1.location
-		}
-
-		character:Stark_hh_13 = {
-			set_location = character:Black_Unicorn_1.location
-		}
-
-
 		add_character_flag = segrellion_black_unicorn_rickon_revealed
 	}
 
@@ -6590,6 +6577,148 @@ segrellion_black_unicorn.0595 = {
 }
 
 # =========================================================
+# 0596 - A WOLF BENEATH THE UNICORN
+#
+# ROOT = VISENYA
+#
+# Immediately before the Beacon storyline begins,
+# Visenya takes Rickon and Osha into her own camp.
+# =========================================================
+
+segrellion_black_unicorn.0596 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0596.t
+	desc = segrellion_black_unicorn.0596.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Black_Unicorn_1
+
+		is_alive = yes
+
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_rickon_osha_with_visenya
+		}
+
+
+		character:Stark_Dummy_11 = {
+			is_alive = yes
+		}
+
+
+		character:Stark_hh_13 = {
+			is_alive = yes
+		}
+
+
+		character:Segrellion_60 = {
+
+			segrellion_black_unicorn_part_iii_ready_trigger = yes
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_black_unicorn_rickon_osha_transfer_queued
+
+
+		character:Segrellion_60 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+					}
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_black_unicorn.0600
+
+					days = 30
+				}
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = character:Stark_Dummy_11
+
+		animation = child_personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_hh_13
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0596.a
+
+		custom_tooltip = segrellion_black_unicorn.0596.a.tt
+
+
+		segrellion_black_unicorn_rickon_osha_join_visenya_effect = yes
+
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0600
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
 # 0598 - LEGACY PART III CONTROLLER
 #
 # Exists only so already-queued events from old saves
@@ -6739,16 +6868,49 @@ segrellion_black_unicorn.0600 = {
 	trigger = {
 
 		segrellion_black_unicorn_part_iii_ready_trigger = yes
+
+
+		OR = {
+
+			character:Black_Unicorn_1 = {
+
+				has_character_flag = segrellion_black_unicorn_rickon_osha_with_visenya
+			}
+
+
+			AND = {
+
+				character:Stark_Dummy_11 = {
+
+					is_courtier_of = character:Black_Unicorn_1
+				}
+
+
+				character:Stark_hh_13 = {
+
+					is_courtier_of = character:Black_Unicorn_1
+				}
+			}
+
+
+			character:Stark_Dummy_11 = {
+
+				is_alive = no
+			}
+
+
+			character:Stark_hh_13 = {
+
+				is_alive = no
+			}
+		}
 	}
 
 
 	on_trigger_fail = {
 
 		# =====================================================
-		# DO NOT LOSE PART III JUST BECAUSE DAEMON OR VISENYA
-		# WAS TEMPORARILY UNAVAILABLE.
-		#
-		# Once the one-year clock has fired, keep retrying.
+		# RICKON + OSHA MUST JOIN VISENYA BEFORE THE BEACON
 		# =====================================================
 
 		if = {
@@ -6756,23 +6918,97 @@ segrellion_black_unicorn.0600 = {
 			limit = {
 
 				this = character:Segrellion_60
+
+				segrellion_black_unicorn_part_iii_ready_trigger = yes
+
+
+				character:Stark_Dummy_11 = {
+
+					is_alive = yes
+				}
+
+
+				character:Stark_hh_13 = {
+
+					is_alive = yes
+				}
+
+
+				character:Black_Unicorn_1 = {
+
+					is_alive = yes
+
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_rickon_osha_with_visenya
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_rickon_osha_transfer_queued
+					}
+				}
+			}
+
+
+			character:Black_Unicorn_1 = {
+
+				add_character_flag = {
+
+					flag = segrellion_black_unicorn_rickon_osha_transfer_queued
+
+					days = 30
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_black_unicorn.0596
+
+					days = 1
+				}
+			}
+		}
+
+
+		# =====================================================
+		# NORMAL PART III RETRY
+		# =====================================================
+
+		else_if = {
+
+			limit = {
+
+				this = character:Segrellion_60
+
 				is_alive = yes
 
+
 				has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
 
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_post_beacon_resolved
 				}
 
+
 				NOT = {
 					has_character_flag = segrellion_black_unicorn_daemon_abducted_in_beacon
 				}
 
+
 				exists = character:Black_Unicorn_1
+
 
 				character:Black_Unicorn_1 = {
 
 					is_alive = yes
+
 
 					NOT = {
 						has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
@@ -6872,6 +7108,54 @@ segrellion_black_unicorn.0600 = {
 
 
 			add_character_flag = segrellion_black_unicorn_infiltrated_beacon
+		}
+
+
+		# =================================================
+		# RICKON TRAVELS WITH VISENYA
+		# =================================================
+
+		character:Stark_Dummy_11 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_courtier_of = character:Black_Unicorn_1
+				}
+
+
+				set_location = title:b_castle_farring.title_province
+
+
+				add_character_flag = segrellion_rickon_at_beacon_with_visenya
+			}
+		}
+
+
+		# =================================================
+		# OSHA TRAVELS WITH VISENYA
+		# =================================================
+
+		character:Stark_hh_13 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_courtier_of = character:Black_Unicorn_1
+				}
+
+
+				set_location = title:b_castle_farring.title_province
+
+
+				add_character_flag = segrellion_osha_at_beacon_with_visenya
+			}
 		}
 
 
