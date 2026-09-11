@@ -13,6 +13,10 @@ segrellion_apply_flamelander_culture_effect = {
 		get_all_innovations_from = culture:stormlander_main
 	}
 
+	culture:high_flamelander = {
+		get_all_innovations_from = culture:flamelander
+	}
+
 	# Vhalerion
 	title:d_vhalerion = {
 		every_de_jure_county = {
@@ -66,8 +70,16 @@ segrellion_apply_flamelander_culture_effect = {
 segrellion_create_flamelander_culture_dynamic_effect = {
 
 	culture:flamelander = {
+
 		reset_culture_creation_date = yes
 	}
+
+
+	culture:high_flamelander = {
+
+		reset_culture_creation_date = yes
+	}
+
 
 	segrellion_apply_flamelander_culture_effect = yes
 }
@@ -97,6 +109,37 @@ segrellion_flamelander_culture_progression_effect = {
         }
         segrellion_apply_flamelander_nobility_effect = yes
     }
+
+	# =====================================================
+	# HIGH FLAMELANDER SAVE UPGRADE
+	#
+	# Old saves may already have completed the original
+	# Flamelander adoption before High Flamelander existed.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			current_date >= 8144.1.28
+
+
+			title:k_flamelands = {
+				exists = holder
+			}
+
+
+			has_global_variable = segrellion_flamelander_nobility_adopted
+
+
+			NOT = {
+				has_global_variable = segrellion_high_flamelander_adopted
+			}
+		}
+
+
+		segrellion_apply_high_flamelander_segrellion_effect = yes
+	}
 
 	if = {
 		limit = {
@@ -186,31 +229,118 @@ segrellion_convert_flamelander_lord_effect = {
     }
 }
 
-# Global scope. Use the current de jure map, including later border changes.
-# Applied once per campaign, also upgrading saves with the old county-only setup.
+# =========================================================
+# HIGH FLAMELANDER
+#
+# The ordinary population and nobility of the Flamelands
+# remain Flamelander.
+#
+# Only House Segrellion adopts High Flamelander.
+# =========================================================
+
+segrellion_apply_high_flamelander_segrellion_effect = {
+
+	# Technologically, High Flamelander begins from the
+	# regional Flamelander culture rather than gaining
+	# additional free technologies.
+
+	culture:high_flamelander = {
+
+		get_all_innovations_from = culture:flamelander
+	}
+
+
+	# =====================================================
+	# HOUSE SEGRELLION
+	# =====================================================
+
+	dynasty:dynn_Segrellion = {
+
+		every_dynasty_member = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			set_culture = culture:high_flamelander
+		}
+	}
+
+
+	set_global_variable = {
+
+		name = segrellion_high_flamelander_adopted
+
+		value = yes
+	}
+}
+
+# =========================================================
+# FLAMELANDER NOBILITY
+#
+# Regional nobility becomes Flamelander.
+# House Segrellion becomes High Flamelander afterwards.
+# =========================================================
+
 segrellion_apply_flamelander_nobility_effect = {
-    dynasty:dynn_Segrellion = {
-        every_dynasty_member = {
-            limit = { is_alive = yes }
-            set_culture = culture:flamelander
-        }
-    }
-    title:k_flamelands = {
-        every_de_jure_county = {
-            if = {
-                limit = { exists = holder }
-                holder = { segrellion_convert_flamelander_lord_effect = yes }
-            }
-            de_jure_liege = {
-                if = {
-                    limit = { exists = holder }
-                    holder = { segrellion_convert_flamelander_lord_effect = yes }
-                }
-            }
-        }
-    }
-    set_global_variable = {
-        name = segrellion_flamelander_nobility_adopted
-        value = yes
-    }
+
+	# =====================================================
+	# REGIONAL NOBILITY
+	# =====================================================
+
+	title:k_flamelands = {
+
+		every_de_jure_county = {
+
+			if = {
+
+				limit = {
+					exists = holder
+				}
+
+
+				holder = {
+
+					segrellion_convert_flamelander_lord_effect = yes
+				}
+			}
+
+
+			de_jure_liege = {
+
+				if = {
+
+					limit = {
+						exists = holder
+					}
+
+
+					holder = {
+
+						segrellion_convert_flamelander_lord_effect = yes
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HOUSE SEGRELLION
+	#
+	# Must run AFTER the regional lord conversion so a
+	# Segrellion ruler is not overwritten back to ordinary
+	# Flamelander.
+	# =====================================================
+
+	segrellion_apply_high_flamelander_segrellion_effect = yes
+
+
+	set_global_variable = {
+
+		name = segrellion_flamelander_nobility_adopted
+
+		value = yes
+	}
 }
