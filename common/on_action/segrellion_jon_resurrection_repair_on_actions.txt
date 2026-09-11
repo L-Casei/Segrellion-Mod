@@ -1,0 +1,45 @@
+# =========================================================
+# RESURRECTED JON
+# NIGHT'S WATCH HANDOFF RECOVERY
+#
+# Repairs saves created before the handoff fix.
+# =========================================================
+
+on_game_start_after_lobby = {
+
+	on_actions = {
+
+		segrellion_jon_resurrection_handoff_recovery
+	}
+}
+
+
+segrellion_jon_resurrection_handoff_recovery = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				has_global_variable = segrellion_resurrected_jon
+
+
+				global_var:segrellion_resurrected_jon ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_canonical_current_jon
+
+					has_title = title:k_the_wall
+				}
+			}
+
+
+			global_var:segrellion_resurrected_jon = {
+
+				segrellion_repair_resurrected_jon_watch_handoff_effect = yes
+			}
+		}
+	}
+}

@@ -2310,3 +2310,116 @@ segrellion_schedule_stannis_death_news_for_jon_effect = {
 		}
 	}
 }
+
+# =========================================================
+# STANNIS NORTHERN CAMPAIGN
+# PROTECT AGAINST IRON THRONE REALM TRANSFER
+#
+# If Stannis is already at 90%+ when Aegon is about to
+# overthrow Tommen, finish the Northern Campaign FIRST.
+# =========================================================
+
+segrellion_finish_near_won_stannis_campaign_before_throne_transfer_effect = {
+
+	character:Baratheon_3 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stannis_northern_campaign_active
+
+				has_variable = segrellion_stannis_northern_war
+
+
+				var:segrellion_stannis_northern_war ?= {
+
+					attacker_war_score >= 90
+				}
+			}
+
+
+			var:segrellion_stannis_northern_war = {
+
+				end_war = attacker
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STANNIS NORTHERN CAMPAIGN
+# POST-AEGON THRONE TRANSFER REPAIR
+#
+# AGOT Mega Wars may rebuild the realm when the Iron Throne
+# changes hands.
+#
+# If that hardcoded reconstruction invalidated Stannis'
+# active war against Ramsay, restore it after Aegon's
+# conquest has settled.
+# =========================================================
+
+segrellion_repair_stannis_campaign_after_aegon_throne_transfer_effect = {
+
+	character:Baratheon_3 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+
+				NOT = {
+					has_character_flag = segrellion_stannis_northern_campaign_active
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_stannis_northern_campaign_victory
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_stannis_northern_campaign_failed
+				}
+
+
+				title:h_the_iron_throne.holder = character:IAF_Young_Griff_1
+
+
+				has_global_variable = segrellion_ramsay_bolton
+
+
+				global_var:segrellion_ramsay_bolton ?= {
+
+					is_alive = yes
+
+					has_title = title:e_the_north
+				}
+			}
+
+
+			global_var:segrellion_ramsay_bolton = {
+
+				save_scope_as = segrellion_stannis_restored_northern_enemy
+			}
+
+
+			add_character_flag = segrellion_stannis_northern_cb_authorized
+
+
+			start_war = {
+
+				cb = segrellion_stannis_northern_campaign_cb
+
+				target = scope:segrellion_stannis_restored_northern_enemy
+
+				target_title = title:e_the_north
+			}
+		}
+	}
+}
