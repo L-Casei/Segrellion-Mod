@@ -371,136 +371,339 @@ segrellion_create_resurrected_jon_effect = {
 			value = yes
 		}
 
-
-		# =================================================
-		# JON RECLAIMS THE NIGHT'S WATCH
-		# =================================================
-
-		create_title_and_vassal_change = {
-
-			type = granted
-
-			save_scope_as = jon_returns_to_watch_change
-
-			add_claim_on_loss = no
-		}
-
-
-		title:k_the_wall = {
-
-			change_title_holder_include_vassals = {
-
-				holder = scope:resurrected_jon
-
-				change = scope:jon_returns_to_watch_change
-
-				government_base = scope:interim_lord_commander
-			}
-		}
-
-
-		if = {
-
-			limit = {
-
-				title:d_the_wall.holder ?= {
-					this = scope:interim_lord_commander
-				}
-			}
-
-
-			title:d_the_wall = {
-
-				change_title_holder = {
-
-					holder = scope:resurrected_jon
-
-					change = scope:jon_returns_to_watch_change
-				}
-			}
-		}
-
-
-		if = {
-
-			limit = {
-
-				title:c_castle_black.holder ?= {
-					this = scope:interim_lord_commander
-				}
-			}
-
-
-			title:c_castle_black = {
-
-				change_title_holder = {
-
-					holder = scope:resurrected_jon
-
-					change = scope:jon_returns_to_watch_change
-				}
-			}
-		}
-
-
-		resolve_title_and_vassal_change = scope:jon_returns_to_watch_change
-
 		# =========================================================
-		# JON IS FULLY RESTORED AS LORD COMMANDER FIRST
+		# SAFE LORD COMMANDER HANDOFF
+		#
+		# CRITICAL ORDER:
+		#
+		# 1. Acting Lord Commander STILL owns the Wall.
+		# 2. Jon temporarily receives Shadow Tower.
+		# 3. Jon temporarily becomes a normal playable ruler.
+		# 4. PLAYER switches to Jon.
+		# 5. ONLY NOW does Jon receive the Wall.
+		# 6. Entire Lord Commander's court follows Jon.
+		# 7. Shadow Tower returns to its original commander.
+		#
+		# There must NEVER be a moment where the human player
+		# controls a man who has just lost k_the_wall.
 		# =========================================================
 
-		scope:resurrected_jon = {
 
-			if = {
+		# =========================================================
+		# SAVE THE ACTING LORD COMMANDER
+		# =========================================================
 
-				limit = {
+		title:k_the_wall.holder ?= {
 
-					NOT = {
-						has_trait = nightswatch
-					}
-				}
-
-				add_trait = nightswatch
-			}
-
-
-			change_government = nights_watch_government
-
-			set_primary_title_to = title:k_the_wall
-
-			set_realm_capital = title:c_castle_black
-
-			set_location = title:c_castle_black.title_province
-
-
-			# =================================================
-			# CRITICAL HANDOFF
-			#
-			# 1. Switch human player back to Jon immediately.
-			# 2. Put Denys beneath Jon.
-			# 3. Return the Night's Watch court to Jon.
-			# =================================================
-
-			segrellion_repair_resurrected_jon_watch_handoff_effect = yes
+			save_scope_as = interim_lord_commander
 		}
 
 
 		# =========================================================
-		# ONLY AFTER THE PLAYER HAS RETURNED TO JON,
-		# DENYS RETURNS TO THE SHADOW TOWER
+		# SAVE EVERY TITLE CURRENTLY PERSONALLY HELD BY THE
+		# ACTING LORD COMMANDER.
+		#
+		# Because he was selected while unlanded, these are
+		# precisely the titles inherited from Jon.
 		# =========================================================
 
-		character:Mallister_6 ?= {
+		scope:interim_lord_commander = {
 
-			if = {
+			every_held_title = {
+
+				add_to_temporary_list = segrellion_interim_watch_titles
+			}
+
+
+			every_courtier = {
 
 				limit = {
 
 					is_alive = yes
 
-					has_title = title:d_shadow_tower
+					is_ruler = no
 				}
 
+
+				add_to_temporary_list = segrellion_interim_watch_courtiers
+			}
+		}
+
+
+		# =========================================================
+		# SAVE THE REAL SHADOW TOWER HOLDERS
+		# =========================================================
+
+		title:d_shadow_tower.holder ?= {
+
+			save_scope_as = segrellion_original_shadow_tower_duke
+		}
+
+
+		title:c_shadow_tower.holder ?= {
+
+			save_scope_as = segrellion_original_shadow_tower_count
+		}
+
+
+		# =========================================================
+		# TEMPORARY PLAYER BRIDGE
+		#
+		# Jon cannot take the Wall before we move the player.
+		#
+		# Therefore Jon temporarily receives the Shadow Tower
+		# and a normal playable government.
+		# =========================================================
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_original_shadow_tower_duke
+				exists = scope:segrellion_original_shadow_tower_count
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = granted
+
+				save_scope_as = segrellion_jon_player_bridge_change
+
+				add_claim_on_loss = no
+			}
+
+
+			title:d_shadow_tower = {
+
+				change_title_holder_include_vassals = {
+
+					holder = scope:resurrected_jon
+
+					change = scope:segrellion_jon_player_bridge_change
+
+					government_base = scope:segrellion_original_shadow_tower_duke
+				}
+			}
+
+
+			title:c_shadow_tower = {
+
+				change_title_holder = {
+
+					holder = scope:resurrected_jon
+
+					change = scope:segrellion_jon_player_bridge_change
+
+					take_baronies = yes
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_jon_player_bridge_change
+
+
+			scope:resurrected_jon = {
+
+				change_government = feudal_government
+
+				set_primary_title_to = title:d_shadow_tower
+
+				set_realm_capital = title:c_shadow_tower
+
+				set_location = title:c_shadow_tower.title_province
+			}
+
+
+			# =====================================================
+			# MAKE THE TEMPORARY JON REALM INDEPENDENT
+			#
+			# This guarantees that CK3 sees him as a valid,
+			# playable landed character BEFORE the player switch.
+			# =====================================================
+
+			if = {
+
+				limit = {
+
+					scope:resurrected_jon = {
+
+						exists = liege
+					}
+				}
+
+
+				create_title_and_vassal_change = {
+
+					type = independency
+
+					save_scope_as = segrellion_jon_player_bridge_independence_change
+
+					add_claim_on_loss = no
+				}
+
+
+				change_liege_or_become_independent = {
+
+					CHANGE = scope:segrellion_jon_player_bridge_independence_change
+
+					VASSAL = scope:resurrected_jon
+				}
+
+
+				resolve_title_and_vassal_change = scope:segrellion_jon_player_bridge_independence_change
+			}
+		}
+
+
+		# =========================================================
+		# HUMAN PLAYER SWITCH
+		#
+		# THE WALL HAS NOT MOVED YET.
+		#
+		# Acting LC still owns k_the_wall and remains perfectly
+		# playable while this effect executes.
+		# =========================================================
+
+		if = {
+
+			limit = {
+
+				scope:interim_lord_commander = {
+
+					is_ai = no
+				}
+
+
+				scope:resurrected_jon = {
+
+					is_playable_character = yes
+				}
+			}
+
+
+			scope:interim_lord_commander = {
+
+				set_player_character = scope:resurrected_jon
+			}
+
+
+			scope:resurrected_jon = {
+
+				add_character_flag = segrellion_jon_player_restored_after_resurrection
+
+				add_character_flag = segrellion_jon_watch_handoff_ready
+			}
+		}
+
+
+		# =========================================================
+		# AI STORY
+		#
+		# No player swap is necessary.
+		# =========================================================
+
+		else_if = {
+
+			limit = {
+
+				scope:interim_lord_commander = {
+
+					is_ai = yes
+				}
+			}
+
+
+			scope:resurrected_jon = {
+
+				add_character_flag = segrellion_jon_watch_handoff_ready
+			}
+		}
+
+
+		# =========================================================
+		# ONLY TRANSFER THE WALL AFTER THE PLAYER IS ALREADY JON
+		# =========================================================
+
+		if = {
+
+			limit = {
+
+				scope:resurrected_jon = {
+
+					has_character_flag = segrellion_jon_watch_handoff_ready
+				}
+			}
+
+
+			# =====================================================
+			# MOVE THE LORD COMMANDER'S ENTIRE PERSONAL COURT
+			# TO JON WHILE THE ACTING COMMANDER STILL EXISTS.
+			# =====================================================
+
+			every_in_list = {
+
+				list = segrellion_interim_watch_courtiers
+
+
+				set_employer = scope:resurrected_jon
+			}
+
+
+			# =====================================================
+			# TRANSFER THE ENTIRE NIGHT'S WATCH
+			# =====================================================
+
+			create_title_and_vassal_change = {
+
+				type = granted
+
+				save_scope_as = jon_returns_to_watch_change
+
+				add_claim_on_loss = no
+			}
+
+
+			title:k_the_wall = {
+
+				change_title_holder_include_vassals = {
+
+					holder = scope:resurrected_jon
+
+					change = scope:jon_returns_to_watch_change
+
+					government_base = scope:interim_lord_commander
+				}
+			}
+
+
+			every_in_list = {
+
+				list = segrellion_interim_watch_titles
+
+				limit = {
+
+					this != title:k_the_wall
+				}
+
+
+				change_title_holder = {
+
+					holder = scope:resurrected_jon
+
+					change = scope:jon_returns_to_watch_change
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:jon_returns_to_watch_change
+
+
+			# =====================================================
+			# JON IS NOW ACTUALLY LORD COMMANDER
+			# =====================================================
+
+			scope:resurrected_jon = {
 
 				if = {
 
@@ -517,11 +720,138 @@ segrellion_create_resurrected_jon_effect = {
 
 				change_government = nights_watch_government
 
-				set_primary_title_to = title:d_shadow_tower
+				set_primary_title_to = title:k_the_wall
 
-				set_realm_capital = title:c_shadow_tower
+				set_realm_capital = title:c_castle_black
 
-				set_location = title:c_shadow_tower.title_province
+				set_location = title:c_castle_black.title_province
+
+
+				add_character_flag = segrellion_jon_watch_court_restored
+
+				remove_character_flag = segrellion_jon_watch_handoff_ready
+			}
+
+
+			# =====================================================
+			# RETURN SHADOW TOWER TO ITS ORIGINAL COMMANDERS
+			# =====================================================
+
+			if = {
+
+				limit = {
+
+					exists = scope:segrellion_original_shadow_tower_duke
+
+					scope:segrellion_original_shadow_tower_duke = {
+						is_alive = yes
+					}
+				}
+
+
+				create_title_and_vassal_change = {
+
+					type = granted
+
+					save_scope_as = segrellion_shadow_tower_restore_change
+
+					add_claim_on_loss = no
+				}
+
+
+				title:d_shadow_tower = {
+
+					change_title_holder_include_vassals = {
+
+						holder = scope:segrellion_original_shadow_tower_duke
+
+						change = scope:segrellion_shadow_tower_restore_change
+
+						government_base = scope:resurrected_jon
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						exists = scope:segrellion_original_shadow_tower_count
+
+						scope:segrellion_original_shadow_tower_count = {
+							is_alive = yes
+						}
+					}
+
+
+					title:c_shadow_tower = {
+
+						change_title_holder = {
+
+							holder = scope:segrellion_original_shadow_tower_count
+
+							change = scope:segrellion_shadow_tower_restore_change
+
+							take_baronies = yes
+						}
+					}
+				}
+
+
+				resolve_title_and_vassal_change = scope:segrellion_shadow_tower_restore_change
+
+
+				scope:segrellion_original_shadow_tower_duke = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_trait = nightswatch
+							}
+						}
+
+						add_trait = nightswatch
+					}
+
+
+					change_government = nights_watch_government
+
+					set_primary_title_to = title:d_shadow_tower
+
+					set_realm_capital = title:c_shadow_tower
+
+					set_location = title:c_shadow_tower.title_province
+				}
+			}
+
+
+			# =====================================================
+			# FORMER ACTING LORD COMMANDER RETURNS TO JON'S COURT
+			# =====================================================
+
+			scope:interim_lord_commander = {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						is_ruler = no
+					}
+
+
+					set_employer = scope:resurrected_jon
+
+					set_location = title:c_castle_black.title_province
+
+
+					remove_character_flag = segrellion_jon_acting_lord_commander
+
+					add_character_flag = segrellion_jon_former_acting_lord_commander
+				}
 			}
 		}
 
@@ -790,9 +1120,13 @@ segrellion_jon_leave_watch_for_winterfell_effect = {
 
 # =========================================================
 # RESURRECTED JON
-# RESTORE PLAYER + WATCH COURT + DENYS VASSALAGE
+# LEGACY SAVE REPAIR
 #
-# ROOT = resurrected Jon
+# IMPORTANT:
+# This effect NEVER changes the human player.
+#
+# Player switching is now performed safely BEFORE
+# k_the_wall changes hands.
 # =========================================================
 
 segrellion_repair_resurrected_jon_watch_handoff_effect = {
@@ -809,116 +1143,19 @@ segrellion_repair_resurrected_jon_watch_handoff_effect = {
 		}
 
 
-		# =================================================
-		# PLAYER HANDOFF
-		#
-		# NEVER leave the human player on Denys after Jon
-		# has reclaimed the Wall.
-		# =================================================
+		# =====================================================
+		# RESTORE THE OLD LORD COMMANDER'S COURT
+		# =====================================================
 
 		if = {
 
 			limit = {
 
-				is_playable_character = yes
-
-
-				NOT = {
-					has_character_flag = segrellion_jon_player_restored_after_resurrection
-				}
+				has_global_variable = segrellion_jon_loyal_lord_commander
 			}
 
 
-			if = {
-
-				limit = {
-
-					character:Mallister_6 ?= {
-
-						is_alive = yes
-
-						is_ai = no
-
-						has_character_flag = segrellion_jon_resurrection_chain_started
-					}
-				}
-
-
-				character:Mallister_6 = {
-
-					set_player_character = root
-				}
-			}
-
-
-			add_character_flag = segrellion_jon_player_restored_after_resurrection
-		}
-
-
-		# =================================================
-		# DENYS RETURNS UNDER THE LORD COMMANDER
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				character:Mallister_6 ?= {
-
-					is_alive = yes
-
-					has_title = title:d_shadow_tower
-
-					top_liege != root
-				}
-			}
-
-
-			create_title_and_vassal_change = {
-
-				type = returned
-
-				save_scope_as = segrellion_denys_returns_under_watch_change
-
-				add_claim_on_loss = no
-			}
-
-
-			character:Mallister_6 = {
-
-				change_liege = {
-
-					liege = root
-
-					change = scope:segrellion_denys_returns_under_watch_change
-				}
-			}
-
-
-			resolve_title_and_vassal_change = scope:segrellion_denys_returns_under_watch_change
-		}
-
-
-		# =================================================
-		# RETURN THE LORD COMMANDER'S COURT TO JON
-		#
-		# Title transfer does NOT transfer courtiers.
-		#
-		# Capture them first, then move them, so modifying
-		# employment does not mutate the iterator itself.
-		# =================================================
-
-		if = {
-
-			limit = {
-
-				NOT = {
-					has_character_flag = segrellion_jon_watch_court_restored
-				}
-			}
-
-
-			character:Mallister_6 ?= {
+			global_var:segrellion_jon_loyal_lord_commander ?= {
 
 				every_courtier = {
 
@@ -926,25 +1163,66 @@ segrellion_repair_resurrected_jon_watch_handoff_effect = {
 
 						is_alive = yes
 
-						is_landed = no
+						is_ruler = no
 					}
 
 
-					add_to_temporary_list = segrellion_watch_courtiers_to_restore
+					add_to_temporary_list = segrellion_legacy_watch_courtiers
 				}
 			}
 
 
 			every_in_list = {
 
-				list = segrellion_watch_courtiers_to_restore
+				list = segrellion_legacy_watch_courtiers
 
 
 				set_employer = root
 			}
-
-
-			add_character_flag = segrellion_jon_watch_court_restored
 		}
+
+
+		# =====================================================
+		# DENYS MUST BE BENEATH THE LORD COMMANDER
+		# =====================================================
+
+		character:Mallister_6 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_title = title:d_shadow_tower
+
+					top_liege != root
+				}
+
+
+				create_title_and_vassal_change = {
+
+					type = returned
+
+					save_scope_as = segrellion_denys_legacy_repair_change
+
+					add_claim_on_loss = no
+				}
+
+
+				change_liege = {
+
+					liege = root
+
+					change = scope:segrellion_denys_legacy_repair_change
+				}
+
+
+				resolve_title_and_vassal_change = scope:segrellion_denys_legacy_repair_change
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_watch_court_restored
 	}
 }

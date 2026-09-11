@@ -176,15 +176,6 @@ segrellion_jon_resurrection.0010 = {
             add_to_list = segrellion_jon_watch_titles
         }
 
-		# =================================================
-        # DENYS MALLISTER SUCCEEDS JON
-        # =================================================
-
-        character:Mallister_6 = {
-            save_scope_as = jon_loyal_successor
-        }
-
-
         # =================================================
         # MARK MUTINEERS
         #
@@ -201,7 +192,6 @@ segrellion_jon_resurrection.0010 = {
                 has_trait = nightswatch
 
                 this != root
-                this != scope:jon_loyal_successor
 
 
                 opinion = {
@@ -225,7 +215,6 @@ segrellion_jon_resurrection.0010 = {
                 has_trait = nightswatch
 
                 this != root
-                this != scope:jon_loyal_successor
 
 
                 opinion = {
@@ -236,6 +225,141 @@ segrellion_jon_resurrection.0010 = {
 
 
             add_character_flag = segrellion_jon_mutineer
+        }
+
+
+        # =================================================
+        # CHOOSE THE ACTING LORD COMMANDER
+        #
+        # IMPORTANT:
+        # - Must already belong to the Night's Watch.
+        # - Must be UNLANDED.
+        # - Must NOT be one of Jon's mutineers.
+        # - Prefer men who actually liked Jon.
+        #
+        # This naturally excludes commanders such as
+        # Denys Mallister and Cotter Pyke while also
+        # excluding hostile conspirators such as Bowen Marsh
+        # if he has been marked as a mutineer.
+        # =================================================
+
+        ordered_courtier = {
+
+            limit = {
+
+                is_alive = yes
+                is_adult = yes
+
+                has_trait = nightswatch
+
+                is_ruler = no
+
+                NOT = {
+                    has_character_flag = segrellion_jon_mutineer
+                }
+
+                opinion = {
+                    target = root
+                    value >= 20
+                }
+            }
+
+            order_by = diplomacy
+
+            position = 0
+
+            check_range_bounds = no
+
+            save_scope_as = jon_loyal_successor
+        }
+
+
+        # =================================================
+        # FALLBACK: NEUTRAL BUT LOYAL BLACK BROTHER
+        # =================================================
+
+        if = {
+
+            limit = {
+
+                NOT = {
+                    exists = scope:jon_loyal_successor
+                }
+            }
+
+
+            ordered_courtier = {
+
+                limit = {
+
+                    is_alive = yes
+                    is_adult = yes
+
+                    has_trait = nightswatch
+
+                    is_ruler = no
+
+                    NOT = {
+                        has_character_flag = segrellion_jon_mutineer
+                    }
+
+                    opinion = {
+                        target = root
+                        value >= 0
+                    }
+                }
+
+                order_by = diplomacy
+
+                position = 0
+
+                check_range_bounds = no
+
+                save_scope_as = jon_loyal_successor
+            }
+        }
+
+
+        # =================================================
+        # FINAL FALLBACK
+        #
+        # Any unlanded non-mutineer Black Brother.
+        # =================================================
+
+        if = {
+
+            limit = {
+
+                NOT = {
+                    exists = scope:jon_loyal_successor
+                }
+            }
+
+
+            ordered_courtier = {
+
+                limit = {
+
+                    is_alive = yes
+                    is_adult = yes
+
+                    has_trait = nightswatch
+
+                    is_ruler = no
+
+                    NOT = {
+                        has_character_flag = segrellion_jon_mutineer
+                    }
+                }
+
+                order_by = diplomacy
+
+                position = 0
+
+                check_range_bounds = no
+
+                save_scope_as = jon_loyal_successor
+            }
         }
 
 
@@ -337,19 +461,137 @@ segrellion_jon_resurrection.0010 = {
 
 
 			# =================================================
-			# DENYS MUST BE A BLACK BROTHER
+			# ACTING LORD COMMANDER
 			# =================================================
 
-			character:Mallister_6 = {
+			set_global_variable = {
+
+				name = segrellion_jon_loyal_lord_commander
+
+				value = scope:jon_loyal_successor
+			}
+
+
+			# =================================================
+			# ENSURE HE IS A BLACK BROTHER
+			# =================================================
+
+			scope:jon_loyal_successor = {
 
 				if = {
+
 					limit = {
+
 						NOT = {
 							has_trait = nightswatch
 						}
 					}
 
 					add_trait = nightswatch
+				}
+			}
+
+
+			# =================================================
+			# TRANSFER EVERY WATCH TITLE JON PERSONALLY HOLDS
+			# =================================================
+
+			create_title_and_vassal_change = {
+
+				type = granted
+
+				save_scope_as = jon_watch_transfer
+
+				add_claim_on_loss = no
+			}
+
+
+			title:k_the_wall = {
+
+				change_title_holder_include_vassals = {
+
+					holder = scope:jon_loyal_successor
+
+					change = scope:jon_watch_transfer
+
+					government_base = root
+				}
+			}
+
+
+			every_in_list = {
+
+				list = segrellion_jon_watch_titles
+
+				limit = {
+
+					this != title:k_the_wall
+				}
+
+
+				change_title_holder = {
+
+					holder = scope:jon_loyal_successor
+
+					change = scope:jon_watch_transfer
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:jon_watch_transfer
+
+
+			# =================================================
+			# ACTING LORD COMMANDER SETUP
+			# =================================================
+
+			scope:jon_loyal_successor = {
+
+				change_government = nights_watch_government
+
+				set_primary_title_to = title:k_the_wall
+
+				set_realm_capital = title:c_castle_black
+
+				set_location = title:c_castle_black.title_province
+
+
+				add_character_flag = segrellion_jon_resurrection_chain_started
+
+				add_character_flag = segrellion_jon_acting_lord_commander
+
+
+				add_character_flag = {
+
+					flag = segrellion_body_in_ice_queued
+
+					days = 12
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_jon_resurrection.0100
+
+					days = 10
+				}
+			}
+
+
+			# =================================================
+			# PLAYER CONTINUES AS THE ACTING LORD COMMANDER
+			# =================================================
+
+			if = {
+
+				limit = {
+					is_ai = no
+				}
+
+
+				root = {
+
+					set_player_character = scope:jon_loyal_successor
 				}
 			}
 
