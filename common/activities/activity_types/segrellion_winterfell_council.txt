@@ -8,9 +8,7 @@ activity_segrellion_winterfell_council = {
 	# =====================================================
 
 	is_shown = {
-
 		segrellion_is_current_jon_trigger = yes
-
 		has_character_flag = segrellion_jon_winterfell_council_called
 
 		NOT = {
@@ -37,11 +35,10 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# RUNTIME VALIDITY ONLY
+	# RUNTIME VALIDITY
 	# =====================================================
 
 	is_valid = {
-
 		scope:host = {
 			is_alive = yes
 		}
@@ -49,11 +46,10 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# ACTIVITY HEADER
+	# PRESENTATION
 	# =====================================================
 
 	background = {
-
 		texture = "gfx/interface/illustrations/activity_header_backgrounds/activity_segrellion_winterfell_council.dds"
 	}
 
@@ -63,7 +59,6 @@ activity_segrellion_winterfell_council = {
 	# =====================================================
 
 	cost = {
-
 		prestige = {
 			value = 300
 		}
@@ -71,7 +66,7 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# WINTERFELL ONLY
+	# LOCATION
 	# =====================================================
 
 	is_single_location = yes
@@ -81,28 +76,20 @@ activity_segrellion_winterfell_council = {
 
 	max_route_deviation_mult = 1.0
 
-
 	is_location_valid = {
-
 		this = title:c_winterfell.title_province
 	}
 
-
 	province_description = {
-
 		desc = activity_segrellion_winterfell_council_province_desc
 	}
 
-
 	max_province_icons = 1
 
-
 	province_score = {
-
 		value = 0
 
 		if = {
-
 			limit = {
 				this = title:c_winterfell.title_province
 			}
@@ -126,13 +113,41 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# HOST INTENT
+	# HOST INTENTS
 	# =====================================================
 
 	host_intents = {
 
 		intents = {
 			segrellion_winterfell_council_intent
+			segrellion_winterfell_council_long_night_intent
+			segrellion_winterfell_council_revenge_intent
+			segrellion_winterfell_council_independence_intent
+			segrellion_winterfell_council_kingmaker_intent
+			segrellion_winterfell_council_dragon_alliance_intent
+		}
+
+		default = segrellion_winterfell_council_intent
+
+		player_defaults = {
+			segrellion_winterfell_council_intent
+		}
+	}
+
+
+	# =====================================================
+	# GUEST INTENTS
+	# =====================================================
+
+	guest_intents = {
+
+		intents = {
+			segrellion_winterfell_council_intent
+			segrellion_winterfell_council_long_night_intent
+			segrellion_winterfell_council_revenge_intent
+			segrellion_winterfell_council_independence_intent
+			segrellion_winterfell_council_kingmaker_intent
+			segrellion_winterfell_council_dragon_alliance_intent
 		}
 
 		default = segrellion_winterfell_council_intent
@@ -149,37 +164,25 @@ activity_segrellion_winterfell_council = {
 
 	max_guests = 100
 
-
 	guest_invite_rules = {
 
 		rules = {
-
 			2 = activity_invite_rule_segrellion_northern_counts
-
 			2 = activity_invite_rule_close_family
-
 			2 = activity_invite_rule_friends
-
 			3 = activity_invite_rule_segrellion_nights_watch
 		}
 
-
 		defaults = {
-
 			1 = activity_invite_rule_segrellion_northern_great_lords
 		}
 	}
 
-
 	can_be_activity_guest = {
-
 		is_adult = yes
-
 		in_diplomatic_range = scope:host
-
 		is_pool_guest = no
 	}
-
 
 	guest_join_chance = {
 		base = 100
@@ -193,176 +196,258 @@ activity_segrellion_winterfell_council = {
 	phases = {
 
 
-		# -------------------------------------------------
+		# =================================================
 		# I - THE LORDS ARRIVE
-		# -------------------------------------------------
+		# =================================================
 
 		segrellion_winterfell_council_arrivals_phase = {
 
 			is_predefined = yes
-
 			order = 1
-
 			location_source = pickable
-
 
 			can_pick = {
 				scope:province = title:c_winterfell.title_province
 			}
 
-
 			is_valid = {
 				scope:province = title:c_winterfell.title_province
 			}
 
-
 			on_phase_active = {
 
 				if = {
-
 					limit = {
 						this = scope:host
 					}
 
-					scope:activity = {
+					segrellion_winterfell_council_initialize_effect = yes
 
+					scope:activity = {
 						progress_activity_phase_after = {
-							days = 5
+							days = 14
 						}
 					}
+				}
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_arrivals_events
+				}
+			}
+
+			on_weekly_pulse = {
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_arrivals_events
 				}
 			}
 		}
 
 
-		# -------------------------------------------------
+		# =================================================
 		# II - THE DEBATE
-		# -------------------------------------------------
+		# =================================================
 
 		segrellion_winterfell_council_debate_phase = {
 
 			is_predefined = yes
-
 			order = 2
-
 			location_source = pickable
-
 
 			can_pick = {
 				scope:province = title:c_winterfell.title_province
 			}
-
 
 			is_valid = {
 				scope:province = title:c_winterfell.title_province
 			}
 
 
-			on_phase_active = {
+			# CRITICAL:
+			# later predefined phases must transition from
+			# "entering phase" to "active phase".
+
+			on_enter_phase = {
 
 				if = {
-
 					limit = {
 						this = scope:host
 					}
 
 					scope:activity = {
-
 						progress_activity_phase_after = {
-							days = 7
+							days = 1
 						}
 					}
+				}
+			}
+
+			on_phase_active = {
+
+				if = {
+					limit = {
+						this = scope:host
+					}
+
+					scope:activity = {
+						progress_activity_phase_after = {
+							days = 21
+						}
+					}
+				}
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_debate_events
+				}
+			}
+
+			on_weekly_pulse = {
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_debate_events
 				}
 			}
 		}
 
 
-		# -------------------------------------------------
+		# =================================================
 		# III - THE PROPOSALS
-		# -------------------------------------------------
+		# =================================================
 
 		segrellion_winterfell_council_proposals_phase = {
 
 			is_predefined = yes
-
 			order = 3
-
 			location_source = pickable
-
 
 			can_pick = {
 				scope:province = title:c_winterfell.title_province
 			}
 
-
 			is_valid = {
 				scope:province = title:c_winterfell.title_province
 			}
 
-
-			on_phase_active = {
+			on_enter_phase = {
 
 				if = {
-
 					limit = {
 						this = scope:host
 					}
 
 					scope:activity = {
-
 						progress_activity_phase_after = {
-							days = 5
+							days = 1
 						}
 					}
+				}
+			}
+
+			on_phase_active = {
+
+				if = {
+					limit = {
+						this = scope:host
+					}
+
+					scope:activity = {
+						progress_activity_phase_after = {
+							days = 14
+						}
+					}
+				}
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_proposals_events
+				}
+			}
+
+			on_weekly_pulse = {
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_proposals_events
 				}
 			}
 		}
 
 
-		# -------------------------------------------------
+		# =================================================
 		# IV - THE PROCLAMATION
-		# -------------------------------------------------
+		# =================================================
 
 		segrellion_winterfell_council_proclamation_phase = {
 
 			is_predefined = yes
-
 			order = 4
-
 			location_source = pickable
-
 
 			can_pick = {
 				scope:province = title:c_winterfell.title_province
 			}
 
-
 			is_valid = {
 				scope:province = title:c_winterfell.title_province
 			}
 
-
-			on_phase_active = {
+			on_enter_phase = {
 
 				if = {
-
 					limit = {
 						this = scope:host
 					}
 
+					scope:activity = {
+						progress_activity_phase_after = {
+							days = 1
+						}
+					}
+				}
+			}
+
+			on_phase_active = {
+
+				if = {
+					limit = {
+						this = scope:host
+					}
 
 					scope:activity = {
-
 						progress_activity_phase_after = {
-							days = 4
+							days = 8
 						}
 					}
 
-
 					trigger_event = {
-						id = segrellion_jon_frey.0020
-						days = 1
+						id = segrellion_winterfell_council.4900
+						days = 6
 					}
+				}
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_proclamation_events
+				}
+			}
+
+			on_weekly_pulse = {
+
+				segrellion_winterfell_council_apply_intent_support_effect = yes
+
+				trigger_event = {
+					on_action = segrellion_winterfell_council_proclamation_events
 				}
 			}
 		}
@@ -375,6 +460,13 @@ activity_segrellion_winterfell_council = {
 
 	on_complete = {
 
+		scope:activity = {
+
+			every_attending_character = {
+				remove_variable = segrellion_council_king_support
+			}
+		}
+
 		scope:host = {
 
 			remove_character_flag = segrellion_jon_winterfell_council_called
@@ -385,14 +477,12 @@ activity_segrellion_winterfell_council = {
 
 
 	# =====================================================
-	# AI JON
+	# AI
 	# =====================================================
 
 	ai_check_interval = 1
 
-
 	ai_will_do = {
-
 		value = 1000
 	}
 }

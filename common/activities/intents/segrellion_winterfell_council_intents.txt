@@ -1,30 +1,394 @@
 # =========================================================
-# WINTERFELL COUNCIL
-# HOST INTENTS
+# WINTERFELL COUNCIL INTENTS
 # =========================================================
 
 
+# ---------------------------------------------------------
+# HEAR THE NORTH
+# Neutral / passive
+# ---------------------------------------------------------
+
 segrellion_winterfell_council_intent = {
 
-	icon = segrellion_secure_legitimacy_intent
+	icon = intent_diplomacy
 
 	auto_complete = yes
 
-
 	on_invalidated = {
-
 		trigger_event = activity_system.0090
 	}
 
+	ai_will_do = {
+
+		value = 50
+
+		if = {
+			limit = {
+				has_trait = patient
+			}
+
+			add = 30
+		}
+
+		if = {
+			limit = {
+				has_trait = content
+			}
+
+			add = 30
+		}
+	}
+
+	scripted_animation = {
+		animation = thinking
+	}
+}
+
+
+# ---------------------------------------------------------
+# WINTER IS COMING
+# Wall / Long Night
+# ---------------------------------------------------------
+
+segrellion_winterfell_council_long_night_intent = {
+
+	icon = intent_diplomacy
+
+	auto_complete = yes
+
+	on_invalidated = {
+		trigger_event = activity_system.0090
+	}
 
 	ai_will_do = {
 
-		value = 100
+		value = 30
+
+		if = {
+			limit = {
+				has_trait = nightswatch
+			}
+
+			add = 200
+		}
+
+		if = {
+			limit = {
+				culture = {
+					agot_is_wildling_culture = yes
+				}
+			}
+
+			add = 125
+		}
+
+		if = {
+			limit = {
+				has_trait = zealous
+			}
+
+			add = 20
+		}
+
+		if = {
+			limit = {
+				has_trait = brave
+			}
+
+			add = 20
+		}
 	}
 
+	scripted_animation = {
+		animation = thinking
+	}
+}
+
+
+# ---------------------------------------------------------
+# THE NORTH REMEMBERS
+# Freys / Red Wedding / Lannisters
+# ---------------------------------------------------------
+
+segrellion_winterfell_council_revenge_intent = {
+
+	icon = murder_intent
+
+	auto_complete = yes
+
+	on_invalidated = {
+		trigger_event = activity_system.0090
+	}
+
+	ai_will_do = {
+
+		value = 55
+
+		if = {
+			limit = {
+				has_trait = vengeful
+			}
+
+			add = 120
+		}
+
+		if = {
+			limit = {
+				has_trait = wrathful
+			}
+
+			add = 60
+		}
+
+		if = {
+			limit = {
+				has_trait = forgiving
+			}
+
+			add = -100
+		}
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_red_wedding_survivor
+			}
+
+			add = 150
+		}
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_red_wedding_bereaved
+			}
+
+			add = 150
+		}
+	}
 
 	scripted_animation = {
+		animation = anger
+	}
+}
 
+
+# ---------------------------------------------------------
+# A REALM OF OUR OWN
+# Independent North without necessarily demanding a king
+# ---------------------------------------------------------
+
+segrellion_winterfell_council_independence_intent = {
+
+	icon = intent_legitimacy
+
+	auto_complete = yes
+
+	on_invalidated = {
+		trigger_event = activity_system.0090
+	}
+
+	ai_will_do = {
+
+		value = 65
+
+		if = {
+			limit = {
+				has_trait = brave
+			}
+
+			add = 35
+		}
+
+		if = {
+			limit = {
+				has_trait = ambitious
+			}
+
+			add = 45
+		}
+
+		if = {
+			limit = {
+				has_trait = content
+			}
+
+			add = -30
+		}
+
+		if = {
+			limit = {
+				has_trait = craven
+			}
+
+			add = -35
+		}
+	}
+
+	scripted_animation = {
+		animation = personality_bold
+	}
+}
+
+
+# ---------------------------------------------------------
+# NAME A KING
+# Target-based intent
+# ---------------------------------------------------------
+
+segrellion_winterfell_council_kingmaker_intent = {
+
+	icon = intent_legitimacy
+
+	on_invalidated = {
+		trigger_event = activity_system.0090
+	}
+
+	ai_targets = {
+		ai_recipients = activity_host
+	}
+
+	ai_targets = {
+		ai_recipients = activity_guests
+		max = 20
+	}
+
+	is_target_valid = {
+
+		this != scope:target
+
+		scope:target = {
+
+			is_alive = yes
+			is_adult = yes
+
+			NOT = {
+				has_trait = nightswatch
+			}
+
+			involved_activity ?= root.involved_activity
+		}
+	}
+
+	on_target_invalidated = {
+		trigger_event = activity_system.0091
+	}
+
+	ai_will_do = {
+
+		value = 80
+
+		if = {
+			limit = {
+				has_trait = ambitious
+			}
+
+			add = 30
+		}
+
+		if = {
+			limit = {
+				has_trait = content
+			}
+
+			add = -20
+		}
+	}
+
+	ai_target_score = {
+
+		value = 1
+
+		if = {
+			limit = {
+				scope:target = {
+					has_title = title:e_the_north
+				}
+			}
+
+			add = 250
+		}
+
+		if = {
+			limit = {
+				scope:target = {
+					has_title = title:d_winterfell
+				}
+			}
+
+			add = 100
+		}
+
+		if = {
+			limit = {
+				scope:target = {
+					is_landed = yes
+				}
+			}
+
+			add = 25
+		}
+
+		if = {
+			limit = {
+				scope:target = {
+					has_trait = nightswatch
+				}
+			}
+
+			add = -1000
+		}
+	}
+
+	scripted_animation = {
 		animation = thinking
+	}
+}
+
+
+# ---------------------------------------------------------
+# SEEK THE DRAGON QUEEN
+# Daenerys / dragons / Long Night alliance
+# ---------------------------------------------------------
+
+segrellion_winterfell_council_dragon_alliance_intent = {
+
+	icon = befriend_intent
+
+	auto_complete = yes
+
+	on_invalidated = {
+		trigger_event = activity_system.0090
+	}
+
+	ai_will_do = {
+
+		value = 20
+
+		if = {
+			limit = {
+				has_trait = compassionate
+			}
+
+			add = 20
+		}
+
+		if = {
+			limit = {
+				has_trait = cynical
+			}
+
+			add = 10
+		}
+
+		if = {
+			limit = {
+				has_trait = stubborn
+			}
+
+			add = -15
+		}
+	}
+
+	scripted_animation = {
+		animation = admiration
 	}
 }

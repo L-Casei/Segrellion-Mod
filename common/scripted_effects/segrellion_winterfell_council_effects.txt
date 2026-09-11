@@ -1,0 +1,424 @@
+# =========================================================
+# WINTERFELL COUNCIL
+# POLITICAL SUPPORT SYSTEM
+# =========================================================
+
+
+# =========================================================
+# INITIALIZE
+# =========================================================
+
+segrellion_winterfell_council_initialize_effect = {
+
+	scope:activity = {
+
+		set_variable = {
+			name = segrellion_council_independence_support
+			value = 4
+		}
+
+		set_variable = {
+			name = segrellion_council_wall_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_revenge_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_dragon_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_no_crown_support
+			value = 0
+		}
+
+
+		every_attending_character = {
+
+			set_variable = {
+				name = segrellion_council_king_support
+				value = 0
+			}
+		}
+	}
+
+
+	# Jon begins as the obvious political favorite,
+	# but he can still be overtaken.
+
+	scope:host = {
+
+		set_variable = {
+			name = segrellion_council_king_support
+			value = 6
+		}
+	}
+}
+
+
+# =========================================================
+# APPLY CURRENT INTENT
+#
+# Runs once when a phase becomes active and once per week.
+# Root = current participant.
+# =========================================================
+
+segrellion_winterfell_council_apply_intent_support_effect = {
+
+
+	# -----------------------------------------------------
+	# LONG NIGHT
+	# -----------------------------------------------------
+
+	if = {
+		limit = {
+			has_activity_intent = segrellion_winterfell_council_long_night_intent
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 2
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# RED WEDDING REVENGE
+	# -----------------------------------------------------
+
+	if = {
+		limit = {
+			has_activity_intent = segrellion_winterfell_council_revenge_intent
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 2
+			}
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# INDEPENDENCE
+	# -----------------------------------------------------
+
+	if = {
+		limit = {
+			has_activity_intent = segrellion_winterfell_council_independence_intent
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# KINGMAKER
+	# -----------------------------------------------------
+
+	if = {
+		limit = {
+			has_activity_intent = segrellion_winterfell_council_kingmaker_intent
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+
+		intent_target ?= {
+
+			if = {
+				limit = {
+					NOT = {
+						exists = var:segrellion_council_king_support
+					}
+				}
+
+				set_variable = {
+					name = segrellion_council_king_support
+					value = 0
+				}
+			}
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# DRAGON ALLIANCE
+	# -----------------------------------------------------
+
+	if = {
+		limit = {
+			has_activity_intent = segrellion_winterfell_council_dragon_alliance_intent
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = 2
+			}
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# SELECT THE LEADING KING CANDIDATE
+# =========================================================
+
+segrellion_winterfell_council_select_candidate_effect = {
+
+	clear_saved_scope = segrellion_council_winning_candidate
+
+	scope:activity = {
+
+		ordered_attending_character = {
+
+			limit = {
+
+				is_alive = yes
+				is_adult = yes
+
+				NOT = {
+					has_trait = nightswatch
+				}
+			}
+
+			order_by = {
+
+				value = 0
+
+				if = {
+					limit = {
+						exists = var:segrellion_council_king_support
+					}
+
+					add = var:segrellion_council_king_support
+				}
+
+				# Tie-breaker in favor of the existing ruler.
+
+				if = {
+					limit = {
+						this = scope:host
+					}
+
+					add = 1
+				}
+			}
+
+			check_range_bounds = no
+
+			save_scope_as = segrellion_council_winning_candidate
+		}
+	}
+
+
+	if = {
+		limit = {
+			NOT = {
+				exists = scope:segrellion_council_winning_candidate
+			}
+		}
+
+		scope:host = {
+			save_scope_as = segrellion_council_winning_candidate
+		}
+	}
+
+
+	scope:activity = {
+
+		set_variable = {
+			name = segrellion_council_winning_candidate
+			value = scope:segrellion_council_winning_candidate
+		}
+	}
+}
+
+
+# =========================================================
+# CROWN ANOTHER CANDIDATE
+# =========================================================
+
+segrellion_winterfell_council_crown_other_candidate_effect = {
+
+	scope:activity.var:segrellion_council_winning_candidate ?= {
+		save_scope_as = segrellion_council_new_king
+	}
+
+
+	if = {
+		limit = {
+
+			exists = scope:segrellion_council_new_king
+
+			scope:segrellion_council_new_king = {
+				is_alive = yes
+			}
+
+			NOT = {
+				root = scope:segrellion_council_new_king
+			}
+		}
+
+
+		# ---------------------------------------------
+		# SAVE NORTHERN VASSALS
+		# ---------------------------------------------
+
+		root = {
+
+			every_vassal = {
+
+				limit = {
+
+					segrellion_is_northern_lord_for_council_trigger = yes
+
+					this != scope:segrellion_council_new_king
+				}
+
+				add_to_list = segrellion_council_vassals_for_new_king
+			}
+		}
+
+
+		# ---------------------------------------------
+		# TRANSFER THE NORTH
+		# ---------------------------------------------
+
+		create_title_and_vassal_change = {
+
+			type = granted
+
+			save_scope_as = segrellion_council_new_king_title_change
+
+			add_claim_on_loss = no
+		}
+
+
+		title:e_the_north = {
+
+			change_title_holder = {
+
+				holder = scope:segrellion_council_new_king
+
+				change = scope:segrellion_council_new_king_title_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_council_new_king_title_change
+
+
+		# ---------------------------------------------
+		# TRANSFER NORTHERN VASSALS
+		# ---------------------------------------------
+
+		create_title_and_vassal_change = {
+
+			type = granted
+
+			save_scope_as = segrellion_council_new_king_vassal_change
+
+			add_claim_on_loss = no
+		}
+
+
+		every_in_list = {
+
+			list = segrellion_council_vassals_for_new_king
+
+			change_liege = {
+
+				liege = scope:segrellion_council_new_king
+
+				change = scope:segrellion_council_new_king_vassal_change
+			}
+		}
+
+
+		# Jon keeps Winterfell but submits to the chosen ruler.
+
+		root = {
+
+			change_liege = {
+
+				liege = scope:segrellion_council_new_king
+
+				change = scope:segrellion_council_new_king_vassal_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_council_new_king_vassal_change
+
+
+		# ---------------------------------------------
+		# NEW KING
+		# ---------------------------------------------
+
+		scope:segrellion_council_new_king = {
+
+			set_primary_title_to = title:e_the_north
+
+			if = {
+				limit = {
+					NOT = {
+						has_trait = segrellion_king_in_the_north_trait
+					}
+				}
+
+				add_trait = segrellion_king_in_the_north_trait
+			}
+
+			add_character_flag = segrellion_winterfell_council_chosen_king
+
+			add_prestige = 750
+		}
+
+
+		root = {
+
+			remove_character_flag = segrellion_jon_lord_paramount_north
+
+			add_character_flag = segrellion_jon_accepted_another_northern_king
+		}
+	}
+}
