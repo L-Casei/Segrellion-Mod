@@ -2382,17 +2382,18 @@ segrellion_young_griff_schedule_cersei_settlement_effect = {
 
 # =========================================================
 # YOUNG GRIFF -> DAEMON
-# FLAMELANDS SUBMISSION STORY SCHEDULER
+# FLAMELANDS SUBMISSION RECOVERY
 #
 # ROOT = Young Griff
 #
-# This is deliberately simple:
-# Aegon has the Iron Throne.
-# Daemon is alive and rules the Flamelands.
-# The story has not been resolved yet.
+# IMPORTANT:
+# This is now a RECOVERY effect.
 #
-# It does NOT care whether AGOT has already mechanically
-# attached Daemon to Aegon.
+# The normal route comes directly from the Iron Throne
+# title-gain on_action.
+#
+# No 120-day cooldown.
+# No delayed scheduler.
 # =========================================================
 
 segrellion_young_griff_try_schedule_daemon_submission_effect = {
@@ -2410,10 +2411,6 @@ segrellion_young_griff_try_schedule_daemon_submission_effect = {
 
 			NOT = {
 				has_character_flag = segrellion_young_griff_flamelands_submission_resolved
-			}
-
-			NOT = {
-				has_character_flag = segrellion_young_griff_daemon_submission_retry_cooldown
 			}
 
 
@@ -2438,46 +2435,78 @@ segrellion_young_griff_try_schedule_daemon_submission_effect = {
 
 
 		# =================================================
-		# OLD BROKEN STATE CLEANUP
+		# REPAIR A LOST OLD ATTEMPT
 		#
-		# These flags must NEVER permanently prevent
-		# the settlement from retrying.
+		# If Aegon thinks the story began but Daemon has
+		# no actual request waiting, the old attempt died.
 		# =================================================
 
-		remove_character_flag = segrellion_young_griff_flamelands_submission_queued
+		if = {
 
-		remove_character_flag = segrellion_young_griff_flamelands_submission_story_started
+			limit = {
+
+				has_character_flag = segrellion_young_griff_flamelands_submission_story_started
 
 
-		character:Segrellion_60 = {
+				character:Segrellion_60 = {
 
-			remove_character_flag = segrellion_daemon_aegon_status_scheduled
+					NOR = {
+
+						has_character_flag = segrellion_daemon_aegon_peaceful_request_pending
+
+						has_character_flag = segrellion_daemon_aegon_ultimatum_pending
+					}
+				}
+			}
+
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_story_started
 		}
 
 
 		# =================================================
-		# RETRY COOLDOWN
-		#
-		# Prevent duplicates while the current attempt
-		# is travelling through 0001 -> 0002/0003.
-		#
-		# If anything gets lost, the story repairs itself
-		# later instead of being permanently dead.
+		# NO ACTIVE ATTEMPT
 		# =================================================
 
-		add_character_flag = {
+		if = {
 
-			flag = segrellion_young_griff_daemon_submission_retry_cooldown
+			limit = {
 
-			days = 120
-		}
+				NOT = {
+					has_character_flag = segrellion_young_griff_flamelands_submission_story_started
+				}
 
 
-		trigger_event = {
+				character:Segrellion_60 = {
 
-			id = segrellion_aegon_daemon.0001
+					NOR = {
 
-			days = 3
+						has_character_flag = segrellion_daemon_aegon_peaceful_request_pending
+
+						has_character_flag = segrellion_daemon_aegon_ultimatum_pending
+					}
+				}
+			}
+
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_queued
+
+			remove_character_flag = segrellion_young_griff_daemon_submission_retry_cooldown
+
+
+			character:Segrellion_60 = {
+
+				remove_character_flag = segrellion_daemon_aegon_status_scheduled
+			}
+
+
+			# Fire NOW.
+			# Do not create another delayed scheduler layer.
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0001
+			}
 		}
 	}
 }

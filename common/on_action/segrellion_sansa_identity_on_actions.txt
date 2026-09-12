@@ -16,9 +16,13 @@ segrellion_sansa_revealed_name_recovery = {
 			if = {
 				limit = {
 					is_alive = yes
-					has_character_flag = segrellion_sansa_identity_revealed
-					NOT = { has_character_flag = segrellion_sansa_explicit_name_restored }
+					OR = {
+						has_character_flag = segrellion_sansa_identity_revealed
+						has_character_flag = segrellion_sansa_under_daemon_protection
+						has_character_flag = segrellion_sansa_arrived_flamelands
+					}
 				}
+				# Reapply even if an older repair flag is present in the save.
 				# Repair the name without repeating parentage or House changes.
 				change_first_name = Sansa
 				add_character_flag = segrellion_sansa_name_restored
