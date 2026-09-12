@@ -122,7 +122,6 @@ on_title_gain_inheritance = {
 on_title_gain = {
 	on_actions = {
 		segrellion_daemon_flamelands_title_gain
-		segrellion_aegon_daemon_iron_throne_gain
 		segrellion_daenerys_iron_throne_fertility_restore
 		segrellion_young_griff_blackfyre_reveal_on_title_gain
 		segrellion_young_griff_daenerys_pact_title_gain
@@ -1488,53 +1487,6 @@ segrellion_young_griff_daemon_marriage_lock_progression = {
 	effect = {
 
 		segrellion_apply_winds_story_marriage_locks_effect = yes
-	}
-}
-
-# =========================================================
-# AEGON TAKES THE IRON THRONE
-#
-# root        = new title holder
-# scope:title = title gained
-#
-# Do NOT run the normal scheduler in the same title-gain
-# tick. Queue the event directly for the following day,
-# when the post-war title state is stable.
-# =========================================================
-
-segrellion_aegon_daemon_iron_throne_gain = {
-
-	trigger = {
-
-		this = character:IAF_Young_Griff_1
-
-		scope:title = title:h_the_iron_throne
-	}
-
-
-	effect = {
-
-		# Clean every legacy scheduler lock.
-
-		remove_character_flag = segrellion_young_griff_flamelands_submission_queued
-		remove_character_flag = segrellion_young_griff_flamelands_submission_story_started
-		remove_character_flag = segrellion_young_griff_daemon_submission_retry_cooldown
-
-
-		character:Segrellion_60 ?= {
-
-			remove_character_flag = segrellion_daemon_aegon_status_scheduled
-		}
-
-
-		# The title transfer has definitely settled by tomorrow.
-
-		trigger_event = {
-
-			id = segrellion_aegon_daemon.0001
-
-			days = 1
-		}
 	}
 }
 
