@@ -5311,3 +5311,44 @@ segrellion_jon_baelish_same_county_capture_check = {
 		}
 	}
 }
+
+on_death = {
+
+	on_actions = {
+		segrellion_young_griff_murder_usurpation_on_action
+	}
+}
+
+
+segrellion_young_griff_murder_usurpation_on_action = {
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		has_title = title:h_the_iron_throne
+
+		exists = killer
+
+		killer = {
+
+			OR = {
+				this = character:Lannister_6
+				this = character:Baelish_2
+			}
+		}
+	}
+
+	effect = {
+
+		killer = {
+
+			add_character_flag = segrellion_killed_young_griff_for_throne
+
+			trigger_event = {
+				id = segrellion_young_griff.8905
+				days = 1
+			}
+		}
+	}
+}

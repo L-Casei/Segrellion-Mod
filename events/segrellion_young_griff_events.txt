@@ -2740,179 +2740,6 @@ segrellion_young_griff.5010 = {
 		}
 
 
-		# =================================================
-		# SECRET CONSPIRACIES
-		#
-		# Everything below is deliberately hidden.
-		# Murder schemes themselves are secret schemes.
-		# =================================================
-
-		hidden_effect = {
-
-
-			# =============================================
-			# PETYR BAELISH
-			# =============================================
-
-			character:Baelish_2 ?= {
-
-				if = {
-
-					limit = {
-
-						is_alive = yes
-						is_adult = yes
-						is_imprisoned = no
-
-
-						can_start_scheme = {
-							type = murder
-							target_character = character:IAF_Young_Griff_1
-						}
-					}
-
-
-					start_scheme = {
-						type = murder
-						target_character = character:IAF_Young_Griff_1
-					}
-
-
-					add_character_flag = segrellion_baelish_murdering_young_griff
-				}
-			}
-
-
-			# =============================================
-			# CERSEI LANNISTER
-			# Character ID confirmed: Lannister_6
-			# Only if alive and free.
-			# =============================================
-
-			character:Lannister_6 ?= {
-
-				if = {
-
-					limit = {
-
-						is_alive = yes
-						is_adult = yes
-						is_imprisoned = no
-
-
-						can_start_scheme = {
-							type = murder
-							target_character = character:IAF_Young_Griff_1
-						}
-					}
-
-
-					start_scheme = {
-						type = murder
-						target_character = character:IAF_Young_Griff_1
-					}
-
-
-					add_character_flag = segrellion_cersei_murdering_young_griff
-				}
-			}
-
-
-			# =============================================
-			# OLENNA TYRELL
-			#
-			# Olenna is Mace Tyrell's mother.
-			# Normally Mace is the current Reach holder.
-			#
-			# Fallback handles one of Mace's children
-			# already inheriting the Reach.
-			# =============================================
-
-			if = {
-
-				limit = {
-
-					title:e_the_reach.holder ?= {
-
-						house = house:house_Tyrell
-
-						mother ?= {
-
-							is_alive = yes
-							is_adult = yes
-							is_imprisoned = no
-						}
-					}
-				}
-
-
-				title:e_the_reach.holder = {
-
-					mother = {
-
-						save_scope_as = segrellion_olenna
-					}
-				}
-			}
-
-
-			else_if = {
-
-				limit = {
-
-					title:e_the_reach.holder ?= {
-
-						house = house:house_Tyrell
-
-						father ?= {
-
-							mother ?= {
-
-								is_alive = yes
-								is_adult = yes
-								is_imprisoned = no
-							}
-						}
-					}
-				}
-
-
-				title:e_the_reach.holder = {
-
-					father = {
-
-						mother = {
-
-							save_scope_as = segrellion_olenna
-						}
-					}
-				}
-			}
-
-
-			scope:segrellion_olenna ?= {
-
-				if = {
-
-					limit = {
-
-						can_start_scheme = {
-							type = murder
-							target_character = character:IAF_Young_Griff_1
-						}
-					}
-
-
-					start_scheme = {
-						type = murder
-						target_character = character:IAF_Young_Griff_1
-					}
-
-
-					add_character_flag = segrellion_olenna_murdering_young_griff
-				}
-			}
-		}
 	}
 
 
@@ -4939,6 +4766,27 @@ segrellion_young_griff.8030 = {
 
 		custom_tooltip = segrellion_young_griff.8030.c.tt
 
+		if = {
+
+			limit = {
+				character:Eunuch_1 ?= {
+					is_alive = yes
+				}
+			}
+
+			show_as_tooltip = {
+
+				character:Eunuch_1 = {
+
+					add_opinion = {
+
+						target = root
+
+						modifier = segrellion_varys_tommen_executed_opinion
+					}
+				}
+			}
+		}
 
 		hidden_effect = {
 
@@ -5056,6 +4904,87 @@ segrellion_young_griff.8040 = {
 
 
 		add_character_flag = segrellion_young_griff_lost_varys_support
+
+		if = {
+
+			limit = {
+
+				character:Tyrell_14 ?= {
+					is_alive = yes
+					is_imprisoned = yes
+					imprisoner = root
+				}
+			}
+
+			character:Tyrell_14 = {
+
+				release_from_prison = yes
+
+				add_character_flag = segrellion_margaery_released_after_tommen_execution
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Eunuch_1 ?= {
+					is_alive = yes
+				}
+
+				character:Targaryen_9 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Eunuch_1 = {
+
+				set_variable = {
+					name = target_employer
+					value = character:Targaryen_9
+				}
+
+				set_employer = character:Targaryen_9
+
+				return_to_court = yes
+
+				set_location = character:Targaryen_9.location
+
+				add_character_flag = segrellion_varys_serves_daenerys
+			}
+
+			character:Targaryen_9 = {
+				add_character_flag = segrellion_daenerys_has_varys
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Eunuch_1 ?= {
+
+					is_alive = yes
+
+					can_start_scheme = {
+						type = murder
+						target_character = character:IAF_Young_Griff_1
+					}
+				}
+			}
+
+			character:Eunuch_1 = {
+
+				start_scheme = {
+					type = murder
+					target_character = character:IAF_Young_Griff_1
+				}
+
+				add_character_flag = segrellion_varys_murdering_young_griff
+			}
+		}
 	}
 
 
@@ -7022,5 +6951,390 @@ segrellion_young_griff.9030 = {
 		ai_chance = {
 			base = 100
 		}
+	}
+}
+
+# =========================================================
+# 8900 - KNIVES AROUND THE IRON THRONE
+# Root = Aegon
+# =========================================================
+
+segrellion_young_griff.8900 = {
+
+	hidden = yes
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+	}
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				title:k_the_reach.holder ?= {
+					mother ?= {
+						is_alive = yes
+					}
+				}
+			}
+
+			title:k_the_reach.holder.mother = {
+				save_scope_as = segrellion_olenna
+			}
+		}
+
+		else_if = {
+
+			limit = {
+
+				title:k_the_reach.holder ?= {
+
+					father ?= {
+
+						mother ?= {
+							is_alive = yes
+						}
+					}
+				}
+			}
+
+			title:k_the_reach.holder.father.mother = {
+				save_scope_as = segrellion_olenna
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_olenna
+
+				scope:segrellion_olenna = {
+
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+
+					can_start_scheme = {
+						type = murder
+						target_character = root
+					}
+				}
+			}
+
+			scope:segrellion_olenna = {
+
+				start_scheme = {
+					type = murder
+					target_character = character:IAF_Young_Griff_1
+				}
+
+				add_character_flag = segrellion_olenna_murdering_young_griff
+			}
+		}
+
+
+		every_targeting_scheme = {
+
+			limit = {
+				scheme_owner = scope:segrellion_olenna
+			}
+
+			save_scope_as = segrellion_olenna_aegon_murder_scheme
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Lannister_6 ?= {
+
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+
+					is_spouse_of = root
+
+					can_start_scheme = {
+						type = murder
+						target_character = root
+					}
+				}
+			}
+
+			character:Lannister_6 = {
+
+				start_scheme = {
+					type = murder
+					target_character = character:IAF_Young_Griff_1
+				}
+
+				add_character_flag = segrellion_cersei_murdering_young_griff_from_within
+			}
+		}
+
+		else_if = {
+
+			limit = {
+
+				character:Lannister_6 ?= {
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+				}
+
+				exists = scope:segrellion_olenna_aegon_murder_scheme
+			}
+
+			character:Lannister_6 = {
+
+				force_add_to_scheme = {
+					scheme = scope:segrellion_olenna_aegon_murder_scheme
+					years = 20
+				}
+
+				add_character_flag = segrellion_cersei_agent_in_olenna_aegon_scheme
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Baelish_2 ?= {
+
+					is_alive = yes
+					is_adult = yes
+					is_imprisoned = no
+
+					can_start_scheme = {
+						type = murder
+						target_character = root
+					}
+				}
+			}
+
+			character:Baelish_2 = {
+
+				start_scheme = {
+					type = murder
+					target_character = character:IAF_Young_Griff_1
+				}
+
+				add_character_flag = segrellion_baelish_murdering_young_griff
+			}
+		}
+	}
+}
+
+# =========================================================
+# 8905 - THE USURPER TAKES THE THRONE
+# Root = Cersei or Baelish
+# =========================================================
+
+segrellion_young_griff.8905 = {
+
+	hidden = yes
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_killed_young_griff_for_throne
+
+		character:IAF_Young_Griff_1 ?= {
+			is_alive = no
+		}
+
+		OR = {
+			this = character:Lannister_6
+			this = character:Baelish_2
+		}
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_killed_young_griff_for_throne
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_title = title:h_the_iron_throne
+				}
+			}
+
+			get_title = title:h_the_iron_throne
+		}
+
+		add_character_flag = segrellion_usurped_iron_throne_after_aegon_murder
+
+		trigger_event = {
+			id = segrellion_young_griff.8910
+			days = 3
+		}
+	}
+}
+
+
+# =========================================================
+# 8910 - THE REALM ANSWERS THE USURPATION
+# Root = Cersei or Baelish
+# =========================================================
+
+segrellion_young_griff.8910 = {
+
+	hidden = yes
+
+	trigger = {
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_usurped_iron_throne_after_aegon_murder
+	}
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				character:Targaryen_9 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Targaryen_9 = {
+
+				trigger_event = {
+					id = segrellion_young_griff.8920
+					days = { 7 14 }
+				}
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Stark_7 ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_jon_identity_revealed
+
+					NOT = {
+						has_character_flag = segrellion_jon_identity_rejected
+					}
+				}
+			}
+
+			character:Stark_7 = {
+
+				trigger_event = {
+					id = segrellion_young_griff.8920
+					days = { 14 28 }
+				}
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+
+					has_claim_on = title:h_the_iron_throne
+				}
+			}
+
+			character:Segrellion_60 = {
+
+				trigger_event = {
+					id = segrellion_young_griff.8920
+					days = { 14 28 }
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 8920 - CLAIM THE IRON THRONE FROM THE USURPER
+# Root = Daenerys / Jon / Daemon
+# =========================================================
+
+segrellion_young_griff.8920 = {
+
+	hidden = yes
+
+	trigger = {
+
+		is_alive = yes
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+		title:h_the_iron_throne ?= {
+
+			exists = holder
+
+			holder = {
+				is_alive = yes
+			}
+		}
+	}
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_claim_on = title:h_the_iron_throne
+				}
+			}
+
+			add_pressed_claim = title:h_the_iron_throne
+		}
+
+		title:h_the_iron_throne.holder = {
+			save_scope_as = segrellion_aegon_usurper_defender
+		}
+
+		start_war = {
+
+			cb = claim_cb
+
+			target = scope:segrellion_aegon_usurper_defender
+
+			claimant = root
+
+			target_title = title:h_the_iron_throne
+		}
+
+		add_character_flag = segrellion_marching_against_aegons_usurper
 	}
 }

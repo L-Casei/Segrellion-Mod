@@ -208,7 +208,6 @@ segrellion_sansa.0110 = {
 
 		custom_tooltip = segrellion_sansa.0110.b.tt
 
-
 		trigger = {
 
 			is_married = no
@@ -222,22 +221,28 @@ segrellion_sansa.0110 = {
 			}
 
 			character:Stark_Dummy_8 ?= {
+				is_alive = yes
 				is_married = no
+			}
+
+			title:c_runestone.holder ?= {
+				is_alive = yes
 			}
 		}
 
-
-		add_character_flag = segrellion_sansa_extraction_in_progress
 		add_character_flag = segrellion_sansa_marriage_demanded_for_protection
+		add_character_flag = segrellion_yohn_sansa_marriage_answer_pending
 
+		hidden_effect = {
 
-		trigger_event = {
+			title:c_runestone.holder = {
 
-			id = segrellion_sansa.0120
-
-			days = { 7 14 }
+				trigger_event = {
+					id = segrellion_sansa.0115
+					days = { 1 2 }
+				}
+			}
 		}
-
 
 		ai_chance = {
 			base = 18
@@ -261,6 +266,190 @@ segrellion_sansa.0110 = {
 
 		ai_chance = {
 			base = 2
+		}
+	}
+}
+
+# =========================================================
+# 0115 - YOHN ANSWERS THE MARRIAGE DEMAND
+# Root = Yohn Royce
+# =========================================================
+
+segrellion_sansa.0115 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0115.t
+	desc = segrellion_sansa.0115.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		is_alive = yes
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_yohn_sansa_marriage_answer_pending
+		}
+
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+	immediate = {
+
+		character:Segrellion_60 = {
+			remove_character_flag = segrellion_yohn_sansa_marriage_answer_pending
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_sansa.0115.a
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_yohn_resented_sansa_marriage_request_opinion
+		}
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_yohn_approved_sansa_marriage
+		}
+
+		character:Stark_Dummy_8 = {
+
+			add_character_flag = segrellion_sansa_promised_to_daemon
+
+			trigger_event = {
+				id = segrellion_sansa.0116
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	option = {
+
+		name = segrellion_sansa.0115.b
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_yohn_refused_sansa_marriage_request_opinion
+		}
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_sansa_marriage_demanded_for_protection
+
+			add_character_flag = segrellion_sansa_royce_route_refused
+
+			remove_character_flag = segrellion_sansa_royce_preliminary_agreement
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+
+# =========================================================
+# 0116 - PROMISED TO THE UNICORN
+# Root = Sansa
+# =========================================================
+
+segrellion_sansa.0116 = {
+
+	type = character_event
+
+	title = segrellion_sansa.0116.t
+	desc = segrellion_sansa.0116.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Stark_Dummy_8
+
+		is_alive = yes
+
+		has_character_flag = segrellion_sansa_promised_to_daemon
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_yohn_approved_sansa_marriage
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+	immediate = {
+
+		add_opinion = {
+
+			target = character:Segrellion_60
+
+			modifier = segrellion_sansa_promised_to_daemon_opinion
+		}
+
+		character:Segrellion_60 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daemon_promised_to_sansa_opinion
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_sansa.0116.a
+
+		hidden_effect = {
+
+			character:Segrellion_60 = {
+
+				add_character_flag = segrellion_sansa_extraction_in_progress
+
+				trigger_event = {
+					id = segrellion_sansa.0120
+					days = { 2 4 }
+				}
+			}
 		}
 	}
 }
@@ -412,7 +601,49 @@ segrellion_sansa.0130 = {
 		custom_tooltip = segrellion_sansa.0130.a.tt
 
 		add_character_flag = segrellion_sansa_war_appeal_resolved
-		add_character_flag = segrellion_sansa_daemon_helped_without_price
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_yohn_approved_sansa_marriage
+
+				is_married = no
+
+				character:Stark_Dummy_8 = {
+					is_alive = yes
+					is_married = no
+					has_character_flag = segrellion_sansa_promised_to_daemon
+				}
+			}
+
+			add_character_flag = segrellion_sansa_marriage_for_vale_war
+
+			segrellion_daemon_marry_sansa_for_vale_war_effect = yes
+
+			remove_character_flag = segrellion_yohn_approved_sansa_marriage
+			remove_character_flag = segrellion_sansa_marriage_demanded_for_protection
+
+			remove_opinion = {
+				target = character:Stark_Dummy_8
+				modifier = segrellion_daemon_promised_to_sansa_opinion
+			}
+
+			character:Stark_Dummy_8 = {
+
+				remove_character_flag = segrellion_sansa_promised_to_daemon
+
+				remove_opinion = {
+					target = root
+					modifier = segrellion_sansa_promised_to_daemon_opinion
+				}
+			}
+		}
+
+		else = {
+
+			add_character_flag = segrellion_sansa_daemon_helped_without_price
+		}
 
 		segrellion_daemon_join_sansa_vale_war_effect = yes
 
@@ -432,6 +663,13 @@ segrellion_sansa.0130 = {
 		name = segrellion_sansa.0130.b
 
 		custom_tooltip = segrellion_sansa.0130.b.tt
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_yohn_approved_sansa_marriage
+			}
+		}
 
 		add_character_flag = segrellion_sansa_war_price_requested
 
@@ -459,6 +697,31 @@ segrellion_sansa.0130 = {
 
 		add_character_flag = segrellion_sansa_war_appeal_resolved
 		add_character_flag = segrellion_sansa_daemon_refused_vale_war
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_yohn_approved_sansa_marriage
+			}
+
+			remove_character_flag = segrellion_yohn_approved_sansa_marriage
+			remove_character_flag = segrellion_sansa_marriage_demanded_for_protection
+
+			remove_opinion = {
+				target = character:Stark_Dummy_8
+				modifier = segrellion_daemon_promised_to_sansa_opinion
+			}
+
+			character:Stark_Dummy_8 = {
+
+				remove_character_flag = segrellion_sansa_promised_to_daemon
+
+				remove_opinion = {
+					target = root
+					modifier = segrellion_sansa_promised_to_daemon_opinion
+				}
+			}
+		}
 
 		ai_chance = {
 			base = 5
