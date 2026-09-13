@@ -183,7 +183,6 @@ segrellion_young_griff_dragon.0010 = {
 
 	# =====================================================
 	# DRAGONSTONE
-	# Available only if Aegon personally holds Dragonstone.
 	# =====================================================
 
 	option = {
@@ -207,38 +206,14 @@ segrellion_young_griff_dragon.0010 = {
 
 		hidden_effect = {
 
+			remove_character_flag = segrellion_young_griff_dragon_search_red_lake
+			remove_character_flag = segrellion_young_griff_dragon_search_summerhall
+
 			add_character_flag = segrellion_young_griff_dragon_search_dragonstone
-		}
-
-
-		if = {
-
-			limit = {
-
-				location = title:c_dragonstone.title_province
-			}
-
 
 			trigger_event = {
-
-				id = segrellion_young_griff_dragon.0040
-			}
-		}
-
-
-		else = {
-
-			start_travel_plan = {
-
-				destination = title:c_dragonstone.title_province
-
-				return_trip = yes
-
-				on_arrival_destinations = all_but_last
-
-				on_arrival_event = segrellion_young_griff_dragon.0040
-
-				on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+				id = segrellion_young_griff_dragon.0011
+				days = 1
 			}
 		}
 
@@ -263,38 +238,14 @@ segrellion_young_griff_dragon.0010 = {
 
 		hidden_effect = {
 
+			remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
+			remove_character_flag = segrellion_young_griff_dragon_search_summerhall
+
 			add_character_flag = segrellion_young_griff_dragon_search_red_lake
-		}
-
-
-		if = {
-
-			limit = {
-
-				location = title:c_red_lake.title_province
-			}
-
 
 			trigger_event = {
-
-				id = segrellion_young_griff_dragon.0020
-			}
-		}
-
-
-		else = {
-
-			start_travel_plan = {
-
-				destination = title:c_red_lake.title_province
-
-				return_trip = yes
-
-				on_arrival_destinations = all_but_last
-
-				on_arrival_event = segrellion_young_griff_dragon.0020
-
-				on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+				id = segrellion_young_griff_dragon.0011
+				days = 1
 			}
 		}
 
@@ -319,38 +270,14 @@ segrellion_young_griff_dragon.0010 = {
 
 		hidden_effect = {
 
+			remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
+			remove_character_flag = segrellion_young_griff_dragon_search_red_lake
+
 			add_character_flag = segrellion_young_griff_dragon_search_summerhall
-		}
-
-
-		if = {
-
-			limit = {
-
-				location = title:c_summerhall.title_province
-			}
-
 
 			trigger_event = {
-
-				id = segrellion_young_griff_dragon.0030
-			}
-		}
-
-
-		else = {
-
-			start_travel_plan = {
-
-				destination = title:c_summerhall.title_province
-
-				return_trip = yes
-
-				on_arrival_destinations = all_but_last
-
-				on_arrival_event = segrellion_young_griff_dragon.0030
-
-				on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+				id = segrellion_young_griff_dragon.0011
+				days = 1
 			}
 		}
 
@@ -358,6 +285,230 @@ segrellion_young_griff_dragon.0010 = {
 		ai_chance = {
 
 			base = 65
+		}
+	}
+}
+
+# =========================================================
+# 0011 - EGG SEARCH TRAVEL CONTROLLER
+#
+# Starts the selected journey safely.
+# Also acts as a watchdog if the arrival callback fails.
+# =========================================================
+
+segrellion_young_griff_dragon.0011 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_path_egg
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_event_started
+		}
+
+		OR = {
+
+			has_character_flag = segrellion_young_griff_dragon_search_dragonstone
+
+			has_character_flag = segrellion_young_griff_dragon_search_red_lake
+
+			has_character_flag = segrellion_young_griff_dragon_search_summerhall
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# DRAGONSTONE
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_young_griff_dragon_search_dragonstone
+			}
+
+
+			if = {
+
+				limit = {
+					location = title:c_dragonstone.title_province
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0040
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					exists = current_travel_plan
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0011
+					days = 7
+				}
+			}
+
+
+			else = {
+
+				start_travel_plan = {
+
+					destination = title:c_dragonstone.title_province
+
+					return_trip = yes
+
+					on_arrival_destinations = all_but_last
+
+					on_arrival_event = segrellion_young_griff_dragon.0040
+
+					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+				}
+
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0011
+					days = 7
+				}
+			}
+		}
+
+
+		# =================================================
+		# RED LAKE
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_young_griff_dragon_search_red_lake
+			}
+
+
+			if = {
+
+				limit = {
+					location = title:c_red_lake.title_province
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0020
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					exists = current_travel_plan
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0011
+					days = 7
+				}
+			}
+
+
+			else = {
+
+				start_travel_plan = {
+
+					destination = title:c_red_lake.title_province
+
+					return_trip = yes
+
+					on_arrival_destinations = all_but_last
+
+					on_arrival_event = segrellion_young_griff_dragon.0020
+
+					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+				}
+
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0011
+					days = 7
+				}
+			}
+		}
+
+
+		# =================================================
+		# SUMMERHALL
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_young_griff_dragon_search_summerhall
+			}
+
+
+			if = {
+
+				limit = {
+					location = title:c_summerhall.title_province
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0030
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					exists = current_travel_plan
+				}
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0011
+					days = 7
+				}
+			}
+
+
+			else = {
+
+				start_travel_plan = {
+
+					destination = title:c_summerhall.title_province
+
+					return_trip = yes
+
+					on_arrival_destinations = all_but_last
+
+					on_arrival_event = segrellion_young_griff_dragon.0030
+
+					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
+				}
+
+
+				trigger_event = {
+					id = segrellion_young_griff_dragon.0011
+					days = 7
+				}
+			}
 		}
 	}
 }
@@ -391,6 +542,10 @@ segrellion_young_griff_dragon.0020 = {
 		}
 	}
 
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_dragon_route_event_started
+	}
 
 	left_portrait = {
 
@@ -468,6 +623,8 @@ segrellion_young_griff_dragon.0021 = {
 			remove_character_flag = segrellion_young_griff_dragon_search_red_lake
 
 			remove_variable = segrellion_young_griff_dragon_researcher
+
+			remove_character_flag = segrellion_young_griff_dragon_route_event_started
 		}
 	}
 }
@@ -501,6 +658,10 @@ segrellion_young_griff_dragon.0030 = {
 		}
 	}
 
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_dragon_route_event_started
+	}
 
 	left_portrait = {
 
@@ -689,6 +850,8 @@ segrellion_young_griff_dragon.0032 = {
 
 		remove_character_flag = segrellion_young_griff_dragon_search_summerhall
 
+		remove_character_flag = segrellion_young_griff_dragon_route_event_started
+
 		remove_variable = segrellion_young_griff_dragon_researcher
 	}
 
@@ -724,6 +887,7 @@ segrellion_young_griff_dragon.0040 = {
 
 	theme = dragon
 
+	add_character_flag = segrellion_young_griff_dragon_route_event_started
 
 	trigger = {
 
@@ -755,6 +919,8 @@ segrellion_young_griff_dragon.0040 = {
 		add_character_flag = segrellion_young_griff_dragon_route_resolved
 
 		remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
+
+		remove_character_flag = segrellion_young_griff_dragon_route_event_started
 
 		remove_variable = segrellion_young_griff_dragon_researcher
 	}
@@ -799,6 +965,8 @@ segrellion_young_griff_dragon.0090 = {
 		remove_character_flag = segrellion_young_griff_dragon_search_summerhall
 
 		remove_character_flag = segrellion_young_griff_dragon_research_underway
+
+		remove_character_flag = segrellion_young_griff_dragon_route_event_started
 
 		remove_variable = segrellion_young_griff_dragon_researcher
 	}
