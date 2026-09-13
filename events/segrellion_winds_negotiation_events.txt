@@ -3264,6 +3264,9 @@ segrellion_support.6020 = {
 		add_character_flag = segrellion_vale_debt_active
 		add_character_flag = segrellion_vale_debt_pact
 
+		add_character_modifier = {
+			modifier = segrellion_vale_debtor_modifier
+		}
 
 		# Robin gains a STRONG FAVOR on Daemon.
 		scope:support_robin = {
@@ -3385,27 +3388,24 @@ segrellion_support.6091 = {
 
 
 # =========================================================
-# 6200 - EIGHT YEARS OF GRACE
+# 6200 - THE VALE DEBT COMES DUE
 #
-# Remaining Vale debt becomes due.
+# Hidden router.
+# First checks whether the Vale decides to forgive the debt.
+# Otherwise Daemon receives the repayment demand.
 # =========================================================
 
 segrellion_support.6200 = {
 
 	type = character_event
+	hidden = yes
 
-	title = segrellion_support.6200.t
-	desc = segrellion_support.6200.desc
-
-	theme = stewardship
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
 
 	trigger = {
 
 		this = character:Segrellion_60
+
+		is_alive = yes
 
 		has_character_flag = segrellion_vale_debt_active
 
@@ -3415,29 +3415,986 @@ segrellion_support.6200 = {
 	}
 
 
+	immediate = {
+
+		random_list = {
+
+			# =================================================
+			# THE VALE STILL DEMANDS PAYMENT
+			# =================================================
+
+			100 = {
+
+				trigger_event = {
+					id = segrellion_support.6201
+					days = 1
+				}
+			}
+
+
+			# =================================================
+			# THE DEBT IS FORGIVEN
+			# =================================================
+
+			0 = {
+
+				# ---------------------------------------------
+				# DEBT SIZE
+				#
+				# Below 500 does not keep increasing the chance.
+				# 500 is effectively the maximum forgiveness tier.
+				# ---------------------------------------------
+
+				modifier = {
+					add = 45
+					var:segrellion_vale_debt <= 500
+				}
+
+				modifier = {
+					add = 35
+					var:segrellion_vale_debt > 500
+					var:segrellion_vale_debt <= 750
+				}
+
+				modifier = {
+					add = 25
+					var:segrellion_vale_debt > 750
+					var:segrellion_vale_debt <= 1000
+				}
+
+				modifier = {
+					add = 15
+					var:segrellion_vale_debt > 1000
+					var:segrellion_vale_debt <= 1250
+				}
+
+				modifier = {
+					add = 8
+					var:segrellion_vale_debt > 1250
+				}
+
+
+				# ---------------------------------------------
+				# LORD OF THE VALE'S OPINION OF DAEMON
+				# ---------------------------------------------
+
+				modifier = {
+					add = 8
+
+					title:e_the_vale.holder = {
+						opinion = {
+							target = root
+							value >= 25
+						}
+					}
+				}
+
+				modifier = {
+					add = 12
+
+					title:e_the_vale.holder = {
+						opinion = {
+							target = root
+							value >= 50
+						}
+					}
+				}
+
+				modifier = {
+					add = 15
+
+					title:e_the_vale.holder = {
+						opinion = {
+							target = root
+							value >= 75
+						}
+					}
+				}
+
+
+				# ---------------------------------------------
+				# IMPORTANT VALE LORDS
+				# ---------------------------------------------
+
+				modifier = {
+					add = 8
+
+					title:e_the_vale.holder = {
+
+						any_powerful_vassal = {
+
+							opinion = {
+								target = root
+								value >= 50
+							}
+						}
+					}
+				}
+
+				modifier = {
+					add = 12
+
+					title:e_the_vale.holder = {
+
+						any_powerful_vassal = {
+
+							opinion = {
+								target = root
+								value >= 75
+							}
+						}
+					}
+				}
+
+				modifier = {
+					add = 15
+
+					title:e_the_vale.holder = {
+
+						any_powerful_vassal = {
+							has_relation_friend = root
+						}
+					}
+				}
+
+
+				# ---------------------------------------------
+				# PRESTIGE
+				# ---------------------------------------------
+
+				modifier = {
+					add = 8
+					prestige_level >= 4
+				}
+
+				modifier = {
+					add = 12
+					prestige_level >= 5
+				}
+
+
+				# ---------------------------------------------
+				# PIETY
+				# ---------------------------------------------
+
+				modifier = {
+					add = 8
+					piety_level >= 4
+				}
+
+				modifier = {
+					add = 12
+					piety_level >= 5
+				}
+
+
+				trigger_event = {
+					id = segrellion_support.6230
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# 6201 - THE FALCON'S ACCOUNT
+# =========================================================
+
+segrellion_support.6201 = {
+
+	type = character_event
+
+	title = segrellion_support.6201.t
+	desc = segrellion_support.6201.desc
+
+	theme = stewardship
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_variable = segrellion_vale_debt
+
+		var:segrellion_vale_debt > 0
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = title:e_the_vale.holder
+		animation = personality_rational
+	}
+
+
 	# =====================================================
-	# PAY EVERYTHING THAT REMAINS
+	# ASK DAEMON'S LIEGE TO PAY
 	# =====================================================
 
 	option = {
 
-		name = segrellion_support.6200.a
+		name = segrellion_support.6201.a
+
+		trigger = {
+
+			exists = liege
+
+			liege = {
+				is_alive = yes
+				this != title:e_the_vale.holder
+			}
+		}
+
+		custom_tooltip = segrellion_support.6201.a.tt
+
+
+		liege = {
+
+			trigger_event = {
+				id = segrellion_support.6220
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# PAY IT PERSONALLY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6201.b
 
 		trigger = {
 			gold >= var:segrellion_vale_debt
 		}
 
-		custom_tooltip = segrellion_support.6200.pay_tt
+		custom_tooltip = segrellion_support.6201.b.tt
+
+		segrellion_pay_vale_debt_in_full_effect = yes
+	}
 
 
-		# Transfer the remaining gold to Robin if he still lives.
-		var:segrellion_vale_creditor ?= {
+	# =====================================================
+	# ASK FOR TWO MORE YEARS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6201.c
+
+		trigger = {
+			NOT = {
+				has_character_flag = segrellion_vale_debt_extension_used
+			}
+		}
+
+		custom_tooltip = segrellion_support.6201.c.tt
+
+		segrellion_grant_vale_debt_extension_effect = yes
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6201.d
+
+		custom_tooltip = segrellion_support.6201.d.tt
+
+		add_character_flag = segrellion_vale_debt_refused_payment
+
+		trigger_event = {
+			id = segrellion_support.6250
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 6220 - DAEMON ASKS HIS LIEGE TO SETTLE THE DEBT
+# =========================================================
+
+segrellion_support.6220 = {
+
+	type = character_event
+
+	title = segrellion_support.6220.t
+	desc = segrellion_support.6220.desc
+
+	theme = stewardship
+
+
+	trigger = {
+
+		is_alive = yes
+
+		character:Segrellion_60 = {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_vale_debt_active
+
+			has_variable = segrellion_vale_debt
+
+			var:segrellion_vale_debt > 0
+
+			liege = root
+		}
+	}
+
+
+	immediate = {
+
+		character:Segrellion_60 = {
+
+			save_scope_value_as = {
+				name = segrellion_vale_liege_payment_amount
+				value = var:segrellion_vale_debt
+			}
+
 
 			if = {
 
 				limit = {
+
+					has_variable = segrellion_vale_creditor
+
+					var:segrellion_vale_creditor = {
+						is_alive = yes
+					}
+				}
+
+				var:segrellion_vale_creditor = {
+					save_scope_as = segrellion_vale_liege_payment_recipient
+				}
+			}
+
+			else = {
+
+				title:e_the_vale.holder ?= {
+					save_scope_as = segrellion_vale_liege_payment_recipient
+				}
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = worry
+	}
+
+
+	# =====================================================
+	# PAY FOR DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6220.a
+
+		add_gold = {
+			value = scope:segrellion_vale_liege_payment_amount
+			multiply = -1
+		}
+
+
+		scope:segrellion_vale_liege_payment_recipient ?= {
+
+			add_gold = scope:segrellion_vale_liege_payment_amount
+		}
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_vale_debt_paid_in_full
+
+			add_character_flag = segrellion_vale_debt_paid_by_liege
+
+			set_variable = {
+				name = segrellion_vale_debt_payer
+				value = root
+			}
+
+			segrellion_finish_vale_debt_effect = yes
+
+			trigger_event = {
+				id = segrellion_support.6210
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 25
+
+			modifier = {
+				factor = 2
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+
+			modifier = {
+				factor = 2
+				has_relation_friend = character:Segrellion_60
+			}
+
+			modifier = {
+				factor = 0.25
+				opinion = {
+					target = character:Segrellion_60
+					value < 0
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6220.b
+
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_support.6221
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 75
+		}
+	}
+}
+
+# =========================================================
+# 6221 - YOUR LIEGE REFUSED
+# =========================================================
+
+segrellion_support.6221 = {
+
+	type = character_event
+
+	title = segrellion_support.6221.t
+	desc = segrellion_support.6221.desc
+
+	theme = stewardship
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# =====================================================
+	# ASK THE VALE FOR TWO MORE YEARS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6221.a
+
+		trigger = {
+			NOT = {
+				has_character_flag = segrellion_vale_debt_extension_used
+			}
+		}
+
+		segrellion_grant_vale_debt_extension_effect = yes
+	}
+
+
+	# =====================================================
+	# REFUSE TO PAY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_support.6221.b
+
+		add_character_flag = segrellion_vale_debt_refused_payment
+
+		trigger_event = {
+			id = segrellion_support.6250
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# 6230 - THE DEBT IS FORGIVEN
+# =========================================================
+
+segrellion_support.6230 = {
+
+	type = character_event
+
+	title = segrellion_support.6230.t
+	desc = segrellion_support.6230.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_vale_debt_forgiven
+
+		segrellion_finish_vale_debt_effect = yes
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+	right_portrait = {
+		character = title:e_the_vale.holder
+		animation = personality_content
+	}
+
+
+	option = {
+		name = segrellion_support.6230.a
+		add_prestige = 100
+	}
+}
+
+# =========================================================
+# 6240 - TWO YEARS HAVE PASSED
+# =========================================================
+
+segrellion_support.6240 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_character_flag = segrellion_vale_debt_extension_used
+
+		has_variable = segrellion_vale_debt
+
+		var:segrellion_vale_debt > 0
+	}
+
+
+	immediate = {
+
+		random_list = {
+
+			# =================================================
+			# THEY HAVE HAD ENOUGH
+			# =================================================
+
+			100 = {
+
+				trigger_event = {
+					id = segrellion_support.6250
+					days = 1
+				}
+			}
+
+
+			# =================================================
+			# LAST-MINUTE FORGIVENESS
+			# =================================================
+
+			0 = {
+
+				modifier = {
+					add = 50
+					var:segrellion_vale_debt <= 500
+				}
+
+				modifier = {
+					add = 35
+					var:segrellion_vale_debt > 500
+					var:segrellion_vale_debt <= 750
+				}
+
+				modifier = {
+					add = 25
+					var:segrellion_vale_debt > 750
+					var:segrellion_vale_debt <= 1000
+				}
+
+				modifier = {
+					add = 12
+					var:segrellion_vale_debt > 1000
+					var:segrellion_vale_debt <= 1250
+				}
+
+				modifier = {
+					add = 5
+					var:segrellion_vale_debt > 1250
+				}
+
+
+				modifier = {
+					add = 10
+
+					title:e_the_vale.holder = {
+						opinion = {
+							target = root
+							value >= 25
+						}
+					}
+				}
+
+				modifier = {
+					add = 15
+
+					title:e_the_vale.holder = {
+						opinion = {
+							target = root
+							value >= 50
+						}
+					}
+				}
+
+				modifier = {
+					add = 20
+
+					title:e_the_vale.holder = {
+						opinion = {
+							target = root
+							value >= 75
+						}
+					}
+				}
+
+
+				modifier = {
+					add = 10
+
+					title:e_the_vale.holder = {
+
+						any_powerful_vassal = {
+
+							opinion = {
+								target = root
+								value >= 50
+							}
+						}
+					}
+				}
+
+				modifier = {
+					add = 15
+
+					title:e_the_vale.holder = {
+
+						any_powerful_vassal = {
+
+							opinion = {
+								target = root
+								value >= 75
+							}
+						}
+					}
+				}
+
+
+				modifier = {
+					add = 8
+					prestige_level >= 4
+				}
+
+				modifier = {
+					add = 12
+					prestige_level >= 5
+				}
+
+				modifier = {
+					add = 8
+					piety_level >= 4
+				}
+
+				modifier = {
+					add = 12
+					piety_level >= 5
+				}
+
+
+				trigger_event = {
+					id = segrellion_support.6230
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# 6250 - THE VALE REMEMBERS
+# =========================================================
+
+segrellion_support.6250 = {
+
+	type = character_event
+
+	title = segrellion_support.6250.t
+	desc = segrellion_support.6250.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_variable = segrellion_vale_debt
+
+		var:segrellion_vale_debt > 0
+	}
+
+
+	immediate = {
+
+		segrellion_default_vale_debt_effect = yes
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	right_portrait = {
+		character = title:e_the_vale.holder
+		animation = personality_vengeful
+	}
+
+
+	option = {
+
+		name = segrellion_support.6250.a
+
+		segrellion_start_vale_abduction_reprisals_effect = yes
+
+
+		trigger_event = {
+			id = segrellion_support.6260
+			days = 14
+		}
+
+
+		trigger_event = {
+			id = segrellion_support.6270
+			years = 3
+		}
+	}
+}
+
+# =========================================================
+# 6260 - ABDUCTION WATCHER
+# =========================================================
+
+segrellion_support.6260 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_character_flag = segrellion_vale_abduction_stage_active
+	}
+
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				is_imprisoned = yes
+
+				imprisoner = {
+					has_character_flag = segrellion_vale_debt_enforcer
+				}
+			}
+
+
+			remove_character_flag = segrellion_vale_abduction_stage_active
+
+
+			trigger_event = {
+				id = segrellion_support.6261
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_support.6260
+				days = 14
+			}
+		}
+	}
+}
+
+# =========================================================
+# 6261 - TAKEN BY THE FALCON
+# =========================================================
+
+segrellion_support.6261 = {
+
+	type = character_event
+
+	title = segrellion_support.6261.t
+	desc = segrellion_support.6261.desc
+
+	theme = dungeon
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+
+		is_imprisoned = yes
+
+		imprisoner = {
+			has_character_flag = segrellion_vale_debt_enforcer
+		}
+	}
+
+
+	immediate = {
+
+		imprisoner = {
+			save_scope_as = segrellion_vale_captor
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = pain
+	}
+
+	right_portrait = {
+		character = scope:segrellion_vale_captor
+		animation = personality_vengeful
+	}
+
+
+	option = {
+
+		name = segrellion_support.6261.a
+
+
+		add_character_modifier = {
+			modifier = recently_tortured
+			years = 5
+		}
+
+		add_stress = 100
+
+
+		# =================================================
+		# THE VALE TAKES EVERYTHING DAEMON STILL OWES
+		#
+		# This is intentionally allowed to put him into debt.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_variable = segrellion_vale_creditor
+
+				var:segrellion_vale_creditor = {
 					is_alive = yes
 				}
+			}
+
+			var:segrellion_vale_creditor = {
+
+				add_gold = root.var:segrellion_vale_debt
+			}
+		}
+
+		else = {
+
+			title:e_the_vale.holder ?= {
 
 				add_gold = root.var:segrellion_vale_debt
 			}
@@ -3450,33 +4407,266 @@ segrellion_support.6200 = {
 		}
 
 
+		add_character_flag = segrellion_vale_debt_paid_by_force
+
 		segrellion_finish_vale_debt_effect = yes
+
+
+		release_from_prison = yes
+	}
+}
+
+# =========================================================
+# 6270 - THE FALCON'S KNIVES
+# =========================================================
+
+segrellion_support.6270 = {
+
+	type = character_event
+
+	title = segrellion_support.6270.t
+	desc = segrellion_support.6270.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_character_flag = segrellion_vale_abduction_stage_active
 	}
 
 
-	# =====================================================
-	# CANNOT AFFORD THE REMAINING BALANCE
-	#
-	# No new interest. Another demand arrives next year.
-	# =====================================================
+	immediate = {
+
+		remove_character_flag = segrellion_vale_abduction_stage_active
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
 
 	option = {
 
-		name = segrellion_support.6200.b
+		name = segrellion_support.6270.a
 
-		trigger = {
-			gold < var:segrellion_vale_debt
-		}
 
-		add_character_flag = segrellion_vale_debt_overdue
+		segrellion_start_vale_murder_reprisals_effect = yes
+
 
 		trigger_event = {
-			id = segrellion_support.6200
-			years = 1
+			id = segrellion_support.6290
+			years = 3
 		}
 	}
 }
 
+# =========================================================
+# 6290 - WAR CHECK
+# =========================================================
+
+segrellion_support.6290 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_active
+
+		has_character_flag = segrellion_vale_murder_stage_active
+	}
+
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				is_landed = yes
+
+				title:e_the_vale.holder = {
+
+					is_alive = yes
+					is_landed = yes
+
+					this != root
+
+					NOT = {
+						is_at_war_with = root
+					}
+				}
+			}
+
+
+			trigger_event = {
+				id = segrellion_support.6291
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_support.6290
+				years = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 6291 - THE VALE COMES FOR ITS GOLD
+# =========================================================
+
+segrellion_support.6291 = {
+
+	type = character_event
+
+	title = segrellion_support.6291.t
+	desc = segrellion_support.6291.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_landed = yes
+
+		has_character_flag = segrellion_vale_debt_active
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = title:e_the_vale.holder
+		animation = personality_vengeful
+	}
+
+
+	option = {
+
+		name = segrellion_support.6291.a
+
+
+		remove_character_flag = segrellion_vale_murder_stage_active
+
+		segrellion_stop_vale_debt_schemes_effect = yes
+
+
+		title:e_the_vale.holder = {
+
+			add_character_flag = segrellion_vale_debt_war_authorized
+
+
+			start_war = {
+
+				casus_belli = segrellion_vale_debt_repayment_cb
+
+				target = root
+			}
+		}
+
+
+		add_character_flag = segrellion_vale_debt_war_started
+	}
+}
+
+# =========================================================
+# 6300 - THE VALE COLLECTS DOUBLE
+# =========================================================
+
+segrellion_support.6300 = {
+
+	type = character_event
+
+	title = segrellion_support.6300.t
+	desc = segrellion_support.6300.desc
+
+	theme = stewardship
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_paid_by_war
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = shame
+	}
+
+
+	option = {
+		name = segrellion_support.6300.a
+	}
+}
+
+# =========================================================
+# 6301 - THE VALE'S CLAIM IS BROKEN
+# =========================================================
+
+segrellion_support.6301 = {
+
+	type = character_event
+
+	title = segrellion_support.6301.t
+	desc = segrellion_support.6301.desc
+
+	theme = war
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_vale_debt_claim_broken
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_support.6301.a
+
+		add_prestige = 250
+	}
+}
 
 # =========================================================
 # 6210 - THE DEBT IS PAID
@@ -3488,7 +4678,22 @@ segrellion_support.6210 = {
 	type = character_event
 
 	title = segrellion_support.6210.t
-	desc = segrellion_support.6210.desc
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_vale_debt_paid_by_liege
+				}
+
+				desc = segrellion_support.6210.desc_liege
+			}
+
+			desc = segrellion_support.6210.desc
+		}
+	}
 
 	theme = stewardship
 

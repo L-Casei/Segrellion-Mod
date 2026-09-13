@@ -1499,6 +1499,19 @@ segrellion_grant_vale_support_effect = {
 
 segrellion_finish_vale_debt_effect = {
 
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_vale_debtor_modifier
+		}
+
+		remove_character_modifier = segrellion_vale_debtor_modifier
+	}
+
+
+	segrellion_stop_vale_debt_schemes_effect = yes
+
+
 	remove_variable = segrellion_vale_debt
 
 	remove_variable = segrellion_vale_creditor
@@ -1506,10 +1519,405 @@ segrellion_finish_vale_debt_effect = {
 
 	remove_character_flag = segrellion_vale_debt_active
 
+	remove_character_flag = segrellion_vale_debt_pact
+
 	remove_character_flag = segrellion_vale_debt_overdue
+
+	remove_character_flag = segrellion_vale_debt_extension_used
+
+	remove_character_flag = segrellion_vale_abduction_stage_active
+
+	remove_character_flag = segrellion_vale_murder_stage_active
+
+	remove_character_flag = segrellion_vale_reprisals_active
+
+	remove_character_flag = segrellion_vale_debt_war_started
 
 
 	add_character_flag = segrellion_vale_debt_fully_settled
+}
+
+# =========================================================
+# PAY THE REMAINING DEBT IN FULL
+# =========================================================
+
+segrellion_pay_vale_debt_in_full_effect = {
+
+	if = {
+
+		limit = {
+
+			has_variable = segrellion_vale_creditor
+
+			var:segrellion_vale_creditor = {
+				is_alive = yes
+			}
+		}
+
+		var:segrellion_vale_creditor = {
+			save_scope_as = segrellion_vale_payment_recipient
+		}
+	}
+
+	else = {
+
+		title:e_the_vale.holder ?= {
+			save_scope_as = segrellion_vale_payment_recipient
+		}
+	}
+
+
+	scope:segrellion_vale_payment_recipient ?= {
+
+		add_gold = root.var:segrellion_vale_debt
+	}
+
+
+	add_gold = {
+		value = var:segrellion_vale_debt
+		multiply = -1
+	}
+
+
+	scope:segrellion_vale_payment_recipient ?= {
+
+		root = {
+
+			set_variable = {
+				name = segrellion_vale_debt_repaid_creditor
+				value = scope:segrellion_vale_payment_recipient
+			}
+		}
+	}
+
+
+	add_character_flag = segrellion_vale_debt_paid_in_full
+
+
+	segrellion_finish_vale_debt_effect = yes
+
+
+	trigger_event = {
+		id = segrellion_support.6210
+		days = 1
+	}
+}
+
+# =========================================================
+# TWO-YEAR EXTENSION
+# =========================================================
+
+segrellion_grant_vale_debt_extension_effect = {
+
+	add_character_flag = segrellion_vale_debt_extension_used
+
+	add_character_flag = segrellion_vale_debt_overdue
+
+
+	trigger_event = {
+		id = segrellion_support.6240
+		years = 2
+	}
+}
+
+# =========================================================
+# DEFAULT
+# =========================================================
+
+segrellion_default_vale_debt_effect = {
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_vale_debtor_modifier
+		}
+
+		remove_character_modifier = segrellion_vale_debtor_modifier
+	}
+
+
+	if = {
+
+		limit = {
+			NOT = {
+				has_character_flag = segrellion_vale_debt_defaulted
+			}
+		}
+
+
+		add_character_flag = segrellion_vale_debt_defaulted
+
+
+		add_character_modifier = {
+			modifier = segrellion_vale_disgraced_debtor_modifier
+			years = 5
+		}
+	}
+
+
+	add_character_flag = segrellion_vale_debt_overdue
+
+	add_character_flag = segrellion_vale_reprisals_active
+}
+
+# =========================================================
+# START VALE ABDUCTION SCHEMES
+# =========================================================
+
+segrellion_start_vale_abduction_reprisals_effect = {
+
+	add_character_flag = segrellion_vale_abduction_stage_active
+
+
+	title:e_the_vale.holder ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+				this != root
+			}
+
+
+			add_character_flag = segrellion_vale_debt_enforcer
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						any_scheme = {
+
+							scheme_type = abduct
+
+							scheme_target_character = root
+						}
+					}
+				}
+
+
+				begin_scheme_basic_effect = {
+					SCHEME_TYPE = abduct
+					TARGET_TYPE = target_character
+					TARGET_SCOPE = root
+				}
+			}
+		}
+
+
+		every_powerful_vassal = {
+
+			limit = {
+
+				is_alive = yes
+				is_landed = yes
+
+				this != root
+			}
+
+
+			add_character_flag = segrellion_vale_debt_enforcer
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						any_scheme = {
+
+							scheme_type = abduct
+
+							scheme_target_character = root
+						}
+					}
+				}
+
+
+				begin_scheme_basic_effect = {
+					SCHEME_TYPE = abduct
+					TARGET_TYPE = target_character
+					TARGET_SCOPE = root
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# START VALE MURDER SCHEMES
+# =========================================================
+
+segrellion_start_vale_murder_reprisals_effect = {
+
+	add_character_flag = segrellion_vale_murder_stage_active
+
+
+	title:e_the_vale.holder ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+				this != root
+			}
+
+
+			add_character_flag = segrellion_vale_debt_enforcer
+
+
+			every_scheme = {
+
+				limit = {
+
+					scheme_type = abduct
+
+					scheme_target_character = root
+				}
+
+				end_scheme = yes
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						any_scheme = {
+
+							scheme_type = murder
+
+							scheme_target_character = root
+						}
+					}
+				}
+
+
+				begin_scheme_basic_effect = {
+					SCHEME_TYPE = murder
+					TARGET_TYPE = target_character
+					TARGET_SCOPE = root
+				}
+			}
+		}
+
+
+		every_powerful_vassal = {
+
+			limit = {
+				is_alive = yes
+				is_landed = yes
+				this != root
+			}
+
+
+			add_character_flag = segrellion_vale_debt_enforcer
+
+
+			every_scheme = {
+
+				limit = {
+
+					scheme_type = abduct
+
+					scheme_target_character = root
+				}
+
+				end_scheme = yes
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						any_scheme = {
+
+							scheme_type = murder
+
+							scheme_target_character = root
+						}
+					}
+				}
+
+
+				begin_scheme_basic_effect = {
+					SCHEME_TYPE = murder
+					TARGET_TYPE = target_character
+					TARGET_SCOPE = root
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# STOP ALL VALE DEBT SCHEMES
+# =========================================================
+
+segrellion_stop_vale_debt_schemes_effect = {
+
+	title:e_the_vale.holder ?= {
+
+		every_scheme = {
+
+			limit = {
+
+				OR = {
+
+					AND = {
+						scheme_type = abduct
+						scheme_target_character = root
+					}
+
+					AND = {
+						scheme_type = murder
+						scheme_target_character = root
+					}
+				}
+			}
+
+			end_scheme = yes
+		}
+
+
+		remove_character_flag = segrellion_vale_debt_enforcer
+
+
+		every_powerful_vassal = {
+
+			every_scheme = {
+
+				limit = {
+
+					OR = {
+
+						AND = {
+							scheme_type = abduct
+							scheme_target_character = root
+						}
+
+						AND = {
+							scheme_type = murder
+							scheme_target_character = root
+						}
+					}
+				}
+
+				end_scheme = yes
+			}
+
+
+			remove_character_flag = segrellion_vale_debt_enforcer
+		}
+	}
 }
 
 # =========================================================

@@ -4311,3 +4311,176 @@ segrellion_jon_remove_baelish_riverlands_cb = {
 		}
 	}
 }
+
+# =========================================================
+# THE VALE COLLECTS ITS DEBT
+# =========================================================
+
+segrellion_vale_debt_repayment_cb = {
+
+	icon = claim
+
+	group = conquest
+
+	combine_into_one = yes
+
+	target_titles = none
+
+	allow_hostages = no
+
+	white_peace_possible = no
+
+
+	allowed_for_character = {
+
+		this = title:e_the_vale.holder
+
+		has_character_flag = segrellion_vale_debt_war_authorized
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = {
+
+			this = character:Segrellion_60
+
+			is_alive = yes
+
+			has_character_flag = segrellion_vale_debt_active
+
+			has_variable = segrellion_vale_debt
+
+			var:segrellion_vale_debt > 0
+		}
+	}
+
+
+	valid_to_start = {
+		always = yes
+	}
+
+
+	should_invalidate = {
+
+		OR = {
+
+			scope:defender = {
+				is_alive = no
+			}
+
+			scope:defender = {
+				NOT = {
+					has_character_flag = segrellion_vale_debt_active
+				}
+			}
+		}
+	}
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+		scope:attacker = {
+			remove_character_flag = segrellion_vale_debt_war_authorized
+		}
+	}
+
+
+	# =====================================================
+	# THE VALE WINS
+	#
+	# DAEMON PAYS TWICE THE REMAINING DEBT.
+	# HE CAN BE FORCED INTO NEGATIVE GOLD.
+	# =====================================================
+
+	on_victory = {
+
+		scope:attacker = {
+
+			add_gold = {
+
+				value = scope:defender.var:segrellion_vale_debt
+
+				multiply = 2
+			}
+		}
+
+
+		scope:defender = {
+
+			add_gold = {
+
+				value = var:segrellion_vale_debt
+
+				multiply = -2
+			}
+
+
+			add_character_flag = segrellion_vale_debt_paid_by_war
+
+
+			segrellion_finish_vale_debt_effect = yes
+
+
+			trigger_event = {
+				id = segrellion_support.6300
+				days = 1
+			}
+		}
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	on_victory_desc = {
+		desc = segrellion_vale_debt_repayment_victory_desc
+	}
+
+
+	# =====================================================
+	# DAEMON WINS
+	#
+	# The Vale has exhausted every method of collection.
+	# Its claim is broken.
+	# =====================================================
+
+	on_defeat = {
+
+		scope:defender = {
+
+			add_character_flag = segrellion_vale_debt_claim_broken
+
+
+			segrellion_finish_vale_debt_effect = yes
+
+
+			trigger_event = {
+				id = segrellion_support.6301
+				days = 1
+			}
+		}
+
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_defeat_desc = {
+		desc = segrellion_vale_debt_repayment_defeat_desc
+	}
+
+
+	on_primary_attacker_death = inherit
+
+	on_primary_defender_death = inherit
+
+	transfer_behavior = transfer
+
+
+	war_name = "segrellion_vale_debt_repayment_war_name"
+
+	cb_name = "segrellion_vale_debt_repayment_cb_name"
+}
