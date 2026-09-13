@@ -1,32 +1,90 @@
-# Repair revealed Sansa in existing saves; leave her disguise intact before reveal.
+# =========================================================
+# SANSA STARK IDENTITY RECOVERY
+#
+# Repairs old saves and prevents any surviving Alayne/Stone
+# identity layer after Sansa has been publicly revealed.
+# =========================================================
+
+
+# =========================================================
+# EXISTING SAVE RECOVERY
+# =========================================================
+
 on_game_start_after_lobby = {
+
 	on_actions = {
-		delay = { days = 1 }
+
+		delay = {
+			days = 1
+		}
+
 		segrellion_sansa_revealed_name_recovery
 	}
 }
 
+
+# =========================================================
+# PERIODIC FAILSAFE
+# =========================================================
+
 monthly_global_pulse = {
-	on_actions = { segrellion_sansa_revealed_name_recovery }
+
+	on_actions = {
+		segrellion_sansa_revealed_name_recovery
+	}
 }
 
+
+# =========================================================
+# FULL IDENTITY RECOVERY
+# =========================================================
+
 segrellion_sansa_revealed_name_recovery = {
+
 	effect = {
+
 		character:Stark_Dummy_8 ?= {
+
 			if = {
+
 				limit = {
+
 					is_alive = yes
+
+
+					# =========================================
+					# ANY OF THESE MEANS SANSA SHOULD ALREADY
+					# BE PUBLICLY KNOWN AS SANSA STARK.
+					#
+					# The legacy flags are included so broken
+					# existing saves repair themselves.
+					# =========================================
+
 					OR = {
+
 						has_character_flag = segrellion_sansa_identity_revealed
+
+						has_character_flag = segrellion_sansa_is_true_stark
+
 						has_character_flag = segrellion_sansa_under_daemon_protection
+
 						has_character_flag = segrellion_sansa_arrived_flamelands
 					}
 				}
-				# Reapply even if an older repair flag is present in the save.
-				# Repair the name without repeating parentage or House changes.
-				change_first_name = Sansa
-				add_character_flag = segrellion_sansa_name_restored
-				add_character_flag = segrellion_sansa_explicit_name_restored
+
+
+				# =============================================
+				# DO NOT ONLY CHANGE HER FIRST NAME.
+				#
+				# Restore the complete identity every time:
+				# - Sansa
+				# - House Stark
+				# - legitimate
+				# - no Stone nickname
+				# - no hidden Stone surname trait
+				# =============================================
+
+				segrellion_reveal_sansa_stark_effect = yes
 			}
 		}
 	}
