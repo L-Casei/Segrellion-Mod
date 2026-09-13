@@ -170,6 +170,13 @@ segrellion_young_griff_dragon.0010 = {
 	immediate = {
 
 		remove_character_flag = segrellion_young_griff_dragon_research_underway
+
+		# Clear any stale state left by an older/broken attempt.
+		remove_character_flag = segrellion_young_griff_dragon_route_event_started
+
+		remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
+		remove_character_flag = segrellion_young_griff_dragon_search_red_lake
+		remove_character_flag = segrellion_young_griff_dragon_search_summerhall
 	}
 
 
@@ -206,13 +213,18 @@ segrellion_young_griff_dragon.0010 = {
 
 		hidden_effect = {
 
+			remove_character_flag = segrellion_young_griff_dragon_route_event_started
+
 			remove_character_flag = segrellion_young_griff_dragon_search_red_lake
 			remove_character_flag = segrellion_young_griff_dragon_search_summerhall
 
 			add_character_flag = segrellion_young_griff_dragon_search_dragonstone
 
+
 			trigger_event = {
+
 				id = segrellion_young_griff_dragon.0011
+
 				days = 1
 			}
 		}
@@ -238,13 +250,18 @@ segrellion_young_griff_dragon.0010 = {
 
 		hidden_effect = {
 
+			remove_character_flag = segrellion_young_griff_dragon_route_event_started
+
 			remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
 			remove_character_flag = segrellion_young_griff_dragon_search_summerhall
 
 			add_character_flag = segrellion_young_griff_dragon_search_red_lake
 
+
 			trigger_event = {
+
 				id = segrellion_young_griff_dragon.0011
+
 				days = 1
 			}
 		}
@@ -270,13 +287,18 @@ segrellion_young_griff_dragon.0010 = {
 
 		hidden_effect = {
 
+			remove_character_flag = segrellion_young_griff_dragon_route_event_started
+
 			remove_character_flag = segrellion_young_griff_dragon_search_dragonstone
 			remove_character_flag = segrellion_young_griff_dragon_search_red_lake
 
 			add_character_flag = segrellion_young_griff_dragon_search_summerhall
 
+
 			trigger_event = {
+
 				id = segrellion_young_griff_dragon.0011
+
 				days = 1
 			}
 		}
@@ -333,40 +355,61 @@ segrellion_young_griff_dragon.0011 = {
 	immediate = {
 
 		# =================================================
-		# DRAGONSTONE
+		# IF HE IS ALREADY TRAVELLING
+		#
+		# Do not destroy the current journey.
+		# Retry this controller later.
 		# =================================================
 
 		if = {
 
 			limit = {
+
+				exists = current_travel_plan
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragon.0011
+
+				days = 7
+			}
+		}
+
+
+		# =================================================
+		# DRAGONSTONE
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
 				has_character_flag = segrellion_young_griff_dragon_search_dragonstone
 			}
 
 
+			# Already there: immediately start the search.
+
 			if = {
 
 				limit = {
+
 					location = title:c_dragonstone.title_province
 				}
 
+
 				trigger_event = {
+
 					id = segrellion_young_griff_dragon.0040
+
+					days = 1
 				}
 			}
 
 
-			else_if = {
-
-				limit = {
-					exists = current_travel_plan
-				}
-
-				trigger_event = {
-					id = segrellion_young_griff_dragon.0011
-					days = 7
-				}
-			}
-
+			# Otherwise physically travel there.
 
 			else = {
 
@@ -374,18 +417,24 @@ segrellion_young_griff_dragon.0011 = {
 
 					destination = title:c_dragonstone.title_province
 
+					players_use_planner = no
+
 					return_trip = yes
 
-					on_arrival_destinations = all_but_last
+					on_arrival_destinations = first
 
 					on_arrival_event = segrellion_young_griff_dragon.0040
-
-					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
 				}
 
 
+				# Watchdog.
+				# If for any reason the trip is not running,
+				# this will try again.
+
 				trigger_event = {
+
 					id = segrellion_young_griff_dragon.0011
+
 					days = 7
 				}
 			}
@@ -399,6 +448,7 @@ segrellion_young_griff_dragon.0011 = {
 		else_if = {
 
 			limit = {
+
 				has_character_flag = segrellion_young_griff_dragon_search_red_lake
 			}
 
@@ -406,24 +456,16 @@ segrellion_young_griff_dragon.0011 = {
 			if = {
 
 				limit = {
+
 					location = title:c_red_lake.title_province
 				}
 
+
 				trigger_event = {
+
 					id = segrellion_young_griff_dragon.0020
-				}
-			}
 
-
-			else_if = {
-
-				limit = {
-					exists = current_travel_plan
-				}
-
-				trigger_event = {
-					id = segrellion_young_griff_dragon.0011
-					days = 7
+					days = 1
 				}
 			}
 
@@ -434,18 +476,20 @@ segrellion_young_griff_dragon.0011 = {
 
 					destination = title:c_red_lake.title_province
 
+					players_use_planner = no
+
 					return_trip = yes
 
-					on_arrival_destinations = all_but_last
+					on_arrival_destinations = first
 
 					on_arrival_event = segrellion_young_griff_dragon.0020
-
-					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
 				}
 
 
 				trigger_event = {
+
 					id = segrellion_young_griff_dragon.0011
+
 					days = 7
 				}
 			}
@@ -459,6 +503,7 @@ segrellion_young_griff_dragon.0011 = {
 		else_if = {
 
 			limit = {
+
 				has_character_flag = segrellion_young_griff_dragon_search_summerhall
 			}
 
@@ -466,24 +511,16 @@ segrellion_young_griff_dragon.0011 = {
 			if = {
 
 				limit = {
+
 					location = title:c_summerhall.title_province
 				}
 
+
 				trigger_event = {
+
 					id = segrellion_young_griff_dragon.0030
-				}
-			}
 
-
-			else_if = {
-
-				limit = {
-					exists = current_travel_plan
-				}
-
-				trigger_event = {
-					id = segrellion_young_griff_dragon.0011
-					days = 7
+					days = 1
 				}
 			}
 
@@ -494,18 +531,20 @@ segrellion_young_griff_dragon.0011 = {
 
 					destination = title:c_summerhall.title_province
 
+					players_use_planner = no
+
 					return_trip = yes
 
-					on_arrival_destinations = all_but_last
+					on_arrival_destinations = first
 
 					on_arrival_event = segrellion_young_griff_dragon.0030
-
-					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
 				}
 
 
 				trigger_event = {
+
 					id = segrellion_young_griff_dragon.0011
+
 					days = 7
 				}
 			}
@@ -887,8 +926,6 @@ segrellion_young_griff_dragon.0040 = {
 
 	theme = dragon
 
-	add_character_flag = segrellion_young_griff_dragon_route_event_started
-
 	trigger = {
 
 		this = character:IAF_Young_Griff_1
@@ -900,6 +937,11 @@ segrellion_young_griff_dragon.0040 = {
 		NOT = {
 			has_character_flag = segrellion_young_griff_dragon_route_resolved
 		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_dragon_route_event_started
 	}
 
 
