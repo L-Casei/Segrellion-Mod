@@ -590,7 +590,12 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 
 	if = {
 		limit = {
-			has_title = title:h_the_iron_throne
+			OR = {
+				is_alive = no
+				is_imprisoned = yes
+				has_title = title:h_the_iron_throne
+				has_character_flag = segrellion_young_griff_iron_throne_war_started
+			}
 		}
 	}
 
@@ -630,7 +635,17 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 		# mandatory before the Iron Throne invasion.
 		# -------------------------------------------------
 
+		# Varys has already been accepted, but the war failed to start.
+		# Replaying his scene is blocked by path_2_varys_seen.
 		if = {
+			limit = {
+				has_character_flag = segrellion_young_griff_path_2_varys_seen
+				has_character_flag = segrellion_young_griff_invasion_event_failed
+			}
+			segrellion_young_griff_start_path_1_throne_war_effect = yes
+		}
+
+		else_if = {
 
 			limit = {
 
@@ -730,11 +745,53 @@ segrellion_young_griff_force_iron_throne_progression_effect = {
 			}
 		}
 
-		remove_character_flag = segrellion_young_griff_invasion_event_failed
-		remove_character_flag = segrellion_young_griff_invasion_event_requested
-		remove_character_flag = segrellion_young_griff_invasion_event_scheduled
-
-		segrellion_young_griff_start_path_1_throne_war_effect = yes
+		# Preserve the six-month wait and Varys' proposal on Path 1.
+		if = {
+			limit = {
+				has_character_flag = segrellion_young_griff_invasion_event_failed
+				OR = {
+					has_character_flag = segrellion_young_griff_independent_varys_seen
+					has_character_flag = segrellion_young_griff_path_1_varys_seen
+				}
+			}
+			segrellion_young_griff_start_path_1_throne_war_effect = yes
+		}
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_young_griff_canon_path_1
+				has_character_flag = segrellion_young_griff_free_for_iron_throne
+				OR = {
+					has_character_flag = segrellion_young_griff_left_daemon_stannis
+					has_character_flag = segrellion_young_griff_left_daemon_daenerys
+				}
+				NOR = {
+					has_character_flag = segrellion_young_griff_independent_throne_path_started
+					has_character_flag = segrellion_young_griff_independent_throne_path_scheduled
+				}
+			}
+			add_character_flag = {
+				flag = segrellion_young_griff_independent_throne_path_scheduled
+				days = 30
+			}
+			trigger_event = { id = segrellion_young_griff.7900 days = 1 }
+		}
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_young_griff_canon_path_1
+				has_character_flag = segrellion_young_griff_independent_throne_path_started
+				has_character_flag = segrellion_young_griff_varys_contacted
+				character:Eunuch_1 = { is_alive = yes }
+				NOR = {
+					has_character_flag = segrellion_young_griff_independent_varys_seen
+					has_character_flag = segrellion_young_griff_independent_varys_scheduled
+				}
+			}
+			add_character_flag = {
+				flag = segrellion_young_griff_independent_varys_scheduled
+				days = 30
+			}
+			trigger_event = { id = segrellion_young_griff.7910 days = { 2 5 } }
+		}
 	}
 }
 
@@ -953,7 +1010,7 @@ segrellion_young_griff_start_path_1_throne_war_effect = {
 
 					is_alive = yes
 
-					this != root
+					this != character:IAF_Young_Griff_1
 				}
 			}
 		}
@@ -1000,7 +1057,7 @@ segrellion_young_griff_start_path_1_throne_war_effect = {
 
 			target = scope:segrellion_young_griff_throne_defender
 
-			claimant = root
+			claimant = character:IAF_Young_Griff_1
 
 			target_title = title:h_the_iron_throne
 		}
