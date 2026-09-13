@@ -1,0 +1,2610 @@
+namespace = segrellion_hugh_black_unicorn
+
+
+# =========================================================
+# 1000 - HUGH SETS OUT
+# =========================================================
+
+segrellion_hugh_black_unicorn.1000 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		is_alive = yes
+
+		has_character_flag = hugh_intends_skagos_journey
+	}
+
+
+	immediate = {
+
+		remove_character_flag = hugh_black_unicorn_journey_queued
+		add_character_flag = hugh_black_unicorn_journey_started
+
+
+		location = {
+			save_scope_as = hugh_black_unicorn_origin_scope
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:hugh_black_unicorn_origin_scope
+			}
+
+
+			set_variable = {
+
+				name = hugh_black_unicorn_origin
+
+				value = scope:hugh_black_unicorn_origin_scope
+			}
+		}
+
+
+		current_travel_plan ?= {
+			abort_travel_plan = yes
+		}
+
+
+		start_travel_plan = {
+
+			destination = title:b_bitter_dryn.title_province
+
+			return_trip = no
+
+			on_arrival_event = segrellion_hugh_black_unicorn.1010
+
+			on_arrival_destinations = first
+
+			on_travel_planner_cancel_event = segrellion_hugh_black_unicorn.1098
+		}
+	}
+}
+
+
+# =========================================================
+# 1010 - THE TAVERN AT BITTER DRYNN
+# =========================================================
+
+segrellion_hugh_black_unicorn.1010 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1010.t
+	desc = segrellion_hugh_black_unicorn.1010.desc
+
+	theme = travel
+
+
+	override_background = {
+		reference = segrellion_westerosi_northern_tavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1010.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1010.a.tt
+
+
+		hidden_effect = {
+
+			add_character_flag = hugh_black_unicorn_heard_child_rumor
+
+
+			start_travel_plan = {
+
+				destination = title:b_cold_peaks.title_province
+
+				return_trip = no
+
+				on_arrival_event = segrellion_hugh_black_unicorn.1020
+
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_hugh_black_unicorn.1098
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1020 - MEN IN THE MOUNTAINS
+# =========================================================
+
+segrellion_hugh_black_unicorn.1020 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1020.t
+	desc = segrellion_hugh_black_unicorn.1020.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = army_camp
+	}
+
+
+	immediate = {
+
+		global_var:segrellion_visenya_skagosi_warrior_1 ?= {
+			save_scope_as = hugh_skagosi_guard
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = fear
+	}
+
+
+	right_portrait = {
+
+		character = scope:hugh_skagosi_guard
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1020.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1020.a.tt
+
+
+		set_location = title:b_cold_peaks.title_province
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1030
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1030 - THE WOMAN IN THE CAVE
+# =========================================================
+
+segrellion_hugh_black_unicorn.1030 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1030.t
+	desc = segrellion_hugh_black_unicorn.1030.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1030.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1030.a.tt
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1040
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1040 - NO LOST BOY
+# =========================================================
+
+segrellion_hugh_black_unicorn.1040 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1040.t
+	desc = segrellion_hugh_black_unicorn.1040.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = amusement
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1040.a
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1050
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1050 - SOMETHING DOES NOT FIT
+# =========================================================
+
+segrellion_hugh_black_unicorn.1050 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1050.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Black_Unicorn_1 = {
+						has_character_flag = segrellion_black_unicorn_secret_icebringer
+					}
+				}
+
+				desc = segrellion_hugh_black_unicorn.1050.desc_icebringer
+			}
+
+
+			desc = segrellion_hugh_black_unicorn.1050.desc
+		}
+	}
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# NO ICEBRINGER - OFFER HELP
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1050.a
+
+		trigger = {
+
+			character:Black_Unicorn_1 = {
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_secret_icebringer
+				}
+			}
+		}
+
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1050.a.tt
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1060
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# ICEBRINGER - HUGH RECOGNIZES HER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1050.b
+
+		trigger = {
+
+			character:Black_Unicorn_1 = {
+				has_character_flag = segrellion_black_unicorn_secret_icebringer
+			}
+		}
+
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1050.b.tt
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1100
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# NO ICEBRINGER - LEAVE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1050.c
+
+		trigger = {
+
+			character:Black_Unicorn_1 = {
+
+				NOT = {
+					has_character_flag = segrellion_black_unicorn_secret_icebringer
+				}
+			}
+		}
+
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1050.c.tt
+
+
+		add_character_flag = hugh_black_unicorn_report_little_pending
+
+		add_character_flag = hugh_black_unicorn_warned_never_return
+
+
+		segrellion_hugh_black_unicorn_return_home_effect = yes
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 1060 - TOO MUCH AT STAKE
+# =========================================================
+
+segrellion_hugh_black_unicorn.1060 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1060.t
+	desc = segrellion_hugh_black_unicorn.1060.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = disgust
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1060.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1060.a.tt
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1070
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 65
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1060.b
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1060.b.tt
+
+
+		add_character_flag = hugh_black_unicorn_report_little_pending
+		add_character_flag = hugh_black_unicorn_warned_never_return
+
+
+		segrellion_hugh_black_unicorn_return_home_effect = yes
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+}
+
+
+# =========================================================
+# 1070 - WAIT
+# =========================================================
+
+segrellion_hugh_black_unicorn.1070 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1070.t
+	desc = segrellion_hugh_black_unicorn.1070.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1070.a
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1080
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1080 - THE DOORS OF VHAL
+# =========================================================
+
+segrellion_hugh_black_unicorn.1080 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1080.t
+	desc = segrellion_hugh_black_unicorn.1080.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1080.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1080.a.tt
+
+
+		add_character_flag = hugh_black_unicorn_offered_vhal_to_unknown_heir
+		add_character_flag = hugh_black_unicorn_report_little_pending
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_hugh_route_no_ice_vhal_pending
+			add_character_flag = segrellion_visenya_remembers_hugh_vhal_offer
+		}
+
+
+		segrellion_hugh_black_unicorn_start_wait_clock_effect = yes
+
+		segrellion_hugh_black_unicorn_return_home_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1090 - HUGH RETURNS
+# =========================================================
+
+segrellion_hugh_black_unicorn.1090 = {
+
+	type = character_event
+	hidden = yes
+
+
+	immediate = {
+
+		remove_character_flag = hugh_black_unicorn_journey_started
+		remove_character_flag = hugh_intends_skagos_journey
+
+
+		if = {
+
+			limit = {
+				has_character_flag = hugh_black_unicorn_report_little_pending
+			}
+
+
+			remove_character_flag = hugh_black_unicorn_report_little_pending
+
+
+			character:Segrellion_60 ?= {
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1095
+
+					days = { 2 5 }
+				}
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_character_flag = hugh_black_unicorn_lie_report_pending
+			}
+
+
+			remove_character_flag = hugh_black_unicorn_lie_report_pending
+
+
+			character:Segrellion_60 ?= {
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1195
+
+					days = { 2 5 }
+				}
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_character_flag = hugh_black_unicorn_full_report_pending
+			}
+
+
+			remove_character_flag = hugh_black_unicorn_full_report_pending
+
+
+			character:Segrellion_60 ?= {
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1500
+
+					days = { 2 5 }
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1095 - HUGH'S THIN REPORT
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_hugh_black_unicorn.1095 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_43
+
+	opening = segrellion_hugh_black_unicorn.1095.opening
+
+	title = segrellion_hugh_black_unicorn.1095.t
+	desc = segrellion_hugh_black_unicorn.1095.desc
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1095.a
+
+		add_character_flag = segrellion_daemon_received_hugh_skagos_report
+	}
+}
+
+
+# =========================================================
+# 1098 - HUGH'S TRAVEL WAS CANCELLED
+# =========================================================
+
+segrellion_hugh_black_unicorn.1098 = {
+
+	type = character_event
+	hidden = yes
+
+
+	immediate = {
+
+		remove_character_flag = hugh_black_unicorn_journey_queued
+		remove_character_flag = hugh_black_unicorn_journey_started
+		remove_character_flag = hugh_intends_skagos_journey
+	}
+}
+
+
+# =========================================================
+# 1100 - ICEBRINGER
+# =========================================================
+
+segrellion_hugh_black_unicorn.1100 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1100.t
+	desc = segrellion_hugh_black_unicorn.1100.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1100.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1100.a.tt
+
+
+		add_character_flag = hugh_black_unicorn_recognized_icebringer
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1110
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1110 - MAY I SEE IT?
+# =========================================================
+
+segrellion_hugh_black_unicorn.1110 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1110.t
+	desc = segrellion_hugh_black_unicorn.1110.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = disgust
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1110.a
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1120
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1120 - VISENYA
+# =========================================================
+
+segrellion_hugh_black_unicorn.1120 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1120.t
+	desc = segrellion_hugh_black_unicorn.1120.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_hugh_knows_visenya_identity
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_identity_revealed_to_hugh
+		}
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1120.a
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1130
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1130 - DAEMON SEGRELLION
+# =========================================================
+
+segrellion_hugh_black_unicorn.1130 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1130.t
+	desc = segrellion_hugh_black_unicorn.1130.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1130.a
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1140
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1140 - WHO IS DAEMON?
+# =========================================================
+
+segrellion_hugh_black_unicorn.1140 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1140.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+
+						any_known_secret = {
+
+							secret_type = secret_unmarried_illegitimate_child
+
+							secret_target = {
+								this = character:Segrellion_60
+							}
+						}
+
+
+						character:Segrellion_60 = {
+							has_character_flag = segrellion_daemon_parentage_known_with_hugh
+						}
+					}
+				}
+
+				desc = segrellion_hugh_black_unicorn.1140.desc_lie
+			}
+
+
+			desc = segrellion_hugh_black_unicorn.1140.desc
+		}
+	}
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1140.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1140.a.tt
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1150
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1150 - THE HEIR OF THE FLAMELANDS
+# =========================================================
+
+segrellion_hugh_black_unicorn.1150 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1150.t
+	desc = segrellion_hugh_black_unicorn.1150.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1150.a
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1160
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1160 - HUGH'S CHOICE
+# =========================================================
+
+segrellion_hugh_black_unicorn.1160 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1160.t
+	desc = segrellion_hugh_black_unicorn.1160.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# PEACEFUL VHAL ROUTE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1160.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1160.a.tt
+
+
+		add_character_flag = hugh_black_unicorn_offered_peaceful_vhal
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1170
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+
+	# =====================================================
+	# SUPPORT VISENYA'S CLAIM
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1160.b
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1160.b.tt
+
+
+		add_character_flag = hugh_black_unicorn_betraying_daemon
+		add_character_flag = hugh_black_unicorn_lie_report_pending
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_hugh_route_coup_vhal
+			add_character_flag = segrellion_visenya_hugh_secret_alliance
+		}
+
+
+		segrellion_hugh_black_unicorn_move_visenya_to_vhal_effect = yes
+
+		segrellion_hugh_black_unicorn_start_wait_clock_effect = yes
+
+		segrellion_hugh_black_unicorn_return_home_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	# =====================================================
+	# LOYAL TO DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1160.c
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1160.c.tt
+
+
+		add_character_flag = hugh_black_unicorn_refused_visenya_claim
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1180
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}
+
+
+# =========================================================
+# 1170 - WILL VISENYA ACCEPT VHAL?
+# =========================================================
+
+segrellion_hugh_black_unicorn.1170 = {
+
+	type = character_event
+	hidden = yes
+
+
+	immediate = {
+
+		random_list = {
+
+			90 = {
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1171
+
+					days = 1
+				}
+			}
+
+
+			10 = {
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1172
+
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1171 - VISENYA ACCEPTS
+# =========================================================
+
+segrellion_hugh_black_unicorn.1171 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1171.t
+	desc = segrellion_hugh_black_unicorn.1171.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1171.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1171.a.tt
+
+
+		add_character_flag = hugh_black_unicorn_promised_non_interference
+		add_character_flag = hugh_black_unicorn_lie_report_pending
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_hugh_route_peaceful_vhal
+			add_character_flag = segrellion_visenya_accepted_hugh_protection
+		}
+
+
+		segrellion_hugh_black_unicorn_move_visenya_to_vhal_effect = yes
+
+		segrellion_hugh_black_unicorn_start_wait_clock_effect = yes
+
+		segrellion_hugh_black_unicorn_return_home_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1172 - VISENYA REFUSES
+# =========================================================
+
+segrellion_hugh_black_unicorn.1172 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1172.t
+	desc = segrellion_hugh_black_unicorn.1172.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1172.a
+
+
+		add_character_flag = hugh_black_unicorn_full_report_pending
+
+
+		segrellion_hugh_black_unicorn_return_home_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1180 - DOES VISENYA LET HUGH LEAVE?
+# =========================================================
+
+segrellion_hugh_black_unicorn.1180 = {
+
+	type = character_event
+	hidden = yes
+
+
+	immediate = {
+
+		random_list = {
+
+			60 = {
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1181
+
+					days = 1
+				}
+			}
+
+
+			40 = {
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1182
+
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1181 - YOU MAY LEAVE
+# =========================================================
+
+segrellion_hugh_black_unicorn.1181 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1181.t
+	desc = segrellion_hugh_black_unicorn.1181.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1181.a
+
+
+		add_character_flag = hugh_black_unicorn_full_report_pending
+
+
+		segrellion_hugh_black_unicorn_return_home_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1182 - NO WITNESSES
+# =========================================================
+
+segrellion_hugh_black_unicorn.1182 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1182.t
+	desc = segrellion_hugh_black_unicorn.1182.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_hidden_cavern
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = fear
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1182.a
+
+
+		segrellion_hugh_black_unicorn_kill_hugh_secretly_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1195 - HUGH LIES TO DAEMON
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_hugh_black_unicorn.1195 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_43
+
+	opening = segrellion_hugh_black_unicorn.1195.opening
+
+	title = segrellion_hugh_black_unicorn.1195.t
+	desc = segrellion_hugh_black_unicorn.1195.desc
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1195.a
+
+		add_character_flag = segrellion_daemon_believes_hugh_found_nothing
+	}
+}
+
+
+# =========================================================
+# 1200 - VISENYA COMES TO VHAL
+#
+# NO-ICEBRINGER PATH
+# =========================================================
+
+segrellion_hugh_black_unicorn.1200 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1200.t
+	desc = segrellion_hugh_black_unicorn.1200.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	immediate = {
+
+		character:Black_Unicorn_1 ?= {
+
+			set_location = root.capital_province
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1200.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1200.a.tt
+
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_hugh_route_no_ice_vhal_pending
+
+			add_character_flag = segrellion_hugh_route_vhal_guest
+			add_character_flag = segrellion_visenya_hugh_vhal_guarantee_tested
+		}
+
+
+		segrellion_hugh_black_unicorn_move_visenya_to_vhal_effect = yes
+
+
+		if = {
+
+			limit = {
+
+				exists = global_var:segrellion_historical_rhaegon
+
+				global_var:segrellion_historical_rhaegon = {
+					is_alive = yes
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_hugh_black_unicorn.1210
+
+				days = 1
+			}
+		}
+
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_hugh_black_unicorn.1220
+
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1210 - THERE IS A DRAGON ON VHAL
+# =========================================================
+
+segrellion_hugh_black_unicorn.1210 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1210.t
+	desc = segrellion_hugh_black_unicorn.1210.desc
+
+	theme = realm
+
+
+	override_background = {
+		reference = courtyard
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = amusement
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1210.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1210.a.tt
+
+
+		add_character_flag = hugh_black_unicorn_saw_rhaegon
+
+
+		segrellion_hugh_black_unicorn_house_rhaegon_at_vhal_effect = yes
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1220
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1220 - THROUGH THE NIGHT
+# =========================================================
+
+segrellion_hugh_black_unicorn.1220 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1220.t
+	desc = segrellion_hugh_black_unicorn.1220.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1220.a
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1230
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 1230 - NOT ME
+# =========================================================
+
+segrellion_hugh_black_unicorn.1230 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1230.t
+	desc = segrellion_hugh_black_unicorn.1230.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = amusement
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = disgust
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1230.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1230.a.tt
+
+
+		add_character_flag = hugh_black_unicorn_suggested_daemon_visenya_marriage
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_visenya_heard_hugh_marriage_proposal
+			add_character_flag = segrellion_visenya_vhal_negotiation_pending
+		}
+
+
+		add_character_flag = segrellion_hugh_visenya_negotiation_ready
+	}
+}
+
+
+# =========================================================
+# 1300 - DAEMON NOW HOLDS THE FLAMELANDS
+#
+# PEACEFUL ICEBRINGER VHAL ROUTE
+# =========================================================
+
+segrellion_hugh_black_unicorn.1300 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1300.t
+	desc = segrellion_hugh_black_unicorn.1300.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1300.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1300.a.tt
+
+
+		add_character_flag = segrellion_hugh_visenya_negotiation_ready
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_visenya_vhal_negotiation_pending
+		}
+	}
+}
+
+
+# =========================================================
+# 1400 - THE VHAL COUP
+# =========================================================
+
+segrellion_hugh_black_unicorn.1400 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1400.t
+	desc = segrellion_hugh_black_unicorn.1400.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1400.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1400.a.tt
+
+
+		hidden_effect = {
+
+			random_list = {
+
+				5 = {
+
+					# -----------------------------------------
+					# SPYMASTER DETECTION
+					# -----------------------------------------
+
+					modifier = {
+
+						add = 4
+
+						character:Segrellion_60 = {
+
+							cp:councillor_spymaster ?= {
+
+								this != root
+
+								intrigue >= 10
+								intrigue < 15
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 10
+
+						character:Segrellion_60 = {
+
+							cp:councillor_spymaster ?= {
+
+								this != root
+
+								intrigue >= 15
+								intrigue < 20
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 18
+
+						character:Segrellion_60 = {
+
+							cp:councillor_spymaster ?= {
+
+								this != root
+
+								intrigue >= 20
+								intrigue < 25
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 26
+
+						character:Segrellion_60 = {
+
+							cp:councillor_spymaster ?= {
+
+								this != root
+
+								intrigue >= 25
+								intrigue < 30
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 34
+
+						character:Segrellion_60 = {
+
+							cp:councillor_spymaster ?= {
+
+								this != root
+
+								intrigue >= 30
+							}
+						}
+					}
+
+
+					# -----------------------------------------
+					# MARSHAL / MASTER-AT-ARMS DETECTION
+					# -----------------------------------------
+
+					modifier = {
+
+						add = 3
+
+						character:Segrellion_60 = {
+
+							cp:councillor_marshal ?= {
+
+								this != root
+
+								martial >= 10
+								martial < 15
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 7
+
+						character:Segrellion_60 = {
+
+							cp:councillor_marshal ?= {
+
+								this != root
+
+								martial >= 15
+								martial < 20
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 12
+
+						character:Segrellion_60 = {
+
+							cp:councillor_marshal ?= {
+
+								this != root
+
+								martial >= 20
+								martial < 25
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 17
+
+						character:Segrellion_60 = {
+
+							cp:councillor_marshal ?= {
+
+								this != root
+
+								martial >= 25
+								martial < 30
+							}
+						}
+					}
+
+
+					modifier = {
+
+						add = 22
+
+						character:Segrellion_60 = {
+
+							cp:councillor_marshal ?= {
+
+								this != root
+
+								martial >= 30
+							}
+						}
+					}
+
+
+					# -----------------------------------------
+					# HUGH BEING ON DAEMON'S COUNCIL
+					# -----------------------------------------
+
+					modifier = {
+
+						factor = 0.50
+
+						root = {
+							is_councillor_of = character:Segrellion_60
+						}
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_hugh_black_unicorn.1410
+
+						days = 1
+					}
+				}
+
+
+				95 = {
+
+					trigger_event = {
+
+						id = segrellion_hugh_black_unicorn.1420
+
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1410 - CAUGHT
+# =========================================================
+
+segrellion_hugh_black_unicorn.1410 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1410.t
+	desc = segrellion_hugh_black_unicorn.1410.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = courtyard
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = fear
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1410.a
+
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_hugh_route_coup_vhal
+
+			add_character_flag = segrellion_hugh_route_coup_failed
+		}
+
+
+		add_character_flag = hugh_black_unicorn_coup_failed
+
+
+		character:Segrellion_60 = {
+
+			imprison = {
+
+				target = root
+
+				type = dungeon
+			}
+
+
+			imprison = {
+
+				target = character:Black_Unicorn_1
+
+				type = dungeon
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 1420 - THE CASTLE IS THEIRS
+# =========================================================
+
+segrellion_hugh_black_unicorn.1420 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1420.t
+	desc = segrellion_hugh_black_unicorn.1420.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1420.a
+
+
+		segrellion_hugh_black_unicorn_execute_vhal_coup_effect = yes
+	}
+}
+
+
+# =========================================================
+# 1500 - HUGH TELLS DAEMON THE TRUTH
+#
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_hugh_black_unicorn.1500 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_43
+
+	opening = segrellion_hugh_black_unicorn.1500.opening
+
+	title = segrellion_hugh_black_unicorn.1500.t
+	desc = segrellion_hugh_black_unicorn.1500.desc
+
+
+	# =====================================================
+	# TRAP VISENYA
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1500.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1500.a.tt
+
+
+		add_character_flag = segrellion_daemon_warned_of_visenya_by_hugh
+		add_character_flag = segrellion_daemon_orders_hugh_visenya_trap
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_hugh_route_daemon_trap
+		}
+
+
+		character:Segrellion_43 = {
+
+			add_character_flag = hugh_black_unicorn_daemon_trap_pending
+
+			segrellion_hugh_black_unicorn_start_wait_clock_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# =====================================================
+	# IGNORE THE WARNING
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1500.b
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1500.b.tt
+
+
+		add_character_flag = segrellion_daemon_dismissed_hugh_warning
+
+
+		segrellion_hugh_black_unicorn_release_normal_visenya_path_effect = yes
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+
+# =========================================================
+# 1520 - HUGH CHOOSES WHO TO BETRAY
+# =========================================================
+
+segrellion_hugh_black_unicorn.1520 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1520.t
+	desc = segrellion_hugh_black_unicorn.1520.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# LOYAL TO DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1520.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1520.a.tt
+
+
+		add_character_flag = hugh_black_unicorn_trap_loyal_to_daemon
+
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_hugh_route_daemon_trap
+
+			add_character_flag = segrellion_hugh_route_daemon_trap_active
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1530
+
+			days = { 20 40 }
+		}
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# WARN VISENYA
+	# =====================================================
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1520.b
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1520.b.tt
+
+
+		add_character_flag = hugh_black_unicorn_betrayed_daemon_for_visenya
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_visenya_warned_of_daemon_trap
+
+			remove_character_flag = segrellion_hugh_route_daemon_trap
+			remove_character_flag = segrellion_hugh_route_daemon_trap_active
+		}
+
+
+		segrellion_hugh_black_unicorn_release_normal_visenya_path_effect = yes
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 1530 - THE TRAP SPRINGS
+# =========================================================
+
+segrellion_hugh_black_unicorn.1530 = {
+
+	type = character_event
+
+	title = segrellion_hugh_black_unicorn.1530.t
+	desc = segrellion_hugh_black_unicorn.1530.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = courtyard
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_hugh_black_unicorn.1530.a
+
+		custom_tooltip = segrellion_hugh_black_unicorn.1530.a.tt
+
+
+		segrellion_hugh_black_unicorn_move_visenya_to_daemon_trap_effect = yes
+
+
+		character:Segrellion_60 = {
+
+			imprison = {
+
+				target = character:Black_Unicorn_1
+
+				type = dungeon
+			}
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_hugh_route_daemon_trap_active
+
+			add_character_flag = segrellion_visenya_captured_by_daemon_and_hugh
+		}
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_captured_visenya_with_hugh
+		}
+	}
+}
+
+
+# =========================================================
+# 1990 - CUSTOM HUGH ROUTE WATCH
+#
+# Wait until Daemon actually rules the Flamelands.
+# =========================================================
+
+segrellion_hugh_black_unicorn.1990 = {
+
+	type = character_event
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_43
+
+		is_alive = yes
+
+		has_character_flag = hugh_black_unicorn_wait_clock_active
+	}
+
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+
+					has_title = title:e_flamelands
+				}
+			}
+
+
+			# =================================================
+			# NO-ICEBRINGER VHAL PROMISE
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 = {
+						has_character_flag = segrellion_hugh_route_no_ice_vhal_pending
+					}
+				}
+
+
+				remove_character_flag = hugh_black_unicorn_wait_clock_active
+
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1200
+
+					days = { 20 50 }
+				}
+			}
+
+
+			# =================================================
+			# PEACEFUL ICEBRINGER ROUTE
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 = {
+						has_character_flag = segrellion_hugh_route_peaceful_vhal
+					}
+				}
+
+
+				remove_character_flag = hugh_black_unicorn_wait_clock_active
+
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1300
+
+					days = { 10 25 }
+				}
+			}
+
+
+			# =================================================
+			# HUGH + VISENYA COUP
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					character:Black_Unicorn_1 = {
+						has_character_flag = segrellion_hugh_route_coup_vhal
+					}
+				}
+
+
+				remove_character_flag = hugh_black_unicorn_wait_clock_active
+
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1400
+
+					days = { 20 45 }
+				}
+			}
+
+
+			# =================================================
+			# DAEMON'S COUNTER-TRAP
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = hugh_black_unicorn_daemon_trap_pending
+
+					character:Black_Unicorn_1 = {
+						has_character_flag = segrellion_hugh_route_daemon_trap
+					}
+				}
+
+
+				remove_character_flag = hugh_black_unicorn_wait_clock_active
+				remove_character_flag = hugh_black_unicorn_daemon_trap_pending
+
+
+				trigger_event = {
+
+					id = segrellion_hugh_black_unicorn.1520
+
+					days = { 15 30 }
+				}
+			}
+
+
+			else = {
+				remove_character_flag = hugh_black_unicorn_wait_clock_active
+			}
+		}
+
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_hugh_black_unicorn.1990
+
+				days = 30
+			}
+		}
+	}
+}

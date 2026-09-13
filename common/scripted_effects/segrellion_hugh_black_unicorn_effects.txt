@@ -1,0 +1,554 @@
+# =========================================================
+# HUGH SEGRELLION
+# THE BLACK UNICORN INVESTIGATION
+# =========================================================
+
+
+# =========================================================
+# BEGIN HUGH'S JOURNEY
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_begin_journey_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_43
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = hugh_black_unicorn_journey_queued
+			}
+
+			NOT = {
+				has_character_flag = hugh_black_unicorn_journey_started
+			}
+		}
+
+
+		add_character_flag = hugh_black_unicorn_journey_queued
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1000
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# RETURN HUGH TO WHERE HIS JOURNEY BEGAN
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_return_home_effect = {
+
+	current_travel_plan ?= {
+		abort_travel_plan = yes
+	}
+
+
+	var:hugh_black_unicorn_origin ?= {
+
+		save_scope_as = hugh_black_unicorn_return_destination
+	}
+
+
+	if = {
+
+		limit = {
+			exists = scope:hugh_black_unicorn_return_destination
+		}
+
+
+		start_travel_plan = {
+
+			destination = scope:hugh_black_unicorn_return_destination
+
+			return_trip = no
+
+			on_arrival_event = segrellion_hugh_black_unicorn.1090
+
+			on_arrival_destinations = first
+
+			on_travel_planner_cancel_event = segrellion_hugh_black_unicorn.1098
+		}
+	}
+
+
+	else = {
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1090
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# START THE WAIT FOR DAEMON TO TAKE THE FLAMELANDS
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_start_wait_clock_effect = {
+
+	if = {
+
+		limit = {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = hugh_black_unicorn_wait_clock_active
+			}
+		}
+
+
+		add_character_flag = hugh_black_unicorn_wait_clock_active
+
+
+		trigger_event = {
+
+			id = segrellion_hugh_black_unicorn.1990
+
+			days = 30
+		}
+	}
+}
+
+
+# =========================================================
+# MOVE VISENYA + HER PEOPLE TO VHAL
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_move_visenya_to_vhal_effect = {
+
+	capital_province ?= {
+		save_scope_as = hugh_vhal_destination
+	}
+
+
+	if = {
+
+		limit = {
+			NOT = {
+				exists = scope:hugh_vhal_destination
+			}
+		}
+
+
+		location ?= {
+			save_scope_as = hugh_vhal_destination
+		}
+	}
+
+
+	character:Black_Unicorn_1 ?= {
+
+		every_courtier_or_guest = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			add_to_temporary_list = segrellion_hugh_visenya_followers
+		}
+
+
+		current_travel_plan ?= {
+			abort_travel_plan = yes
+		}
+
+
+		remove_character_flag = segrellion_black_unicorn_lock_camp_skagos
+		remove_character_flag = segrellion_black_unicorn_camp_lock_started
+
+
+		if = {
+
+			limit = {
+				is_landless_adventurer = yes
+			}
+
+
+			destroy_title = primary_title
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				title:d_laamp_red_unicorn ?= {
+
+					holder = {
+						this = character:Black_Unicorn_1
+					}
+				}
+			}
+
+
+			destroy_title = title:d_laamp_red_unicorn
+		}
+
+
+		set_employer = root
+		return_to_court = yes
+
+
+		if = {
+
+			limit = {
+				exists = scope:hugh_vhal_destination
+			}
+
+
+			set_location = scope:hugh_vhal_destination
+		}
+
+
+		add_character_flag = segrellion_visenya_hidden_at_vhal_with_hugh
+	}
+
+
+	every_in_list = {
+
+		list = segrellion_hugh_visenya_followers
+
+
+		limit = {
+			is_alive = yes
+		}
+
+
+		set_employer = root
+		return_to_court = yes
+
+
+		if = {
+
+			limit = {
+				exists = scope:hugh_vhal_destination
+			}
+
+
+			set_location = scope:hugh_vhal_destination
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_followed_visenya_to_vhal
+	}
+}
+
+
+# =========================================================
+# RHAEGON ENTERS THE CAVERNS OF VHAL
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_house_rhaegon_at_vhal_effect = {
+
+	capital_province ?= {
+		save_scope_as = hugh_vhal_dragon_destination
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = global_var:segrellion_historical_rhaegon
+
+			exists = scope:hugh_vhal_dragon_destination
+		}
+
+
+		global_var:segrellion_historical_rhaegon = {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_location = scope:hugh_vhal_dragon_destination
+
+				add_character_flag = segrellion_rhaegon_housed_at_vhal_dragonpit
+				add_character_flag = segrellion_rhaegon_under_hugh_protection
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# MOVE VISENYA + HER PEOPLE INTO DAEMON'S TRAP
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_move_visenya_to_daemon_trap_effect = {
+
+	character:Segrellion_60 ?= {
+
+		capital_province ?= {
+			save_scope_as = daemon_trap_destination
+		}
+	}
+
+
+	character:Black_Unicorn_1 ?= {
+
+		every_courtier_or_guest = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			add_to_temporary_list = segrellion_hugh_visenya_trap_followers
+		}
+
+
+		current_travel_plan ?= {
+			abort_travel_plan = yes
+		}
+
+
+		remove_character_flag = segrellion_black_unicorn_lock_camp_skagos
+		remove_character_flag = segrellion_black_unicorn_camp_lock_started
+
+
+		if = {
+
+			limit = {
+				is_landless_adventurer = yes
+			}
+
+
+			destroy_title = primary_title
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				title:d_laamp_red_unicorn ?= {
+
+					holder = {
+						this = character:Black_Unicorn_1
+					}
+				}
+			}
+
+
+			destroy_title = title:d_laamp_red_unicorn
+		}
+
+
+		set_employer = character:Segrellion_60
+		return_to_court = yes
+
+
+		if = {
+
+			limit = {
+				exists = scope:daemon_trap_destination
+			}
+
+
+			set_location = scope:daemon_trap_destination
+		}
+	}
+
+
+	every_in_list = {
+
+		list = segrellion_hugh_visenya_trap_followers
+
+
+		limit = {
+			is_alive = yes
+		}
+
+
+		set_employer = character:Segrellion_60
+		return_to_court = yes
+
+
+		if = {
+
+			limit = {
+				exists = scope:daemon_trap_destination
+			}
+
+
+			set_location = scope:daemon_trap_destination
+		}
+	}
+}
+
+
+# =========================================================
+# RETURN VISENYA TO THE NORMAL PART III ROUTE
+#
+# ROOT can be Hugh or Daemon
+# =========================================================
+
+segrellion_hugh_black_unicorn_release_normal_visenya_path_effect = {
+
+	character:Black_Unicorn_1 ?= {
+
+		remove_character_flag = segrellion_hugh_route_no_ice_vhal_pending
+		remove_character_flag = segrellion_hugh_route_peaceful_vhal
+		remove_character_flag = segrellion_hugh_route_coup_vhal
+		remove_character_flag = segrellion_hugh_route_daemon_trap
+		remove_character_flag = segrellion_hugh_route_daemon_trap_active
+		remove_character_flag = segrellion_hugh_route_vhal_guest
+	}
+
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_title = title:e_flamelands
+			}
+
+
+			segrellion_black_unicorn_start_post_beacon_clock_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# SUCCESSFUL HUGH + VISENYA COUP
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_execute_vhal_coup_effect = {
+
+	character:Black_Unicorn_1 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			segrellion_black_unicorn_visenya_take_flamelands_effect = yes
+
+			add_character_flag = segrellion_visenya_flamelands_civil_war_pending
+			add_character_flag = segrellion_visenya_took_flamelands_with_hugh
+		}
+	}
+
+
+	character:Segrellion_60 ?= {
+
+		spouse ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				death = {
+
+					death_reason = segrellion_death_vhal_coup
+
+					killer = character:Black_Unicorn_1
+				}
+			}
+		}
+
+
+		every_child = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			death = {
+
+				death_reason = segrellion_death_vhal_coup
+
+				killer = character:Black_Unicorn_1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			death = {
+
+				death_reason = segrellion_death_vhal_coup
+
+				killer = character:Black_Unicorn_1
+			}
+		}
+	}
+
+
+	character:Black_Unicorn_1 ?= {
+
+		remove_character_flag = segrellion_hugh_route_coup_vhal
+
+		add_character_flag = segrellion_hugh_route_coup_succeeded
+	}
+
+
+	add_character_flag = hugh_black_unicorn_coup_succeeded
+}
+
+
+# =========================================================
+# HUGH DISAPPEARS IN THE FAR NORTH
+#
+# ROOT = Hugh
+# =========================================================
+
+segrellion_hugh_black_unicorn_kill_hugh_secretly_effect = {
+
+	add_character_flag = segrellion_hugh_disappeared_far_north
+
+	remove_character_flag = hugh_black_unicorn_wait_clock_active
+
+
+	death = {
+		death_reason = segrellion_death_disappeared_far_north
+	}
+}
