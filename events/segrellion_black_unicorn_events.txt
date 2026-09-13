@@ -9913,3 +9913,77 @@ segrellion_black_unicorn.0889 = {
 		custom_tooltip = segrellion_black_unicorn.ui.0889.a.tt
 	}
 }
+
+
+segrellion_hugh_black_unicorn.0010 = {
+    type = character_event
+    title = segrellion_hugh_black_unicorn.0010.t
+    desc = segrellion_hugh_black_unicorn.0010.desc
+    theme = diplomacy
+
+    left_portrait = root
+    right_portrait = character:Segrellion_60
+
+    trigger = {
+        this = character:Segrellion_43
+        is_alive = yes
+
+        has_character_flag = segrellion_hugh_supports_black_unicorn
+
+        character:Segrellion_60 ?= {
+            is_alive = yes
+        }
+
+        NOT = {
+            has_character_flag = segrellion_hugh_plate_given_to_daemon
+        }
+    }
+
+    immediate = {
+        set_character_flag = segrellion_hugh_plate_handover_started
+    }
+
+    option = {
+        name = segrellion_hugh_black_unicorn.0010.a
+
+        segrellion_transfer_plate_to_daemon_effect = yes
+
+        set_character_flag = segrellion_hugh_plate_given_to_daemon
+
+        character:Segrellion_60 = {
+            set_character_flag = segrellion_daemon_received_plate_from_hugh
+        }
+
+        trigger_event = {
+            id = segrellion_hugh_black_unicorn.0011
+            days = { 1 3 }
+        }
+    }
+}
+
+segrellion_hugh_black_unicorn.0011 = {
+    type = character_event
+    title = segrellion_hugh_black_unicorn.0011.t
+    desc = segrellion_hugh_black_unicorn.0011.desc
+    theme = friendship
+
+    left_portrait = root
+    right_portrait = character:Segrellion_43
+
+    trigger = {
+        this = character:Segrellion_60
+        is_alive = yes
+
+        has_character_flag = segrellion_daemon_received_plate_from_hugh
+
+        character:Segrellion_43 ?= {
+            is_alive = yes
+        }
+    }
+
+    option = {
+        name = segrellion_hugh_black_unicorn.0011.a
+
+        set_character_flag = segrellion_daemon_acknowledged_hugh_plate
+    }
+}

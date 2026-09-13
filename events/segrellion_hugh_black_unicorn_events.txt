@@ -2608,3 +2608,48 @@ segrellion_hugh_black_unicorn.1990 = {
 		}
 	}
 }
+
+segrellion_hugh_black_unicorn.0012 = {
+    type = character_event
+    title = segrellion_hugh_black_unicorn.0012.t
+    desc = segrellion_hugh_black_unicorn.0012.desc
+    theme = war
+
+    left_portrait = root
+    right_portrait = character:Segrellion_60
+
+    trigger = {
+        this = character:Segrellion_43
+        is_alive = yes
+
+        has_character_flag = segrellion_hugh_waiting_to_join_daemon_war
+        has_character_flag = segrellion_hugh_plate_given_to_daemon
+
+        character:Segrellion_60 ?= {
+            is_alive = yes
+            is_at_war = yes
+        }
+    }
+
+    option = {
+        name = segrellion_hugh_black_unicorn.0012.a
+
+        remove_character_flag = segrellion_hugh_waiting_to_join_daemon_war
+        set_character_flag = segrellion_hugh_joined_daemon_against_stormflames
+
+        character:Segrellion_60 = {
+            every_war = {
+                limit = {
+                    is_attacker = yes
+                }
+
+                root = {
+                    join_war = {
+                        war = prev
+                        side = attacker
+                    }
+                }
+            }
+        }
+    }
+}
