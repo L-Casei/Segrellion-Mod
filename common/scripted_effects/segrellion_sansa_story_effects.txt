@@ -8,140 +8,18 @@
 # ROOT = Stark_Dummy_8
 # =========================================================
 
-# =========================================================
-# REMOVE EVERY REMNANT OF ALAYNE'S BASTARD IDENTITY
-#
-# ROOT = Stark_Dummy_8
-# =========================================================
-
 segrellion_remove_sansa_bastard_identity_effect = {
 
-	# =====================================================
-	# OLD CANON CHILDREN SETUP
-	#
-	# Canon Children gives Alayne "nick_stone".
-	# =====================================================
-
-	if = {
-
-		limit = {
-			has_nickname = nick_stone
-		}
-
-		remove_nickname = yes
-	}
-
-
-	# =====================================================
-	# AGOT BASTARD SURNAME SYSTEM
-	# =====================================================
-
-	agot_remove_bastard_nickname_effect = yes
-
-
-	# =====================================================
-	# REMOVE INACTIVE BASTARD SURNAME TRAITS
-	#
-	# AGOT stores regional bastard surnames as INACTIVE
-	# traits. remove_trait alone is not reliable here.
-	#
-	# Activate them first, then remove them.
-	# =====================================================
-
-	if = {
-		limit = {
-			has_inactive_trait = surname_flowers
-		}
-		make_trait_active = surname_flowers
-	}
-
-	if = {
-		limit = {
-			has_trait = surname_flowers
-		}
-		remove_trait = surname_flowers
-	}
-
-
-	if = {
-		limit = {
-			has_inactive_trait = surname_hill
-		}
-		make_trait_active = surname_hill
-	}
-
-	if = {
-		limit = {
-			has_trait = surname_hill
-		}
-		remove_trait = surname_hill
-	}
-
-
-	if = {
-		limit = {
-			has_inactive_trait = surname_pyke
-		}
-		make_trait_active = surname_pyke
-	}
-
-	if = {
-		limit = {
-			has_trait = surname_pyke
-		}
-		remove_trait = surname_pyke
-	}
-
-
-	if = {
-		limit = {
-			has_inactive_trait = surname_rivers
-		}
-		make_trait_active = surname_rivers
-	}
-
-	if = {
-		limit = {
-			has_trait = surname_rivers
-		}
-		remove_trait = surname_rivers
-	}
-
-
-	if = {
-		limit = {
-			has_inactive_trait = surname_sand
-		}
-		make_trait_active = surname_sand
-	}
-
-	if = {
-		limit = {
-			has_trait = surname_sand
-		}
-		remove_trait = surname_sand
-	}
-
-
-	if = {
-		limit = {
-			has_inactive_trait = surname_snow
-		}
-		make_trait_active = surname_snow
-	}
-
-	if = {
-		limit = {
-			has_trait = surname_snow
-		}
-		remove_trait = surname_snow
-	}
-
+	# -------------------------------------------------
+	# AGOT CURRENT SYSTEM:
+	# "Stone" is stored as an INACTIVE surname trait.
+	# -------------------------------------------------
 
 	if = {
 		limit = {
 			has_inactive_trait = surname_stone
 		}
+
 		make_trait_active = surname_stone
 	}
 
@@ -149,46 +27,48 @@ segrellion_remove_sansa_bastard_identity_effect = {
 		limit = {
 			has_trait = surname_stone
 		}
+
 		remove_trait = surname_stone
 	}
 
 
+	# -------------------------------------------------
+	# OLD / COMPATIBILITY SYSTEM:
+	# Some Canon Children versions used nick_stone.
+	# -------------------------------------------------
+
 	if = {
 		limit = {
-			has_inactive_trait = surname_storm
+			has_nickname = nick_stone
 		}
-		make_trait_active = surname_storm
+
+		remove_nickname = yes
+	}
+
+	agot_remove_bastard_nickname_effect = yes
+
+
+	# -------------------------------------------------
+	# FINAL FAILSAFE
+	# -------------------------------------------------
+
+	if = {
+		limit = {
+			has_inactive_trait = surname_stone
+		}
+
+		make_trait_active = surname_stone
 	}
 
 	if = {
 		limit = {
-			has_trait = surname_storm
+			has_trait = surname_stone
 		}
-		remove_trait = surname_storm
-	}
 
-
-	if = {
-		limit = {
-			has_inactive_trait = surname_waters
-		}
-		make_trait_active = surname_waters
+		remove_trait = surname_stone
 	}
 
 	if = {
-		limit = {
-			has_trait = surname_waters
-		}
-		remove_trait = surname_waters
-	}
-
-
-	# =====================================================
-	# FINAL OLD-NICKNAME FAILSAFE
-	# =====================================================
-
-	if = {
-
 		limit = {
 			has_nickname = nick_stone
 		}
@@ -209,23 +89,18 @@ segrellion_remove_sansa_bastard_identity_effect = {
 
 segrellion_force_sansa_stark_identity_effect = {
 
-	# =====================================================
-	# FIRST CLEANUP
-	#
-	# Do this BEFORE removing the bastard trait so that any
-	# AGOT bastard cleanup which expects her to still be a
-	# bastard has a chance to execute normally.
-	# =====================================================
+	# =================================================
+	# REMOVE "STONE"
+	# =================================================
 
 	segrellion_remove_sansa_bastard_identity_effect = yes
 
 
-	# =====================================================
-	# SHE IS NOT A BASTARD
-	# =====================================================
+	# =================================================
+	# REMOVE BASTARD STATUS
+	# =================================================
 
 	if = {
-
 		limit = {
 			has_trait = bastard
 		}
@@ -233,9 +108,7 @@ segrellion_force_sansa_stark_identity_effect = {
 		remove_trait = bastard
 	}
 
-
 	if = {
-
 		limit = {
 			has_trait = legitimized_bastard
 		}
@@ -243,9 +116,7 @@ segrellion_force_sansa_stark_identity_effect = {
 		remove_trait = legitimized_bastard
 	}
 
-
 	if = {
-
 		limit = {
 			has_trait = bastard_founder
 		}
@@ -254,38 +125,55 @@ segrellion_force_sansa_stark_identity_effect = {
 	}
 
 
-	# =====================================================
+	# =================================================
+	# RESTORE HER REAL PARENTS
+	# =================================================
+
+	set_father = character:Stark_3
+	set_mother = character:Tully_4
+
+
+	# =================================================
 	# RESTORE HOUSE STARK
-	# =====================================================
+	#
+	# Alayne starts with:
+	# dynasty_house = house_BaelishHH
+	# =================================================
 
 	set_house = character:Stark_8.house
 
 
-	# =====================================================
-	# RESTORE HER REAL FIRST NAME
-	# =====================================================
-
-	change_first_name = Sansa
-
-
-	# =====================================================
-	# SECOND CLEANUP
+	# =================================================
+	# RESTORE THE ORIGINAL SANSA NAME
 	#
-	# Absolutely nothing connected to "Stone" should survive
-	# the House/name transition.
-	# =====================================================
+	# IMPORTANT:
+	# Do NOT manually use:
+	# change_first_name = Sansa
+	#
+	# Copy the exact name stored by the original
+	# Sansa Stark character instead.
+	# =================================================
+
+	change_first_name = {
+		template_character = character:Stark_8
+	}
+
+
+	# =================================================
+	# SECOND "STONE" PURGE
+	#
+	# Run it again after bastard/house changes.
+	# =================================================
 
 	segrellion_remove_sansa_bastard_identity_effect = yes
 
 
-	# =====================================================
-	# IDENTITY STATE
-	# =====================================================
+	# =================================================
+	# STATE
+	# =================================================
 
 	add_character_flag = segrellion_sansa_name_restored
-
 	add_character_flag = segrellion_sansa_explicit_name_restored
-
 	add_character_flag = segrellion_sansa_is_true_stark
 }
 
@@ -298,25 +186,7 @@ segrellion_force_sansa_stark_identity_effect = {
 
 segrellion_reveal_sansa_stark_effect = {
 
-	# =====================================================
-	# RESTORE HER TRUE PARENTS
-	# =====================================================
-
-	set_father = character:Stark_3
-
-	set_mother = character:Tully_4
-
-
-	# =====================================================
-	# NORMALIZE THE ENTIRE IDENTITY
-	# =====================================================
-
 	segrellion_force_sansa_stark_identity_effect = yes
-
-
-	# =====================================================
-	# THE SECRET IS NOW PUBLIC
-	# =====================================================
 
 	add_character_flag = segrellion_sansa_identity_revealed
 }
