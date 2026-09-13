@@ -1554,10 +1554,19 @@ segrellion_winterfell_council.4920 = {
 		add_prestige = 250
 		add_piety = 150
 
-		add_character_modifier = {
+		if = {
 
-			modifier = segrellion_council_winter_planner_modifier
-			years = 5
+			limit = {
+				segrellion_council_winter_planner_reward_available_trigger = yes
+			}
+
+			add_character_flag = segrellion_council_winter_planner_reward_received
+
+			add_character_modifier = {
+
+				modifier = segrellion_council_winter_planner_modifier
+				years = 5
+			}
 		}
 	}
 }
@@ -1639,11 +1648,19 @@ segrellion_winterfell_council.4940 = {
 		add_prestige = 500
 
 
-		add_character_modifier = {
+		if = {
 
-			modifier = segrellion_council_northern_consensus_modifier
+			limit = {
+				segrellion_council_northern_consensus_reward_available_trigger = yes
+			}
 
-			years = 5
+			add_character_flag = segrellion_council_northern_consensus_reward_received
+
+			add_character_modifier = {
+
+				modifier = segrellion_council_northern_consensus_modifier
+				years = 5
+			}
 		}
 
 
@@ -1693,11 +1710,19 @@ segrellion_winterfell_council.4950 = {
 		add_prestige = 300
 
 
-		add_character_modifier = {
+		if = {
 
-			modifier = segrellion_council_northern_consensus_modifier
+			limit = {
+				segrellion_council_northern_consensus_reward_available_trigger = yes
+			}
 
-			years = 3
+			add_character_flag = segrellion_council_northern_consensus_reward_received
+
+			add_character_modifier = {
+
+				modifier = segrellion_council_northern_consensus_modifier
+				years = 3
+			}
 		}
 
 
@@ -2007,5 +2032,2150 @@ segrellion_winterfell_council.5010 = {
 
 	option = {
 		name = segrellion_winterfell_council.5010.a
+	}
+}
+
+# =========================================================
+# 6000-SERIES
+# LIVE WINTERFELL COUNCIL POLITICAL EVENTS
+# =========================================================
+
+
+# =========================================================
+# PHASE I - ARRIVALS / SOCIAL POLITICS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6001 - WHO LOST MORE?
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6001 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6001.t
+	desc = segrellion_winterfell_council.6001.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6001
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6001
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6001.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6002 - DRAGONS GROW WITH EVERY CUP
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6002 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6002.t
+	desc = segrellion_winterfell_council.6002.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6002
+		}
+
+		character:Targaryen_9 = {
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6002
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6002.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6002.b
+
+		add_prestige = 25
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6003 - THE WILDLING'S ANSWER
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6003 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6003.t
+	desc = segrellion_winterfell_council.6003.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6003
+		}
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				is_alive = yes
+
+				culture = {
+					agot_is_wildling_culture = yes
+				}
+			}
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6003
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+
+					is_alive = yes
+
+					culture = {
+						agot_is_wildling_culture = yes
+					}
+				}
+
+				order_by = {
+					value = 1
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_wildling
+			}
+		}
+	}
+
+	right_portrait = {
+
+		character = scope:segrellion_wc_wildling
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6003.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 2
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6004 - FIFTY MEN
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6004 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6004.t
+	desc = segrellion_winterfell_council.6004.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6004
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6004
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6004.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 2
+			}
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = -1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# PHASE II - THE DEBATE
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6101 - THE EMPTY BENCHES
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6101 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6101.t
+	desc = segrellion_winterfell_council.6101.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6101
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6101
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6101.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 2
+			}
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = -1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6101.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6101.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6102 - A BROTHER'S TALE
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6102 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6102.t
+	desc = segrellion_winterfell_council.6102.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6102
+		}
+
+		scope:activity = {
+
+			any_attending_character = {
+				is_alive = yes
+				has_trait = nightswatch
+			}
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6102
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+					is_alive = yes
+					has_trait = nightswatch
+				}
+
+				order_by = {
+					value = 1
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_black_brother
+			}
+		}
+	}
+
+	right_portrait = {
+
+		character = scope:segrellion_wc_black_brother
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6102.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6102.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 1
+			}
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6102.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = -1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6103 - THE DRAGON QUESTION
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6103 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6103.t
+	desc = segrellion_winterfell_council.6103.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6103
+		}
+
+		character:Targaryen_9 = {
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6103
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6103.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6103.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = -2
+			}
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6103.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6104 - THE NEW DRAGON KING
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6104 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6104.t
+	desc = segrellion_winterfell_council.6104.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6104
+		}
+
+		character:IAF_Young_Griff_1 = {
+
+			is_alive = yes
+			is_independent_ruler = yes
+			highest_held_title_tier >= tier_kingdom
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6104
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6104.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6104.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6104.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = -1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6105 - THE KING'S DEBT
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6105 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6105.t
+	desc = segrellion_winterfell_council.6105.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6105
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6105
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6105.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6105.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6105.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6106 - THE MUSIC AT THE TWINS
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6106 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6106.t
+	desc = segrellion_winterfell_council.6106.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6106
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6106
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6106.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6106.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6106.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = -2
+			}
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 2
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# PHASE III - THE PROPOSALS
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6201 - A CROWN FOR THE WHITE WOLF
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6201 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6201.t
+	desc = segrellion_winterfell_council.6201.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6201
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6201
+	}
+
+	left_portrait = {
+
+		character = scope:host
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6201.a
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6201.b
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 3
+			}
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6201.c
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = -1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6202 - A DAUGHTER OF WINTERFELL
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6202 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6202.t
+	desc = segrellion_winterfell_council.6202.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6202
+		}
+
+		scope:host = {
+			has_character_flag = segrellion_jon_knows_sansa_alive
+		}
+
+		scope:activity = {
+
+			any_attending_character = {
+				is_alive = yes
+				has_character_flag = segrellion_sansa_council_character
+			}
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6202
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+					is_alive = yes
+					has_character_flag = segrellion_sansa_council_character
+				}
+
+				order_by = {
+					value = 1
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_sansa
+			}
+		}
+	}
+
+	right_portrait = {
+
+		character = scope:segrellion_wc_sansa
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6202.a
+
+		scope:segrellion_wc_sansa = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6202.b
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+		scope:segrellion_wc_sansa = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = -1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6202.c
+
+		add_character_flag = segrellion_sansa_council_must_answer
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6203 - THE BOY ON SKAGOS
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6203 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6203.t
+	desc = segrellion_winterfell_council.6203.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6203
+		}
+
+		scope:host = {
+			has_character_flag = segrellion_jon_knows_rickon_may_live
+		}
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				is_alive = yes
+				is_male = yes
+				is_adult = no
+				age < 10
+
+				dynasty = character:Stark_Dummy_8.dynasty
+			}
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6203
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+
+					is_alive = yes
+					is_male = yes
+					is_adult = no
+					age < 10
+
+					dynasty = character:Stark_Dummy_8.dynasty
+				}
+
+				order_by = {
+					value = 1
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_rickon
+			}
+		}
+	}
+
+	right_portrait = {
+
+		character = scope:segrellion_wc_rickon
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6203.a
+
+		scope:segrellion_wc_rickon = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6203.b
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+		scope:segrellion_wc_rickon = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = -1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6203.c
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+		scope:segrellion_wc_rickon = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6204 - THE FREY PROPOSAL
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6204 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6204.t
+	desc = segrellion_winterfell_council.6204.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6204
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6204
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6204.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6204.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6204.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = -2
+			}
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 2
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6205 - THE WALL BEFORE CROWNS
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6205 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6205.t
+	desc = segrellion_winterfell_council.6205.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6205
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6205
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6205.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6205.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 1
+			}
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6205.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = -1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6206 - MOAT CAILIN
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6206 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6206.t
+	desc = segrellion_winterfell_council.6206.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6206
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6206
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6206.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6206.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6206.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 1
+			}
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = -1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6207 - SEND FOR THE DRAGON QUEEN
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6207 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6207.t
+	desc = segrellion_winterfell_council.6207.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6207
+		}
+
+		character:Targaryen_9 = {
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6207
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6207.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6207.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = -2
+			}
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6207.c
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6208 - THE CROWN OF ROBB STARK
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6208 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6208.t
+	desc = segrellion_winterfell_council.6208.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6208
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6208
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6208.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6208.b
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6208.c
+
+		add_prestige = 50
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6209 - A LORD OF OUR OWN
+# DYNAMIC ONLY
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6209 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6209.t
+	desc = segrellion_winterfell_council.6209.desc
+
+	trigger = {
+
+		this = scope:host
+
+		has_game_rule = segrellion_winterfell_council_dynamic
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6209
+		}
+
+		scope:activity = {
+
+			any_attending_character = {
+
+				this != scope:host
+
+				is_alive = yes
+				is_adult = yes
+				is_landed = yes
+
+				segrellion_is_northern_lord_for_council_trigger = yes
+
+				NOT = {
+					dynasty = character:Stark_Dummy_8.dynasty
+				}
+			}
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6209
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+
+					this != scope:host
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+
+					segrellion_is_northern_lord_for_council_trigger = yes
+
+					NOT = {
+						dynasty = character:Stark_Dummy_8.dynasty
+					}
+				}
+
+				order_by = {
+
+					value = 0
+
+					if = {
+						limit = {
+							highest_held_title_tier >= tier_duchy
+						}
+						add = 100
+					}
+
+					if = {
+						limit = {
+							highest_held_title_tier >= tier_county
+						}
+						add = 40
+					}
+
+					if = {
+						limit = {
+							prestige_level >= 4
+						}
+						add = 30
+					}
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_compromise_candidate
+			}
+		}
+	}
+
+	right_portrait = {
+
+		character = scope:segrellion_wc_compromise_candidate
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6209.a
+
+		scope:segrellion_wc_compromise_candidate = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6209.b
+
+		scope:segrellion_wc_compromise_candidate = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = -2
+			}
+		}
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6209.c
+
+		scope:segrellion_wc_compromise_candidate = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6210 - A CROWN WITH CHAINS
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6210 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6210.t
+	desc = segrellion_winterfell_council.6210.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6210
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6210
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6210.a
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_defend_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6210.b
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = -1
+			}
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 1
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6210.c
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# PHASE IV - THE PROCLAMATION
+# =========================================================
+
+
+# ---------------------------------------------------------
+# 6301 - RAVENS BEFORE THE VOTE
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6301 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6301.t
+	desc = segrellion_winterfell_council.6301.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6301
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6301
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6301.a
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_revenge_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6301.b
+
+		trigger = {
+
+			scope:activity = {
+
+				any_attending_character = {
+					is_alive = yes
+					has_trait = nightswatch
+				}
+			}
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_wall_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6301.c
+
+		trigger = {
+
+			character:Targaryen_9 = {
+				is_alive = yes
+			}
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_dragon_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6301.d
+
+		trigger = {
+
+			character:IAF_Young_Griff_1 = {
+
+				is_alive = yes
+				is_independent_ruler = yes
+				highest_held_title_tier >= tier_kingdom
+			}
+		}
+
+		scope:activity = {
+
+			change_variable = {
+				name = segrellion_council_independence_support
+				add = 2
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6302 - THE LAST DOUBT
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6302 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6302.t
+	desc = segrellion_winterfell_council.6302.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6302
+		}
+
+		OR = {
+
+			has_character_flag = segrellion_jon_resurrected
+
+			scope:activity = {
+
+				any_attending_character = {
+					is_alive = yes
+					has_trait = nightswatch
+				}
+			}
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_wc_seen_6302
+	}
+
+	left_portrait = {
+
+		character = scope:host
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6302.a
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 3
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6302.b
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6302.c
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 1
+			}
+		}
+
+		add_prestige = 100
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6303 - THE LORD WHO CHANGES HIS MIND
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6303 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6303.t
+	desc = segrellion_winterfell_council.6303.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6303
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6303
+
+		segrellion_winterfell_council_recount_intent_support_effect = yes
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				order_by = {
+
+					value = 0
+
+					if = {
+						limit = {
+							exists = var:segrellion_council_king_support
+						}
+
+						add = var:segrellion_council_king_support
+					}
+
+					if = {
+						limit = {
+							exists = var:segrellion_council_king_intent_support
+						}
+
+						add = var:segrellion_council_king_intent_support
+					}
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_current_leader
+			}
+		}
+	}
+
+	right_portrait = {
+
+		character = scope:segrellion_wc_current_leader
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6303.a
+
+		scope:segrellion_wc_current_leader = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 3
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6304 - THE FINAL SPEECH
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6304 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6304.t
+	desc = segrellion_winterfell_council.6304.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6304
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6304
+
+		segrellion_winterfell_council_recount_intent_support_effect = yes
+
+		scope:activity = {
+			segrellion_winterfell_council_finalize_strategy_totals_effect = yes
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6304.a
+
+		scope:activity = {
+
+			if = {
+
+				limit = {
+
+					var:segrellion_council_revenge_total > 0
+
+					var:segrellion_council_revenge_total >= var:segrellion_council_wall_total
+					var:segrellion_council_revenge_total >= var:segrellion_council_independence_total
+					var:segrellion_council_revenge_total >= var:segrellion_council_defend_total
+					var:segrellion_council_revenge_total >= var:segrellion_council_dragon_total
+				}
+
+				change_variable = {
+					name = segrellion_council_revenge_support
+					add = 2
+				}
+			}
+
+			else_if = {
+
+				limit = {
+
+					var:segrellion_council_wall_total > 0
+
+					var:segrellion_council_wall_total >= var:segrellion_council_revenge_total
+					var:segrellion_council_wall_total >= var:segrellion_council_independence_total
+					var:segrellion_council_wall_total >= var:segrellion_council_defend_total
+					var:segrellion_council_wall_total >= var:segrellion_council_dragon_total
+				}
+
+				change_variable = {
+					name = segrellion_council_wall_support
+					add = 2
+				}
+			}
+
+			else_if = {
+
+				limit = {
+
+					var:segrellion_council_independence_total > 0
+
+					var:segrellion_council_independence_total >= var:segrellion_council_revenge_total
+					var:segrellion_council_independence_total >= var:segrellion_council_wall_total
+					var:segrellion_council_independence_total >= var:segrellion_council_defend_total
+					var:segrellion_council_independence_total >= var:segrellion_council_dragon_total
+				}
+
+				change_variable = {
+					name = segrellion_council_independence_support
+					add = 2
+				}
+			}
+
+			else_if = {
+
+				limit = {
+
+					var:segrellion_council_defend_total > 0
+
+					var:segrellion_council_defend_total >= var:segrellion_council_revenge_total
+					var:segrellion_council_defend_total >= var:segrellion_council_wall_total
+					var:segrellion_council_defend_total >= var:segrellion_council_independence_total
+					var:segrellion_council_defend_total >= var:segrellion_council_dragon_total
+				}
+
+				change_variable = {
+					name = segrellion_council_defend_support
+					add = 2
+				}
+			}
+
+			else_if = {
+
+				limit = {
+
+					var:segrellion_council_dragon_total > 0
+				}
+
+				change_variable = {
+					name = segrellion_council_dragon_support
+					add = 2
+				}
+			}
+
+			else = {
+
+				change_variable = {
+					name = segrellion_council_defend_support
+					add = 2
+				}
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# 6305 - THE STARK QUESTION
+# ---------------------------------------------------------
+
+segrellion_winterfell_council.6305 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.6305.t
+	desc = segrellion_winterfell_council.6305.desc
+
+	trigger = {
+
+		this = scope:host
+
+		NOT = {
+			has_character_flag = segrellion_wc_seen_6305
+		}
+
+		scope:activity = {
+
+			OR = {
+
+				any_attending_character = {
+					is_alive = yes
+					has_character_flag = segrellion_sansa_council_character
+				}
+
+				any_attending_character = {
+
+					is_alive = yes
+					is_male = yes
+					is_adult = no
+					age < 10
+
+					dynasty = character:Stark_Dummy_8.dynasty
+				}
+			}
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_wc_seen_6305
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+					is_alive = yes
+					has_character_flag = segrellion_sansa_council_character
+				}
+
+				order_by = {
+					value = 1
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_final_sansa
+			}
+
+			ordered_attending_character = {
+
+				limit = {
+
+					is_alive = yes
+					is_male = yes
+					is_adult = no
+					age < 10
+
+					dynasty = character:Stark_Dummy_8.dynasty
+				}
+
+				order_by = {
+					value = 1
+				}
+
+				position = 0
+
+				save_scope_as = segrellion_wc_final_rickon
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6305.a
+
+		scope:host = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6305.b
+
+		trigger = {
+			exists = scope:segrellion_wc_final_sansa
+		}
+
+		scope:segrellion_wc_final_sansa = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_winterfell_council.6305.c
+
+		trigger = {
+			exists = scope:segrellion_wc_final_rickon
+		}
+
+		scope:segrellion_wc_final_rickon = {
+
+			change_variable = {
+				name = segrellion_council_king_support
+				add = 2
+			}
+		}
 	}
 }

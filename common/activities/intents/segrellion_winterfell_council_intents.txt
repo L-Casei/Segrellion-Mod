@@ -244,7 +244,11 @@ segrellion_winterfell_council_kingmaker_intent = {
 
 
 	# =====================================================
-	# AI CANDIDATE POOL
+	# POSSIBLE INTENT TARGET SOURCES
+	#
+	# Host + Council guests are searched here.
+	# is_target_valid below then HARD-FILTERS the list so
+	# only Jon and members of the Stark dynasty can appear.
 	# =====================================================
 
 	ai_targets = {
@@ -271,26 +275,30 @@ segrellion_winterfell_council_kingmaker_intent = {
 				has_trait = incapable
 			}
 
-			# Normal candidates must be adults.
-			# Starks may be considered even while young.
+			# =================================================
+			# ONLY STARK BLOOD MAY BE NAMED KING IN THE NORTH
+			#
+			# Jon is explicitly allowed even if his current
+			# dynasty/house is still Snow or otherwise differs
+			# from the Stark dynasty.
+			# =================================================
+
 			OR = {
 
-				is_adult = yes
+				segrellion_is_current_jon_trigger = yes
 
 				dynasty = character:Stark_Dummy_8.dynasty
 			}
 
-			# Ordinary candidates must hold land.
-			# A Stark may be acclaimed regardless of current land.
-			OR = {
 
-				is_landed = yes
+			# =================================================
+			# NIGHT'S WATCH
+			#
+			# A normal Stark in the Watch cannot be nominated.
+			# Jon is exempt because his storyline treats his
+			# death as ending his Watch obligations.
+			# =================================================
 
-				dynasty = character:Stark_Dummy_8.dynasty
-			}
-
-			# The Watch normally bars a candidate.
-			# Jon is explicitly exempt because his death ended the issue.
 			OR = {
 
 				NOT = {
