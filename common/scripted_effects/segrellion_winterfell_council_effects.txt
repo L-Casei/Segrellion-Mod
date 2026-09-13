@@ -12,10 +12,9 @@ segrellion_winterfell_council_initialize_effect = {
 
 	scope:activity = {
 
-		set_variable = {
-			name = segrellion_council_independence_support
-			value = 4
-		}
+		# =================================================
+		# EVENT / DEBATE MOMENTUM
+		# =================================================
 
 		set_variable = {
 			name = segrellion_council_wall_support
@@ -28,15 +27,123 @@ segrellion_winterfell_council_initialize_effect = {
 		}
 
 		set_variable = {
+			name = segrellion_council_independence_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_defend_support
+			value = 0
+		}
+
+		set_variable = {
 			name = segrellion_council_dragon_support
 			value = 0
 		}
 
+		# Legacy debate variable.
+		# Can still be modified by individual council events,
+		# but it no longer replaces the leadership vote.
 		set_variable = {
 			name = segrellion_council_no_crown_support
 			value = 0
 		}
 
+
+		# =================================================
+		# CURRENT INTENT SUPPORT
+		# Recalculated from scratch.
+		# =================================================
+
+		set_variable = {
+			name = segrellion_council_wall_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_revenge_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_independence_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_defend_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_dragon_intent_support
+			value = 0
+		}
+
+
+		# =================================================
+		# FINAL STRATEGY TOTALS
+		# =================================================
+
+		set_variable = {
+			name = segrellion_council_wall_total
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_revenge_total
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_independence_total
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_defend_total
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_dragon_total
+			value = 0
+		}
+
+
+		# =================================================
+		# FINAL STRATEGY FLAGS
+		# =================================================
+
+		set_variable = {
+			name = segrellion_council_strategy_revenge_won
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_strategy_wall_won
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_strategy_independence_won
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_strategy_defend_won
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_strategy_dragon_won
+			value = 0
+		}
+
+
+		# =================================================
+		# CANDIDATES
+		# =================================================
 
 		every_attending_character = {
 
@@ -44,31 +151,206 @@ segrellion_winterfell_council_initialize_effect = {
 				name = segrellion_council_king_support
 				value = 0
 			}
+
+			set_variable = {
+				name = segrellion_council_king_intent_support
+				value = 0
+			}
+
+			set_variable = {
+				name = segrellion_council_king_total_support
+				value = 0
+			}
 		}
 	}
 
 
-	# Jon begins as the obvious political favorite,
-	# but he can still be overtaken.
+	# Safety for the host.
 
 	scope:host = {
 
 		set_variable = {
 			name = segrellion_council_king_support
-			value = 6
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_king_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_king_total_support
+			value = 0
 		}
 	}
 }
 
 
 # =========================================================
-# APPLY CURRENT INTENT
+# CALCULATE ONE LORD'S POLITICAL INFLUENCE
 #
-# Runs once when a phase becomes active and once per week.
-# Root = current participant.
+# Current scope = voting character.
+#
+# Base:
+# Unlanded      1
+# Baron         3
+# Count         5
+# Duke          8
+# King         10
+# Emperor      12
+#
+# Bonuses:
+# Powerful Vassal +2
+# Prestige        +1/+1/+1
+#
+# Maximum = 15
 # =========================================================
 
-segrellion_winterfell_council_apply_intent_support_effect = {
+segrellion_winterfell_council_calculate_influence_effect = {
+
+	set_variable = {
+		name = segrellion_council_influence
+		value = 1
+	}
+
+
+	if = {
+		limit = {
+			is_landed = yes
+		}
+
+		set_variable = {
+			name = segrellion_council_influence
+			value = 3
+		}
+	}
+
+
+	if = {
+		limit = {
+			highest_held_title_tier >= tier_county
+		}
+
+		set_variable = {
+			name = segrellion_council_influence
+			value = 5
+		}
+	}
+
+
+	if = {
+		limit = {
+			highest_held_title_tier >= tier_duchy
+		}
+
+		set_variable = {
+			name = segrellion_council_influence
+			value = 8
+		}
+	}
+
+
+	if = {
+		limit = {
+			highest_held_title_tier >= tier_kingdom
+		}
+
+		set_variable = {
+			name = segrellion_council_influence
+			value = 10
+		}
+	}
+
+
+	if = {
+		limit = {
+			highest_held_title_tier >= tier_empire
+		}
+
+		set_variable = {
+			name = segrellion_council_influence
+			value = 12
+		}
+	}
+
+
+	if = {
+		limit = {
+			is_powerful_vassal = yes
+		}
+
+		change_variable = {
+			name = segrellion_council_influence
+			add = 2
+		}
+	}
+
+
+	if = {
+		limit = {
+			prestige_level >= 3
+		}
+
+		change_variable = {
+			name = segrellion_council_influence
+			add = 1
+		}
+	}
+
+
+	if = {
+		limit = {
+			prestige_level >= 4
+		}
+
+		change_variable = {
+			name = segrellion_council_influence
+			add = 1
+		}
+	}
+
+
+	if = {
+		limit = {
+			prestige_level >= 5
+		}
+
+		change_variable = {
+			name = segrellion_council_influence
+			add = 1
+		}
+	}
+
+
+	if = {
+		limit = {
+			var:segrellion_council_influence > 15
+		}
+
+		set_variable = {
+			name = segrellion_council_influence
+			value = 15
+		}
+	}
+}
+
+
+# =========================================================
+# APPLY ONE CHARACTER'S CURRENT INTENT
+#
+# This does NOT permanently stack every week.
+# The whole intent tally is rebuilt every time.
+# =========================================================
+
+segrellion_winterfell_council_apply_single_voter_effect = {
+
+	segrellion_winterfell_council_calculate_influence_effect = yes
+
+	save_temporary_scope_value_as = {
+		name = segrellion_council_vote_weight
+		value = var:segrellion_council_influence
+	}
 
 
 	# -----------------------------------------------------
@@ -83,15 +365,15 @@ segrellion_winterfell_council_apply_intent_support_effect = {
 		scope:activity = {
 
 			change_variable = {
-				name = segrellion_council_wall_support
-				add = 2
+				name = segrellion_council_wall_intent_support
+				add = scope:segrellion_council_vote_weight
 			}
 		}
 	}
 
 
 	# -----------------------------------------------------
-	# RED WEDDING REVENGE
+	# RED WEDDING
 	# -----------------------------------------------------
 
 	if = {
@@ -102,13 +384,8 @@ segrellion_winterfell_council_apply_intent_support_effect = {
 		scope:activity = {
 
 			change_variable = {
-				name = segrellion_council_revenge_support
-				add = 2
-			}
-
-			change_variable = {
-				name = segrellion_council_independence_support
-				add = 1
+				name = segrellion_council_revenge_intent_support
+				add = scope:segrellion_council_vote_weight
 			}
 		}
 	}
@@ -126,48 +403,27 @@ segrellion_winterfell_council_apply_intent_support_effect = {
 		scope:activity = {
 
 			change_variable = {
-				name = segrellion_council_independence_support
-				add = 2
+				name = segrellion_council_independence_intent_support
+				add = scope:segrellion_council_vote_weight
 			}
 		}
 	}
 
 
 	# -----------------------------------------------------
-	# KINGMAKER
+	# DEFEND / CONSOLIDATE
 	# -----------------------------------------------------
 
 	if = {
 		limit = {
-			has_activity_intent = segrellion_winterfell_council_kingmaker_intent
+			has_activity_intent = segrellion_winterfell_council_defend_north_intent
 		}
 
 		scope:activity = {
 
 			change_variable = {
-				name = segrellion_council_independence_support
-				add = 2
-			}
-		}
-
-		intent_target ?= {
-
-			if = {
-				limit = {
-					NOT = {
-						exists = var:segrellion_council_king_support
-					}
-				}
-
-				set_variable = {
-					name = segrellion_council_king_support
-					value = 0
-				}
-			}
-
-			change_variable = {
-				name = segrellion_council_king_support
-				add = 2
+				name = segrellion_council_defend_intent_support
+				add = scope:segrellion_council_vote_weight
 			}
 		}
 	}
@@ -185,73 +441,384 @@ segrellion_winterfell_council_apply_intent_support_effect = {
 		scope:activity = {
 
 			change_variable = {
-				name = segrellion_council_dragon_support
-				add = 2
-			}
-
-			change_variable = {
-				name = segrellion_council_wall_support
-				add = 1
+				name = segrellion_council_dragon_intent_support
+				add = scope:segrellion_council_vote_weight
 			}
 		}
+	}
+
+
+	# -----------------------------------------------------
+	# KINGMAKER
+	#
+	# IMPORTANT:
+	# This ONLY votes for a leader.
+	# It no longer gives Independence points.
+	# -----------------------------------------------------
+
+	if = {
+		limit = {
+			has_activity_intent = segrellion_winterfell_council_kingmaker_intent
+		}
+
+		intent_target ?= {
+
+			change_variable = {
+				name = segrellion_council_king_intent_support
+				add = scope:segrellion_council_vote_weight
+			}
+		}
+	}
+
+
+	# Hear the North intentionally contributes nothing.
+
+	remove_variable = segrellion_council_influence
+}
+
+
+# =========================================================
+# RECOUNT ALL CURRENT INTENTS
+# =========================================================
+
+segrellion_winterfell_council_recount_intent_support_effect = {
+
+	scope:activity = {
+
+		set_variable = {
+			name = segrellion_council_wall_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_revenge_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_independence_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_defend_intent_support
+			value = 0
+		}
+
+		set_variable = {
+			name = segrellion_council_dragon_intent_support
+			value = 0
+		}
+
+
+		every_attending_character = {
+
+			set_variable = {
+				name = segrellion_council_king_intent_support
+				value = 0
+			}
+		}
+
+
+		every_attending_character = {
+
+			limit = {
+				this != scope:host
+			}
+
+			segrellion_winterfell_council_apply_single_voter_effect = yes
+		}
+	}
+
+
+	# Host vote is handled explicitly so it can never be missed.
+
+	scope:host = {
+
+		set_variable = {
+			name = segrellion_council_king_intent_support
+			value = 0
+		}
+
+		segrellion_winterfell_council_apply_single_voter_effect = yes
 	}
 }
 
 
 # =========================================================
-# SELECT THE LEADING KING CANDIDATE
+# APPLY CURRENT INTENT SUPPORT
+#
+# The activity calls this for several participants.
+# Only the host performs the full recount.
+# =========================================================
+
+segrellion_winterfell_council_apply_intent_support_effect = {
+
+	if = {
+		limit = {
+			this = scope:host
+		}
+
+		segrellion_winterfell_council_recount_intent_support_effect = yes
+	}
+}
+
+
+# =========================================================
+# FINALIZE STRATEGIC TOTALS
+#
+# Current scope = activity.
+#
+# TOTAL =
+# event/debate momentum
+# +
+# current weighted lord influence
+# =========================================================
+
+segrellion_winterfell_council_finalize_strategy_totals_effect = {
+
+	set_variable = {
+		name = segrellion_council_wall_total
+		value = var:segrellion_council_wall_support
+	}
+
+	change_variable = {
+		name = segrellion_council_wall_total
+		add = var:segrellion_council_wall_intent_support
+	}
+
+
+	set_variable = {
+		name = segrellion_council_revenge_total
+		value = var:segrellion_council_revenge_support
+	}
+
+	change_variable = {
+		name = segrellion_council_revenge_total
+		add = var:segrellion_council_revenge_intent_support
+	}
+
+
+	set_variable = {
+		name = segrellion_council_independence_total
+		value = var:segrellion_council_independence_support
+	}
+
+	change_variable = {
+		name = segrellion_council_independence_total
+		add = var:segrellion_council_independence_intent_support
+	}
+
+
+	set_variable = {
+		name = segrellion_council_defend_total
+		value = var:segrellion_council_defend_support
+	}
+
+	change_variable = {
+		name = segrellion_council_defend_total
+		add = var:segrellion_council_defend_intent_support
+	}
+
+
+	set_variable = {
+		name = segrellion_council_dragon_total
+		value = var:segrellion_council_dragon_support
+	}
+
+	change_variable = {
+		name = segrellion_council_dragon_total
+		add = var:segrellion_council_dragon_intent_support
+	}
+}
+
+
+# =========================================================
+# SELECT KING CANDIDATE
 # =========================================================
 
 segrellion_winterfell_council_select_candidate_effect = {
 
 	clear_saved_scope = segrellion_council_winning_candidate
 
+
+	# =====================================================
+	# BUILD FINAL CANDIDATE TOTALS
+	# =====================================================
+
 	scope:activity = {
 
-		ordered_attending_character = {
+		every_attending_character = {
 
-			limit = {
-
-				is_alive = yes
-				is_adult = yes
-
-				NOT = {
-					has_trait = nightswatch
-				}
+			set_variable = {
+				name = segrellion_council_king_total_support
+				value = 0
 			}
 
-			order_by = {
+			if = {
+				limit = {
+					exists = var:segrellion_council_king_support
+				}
 
-				value = 0
-
-				if = {
-					limit = {
-						exists = var:segrellion_council_king_support
-					}
-
+				change_variable = {
+					name = segrellion_council_king_total_support
 					add = var:segrellion_council_king_support
 				}
-
-				# Tie-breaker in favor of the existing ruler.
-
-				if = {
-					limit = {
-						this = scope:host
-					}
-
-					add = 1
-				}
 			}
 
-			check_range_bounds = no
+			if = {
+				limit = {
+					exists = var:segrellion_council_king_intent_support
+				}
 
+				change_variable = {
+					name = segrellion_council_king_total_support
+					add = var:segrellion_council_king_intent_support
+				}
+			}
+		}
+	}
+
+
+	# Safety for host.
+
+	scope:host = {
+
+		set_variable = {
+			name = segrellion_council_king_total_support
+			value = 0
+		}
+
+		if = {
+			limit = {
+				exists = var:segrellion_council_king_support
+			}
+
+			change_variable = {
+				name = segrellion_council_king_total_support
+				add = var:segrellion_council_king_support
+			}
+		}
+
+		if = {
+			limit = {
+				exists = var:segrellion_council_king_intent_support
+			}
+
+			change_variable = {
+				name = segrellion_council_king_total_support
+				add = var:segrellion_council_king_intent_support
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CANON
+	# Jon always wins the leadership vote.
+	# =====================================================
+
+	if = {
+		limit = {
+
+			has_game_rule = segrellion_winterfell_council_canon
+
+			scope:host = {
+
+				is_alive = yes
+
+				segrellion_is_current_jon_trigger = yes
+			}
+		}
+
+		scope:host = {
 			save_scope_as = segrellion_council_winning_candidate
 		}
 	}
 
 
+	# =====================================================
+	# DYNAMIC
+	# Highest actual support wins.
+	# =====================================================
+
+	else = {
+
+		scope:activity = {
+
+			ordered_attending_character = {
+
+				limit = {
+
+					is_alive = yes
+
+					NOT = {
+						has_trait = incapable
+					}
+
+					OR = {
+
+						is_adult = yes
+
+						dynasty = character:Stark_Dummy_8.dynasty
+					}
+
+					OR = {
+
+						is_landed = yes
+
+						dynasty = character:Stark_Dummy_8.dynasty
+					}
+
+					OR = {
+
+						NOT = {
+							has_trait = nightswatch
+						}
+
+						segrellion_is_current_jon_trigger = yes
+					}
+
+					exists = var:segrellion_council_king_total_support
+
+					var:segrellion_council_king_total_support > 0
+				}
+
+
+				order_by = {
+
+					value = 0
+
+					add = var:segrellion_council_king_total_support
+
+					# Small tie-break in favor of the host.
+					if = {
+						limit = {
+							this = scope:host
+						}
+
+						add = 0.1
+					}
+				}
+
+
+				position = 0
+
+				check_range_bounds = no
+
+				save_scope_as = segrellion_council_winning_candidate
+			}
+		}
+	}
+
+
+	# =====================================================
+	# FALLBACK
+	# =====================================================
+
 	if = {
 		limit = {
+
 			NOT = {
 				exists = scope:segrellion_council_winning_candidate
 			}
@@ -268,6 +835,196 @@ segrellion_winterfell_council_select_candidate_effect = {
 		set_variable = {
 			name = segrellion_council_winning_candidate
 			value = scope:segrellion_council_winning_candidate
+		}
+	}
+}
+
+
+# =========================================================
+# SELECT NORTHERN STRATEGY
+#
+# Current scope = activity.
+#
+# CANON:
+# Red Wedding revenge.
+#
+# DYNAMIC:
+# Highest weighted total.
+# =========================================================
+
+segrellion_winterfell_council_select_strategy_effect = {
+
+	set_variable = {
+		name = segrellion_council_strategy_revenge_won
+		value = 0
+	}
+
+	set_variable = {
+		name = segrellion_council_strategy_wall_won
+		value = 0
+	}
+
+	set_variable = {
+		name = segrellion_council_strategy_independence_won
+		value = 0
+	}
+
+	set_variable = {
+		name = segrellion_council_strategy_defend_won
+		value = 0
+	}
+
+	set_variable = {
+		name = segrellion_council_strategy_dragon_won
+		value = 0
+	}
+
+
+	# =====================================================
+	# CANON
+	# =====================================================
+
+	if = {
+		limit = {
+			has_game_rule = segrellion_winterfell_council_canon
+		}
+
+		set_variable = {
+			name = segrellion_council_strategy_revenge_won
+			value = 1
+		}
+	}
+
+
+	# =====================================================
+	# DYNAMIC
+	# =====================================================
+
+	else = {
+
+
+		# -------------------------------------------------
+		# REVENGE
+		# Tie priority 1.
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				var:segrellion_council_revenge_total > 0
+
+				var:segrellion_council_revenge_total >= var:segrellion_council_wall_total
+				var:segrellion_council_revenge_total >= var:segrellion_council_independence_total
+				var:segrellion_council_revenge_total >= var:segrellion_council_defend_total
+				var:segrellion_council_revenge_total >= var:segrellion_council_dragon_total
+			}
+
+			set_variable = {
+				name = segrellion_council_strategy_revenge_won
+				value = 1
+			}
+		}
+
+
+		# -------------------------------------------------
+		# WALL
+		# -------------------------------------------------
+
+		else_if = {
+			limit = {
+
+				var:segrellion_council_wall_total > 0
+
+				var:segrellion_council_wall_total >= var:segrellion_council_revenge_total
+				var:segrellion_council_wall_total >= var:segrellion_council_independence_total
+				var:segrellion_council_wall_total >= var:segrellion_council_defend_total
+				var:segrellion_council_wall_total >= var:segrellion_council_dragon_total
+			}
+
+			set_variable = {
+				name = segrellion_council_strategy_wall_won
+				value = 1
+			}
+		}
+
+
+		# -------------------------------------------------
+		# INDEPENDENCE
+		# -------------------------------------------------
+
+		else_if = {
+			limit = {
+
+				var:segrellion_council_independence_total > 0
+
+				var:segrellion_council_independence_total >= var:segrellion_council_revenge_total
+				var:segrellion_council_independence_total >= var:segrellion_council_wall_total
+				var:segrellion_council_independence_total >= var:segrellion_council_defend_total
+				var:segrellion_council_independence_total >= var:segrellion_council_dragon_total
+			}
+
+			set_variable = {
+				name = segrellion_council_strategy_independence_won
+				value = 1
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DEFEND THE NORTH
+		# -------------------------------------------------
+
+		else_if = {
+			limit = {
+
+				var:segrellion_council_defend_total > 0
+
+				var:segrellion_council_defend_total >= var:segrellion_council_revenge_total
+				var:segrellion_council_defend_total >= var:segrellion_council_wall_total
+				var:segrellion_council_defend_total >= var:segrellion_council_independence_total
+				var:segrellion_council_defend_total >= var:segrellion_council_dragon_total
+			}
+
+			set_variable = {
+				name = segrellion_council_strategy_defend_won
+				value = 1
+			}
+		}
+
+
+		# -------------------------------------------------
+		# DRAGON QUEEN
+		# -------------------------------------------------
+
+		else_if = {
+			limit = {
+
+				var:segrellion_council_dragon_total > 0
+
+				var:segrellion_council_dragon_total >= var:segrellion_council_revenge_total
+				var:segrellion_council_dragon_total >= var:segrellion_council_wall_total
+				var:segrellion_council_dragon_total >= var:segrellion_council_independence_total
+				var:segrellion_council_dragon_total >= var:segrellion_council_defend_total
+			}
+
+			set_variable = {
+				name = segrellion_council_strategy_dragon_won
+				value = 1
+			}
+		}
+
+
+		# -------------------------------------------------
+		# NO CLEAR MANDATE
+		# Hold and consolidate.
+		# -------------------------------------------------
+
+		else = {
+
+			set_variable = {
+				name = segrellion_council_strategy_defend_won
+				value = 1
+			}
 		}
 	}
 }

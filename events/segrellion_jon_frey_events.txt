@@ -405,9 +405,6 @@ segrellion_jon_frey.0020 = {
 
 			add_character_flag = segrellion_jon_stannis_result_resolved
 
-			add_character_flag = segrellion_jon_red_wedding_revenge_pending
-
-
 			if = {
 
 				limit = {
@@ -491,25 +488,31 @@ segrellion_jon_frey.0020 = {
 			}
 		}
 
+		# =================================================
+		# THE FREY WAR ONLY FOLLOWS A REVENGE MANDATE
+		# =================================================
+
 		if = {
 			limit = {
 
 				scope:activity = {
-					var:segrellion_council_revenge_support >= 6
+					var:segrellion_council_strategy_revenge_won = 1
 				}
 			}
 
+
+			add_character_flag = segrellion_jon_red_wedding_revenge_pending
+
 			add_character_flag = segrellion_jon_council_demands_frey_revenge
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0030
+
+				days = { 5 10 }
+			}
 		}
-
-
-		trigger_event = {
-
-			id = segrellion_jon_frey.0030
-
-			days = { 5 10 }
-		}
-
 
 		ai_chance = {
 			base = 100

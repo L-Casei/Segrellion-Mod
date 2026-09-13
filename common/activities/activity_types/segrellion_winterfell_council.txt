@@ -124,6 +124,7 @@ activity_segrellion_winterfell_council = {
 			segrellion_winterfell_council_revenge_intent
 			segrellion_winterfell_council_independence_intent
 			segrellion_winterfell_council_kingmaker_intent
+			segrellion_winterfell_council_defend_north_intent
 			segrellion_winterfell_council_dragon_alliance_intent
 		}
 
@@ -147,6 +148,7 @@ activity_segrellion_winterfell_council = {
 			segrellion_winterfell_council_revenge_intent
 			segrellion_winterfell_council_independence_intent
 			segrellion_winterfell_council_kingmaker_intent
+			segrellion_winterfell_council_defend_north_intent
 			segrellion_winterfell_council_dragon_alliance_intent
 		}
 
@@ -179,8 +181,18 @@ activity_segrellion_winterfell_council = {
 	}
 
 	can_be_activity_guest = {
-		is_adult = yes
+
+		OR = {
+
+			is_adult = yes
+
+			# Stark heirs can be brought before the council
+			# even if they are still underage.
+			dynasty = character:Stark_Dummy_8.dynasty
+		}
+
 		in_diplomatic_range = scope:host
+
 		is_pool_guest = no
 	}
 
@@ -463,11 +475,20 @@ activity_segrellion_winterfell_council = {
 		scope:activity = {
 
 			every_attending_character = {
+
 				remove_variable = segrellion_council_king_support
+				remove_variable = segrellion_council_king_intent_support
+				remove_variable = segrellion_council_king_total_support
+				remove_variable = segrellion_council_influence
 			}
 		}
 
 		scope:host = {
+
+			remove_variable = segrellion_council_king_support
+			remove_variable = segrellion_council_king_intent_support
+			remove_variable = segrellion_council_king_total_support
+			remove_variable = segrellion_council_influence
 
 			remove_character_flag = segrellion_jon_winterfell_council_called
 

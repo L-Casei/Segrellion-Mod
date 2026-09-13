@@ -1292,6 +1292,11 @@ segrellion_winterfell_council.4006 = {
 
 # =========================================================
 # FINAL COUNCIL RESOLVER
+#
+# TWO INDEPENDENT RESULTS:
+#
+# 1. WHO LEADS THE NORTH?
+# 2. WHAT WILL THE NORTH DO?
 # =========================================================
 
 segrellion_winterfell_council.4900 = {
@@ -1299,6 +1304,7 @@ segrellion_winterfell_council.4900 = {
 	type = activity_event
 
 	hidden = yes
+
 
 	trigger = {
 
@@ -1312,42 +1318,81 @@ segrellion_winterfell_council.4900 = {
 		}
 	}
 
+
 	immediate = {
+
+
+		# =================================================
+		# FINAL RECOUNT
+		# =================================================
+
+		segrellion_winterfell_council_recount_intent_support_effect = yes
 
 		segrellion_winterfell_council_select_candidate_effect = yes
 
 
-		# -------------------------------------------------
-		# OVERWHELMING NO-CROWN FACTION
-		# -------------------------------------------------
+		scope:activity = {
+
+			segrellion_winterfell_council_finalize_strategy_totals_effect = yes
+
+			segrellion_winterfell_council_select_strategy_effect = yes
+		}
+
+
+		# =================================================
+		# RESULT I
+		# LEADERSHIP
+		# =================================================
 
 		if = {
 			limit = {
 
-				scope:activity = {
-					var:segrellion_council_no_crown_support >= 12
+				exists = scope:activity.var:segrellion_council_winning_candidate
+
+				scope:activity.var:segrellion_council_winning_candidate = {
+					segrellion_is_current_jon_trigger = yes
 				}
 			}
 
 			trigger_event = {
-				id = segrellion_winterfell_council.4950
+				id = segrellion_jon_frey.0020
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_winterfell_council.4910
 				days = 1
 			}
 		}
 
 
-		# -------------------------------------------------
-		# OVERWHELMING LONG NIGHT FACTION
-		# -------------------------------------------------
+		# =================================================
+		# RESULT II
+		# NORTHERN STRATEGY
+		# =================================================
+
+		if = {
+			limit = {
+
+				scope:activity = {
+					var:segrellion_council_strategy_revenge_won = 1
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_winterfell_council.4960
+				days = 1
+			}
+		}
 
 		else_if = {
 			limit = {
 
 				scope:activity = {
-
-					var:segrellion_council_wall_support >= 12
-
-					var:segrellion_council_independence_support < 10
+					var:segrellion_council_strategy_wall_won = 1
 				}
 			}
 
@@ -1357,80 +1402,11 @@ segrellion_winterfell_council.4900 = {
 			}
 		}
 
-
-		# -------------------------------------------------
-		# OVERWHELMING DRAGON ALLIANCE FACTION
-		# -------------------------------------------------
-
 		else_if = {
 			limit = {
 
 				scope:activity = {
-
-					var:segrellion_council_dragon_support >= 10
-
-					var:segrellion_council_independence_support < 10
-				}
-			}
-
-			trigger_event = {
-				id = segrellion_winterfell_council.4930
-				days = 1
-			}
-		}
-
-
-		# -------------------------------------------------
-		# CROWN A KING
-		# -------------------------------------------------
-
-		else_if = {
-			limit = {
-
-				scope:activity = {
-
-					var:segrellion_council_independence_support >= 6
-
-					var:segrellion_council_winning_candidate = {
-
-						exists = var:segrellion_council_king_support
-
-						var:segrellion_council_king_support >= 6
-					}
-				}
-			}
-
-
-			if = {
-				limit = {
-
-					this = scope:activity.var:segrellion_council_winning_candidate
-				}
-
-				trigger_event = {
-					id = segrellion_jon_frey.0020
-					days = 1
-				}
-			}
-
-			else = {
-
-				trigger_event = {
-					id = segrellion_winterfell_council.4910
-					days = 1
-				}
-			}
-		}
-
-
-		# -------------------------------------------------
-		# INDEPENDENT NORTH, NO KING
-		# -------------------------------------------------
-
-		else_if = {
-			limit = {
-				scope:activity = {
-					var:segrellion_council_independence_support >= 5
+					var:segrellion_council_strategy_independence_won = 1
 				}
 			}
 
@@ -1440,33 +1416,11 @@ segrellion_winterfell_council.4900 = {
 			}
 		}
 
-
-		# -------------------------------------------------
-		# WALL FALLBACK
-		# -------------------------------------------------
-
 		else_if = {
 			limit = {
+
 				scope:activity = {
-					var:segrellion_council_wall_support >= 6
-				}
-			}
-
-			trigger_event = {
-				id = segrellion_winterfell_council.4920
-				days = 1
-			}
-		}
-
-
-		# -------------------------------------------------
-		# DRAGON FALLBACK
-		# -------------------------------------------------
-
-		else_if = {
-			limit = {
-				scope:activity = {
-					var:segrellion_council_dragon_support >= 6
+					var:segrellion_council_strategy_dragon_won = 1
 				}
 			}
 
@@ -1475,7 +1429,6 @@ segrellion_winterfell_council.4900 = {
 				days = 1
 			}
 		}
-
 
 		else = {
 
@@ -1650,7 +1603,7 @@ segrellion_winterfell_council.4930 = {
 
 
 # =========================================================
-# INDEPENDENT NORTH WITHOUT A KING
+# NORTHERN INDEPENDENCE
 # =========================================================
 
 segrellion_winterfell_council.4940 = {
@@ -1678,24 +1631,32 @@ segrellion_winterfell_council.4940 = {
 
 		name = segrellion_winterfell_council.4940.a
 
-		custom_tooltip = segrellion_winterfell_council.4940.a.tt
+		add_character_flag = segrellion_north_council_prioritized_independence
 
-		add_character_flag = segrellion_north_independent_without_king
 		add_character_flag = segrellion_jon_council_rejected_southern_rule
 
+
 		add_prestige = 500
+
 
 		add_character_modifier = {
 
 			modifier = segrellion_council_northern_consensus_modifier
+
 			years = 5
+		}
+
+
+		scope:activity.var:segrellion_council_winning_candidate ?= {
+
+			add_character_flag = segrellion_winterfell_council_independence_mandate
 		}
 	}
 }
 
 
 # =========================================================
-# NO CROWN
+# HOLD THE NORTH
 # =========================================================
 
 segrellion_winterfell_council.4950 = {
@@ -1705,7 +1666,7 @@ segrellion_winterfell_council.4950 = {
 	title = segrellion_winterfell_council.4950.t
 	desc = segrellion_winterfell_council.4950.desc
 
-	theme = realm
+	theme = stewardship
 
 	override_background = {
 		reference = council_chamber
@@ -1723,11 +1684,72 @@ segrellion_winterfell_council.4950 = {
 
 		name = segrellion_winterfell_council.4950.a
 
-		custom_tooltip = segrellion_winterfell_council.4950.a.tt
 
-		add_character_flag = segrellion_jon_council_no_crown
+		add_character_flag = segrellion_north_council_prioritized_defense
 
-		add_prestige = 150
+		add_character_flag = segrellion_jon_council_defend_north
+
+
+		add_prestige = 300
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_council_northern_consensus_modifier
+
+			years = 3
+		}
+
+
+		scope:activity.var:segrellion_council_winning_candidate ?= {
+
+			add_character_flag = segrellion_winterfell_council_defense_mandate
+		}
+	}
+}
+
+# =========================================================
+# THE NORTH REMEMBERS
+# =========================================================
+
+segrellion_winterfell_council.4960 = {
+
+	type = activity_event
+
+	title = segrellion_winterfell_council.4960.t
+	desc = segrellion_winterfell_council.4960.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+
+	left_portrait = {
+
+		character = scope:host
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_winterfell_council.4960.a
+
+
+		add_character_flag = segrellion_north_council_prioritized_revenge
+
+		add_character_flag = segrellion_jon_council_demands_frey_revenge
+
+
+		add_prestige = 350
+
+
+		scope:activity.var:segrellion_council_winning_candidate ?= {
+
+			add_character_flag = segrellion_winterfell_council_revenge_mandate
+		}
 	}
 }
 

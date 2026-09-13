@@ -242,31 +242,75 @@ segrellion_winterfell_council_kingmaker_intent = {
 		trigger_event = activity_system.0090
 	}
 
+
+	# =====================================================
+	# AI CANDIDATE POOL
+	# =====================================================
+
 	ai_targets = {
 		ai_recipients = activity_host
 	}
 
 	ai_targets = {
 		ai_recipients = activity_guests
-		max = 20
+		max = 100
 	}
+
+
+	# =====================================================
+	# VALID KING CANDIDATES
+	# =====================================================
 
 	is_target_valid = {
 
 		scope:target = {
 
 			is_alive = yes
-			is_adult = yes
 
 			NOT = {
-				has_trait = nightswatch
+				has_trait = incapable
+			}
+
+			# Normal candidates must be adults.
+			# Starks may be considered even while young.
+			OR = {
+
+				is_adult = yes
+
+				dynasty = character:Stark_Dummy_8.dynasty
+			}
+
+			# Ordinary candidates must hold land.
+			# A Stark may be acclaimed regardless of current land.
+			OR = {
+
+				is_landed = yes
+
+				dynasty = character:Stark_Dummy_8.dynasty
+			}
+
+			# The Watch normally bars a candidate.
+			# Jon is explicitly exempt because his death ended the issue.
+			OR = {
+
+				NOT = {
+					has_trait = nightswatch
+				}
+
+				segrellion_is_current_jon_trigger = yes
 			}
 		}
 	}
 
+
 	on_target_invalidated = {
 		trigger_event = activity_system.0091
 	}
+
+
+	# =====================================================
+	# SHOULD THE AI CHOOSE THE KINGMAKER INTENT?
+	# =====================================================
 
 	ai_will_do = {
 
@@ -282,6 +326,22 @@ segrellion_winterfell_council_kingmaker_intent = {
 
 		if = {
 			limit = {
+				has_trait = arrogant
+			}
+
+			add = 20
+		}
+
+		if = {
+			limit = {
+				has_trait = brave
+			}
+
+			add = 15
+		}
+
+		if = {
+			limit = {
 				has_trait = content
 			}
 
@@ -289,12 +349,66 @@ segrellion_winterfell_council_kingmaker_intent = {
 		}
 	}
 
+
+	# =====================================================
+	# WHO DOES THE AI SUPPORT?
+	# =====================================================
+
 	ai_target_score = {
 
 		value = 1
 
+
+		# -------------------------------------------------
+		# JON / THE WHITE WOLF
+		# -------------------------------------------------
+
 		if = {
 			limit = {
+
+				scope:target = {
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+			add = 500
+		}
+
+		if = {
+			limit = {
+
+				scope:target = {
+					has_character_flag = segrellion_jon_restored_to_winterfell
+				}
+			}
+
+			add = 100
+		}
+
+
+		# -------------------------------------------------
+		# STARK BLOOD
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				scope:target = {
+					dynasty = character:Stark_Dummy_8.dynasty
+				}
+			}
+
+			add = 160
+		}
+
+
+		# -------------------------------------------------
+		# CURRENT POLITICAL POSITION
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
 				scope:target = {
 					has_title = title:e_the_north
 				}
@@ -305,52 +419,321 @@ segrellion_winterfell_council_kingmaker_intent = {
 
 		if = {
 			limit = {
+
 				scope:target = {
 					has_title = title:d_winterfell
 				}
 			}
 
-			add = 100
+			add = 120
 		}
 
 		if = {
 			limit = {
+
 				scope:target = {
 					is_landed = yes
 				}
 			}
 
-			add = 25
-		}
-
-		if = {
-
-			limit = {
-
-				scope:target = {
-
-					has_trait = nightswatch
-
-					NOT = {
-						segrellion_is_current_jon_trigger = yes
-					}
-				}
-			}
-
-			add = -1000
+			add = 20
 		}
 
 
-		if = {
+		# -------------------------------------------------
+		# NORTHERN PREFERENCE FOR A MALE WAR LEADER
+		# -------------------------------------------------
 
+		if = {
 			limit = {
 
 				scope:target = {
-					segrellion_is_current_jon_trigger = yes
+					is_female = no
 				}
 			}
 
-			add = 500
+			add = 30
+		}
+
+
+		# -------------------------------------------------
+		# AGE
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				scope:target = {
+					is_adult = no
+				}
+			}
+
+			add = -75
+		}
+
+
+		# -------------------------------------------------
+		# PRESTIGE
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				scope:target = {
+					prestige_level >= 3
+				}
+			}
+
+			add = 20
+		}
+
+		if = {
+			limit = {
+
+				scope:target = {
+					prestige_level >= 4
+				}
+			}
+
+			add = 20
+		}
+
+		if = {
+			limit = {
+
+				scope:target = {
+					prestige_level >= 5
+				}
+			}
+
+			add = 20
+		}
+
+
+		# -------------------------------------------------
+		# MARTIAL REPUTATION
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				scope:target = {
+					martial >= 12
+				}
+			}
+
+			add = 15
+		}
+
+		if = {
+			limit = {
+
+				scope:target = {
+					martial >= 18
+				}
+			}
+
+			add = 20
+		}
+
+
+		# -------------------------------------------------
+		# BASTARDY
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				scope:target = {
+					has_trait = bastard
+				}
+			}
+
+			add = -45
+		}
+
+		if = {
+			limit = {
+
+				scope:target = {
+					has_trait = legitimized_bastard
+				}
+			}
+
+			add = -10
+		}
+
+
+		# -------------------------------------------------
+		# CHARACTER
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+
+				scope:target = {
+					has_trait = brave
+				}
+			}
+
+			add = 20
+		}
+
+		if = {
+			limit = {
+
+				scope:target = {
+					has_trait = just
+				}
+			}
+
+			add = 15
+		}
+
+		if = {
+			limit = {
+
+				scope:target = {
+					has_trait = craven
+				}
+			}
+
+			add = -30
+		}
+
+
+		# -------------------------------------------------
+		# PERSONAL RELATIONSHIP WITH THE VOTER
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				has_relation_friend = scope:target
+			}
+
+			add = 50
+		}
+
+		if = {
+			limit = {
+				has_relation_rival = scope:target
+			}
+
+			add = -150
+		}
+
+		if = {
+			limit = {
+
+				opinion = {
+					target = scope:target
+					value >= 40
+				}
+			}
+
+			add = 30
+		}
+
+		if = {
+			limit = {
+
+				opinion = {
+					target = scope:target
+					value >= 70
+				}
+			}
+
+			add = 30
+		}
+	}
+
+
+	scripted_animation = {
+		animation = thinking
+	}
+}
+
+# ---------------------------------------------------------
+# HOLD THE NORTH
+# Consolidation / defense
+# ---------------------------------------------------------
+
+segrellion_winterfell_council_defend_north_intent = {
+
+	icon = intent_stewardship
+
+	auto_complete = yes
+
+	on_invalidated = {
+		trigger_event = activity_system.0090
+	}
+
+	ai_will_do = {
+
+		value = 45
+
+		if = {
+			limit = {
+				has_trait = patient
+			}
+
+			add = 60
+		}
+
+		if = {
+			limit = {
+				has_trait = diligent
+			}
+
+			add = 45
+		}
+
+		if = {
+			limit = {
+				has_trait = content
+			}
+
+			add = 30
+		}
+
+		if = {
+			limit = {
+				has_trait = brave
+			}
+
+			add = 20
+		}
+
+		if = {
+			limit = {
+				has_trait = stubborn
+			}
+
+			add = 15
+		}
+
+		if = {
+			limit = {
+				has_trait = ambitious
+			}
+
+			add = -20
+		}
+
+		if = {
+			limit = {
+				has_trait = vengeful
+			}
+
+			add = -35
+		}
+
+		if = {
+			limit = {
+				has_trait = nightswatch
+			}
+
+			add = -20
 		}
 	}
 
@@ -358,7 +741,6 @@ segrellion_winterfell_council_kingmaker_intent = {
 		animation = thinking
 	}
 }
-
 
 # ---------------------------------------------------------
 # SEEK THE DRAGON QUEEN
