@@ -36,6 +36,7 @@ monthly_global_pulse = {
 		segrellion_young_griff_iron_throne_invasion_failsafe
 		segrellion_young_griff_kings_landing_arrival_fallback
 		segrellion_jon_resurrection_progression
+		segrellion_jon_winterfell_council_ai_failsafe
 		segrellion_jon_nights_watch_status_guard
 		segrellion_jon_targaryen_reveal_progression
 		segrellion_jon_body_in_ice_failsafe
@@ -5408,4 +5409,63 @@ segrellion_hugh_death_black_unicorn_fallback = {
             set_character_flag = segrellion_black_unicorn_part_iii_available
         }
     }
+}
+
+# =========================================================
+# JON SNOW - WINTERFELL COUNCIL AI FAILSAFE
+# =========================================================
+
+segrellion_jon_winterfell_council_ai_failsafe = {
+
+	trigger = {
+
+		title:c_winterfell.holder ?= {
+
+			is_alive = yes
+			is_ai = yes
+
+			segrellion_is_current_jon_trigger = yes
+
+			has_character_flag = segrellion_jon_winterfell_council_called
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_completed
+			}
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
+			}
+
+			NOT = {
+				in_activity_type = activity_segrellion_winterfell_council
+			}
+		}
+	}
+
+	effect = {
+
+		title:c_winterfell.holder = {
+
+			random = {
+
+				chance = 35
+
+				add_character_flag = {
+					flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
+					days = 180
+				}
+
+				save_scope_as = segrellion_winterfell_council_ai_host
+
+				title:c_winterfell.title_province = {
+
+					spawn_activity = {
+						owner = scope:segrellion_winterfell_council_ai_host
+						type = activity_segrellion_winterfell_council
+						days = 365
+					}
+				}
+			}
+		}
+	}
 }
