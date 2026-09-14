@@ -1,0 +1,349 @@
+namespace = segrellion_jeyne_poole
+
+
+# =========================================================
+# 0000 - WAIT UNTIL JON HOLDS WINTERFELL
+#
+# Hidden controller.
+#
+# Ramsay can technically die slightly before the title
+# transfer is completely resolved. Do not lose the chain.
+# =========================================================
+
+segrellion_jeyne_poole.0000 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		is_alive = yes
+
+
+		character:Poole_Dummy_3 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_jeyne_poole_reveal_pending
+
+			NOT = {
+				has_character_flag = segrellion_jeyne_poole_identity_revealed
+			}
+		}
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# JON HAS RETURNED TO WINTERFELL
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Bolton_5 ?= {
+					is_alive = no
+				}
+
+				OR = {
+
+					has_title = title:d_winterfell
+
+					has_title = title:c_winterfell
+
+					has_character_flag = segrellion_jon_restored_to_winterfell
+				}
+			}
+
+
+			trigger_event = {
+				id = segrellion_jeyne_poole.0001
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# WINTERFELL HAS NOT FULLY PASSED TO JON YET
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_jeyne_poole.0000
+				days = 10
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0001 - THE GIRL WHO WASN'T ARYA
+#
+# ROOT = current Jon
+# =========================================================
+
+segrellion_jeyne_poole.0001 = {
+
+	type = character_event
+
+	title = segrellion_jeyne_poole.0001.t
+
+	desc = segrellion_jeyne_poole.0001.desc
+
+	theme = intrigue
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		is_alive = yes
+
+
+		character:Bolton_5 ?= {
+			is_alive = no
+		}
+
+
+		character:Poole_Dummy_3 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_jeyne_poole_reveal_pending
+
+			NOT = {
+				has_character_flag = segrellion_jeyne_poole_identity_revealed
+			}
+		}
+	}
+
+
+	immediate = {
+
+		character:Poole_Dummy_3 = {
+
+			save_scope_as = segrellion_jeyne_poole
+
+			segrellion_reveal_jeyne_poole_effect = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_honorable
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_jeyne_poole
+
+		animation = worry
+	}
+
+
+	# =====================================================
+	# LET JEYNE REMAIN AT WINTERFELL
+	# =====================================================
+
+	option = {
+
+		name = segrellion_jeyne_poole.0001.a
+
+		custom_tooltip = segrellion_jeyne_poole.0001.a.tt
+
+
+		scope:segrellion_jeyne_poole = {
+
+			if = {
+
+				limit = {
+					is_ruler = no
+				}
+
+				set_employer = root
+			}
+
+
+			set_location = title:c_winterfell.title_province
+
+
+			add_character_flag = segrellion_jeyne_poole_stays_winterfell
+		}
+
+
+		root = {
+
+			add_character_flag = segrellion_jon_protected_jeyne_poole
+		}
+
+
+		ai_chance = {
+			base = 85
+		}
+	}
+
+
+	# =====================================================
+	# SEND JEYNE AWAY UNDER HER TRUE NAME
+	# =====================================================
+
+	option = {
+
+		name = segrellion_jeyne_poole.0001.b
+
+		custom_tooltip = segrellion_jeyne_poole.0001.b.tt
+
+
+		hidden_effect = {
+
+			# =============================================
+			# FIRST TRY TO FIND A LIVING LANDED POOLE
+			# =============================================
+
+			dynasty:dynn_Poole = {
+
+				random_dynasty_member = {
+
+					limit = {
+
+						is_alive = yes
+
+						is_ruler = yes
+
+						this != scope:segrellion_jeyne_poole
+					}
+
+
+					save_scope_as = segrellion_jeyne_poole_host
+				}
+			}
+
+
+			# =============================================
+			# A POOLE LORD EXISTS
+			# =============================================
+
+			if = {
+
+				limit = {
+					exists = scope:segrellion_jeyne_poole_host
+				}
+
+
+				scope:segrellion_jeyne_poole = {
+
+					if = {
+
+						limit = {
+							is_ruler = no
+						}
+
+						set_employer = scope:segrellion_jeyne_poole_host
+					}
+
+
+					set_location = scope:segrellion_jeyne_poole_host.location
+
+					add_character_flag = segrellion_jeyne_poole_returned_to_her_people
+				}
+			}
+
+
+			# =============================================
+			# NO LANDED POOLE SURVIVES
+			#
+			# Send her to White Harbor under Northern
+			# protection instead of inventing Poole lands.
+			# =============================================
+
+			else_if = {
+
+				limit = {
+
+					title:c_white_harbor = {
+						exists = holder
+					}
+
+					title:c_white_harbor.holder = {
+						is_alive = yes
+					}
+				}
+
+
+				title:c_white_harbor.holder = {
+					save_scope_as = segrellion_jeyne_refuge_host
+				}
+
+
+				scope:segrellion_jeyne_poole = {
+
+					if = {
+
+						limit = {
+							is_ruler = no
+						}
+
+						set_employer = scope:segrellion_jeyne_refuge_host
+					}
+
+
+					set_location = title:c_white_harbor.title_province
+
+					add_character_flag = segrellion_jeyne_poole_left_winterfell
+				}
+			}
+
+
+			# =============================================
+			# ABSOLUTE FAILSAFE
+			# =============================================
+
+			else = {
+
+				scope:segrellion_jeyne_poole = {
+
+					if = {
+
+						limit = {
+							is_ruler = no
+						}
+
+						set_employer = root
+					}
+
+					set_location = title:c_winterfell.title_province
+
+					add_character_flag = segrellion_jeyne_poole_stays_winterfell
+				}
+			}
+
+
+			root = {
+
+				add_character_flag = segrellion_jon_released_jeyne_poole
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}

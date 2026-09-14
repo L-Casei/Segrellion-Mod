@@ -1,0 +1,220 @@
+# =========================================================
+# JEYNE POOLE / FALSE ARYA STARK
+# =========================================================
+
+
+# =========================================================
+# RAMSAY BOLTON DIES
+#
+# ROOT = dying character
+# =========================================================
+
+on_death = {
+
+	on_actions = {
+		segrellion_jeyne_poole_ramsay_death
+	}
+}
+
+
+segrellion_jeyne_poole_ramsay_death = {
+
+	trigger = {
+
+		this = character:Bolton_5
+
+
+		character:Poole_Dummy_3 ?= {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_jeyne_poole_identity_revealed
+			}
+
+			NOT = {
+				has_character_flag = segrellion_jeyne_poole_reveal_scheduled
+			}
+		}
+
+
+		OR = {
+
+			AND = {
+
+				exists = global_var:segrellion_resurrected_jon
+
+				global_var:segrellion_resurrected_jon ?= {
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+
+			character:Stark_7 ?= {
+				segrellion_is_current_jon_trigger = yes
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Poole_Dummy_3 = {
+
+			add_character_flag = segrellion_jeyne_poole_reveal_scheduled
+
+			add_character_flag = segrellion_jeyne_poole_reveal_pending
+		}
+
+
+		# =================================================
+		# RESURRECTED / RUNTIME JON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				exists = global_var:segrellion_resurrected_jon
+
+				global_var:segrellion_resurrected_jon ?= {
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+
+			global_var:segrellion_resurrected_jon = {
+
+				trigger_event = {
+					id = segrellion_jeyne_poole.0000
+					days = 3
+				}
+			}
+		}
+
+
+		# =================================================
+		# HISTORICAL JON
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				character:Stark_7 ?= {
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+
+			character:Stark_7 = {
+
+				trigger_event = {
+					id = segrellion_jeyne_poole.0000
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# EXISTING SAVE RECOVERY
+#
+# If Ramsay is already dead when an old save is loaded,
+# schedule the reveal instead of requiring another death.
+# =========================================================
+
+on_game_start_after_lobby = {
+
+	on_actions = {
+
+		delay = {
+			days = 1
+		}
+
+		segrellion_jeyne_poole_existing_save_recovery
+	}
+}
+
+
+segrellion_jeyne_poole_existing_save_recovery = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				character:Bolton_5 ?= {
+					is_alive = no
+				}
+
+
+				character:Poole_Dummy_3 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_jeyne_poole_identity_revealed
+					}
+
+					NOT = {
+						has_character_flag = segrellion_jeyne_poole_reveal_scheduled
+					}
+				}
+			}
+
+
+			character:Poole_Dummy_3 = {
+
+				add_character_flag = segrellion_jeyne_poole_reveal_scheduled
+
+				add_character_flag = segrellion_jeyne_poole_reveal_pending
+			}
+
+
+			if = {
+
+				limit = {
+
+					exists = global_var:segrellion_resurrected_jon
+
+					global_var:segrellion_resurrected_jon ?= {
+						segrellion_is_current_jon_trigger = yes
+					}
+				}
+
+
+				global_var:segrellion_resurrected_jon = {
+
+					trigger_event = {
+						id = segrellion_jeyne_poole.0000
+						days = 1
+					}
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					character:Stark_7 ?= {
+						segrellion_is_current_jon_trigger = yes
+					}
+				}
+
+
+				character:Stark_7 = {
+
+					trigger_event = {
+						id = segrellion_jeyne_poole.0000
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
