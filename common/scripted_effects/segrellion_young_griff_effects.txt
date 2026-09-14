@@ -5225,6 +5225,157 @@ segrellion_cersei_young_griff_margaery_transition_effect = {
 }
 
 # =========================================================
+# YOUNG GRIFF - KNIVES AROUND THE IRON THRONE
+#
+# Canon pressure:
+#
+# Aegon is NOT killed by script.
+# Instead, surviving enemies repeatedly attempt legitimate
+# CK3 murder schemes until one succeeds or Aegon manages
+# to outlive / neutralize them.
+#
+# OLENNA  -> retried through event 8900
+# BAELISH -> retried through event 8900
+# CERSEI  -> retried if she wants him dead
+# VARYS   -> retried only if Aegon betrayed him over Tommen
+# =========================================================
+
+segrellion_young_griff_assassination_pressure_effect = {
+
+	# =====================================================
+	# AEGON IS KING
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+		}
+
+
+		# =================================================
+		# THE THRONE HAS BECOME A NEST OF KNIVES
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_knives_around_iron_throne_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_knives_around_iron_throne_modifier
+			}
+		}
+
+
+		# =================================================
+		# OLENNA / BAELISH / CERSEI
+		#
+		# 8900 uses can_start_scheme.
+		# Therefore:
+		#
+		# - an existing scheme is not duplicated
+		# - a failed scheme can be attempted again later
+		# - imprisonment / temporary restrictions merely
+		#   postpone the next attempt
+		# =================================================
+
+		trigger_event = {
+
+			id = segrellion_young_griff.8900
+
+			days = { 1 5 }
+		}
+
+
+		# =================================================
+		# VARYS
+		#
+		# Only hostile if Aegon already broke faith with him.
+		# Most importantly, his first failed murder attempt
+		# is no longer his only attempt.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Eunuch_1 ?= {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+
+
+					OR = {
+
+						has_character_flag = segrellion_varys_abandoned_young_griff
+
+						has_character_flag = segrellion_varys_murdering_young_griff
+					}
+
+
+					can_start_scheme = {
+
+						type = murder
+
+						target_character = character:IAF_Young_Griff_1
+					}
+				}
+			}
+
+
+			character:Eunuch_1 = {
+
+				start_scheme = {
+
+					type = murder
+
+					target_character = character:IAF_Young_Griff_1
+				}
+
+
+				add_character_flag = segrellion_varys_murdering_young_griff
+			}
+		}
+	}
+
+
+	# =====================================================
+	# NO LONGER KING
+	# =====================================================
+
+	else = {
+
+		if = {
+
+			limit = {
+
+				has_character_modifier = segrellion_knives_around_iron_throne_modifier
+			}
+
+
+			remove_character_modifier = segrellion_knives_around_iron_throne_modifier
+		}
+	}
+}
+
+# =========================================================
 # CERSEI / AEGON - MURDER INTENT
 #
 # Cersei has decided that Aegon must die.
