@@ -381,6 +381,86 @@ segrellion_sansa_jon_schedule_riverlands_war_effect = {
 segrellion_sansa_jon_story_progression_effect = {
 
 	# =====================================================
+	# DAEMON DIVORCED MYA STONE
+	#
+	# Daemon really married Mya, she is still alive,
+	# but they are no longer spouses.
+	#
+	# Yohn no longer considers Daemon a trustworthy
+	# protector for Sansa. The Daemon route is closed
+	# and the existing Jon Snow route becomes available.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_vale_support_pact
+
+				has_character_flag = segrellion_mya_marriage_completed
+
+				NOT = {
+					has_character_flag = segrellion_sansa_protection_accepted
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_royce_route_refused
+				}
+
+				NOT = {
+					is_spouse_of = character:Baratheon_10
+				}
+			}
+
+
+			character:Baratheon_10 ?= {
+				is_alive = yes
+			}
+
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_sansa_identity_revealed
+				}
+
+				NOT = {
+					has_character_flag = segrellion_sansa_under_daemon_protection
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_sansa_royce_route_refused
+
+			remove_character_flag = segrellion_sansa_royce_first_letter_scheduled
+			remove_character_flag = segrellion_sansa_royce_second_letter_scheduled
+
+			remove_character_flag = segrellion_sansa_royce_preliminary_agreement
+
+			remove_character_flag = segrellion_sansa_marriage_demanded_for_protection
+			remove_character_flag = segrellion_yohn_sansa_marriage_answer_pending
+			remove_character_flag = segrellion_yohn_approved_sansa_marriage
+
+			remove_character_flag = segrellion_sansa_extraction_in_progress
+		}
+
+
+		character:Stark_Dummy_8 = {
+
+			remove_character_flag = segrellion_sansa_promised_to_daemon
+		}
+	}
+
+	# =====================================================
 	# START THE SINGLE VALE RESCUE ATTEMPT
 	# =====================================================
 

@@ -1,20 +1,84 @@
 # Character scope: only Daemon, after a successful marriage to Visenya.
 # Safe to call from both scripted weddings and the general marriage hook.
+
 segrellion_daemon_visenya_marriage_traits_effect = {
-    if = {
-        limit = {
-            this = character:Segrellion_60
-            is_spouse_of = character:Black_Unicorn_1
-        }
-        if = {
-            limit = { has_trait = lustful }
-            remove_trait = lustful
-        }
-        if = {
-            limit = {
-                NOT = { has_trait = temperate }
-            }
-            add_trait = temperate
-        }
-    }
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			is_spouse_of = character:Black_Unicorn_1
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = lustful
+			}
+
+			remove_trait = lustful
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_trait = temperate
+				}
+			}
+
+			add_trait = temperate
+		}
+
+
+		# =================================================
+		# DAEMON ABANDONED A WIFE / BETROTHAL FOR VISENYA
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daemon_broke_previous_union_for_visenya
+
+
+				NOT = {
+					has_character_modifier = segrellion_daemon_visenya_true_love_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_daemon_visenya_true_love_modifier
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daemon_broke_previous_union_for_visenya
+
+
+				NOT = {
+					has_character_modifier = segrellion_publicly_disloyal_husband_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_publicly_disloyal_husband_modifier
+
+				years = 10
+			}
+		}
+	}
 }

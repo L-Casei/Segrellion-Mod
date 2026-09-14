@@ -450,26 +450,68 @@ segrellion_settle_sansa_riverlands_effect = {
 
 		# =================================================
 		# HARRENHAL
+		#
+		# Normally Harrenhal belongs to Sansa's new
+		# Riverlands settlement.
+		#
+		# If Daemon demanded it as his price for joining
+		# the war, both the duchy and county go to him.
 		# =================================================
 
-		title:d_harrenhal = {
+		if = {
 
-			change_title_holder_include_vassals = {
+			limit = {
 
-				holder = character:Stark_Dummy_8
+				character:Segrellion_60 ?= {
+					has_character_flag = segrellion_sansa_harrenhal_price_for_vale_war
+				}
+			}
 
-				change = scope:segrellion_sansa_riverlands_change
+
+			title:d_harrenhal = {
+
+				change_title_holder_include_vassals = {
+
+					holder = character:Segrellion_60
+
+					change = scope:segrellion_sansa_riverlands_change
+				}
+			}
+
+
+			title:c_harrenhal = {
+
+				change_title_holder = {
+
+					holder = character:Segrellion_60
+
+					change = scope:segrellion_sansa_riverlands_change
+				}
 			}
 		}
 
 
-		title:c_harrenhal = {
+		else = {
 
-			change_title_holder = {
+			title:d_harrenhal = {
 
-				holder = character:Stark_Dummy_8
+				change_title_holder_include_vassals = {
 
-				change = scope:segrellion_sansa_riverlands_change
+					holder = character:Stark_Dummy_8
+
+					change = scope:segrellion_sansa_riverlands_change
+				}
+			}
+
+
+			title:c_harrenhal = {
+
+				change_title_holder = {
+
+					holder = character:Stark_Dummy_8
+
+					change = scope:segrellion_sansa_riverlands_change
+				}
 			}
 		}
 
@@ -506,11 +548,17 @@ segrellion_settle_sansa_riverlands_effect = {
 
 				limit = {
 
+					has_character_flag = segrellion_sansa_strong_hook_price_for_vale_war
+
+
 					can_add_hook = {
+
 						target = character:Stark_Dummy_8
+
 						type = strong_favor_hook
 					}
 				}
+
 
 				add_hook = {
 

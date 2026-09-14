@@ -5907,15 +5907,11 @@ segrellion_young_griff.8210 = {
 
 		custom_tooltip = segrellion_young_griff.8210.a.tt
 
-		# =================================================
-		# CERSEI WILL NEVER ACCEPT ANOTHER QUEEN
-		# =================================================
+		if = {
 
-		character:Lannister_6 ?= {
+			limit = {
 
-			if = {
-
-				limit = {
+				character:Lannister_6 ?= {
 
 					is_alive = yes
 
@@ -5923,13 +5919,22 @@ segrellion_young_griff.8210 = {
 
 					is_spouse_of = root
 				}
+			}
 
 
-				segrellion_cersei_turns_on_young_griff_effect = yes
+			character:Lannister_6 = {
+
+				trigger_event = {
+
+					id = segrellion_young_griff.8240
+
+					days = 1
+				}
 			}
 		}
 
-		if = {
+
+		else_if = {
 
 			limit = {
 
@@ -5952,33 +5957,23 @@ segrellion_young_griff.8210 = {
 		}
 
 
-		# Married, but not to Arianne.
-		# No Dornish political crisis.
-
 		else = {
 
-			var:segrellion_young_griff_margaery = {
-
-				if = {
-
-					limit = {
-						is_imprisoned = yes
-					}
-
-					release_from_prison = yes
-				}
+			character:Tyrell_4 = {
+				release_from_prison = yes
 			}
 
 
 			segrellion_young_griff_open_story_marriage_window_effect = yes
 
-			marry = var:segrellion_young_griff_margaery
+			marry = character:Tyrell_4
 
 			segrellion_young_griff_close_story_marriage_window_effect = yes
 
-			add_character_flag = segrellion_young_griff_margaery_second_wife
 
-			add_character_flag = segrellion_young_griff_margaery_story_resolved
+			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
+
+			add_character_flag = segrellion_young_griff_second_wife_question_resolved
 		}
 
 
@@ -6275,6 +6270,189 @@ segrellion_young_griff.8230 = {
 	option = {
 
 		name = segrellion_young_griff.8230.a
+	}
+}
+
+# =========================================================
+# 8240 - A DRAGON WANTS TWO QUEENS
+#
+# ROOT = Cersei
+# =========================================================
+
+segrellion_young_griff.8240 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8240.t
+
+	desc = segrellion_young_griff.8240.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Lannister_6
+
+		is_alive = yes
+
+		is_spouse_of = character:IAF_Young_Griff_1
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+
+
+		character:Tyrell_4 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8240.a
+
+		custom_tooltip = segrellion_young_griff.8240.a.tt
+
+
+		add_character_flag = segrellion_cersei_outwardly_accepted_margaery
+
+
+		segrellion_cersei_young_griff_margaery_transition_effect = yes
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8240.b
+
+		custom_tooltip = segrellion_young_griff.8240.b.tt
+
+
+		add_character_flag = segrellion_cersei_rejected_margaery
+
+
+		segrellion_cersei_young_griff_margaery_transition_effect = yes
+
+
+		ai_chance = {
+			base = 85
+		}
+	}
+}
+
+
+# =========================================================
+# 8250 - THE LIONESS LEAVES THE THRONE
+#
+# ROOT = Aegon
+# =========================================================
+
+segrellion_young_griff.8250 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8250.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Lannister_6 ?= {
+						has_character_flag = segrellion_cersei_outwardly_accepted_margaery
+					}
+				}
+
+				desc = segrellion_young_griff.8250.desc_accept
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Lannister_6 ?= {
+						has_character_flag = segrellion_cersei_rejected_margaery
+					}
+				}
+
+				desc = segrellion_young_griff.8250.desc_reject
+			}
+
+
+			desc = segrellion_young_griff.8250.desc_reject
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		is_spouse_of = character:Tyrell_4
+
+
+		character:Lannister_6 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Lannister_6
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8250.a
 	}
 }
 

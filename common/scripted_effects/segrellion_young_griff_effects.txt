@@ -5099,6 +5099,79 @@ segrellion_daemon_young_griff_war_allegiance_guard_effect = {
 }
 
 # =========================================================
+# CERSEI / MARGAERY - END OF THE TWO QUEENS DREAM
+#
+# ROOT = Cersei
+# =========================================================
+
+segrellion_cersei_young_griff_margaery_transition_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Lannister_6
+
+			is_alive = yes
+
+			is_spouse_of = character:IAF_Young_Griff_1
+
+
+			character:IAF_Young_Griff_1 ?= {
+
+				is_alive = yes
+
+				has_title = title:h_the_iron_throne
+			}
+
+
+			character:Tyrell_4 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_cersei_turns_on_young_griff_effect = yes
+
+
+		remove_character_flag = segrellion_cersei_married_young_griff
+
+
+		character:IAF_Young_Griff_1 = {
+
+			divorce = character:Lannister_6
+
+			remove_character_flag = segrellion_young_griff_married_cersei
+
+
+			character:Tyrell_4 = {
+				release_from_prison = yes
+			}
+
+
+			segrellion_young_griff_open_story_marriage_window_effect = yes
+
+			marry = character:Tyrell_4
+
+			segrellion_young_griff_close_story_marriage_window_effect = yes
+
+
+			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
+
+			add_character_flag = segrellion_young_griff_second_wife_question_resolved
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8250
+
+				days = 1
+			}
+		}
+	}
+}
+
+# =========================================================
 # CERSEI / AEGON - MURDER INTENT
 #
 # Cersei has decided that Aegon must die.
