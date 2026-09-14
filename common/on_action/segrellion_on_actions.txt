@@ -56,6 +56,7 @@ monthly_global_pulse = {
 		segrellion_ramsay_war_lock_progression
 		segrellion_daenerys_aurane_land_promise_progression
 		segrellion_daenerys_ai_invasion_failsafe
+		segrellion_daenerys_pentos_gerio_progression
 		segrellion_stannis_renly_truth_progression
 	}
 }
@@ -993,6 +994,132 @@ segrellion_daenerys_ai_invasion_failsafe = {
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# DAENERYS - PENTOS / GERIO PROGRESSION
+# =========================================================
+
+segrellion_daenerys_pentos_gerio_progression = {
+
+	effect = {
+
+		# =================================================
+		# KEEP LUKKIO UNMARRIED UNTIL GERIO'S PROPOSAL
+		# =================================================
+
+		character:Quaranis_32 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_lukkio_reserved_for_daenerys
+
+					character:Targaryen_9 ?= {
+
+						is_alive = yes
+
+						has_character_flag = segrellion_daenerys_pentos_investment_accepted
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_gerio_marriage_demand_resolved
+						}
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = refusing_marriage
+						}
+					}
+
+
+					add_trait = refusing_marriage
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_lukkio_reserved_for_daenerys
+				}
+
+
+				if = {
+
+					limit = {
+						has_trait = refusing_marriage
+					}
+
+					remove_trait = refusing_marriage
+				}
+
+
+				remove_character_flag = segrellion_lukkio_reserved_for_daenerys
+			}
+		}
+
+
+		# =================================================
+		# GERIO SUPPORTS YOUNG GRIFF AGAINST DAENERYS
+		# =================================================
+
+		character:IAF_Young_Griff_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_at_war_with = character:Targaryen_9
+
+					NOT = {
+						has_character_flag = segrellion_gerio_pentos_support_received
+					}
+
+					NOT = {
+						has_character_flag = segrellion_gerio_pentos_support_pending
+					}
+
+
+					character:Targaryen_9 ?= {
+
+						is_alive = yes
+
+						has_character_flag = segrellion_daenerys_refused_gerio_marriage
+					}
+
+
+					character:Quaranis_23 ?= {
+
+						is_alive = yes
+
+						has_character_flag = segrellion_gerio_opposes_daenerys
+					}
+				}
+
+
+				add_character_flag = segrellion_gerio_pentos_support_pending
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_pentos.0002
+
+					days = 1
 				}
 			}
 		}

@@ -1,0 +1,262 @@
+namespace = segrellion_daenerys_pentos
+
+
+# =========================================================
+# 0001 - THE PRICE OF PENTOSHI GOLD
+#
+# 2-3 years after Daenerys accepts Gerio's investment.
+# Gerio finally reveals what he expected in return:
+# Daenerys must marry his son, Lukkio.
+#
+# Daenerys always refuses.
+# =========================================================
+
+segrellion_daenerys_pentos.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_pentos.0001.t
+
+	desc = segrellion_daenerys_pentos.0001.desc
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_pentos_investment_accepted
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_gerio_marriage_demand_resolved
+		}
+
+		character:Quaranis_23 ?= {
+			is_alive = yes
+		}
+
+		character:Quaranis_32 ?= {
+			is_alive = yes
+			is_married = no
+		}
+	}
+
+
+	immediate = {
+
+		# The reservation has served its purpose.
+		# Lukkio may marry normally once the proposal is made.
+
+		character:Quaranis_32 ?= {
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_lukkio_reserved_for_daenerys
+				}
+
+
+				if = {
+
+					limit = {
+						has_trait = refusing_marriage
+					}
+
+					remove_trait = refusing_marriage
+				}
+
+
+				remove_character_flag = segrellion_lukkio_reserved_for_daenerys
+
+				add_character_flag = segrellion_lukkio_daenerys_reservation_ended
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Quaranis_23
+
+		animation = personality_bold
+	}
+
+
+	lower_right_portrait = {
+
+		character = character:Quaranis_32
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_pentos.0001.a
+
+		custom_tooltip = segrellion_daenerys_pentos.0001.a.tt
+
+
+		add_character_flag = segrellion_daenerys_gerio_marriage_demand_resolved
+
+		add_character_flag = segrellion_daenerys_refused_gerio_marriage
+
+
+		character:Quaranis_23 ?= {
+
+			add_character_flag = segrellion_gerio_opposes_daenerys
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0002 - PENTOS CHOOSES AEGON
+#
+# If Daenerys later fights Young Griff after rejecting
+# Gerio's marriage demand, Gerio backs Aegon with gold
+# and Pentoshi troops.
+# =========================================================
+
+segrellion_daenerys_pentos.0002 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_pentos.0002.t
+
+	desc = segrellion_daenerys_pentos.0002.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_gerio_pentos_support_pending
+
+		character:Targaryen_9 ?= {
+
+			has_character_flag = segrellion_daenerys_refused_gerio_marriage
+		}
+
+		character:Quaranis_23 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_gerio_opposes_daenerys
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_gerio_pentos_support_pending
+
+		add_character_flag = segrellion_gerio_pentos_support_received
+
+
+		# =================================================
+		# PENTOSHI GOLD
+		# =================================================
+
+		add_gold = 1000
+
+
+		# =================================================
+		# PENTOSHI EXPEDITIONARY HOST
+		# 2,000 MEN
+		# =================================================
+
+		spawn_army = {
+
+			name = segrellion_gerio_pentoshi_host
+
+			men_at_arms = {
+				type = segrellion_pentoshi_expeditionaries
+				men = 500
+			}
+
+			men_at_arms = {
+				type = segrellion_pentoshi_expeditionaries
+				men = 500
+			}
+
+			men_at_arms = {
+				type = segrellion_pentoshi_expeditionaries
+				men = 500
+			}
+
+			men_at_arms = {
+				type = segrellion_pentoshi_expeditionaries
+				men = 500
+			}
+
+			inheritable = no
+
+			location = root.location
+
+			origin = root.location
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Quaranis_23
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_pentos.0002.a
+	}
+}

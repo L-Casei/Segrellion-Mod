@@ -2,10 +2,17 @@
 # DAENERYS TARGARYEN
 # DRAGON MAINTENANCE
 #
-# - Drogon remains the largest of the three.
-# - Rhaegal and Viserion receive accelerated growth.
-# - All three remain physically close to Daenerys.
-# - Dragons deliberately confined in a dragonpit are ignored.
+# TARGET:
+#
+# Around age 2:
+#   Drogon        >= roughly 30-40 size
+#   Rhaegal       >= roughly 25-35 size
+#   Viserion      >= roughly 25-35 size
+#
+# Drogon remains clearly the largest.
+#
+# Existing saves receive the correction automatically
+# because these use new milestone flags.
 # =========================================================
 
 
@@ -37,7 +44,7 @@ segrellion_daenerys_dragon_maintenance_effect = {
 
 
 					# -----------------------------------------
-					# KEEP DROGON WITH DAENERYS
+					# STAY WITH DAENERYS
 					# -----------------------------------------
 
 					if = {
@@ -55,58 +62,92 @@ segrellion_daenerys_dragon_maintenance_effect = {
 
 
 					# -----------------------------------------
-					# INITIAL SIZE CORRECTION
+					# AGE 2 CANON GROWTH BOOST
+					#
+					# Existing size is normally around 0-10.
+					# +30 puts Drogon around 30-40.
 					# -----------------------------------------
 
 					if = {
 
 						limit = {
 
+							age >= 2
+
 							NOT = {
-								has_character_flag = segrellion_daenerys_dragon_size_corrected
+								has_character_flag = segrellion_drogon_age_two_growth_boost
 							}
 						}
 
 
 						change_dragon_size = {
-							VALUE = 8
+							VALUE = 30
 						}
 
-						add_prowess_skill = 4
+						add_prowess_skill = 8
 
 
-						add_character_flag = segrellion_daenerys_dragon_size_corrected
+						add_character_flag = segrellion_drogon_age_two_growth_boost
 
 						add_character_flag = {
-							flag = segrellion_daenerys_bonus_growth_cooldown
+							flag = segrellion_drogon_bonus_growth_cooldown
 							years = 1
 						}
 					}
 
 
 					# -----------------------------------------
-					# ACCELERATED YEARLY GROWTH
+					# AGE 3 EXTRA GROWTH
 					# -----------------------------------------
 
-					else_if = {
+					if = {
 
 						limit = {
 
+							age >= 3
+
 							NOT = {
-								has_character_flag = segrellion_daenerys_bonus_growth_cooldown
+								has_character_flag = segrellion_drogon_age_three_growth_boost
 							}
 						}
 
 
 						change_dragon_size = {
-							VALUE = 3
+							VALUE = 6
 						}
 
-						add_prowess_skill = 1
+						add_prowess_skill = 2
+
+
+						add_character_flag = segrellion_drogon_age_three_growth_boost
+					}
+
+
+					# -----------------------------------------
+					# CONTINUED ACCELERATED GROWTH
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							age >= 2
+
+							NOT = {
+								has_character_flag = segrellion_drogon_bonus_growth_cooldown
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 5
+						}
+
+						add_prowess_skill = 2
 
 
 						add_character_flag = {
-							flag = segrellion_daenerys_bonus_growth_cooldown
+							flag = segrellion_drogon_bonus_growth_cooldown
 							years = 1
 						}
 					}
@@ -128,7 +169,7 @@ segrellion_daenerys_dragon_maintenance_effect = {
 
 
 					# -----------------------------------------
-					# KEEP RHAEGAL WITH DAENERYS
+					# STAY WITH DAENERYS
 					# -----------------------------------------
 
 					if = {
@@ -146,58 +187,89 @@ segrellion_daenerys_dragon_maintenance_effect = {
 
 
 					# -----------------------------------------
-					# INITIAL SIZE CORRECTION
+					# AGE 2 GROWTH BOOST
 					# -----------------------------------------
 
 					if = {
 
 						limit = {
 
+							age >= 2
+
 							NOT = {
-								has_character_flag = segrellion_daenerys_dragon_size_corrected
+								has_character_flag = segrellion_rhaegal_age_two_growth_boost
 							}
 						}
 
 
 						change_dragon_size = {
-							VALUE = 6
+							VALUE = 26
 						}
 
-						add_prowess_skill = 3
+						add_prowess_skill = 7
 
 
-						add_character_flag = segrellion_daenerys_dragon_size_corrected
+						add_character_flag = segrellion_rhaegal_age_two_growth_boost
 
 						add_character_flag = {
-							flag = segrellion_daenerys_bonus_growth_cooldown
+							flag = segrellion_rhaegal_bonus_growth_cooldown
 							years = 1
 						}
 					}
 
 
 					# -----------------------------------------
-					# ACCELERATED YEARLY GROWTH
+					# AGE 3 EXTRA GROWTH
 					# -----------------------------------------
 
-					else_if = {
+					if = {
 
 						limit = {
 
+							age >= 3
+
 							NOT = {
-								has_character_flag = segrellion_daenerys_bonus_growth_cooldown
+								has_character_flag = segrellion_rhaegal_age_three_growth_boost
 							}
 						}
 
 
 						change_dragon_size = {
-							VALUE = 2
+							VALUE = 5
+						}
+
+						add_prowess_skill = 2
+
+
+						add_character_flag = segrellion_rhaegal_age_three_growth_boost
+					}
+
+
+					# -----------------------------------------
+					# CONTINUED ACCELERATED GROWTH
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							age >= 2
+
+							NOT = {
+								has_character_flag = segrellion_rhaegal_bonus_growth_cooldown
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 4
 						}
 
 						add_prowess_skill = 1
 
 
 						add_character_flag = {
-							flag = segrellion_daenerys_bonus_growth_cooldown
+							flag = segrellion_rhaegal_bonus_growth_cooldown
 							years = 1
 						}
 					}
@@ -219,7 +291,7 @@ segrellion_daenerys_dragon_maintenance_effect = {
 
 
 					# -----------------------------------------
-					# KEEP VISERION WITH DAENERYS
+					# STAY WITH DAENERYS
 					# -----------------------------------------
 
 					if = {
@@ -237,58 +309,89 @@ segrellion_daenerys_dragon_maintenance_effect = {
 
 
 					# -----------------------------------------
-					# INITIAL SIZE CORRECTION
+					# AGE 2 GROWTH BOOST
 					# -----------------------------------------
 
 					if = {
 
 						limit = {
 
+							age >= 2
+
 							NOT = {
-								has_character_flag = segrellion_daenerys_dragon_size_corrected
+								has_character_flag = segrellion_viserion_age_two_growth_boost
 							}
 						}
 
 
 						change_dragon_size = {
-							VALUE = 6
+							VALUE = 26
 						}
 
-						add_prowess_skill = 3
+						add_prowess_skill = 7
 
 
-						add_character_flag = segrellion_daenerys_dragon_size_corrected
+						add_character_flag = segrellion_viserion_age_two_growth_boost
 
 						add_character_flag = {
-							flag = segrellion_daenerys_bonus_growth_cooldown
+							flag = segrellion_viserion_bonus_growth_cooldown
 							years = 1
 						}
 					}
 
 
 					# -----------------------------------------
-					# ACCELERATED YEARLY GROWTH
+					# AGE 3 EXTRA GROWTH
 					# -----------------------------------------
 
-					else_if = {
+					if = {
 
 						limit = {
 
+							age >= 3
+
 							NOT = {
-								has_character_flag = segrellion_daenerys_bonus_growth_cooldown
+								has_character_flag = segrellion_viserion_age_three_growth_boost
 							}
 						}
 
 
 						change_dragon_size = {
-							VALUE = 2
+							VALUE = 5
+						}
+
+						add_prowess_skill = 2
+
+
+						add_character_flag = segrellion_viserion_age_three_growth_boost
+					}
+
+
+					# -----------------------------------------
+					# CONTINUED ACCELERATED GROWTH
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							age >= 2
+
+							NOT = {
+								has_character_flag = segrellion_viserion_bonus_growth_cooldown
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 4
 						}
 
 						add_prowess_skill = 1
 
 
 						add_character_flag = {
-							flag = segrellion_daenerys_bonus_growth_cooldown
+							flag = segrellion_viserion_bonus_growth_cooldown
 							years = 1
 						}
 					}

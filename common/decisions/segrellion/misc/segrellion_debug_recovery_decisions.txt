@@ -2,17 +2,18 @@
 # SEGRELLION
 # DEBUG / CAMPAIGN RECOVERY DECISIONS
 #
-# These decisions deliberately bypass scripted story locks.
-# They must NEVER be used by the AI.
+# PLAYER:
+#   Can use them whenever their normal requirements are met.
+#
+# AI:
+#   Cannot use them during the first 5 years of the campaign.
+#   After 5 years they may use them only as stuck-story
+#   recovery tools.
 # =========================================================
 
 
 # =========================================================
 # REMOVE REFUSING MARRIAGE
-#
-# Only available to Daemon Segrellion and Young Griff.
-# Intended solely to recover a campaign where the scripted
-# marriage storyline failed to remove the trait.
 # =========================================================
 
 segrellion_debug_remove_refusing_marriage_decision = {
@@ -36,8 +37,6 @@ segrellion_debug_remove_refusing_marriage_decision = {
 
 	is_shown = {
 
-		is_ai = no
-
 		has_trait = refusing_marriage
 
 
@@ -46,6 +45,14 @@ segrellion_debug_remove_refusing_marriage_decision = {
 			this = character:Segrellion_60
 
 			this = character:IAF_Young_Griff_1
+		}
+
+
+		OR = {
+
+			is_ai = no
+
+			years_from_game_start >= 5
 		}
 	}
 
@@ -63,6 +70,16 @@ segrellion_debug_remove_refusing_marriage_decision = {
 		is_imprisoned = no
 
 		has_trait = refusing_marriage
+
+
+		trigger_if = {
+
+			limit = {
+				is_ai = yes
+			}
+
+			years_from_game_start >= 5
+		}
 	}
 
 
@@ -85,17 +102,33 @@ segrellion_debug_remove_refusing_marriage_decision = {
 
 
 	# =====================================================
-	# NEVER AI
+	# AI
+	#
+	# First possible use: 5 years after campaign start.
 	# =====================================================
 
-	ai_check_interval = 0
+	ai_check_interval = 12
+
 
 	ai_potential = {
-		always = no
+
+		years_from_game_start >= 5
+
+		has_trait = refusing_marriage
+
+
+		OR = {
+
+			this = character:Segrellion_60
+
+			this = character:IAF_Young_Griff_1
+		}
 	}
 
+
 	ai_will_do = {
-		base = 0
+
+		base = 100
 	}
 }
 
@@ -103,11 +136,6 @@ segrellion_debug_remove_refusing_marriage_decision = {
 # =========================================================
 # DAENERYS
 # RESTORE FERTILITY
-#
-# Available only from 303 AC onward.
-#
-# Normal story events should remove no_more_children_modifier.
-# This decision exists only as a recovery mechanism.
 # =========================================================
 
 segrellion_debug_daenerys_restore_fertility_decision = {
@@ -131,13 +159,19 @@ segrellion_debug_daenerys_restore_fertility_decision = {
 
 	is_shown = {
 
-		is_ai = no
-
 		this = character:Targaryen_9
 
 		current_date >= 8303.1.1
 
 		has_character_modifier = no_more_children_modifier
+
+
+		OR = {
+
+			is_ai = no
+
+			years_from_game_start >= 5
+		}
 	}
 
 
@@ -156,6 +190,16 @@ segrellion_debug_daenerys_restore_fertility_decision = {
 		current_date >= 8303.1.1
 
 		has_character_modifier = no_more_children_modifier
+
+
+		trigger_if = {
+
+			limit = {
+				is_ai = yes
+			}
+
+			years_from_game_start >= 5
+		}
 	}
 
 
@@ -178,16 +222,30 @@ segrellion_debug_daenerys_restore_fertility_decision = {
 
 
 	# =====================================================
-	# NEVER AI
+	# AI
+	#
+	# Even though the decision appears from 303 AC for
+	# players, AI cannot use it until 5 full campaign years
+	# have elapsed.
 	# =====================================================
 
-	ai_check_interval = 0
+	ai_check_interval = 12
+
 
 	ai_potential = {
-		always = no
+
+		years_from_game_start >= 5
+
+		this = character:Targaryen_9
+
+		current_date >= 8303.1.1
+
+		has_character_modifier = no_more_children_modifier
 	}
 
+
 	ai_will_do = {
-		base = 0
+
+		base = 100
 	}
 }
