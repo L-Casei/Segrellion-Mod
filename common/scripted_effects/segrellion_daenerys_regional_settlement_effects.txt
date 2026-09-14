@@ -1,0 +1,779 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# POST-THRONE REGIONAL SETTLEMENTS
+#
+# WESTERLANDS -> DORNE -> REACH -> RIVERLANDS
+# =========================================================
+
+
+# =========================================================
+# SAVE COMPATIBILITY / STORY PROGRESSION
+# =========================================================
+
+segrellion_daenerys_regional_settlement_progression_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_daenerys_post_throne_started
+		}
+
+
+		# =================================================
+		# WESTERLANDS -> DORNE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_westerlands_resolved
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_dorne_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_dorne_issue_scheduled
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_dorne_issue_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0100
+
+				days = { 3 7 }
+			}
+		}
+
+
+		# =================================================
+		# DORNE -> REACH
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_dorne_resolved
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_reach_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_reach_issue_scheduled
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_reach_issue_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0200
+
+				days = { 5 10 }
+			}
+		}
+
+
+		# =================================================
+		# REACH -> RIVERLANDS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_reach_resolved
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_riverlands_resolved
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_riverlands_issue_scheduled
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_riverlands_issue_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0300
+
+				days = { 5 10 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DORNE - SWEAR FEALTY
+# =========================================================
+
+segrellion_daenerys_dorne_swears_fealty_effect = {
+
+	title:e_dorne.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				NOT = {
+					liege = character:Targaryen_9
+				}
+			}
+
+
+			save_scope_as = segrellion_dorne_holder
+
+
+			create_title_and_vassal_change = {
+
+				type = swear_fealty
+
+				save_scope_as = segrellion_dorne_fealty_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege = {
+
+				liege = character:Targaryen_9
+
+				change = scope:segrellion_dorne_fealty_change
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_dorne_fealty_change
+		}
+
+
+		add_character_flag = segrellion_swore_fealty_to_daenerys
+	}
+}
+
+
+# =========================================================
+# REACH - SWEAR FEALTY
+# =========================================================
+
+segrellion_daenerys_reach_swears_fealty_effect = {
+
+	title:e_the_reach.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				NOT = {
+					liege = character:Targaryen_9
+				}
+			}
+
+
+			save_scope_as = segrellion_reach_holder
+
+
+			create_title_and_vassal_change = {
+
+				type = swear_fealty
+
+				save_scope_as = segrellion_reach_fealty_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege = {
+
+				liege = character:Targaryen_9
+
+				change = scope:segrellion_reach_fealty_change
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_reach_fealty_change
+		}
+
+
+		add_character_flag = segrellion_swore_fealty_to_daenerys
+	}
+}
+
+
+# =========================================================
+# RIVERLANDS - SWEAR FEALTY
+# =========================================================
+
+segrellion_daenerys_riverlands_swears_fealty_effect = {
+
+	title:e_the_riverlands.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				NOT = {
+					liege = character:Targaryen_9
+				}
+			}
+
+
+			save_scope_as = segrellion_riverlands_holder
+
+
+			create_title_and_vassal_change = {
+
+				type = swear_fealty
+
+				save_scope_as = segrellion_riverlands_fealty_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege = {
+
+				liege = character:Targaryen_9
+
+				change = scope:segrellion_riverlands_fealty_change
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_riverlands_fealty_change
+		}
+
+
+		add_character_flag = segrellion_swore_fealty_to_daenerys
+	}
+}
+
+
+# =========================================================
+# DORNE - SPARE AEGON / ARIANNE CHILD
+# =========================================================
+
+segrellion_daenerys_spare_dornish_aegon_child_effect = {
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_daenerys_dorne_aegon_child
+		}
+
+
+		var:segrellion_daenerys_dorne_aegon_child ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_character_flag = segrellion_aegon_heir_spared_by_daenerys
+			}
+		}
+
+
+		remove_variable = segrellion_daenerys_dorne_aegon_child
+	}
+}
+
+
+# =========================================================
+# REACH - SPARE AEGON / MARGAERY CHILD
+# =========================================================
+
+segrellion_daenerys_spare_reach_aegon_child_effect = {
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_daenerys_reach_aegon_child
+		}
+
+
+		var:segrellion_daenerys_reach_aegon_child ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_character_flag = segrellion_aegon_heir_spared_by_daenerys
+			}
+		}
+
+
+		remove_variable = segrellion_daenerys_reach_aegon_child
+	}
+}
+
+
+# =========================================================
+# DORNE - FEED AEGON'S CHILD TO DROGON
+# =========================================================
+
+segrellion_daenerys_devour_dornish_aegon_child_effect = {
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_daenerys_dorne_aegon_child
+		}
+
+
+		var:segrellion_daenerys_dorne_aegon_child ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				add_character_flag = segrellion_aegon_heir_devoured_by_drogon
+
+
+				death = {
+
+					death_reason = death_execution
+
+					killer = character:Targaryen_9
+				}
+			}
+		}
+
+
+		remove_variable = segrellion_daenerys_dorne_aegon_child
+	}
+
+
+	# =====================================================
+	# DAENERYS HERSELF
+	# =====================================================
+
+	if = {
+
+		limit = {
+			NOT = { has_trait = murderer }
+		}
+
+		add_trait = murderer
+	}
+
+
+	if = {
+
+		limit = {
+
+			NOR = {
+				has_trait = lunatic_1
+				has_trait = lunatic_genetic
+			}
+		}
+
+		add_trait = lunatic_1
+	}
+
+
+	add_tyranny = 100
+	add_dread = 60
+
+
+	segrellion_change_daenerys_pacification_tyranny_effect = {
+		VALUE = 55
+	}
+
+
+	add_character_modifier = {
+		modifier = segrellion_daenerys_child_devourer_modifier
+	}
+
+
+	add_character_flag = segrellion_daenerys_fed_aegon_child_to_drogon
+
+
+	# =====================================================
+	# THE REALM IS HORRIFIED
+	# =====================================================
+
+	every_vassal_or_below = {
+
+		limit = {
+			is_alive = yes
+			this != root
+		}
+
+
+		add_opinion = {
+
+			target = root
+
+			modifier = segrellion_daenerys_devoured_child_general_opinion
+		}
+	}
+
+
+	# =====================================================
+	# DORNE IS ESPECIALLY HORRIFIED
+	# =====================================================
+
+	title:e_dorne.holder ?= {
+
+		add_opinion = {
+
+			target = character:Targaryen_9
+
+			modifier = segrellion_daenerys_devoured_dornish_child_opinion
+		}
+
+
+		every_vassal_or_below = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			add_opinion = {
+
+				target = character:Targaryen_9
+
+				modifier = segrellion_daenerys_devoured_dornish_child_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# REACH - FEED AEGON'S CHILD TO DROGON
+# =========================================================
+
+segrellion_daenerys_devour_reach_aegon_child_effect = {
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_daenerys_reach_aegon_child
+		}
+
+
+		var:segrellion_daenerys_reach_aegon_child ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				add_character_flag = segrellion_aegon_heir_devoured_by_drogon
+
+
+				death = {
+
+					death_reason = death_execution
+
+					killer = character:Targaryen_9
+				}
+			}
+		}
+
+
+		remove_variable = segrellion_daenerys_reach_aegon_child
+	}
+
+
+	if = {
+
+		limit = {
+			NOT = { has_trait = murderer }
+		}
+
+		add_trait = murderer
+	}
+
+
+	if = {
+
+		limit = {
+
+			NOR = {
+				has_trait = lunatic_1
+				has_trait = lunatic_genetic
+			}
+		}
+
+		add_trait = lunatic_1
+	}
+
+
+	add_tyranny = 100
+	add_dread = 60
+
+
+	segrellion_change_daenerys_pacification_tyranny_effect = {
+		VALUE = 55
+	}
+
+
+	add_character_modifier = {
+		modifier = segrellion_daenerys_child_devourer_modifier
+	}
+
+
+	add_character_flag = segrellion_daenerys_fed_aegon_child_to_drogon
+
+
+	every_vassal_or_below = {
+
+		limit = {
+			is_alive = yes
+			this != root
+		}
+
+
+		add_opinion = {
+
+			target = root
+
+			modifier = segrellion_daenerys_devoured_child_general_opinion
+		}
+	}
+
+
+	title:e_the_reach.holder ?= {
+
+		add_opinion = {
+
+			target = character:Targaryen_9
+
+			modifier = segrellion_daenerys_devoured_reach_child_opinion
+		}
+
+
+		every_vassal_or_below = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			add_opinion = {
+
+				target = character:Targaryen_9
+
+				modifier = segrellion_daenerys_devoured_reach_child_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DORNE RESOLVED
+# =========================================================
+
+segrellion_daenerys_dorne_resolved_effect = {
+
+	remove_character_flag = segrellion_daenerys_dorne_issue_scheduled
+
+	add_character_flag = segrellion_daenerys_dorne_resolved
+	add_character_flag = segrellion_daenerys_pacification_next_issue_ready
+
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_reach_resolved
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_reach_issue_scheduled
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_reach_issue_scheduled
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_post_throne.0200
+
+			days = { 5 10 }
+		}
+	}
+}
+
+
+# =========================================================
+# REACH RESOLVED
+# =========================================================
+
+segrellion_daenerys_reach_resolved_effect = {
+
+	remove_character_flag = segrellion_daenerys_reach_issue_scheduled
+
+	add_character_flag = segrellion_daenerys_reach_resolved
+	add_character_flag = segrellion_daenerys_pacification_next_issue_ready
+
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_riverlands_resolved
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_riverlands_issue_scheduled
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_riverlands_issue_scheduled
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_post_throne.0300
+
+			days = { 5 10 }
+		}
+	}
+}
+
+
+# =========================================================
+# RIVERLANDS RESOLVED
+# =========================================================
+
+segrellion_daenerys_riverlands_resolved_effect = {
+
+	remove_character_flag = segrellion_daenerys_riverlands_issue_scheduled
+
+	add_character_flag = segrellion_daenerys_riverlands_resolved
+	add_character_flag = segrellion_daenerys_pacification_next_issue_ready
+}
+
+
+# =========================================================
+# GRANT RIVERLANDS
+#
+# RECIPIENT = character
+# =========================================================
+
+segrellion_daenerys_grant_riverlands_effect = {
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_daenerys_riverlands_title_change
+
+		add_claim_on_loss = no
+	}
+
+
+	title:e_the_riverlands = {
+
+		change_title_holder_include_vassals = {
+
+			holder = $RECIPIENT$
+
+			change = scope:segrellion_daenerys_riverlands_title_change
+		}
+	}
+
+
+	title:k_the_riverlands = {
+
+		change_title_holder = {
+
+			holder = $RECIPIENT$
+
+			change = scope:segrellion_daenerys_riverlands_title_change
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_daenerys_riverlands_title_change
+
+
+	$RECIPIENT$ = {
+
+		set_primary_title_to = title:e_the_riverlands
+
+		add_character_flag = segrellion_daenerys_confirmed_riverlands_ruler
+	}
+
+
+	segrellion_daenerys_riverlands_swears_fealty_effect = yes
+}
+
+
+# =========================================================
+# EXECUTE CURRENT RIVERLANDS HOLDER
+# =========================================================
+
+segrellion_daenerys_execute_riverlands_holder_effect = {
+
+	title:e_the_riverlands.holder ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+				this != character:Targaryen_9
+			}
+
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = character:Targaryen_9
+			}
+		}
+	}
+
+
+	add_tyranny = 30
+
+
+	segrellion_change_daenerys_pacification_tyranny_effect = {
+		VALUE = 20
+	}
+}

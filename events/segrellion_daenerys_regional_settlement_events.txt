@@ -1,0 +1,1890 @@
+namespace = segrellion_daenerys_post_throne
+
+
+# =========================================================
+# 0100 - DORNE
+# =========================================================
+
+segrellion_daenerys_post_throne.0100 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0100.t
+
+
+	desc = {
+
+		first_valid = {
+
+			# DORNE HELPED DAENERYS
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+
+						has_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+
+						title:e_dorne.holder ?= {
+							has_character_flag = segrellion_dorne_secretly_supports_daenerys
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_post_throne.0100.desc_ally
+			}
+
+
+			# AEGON + ARIANNE HAVE A LIVING CHILD
+			triggered_desc = {
+
+				trigger = {
+					has_variable = segrellion_daenerys_dorne_aegon_child
+				}
+
+				desc = segrellion_daenerys_post_throne.0100.desc_child
+			}
+
+
+			# ARIANNE / DORNE SUPPORTED AEGON
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+
+						character:IAF_Young_Griff_1 = {
+							has_character_flag = segrellion_young_griff_married_arianne
+						}
+
+						character:Martell_9 = {
+							has_character_flag = segrellion_young_griff_married_arianne
+						}
+
+						character:IAF_Young_Griff_1 = {
+							has_character_flag = segrellion_young_griff_dorne_support_secured
+						}
+
+						title:e_dorne.holder ?= {
+							has_character_flag = segrellion_dorne_supports_young_griff
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_post_throne.0100.desc_aegon
+			}
+
+
+			desc = segrellion_daenerys_post_throne.0100.desc
+		}
+	}
+
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_daenerys_westerlands_resolved
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_dorne_resolved
+		}
+
+		title:e_dorne = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_dorne_issue_scheduled
+
+		remove_variable = segrellion_daenerys_dorne_aegon_child
+
+
+		title:e_dorne.holder = {
+			save_scope_as = segrellion_dorne_holder
+		}
+
+
+		# =================================================
+		# FIND A LIVING CHILD OF AEGON + ARIANNE
+		# =================================================
+
+		character:Martell_9 ?= {
+
+			random_child = {
+
+				limit = {
+
+					is_alive = yes
+
+					father = character:IAF_Young_Griff_1
+				}
+
+
+				save_scope_as = segrellion_aegon_arianne_child
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_aegon_arianne_child
+			}
+
+
+			set_variable = {
+
+				name = segrellion_daenerys_dorne_aegon_child
+
+				value = scope:segrellion_aegon_arianne_child
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_dorne_holder
+		animation = worry
+	}
+
+
+	# =====================================================
+	# MERCY + LOYALTY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0100.a
+
+
+		if = {
+
+			limit = {
+				has_variable = segrellion_daenerys_dorne_aegon_child
+			}
+
+			segrellion_daenerys_spare_dornish_aegon_child_effect = yes
+		}
+
+
+		add_character_flag = segrellion_daenerys_dorne_mercy_offered
+
+
+		if = {
+
+			limit = {
+				scope:segrellion_dorne_holder = root
+			}
+
+
+			segrellion_daenerys_dorne_resolved_effect = yes
+		}
+
+
+		else = {
+
+			scope:segrellion_dorne_holder = {
+
+				trigger_event = {
+
+					id = segrellion_daenerys_post_throne.0110
+
+					days = { 1 3 }
+				}
+			}
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# =====================================================
+	# DORNE HELPED DAENERYS
+	# MERCY + COUNCIL POSITION
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0100.b
+
+
+		trigger = {
+
+			OR = {
+
+				has_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+
+				scope:segrellion_dorne_holder = {
+					has_character_flag = segrellion_dorne_secretly_supports_daenerys
+				}
+
+				scope:segrellion_dorne_holder = {
+					is_allied_to = root
+				}
+			}
+		}
+
+
+		segrellion_daenerys_spare_dornish_aegon_child_effect = yes
+
+		segrellion_daenerys_dorne_swears_fealty_effect = yes
+
+
+		scope:segrellion_dorne_holder = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_rewarded_loyal_dorne_opinion
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0112
+
+				days = { 2 5 }
+			}
+		}
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = -5
+		}
+
+
+		segrellion_daenerys_dorne_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# FEED AEGON'S CHILD TO DROGON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0100.c
+
+
+		trigger = {
+
+			has_variable = segrellion_daenerys_dorne_aegon_child
+
+			character:dragon_drogon ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_devour_dornish_aegon_child_effect = yes
+
+		segrellion_daenerys_dorne_swears_fealty_effect = yes
+
+		segrellion_daenerys_dorne_resolved_effect = yes
+
+
+		ai_chance = {
+
+			base = 1
+
+			modifier = {
+				factor = 5
+				has_trait = sadistic
+			}
+
+			modifier = {
+				factor = 3
+				has_trait = callous
+			}
+
+			modifier = {
+				factor = 3
+				has_trait = wrathful
+			}
+		}
+	}
+
+
+	# =====================================================
+	# NOTHING SPECIAL HAPPENED IN DORNE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0100.d
+
+
+		trigger = {
+
+			NOR = {
+
+				has_variable = segrellion_daenerys_dorne_aegon_child
+
+				has_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_married_arianne
+				}
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_dorne_support_secured
+				}
+			}
+		}
+
+
+		segrellion_daenerys_dorne_swears_fealty_effect = yes
+
+		segrellion_daenerys_dorne_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - DORNE ANSWERS DAENERYS
+# ROOT = DORNE HOLDER
+# =========================================================
+
+segrellion_daenerys_post_throne.0110 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys_post_throne.0110.opening
+
+	title = segrellion_daenerys_post_throne.0110.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					character:Targaryen_9 = {
+						has_variable = segrellion_daenerys_dorne_aegon_child
+					}
+				}
+
+				desc = segrellion_daenerys_post_throne.0110.desc_child
+			}
+
+
+			desc = segrellion_daenerys_post_throne.0110.desc
+		}
+	}
+
+
+	# ACCEPT
+	option = {
+
+		name = segrellion_daenerys_post_throne.0110.a
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_dorne_swears_fealty_effect = yes
+
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_accepted_regional_submission_opinion
+			}
+
+
+			segrellion_daenerys_dorne_resolved_effect = yes
+		}
+
+
+		ai_chance = {
+
+			base = 90
+
+			modifier = {
+				factor = 0.5
+				has_trait = arrogant
+			}
+
+			modifier = {
+				factor = 0.5
+				has_trait = stubborn
+			}
+
+			modifier = {
+				factor = 1.5
+				has_trait = content
+			}
+		}
+	}
+
+
+	# REFUSE
+	option = {
+
+		name = segrellion_daenerys_post_throne.0110.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_dorne_submission_refused
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0111
+
+				days = { 1 3 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0111 - DORNE REFUSED
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_post_throne.0111 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0111.t
+
+	desc = segrellion_daenerys_post_throne.0111.desc
+
+	theme = crown
+
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+
+	right_portrait = {
+		character = title:e_dorne.holder
+		animation = personality_bold
+	}
+
+
+	# FEED THE CHILD TO DROGON
+	option = {
+
+		name = segrellion_daenerys_post_throne.0111.a
+
+
+		trigger = {
+
+			has_variable = segrellion_daenerys_dorne_aegon_child
+
+			character:dragon_drogon ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_devour_dornish_aegon_child_effect = yes
+
+		segrellion_daenerys_dorne_swears_fealty_effect = yes
+
+		segrellion_daenerys_dorne_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	# TAKE DORNE
+	option = {
+
+		name = segrellion_daenerys_post_throne.0111.b
+
+
+		title:e_dorne = {
+			grant_title = root
+		}
+
+
+		title:k_dorne ?= {
+			grant_title = root
+		}
+
+
+		add_tyranny = 40
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 25
+		}
+
+
+		segrellion_daenerys_spare_dornish_aegon_child_effect = yes
+
+		segrellion_daenerys_dorne_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+}
+
+
+# =========================================================
+# 0112 - COUNCIL OFFER TO DORNE
+# ROOT = DORNE HOLDER
+# =========================================================
+
+segrellion_daenerys_post_throne.0112 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys_post_throne.0112.opening
+
+	title = segrellion_daenerys_post_throne.0112.t
+
+	desc = segrellion_daenerys_post_throne.0112.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0112.a
+
+
+		character:Targaryen_9 = {
+
+			assign_councillor_type = {
+
+				type = councillor_spymaster
+
+				target = root
+
+				remove_existing_councillor = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_dornish_councillor_of_daenerys
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0112.b
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0200 - THE REACH
+# =========================================================
+
+segrellion_daenerys_post_throne.0200 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0200.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:segrellion_reach_holder = {
+						is_allied_to = root
+					}
+				}
+
+				desc = segrellion_daenerys_post_throne.0200.desc_ally
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_variable = segrellion_daenerys_reach_aegon_child
+				}
+
+				desc = segrellion_daenerys_post_throne.0200.desc_child
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:IAF_Young_Griff_1 = {
+
+						OR = {
+							has_character_flag = segrellion_young_griff_married_margaery
+							has_character_flag = segrellion_young_griff_married_margaery_after_arianne_divorce
+							has_character_flag = segrellion_young_griff_married_margaery_as_second_wife
+							has_character_flag = segrellion_young_griff_married_margaery_after_wife_divorce
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_post_throne.0200.desc_aegon
+			}
+
+
+			desc = segrellion_daenerys_post_throne.0200.desc
+		}
+	}
+
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_daenerys_dorne_resolved
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_reach_resolved
+		}
+
+		title:e_the_reach = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_reach_issue_scheduled
+
+		remove_variable = segrellion_daenerys_reach_aegon_child
+
+
+		title:e_the_reach.holder = {
+			save_scope_as = segrellion_reach_holder
+		}
+
+
+		character:Tyrell_14 ?= {
+
+			random_child = {
+
+				limit = {
+
+					is_alive = yes
+
+					father = character:IAF_Young_Griff_1
+				}
+
+
+				save_scope_as = segrellion_aegon_margaery_child
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_aegon_margaery_child
+			}
+
+
+			set_variable = {
+
+				name = segrellion_daenerys_reach_aegon_child
+
+				value = scope:segrellion_aegon_margaery_child
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_reach_holder
+		animation = worry
+	}
+
+
+	# MERCY
+	option = {
+
+		name = segrellion_daenerys_post_throne.0200.a
+
+
+		segrellion_daenerys_spare_reach_aegon_child_effect = yes
+
+		add_character_flag = segrellion_daenerys_reach_mercy_offered
+
+
+		if = {
+
+			limit = {
+				scope:segrellion_reach_holder = root
+			}
+
+			segrellion_daenerys_reach_resolved_effect = yes
+		}
+
+
+		else = {
+
+			scope:segrellion_reach_holder = {
+
+				trigger_event = {
+
+					id = segrellion_daenerys_post_throne.0210
+
+					days = { 1 3 }
+				}
+			}
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# REWARD A LOYAL REACH
+	option = {
+
+		name = segrellion_daenerys_post_throne.0200.b
+
+
+		trigger = {
+
+			scope:segrellion_reach_holder = {
+				is_allied_to = root
+			}
+		}
+
+
+		segrellion_daenerys_spare_reach_aegon_child_effect = yes
+
+		segrellion_daenerys_reach_swears_fealty_effect = yes
+
+
+		scope:segrellion_reach_holder = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_rewarded_loyal_reach_opinion
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0212
+
+				days = { 2 5 }
+			}
+		}
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = -5
+		}
+
+
+		segrellion_daenerys_reach_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# FEED CHILD TO DROGON
+	option = {
+
+		name = segrellion_daenerys_post_throne.0200.c
+
+
+		trigger = {
+
+			has_variable = segrellion_daenerys_reach_aegon_child
+
+			character:dragon_drogon ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_devour_reach_aegon_child_effect = yes
+
+		segrellion_daenerys_reach_swears_fealty_effect = yes
+
+		segrellion_daenerys_reach_resolved_effect = yes
+
+
+		ai_chance = {
+
+			base = 1
+
+			modifier = {
+				factor = 5
+				has_trait = sadistic
+			}
+
+			modifier = {
+				factor = 3
+				has_trait = callous
+			}
+
+			modifier = {
+				factor = 3
+				has_trait = wrathful
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0210 - THE REACH ANSWERS
+# =========================================================
+
+segrellion_daenerys_post_throne.0210 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys_post_throne.0210.opening
+
+	title = segrellion_daenerys_post_throne.0210.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Targaryen_9 = {
+						has_variable = segrellion_daenerys_reach_aegon_child
+					}
+				}
+
+				desc = segrellion_daenerys_post_throne.0210.desc_child
+			}
+
+
+			desc = segrellion_daenerys_post_throne.0210.desc
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0210.a
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_reach_swears_fealty_effect = yes
+
+			segrellion_daenerys_reach_resolved_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0210.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_reach_submission_refused
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0211
+
+				days = { 1 3 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0211 - THE REACH REFUSED
+# =========================================================
+
+segrellion_daenerys_post_throne.0211 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0211.t
+
+	desc = segrellion_daenerys_post_throne.0211.desc
+
+	theme = crown
+
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+
+	right_portrait = {
+		character = title:e_the_reach.holder
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0211.a
+
+
+		trigger = {
+
+			has_variable = segrellion_daenerys_reach_aegon_child
+
+			character:dragon_drogon ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_devour_reach_aegon_child_effect = yes
+
+		segrellion_daenerys_reach_swears_fealty_effect = yes
+
+		segrellion_daenerys_reach_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0211.b
+
+
+		title:e_the_reach = {
+			grant_title = root
+		}
+
+
+		title:k_the_reach ?= {
+			grant_title = root
+		}
+
+
+		add_tyranny = 40
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 25
+		}
+
+
+		segrellion_daenerys_spare_reach_aegon_child_effect = yes
+
+		segrellion_daenerys_reach_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+}
+
+
+# =========================================================
+# 0212 - COUNCIL OFFER TO THE REACH
+# =========================================================
+
+segrellion_daenerys_post_throne.0212 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys_post_throne.0212.opening
+
+	title = segrellion_daenerys_post_throne.0212.t
+
+	desc = segrellion_daenerys_post_throne.0212.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0212.a
+
+
+		character:Targaryen_9 = {
+
+			assign_councillor_type = {
+
+				type = councillor_steward
+
+				target = root
+
+				remove_existing_councillor = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_reach_councillor_of_daenerys
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0212.b
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0300 - RIVERLANDS ROUTER
+# =========================================================
+
+segrellion_daenerys_post_throne.0300 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_daenerys_reach_resolved
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_riverlands_resolved
+		}
+
+		title:e_the_riverlands = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_riverlands_issue_scheduled
+
+
+		title:e_the_riverlands.holder = {
+			save_scope_as = segrellion_riverlands_holder
+		}
+
+
+		# =================================================
+		# JON HOLDS THE RIVERLANDS
+		# DEFER EVERYTHING TO HIS STORY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				scope:segrellion_riverlands_holder = {
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_riverlands_deferred_to_jon
+
+			segrellion_daenerys_riverlands_resolved_effect = yes
+		}
+
+
+		# =================================================
+		# EDMURE TULLY
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				scope:segrellion_riverlands_holder = character:Tully_7
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0320
+
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# SANSA STARK
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				OR = {
+
+					scope:segrellion_riverlands_holder = character:Stark_8
+
+					scope:segrellion_riverlands_holder = character:Stark_Dummy_8
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0330
+
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# BAELISH / OTHER LORD
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0310
+
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0310 - AN UNEXPECTED LORD OF THE RIVERLANDS
+# =========================================================
+
+segrellion_daenerys_post_throne.0310 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0310.t
+
+	desc = segrellion_daenerys_post_throne.0310.desc
+
+	theme = crown
+
+
+	immediate = {
+
+		title:e_the_riverlands.holder = {
+			save_scope_as = segrellion_riverlands_holder
+		}
+
+
+		# =================================================
+		# CLAIMANT
+		# =================================================
+
+		scope:segrellion_riverlands_holder = {
+
+			random_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+
+					this != root
+
+					has_claim_on = title:e_the_riverlands
+				}
+
+
+				save_scope_as = segrellion_riverlands_claimant
+			}
+		}
+
+
+		# =================================================
+		# POWERFUL LOCAL LORD
+		# =================================================
+
+		scope:segrellion_riverlands_holder = {
+
+			random_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+
+					highest_held_title_tier >= tier_duchy
+
+					this != root
+				}
+
+
+				save_scope_as = segrellion_riverlands_powerful_lord
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_riverlands_holder
+		animation = worry
+	}
+
+
+	# KEEP CURRENT LORD
+	option = {
+
+		name = segrellion_daenerys_post_throne.0310.a
+
+
+		segrellion_daenerys_riverlands_swears_fealty_effect = yes
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+
+	# EDMURE TULLY
+	option = {
+
+		name = segrellion_daenerys_post_throne.0310.b
+
+
+		trigger = {
+
+			character:Tully_7 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_grant_riverlands_effect = {
+			RECIPIENT = character:Tully_7
+		}
+
+
+		character:Tully_7 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_restored_legitimate_lord_opinion
+			}
+		}
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = -5
+		}
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+
+	# CLAIMANT
+	option = {
+
+		name = segrellion_daenerys_post_throne.0310.c
+
+
+		trigger = {
+			exists = scope:segrellion_riverlands_claimant
+		}
+
+
+		segrellion_daenerys_grant_riverlands_effect = {
+			RECIPIENT = scope:segrellion_riverlands_claimant
+		}
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 5
+		}
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+
+	# POWERFUL LOCAL LORD
+	option = {
+
+		name = segrellion_daenerys_post_throne.0310.d
+
+
+		trigger = {
+			exists = scope:segrellion_riverlands_powerful_lord
+		}
+
+
+		segrellion_daenerys_grant_riverlands_effect = {
+			RECIPIENT = scope:segrellion_riverlands_powerful_lord
+		}
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 10
+		}
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+
+
+	# EXECUTE CURRENT HOLDER
+	option = {
+
+		name = segrellion_daenerys_post_throne.0310.e
+
+
+		segrellion_daenerys_execute_riverlands_holder_effect = yes
+
+		segrellion_daenerys_riverlands_swears_fealty_effect = yes
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0320 - EDMURE TULLY
+# =========================================================
+
+segrellion_daenerys_post_throne.0320 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0320.t
+
+	desc = segrellion_daenerys_post_throne.0320.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Tully_7
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0320.a
+
+
+		segrellion_daenerys_riverlands_swears_fealty_effect = yes
+
+
+		character:Tully_7 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_respected_tully_rights_opinion
+			}
+		}
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = -5
+		}
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0330 - SANSA STARK HOLDS THE RIVERLANDS
+# =========================================================
+
+segrellion_daenerys_post_throne.0330 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0330.t
+
+	desc = segrellion_daenerys_post_throne.0330.desc
+
+	theme = crown
+
+
+	immediate = {
+
+		title:e_the_riverlands.holder = {
+			save_scope_as = segrellion_sansa_riverlands_holder
+		}
+
+
+		scope:segrellion_sansa_riverlands_holder = {
+
+			random_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+					is_adult = yes
+					is_landed = yes
+
+					has_claim_on = title:e_the_riverlands
+				}
+
+
+				save_scope_as = segrellion_sansa_riverlands_claimant
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_sansa_riverlands_holder
+		animation = worry
+	}
+
+
+	# =====================================================
+	# GIVE THE RIVERLANDS TO A LEGITIMATE LORD
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0330.a
+
+
+		if = {
+
+			limit = {
+
+				character:Tully_7 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			segrellion_daenerys_grant_riverlands_effect = {
+				RECIPIENT = character:Tully_7
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				exists = scope:segrellion_sansa_riverlands_claimant
+			}
+
+
+			segrellion_daenerys_grant_riverlands_effect = {
+				RECIPIENT = scope:segrellion_sansa_riverlands_claimant
+			}
+		}
+
+
+		else = {
+
+			title:e_the_riverlands = {
+				grant_title = root
+			}
+		}
+
+
+		scope:segrellion_sansa_riverlands_holder = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_removed_sansa_riverlands_opinion
+			}
+		}
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 55
+		}
+	}
+
+
+	# =====================================================
+	# SANSA MAY KEEP THEM IF SHE BRINGS THE NORTH TO DAENERYS
+	# ONLY IF THE NORTH IS INDEPENDENT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0330.b
+
+
+		trigger = {
+
+			title:e_the_north.holder ?= {
+
+				NOT = {
+					liege = root
+				}
+
+				NOT = {
+					this = root
+				}
+
+				NOT = {
+					top_liege = root
+				}
+			}
+		}
+
+
+		scope:segrellion_sansa_riverlands_holder = {
+
+			add_character_flag = segrellion_sansa_must_bring_north_to_daenerys
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_offered_sansa_north_compact_opinion
+			}
+		}
+
+
+		title:e_the_north.holder ?= {
+
+			add_character_flag = segrellion_daenerys_northern_submission_demand_pending
+		}
+
+
+		add_character_flag = segrellion_daenerys_sansa_north_compact_pending
+
+		add_character_flag = segrellion_daenerys_riverlands_deferred_to_jon
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# STRIP SANSA + IMPRISON HER + USE HER AGAINST THE NORTH
+	# ONLY IF THE NORTH IS INDEPENDENT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0330.c
+
+
+		trigger = {
+
+			title:e_the_north.holder ?= {
+
+				NOT = {
+					liege = root
+				}
+
+				NOT = {
+					this = root
+				}
+
+				NOT = {
+					top_liege = root
+				}
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Tully_7 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			segrellion_daenerys_grant_riverlands_effect = {
+				RECIPIENT = character:Tully_7
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				exists = scope:segrellion_sansa_riverlands_claimant
+			}
+
+
+			segrellion_daenerys_grant_riverlands_effect = {
+				RECIPIENT = scope:segrellion_sansa_riverlands_claimant
+			}
+		}
+
+
+		else = {
+
+			title:e_the_riverlands = {
+				grant_title = root
+			}
+		}
+
+
+		imprison = {
+
+			target = scope:segrellion_sansa_riverlands_holder
+
+			type = house_arrest
+		}
+
+
+		scope:segrellion_sansa_riverlands_holder = {
+
+			add_character_flag = segrellion_sansa_prisoner_for_northern_submission
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_imprisoned_sansa_opinion
+			}
+		}
+
+
+		title:e_the_north.holder ?= {
+
+			add_character_flag = segrellion_daenerys_holds_sansa_against_north
+		}
+
+
+		add_character_flag = segrellion_daenerys_sansa_hostage_against_north
+
+
+		add_tyranny = 40
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 25
+		}
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	# =====================================================
+	# LET SANSA KEEP THE RIVERLANDS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0330.d
+
+
+		segrellion_daenerys_riverlands_swears_fealty_effect = yes
+
+
+		scope:segrellion_sansa_riverlands_holder = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daenerys_confirmed_sansa_riverlands_opinion
+			}
+		}
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = -5
+		}
+
+
+		segrellion_daenerys_riverlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
