@@ -40,6 +40,7 @@ monthly_global_pulse = {
 		segrellion_young_griff_iron_throne_invasion_failsafe
 		segrellion_young_griff_kings_landing_arrival_fallback
 		segrellion_jon_resurrection_progression
+		segrellion_jon_canon_north_recovery
 		segrellion_jon_winterfell_council_ai_failsafe
 		segrellion_jon_nights_watch_status_guard
 		segrellion_jon_targaryen_reveal_progression
@@ -4472,6 +4473,8 @@ segrellion_young_griff_post_conquest_progression = {
 
 			segrellion_young_griff_post_conquest_chain_recovery_effect = yes
 
+			segrellion_young_griff_assassination_pressure_effect = yes
+
 			segrellion_young_griff_try_schedule_daemon_submission_effect = yes
 		}
 	}
@@ -6031,6 +6034,41 @@ segrellion_jon_winterfell_council_ai_failsafe = {
 						days = 365
 					}
 				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# JON SNOW - CANON NORTH RECOVERY
+#
+# Save compatibility and final hard failsafe.
+# Works for both the resurrected runtime Jon and Stark_7.
+# =========================================================
+
+segrellion_jon_canon_north_recovery = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+				has_global_variable = segrellion_resurrected_jon
+			}
+
+
+			global_var:segrellion_resurrected_jon ?= {
+
+				segrellion_jon_force_canon_north_recovery_effect = yes
+			}
+		}
+
+
+		else = {
+
+			character:Stark_7 ?= {
+
+				segrellion_jon_force_canon_north_recovery_effect = yes
 			}
 		}
 	}

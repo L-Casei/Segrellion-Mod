@@ -287,3 +287,216 @@ segrellion_jon_restore_edmure_tully_effect = {
 	}
 }
 
+# =========================================================
+# JON SNOW - CANON NORTH RECOVERY
+#
+# In Canon mode Jon must emerge from the Winterfell Council
+# as ruler of the North.
+#
+# This repairs:
+# - lost/delayed 0020
+# - activity completion race conditions
+# - old saves where the Council completed without the title
+# =========================================================
+
+segrellion_jon_force_canon_north_recovery_effect = {
+
+	if = {
+
+		limit = {
+
+			has_game_rule = segrellion_winterfell_council_canon
+
+			segrellion_is_current_jon_trigger = yes
+
+			is_alive = yes
+
+
+			OR = {
+
+				has_character_flag = segrellion_jon_winterfell_council_called
+
+				has_character_flag = segrellion_jon_winterfell_council_completed
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_jon_king_in_the_north
+			}
+		}
+
+
+		# =================================================
+		# THE NORTH PASSES TO JON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_title = title:e_the_north
+				}
+			}
+
+
+			title:e_the_north = {
+				grant_title = root
+			}
+		}
+
+
+		# =================================================
+		# THE NORTH BECOMES INDEPENDENT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_independent_ruler = yes
+				}
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_jon_canon_recovery_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			becomes_independent = {
+
+				change = scope:segrellion_jon_canon_recovery_independence_change
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_jon_canon_recovery_independence_change
+		}
+
+
+		# =================================================
+		# CLEAN OLD STANNIS / MEGA WAR POLITICAL STATE
+		# =================================================
+
+		segrellion_jon_clear_stannis_political_liege_effect = yes
+
+		agot_mw_clear_data_effect = yes
+
+
+		remove_character_flag = bookmark_independent
+
+		remove_character_flag = segrellion_jon_coronation_locked_until_council
+
+		remove_character_flag = agot_start_historical_coronation_cooldown
+
+		remove_character_flag = segrellion_jon_stannis_death_news_pending
+
+		remove_character_flag = segrellion_jon_stannis_death_news_scheduled
+
+
+		segrellion_jon_update_northern_government_effect = yes
+
+
+		set_primary_title_to = title:e_the_north
+
+
+		remove_character_flag = segrellion_jon_lord_paramount_under_stannis
+
+		remove_character_flag = segrellion_jon_lord_of_winterfell_under_stannis
+
+
+		# =================================================
+		# KING IN THE NORTH
+		# =================================================
+
+		add_character_flag = segrellion_jon_king_in_the_north
+
+		add_character_flag = segrellion_jon_stannis_result_resolved
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_trait = segrellion_king_in_the_north_trait
+				}
+			}
+
+
+			add_trait = segrellion_king_in_the_north_trait
+		}
+
+
+		# =================================================
+		# CANON REWARDS
+		# =================================================
+
+		add_prestige = 1500
+
+		add_legitimacy = 500
+
+		add_dread = 15
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_north_united_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_north_united_modifier
+
+				years = 10
+			}
+		}
+
+
+		# =================================================
+		# CANON STRATEGY:
+		# REVENGE FOR THE RED WEDDING
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOR = {
+
+					has_character_flag = segrellion_jon_red_wedding_revenge_pending
+
+					has_character_flag = segrellion_jon_frey_extermination_war_active
+
+					has_character_flag = segrellion_jon_red_wedding_revenge_active
+
+					has_character_flag = segrellion_jon_red_wedding_avenged
+				}
+			}
+
+
+			add_character_flag = segrellion_jon_red_wedding_revenge_pending
+
+			add_character_flag = segrellion_jon_council_demands_frey_revenge
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0030
+
+				days = { 5 10 }
+			}
+		}
+	}
+}
