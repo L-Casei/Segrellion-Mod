@@ -314,8 +314,12 @@ segrellion_young_griff_dragon.0010 = {
 # =========================================================
 # 0011 - EGG SEARCH TRAVEL CONTROLLER
 #
-# Starts the selected journey safely.
-# Also acts as a watchdog if the arrival callback fails.
+# ROOT = Young Griff
+#
+# Opens the real CK3 Travel Planner for the selected lead.
+#
+# If the travel system fails to create a travel plan,
+# .0012 guarantees that the storyline continues.
 # =========================================================
 
 segrellion_young_griff_dragon.0011 = {
@@ -333,13 +337,16 @@ segrellion_young_griff_dragon.0011 = {
 
 		has_character_flag = segrellion_young_griff_dragon_path_egg
 
+
 		NOT = {
 			has_character_flag = segrellion_young_griff_dragon_route_resolved
 		}
 
+
 		NOT = {
 			has_character_flag = segrellion_young_griff_dragon_route_event_started
 		}
+
 
 		OR = {
 
@@ -354,17 +361,17 @@ segrellion_young_griff_dragon.0011 = {
 
 	immediate = {
 
+
 		# =================================================
-		# IF HE IS ALREADY TRAVELLING
+		# ALREADY TRAVELLING
 		#
-		# Do not destroy the current journey.
-		# Retry this controller later.
+		# Never overwrite another active journey.
+		# Retry once the current journey has had time to end.
 		# =================================================
 
 		if = {
 
 			limit = {
-
 				exists = current_travel_plan
 			}
 
@@ -385,17 +392,13 @@ segrellion_young_griff_dragon.0011 = {
 		else_if = {
 
 			limit = {
-
 				has_character_flag = segrellion_young_griff_dragon_search_dragonstone
 			}
 
 
-			# Already there: immediately start the search.
-
 			if = {
 
 				limit = {
-
 					location = title:c_dragonstone.title_province
 				}
 
@@ -409,31 +412,27 @@ segrellion_young_griff_dragon.0011 = {
 			}
 
 
-			# Otherwise physically travel there.
-
 			else = {
+
+
+				add_character_flag = segrellion_young_griff_dragon_travel_attempt_active
+
 
 				start_travel_plan = {
 
 					destination = title:c_dragonstone.title_province
 
-					players_use_planner = no
-
 					return_trip = yes
 
-					on_arrival_destinations = first
-
 					on_arrival_event = segrellion_young_griff_dragon.0040
+
+					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
 				}
 
 
-				# Watchdog.
-				# If for any reason the trip is not running,
-				# this will try again.
-
 				trigger_event = {
 
-					id = segrellion_young_griff_dragon.0011
+					id = segrellion_young_griff_dragon.0012
 
 					days = 7
 				}
@@ -448,7 +447,6 @@ segrellion_young_griff_dragon.0011 = {
 		else_if = {
 
 			limit = {
-
 				has_character_flag = segrellion_young_griff_dragon_search_red_lake
 			}
 
@@ -456,7 +454,6 @@ segrellion_young_griff_dragon.0011 = {
 			if = {
 
 				limit = {
-
 					location = title:c_red_lake.title_province
 				}
 
@@ -472,23 +469,25 @@ segrellion_young_griff_dragon.0011 = {
 
 			else = {
 
+
+				add_character_flag = segrellion_young_griff_dragon_travel_attempt_active
+
+
 				start_travel_plan = {
 
 					destination = title:c_red_lake.title_province
 
-					players_use_planner = no
-
 					return_trip = yes
 
-					on_arrival_destinations = first
-
 					on_arrival_event = segrellion_young_griff_dragon.0020
+
+					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
 				}
 
 
 				trigger_event = {
 
-					id = segrellion_young_griff_dragon.0011
+					id = segrellion_young_griff_dragon.0012
 
 					days = 7
 				}
@@ -503,7 +502,6 @@ segrellion_young_griff_dragon.0011 = {
 		else_if = {
 
 			limit = {
-
 				has_character_flag = segrellion_young_griff_dragon_search_summerhall
 			}
 
@@ -511,7 +509,6 @@ segrellion_young_griff_dragon.0011 = {
 			if = {
 
 				limit = {
-
 					location = title:c_summerhall.title_province
 				}
 
@@ -527,25 +524,226 @@ segrellion_young_griff_dragon.0011 = {
 
 			else = {
 
+
+				add_character_flag = segrellion_young_griff_dragon_travel_attempt_active
+
+
 				start_travel_plan = {
 
 					destination = title:c_summerhall.title_province
 
-					players_use_planner = no
-
 					return_trip = yes
 
-					on_arrival_destinations = first
-
 					on_arrival_event = segrellion_young_griff_dragon.0030
+
+					on_travel_planner_cancel_event = segrellion_young_griff_dragon.0090
 				}
 
 
 				trigger_event = {
 
-					id = segrellion_young_griff_dragon.0011
+					id = segrellion_young_griff_dragon.0012
 
 					days = 7
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0012 - EGG SEARCH TRAVEL WATCHDOG
+#
+# ROOT = Young Griff
+#
+# Normal:
+# - travel exists -> wait
+# - arrival callback eventually handles everything
+#
+# Broken travel:
+# - no travel plan exists after the attempt
+# - move Aegon to the destination
+# - fire the correct arrival event
+#
+# This guarantees that I Need a Dragon can never die here.
+# =========================================================
+
+segrellion_young_griff_dragon.0012 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragon_path_egg
+
+		has_character_flag = segrellion_young_griff_dragon_travel_attempt_active
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_resolved
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragon_route_event_started
+		}
+
+
+		OR = {
+
+			has_character_flag = segrellion_young_griff_dragon_search_dragonstone
+
+			has_character_flag = segrellion_young_griff_dragon_search_red_lake
+
+			has_character_flag = segrellion_young_griff_dragon_search_summerhall
+		}
+	}
+
+
+	immediate = {
+
+
+		# =================================================
+		# TRAVEL IS WORKING
+		#
+		# Do absolutely nothing to the journey.
+		# Check again later only as a safety net.
+		# =================================================
+
+		if = {
+
+			limit = {
+				exists = current_travel_plan
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragon.0012
+
+				days = 14
+			}
+		}
+
+
+		# =================================================
+		# NO TRAVEL PLAN EXISTS
+		#
+		# The engine failed to create / preserve the journey.
+		# Continue the storyline manually.
+		# =================================================
+
+		else = {
+
+
+			remove_character_flag = segrellion_young_griff_dragon_travel_attempt_active
+
+
+			# =============================================
+			# DRAGONSTONE
+			# =============================================
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_dragon_search_dragonstone
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							location = title:c_dragonstone.title_province
+						}
+					}
+
+
+					set_location = title:c_dragonstone.title_province
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragon.0040
+
+					days = 1
+				}
+			}
+
+
+			# =============================================
+			# RED LAKE
+			# =============================================
+
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_dragon_search_red_lake
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							location = title:c_red_lake.title_province
+						}
+					}
+
+
+					set_location = title:c_red_lake.title_province
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragon.0020
+
+					days = 1
+				}
+			}
+
+
+			# =============================================
+			# SUMMERHALL
+			# =============================================
+
+			else_if = {
+
+				limit = {
+					has_character_flag = segrellion_young_griff_dragon_search_summerhall
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							location = title:c_summerhall.title_province
+						}
+					}
+
+
+					set_location = title:c_summerhall.title_province
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragon.0030
+
+					days = 1
 				}
 			}
 		}
@@ -583,7 +781,15 @@ segrellion_young_griff_dragon.0020 = {
 
 	immediate = {
 
+		remove_character_flag = segrellion_young_griff_dragon_travel_attempt_active
+
 		add_character_flag = segrellion_young_griff_dragon_route_event_started
+
+
+		current_travel_plan ?= {
+
+			pause_travel_plan = yes
+		}
 	}
 
 	left_portrait = {
@@ -652,6 +858,9 @@ segrellion_young_griff_dragon.0021 = {
 
 		name = segrellion_young_griff_dragon.0021.a
 
+		current_travel_plan ?= {
+			resume_travel_plan = yes
+		}
 
 		hidden_effect = {
 
@@ -699,7 +908,15 @@ segrellion_young_griff_dragon.0030 = {
 
 	immediate = {
 
+		remove_character_flag = segrellion_young_griff_dragon_travel_attempt_active
+
 		add_character_flag = segrellion_young_griff_dragon_route_event_started
+
+
+		current_travel_plan ?= {
+
+			pause_travel_plan = yes
+		}
 	}
 
 	left_portrait = {
@@ -892,6 +1109,11 @@ segrellion_young_griff_dragon.0032 = {
 		remove_character_flag = segrellion_young_griff_dragon_route_event_started
 
 		remove_variable = segrellion_young_griff_dragon_researcher
+
+		current_travel_plan ?= {
+
+			resume_travel_plan = yes
+		}
 	}
 
 
@@ -942,6 +1164,7 @@ segrellion_young_griff_dragon.0040 = {
 	immediate = {
 
 		add_character_flag = segrellion_young_griff_dragon_route_event_started
+		remove_character_flag = segrellion_young_griff_dragon_travel_attempt_active
 	}
 
 
@@ -997,6 +1220,8 @@ segrellion_young_griff_dragon.0090 = {
 	immediate = {
 
 		remove_character_flag = segrellion_young_griff_dragon_path_chosen
+
+		remove_character_flag = segrellion_young_griff_dragon_travel_attempt_active
 
 		remove_character_flag = segrellion_young_griff_dragon_path_egg
 
