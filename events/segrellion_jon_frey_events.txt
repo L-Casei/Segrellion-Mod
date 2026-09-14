@@ -1139,68 +1139,68 @@ segrellion_jon_frey.0060 = {
 
 		custom_tooltip = segrellion_jon_frey.0060.a.tt
 
-
-		segrellion_jon_execute_adult_freys_effect = yes
-
-
-		add_character_flag = segrellion_jon_frey_judgment_complete
+		hidden_effect = {
+			segrellion_jon_execute_adult_freys_effect = yes
 
 
-		add_character_modifier = {
-			modifier = segrellion_red_wedding_avenger_modifier
-		}
+			add_character_flag = segrellion_jon_frey_judgment_complete
 
 
-		# =================================================
-		# BAELISH STILL HOLDS THE RIVERLANDS
-		# =================================================
+			add_character_modifier = {
+				modifier = segrellion_red_wedding_avenger_modifier
+			}
 
-		if = {
 
-			limit = {
+			# =================================================
+			# BAELISH STILL HOLDS THE RIVERLANDS
+			# =================================================
 
-				character:Baelish_2 ?= {
+			if = {
 
-					is_alive = yes
+				limit = {
 
-					has_title = title:e_the_riverlands
+					character:Baelish_2 ?= {
 
-					NOT = {
+						is_alive = yes
+
+						has_title = title:e_the_riverlands
+
+						NOT = {
+							has_title = title:h_the_iron_throne
+						}
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_jon_frey.0070
+
+					days = 1
+				}
+			}
+
+
+			# =================================================
+			# BAELISH HOLDS THE IRON THRONE
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					character:Baelish_2 ?= {
+
+						is_alive = yes
+
 						has_title = title:h_the_iron_throne
 					}
 				}
-			}
 
 
-			trigger_event = {
-
-				id = segrellion_jon_frey.0070
-
-				days = 1
+				add_character_flag = segrellion_jon_baelish_iron_throne_branch_pending
 			}
 		}
-
-
-		# =================================================
-		# BAELISH HOLDS THE IRON THRONE
-		# =================================================
-
-		else_if = {
-
-			limit = {
-
-				character:Baelish_2 ?= {
-
-					is_alive = yes
-
-					has_title = title:h_the_iron_throne
-				}
-			}
-
-
-			add_character_flag = segrellion_jon_baelish_iron_throne_branch_pending
-		}
-
 
 		ai_chance = {
 			base = 100
@@ -1384,58 +1384,22 @@ segrellion_jon_frey.0070 = {
 
 		custom_tooltip = segrellion_jon_frey.0070.join_existing.tt
 
+		hidden_effect = {
+			add_character_flag = segrellion_jon_baelish_riverlands_campaign_started
 
-		add_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+			add_character_flag = segrellion_jon_baelish_riverlands_war_active
 
-		add_character_flag = segrellion_jon_baelish_riverlands_war_active
+			add_character_flag = segrellion_jon_joined_existing_baelish_war
 
-		add_character_flag = segrellion_jon_joined_existing_baelish_war
-
-		add_character_flag = segrellion_disable_call_the_banners
-
-
-		set_variable = {
-
-			name = segrellion_jon_baelish_riverlands_war
-
-			value = scope:segrellion_jon_existing_baelish_war
-		}
+			add_character_flag = segrellion_disable_call_the_banners
 
 
-		scope:segrellion_jon_existing_baelish_war = {
+			set_variable = {
 
-			if = {
+				name = segrellion_jon_baelish_riverlands_war
 
-				limit = {
-
-					NOT = {
-						is_participant = root
-					}
-				}
-
-
-				add_attacker = root
+				value = scope:segrellion_jon_existing_baelish_war
 			}
-		}
-
-
-		# =================================================
-		# THE GREAT LORDS OF THE NORTH ENTER THE SAME WAR
-		# =================================================
-
-		every_vassal_or_below = {
-
-			limit = {
-
-				is_alive = yes
-
-				is_landed = yes
-
-				highest_held_title_tier >= tier_duchy
-			}
-
-
-			save_temporary_scope_as = segrellion_jon_baelish_northern_banner
 
 
 			scope:segrellion_jon_existing_baelish_war = {
@@ -1445,16 +1409,52 @@ segrellion_jon_frey.0070 = {
 					limit = {
 
 						NOT = {
-							is_participant = scope:segrellion_jon_baelish_northern_banner
+							is_participant = root
 						}
 					}
 
 
-					add_attacker = scope:segrellion_jon_baelish_northern_banner
+					add_attacker = root
+				}
+			}
+
+
+			# =================================================
+			# THE GREAT LORDS OF THE NORTH ENTER THE SAME WAR
+			# =================================================
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					highest_held_title_tier >= tier_duchy
+				}
+
+
+				save_temporary_scope_as = segrellion_jon_baelish_northern_banner
+
+
+				scope:segrellion_jon_existing_baelish_war = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_participant = scope:segrellion_jon_baelish_northern_banner
+							}
+						}
+
+
+						add_attacker = scope:segrellion_jon_baelish_northern_banner
+					}
 				}
 			}
 		}
-
 
 		ai_chance = {
 			base = 100
@@ -1482,23 +1482,23 @@ segrellion_jon_frey.0070 = {
 
 		custom_tooltip = segrellion_jon_frey.0070.a.tt
 
+		hidden_effect = {
+			add_character_flag = segrellion_jon_baelish_riverlands_campaign_started
 
-		add_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+			add_character_flag = segrellion_jon_baelish_riverlands_cb_authorized
 
-		add_character_flag = segrellion_jon_baelish_riverlands_cb_authorized
-
-		add_character_flag = segrellion_disable_call_the_banners
+			add_character_flag = segrellion_disable_call_the_banners
 
 
-		start_war = {
+			start_war = {
 
-			cb = segrellion_jon_baelish_riverlands_cb
+				cb = segrellion_jon_baelish_riverlands_cb
 
-			target = scope:segrellion_jon_baelish_enemy
+				target = scope:segrellion_jon_baelish_enemy
 
-			target_title = title:e_the_riverlands
+				target_title = title:e_the_riverlands
+			}
 		}
-
 
 		ai_chance = {
 			base = 100
