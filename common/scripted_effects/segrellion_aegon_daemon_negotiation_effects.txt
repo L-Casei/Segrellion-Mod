@@ -1,0 +1,223 @@
+# =========================================================
+# AEGON / DAEMON SUBMISSION NEGOTIATION
+# =========================================================
+
+
+# =========================================================
+# CLEAR TEMPORARY NEGOTIATION STATE
+#
+# ROOT = Daemon
+# =========================================================
+
+segrellion_daemon_clear_aegon_submission_negotiation_effect = {
+
+	remove_character_flag = segrellion_daemon_aegon_ultimatum_pending
+
+	remove_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+	remove_character_flag = segrellion_daemon_aegon_demands_more
+
+	remove_character_flag = segrellion_daemon_aegon_concessions_pending
+
+
+	remove_character_flag = segrellion_daemon_aegon_offer_hand
+
+	remove_character_flag = segrellion_daemon_aegon_offer_contract
+
+	remove_character_flag = segrellion_daemon_aegon_offer_court_position
+
+	remove_character_flag = segrellion_daemon_aegon_offer_heir
+
+
+	remove_character_flag = segrellion_daemon_aegon_negotiation_daemon_refused
+
+	remove_character_flag = segrellion_daemon_aegon_negotiation_aegon_refused
+}
+
+
+# =========================================================
+# APPLY ALL CONCESSIONS PROMISED BY AEGON
+#
+# ROOT = Daemon
+#
+# Called only AFTER Daemon has become Aegon's vassal.
+# =========================================================
+
+segrellion_daemon_apply_aegon_submission_concessions_effect = {
+
+
+	# =====================================================
+	# HAND OF THE KING
+	#
+	# Important:
+	# This does NOT make Daemon Regent, Friend or Confidant.
+	# Those rewards remain exclusive to the mutual-support
+	# storyline.
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daemon_aegon_offer_hand
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			assign_councillor_type = {
+
+				remove_existing_councillor = yes
+
+				type = councillor_castellan
+
+				target = character:Segrellion_60
+
+				fire_on_actions = yes
+			}
+
+
+			add_character_flag = segrellion_young_griff_daemon_negotiated_hand
+		}
+
+
+		add_character_flag = segrellion_daemon_aegon_negotiated_hand
+	}
+
+
+	# =====================================================
+	# LIGHTER VASSAL CONTRACT
+	#
+	# One obligation level lower for:
+	# - taxes
+	# - levies
+	# =====================================================
+
+	if = {
+
+		limit = {
+			liege ?= character:IAF_Young_Griff_1
+			has_character_flag = segrellion_daemon_aegon_offer_contract
+		}
+
+
+		vassal_contract_decrease_obligation_level = feudal_government_taxes
+
+		vassal_contract_decrease_obligation_level = feudal_government_levies
+
+
+		add_character_flag = segrellion_daemon_aegon_negotiated_contract
+
+
+		character:IAF_Young_Griff_1 = {
+			add_character_flag = segrellion_young_griff_daemon_negotiated_contract
+		}
+	}
+
+
+	# =====================================================
+	# ROYAL COURT POSITION
+	#
+	# Master of Horse.
+	#
+	# This is a real Court Position and can coexist with
+	# Daemon being Hand of the King.
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daemon_aegon_offer_court_position
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						exists = court_position:master_of_horse_court_position
+					}
+				}
+
+
+				appoint_court_position = {
+
+					recipient = character:Segrellion_60
+
+					court_position = master_of_horse_court_position
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					exists = court_position:master_of_horse_court_position
+
+					court_position:master_of_horse_court_position != character:Segrellion_60
+				}
+
+
+				replace_court_position = {
+
+					recipient = character:Segrellion_60
+
+					holder = court_position:master_of_horse_court_position
+
+					court_position = master_of_horse_court_position
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_daemon_negotiated_court_position
+		}
+
+
+		add_character_flag = segrellion_daemon_aegon_negotiated_court_position
+	}
+
+
+	# =====================================================
+	# DESIGNATED HEIR
+	#
+	# Political promise takes precedence over normal
+	# designation restrictions.
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daemon_aegon_offer_heir
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			set_designated_heir_unsafe = character:Segrellion_60
+
+			add_character_flag = segrellion_young_griff_daemon_designated_heir
+		}
+
+
+		add_character_flag = segrellion_daemon_designated_aegon_heir
+	}
+
+
+	# =====================================================
+	# SETTLEMENT COMPLETE
+	# =====================================================
+
+	add_character_flag = segrellion_daemon_aegon_negotiated_settlement_honored
+
+
+	character:IAF_Young_Griff_1 = {
+		add_character_flag = segrellion_young_griff_daemon_negotiated_settlement_honored
+	}
+
+
+	segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+}

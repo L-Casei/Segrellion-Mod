@@ -28,21 +28,8 @@ segrellion_aegon_daemon.0001 = {
 			triggered_desc = {
 
 				trigger = {
-
-					OR = {
-
-						has_character_flag = segrellion_young_griff_daemon_oath_secured
-
-						has_character_flag = segrellion_young_griff_supports_daemon
-
-
-						character:Segrellion_60 = {
-
-							has_character_flag = segrellion_pledged_to_young_griff
-						}
-					}
+					segrellion_aegon_daemon_mutual_support_trigger = yes
 				}
-
 
 				desc = segrellion_aegon_daemon.0001.desc_friend
 			}
@@ -164,23 +151,9 @@ segrellion_aegon_daemon.0001 = {
 
 		custom_tooltip = segrellion_aegon_daemon.0001.a.tt
 
-
 		trigger = {
-
-			OR = {
-
-				has_character_flag = segrellion_young_griff_daemon_oath_secured
-
-				has_character_flag = segrellion_young_griff_supports_daemon
-
-
-				character:Segrellion_60 = {
-
-					has_character_flag = segrellion_pledged_to_young_griff
-				}
-			}
+			segrellion_aegon_daemon_mutual_support_trigger = yes
 		}
-
 
 		character:Segrellion_60 = {
 
@@ -215,23 +188,12 @@ segrellion_aegon_daemon.0001 = {
 
 		custom_tooltip = segrellion_aegon_daemon.0001.b.tt
 
-
 		trigger = {
 
-			NOR = {
-
-				has_character_flag = segrellion_young_griff_daemon_oath_secured
-
-				has_character_flag = segrellion_young_griff_supports_daemon
-
-
-				character:Segrellion_60 = {
-
-					has_character_flag = segrellion_pledged_to_young_griff
-				}
+			NOT = {
+				segrellion_aegon_daemon_mutual_support_trigger = yes
 			}
 		}
-
 
 		character:Segrellion_60 = {
 
@@ -276,18 +238,8 @@ segrellion_aegon_daemon.0001 = {
 
 				is_ai = no
 
-
-				NOR = {
-
-					has_character_flag = segrellion_young_griff_daemon_oath_secured
-
-					has_character_flag = segrellion_young_griff_supports_daemon
-
-
-					character:Segrellion_60 = {
-
-						has_character_flag = segrellion_pledged_to_young_griff
-					}
+				NOT = {
+					segrellion_aegon_daemon_mutual_support_trigger = yes
 				}
 			}
 		}
@@ -376,6 +328,8 @@ segrellion_aegon_daemon.0002 = {
 			is_alive = yes
 
 			has_title = title:h_the_iron_throne
+
+			segrellion_aegon_daemon_mutual_support_trigger = yes
 		}
 	}
 
@@ -614,10 +568,17 @@ segrellion_aegon_daemon.0002 = {
 
 
 # =========================================================
-# 0003 - KNEEL OR FACE THE DRAGON
+# 0003 - THE KING'S DEMAND
 #
 # Root = Daemon
-# Hostile ultimatum.
+#
+# This is the normal political route when Daemon and Aegon
+# did NOT mutually support one another.
+#
+# Daemon may:
+# - submit outright
+# - negotiate his submission
+# - refuse entirely
 # =========================================================
 
 segrellion_aegon_daemon.0003 = {
@@ -632,7 +593,7 @@ segrellion_aegon_daemon.0003 = {
 
 	desc = segrellion_aegon_daemon.0003.desc
 
-	theme = war
+	theme = diplomacy
 
 
 	trigger = {
@@ -669,7 +630,7 @@ segrellion_aegon_daemon.0003 = {
 
 	on_trigger_fail = {
 
-		remove_character_flag = segrellion_daemon_aegon_ultimatum_pending
+		segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
 
 
 		character:IAF_Young_Griff_1 ?= {
@@ -687,7 +648,7 @@ segrellion_aegon_daemon.0003 = {
 
 		character = root
 
-		animation = anger
+		animation = thinking
 	}
 
 
@@ -700,9 +661,7 @@ segrellion_aegon_daemon.0003 = {
 
 
 	# =====================================================
-	# BEND THE KNEE
-	#
-	# 20%
+	# ACCEPT OUTRIGHT
 	# =====================================================
 
 	option = {
@@ -711,7 +670,9 @@ segrellion_aegon_daemon.0003 = {
 
 		custom_tooltip = segrellion_aegon_daemon.0003.a.tt
 
-		remove_character_flag = segrellion_daemon_aegon_ultimatum_pending
+
+		segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+
 
 		segrellion_daemon_swear_fealty_to_aegon_effect = yes
 
@@ -732,15 +693,107 @@ segrellion_aegon_daemon.0003 = {
 
 
 		ai_chance = {
+
 			base = 20
+
+
+			modifier = {
+
+				add = 20
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 60
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				has_relation_friend = character:IAF_Young_Griff_1
+			}
+
+
+			modifier = {
+
+				add = 35
+
+				has_relation_best_friend = character:IAF_Young_Griff_1
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				has_trait = content
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				has_trait = humble
+			}
+
+
+			modifier = {
+
+				factor = 0.6
+
+				has_trait = ambitious
+			}
+
+
+			modifier = {
+
+				factor = 0.65
+
+				has_trait = stubborn
+			}
+
+
+			modifier = {
+
+				factor = 0.4
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -25
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.02
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
 		}
 	}
 
 
 	# =====================================================
-	# REFUSE
+	# NEGOTIATE
 	#
-	# 80%
+	# This should normally be Daemon's preferred AI route.
 	# =====================================================
 
 	option = {
@@ -749,7 +802,111 @@ segrellion_aegon_daemon.0003 = {
 
 		custom_tooltip = segrellion_aegon_daemon.0003.b.tt
 
-		remove_character_flag = segrellion_daemon_aegon_ultimatum_pending
+
+		segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+
+
+		add_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0011
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 60
+
+
+			modifier = {
+
+				add = 15
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 0
+				}
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 30
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				has_trait = ambitious
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				has_trait = greedy
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				has_trait = arrogant
+			}
+
+
+			modifier = {
+
+				factor = 0.5
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -50
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.03
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0003.c
+
+		custom_tooltip = segrellion_aegon_daemon.0003.c.tt
+
+
+		segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+
 
 		if = {
 
@@ -759,6 +916,7 @@ segrellion_aegon_daemon.0003 = {
 
 			becomes_independent = yes
 		}
+
 
 		add_character_flag = segrellion_daemon_rejected_aegon_ultimatum
 
@@ -775,7 +933,83 @@ segrellion_aegon_daemon.0003 = {
 
 
 		ai_chance = {
-			base = 80
+
+			base = 20
+
+
+			modifier = {
+
+				add = 25
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -25
+				}
+			}
+
+
+			modifier = {
+
+				add = 40
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -60
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				has_relation_rival = character:IAF_Young_Griff_1
+			}
+
+
+			modifier = {
+
+				add = 50
+
+				has_relation_nemesis = character:IAF_Young_Griff_1
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				has_trait = stubborn
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				has_trait = arrogant
+			}
+
+
+			modifier = {
+
+				factor = 0.6
+
+				has_trait = content
+			}
+
+
+			# Public Blackfyre revelation almost kills
+			# any AI chance of Daemon accepting Aegon.
+
+			modifier = {
+
+				factor = 30
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
 		}
 	}
 }
@@ -813,7 +1047,12 @@ segrellion_aegon_daemon.0004 = {
 
 			is_independent_ruler = yes
 
-			has_title = title:e_flamelands
+			OR = {
+
+				has_title = title:e_flamelands
+
+				has_title = title:k_flamelands
+			}
 
 			has_character_flag = segrellion_daemon_aegon_fealty_refused
 		}
@@ -849,7 +1088,7 @@ segrellion_aegon_daemon.0004 = {
 
 
 		ai_chance = {
-			base = 45
+			base = 10
 		}
 	}
 
@@ -877,7 +1116,7 @@ segrellion_aegon_daemon.0004 = {
 
 
 		ai_chance = {
-			base = 55
+			base = 90
 		}
 	}
 }
@@ -915,7 +1154,12 @@ segrellion_aegon_daemon.0005 = {
 
 			is_independent_ruler = yes
 
-			has_title = title:e_flamelands
+			OR = {
+
+				has_title = title:e_flamelands
+
+				has_title = title:k_flamelands
+			}
 
 			has_character_flag = segrellion_daemon_rejected_aegon_ultimatum
 		}
@@ -951,7 +1195,16 @@ segrellion_aegon_daemon.0005 = {
 
 
 		ai_chance = {
-			base = 70
+
+			base = 20
+
+
+			modifier = {
+
+				factor = 0.25
+
+				has_character_flag = segrellion_young_griff_blackfyre_revealed
+			}
 		}
 	}
 
@@ -979,7 +1232,16 @@ segrellion_aegon_daemon.0005 = {
 
 
 		ai_chance = {
-			base = 30
+
+			base = 80
+
+
+			modifier = {
+
+				factor = 2
+
+				has_character_flag = segrellion_young_griff_blackfyre_revealed
+			}
 		}
 	}
 }
@@ -1528,5 +1790,1420 @@ segrellion_aegon_daemon.0010 = {
 
 			base = 100
 		}
+	}
+}
+
+# =========================================================
+# 0011 - THE PRICE OF A KNEE
+#
+# Root = Young Griff
+#
+# Daemon is willing to submit, but only for a concession.
+# =========================================================
+
+segrellion_aegon_daemon.0011 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_60
+
+	opening = segrellion_aegon_daemon.0011.opening
+
+	title = segrellion_aegon_daemon.0011.t
+
+	desc = segrellion_aegon_daemon.0011.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			is_independent_ruler = yes
+
+			OR = {
+				has_title = title:e_flamelands
+				has_title = title:k_flamelands
+			}
+
+			has_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+			NOT = {
+				has_character_flag = segrellion_daemon_aegon_status_resolved
+			}
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		character:Segrellion_60 ?= {
+			segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+		}
+
+		remove_character_flag = segrellion_young_griff_flamelands_submission_chain_active
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# HAND OF THE KING
+	# 35
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0011.a
+
+		custom_tooltip = segrellion_aegon_daemon.0011.a.tt
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_offer_hand
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0012
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+
+
+	# =====================================================
+	# LIGHTER VASSAL CONTRACT
+	# 30
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0011.b
+
+		custom_tooltip = segrellion_aegon_daemon.0011.b.tt
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_offer_contract
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0012
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# ROYAL COURT OFFICE
+	# MASTER OF HORSE
+	# 20
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0011.c
+
+		custom_tooltip = segrellion_aegon_daemon.0011.c.tt
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_offer_court_position
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0012
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+
+	# =====================================================
+	# DESIGNATED HEIR
+	# 15
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0011.d
+
+		custom_tooltip = segrellion_aegon_daemon.0011.d.tt
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_offer_heir
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0012
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE TO BARGAIN
+	#
+	# Human Aegon can always select this.
+	# AI normally will not unless relations are terrible.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0011.e
+
+		custom_tooltip = segrellion_aegon_daemon.0011.e.tt
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_aegon_negotiation_aegon_refused
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0016
+
+				days = { 1 2 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 0
+
+
+			modifier = {
+
+				add = 5
+
+				opinion = {
+					target = character:Segrellion_60
+					value <= -50
+				}
+			}
+
+
+			modifier = {
+
+				add = 5
+
+				has_relation_rival = character:Segrellion_60
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				has_relation_nemesis = character:Segrellion_60
+			}
+
+
+			modifier = {
+
+				add = 5
+
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0012 - THE KING'S FIRST OFFER
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_aegon_daemon.0012 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_aegon_daemon.0012.opening
+
+	title = segrellion_aegon_daemon.0012.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daemon_aegon_offer_hand
+				}
+
+				desc = segrellion_aegon_daemon.0012.desc_hand
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daemon_aegon_offer_contract
+				}
+
+				desc = segrellion_aegon_daemon.0012.desc_contract
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daemon_aegon_offer_court_position
+				}
+
+				desc = segrellion_aegon_daemon.0012.desc_court
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daemon_aegon_offer_heir
+				}
+
+				desc = segrellion_aegon_daemon.0012.desc_heir
+			}
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_independent_ruler = yes
+
+
+		has_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+
+		OR = {
+
+			has_character_flag = segrellion_daemon_aegon_offer_hand
+
+			has_character_flag = segrellion_daemon_aegon_offer_contract
+
+			has_character_flag = segrellion_daemon_aegon_offer_court_position
+
+			has_character_flag = segrellion_daemon_aegon_offer_heir
+		}
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0012.a
+
+		custom_tooltip = segrellion_aegon_daemon.0012.a.tt
+
+
+		remove_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+		remove_character_flag = segrellion_daemon_aegon_demands_more
+
+
+		segrellion_daemon_swear_fealty_to_aegon_effect = yes
+
+
+		add_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+		add_character_flag = segrellion_daemon_aegon_status_resolved
+
+		add_character_flag = segrellion_daemon_submitted_by_bargain
+
+		add_character_flag = segrellion_daemon_aegon_concessions_pending
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+			add_character_flag = segrellion_young_griff_flamelands_peacefully_submitted
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_chain_active
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_aegon_daemon.0017
+
+			days = 1
+		}
+
+
+		ai_chance = {
+
+			base = 55
+
+
+			modifier = {
+
+				add = 25
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 40
+				}
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				has_trait = content
+			}
+
+
+			modifier = {
+
+				factor = 0.6
+
+				has_trait = ambitious
+			}
+
+
+			modifier = {
+
+				factor = 0.03
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DEMAND MORE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0012.b
+
+		custom_tooltip = segrellion_aegon_daemon.0012.b.tt
+
+
+		add_character_flag = segrellion_daemon_aegon_demands_more
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0013
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 35
+
+
+			modifier = {
+
+				add = 20
+
+				has_trait = ambitious
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				has_trait = greedy
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				has_trait = arrogant
+			}
+
+
+			modifier = {
+
+				factor = 0.05
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REJECT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0012.c
+
+		custom_tooltip = segrellion_aegon_daemon.0012.c.tt
+
+
+		add_character_flag = segrellion_daemon_aegon_negotiation_daemon_refused
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0015
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+
+
+			modifier = {
+
+				add = 30
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -40
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				has_trait = stubborn
+			}
+
+
+			modifier = {
+
+				factor = 30
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0013 - ONE DEMAND MORE
+#
+# Root = Young Griff
+#
+# Daemon wants the FIRST concession plus another.
+# =========================================================
+
+segrellion_aegon_daemon.0013 = {
+
+	type = letter_event
+
+	sender = character:Segrellion_60
+
+	opening = segrellion_aegon_daemon.0013.opening
+
+	title = segrellion_aegon_daemon.0013.t
+
+	desc = segrellion_aegon_daemon.0013.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			is_independent_ruler = yes
+
+			has_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+			has_character_flag = segrellion_daemon_aegon_demands_more
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ADD HAND OF THE KING
+	# 35
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0013.a
+
+		custom_tooltip = segrellion_aegon_daemon.0013.a.tt
+
+
+		trigger = {
+
+			character:Segrellion_60 = {
+
+				NOT = {
+					has_character_flag = segrellion_daemon_aegon_offer_hand
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_aegon_demands_more
+
+			add_character_flag = segrellion_daemon_aegon_offer_hand
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0014
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+
+
+	# =====================================================
+	# ADD LIGHTER CONTRACT
+	# 30
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0013.b
+
+		custom_tooltip = segrellion_aegon_daemon.0013.b.tt
+
+
+		trigger = {
+
+			character:Segrellion_60 = {
+
+				NOT = {
+					has_character_flag = segrellion_daemon_aegon_offer_contract
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_aegon_demands_more
+
+			add_character_flag = segrellion_daemon_aegon_offer_contract
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0014
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# ADD COURT POSITION
+	# 20
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0013.c
+
+		custom_tooltip = segrellion_aegon_daemon.0013.c.tt
+
+
+		trigger = {
+
+			character:Segrellion_60 = {
+
+				NOT = {
+					has_character_flag = segrellion_daemon_aegon_offer_court_position
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_aegon_demands_more
+
+			add_character_flag = segrellion_daemon_aegon_offer_court_position
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0014
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+
+	# =====================================================
+	# ADD DESIGNATED HEIR
+	# 15
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0013.d
+
+		custom_tooltip = segrellion_aegon_daemon.0013.d.tt
+
+
+		trigger = {
+
+			character:Segrellion_60 = {
+
+				NOT = {
+					has_character_flag = segrellion_daemon_aegon_offer_heir
+				}
+			}
+		}
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_aegon_demands_more
+
+			add_character_flag = segrellion_daemon_aegon_offer_heir
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0014
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+
+
+	# =====================================================
+	# AEGON REFUSES TO GIVE MORE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0013.e
+
+		custom_tooltip = segrellion_aegon_daemon.0013.e.tt
+
+
+		character:Segrellion_60 = {
+
+			remove_character_flag = segrellion_daemon_aegon_demands_more
+
+			add_character_flag = segrellion_daemon_aegon_negotiation_aegon_refused
+
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0016
+
+				days = { 1 2 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 0
+
+
+			modifier = {
+
+				add = 5
+
+				opinion = {
+					target = character:Segrellion_60
+					value <= -25
+				}
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				opinion = {
+					target = character:Segrellion_60
+					value <= -60
+				}
+			}
+
+
+			modifier = {
+
+				add = 5
+
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0014 - TWO PROMISES FOR ONE OATH
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_aegon_daemon.0014 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_aegon_daemon.0014.opening
+
+	title = segrellion_aegon_daemon.0014.t
+
+	desc = segrellion_aegon_daemon.0014.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_independent_ruler = yes
+
+		has_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0014.a
+
+		custom_tooltip = segrellion_aegon_daemon.0014.a.tt
+
+
+		remove_character_flag = segrellion_daemon_aegon_negotiation_pending
+
+		remove_character_flag = segrellion_daemon_aegon_demands_more
+
+
+		segrellion_daemon_swear_fealty_to_aegon_effect = yes
+
+
+		add_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+		add_character_flag = segrellion_daemon_aegon_status_resolved
+
+		add_character_flag = segrellion_daemon_submitted_by_bargain
+
+		add_character_flag = segrellion_daemon_aegon_concessions_pending
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+			add_character_flag = segrellion_young_griff_flamelands_peacefully_submitted
+
+			remove_character_flag = segrellion_young_griff_flamelands_submission_chain_active
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_aegon_daemon.0017
+
+			days = 1
+		}
+
+
+		ai_chance = {
+
+			base = 85
+
+
+			modifier = {
+
+				add = 20
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 30
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.02
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0014.b
+
+		custom_tooltip = segrellion_aegon_daemon.0014.b.tt
+
+
+		add_character_flag = segrellion_daemon_aegon_negotiation_daemon_refused
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0015
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 15
+
+
+			modifier = {
+
+				add = 20
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -30
+				}
+			}
+
+
+			modifier = {
+
+				factor = 40
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0015 - NEGOTIATIONS COLLAPSE
+#
+# Root = Young Griff
+# =========================================================
+
+segrellion_aegon_daemon.0015 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0015.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Segrellion_60 = {
+						has_character_flag = segrellion_daemon_aegon_negotiation_aegon_refused
+					}
+				}
+
+				desc = segrellion_aegon_daemon.0015.desc_aegon_refused
+			}
+
+
+			desc = segrellion_aegon_daemon.0015.desc_daemon_refused
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			is_independent_ruler = yes
+
+			OR = {
+
+				has_title = title:e_flamelands
+
+				has_title = title:k_flamelands
+			}
+
+
+			OR = {
+
+				has_character_flag = segrellion_daemon_aegon_negotiation_daemon_refused
+
+				has_character_flag = segrellion_daemon_aegon_negotiation_aegon_refused
+			}
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		character:Segrellion_60 ?= {
+			segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# WAR
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0015.a
+
+		custom_tooltip = segrellion_aegon_daemon.0015.a.tt
+
+
+		character:Segrellion_60 = {
+			segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+		}
+
+
+		segrellion_young_griff_start_flamelands_submission_war_effect = yes
+
+
+		ai_chance = {
+
+			base = 15
+
+
+			modifier = {
+
+				factor = 0.25
+
+				has_character_flag = segrellion_young_griff_blackfyre_revealed
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT INDEPENDENCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_aegon_daemon.0015.b
+
+		custom_tooltip = segrellion_aegon_daemon.0015.b.tt
+
+
+		character:Segrellion_60 = {
+
+			segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+
+			add_character_flag = segrellion_daemon_aegon_status_resolved
+
+			add_character_flag = segrellion_daemon_independence_tolerated_by_aegon
+		}
+
+
+		add_character_flag = segrellion_young_griff_flamelands_submission_resolved
+
+		remove_character_flag = segrellion_young_griff_flamelands_submission_chain_active
+
+
+		ai_chance = {
+
+			base = 85
+
+
+			modifier = {
+
+				factor = 2
+
+				has_character_flag = segrellion_young_griff_blackfyre_revealed
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0016 - AEGON REFUSES THE BARGAIN
+#
+# Root = Daemon
+# =========================================================
+
+segrellion_aegon_daemon.0016 = {
+
+	type = letter_event
+
+	sender = character:IAF_Young_Griff_1
+
+	opening = segrellion_aegon_daemon.0016.opening
+
+	title = segrellion_aegon_daemon.0016.t
+
+	desc = segrellion_aegon_daemon.0016.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_independent_ruler = yes
+
+		has_character_flag = segrellion_daemon_aegon_negotiation_aegon_refused
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0016.a
+
+
+		character:IAF_Young_Griff_1 = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0015
+
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0017 - THE KING'S WORD
+#
+# Root = Daemon
+#
+# Runs one day after submission so the liege transfer has
+# fully settled before Hand / court / contract effects fire.
+# =========================================================
+
+segrellion_aegon_daemon.0017 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0017.t
+
+	desc = segrellion_aegon_daemon.0017.desc
+
+	theme = crown
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daemon_aegon_concessions_pending
+
+		liege ?= character:IAF_Young_Griff_1
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		segrellion_daemon_clear_aegon_submission_negotiation_effect = yes
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0017.a
+
+		custom_tooltip = segrellion_aegon_daemon.0017.a.tt
+
+
+		segrellion_daemon_apply_aegon_submission_concessions_effect = yes
 	}
 }
