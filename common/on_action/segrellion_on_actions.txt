@@ -709,6 +709,29 @@ segrellion_daenerys_followers_progression = {
 
 # =========================================================
 # DAENERYS AI - INVASION FAILSAFE
+#
+# DESIGN:
+#
+# Default:
+#   Begins considering crossing during 303 AC.
+#   Increasingly likely through 304 AC.
+#   HARD DEADLINE: 305 AC.
+#
+# Aggressive:
+#   HARD DEADLINE: 304 AC.
+#
+# Super Aggressive:
+#   HARD DEADLINE: 303 AC.
+#
+# Passive:
+#   HARD DEADLINE: 306 AC.
+#
+# GLOBAL EMERGENCY:
+#   By 306 AC every AI Daenerys that is supposed to pursue
+#   Westeros MUST attempt the crossing regardless of fleet
+#   readiness or broken historical flags.
+#
+# This also repairs old saves.
 # =========================================================
 
 segrellion_daenerys_ai_invasion_failsafe = {
@@ -722,24 +745,149 @@ segrellion_daenerys_ai_invasion_failsafe = {
 				limit = {
 
 					is_alive = yes
+
 					is_ai = yes
 
-					game_start_date >= 8300.8.20
-					game_start_date < 8301.1.1
 
-					has_character_flag = segrellion_daenerys_invasion_committed
+					# -----------------------------------------
+					# Explicit Free Cities rule remains exempt.
+					# The route itself is still under development.
+					# -----------------------------------------
 
 					NOT = {
-						has_character_flag = segrellion_daenerys_landed_in_westeros
+						has_game_rule = segrellion_daenerys_destiny_free_cities
+					}
+
+
+					# -----------------------------------------
+					# Intentional Young Griff agreement.
+					# Do not destroy an existing throne pact.
+					# -----------------------------------------
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_young_griff_throne_pact
 					}
 				}
 
 
 				# =================================================
-				# AI FLEET FINANCING
+				# PHASE 1
+				# REPAIR THE WESTEROS STORY
 				#
-				# Required fleet contributions cost 2300 gold.
-				# AI receives one emergency treasury injection.
+				# Any AI Daenerys on a non-Free-Cities game rule
+				# is restored to the Westeros storyline.
+				#
+				# This fixes old saves where Dynamic/Random selected
+				# the unfinished Free Cities route.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8301.1.1
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landed_in_westeros
+						}
+
+						NOT = {
+							has_title = title:h_the_iron_throne
+						}
+					}
+
+
+					segrellion_daenerys_ai_repair_westeros_route_effect = yes
+				}
+
+
+				# =================================================
+				# PHASE 2
+				# PENTOS RECOVERY
+				#
+				# By 302 AC she cannot still be wandering around
+				# Essos waiting for the Pentos travel chain.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8302.1.1
+
+						has_character_flag = segrellion_daenerys_invasion_committed
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_camped_at_pentos
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_crossing_committed
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landing_chosen
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landed_in_westeros
+						}
+					}
+
+
+					segrellion_daenerys_ai_force_pentos_staging_effect = yes
+				}
+
+
+				# =================================================
+				# PHASE 3
+				# FLEET STRATEGY RECOVERY
+				#
+				# If she reached Pentos but .0006 never resolved,
+				# reopen the fleet strategy event.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						current_date >= 8302.1.1
+
+						has_character_flag = segrellion_daenerys_camped_at_pentos
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_fleet_strategy_chosen
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_crossing_committed
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landing_chosen
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_landed_in_westeros
+						}
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_invasion.0006
+
+						days = 1
+					}
+				}
+
+
+				# =================================================
+				# PHASE 4
+				# GREAT FLEET FINANCIAL FAILSAFE
+				#
+				# Required project contributions cost 2300 gold.
+				# Give the AI enough liquidity once.
 				# =================================================
 
 				if = {
@@ -757,40 +905,23 @@ segrellion_daenerys_ai_invasion_failsafe = {
 						}
 					}
 
+
 					add_gold = 3000
 
 					add_character_flag = segrellion_daenerys_ai_fleet_funding_failsafe_used
 				}
 
-				# =================================================
-				# INVASION TIMING PROFILE RECOVERY
-				# =================================================
-
-				if = {
-
-					limit = {
-
-						NOR = {
-							has_character_flag = segrellion_daenerys_invasion_profile_passive
-							has_character_flag = segrellion_daenerys_invasion_profile_default
-							has_character_flag = segrellion_daenerys_invasion_profile_aggressive
-							has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
-						}
-					}
-
-					segrellion_initialize_daenerys_invasion_timing_effect = yes
-				}
-
 
 				# =================================================
-				# AI INVASION OF WESTEROS
+				# PHASE 5
+				# CROSS THE NARROW SEA
 				# =================================================
 
 				if = {
 
 					limit = {
 
-						has_character_flag = segrellion_daenerys_camped_at_pentos
+						has_character_flag = segrellion_daenerys_invasion_committed
 
 						NOT = {
 							has_character_flag = segrellion_daenerys_crossing_committed
@@ -805,25 +936,44 @@ segrellion_daenerys_ai_invasion_failsafe = {
 						}
 
 						NOT = {
-							has_character_flag = segrellion_daenerys_aurane_negotiation_active
+							has_title = title:h_the_iron_throne
 						}
 					}
 
 
 					# =================================================
-					# SUPER AGGRESSIVE
+					# ABSOLUTE EMERGENCY DEADLINE
 					#
-					# May sail as soon as roughly 40% of the fleet
-					# capacity is available.
+					# Whatever happened before, by 306 AC she goes.
 					# =================================================
 
 					if = {
 
 						limit = {
+							current_date >= 8306.1.1
+						}
 
-							has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
 
-							var:segrellion_daenerys_fleet_readiness >= 40
+						segrellion_daenerys_ai_force_westeros_crossing_effect = yes
+					}
+
+
+					# =================================================
+					# SUPER AGGRESSIVE
+					# =================================================
+
+					else_if = {
+
+						limit = {
+
+							OR = {
+
+								has_game_rule = segrellion_daenerys_aggression_super_aggressive
+
+								has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+
+								has_character_flag = segrellion_daenerys_random_super_aggressive
+							}
 						}
 
 
@@ -833,16 +983,26 @@ segrellion_daenerys_ai_invasion_failsafe = {
 								current_date >= 8303.1.1
 							}
 
-							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+
+							segrellion_daenerys_ai_force_westeros_crossing_effect = yes
 						}
 
-						else = {
+
+						else_if = {
+
+							limit = {
+
+								exists = var:segrellion_daenerys_fleet_readiness
+
+								var:segrellion_daenerys_fleet_readiness >= 40
+							}
+
 
 							random = {
 
 								chance = 60
 
-								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+								segrellion_daenerys_ai_begin_westeros_crossing_effect = yes
 							}
 						}
 					}
@@ -850,19 +1010,20 @@ segrellion_daenerys_ai_invasion_failsafe = {
 
 					# =================================================
 					# AGGRESSIVE
-					#
-					# At least half of the intended invasion fleet.
-					# Aurane/Euron-style shortcuts therefore allow
-					# a genuinely early invasion.
 					# =================================================
 
 					else_if = {
 
 						limit = {
 
-							has_character_flag = segrellion_daenerys_invasion_profile_aggressive
+							OR = {
 
-							var:segrellion_daenerys_fleet_readiness >= 50
+								has_game_rule = segrellion_daenerys_aggression_aggressive
+
+								has_character_flag = segrellion_daenerys_invasion_profile_aggressive
+
+								has_character_flag = segrellion_daenerys_random_aggressive
+							}
 						}
 
 
@@ -872,86 +1033,26 @@ segrellion_daenerys_ai_invasion_failsafe = {
 								current_date >= 8304.1.1
 							}
 
-							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+
+							segrellion_daenerys_ai_force_westeros_crossing_effect = yes
 						}
 
-						else = {
+
+						else_if = {
+
+							limit = {
+
+								exists = var:segrellion_daenerys_fleet_readiness
+
+								var:segrellion_daenerys_fleet_readiness >= 50
+							}
+
 
 							random = {
 
 								chance = 25
 
-								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
-							}
-						}
-					}
-
-
-					# =================================================
-					# DEFAULT
-					#
-					# Canonical pacing:
-					# starts considering Westeros in mid 303 AC,
-					# becomes increasingly likely through 304 AC,
-					# and will sail by 305 AC.
-					# =================================================
-
-					else_if = {
-
-						limit = {
-
-							has_character_flag = segrellion_daenerys_invasion_profile_default
-
-							var:segrellion_daenerys_fleet_readiness >= 75
-
-							current_date >= 8303.6.1
-						}
-
-
-						if = {
-
-							limit = {
-								current_date >= 8305.1.1
-							}
-
-							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
-						}
-
-						else_if = {
-
-							limit = {
-								current_date >= 8304.7.1
-							}
-
-							random = {
-
-								chance = 16
-
-								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
-							}
-						}
-
-						else_if = {
-
-							limit = {
-								current_date >= 8304.1.1
-							}
-
-							random = {
-
-								chance = 8
-
-								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
-							}
-						}
-
-						else = {
-
-							random = {
-
-								chance = 4
-
-								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+								segrellion_daenerys_ai_begin_westeros_crossing_effect = yes
 							}
 						}
 					}
@@ -959,20 +1060,20 @@ segrellion_daenerys_ai_invasion_failsafe = {
 
 					# =================================================
 					# PASSIVE
-					#
-					# Daenerys wants almost the entire invasion force
-					# assembled before she risks the crossing.
 					# =================================================
 
 					else_if = {
 
 						limit = {
 
-							has_character_flag = segrellion_daenerys_invasion_profile_passive
+							OR = {
 
-							var:segrellion_daenerys_fleet_readiness >= 90
+								has_game_rule = segrellion_daenerys_aggression_passive
 
-							current_date >= 8305.1.1
+								has_character_flag = segrellion_daenerys_invasion_profile_passive
+
+								has_character_flag = segrellion_daenerys_random_passive
+							}
 						}
 
 
@@ -982,18 +1083,190 @@ segrellion_daenerys_ai_invasion_failsafe = {
 								current_date >= 8306.1.1
 							}
 
-							segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+
+							segrellion_daenerys_ai_force_westeros_crossing_effect = yes
 						}
 
-						else = {
+
+						else_if = {
+
+							limit = {
+
+								current_date >= 8305.1.1
+
+								exists = var:segrellion_daenerys_fleet_readiness
+
+								var:segrellion_daenerys_fleet_readiness >= 90
+							}
+
 
 							random = {
 
 								chance = 5
 
-								segrellion_daenerys_ai_commit_westeros_crossing_effect = yes
+								segrellion_daenerys_ai_begin_westeros_crossing_effect = yes
 							}
 						}
+					}
+
+
+					# =================================================
+					# DEFAULT
+					#
+					# Also acts as fallback for old/broken saves
+					# with no valid aggression profile flag.
+					# =================================================
+
+					else = {
+
+
+						# =============================================
+						# HARD DEFAULT DEADLINE
+						#
+						# 305 AC means GO, even if the Great Project
+						# is incomplete or readiness is below 75.
+						# =============================================
+
+						if = {
+
+							limit = {
+								current_date >= 8305.1.1
+							}
+
+
+							segrellion_daenerys_ai_force_westeros_crossing_effect = yes
+						}
+
+
+						# =============================================
+						# LATE 304 AC
+						# =============================================
+
+						else_if = {
+
+							limit = {
+
+								current_date >= 8304.7.1
+
+								exists = var:segrellion_daenerys_fleet_readiness
+
+								var:segrellion_daenerys_fleet_readiness >= 75
+							}
+
+
+							random = {
+
+								chance = 16
+
+								segrellion_daenerys_ai_begin_westeros_crossing_effect = yes
+							}
+						}
+
+
+						# =============================================
+						# EARLY 304 AC
+						# =============================================
+
+						else_if = {
+
+							limit = {
+
+								current_date >= 8304.1.1
+
+								exists = var:segrellion_daenerys_fleet_readiness
+
+								var:segrellion_daenerys_fleet_readiness >= 75
+							}
+
+
+							random = {
+
+								chance = 8
+
+								segrellion_daenerys_ai_begin_westeros_crossing_effect = yes
+							}
+						}
+
+
+						# =============================================
+						# MID 303 AC
+						# =============================================
+
+						else_if = {
+
+							limit = {
+
+								current_date >= 8303.6.1
+
+								exists = var:segrellion_daenerys_fleet_readiness
+
+								var:segrellion_daenerys_fleet_readiness >= 75
+							}
+
+
+							random = {
+
+								chance = 4
+
+								segrellion_daenerys_ai_begin_westeros_crossing_effect = yes
+							}
+						}
+					}
+				}
+
+
+				# =================================================
+				# PHASE 6
+				# POST-LANDING WAR RECOVERY
+				#
+				# If she successfully arrived in Westeros but the
+				# final Iron Throne invasion event somehow failed,
+				# fire it again.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						has_character_flag = segrellion_daenerys_landed_in_westeros
+
+						NOT = {
+							has_title = title:h_the_iron_throne
+						}
+
+						NOT = {
+							has_character_flag = segrellion_daenerys_iron_throne_war_started
+						}
+
+						title:h_the_iron_throne.holder ?= {
+
+							is_alive = yes
+
+							NOT = {
+								is_at_war_with = character:Targaryen_9
+							}
+						}
+					}
+
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_landing_chosen
+							}
+						}
+
+						add_character_flag = segrellion_daenerys_landing_chosen
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_invasion.0020
+
+						days = 1
 					}
 				}
 			}

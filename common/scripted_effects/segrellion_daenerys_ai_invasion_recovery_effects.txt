@@ -1,0 +1,340 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# AI WESTEROS INVASION RECOVERY
+#
+# Save-compatible recovery helpers.
+#
+# These exist to make sure AI Daenerys cannot remain
+# permanently stuck in Essos because of:
+#
+# - broken travel
+# - missing story flags
+# - unfinished Free Cities routing
+# - insufficient fleet readiness
+# - incomplete Great Project
+# - cancelled crossings
+# - old save states
+# =========================================================
+
+
+# =========================================================
+# REPAIR THE WESTEROS STORY ROUTE
+#
+# ROOT = Daenerys
+#
+# Only called when the selected game rule does NOT
+# explicitly force the unfinished Free Cities route.
+# =========================================================
+
+segrellion_daenerys_ai_repair_westeros_route_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			is_ai = yes
+
+			NOT = {
+				has_game_rule = segrellion_daenerys_destiny_free_cities
+			}
+		}
+
+
+		# =================================================
+		# REMOVE STALE / UNFINISHED ESSOS ROUTE FLAGS
+		# =================================================
+
+		remove_character_flag = segrellion_daenerys_ai_free_cities_route
+
+		remove_character_flag = segrellion_daenerys_destiny_free_cities
+
+		remove_character_flag = segrellion_daenerys_free_cities_path
+
+		remove_character_flag = segrellion_daenerys_invasion_abandoned
+
+		remove_character_flag = segrellion_daenerys_special_story_abandoned
+
+		remove_character_flag = segrellion_daenerys_wandering_freely
+
+		remove_character_flag = segrellion_daenerys_invasion_delayed
+
+		remove_character_flag = segrellion_daenerys_invasion_delayed_once
+
+
+		# =================================================
+		# RESTORE WESTEROS ROUTE
+		# =================================================
+
+		add_character_flag = segrellion_daenerys_destiny_westeros
+
+		add_character_flag = segrellion_daenerys_invasion_committed
+
+		add_character_flag = segrellion_daenerys_westeros_assessed
+
+
+		# =================================================
+		# KEEP AI ON THE SCRIPTED STORY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = sworn_peace
+				}
+			}
+
+			add_character_flag = sworn_peace
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# FORCE THE PENTOS STAGING AREA
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_ai_force_pentos_staging_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+			}
+		}
+
+
+		# Stop any irrelevant wandering/travel.
+
+		current_travel_plan ?= {
+			abort_travel_plan = yes
+		}
+
+
+		remove_character_flag = segrellion_daenerys_travelling_to_pentos
+
+
+		# =================================================
+		# PHYSICALLY RETURN DAENERYS TO PENTOS
+		# =================================================
+
+		set_location = title:c_pentos.title_province
+
+
+		domicile ?= {
+
+			move_domicile = title:c_pentos.title_province
+
+			change_provisions = 10000
+		}
+
+
+		every_army = {
+
+			limit = {
+				army_owner = root
+			}
+
+			add_supply = 10000
+		}
+
+
+		# =================================================
+		# STORY STATE
+		# =================================================
+
+		add_character_flag = segrellion_daenerys_camped_at_pentos
+
+		add_character_flag = segrellion_daenerys_waiting_at_pentos
+
+		add_character_flag = segrellion_daenerys_westeros_assessed
+
+		add_character_flag = segrellion_daenerys_fleet_question_resolved
+	}
+}
+
+
+# =========================================================
+# BEGIN THE CROSSING USING CURRENT FLEET READINESS
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_ai_begin_westeros_crossing_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			is_ai = yes
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_crossing_committed
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landing_chosen
+			}
+		}
+
+
+		segrellion_daenerys_ai_repair_westeros_route_effect = yes
+
+		segrellion_daenerys_ai_force_pentos_staging_effect = yes
+
+
+		# =================================================
+		# END ALL FLEET PREPARATION STATES
+		# =================================================
+
+		remove_character_flag = segrellion_daenerys_fleet_project_active
+
+		remove_character_flag = segrellion_daenerys_delayed_fleet_preparation
+
+		remove_character_flag = segrellion_daenerys_passive_fleet_preparation
+
+		remove_character_flag = segrellion_daenerys_aurane_negotiation_active
+
+
+		add_character_flag = segrellion_daenerys_fleet_strategy_chosen
+
+
+		# =================================================
+		# APPLY WHATEVER CROSSING CAPACITY SHE CURRENTLY HAS
+		# =================================================
+
+		segrellion_daenerys_apply_crossing_capacity_effect = yes
+
+
+		add_character_flag = segrellion_daenerys_crossing_committed
+
+		add_character_flag = segrellion_daenerys_ai_crossing_failsafe_used
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0010
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# HARD CROSSING FAILSAFE
+#
+# ROOT = Daenerys
+#
+# The storyline has waited too long.
+#
+# Give her enough emergency transport capacity to move
+# roughly 75% of the intended invasion army and GO.
+# =========================================================
+
+segrellion_daenerys_ai_force_westeros_crossing_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			is_ai = yes
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_crossing_committed
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landing_chosen
+			}
+		}
+
+
+		# =================================================
+		# GUARANTEE MINIMUM VIABLE INVASION FLEET
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = var:segrellion_daenerys_fleet_readiness
+				}
+			}
+
+			set_variable = {
+
+				name = segrellion_daenerys_fleet_readiness
+
+				value = 75
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				var:segrellion_daenerys_fleet_readiness < 75
+			}
+
+			set_variable = {
+
+				name = segrellion_daenerys_fleet_readiness
+
+				value = 75
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_ai_forced_invasion_deadline
+
+
+		segrellion_daenerys_ai_begin_westeros_crossing_effect = yes
+	}
+}

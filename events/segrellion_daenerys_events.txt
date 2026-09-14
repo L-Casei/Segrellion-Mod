@@ -571,10 +571,10 @@ segrellion_daenerys_invasion.0003 = {
 
 			destination = title:c_pentos.title_province
 
+			players_use_planner = no
+
 			return_trip = no
 
-			# CRITICAL:
-			# The adventurer camp moves with Daenerys.
 			travel_with_domicile = yes
 
 			on_arrival_event = segrellion_daenerys_invasion.0004
@@ -1766,10 +1766,14 @@ segrellion_daenerys_invasion.0010 = {
 
 			destination = title:c_dragonstone.title_province
 
+			players_use_planner = no
+
 			return_trip = no
+
 			travel_with_domicile = yes
 
 			on_arrival_event = segrellion_daenerys_invasion.0018
+
 			on_arrival_destinations = last
 
 			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
@@ -1818,10 +1822,14 @@ segrellion_daenerys_invasion.0010 = {
 
 			destination = title:c_sunspear.title_province
 
+			players_use_planner = no
+
 			return_trip = no
+
 			travel_with_domicile = yes
 
 			on_arrival_event = segrellion_daenerys_invasion.0018
+
 			on_arrival_destinations = last
 
 			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
@@ -1901,6 +1909,8 @@ segrellion_daenerys_invasion.0010 = {
 		start_travel_plan = {
 
 			destination = title:c_stonedance.title_province
+
+			players_use_planner = no
 
 			return_trip = no
 
@@ -2028,6 +2038,8 @@ segrellion_daenerys_invasion.0010 = {
 			start_travel_plan = {
 
 				destination = title:c_farring_cross.title_province
+
+				players_use_planner = no
 
 				return_trip = no
 
@@ -3052,6 +3064,36 @@ segrellion_daenerys_invasion.0091 = {
 	option = {
 
 		name = segrellion_daenerys_invasion.0091.a
+
+
+		if = {
+
+			limit = {
+
+				is_ai = yes
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_landed_in_westeros
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_camped_at_pentos
+
+			add_character_flag = segrellion_daenerys_waiting_at_pentos
+
+			add_character_flag = segrellion_daenerys_crossing_committed
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0010
+
+				days = 7
+			}
+		}
 	}
 }
 
