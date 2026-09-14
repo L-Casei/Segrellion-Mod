@@ -2487,7 +2487,7 @@ segrellion_sansa_protection_war_cb = {
 	allow_hostages = no
 
 
-	war_name = "segrellion_sansa_protection_war_cb_war_name"
+	war_name = "segrellion_sansa_stark_riverlands_war_name"
 	cb_name = "segrellion_sansa_protection_war_cb_name"
 
 
@@ -2901,6 +2901,39 @@ segrellion_sansa_protection_war_cb = {
 
 			add_character_flag = segrellion_sansa_baelish_war_resolved
 		}
+
+		# =====================================================
+		# JON JOINED THIS WAR AFTER AVENGING THE RED WEDDING
+		# =====================================================
+
+		title:e_the_north.holder ?= {
+
+			if = {
+
+				limit = {
+
+					segrellion_is_current_jon_trigger = yes
+
+					has_character_flag = segrellion_jon_joined_existing_baelish_war
+				}
+
+
+				remove_character_flag = segrellion_jon_joined_existing_baelish_war
+
+				remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+				remove_character_flag = segrellion_disable_call_the_banners
+
+				remove_variable = segrellion_jon_baelish_riverlands_war
+
+
+				add_character_flag = segrellion_jon_baelish_riverlands_war_resolved
+
+				add_character_flag = segrellion_jon_baelish_riverlands_war_won
+
+				add_character_flag = segrellion_jon_baelish_defeated_with_vale
+			}
+		}
 	}
 
 
@@ -2965,6 +2998,30 @@ segrellion_sansa_protection_war_cb = {
 
 			add_character_flag = segrellion_sansa_baelish_war_resolved
 		}
+
+		title:e_the_north.holder ?= {
+
+			if = {
+
+				limit = {
+
+					segrellion_is_current_jon_trigger = yes
+
+					has_character_flag = segrellion_jon_joined_existing_baelish_war
+				}
+
+
+				remove_character_flag = segrellion_jon_joined_existing_baelish_war
+
+				remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+				remove_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+
+				remove_character_flag = segrellion_disable_call_the_banners
+
+				remove_variable = segrellion_jon_baelish_riverlands_war
+			}
+		}
 	}
 
 
@@ -2976,6 +3033,30 @@ segrellion_sansa_protection_war_cb = {
 
 		scope:defender = {
 			remove_character_flag = segrellion_sansa_baelish_war_active
+		}
+
+		title:e_the_north.holder ?= {
+
+			if = {
+
+				limit = {
+
+					segrellion_is_current_jon_trigger = yes
+
+					has_character_flag = segrellion_jon_joined_existing_baelish_war
+				}
+
+
+				remove_character_flag = segrellion_jon_joined_existing_baelish_war
+
+				remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+				remove_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+
+				remove_character_flag = segrellion_disable_call_the_banners
+
+				remove_variable = segrellion_jon_baelish_riverlands_war
+			}
 		}
 	}
 
@@ -3313,6 +3394,30 @@ segrellion_stannis_frey_campaign_cb = {
 
 			remove_variable = segrellion_stannis_frey_war
 		}
+
+		title:e_the_north.holder ?= {
+
+			if = {
+
+				limit = {
+
+					segrellion_is_current_jon_trigger = yes
+
+					has_character_flag = segrellion_jon_joined_existing_baelish_war
+				}
+
+
+				remove_character_flag = segrellion_jon_joined_existing_baelish_war
+
+				remove_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+				remove_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+
+				remove_character_flag = segrellion_disable_call_the_banners
+
+				remove_variable = segrellion_jon_baelish_riverlands_war
+			}
+		}
 	}
 
 
@@ -3418,6 +3523,90 @@ segrellion_jon_red_wedding_revenge_cb = {
 
 	on_victory = {
 
+		# =====================================================
+		# SAVE THE TWO SIDES BEFORE THE WAR IS CLEANED UP
+		# =====================================================
+
+		scope:attacker = {
+			save_scope_as = segrellion_jon_red_wedding_attacker
+		}
+
+		scope:defender = {
+			save_scope_as = segrellion_jon_red_wedding_defender
+		}
+
+		scope:defender.top_liege ?= {
+			save_scope_as = segrellion_jon_red_wedding_realm_liege
+		}
+
+
+		# =====================================================
+		# SEIZE THE FREYS WHO WERE ACTUALLY WITHIN REACH
+		#
+		# This includes:
+		# - the defeated Frey war leader
+		# - Freys inside the defeated realm
+		# - Freys already imprisoned by Jon
+		#
+		# Freys living safely in Essos or another foreign realm
+		# are NOT magically captured.
+		# =====================================================
+
+		dynasty:dynn_Frey = {
+
+			every_dynasty_member = {
+
+				limit = {
+
+					is_alive = yes
+
+					OR = {
+
+						this = scope:segrellion_jon_red_wedding_defender
+
+						is_imprisoned_by = scope:segrellion_jon_red_wedding_attacker
+
+						AND = {
+
+							exists = scope:segrellion_jon_red_wedding_realm_liege
+
+							top_liege = scope:segrellion_jon_red_wedding_realm_liege
+						}
+					}
+				}
+
+
+				save_temporary_scope_as = segrellion_jon_frey_captive
+
+
+				add_character_flag = segrellion_frey_captured_for_red_wedding_judgment
+
+
+				if = {
+
+					limit = {
+						is_imprisoned = no
+					}
+
+
+					scope:segrellion_jon_red_wedding_attacker = {
+
+						imprison = {
+
+							target = scope:segrellion_jon_frey_captive
+
+							type = dungeon
+						}
+					}
+				}
+			}
+		}
+
+
+		# =====================================================
+		# THE WAR IS WON
+		# =====================================================
+
 		scope:attacker = {
 
 			remove_character_flag = segrellion_jon_red_wedding_revenge_active
@@ -3430,14 +3619,15 @@ segrellion_jon_red_wedding_revenge_cb = {
 
 			remove_variable = segrellion_jon_frey_war
 
+
 			add_character_flag = segrellion_jon_red_wedding_avenged
 
 
+			# Immediate.
+			# No artificial wait after enforcing victory.
+
 			trigger_event = {
-
 				id = segrellion_jon_frey.0060
-
-				days = 1
 			}
 		}
 	}

@@ -1142,8 +1142,18 @@ segrellion_jon_frey.0060 = {
 
 		segrellion_jon_execute_adult_freys_effect = yes
 
+
 		add_character_flag = segrellion_jon_frey_judgment_complete
 
+
+		add_character_modifier = {
+			modifier = segrellion_red_wedding_avenger_modifier
+		}
+
+
+		# =================================================
+		# BAELISH STILL HOLDS THE RIVERLANDS
+		# =================================================
 
 		if = {
 
@@ -1166,9 +1176,14 @@ segrellion_jon_frey.0060 = {
 
 				id = segrellion_jon_frey.0070
 
-				days = { 7 14 }
+				days = 1
 			}
 		}
+
+
+		# =================================================
+		# BAELISH HOLDS THE IRON THRONE
+		# =================================================
 
 		else_if = {
 
@@ -1203,7 +1218,27 @@ segrellion_jon_frey.0070 = {
 	type = character_event
 
 	title = segrellion_jon_frey.0070.t
-	desc = segrellion_jon_frey.0070.desc
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					title:e_the_vale.holder ?= {
+
+						is_at_war_with = character:Baelish_2
+					}
+				}
+
+				desc = segrellion_jon_frey.0070.desc_existing_war
+			}
+
+			desc = segrellion_jon_frey.0070.desc
+		}
+	}
 
 	theme = war
 
@@ -1275,6 +1310,35 @@ segrellion_jon_frey.0070 = {
 				save_scope_as = segrellion_jon_edmure
 			}
 		}
+
+
+		# =================================================
+		# FIND AN EXISTING VALE WAR AGAINST BAELISH
+		# =================================================
+
+		title:e_the_vale.holder ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				every_character_war = {
+
+					limit = {
+
+						is_attacker = title:e_the_vale.holder
+
+						is_defender = character:Baelish_2
+					}
+
+
+					save_scope_as = segrellion_jon_existing_baelish_war
+				}
+			}
+		}
 	}
 
 
@@ -1302,7 +1366,117 @@ segrellion_jon_frey.0070 = {
 	}
 
 
+	# =====================================================
+	# THE VALE IS ALREADY AT WAR
+	#
+	# DO NOT CREATE A SECOND WAR.
+	# JON AND THE NORTH JOIN THE EXISTING ATTACKER SIDE.
+	# =====================================================
+
 	option = {
+
+		trigger = {
+			exists = scope:segrellion_jon_existing_baelish_war
+		}
+
+
+		name = segrellion_jon_frey.0070.join_existing
+
+		custom_tooltip = segrellion_jon_frey.0070.join_existing.tt
+
+
+		add_character_flag = segrellion_jon_baelish_riverlands_campaign_started
+
+		add_character_flag = segrellion_jon_baelish_riverlands_war_active
+
+		add_character_flag = segrellion_jon_joined_existing_baelish_war
+
+		add_character_flag = segrellion_disable_call_the_banners
+
+
+		set_variable = {
+
+			name = segrellion_jon_baelish_riverlands_war
+
+			value = scope:segrellion_jon_existing_baelish_war
+		}
+
+
+		scope:segrellion_jon_existing_baelish_war = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_participant = root
+					}
+				}
+
+
+				add_attacker = root
+			}
+		}
+
+
+		# =================================================
+		# THE GREAT LORDS OF THE NORTH ENTER THE SAME WAR
+		# =================================================
+
+		every_vassal_or_below = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_landed = yes
+
+				highest_held_title_tier >= tier_duchy
+			}
+
+
+			save_temporary_scope_as = segrellion_jon_baelish_northern_banner
+
+
+			scope:segrellion_jon_existing_baelish_war = {
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							is_participant = scope:segrellion_jon_baelish_northern_banner
+						}
+					}
+
+
+					add_attacker = scope:segrellion_jon_baelish_northern_banner
+				}
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# NO EXISTING WAR
+	#
+	# JON STARTS HIS OWN SCRIPTED WAR AS BEFORE.
+	# =====================================================
+
+	option = {
+
+		trigger = {
+
+			NOT = {
+				exists = scope:segrellion_jon_existing_baelish_war
+			}
+		}
+
 
 		name = segrellion_jon_frey.0070.a
 
