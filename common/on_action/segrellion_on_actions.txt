@@ -10,6 +10,7 @@ on_game_start = {
 monthly_global_pulse = {
 	on_actions = {
 		segrellion_tommen_peace_guard
+		segrellion_daemon_young_griff_war_allegiance_progression
 		segrellion_trueflame_historical_progression
 		segrellion_rhaegar_historical_progression
 		segrellion_protect_hugh_vhal_from_stormflames
@@ -42,6 +43,7 @@ monthly_global_pulse = {
 		segrellion_jon_body_in_ice_failsafe
 		segrellion_young_griff_opening_progression
 		segrellion_young_griff_post_conquest_progression
+		segrellion_cersei_young_griff_marriage_guard
 		segrellion_young_griff_unicorn_returns_notice_fallback
 		segrellion_massey_secret_support_progression
 		segrellion_young_griff_deerfield_progression
@@ -1078,7 +1080,36 @@ on_war_started = {
 		segrellion_stannis_iron_throne_war_setup
 		segrellion_young_griff_golden_company_war_sync
 		segrellion_stepstones_followup_war_started
+		segrellion_daemon_young_griff_war_allegiance_progression
 		segrellion_deadly_triarchy_war_check
+	}
+}
+
+# =========================================================
+# CERSEI / YOUNG GRIFF MARRIAGE GUARD
+# =========================================================
+
+segrellion_cersei_young_griff_marriage_guard = {
+
+	effect = {
+
+		segrellion_cersei_young_griff_marriage_guard_effect = yes
+	}
+}
+
+# =========================================================
+# DAEMON JOINS A WAR
+#
+# Immediate protection against AGOT Mega War side changes.
+# ROOT = joining character
+# scope:war = joined war
+# =========================================================
+
+on_join_war_as_secondary = {
+
+	on_actions = {
+
+		segrellion_daemon_young_griff_secondary_war_join_guard
 	}
 }
 
@@ -3894,6 +3925,41 @@ segrellion_young_griff_opening_progression = {
 
 			segrellion_young_griff_try_schedule_arianne_storms_end_effect = yes
 		}
+	}
+}
+
+# =========================================================
+# DAEMON / AEGON WAR ALLEGIANCE
+# =========================================================
+
+segrellion_daemon_young_griff_war_allegiance_progression = {
+
+	effect = {
+
+		segrellion_daemon_young_griff_war_allegiance_guard_effect = yes
+	}
+}
+
+
+# =========================================================
+# DAEMON JOINS A WAR AS SECONDARY PARTICIPANT
+# =========================================================
+
+segrellion_daemon_young_griff_secondary_war_join_guard = {
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		has_character_flag = segrellion_pledged_to_young_griff
+	}
+
+
+	effect = {
+
+		segrellion_daemon_young_griff_war_allegiance_guard_effect = yes
 	}
 }
 

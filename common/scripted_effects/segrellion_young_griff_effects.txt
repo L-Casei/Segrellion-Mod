@@ -3076,6 +3076,99 @@ segrellion_daemon_swear_fealty_to_aegon_effect = {
 	}
 }
 
+# =========================================================
+# DAEMON - PERMANENT HAND OF THE KING
+#
+# Gives him the real contractual Council Rights privilege
+# and applies CK3's vanilla councillor-firing lock.
+#
+# AGOT Mega Wars also remember the council-rights state.
+# =========================================================
+
+segrellion_daemon_lock_aegon_council_position_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			is_alive = yes
+
+			liege ?= character:IAF_Young_Griff_1
+
+
+			character:IAF_Young_Griff_1 ?= {
+
+				is_alive = yes
+
+				has_title = title:h_the_iron_throne
+			}
+		}
+
+
+		# =================================================
+		# AGOT MEGA WAR CONTRACT PERSISTENCE
+		# =================================================
+
+		set_variable = mw_obl_council_rights_guaranteed
+
+
+		# =================================================
+		# GUARANTEED COUNCIL POSITION
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				vassal_contract_has_modifiable_obligations = yes
+
+
+				NOT = {
+					vassal_contract_has_flag = can_demand_council_seat
+				}
+			}
+
+
+			vassal_contract_set_obligation_level = {
+
+				type = council_rights
+
+				level = 1
+			}
+		}
+
+
+		# =================================================
+		# HARD FIRING LOCK
+		#
+		# Same vanilla mechanic used when a vassal forces
+		# themselves onto their liege's council.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+
+					is_blocked_from_being_fired_from_council_trigger = {
+
+						COURT_OWNER = character:IAF_Young_Griff_1
+					}
+				}
+			}
+
+
+			block_firing_councillor_effect = {
+
+				COURT_OWNER = character:IAF_Young_Griff_1
+			}
+		}
+	}
+}
+
 segrellion_daemon_becomes_aegons_hand_and_regent_effect = {
 
 	if = {
@@ -3212,7 +3305,7 @@ segrellion_daemon_becomes_aegons_hand_and_regent_effect = {
 			add_character_flag = segrellion_young_griff_daemon_regency_semantics_repaired
 		}
 
-
+		segrellion_daemon_lock_aegon_council_position_effect = yes
 		add_character_flag = segrellion_daemon_aegon_hand_and_regent
 	}
 }
@@ -4731,3 +4824,467 @@ segrellion_young_griff_maintain_golden_company_alliance_effect = {
 	}
 }
 
+
+
+# =========================================================
+# DAEMON / YOUNG GRIFF - WAR ALLEGIANCE GUARD
+#
+# Daemon pledged himself to Aegon.
+#
+# AGOT Mega Wars, alliances and secondary-war propagation
+# must never place him on Tommen's side against Aegon.
+#
+# It also removes Daemon from unrelated Tommen wars,
+# such as Tommen vs Shireen.
+# =========================================================
+
+segrellion_daemon_young_griff_war_allegiance_guard_effect = {
+
+
+	# =====================================================
+	# DAEMON
+	# =====================================================
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_pledged_to_young_griff
+
+				character:IAF_Young_Griff_1 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			# =================================================
+			# TOMMEN CANNOT KEEP A POLITICAL ALLIANCE
+			# WITH A DAEMON WHO HAS PLEDGED HIMSELF TO AEGON
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					character:Baratheon_7 ?= {
+						is_alive = yes
+					}
+
+					is_allied_to = character:Baratheon_7
+				}
+
+
+				break_alliance = character:Baratheon_7
+			}
+
+
+			# =================================================
+			# REMOVE DAEMON FROM TOMMEN'S SIDE
+			# =================================================
+
+			every_character_war = {
+
+
+				# =============================================
+				# TOMMEN IS PRIMARY ATTACKER
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						primary_attacker = character:Baratheon_7
+
+						any_war_attacker = {
+							this = character:Segrellion_60
+						}
+					}
+
+
+					# AEGON IS THE DEFENDER.
+					# MOVE DAEMON TO AEGON'S SIDE.
+
+					if = {
+
+						limit = {
+							primary_defender = character:IAF_Young_Griff_1
+						}
+
+
+						remove_participant = character:Segrellion_60
+
+						add_defender = character:Segrellion_60
+					}
+
+
+					# Tommen is fighting someone else.
+					# Daemon has no business being here.
+
+					else = {
+
+						remove_participant = character:Segrellion_60
+					}
+				}
+
+
+				# =============================================
+				# TOMMEN IS PRIMARY DEFENDER
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						primary_defender = character:Baratheon_7
+
+						any_war_defender = {
+							this = character:Segrellion_60
+						}
+					}
+
+
+					# AEGON IS THE ATTACKER.
+					# MOVE DAEMON TO AEGON'S SIDE.
+
+					if = {
+
+						limit = {
+							primary_attacker = character:IAF_Young_Griff_1
+						}
+
+
+						remove_participant = character:Segrellion_60
+
+						add_attacker = character:Segrellion_60
+					}
+
+
+					# Tommen is fighting someone else.
+
+					else = {
+
+						remove_participant = character:Segrellion_60
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AEGON
+	#
+	# Second pass.
+	# Even if AGOT completely removed Daemon from Aegon's
+	# war, put him back where his oath says he belongs.
+	# =====================================================
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_pledged_to_young_griff
+				}
+			}
+
+
+			every_character_war = {
+
+
+				# =============================================
+				# AEGON ATTACKS FOR THE IRON THRONE
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						primary_attacker = character:IAF_Young_Griff_1
+
+
+						OR = {
+
+							primary_defender = character:Baratheon_7
+
+
+							casus_belli = {
+
+								any_target_title = {
+									this = title:h_the_iron_throne
+								}
+							}
+						}
+
+
+						NOT = {
+
+							any_war_attacker = {
+								this = character:Segrellion_60
+							}
+						}
+					}
+
+
+					if = {
+
+						limit = {
+
+							any_war_defender = {
+								this = character:Segrellion_60
+							}
+						}
+
+
+						remove_participant = character:Segrellion_60
+					}
+
+
+					add_attacker = character:Segrellion_60
+				}
+
+
+				# =============================================
+				# TOMMEN ATTACKS AEGON
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						primary_defender = character:IAF_Young_Griff_1
+
+						primary_attacker = character:Baratheon_7
+
+
+						NOT = {
+
+							any_war_defender = {
+								this = character:Segrellion_60
+							}
+						}
+					}
+
+
+					if = {
+
+						limit = {
+
+							any_war_attacker = {
+								this = character:Segrellion_60
+							}
+						}
+
+
+						remove_participant = character:Segrellion_60
+					}
+
+
+					add_defender = character:Segrellion_60
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# CERSEI / AEGON - MURDER INTENT
+#
+# Cersei has decided that Aegon must die.
+# The flag survives temporary scheme restrictions, so the
+# monthly guard can retry later.
+# =========================================================
+
+segrellion_cersei_start_young_griff_murder_scheme_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Lannister_6
+
+			is_alive = yes
+			is_adult = yes
+			is_imprisoned = no
+
+
+			character:IAF_Young_Griff_1 ?= {
+
+				is_alive = yes
+
+				has_title = title:h_the_iron_throne
+			}
+		}
+
+
+		remove_character_flag = segrellion_cersei_loyal_to_young_griff
+
+		add_character_flag = segrellion_cersei_wants_young_griff_dead
+
+
+		if = {
+
+			limit = {
+
+				can_start_scheme = {
+
+					type = murder
+
+					target_character = character:IAF_Young_Griff_1
+				}
+			}
+
+
+			start_scheme = {
+
+				type = murder
+
+				target_character = character:IAF_Young_Griff_1
+			}
+
+
+			add_character_flag = segrellion_cersei_murdering_young_griff_from_within
+		}
+	}
+}
+
+
+# =========================================================
+# CERSEI / AEGON - CAST ASIDE
+#
+# Divorce or the attempt to take Margaery as another wife
+# turns Cersei permanently against Aegon.
+# =========================================================
+
+segrellion_cersei_turns_on_young_griff_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Lannister_6
+
+			is_alive = yes
+
+
+			character:IAF_Young_Griff_1 ?= {
+				is_alive = yes
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_cersei_young_griff_betrayal_locked
+			}
+		}
+
+
+		add_character_flag = segrellion_cersei_young_griff_betrayal_locked
+
+		remove_character_flag = segrellion_cersei_loyal_to_young_griff
+
+
+		remove_opinion = {
+
+			target = character:IAF_Young_Griff_1
+
+			modifier = segrellion_cersei_married_aegon_opinion
+		}
+
+
+		add_opinion = {
+
+			target = character:IAF_Young_Griff_1
+
+			modifier = segrellion_cersei_betrayed_by_aegon_opinion
+		}
+
+
+		segrellion_cersei_start_young_griff_murder_scheme_effect = yes
+	}
+}
+
+
+# =========================================================
+# CERSEI / AEGON - MARRIAGE GUARD
+#
+# Catches:
+# - normal divorce
+# - scripted divorce
+# - external-mod divorce
+# - failed/restarted murder schemes
+# =========================================================
+
+segrellion_cersei_young_griff_marriage_guard_effect = {
+
+	character:Lannister_6 ?= {
+
+
+		# =================================================
+		# AEGON CAST HER ASIDE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_cersei_married_young_griff
+
+
+				character:IAF_Young_Griff_1 ?= {
+					is_alive = yes
+				}
+
+
+				NOT = {
+					is_spouse_of = character:IAF_Young_Griff_1
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_cersei_young_griff_betrayal_locked
+				}
+			}
+
+
+			segrellion_cersei_turns_on_young_griff_effect = yes
+		}
+
+
+		# =================================================
+		# SHE WANTS HIM DEAD
+		#
+		# Retry if CK3 temporarily prevented the scheme.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_cersei_wants_young_griff_dead
+
+
+				character:IAF_Young_Griff_1 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			segrellion_cersei_start_young_griff_murder_scheme_effect = yes
+		}
+	}
+}

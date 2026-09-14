@@ -440,6 +440,16 @@ segrellion_aegon_daemon.0002 = {
 
 				days = 1
 			}
+
+			character:IAF_Young_Griff_1 = {
+
+				trigger_event = {
+
+					id = segrellion_aegon_daemon.0018
+
+					days = 1
+				}
+			}
 		}
 
 
@@ -3205,5 +3215,86 @@ segrellion_aegon_daemon.0017 = {
 
 
 		segrellion_daemon_apply_aegon_submission_concessions_effect = yes
+	}
+}
+
+# =========================================================
+# 0018 - THE UNICORN AT MY RIGHT HAND
+#
+# ROOT = Aegon
+#
+# Daemon has accepted peaceful submission.
+# Aegon formally confirms him as:
+# - Hand of the King
+# - Designated Regent
+# =========================================================
+
+segrellion_aegon_daemon.0018 = {
+
+	type = character_event
+
+	title = segrellion_aegon_daemon.0018.t
+
+	desc = segrellion_aegon_daemon.0018.desc
+
+	theme = realm
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_daemon_acceptance_notified
+		}
+
+
+		character:Segrellion_60 ?= {
+
+			is_alive = yes
+
+			liege ?= character:IAF_Young_Griff_1
+
+			has_character_flag = segrellion_daemon_aegon_fealty_accepted
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_daemon_acceptance_notified
+
+
+		character:Segrellion_60 = {
+
+			segrellion_daemon_becomes_aegons_hand_and_regent_effect = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_aegon_daemon.0018.a
 	}
 }

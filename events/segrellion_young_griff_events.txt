@@ -5106,7 +5106,7 @@ segrellion_young_griff.8100 = {
 
 
 		ai_chance = {
-			base = 35
+			base = 30
 		}
 	}
 
@@ -5227,7 +5227,7 @@ segrellion_young_griff.8100 = {
 
 
 		ai_chance = {
-			base = 50
+			base = 45
 		}
 	}
 
@@ -5266,7 +5266,7 @@ segrellion_young_griff.8100 = {
 
 
 		ai_chance = {
-			base = 5
+			base = 15
 		}
 	}
 }
@@ -5278,6 +5278,22 @@ segrellion_young_griff.8100 = {
 # Hidden AI decision.
 # =========================================================
 
+# =========================================================
+# 8110 - CERSEI CONSIDERS AEGON'S OFFER
+#
+# Root = Cersei
+#
+# Cersei is strongly tempted by:
+# - Aegon's youth
+# - his beauty
+# - the Iron Throne
+# - the chance to remain Lady of the Westerlands
+#
+# If she accepts:
+# 50% loyal queen
+# 50% secret usurper
+# =========================================================
+
 segrellion_young_griff.8110 = {
 
 	type = character_event
@@ -5287,20 +5303,27 @@ segrellion_young_griff.8110 = {
 
 	trigger = {
 
+		this = character:Lannister_6
+
 		is_alive = yes
 
 		is_imprisoned = yes
 
+
 		character:IAF_Young_Griff_1 ?= {
 
 			is_alive = yes
+
 			is_married = no
+
 			has_title = title:h_the_iron_throne
 		}
 	}
 
 
+	# =====================================================
 	# ACCEPT
+	# =====================================================
 
 	option = {
 
@@ -5324,7 +5347,60 @@ segrellion_young_griff.8110 = {
 			segrellion_young_griff_close_story_marriage_window_effect = yes
 		}
 
+
 		add_character_flag = segrellion_cersei_married_young_griff
+
+
+		# Clean any stale state from old saves / attempts.
+
+		remove_character_flag = segrellion_cersei_loyal_to_young_griff
+		remove_character_flag = segrellion_cersei_wants_young_griff_dead
+		remove_character_flag = segrellion_cersei_young_griff_betrayal_locked
+
+
+		# Aegon is young, beautiful and king.
+		# Cersei sees a real future here.
+
+		add_opinion = {
+
+			target = character:IAF_Young_Griff_1
+
+			modifier = segrellion_cersei_married_aegon_opinion
+		}
+
+
+		# =================================================
+		# CERSEI'S TRUE INTENT
+		#
+		# EXACT:
+		# 50% loyal
+		# 50% plans to murder and usurp Aegon
+		# =================================================
+
+		random_list = {
+
+
+			# =============================================
+			# 50% - LOYAL
+			# =============================================
+
+			50 = {
+
+				add_character_flag = segrellion_cersei_loyal_to_young_griff
+
+				remove_character_flag = segrellion_cersei_wants_young_griff_dead
+			}
+
+
+			# =============================================
+			# 50% - THE LIONESS WAITS
+			# =============================================
+
+			50 = {
+
+				segrellion_cersei_start_young_griff_murder_scheme_effect = yes
+			}
+		}
 
 
 		character:IAF_Young_Griff_1 = {
@@ -5341,14 +5417,64 @@ segrellion_young_griff.8110 = {
 		}
 
 
+		# =================================================
+		# AI ACCEPTANCE
+		# =================================================
+
 		ai_chance = {
 
-			base = 10
+			base = 50
+
+
+			# Cersei wants power.
+
+			modifier = {
+
+				add = 20
+
+				has_trait = ambitious
+			}
+
+
+			# Aegon is attractive.
+
+			modifier = {
+
+				add = 15
+
+				character:IAF_Young_Griff_1 = {
+					has_trait = beauty_good_1
+				}
+			}
+
+
+			# Aegon is young.
+
+			modifier = {
+
+				add = 15
+
+				character:IAF_Young_Griff_1 = {
+					age <= 30
+				}
+			}
+
+
+			# Marriage keeps her beside the Iron Throne.
+
+			modifier = {
+
+				add = 20
+
+				character:IAF_Young_Griff_1 = {
+					has_title = title:h_the_iron_throne
+				}
+			}
 
 
 			modifier = {
 
-				add = 30
+				add = 10
 
 				opinion = {
 
@@ -5361,20 +5487,7 @@ segrellion_young_griff.8110 = {
 
 			modifier = {
 
-				add = 40
-
-				opinion = {
-
-					target = character:IAF_Young_Griff_1
-
-					value >= 25
-				}
-			}
-
-
-			modifier = {
-
-				add = -100
+				add = -50
 
 				opinion = {
 
@@ -5383,19 +5496,13 @@ segrellion_young_griff.8110 = {
 					value <= -50
 				}
 			}
-
-
-			modifier = {
-
-				add = 20
-
-				has_trait = ambitious
-			}
 		}
 	}
 
 
+	# =====================================================
 	# REFUSE
+	# =====================================================
 
 	option = {
 
@@ -5431,7 +5538,7 @@ segrellion_young_griff.8110 = {
 
 		ai_chance = {
 
-			base = 90
+			base = 40
 		}
 	}
 }
@@ -5800,6 +5907,27 @@ segrellion_young_griff.8210 = {
 
 		custom_tooltip = segrellion_young_griff.8210.a.tt
 
+		# =================================================
+		# CERSEI WILL NEVER ACCEPT ANOTHER QUEEN
+		# =================================================
+
+		character:Lannister_6 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_cersei_married_young_griff
+
+					is_spouse_of = root
+				}
+
+
+				segrellion_cersei_turns_on_young_griff_effect = yes
+			}
+		}
 
 		if = {
 
@@ -7056,6 +7184,10 @@ segrellion_young_griff.8900 = {
 		}
 
 
+		# =================================================
+		# CERSEI
+		# =================================================
+
 		if = {
 
 			limit = {
@@ -7066,45 +7198,69 @@ segrellion_young_griff.8900 = {
 					is_adult = yes
 					is_imprisoned = no
 
-					is_spouse_of = root
+					has_character_flag = segrellion_cersei_wants_young_griff_dead
+
 
 					can_start_scheme = {
+
 						type = murder
+
 						target_character = root
 					}
 				}
 			}
 
+
 			character:Lannister_6 = {
 
-				start_scheme = {
-					type = murder
-					target_character = character:IAF_Young_Griff_1
-				}
-
-				add_character_flag = segrellion_cersei_murdering_young_griff_from_within
+				segrellion_cersei_start_young_griff_murder_scheme_effect = yes
 			}
 		}
+
+
+		# =================================================
+		# CERSEI MAY JOIN OLENNA
+		#
+		# But NEVER if she chose the loyal-wife route.
+		# A Cersei already running her own murder plot does
+		# not need to become Olenna's agent.
+		# =================================================
 
 		else_if = {
 
 			limit = {
 
 				character:Lannister_6 ?= {
+
 					is_alive = yes
 					is_adult = yes
 					is_imprisoned = no
+
+
+					NOT = {
+						has_character_flag = segrellion_cersei_loyal_to_young_griff
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_cersei_wants_young_griff_dead
+					}
 				}
+
 
 				exists = scope:segrellion_olenna_aegon_murder_scheme
 			}
 
+
 			character:Lannister_6 = {
 
 				force_add_to_scheme = {
+
 					scheme = scope:segrellion_olenna_aegon_murder_scheme
+
 					years = 20
 				}
+
 
 				add_character_flag = segrellion_cersei_agent_in_olenna_aegon_scheme
 			}
