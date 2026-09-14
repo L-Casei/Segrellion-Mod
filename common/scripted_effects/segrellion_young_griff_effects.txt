@@ -5099,7 +5099,65 @@ segrellion_daemon_young_griff_war_allegiance_guard_effect = {
 }
 
 # =========================================================
-# CERSEI / MARGAERY - END OF THE TWO QUEENS DREAM
+# YOUNG GRIFF / MARGAERY - COMPLETE STORY MARRIAGE
+#
+# ROOT = Young Griff
+#
+# Always uses the Margaery saved by the storyline.
+# =========================================================
+
+segrellion_young_griff_complete_margaery_marriage_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+			has_variable = segrellion_young_griff_margaery
+
+
+			var:segrellion_young_griff_margaery = {
+
+				is_alive = yes
+
+				is_married = no
+			}
+		}
+
+
+		var:segrellion_young_griff_margaery = {
+
+			if = {
+
+				limit = {
+					is_imprisoned = yes
+				}
+
+				release_from_prison = yes
+			}
+		}
+
+
+		segrellion_young_griff_open_story_marriage_window_effect = yes
+
+		marry = var:segrellion_young_griff_margaery
+
+		segrellion_young_griff_close_story_marriage_window_effect = yes
+
+
+		add_character_flag = segrellion_young_griff_married_margaery
+
+		add_character_flag = segrellion_young_griff_margaery_story_resolved
+
+		add_character_flag = segrellion_young_griff_second_wife_question_resolved
+	}
+}
+
+# =========================================================
+# CERSEI / MARGAERY - CERSEI REJECTS THE TWO QUEENS
 #
 # ROOT = Cersei
 # =========================================================
@@ -5122,11 +5180,16 @@ segrellion_cersei_young_griff_margaery_transition_effect = {
 				is_alive = yes
 
 				has_title = title:h_the_iron_throne
-			}
+
+				has_variable = segrellion_young_griff_margaery
 
 
-			character:Tyrell_4 ?= {
-				is_alive = yes
+				var:segrellion_young_griff_margaery = {
+
+					is_alive = yes
+
+					is_married = no
+				}
 			}
 		}
 
@@ -5141,24 +5204,14 @@ segrellion_cersei_young_griff_margaery_transition_effect = {
 
 			divorce = character:Lannister_6
 
+
 			remove_character_flag = segrellion_young_griff_married_cersei
 
 
-			character:Tyrell_4 = {
-				release_from_prison = yes
-			}
+			segrellion_young_griff_complete_margaery_marriage_effect = yes
 
 
-			segrellion_young_griff_open_story_marriage_window_effect = yes
-
-			marry = character:Tyrell_4
-
-			segrellion_young_griff_close_story_marriage_window_effect = yes
-
-
-			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
-
-			add_character_flag = segrellion_young_griff_second_wife_question_resolved
+			add_character_flag = segrellion_young_griff_married_margaery_after_cersei_divorce
 
 
 			trigger_event = {

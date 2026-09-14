@@ -5866,10 +5866,15 @@ segrellion_young_griff.8210 = {
 
 		has_variable = segrellion_young_griff_margaery
 
+
 		var:segrellion_young_griff_margaery = {
+
 			is_alive = yes
+
+			is_married = no
 		}
 	}
+
 
 	on_trigger_fail = {
 
@@ -5888,6 +5893,7 @@ segrellion_young_griff.8210 = {
 	left_portrait = {
 
 		character = root
+
 		animation = thinking
 	}
 
@@ -5895,11 +5901,14 @@ segrellion_young_griff.8210 = {
 	right_portrait = {
 
 		character = root.var:segrellion_young_griff_margaery
+
 		animation = admiration
 	}
 
 
-	# TAKE MARGAERY AS ANOTHER WIFE
+	# =====================================================
+	# ATTEMPT THE TWO DRAGON QUEENS
+	# =====================================================
 
 	option = {
 
@@ -5907,73 +5916,38 @@ segrellion_young_griff.8210 = {
 
 		custom_tooltip = segrellion_young_griff.8210.a.tt
 
-		if = {
+
+		# =====================================================
+		# SAVE AEGON'S CURRENT WIFE
+		# =====================================================
+
+		random_spouse = {
 
 			limit = {
 
-				character:Lannister_6 ?= {
+				is_alive = yes
 
-					is_alive = yes
+				this != root.var:segrellion_young_griff_margaery
+			}
 
-					has_character_flag = segrellion_cersei_married_young_griff
 
-					is_spouse_of = root
+			root = {
+
+				set_variable = {
+
+					name = segrellion_young_griff_second_wife_responder
+
+					value = prev
 				}
 			}
 
 
-			character:Lannister_6 = {
+			trigger_event = {
 
-				trigger_event = {
+				id = segrellion_young_griff.8260
 
-					id = segrellion_young_griff.8240
-
-					days = 1
-				}
+				days = 1
 			}
-		}
-
-
-		else_if = {
-
-			limit = {
-
-				any_spouse = {
-
-					this = character:Martell_9
-				}
-			}
-
-
-			character:Martell_9 = {
-
-				trigger_event = {
-
-					id = segrellion_young_griff.8220
-
-					days = 1
-				}
-			}
-		}
-
-
-		else = {
-
-			character:Tyrell_4 = {
-				release_from_prison = yes
-			}
-
-
-			segrellion_young_griff_open_story_marriage_window_effect = yes
-
-			marry = character:Tyrell_4
-
-			segrellion_young_griff_close_story_marriage_window_effect = yes
-
-
-			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
-
-			add_character_flag = segrellion_young_griff_second_wife_question_resolved
 		}
 
 
@@ -5983,7 +5957,9 @@ segrellion_young_griff.8210 = {
 	}
 
 
-	# REFUSE HER
+	# =====================================================
+	# REFUSE MARGAERY
+	# =====================================================
 
 	option = {
 
@@ -6009,6 +5985,7 @@ segrellion_young_griff.8210 = {
 
 
 		add_character_flag = segrellion_young_griff_refused_margaery
+
 		add_character_flag = segrellion_young_griff_margaery_story_resolved
 
 
@@ -6045,7 +6022,8 @@ segrellion_young_griff.8220 = {
 
 
 	# =====================================================
-	# 5% - ACCEPT
+	# 30% BASE - ACCEPT
+	# Modified by Wife personality.
 	# =====================================================
 
 	option = {
@@ -6092,13 +6070,87 @@ segrellion_young_griff.8220 = {
 
 
 		ai_chance = {
-			base = 5
+
+			base = 30
+
+
+			modifier = {
+				factor = 1.75
+				has_trait = lustful
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = cynical
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = arbitrary
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = forgiving
+			}
+
+			modifier = {
+				factor = 1.15
+				has_trait = trusting
+			}
+
+
+			modifier = {
+				factor = 0.20
+				has_trait = jealous
+			}
+
+			modifier = {
+				factor = 0.50
+				has_trait = chaste
+			}
+
+			modifier = {
+				factor = 0.65
+				has_trait = ambitious
+			}
+
+			modifier = {
+				factor = 0.65
+				has_trait = paranoid
+			}
+
+			modifier = {
+				factor = 0.70
+				has_trait = arrogant
+			}
+
+			modifier = {
+				factor = 0.75
+				has_trait = stubborn
+			}
+
+			modifier = {
+				factor = 0.80
+				has_trait = vengeful
+			}
+
+			modifier = {
+				factor = 0.70
+				has_trait = zealous
+			}
 		}
 	}
 
 
 	# =====================================================
-	# 95% - DORNE BREAKS WITH AEGON
+	# 70% BASE - DORNE BREAKS WITH AEGON
+	# Modified by Arianne's personality.
 	# =====================================================
 
 	option = {
@@ -6212,7 +6264,80 @@ segrellion_young_griff.8220 = {
 
 
 		ai_chance = {
-			base = 95
+
+			base = 70
+
+
+			modifier = {
+				factor = 1.75
+				has_trait = jealous
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = chaste
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = ambitious
+			}
+
+			modifier = {
+				factor = 1.30
+				has_trait = paranoid
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = arrogant
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = stubborn
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = vengeful
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = zealous
+			}
+
+
+			modifier = {
+				factor = 0.65
+				has_trait = lustful
+			}
+
+			modifier = {
+				factor = 0.80
+				has_trait = cynical
+			}
+
+			modifier = {
+				factor = 0.85
+				has_trait = arbitrary
+			}
+
+			modifier = {
+				factor = 0.85
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 0.85
+				has_trait = forgiving
+			}
+
+			modifier = {
+				factor = 0.90
+				has_trait = trusting
+			}
 		}
 	}
 }
@@ -6304,11 +6429,16 @@ segrellion_young_griff.8240 = {
 			is_alive = yes
 
 			has_title = title:h_the_iron_throne
-		}
+
+			has_variable = segrellion_young_griff_margaery
 
 
-		character:Tyrell_4 ?= {
-			is_alive = yes
+			var:segrellion_young_griff_margaery = {
+
+				is_alive = yes
+
+				is_married = no
+			}
 		}
 	}
 
@@ -6329,6 +6459,13 @@ segrellion_young_griff.8240 = {
 	}
 
 
+	# =====================================================
+	# ACCEPT THE TWO QUEENS
+	#
+	# Cersei remains Aegon's wife.
+	# She accepts publicly, but still wants him dead.
+	# =====================================================
+
 	option = {
 
 		name = segrellion_young_griff.8240.a
@@ -6339,14 +6476,116 @@ segrellion_young_griff.8240 = {
 		add_character_flag = segrellion_cersei_outwardly_accepted_margaery
 
 
-		segrellion_cersei_young_griff_margaery_transition_effect = yes
+		segrellion_cersei_start_young_griff_murder_scheme_effect = yes
+
+
+		character:IAF_Young_Griff_1 = {
+
+			segrellion_young_griff_complete_margaery_marriage_effect = yes
+
+
+			set_primary_spouse = character:Lannister_6
+
+
+			add_character_flag = segrellion_young_griff_margaery_second_wife
+
+			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8250
+
+				days = 1
+			}
+		}
 
 
 		ai_chance = {
-			base = 15
+
+			base = 30
+
+
+			modifier = {
+				factor = 1.75
+				has_trait = lustful
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = cynical
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = arbitrary
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = forgiving
+			}
+
+			modifier = {
+				factor = 1.15
+				has_trait = trusting
+			}
+
+
+			modifier = {
+				factor = 0.20
+				has_trait = jealous
+			}
+
+			modifier = {
+				factor = 0.50
+				has_trait = chaste
+			}
+
+			modifier = {
+				factor = 0.65
+				has_trait = ambitious
+			}
+
+			modifier = {
+				factor = 0.65
+				has_trait = paranoid
+			}
+
+			modifier = {
+				factor = 0.70
+				has_trait = arrogant
+			}
+
+			modifier = {
+				factor = 0.75
+				has_trait = stubborn
+			}
+
+			modifier = {
+				factor = 0.80
+				has_trait = vengeful
+			}
+
+			modifier = {
+				factor = 0.70
+				has_trait = zealous
+			}
 		}
 	}
 
+
+	# =====================================================
+	# REJECT
+	#
+	# Cersei refuses to share the crown.
+	# She divorces Aegon and Margaery becomes his wife.
+	# =====================================================
 
 	option = {
 
@@ -6362,14 +6601,87 @@ segrellion_young_griff.8240 = {
 
 
 		ai_chance = {
-			base = 85
+
+			base = 70
+
+
+			modifier = {
+				factor = 1.75
+				has_trait = jealous
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = chaste
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = ambitious
+			}
+
+			modifier = {
+				factor = 1.30
+				has_trait = paranoid
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = arrogant
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = stubborn
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = vengeful
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = zealous
+			}
+
+
+			modifier = {
+				factor = 0.65
+				has_trait = lustful
+			}
+
+			modifier = {
+				factor = 0.80
+				has_trait = cynical
+			}
+
+			modifier = {
+				factor = 0.85
+				has_trait = arbitrary
+			}
+
+			modifier = {
+				factor = 0.85
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 0.85
+				has_trait = forgiving
+			}
+
+			modifier = {
+				factor = 0.90
+				has_trait = trusting
+			}
 		}
 	}
 }
 
 
 # =========================================================
-# 8250 - THE LIONESS LEAVES THE THRONE
+# 8250 - THE LIONESS'S ANSWER
 #
 # ROOT = Aegon
 # =========================================================
@@ -6390,7 +6702,10 @@ segrellion_young_griff.8250 = {
 				trigger = {
 
 					character:Lannister_6 ?= {
+
 						has_character_flag = segrellion_cersei_outwardly_accepted_margaery
+
+						is_spouse_of = root
 					}
 				}
 
@@ -6425,7 +6740,15 @@ segrellion_young_griff.8250 = {
 
 		is_alive = yes
 
-		is_spouse_of = character:Tyrell_4
+		has_variable = segrellion_young_griff_margaery
+
+
+		var:segrellion_young_griff_margaery = {
+
+			is_alive = yes
+
+			is_spouse_of = root
+		}
 
 
 		character:Lannister_6 ?= {
@@ -6453,6 +6776,541 @@ segrellion_young_griff.8250 = {
 	option = {
 
 		name = segrellion_young_griff.8250.a
+	}
+}
+
+# =========================================================
+# 8260 - TWO QUEENS BENEATH ONE DRAGON
+#
+# ROOT = Aegon's current wife
+#
+# Base:
+# 30 ACCEPT
+# 70 REJECT
+#
+# Personality modifies the result.
+# =========================================================
+
+segrellion_young_griff.8260 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8260.t
+
+	desc = segrellion_young_griff.8260.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		is_alive = yes
+
+		is_spouse_of = character:IAF_Young_Griff_1
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_variable = segrellion_young_griff_margaery
+
+
+			var:segrellion_young_griff_margaery = {
+
+				is_alive = yes
+
+				is_married = no
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:IAF_Young_Griff_1
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	#
+	# 30 BASE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8260.a
+
+
+		add_character_flag = segrellion_young_griff_wife_accepts_margaery
+
+
+		# =================================================
+		# ARIANNE SPECIAL STATE
+		# =================================================
+
+		if = {
+
+			limit = {
+				this = character:Martell_9
+			}
+
+
+			add_character_flag = segrellion_arianne_accepts_margaery_second_wife
+		}
+
+
+		# =================================================
+		# CERSEI
+		#
+		# She accepts the second queen publicly,
+		# but still decides Aegon must die.
+		# =================================================
+
+		if = {
+
+			limit = {
+				this = character:Lannister_6
+			}
+
+
+			add_character_flag = segrellion_cersei_outwardly_accepted_margaery
+
+
+			segrellion_cersei_start_young_griff_murder_scheme_effect = yes
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			segrellion_young_griff_complete_margaery_marriage_effect = yes
+
+
+			set_primary_spouse = root
+
+
+			add_character_flag = segrellion_young_griff_margaery_second_wife
+
+			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8270
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 30
+
+
+			# =================================================
+			# MORE LIKELY TO ACCEPT
+			# =================================================
+
+			modifier = {
+				factor = 1.75
+				has_trait = lustful
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = cynical
+			}
+
+			modifier = {
+				factor = 1.30
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = forgiving
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = trusting
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = arbitrary
+			}
+
+
+			# =================================================
+			# LESS LIKELY TO ACCEPT
+			# =================================================
+
+			modifier = {
+				factor = 0.15
+				has_trait = jealous
+			}
+
+			modifier = {
+				factor = 0.45
+				has_trait = chaste
+			}
+
+			modifier = {
+				factor = 0.60
+				has_trait = ambitious
+			}
+
+			modifier = {
+				factor = 0.60
+				has_trait = paranoid
+			}
+
+			modifier = {
+				factor = 0.65
+				has_trait = arrogant
+			}
+
+			modifier = {
+				factor = 0.70
+				has_trait = stubborn
+			}
+
+			modifier = {
+				factor = 0.75
+				has_trait = vengeful
+			}
+
+			modifier = {
+				factor = 0.65
+				has_trait = zealous
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REJECT
+	#
+	# 70 BASE
+	# Wife divorces Aegon.
+	# Margaery replaces her.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8260.b
+
+
+		add_character_flag = segrellion_young_griff_wife_rejects_margaery
+
+
+		# =================================================
+		# ARIANNE
+		#
+		# Dorne breaks with Aegon.
+		# =================================================
+
+		if = {
+
+			limit = {
+				this = character:Martell_9
+			}
+
+
+			add_character_flag = segrellion_arianne_rejects_margaery_second_wife
+
+
+			add_opinion = {
+
+				target = character:IAF_Young_Griff_1
+
+				modifier = segrellion_arianne_margaery_second_wife_opinion
+			}
+
+
+			set_location = title:c_sunspear.title_province
+
+
+			father ?= {
+
+				remove_character_flag = segrellion_dorne_supports_young_griff
+
+				add_character_flag = segrellion_dorne_secretly_supports_daenerys
+			}
+
+
+			character:Targaryen_9 ?= {
+
+				add_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+			}
+
+
+			character:IAF_Young_Griff_1 = {
+
+				remove_character_flag = segrellion_young_griff_dorne_support_secured
+
+				add_character_flag = segrellion_young_griff_lost_dorne_over_margaery
+			}
+		}
+
+
+		# =================================================
+		# CERSEI
+		#
+		# 100% hostile after being cast aside.
+		# =================================================
+
+		if = {
+
+			limit = {
+				this = character:Lannister_6
+			}
+
+
+			add_character_flag = segrellion_cersei_rejected_margaery
+
+
+			segrellion_cersei_turns_on_young_griff_effect = yes
+
+
+			remove_character_flag = segrellion_cersei_married_young_griff
+
+
+			character:IAF_Young_Griff_1 = {
+
+				remove_character_flag = segrellion_young_griff_married_cersei
+			}
+		}
+
+
+		# =================================================
+		# END CURRENT MARRIAGE
+		# =================================================
+
+		divorce = character:IAF_Young_Griff_1
+
+
+		# =================================================
+		# MARGAERY BECOMES AEGON'S WIFE
+		# =================================================
+
+		character:IAF_Young_Griff_1 = {
+
+			segrellion_young_griff_complete_margaery_marriage_effect = yes
+
+
+			add_character_flag = segrellion_young_griff_married_margaery_after_wife_divorce
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.8270
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 70
+
+
+			# =================================================
+			# MORE LIKELY TO REJECT
+			# =================================================
+
+			modifier = {
+				factor = 1.80
+				has_trait = jealous
+			}
+
+			modifier = {
+				factor = 1.40
+				has_trait = chaste
+			}
+
+			modifier = {
+				factor = 1.40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				factor = 1.35
+				has_trait = paranoid
+			}
+
+			modifier = {
+				factor = 1.30
+				has_trait = arrogant
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = stubborn
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = vengeful
+			}
+
+			modifier = {
+				factor = 1.30
+				has_trait = zealous
+			}
+
+
+			# =================================================
+			# LESS LIKELY TO REJECT
+			# =================================================
+
+			modifier = {
+				factor = 0.60
+				has_trait = lustful
+			}
+
+			modifier = {
+				factor = 0.80
+				has_trait = cynical
+			}
+
+			modifier = {
+				factor = 0.80
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 0.85
+				has_trait = forgiving
+			}
+
+			modifier = {
+				factor = 0.90
+				has_trait = trusting
+			}
+
+			modifier = {
+				factor = 0.90
+				has_trait = arbitrary
+			}
+		}
+	}
+}
+
+# =========================================================
+# 8270 - THE SECOND QUEEN
+#
+# ROOT = Aegon
+# =========================================================
+
+segrellion_young_griff.8270 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.8270.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_variable = segrellion_young_griff_second_wife_responder
+
+
+					var:segrellion_young_griff_second_wife_responder = {
+						has_character_flag = segrellion_young_griff_wife_accepts_margaery
+					}
+				}
+
+				desc = segrellion_young_griff.8270.desc_accept
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_variable = segrellion_young_griff_second_wife_responder
+
+
+					var:segrellion_young_griff_second_wife_responder = {
+						has_character_flag = segrellion_young_griff_wife_rejects_margaery
+					}
+				}
+
+				desc = segrellion_young_griff.8270.desc_reject
+			}
+
+
+			desc = segrellion_young_griff.8270.desc_reject
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+
+		has_variable = segrellion_young_griff_second_wife_responder
+
+		has_variable = segrellion_young_griff_margaery
+
+
+		var:segrellion_young_griff_margaery = {
+
+			is_alive = yes
+
+			is_spouse_of = root
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = root.var:segrellion_young_griff_second_wife_responder
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.8270.a
+
+
+		remove_variable = segrellion_young_griff_second_wife_responder
 	}
 }
 
