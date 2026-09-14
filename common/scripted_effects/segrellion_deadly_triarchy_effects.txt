@@ -441,6 +441,139 @@ segrellion_dissolve_deadly_triarchy_effect = {
 
 
 # =========================================================
+# OATHBREAKER OF PENTOS
+#
+# ROOT = the character who broke the Pentos Compact
+#
+# Valid for:
+# - Aegon
+# - Daemon
+# - Joffrey
+#
+# This is the canonical punishment used by BOTH:
+# - political betrayal
+# - military betrayal
+# =========================================================
+
+segrellion_apply_pentos_oathbreaker_effect = {
+
+	if = {
+
+		limit = {
+
+			OR = {
+
+				this = character:IAF_Young_Griff_1
+
+				this = character:Segrellion_60
+
+				this = character:Vladwyn_5
+			}
+		}
+
+
+		# =================================================
+		# REMOVE THE BENEFITS OF THE COMPACT
+		# =================================================
+
+		remove_character_flag = segrellion_deadly_triarchy_formed
+
+		add_character_flag = segrellion_deadly_triarchy_oathbreaker
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_deadly_triarchy_modifier
+			}
+
+
+			remove_character_modifier = segrellion_deadly_triarchy_modifier
+		}
+
+
+		# =================================================
+		# REMOVE OLD / LEGACY OATHBREAKER MODIFIERS
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_young_griff_oathbreaker_modifier
+			}
+
+
+			remove_character_modifier = segrellion_young_griff_oathbreaker_modifier
+		}
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_oathbreaker_of_the_triarchy_modifier
+			}
+
+
+			remove_character_modifier = segrellion_oathbreaker_of_the_triarchy_modifier
+		}
+
+
+		# =================================================
+		# FIRST-TIME PUNISHMENT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_oathbreaker_of_pentos
+				}
+			}
+
+
+			add_character_flag = segrellion_oathbreaker_of_pentos
+
+
+			add_legitimacy = -400
+
+			add_prestige = -750
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_oathbreaker_of_pentos_modifier
+
+				years = 20
+			}
+		}
+
+
+		# =================================================
+		# SAVE / MODIFIER RECOVERY
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_oathbreaker_of_pentos_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_oathbreaker_of_pentos_modifier
+
+				years = 20
+			}
+		}
+	}
+}
+
+# =========================================================
 # OATHBREAKER OF THE TRIARCHY
 #
 # ROOT = aggressor
@@ -454,36 +587,10 @@ segrellion_dissolve_deadly_triarchy_effect = {
 segrellion_deadly_triarchy_oathbreaker_effect = {
 
 	# =====================================================
-	# BREAK THE AGGRESSOR'S PLACE IN THE TRIARCHY
+	# BRAND THE AGGRESSOR AS AN OATHBREAKER OF PENTOS
 	# =====================================================
 
-	remove_character_flag = segrellion_deadly_triarchy_formed
-
-	add_character_flag = segrellion_deadly_triarchy_oathbreaker
-
-
-	if = {
-
-		limit = {
-			has_character_modifier = segrellion_deadly_triarchy_modifier
-		}
-
-		remove_character_modifier = segrellion_deadly_triarchy_modifier
-	}
-
-
-	# =====================================================
-	# MASSIVE POLITICAL PENALTY
-	# =====================================================
-
-	add_legitimacy = -300
-
-
-	add_character_modifier = {
-		modifier = segrellion_oathbreaker_of_the_triarchy_modifier
-		years = 20
-	}
-
+	segrellion_apply_pentos_oathbreaker_effect = yes
 
 	# =====================================================
 	# REMOVE OLD TRIARCHY FRIENDSHIP
@@ -620,4 +727,14 @@ segrellion_deadly_triarchy_oathbreaker_effect = {
 			}
 		}
 	}
+
+    # =====================================================
+	# THE PENTOS COMPACT IS DEAD
+	#
+	# The third member was already given the chance to
+	# defend the betrayed member above.
+	# Now remove the Triarchy benefits from everyone.
+	# =====================================================
+
+	segrellion_dissolve_deadly_triarchy_effect = yes
 }

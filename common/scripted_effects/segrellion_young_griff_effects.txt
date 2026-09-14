@@ -2293,18 +2293,52 @@ segrellion_young_griff_schedule_daemon_post_throne_effect = {
 
 			flag = segrellion_young_griff_flamelands_submission_chain_active
 
-			days = 30
+			days = 45
 		}
 
 
-		# Aegon's other post-throne settlements get a few days
-		# of breathing room first.
+		# =========================================================
+		# REVERSE ORDER
+		#
+		# Aegon already had the Iron Throne when Daemon later
+		# restored the Flamelands.
+		#
+		# Give Daemon roughly one month to consolidate his new
+		# realm before the Iron Throne raises the question of
+		# submission.
+		# =========================================================
 
-		trigger_event = {
+		if = {
 
-			id = segrellion_aegon_daemon.0001
+			limit = {
+				has_character_flag = segrellion_young_griff_daemon_submission_late_flamelands
+			}
 
-			days = 7
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0001
+
+				days = 30
+			}
+		}
+
+
+		# =========================================================
+		# NORMAL ORDER
+		#
+		# Daemon already controlled the Flamelands when Aegon
+		# took the Iron Throne.
+		# =========================================================
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_aegon_daemon.0001
+
+				days = 7
+			}
 		}
 	}
 }

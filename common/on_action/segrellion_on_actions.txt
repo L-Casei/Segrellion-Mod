@@ -2911,16 +2911,38 @@ segrellion_beacon_flavor_yearly_check = {
 # DAEMON GAINS THE FLAMELANDS
 # =========================================================
 
+# =========================================================
+# DAEMON GAINS THE FLAMELANDS
+#
+# Also covers the reverse political order:
+#
+# 1. Aegon already took the Iron Throne.
+# 2. Daemon later restores the Flamelands.
+# 3. One month later the existing submission / vassalage
+#    storyline begins.
+#
+# The actual event chain remains the existing:
+# segrellion_aegon_daemon.0001 -> ...
+# =========================================================
+
 segrellion_daemon_flamelands_title_gain = {
 
 	trigger = {
 
 		this = character:Segrellion_60
 
+
 		scope:title = {
-			this = title:e_flamelands
+
+			OR = {
+
+				this = title:e_flamelands
+
+				this = title:k_flamelands
+			}
 		}
 	}
+
 
 	effect = {
 
@@ -2929,6 +2951,56 @@ segrellion_daemon_flamelands_title_gain = {
 		segrellion_check_massey_reunification_effect = yes
 
 		segrellion_check_daenerys_marriage_effect = yes
+
+
+		# =================================================
+		# AEGON ALREADY RULES THE IRON THRONE
+		#
+		# Daemon restored the Flamelands SECOND.
+		# Mark this as the delayed/reverse-order version
+		# and send it through the normal scheduler.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_daemon_aegon_status_resolved
+				}
+
+
+				character:IAF_Young_Griff_1 ?= {
+
+					is_alive = yes
+
+					has_title = title:h_the_iron_throne
+
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_flamelands_submission_resolved
+					}
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_flamelands_submission_chain_active
+					}
+				}
+			}
+
+
+			character:IAF_Young_Griff_1 = {
+
+				add_character_flag = {
+
+					flag = segrellion_young_griff_daemon_submission_late_flamelands
+
+					days = 60
+				}
+
+
+				segrellion_young_griff_schedule_daemon_post_throne_effect = yes
+			}
+		}
 	}
 }
 
