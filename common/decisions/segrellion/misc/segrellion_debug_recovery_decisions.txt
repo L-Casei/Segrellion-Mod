@@ -1,0 +1,193 @@
+# =========================================================
+# SEGRELLION
+# DEBUG / CAMPAIGN RECOVERY DECISIONS
+#
+# These decisions deliberately bypass scripted story locks.
+# They must NEVER be used by the AI.
+# =========================================================
+
+
+# =========================================================
+# REMOVE REFUSING MARRIAGE
+#
+# Only available to Daemon Segrellion and Young Griff.
+# Intended solely to recover a campaign where the scripted
+# marriage storyline failed to remove the trait.
+# =========================================================
+
+segrellion_debug_remove_refusing_marriage_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_knight_kneeling.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_debug_remove_refusing_marriage_decision_desc
+
+	selection_tooltip = segrellion_debug_remove_refusing_marriage_decision_tooltip
+
+	confirm_text = segrellion_debug_remove_refusing_marriage_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		is_ai = no
+
+		has_trait = refusing_marriage
+
+
+		OR = {
+
+			this = character:Segrellion_60
+
+			this = character:IAF_Young_Griff_1
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_alive = yes
+
+		is_adult = yes
+
+		is_imprisoned = no
+
+		has_trait = refusing_marriage
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_debug_remove_refusing_marriage_effect_tt
+
+
+		hidden_effect = {
+
+			remove_trait = refusing_marriage
+
+			add_character_flag = segrellion_debug_refusing_marriage_removed
+		}
+	}
+
+
+	# =====================================================
+	# NEVER AI
+	# =====================================================
+
+	ai_check_interval = 0
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+# =========================================================
+# DAENERYS
+# RESTORE FERTILITY
+#
+# Available only from 303 AC onward.
+#
+# Normal story events should remove no_more_children_modifier.
+# This decision exists only as a recovery mechanism.
+# =========================================================
+
+segrellion_debug_daenerys_restore_fertility_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_debug_daenerys_restore_fertility_decision_desc
+
+	selection_tooltip = segrellion_debug_daenerys_restore_fertility_decision_tooltip
+
+	confirm_text = segrellion_debug_daenerys_restore_fertility_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		is_ai = no
+
+		this = character:Targaryen_9
+
+		current_date >= 8303.1.1
+
+		has_character_modifier = no_more_children_modifier
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_alive = yes
+
+		is_adult = yes
+
+		is_imprisoned = no
+
+		current_date >= 8303.1.1
+
+		has_character_modifier = no_more_children_modifier
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_debug_daenerys_restore_fertility_effect_tt
+
+
+		hidden_effect = {
+
+			remove_character_modifier = no_more_children_modifier
+
+			add_character_flag = segrellion_debug_daenerys_fertility_restored
+		}
+	}
+
+
+	# =====================================================
+	# NEVER AI
+	# =====================================================
+
+	ai_check_interval = 0
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

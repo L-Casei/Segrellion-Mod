@@ -1,0 +1,299 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# DRAGON MAINTENANCE
+#
+# - Drogon remains the largest of the three.
+# - Rhaegal and Viserion receive accelerated growth.
+# - All three remain physically close to Daenerys.
+# - Dragons deliberately confined in a dragonpit are ignored.
+# =========================================================
+
+
+segrellion_daenerys_dragon_maintenance_effect = {
+
+	character:Targaryen_9 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			save_scope_as = segrellion_daenerys_dragon_anchor
+
+
+			# =================================================
+			# DROGON
+			# =================================================
+
+			character:dragon_drogon ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					# -----------------------------------------
+					# KEEP DROGON WITH DAENERYS
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = in_dragonpit
+							}
+						}
+
+
+						set_location = scope:segrellion_daenerys_dragon_anchor.location
+					}
+
+
+					# -----------------------------------------
+					# INITIAL SIZE CORRECTION
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_dragon_size_corrected
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 8
+						}
+
+						add_prowess_skill = 4
+
+
+						add_character_flag = segrellion_daenerys_dragon_size_corrected
+
+						add_character_flag = {
+							flag = segrellion_daenerys_bonus_growth_cooldown
+							years = 1
+						}
+					}
+
+
+					# -----------------------------------------
+					# ACCELERATED YEARLY GROWTH
+					# -----------------------------------------
+
+					else_if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_bonus_growth_cooldown
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 3
+						}
+
+						add_prowess_skill = 1
+
+
+						add_character_flag = {
+							flag = segrellion_daenerys_bonus_growth_cooldown
+							years = 1
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# RHAEGAL
+			# =================================================
+
+			character:dragon_rhaegal ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					# -----------------------------------------
+					# KEEP RHAEGAL WITH DAENERYS
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = in_dragonpit
+							}
+						}
+
+
+						set_location = scope:segrellion_daenerys_dragon_anchor.location
+					}
+
+
+					# -----------------------------------------
+					# INITIAL SIZE CORRECTION
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_dragon_size_corrected
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 6
+						}
+
+						add_prowess_skill = 3
+
+
+						add_character_flag = segrellion_daenerys_dragon_size_corrected
+
+						add_character_flag = {
+							flag = segrellion_daenerys_bonus_growth_cooldown
+							years = 1
+						}
+					}
+
+
+					# -----------------------------------------
+					# ACCELERATED YEARLY GROWTH
+					# -----------------------------------------
+
+					else_if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_bonus_growth_cooldown
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 2
+						}
+
+						add_prowess_skill = 1
+
+
+						add_character_flag = {
+							flag = segrellion_daenerys_bonus_growth_cooldown
+							years = 1
+						}
+					}
+				}
+			}
+
+
+			# =================================================
+			# VISERION
+			# =================================================
+
+			character:dragon_viserion ?= {
+
+				if = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					# -----------------------------------------
+					# KEEP VISERION WITH DAENERYS
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = in_dragonpit
+							}
+						}
+
+
+						set_location = scope:segrellion_daenerys_dragon_anchor.location
+					}
+
+
+					# -----------------------------------------
+					# INITIAL SIZE CORRECTION
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_dragon_size_corrected
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 6
+						}
+
+						add_prowess_skill = 3
+
+
+						add_character_flag = segrellion_daenerys_dragon_size_corrected
+
+						add_character_flag = {
+							flag = segrellion_daenerys_bonus_growth_cooldown
+							years = 1
+						}
+					}
+
+
+					# -----------------------------------------
+					# ACCELERATED YEARLY GROWTH
+					# -----------------------------------------
+
+					else_if = {
+
+						limit = {
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_bonus_growth_cooldown
+							}
+						}
+
+
+						change_dragon_size = {
+							VALUE = 2
+						}
+
+						add_prowess_skill = 1
+
+
+						add_character_flag = {
+							flag = segrellion_daenerys_bonus_growth_cooldown
+							years = 1
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -10,7 +10,41 @@ on_war_started = {
 
 	on_actions = {
 		segrellion_tommen_block_offensive_war
+		segrellion_shireen_block_offensive_war
 		segrellion_baelish_anti_north_war_meddling
+	}
+}
+
+# =========================================================
+# SHIREEN BARATHEON
+# BLOCK AUTONOMOUS AI OFFENSIVE WARS
+# =========================================================
+
+segrellion_shireen_block_offensive_war = {
+
+	trigger = {
+
+		exists = scope:war
+		exists = scope:attacker
+
+		scope:attacker = character:Baratheon_13
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+
+			is_ai = yes
+		}
+	}
+
+
+	effect = {
+
+		scope:war = {
+
+			end_war = invalidated
+		}
 	}
 }
 
