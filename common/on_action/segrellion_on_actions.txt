@@ -12,6 +12,7 @@ monthly_global_pulse = {
 		segrellion_tommen_peace_guard
 		segrellion_shireen_peace_guard
 		segrellion_daemon_young_griff_war_allegiance_progression
+		segrellion_daenerys_post_throne_progression
 		segrellion_trueflame_historical_progression
 		segrellion_rhaegar_historical_progression
 		segrellion_protect_hugh_vhal_from_stormflames
@@ -129,6 +130,7 @@ on_title_gain = {
 	on_actions = {
 		segrellion_daemon_flamelands_title_gain
 		segrellion_daenerys_iron_throne_fertility_restore
+		segrellion_daenerys_post_throne_title_gain
 		segrellion_young_griff_blackfyre_reveal_on_title_gain
 		segrellion_young_griff_daenerys_pact_title_gain
 		segrellion_young_griff_crownlands_guard_progression
@@ -5610,5 +5612,42 @@ segrellion_jon_winterfell_council_ai_failsafe = {
 				}
 			}
 		}
+	}
+}
+
+# =========================================================
+# DAENERYS - POST THRONE STORY
+# =========================================================
+
+segrellion_daenerys_post_throne_title_gain = {
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		scope:title ?= {
+			this = title:h_the_iron_throne
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_post_throne_started
+		}
+	}
+
+
+	effect = {
+
+		segrellion_start_daenerys_post_throne_effect = yes
+	}
+}
+
+
+segrellion_daenerys_post_throne_progression = {
+
+	effect = {
+
+		segrellion_daenerys_post_throne_recovery_effect = yes
 	}
 }

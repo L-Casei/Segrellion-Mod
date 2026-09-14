@@ -1,0 +1,631 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# POST-THRONE PACIFICATION
+# =========================================================
+
+
+# =========================================================
+# START POST-THRONE STORY
+# =========================================================
+
+segrellion_start_daenerys_post_throne_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_post_throne_started
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_post_throne_started
+
+		add_character_flag = segrellion_daenerys_pacification_active
+
+
+		set_variable = {
+			name = segrellion_daenerys_pacification_tyranny
+			value = 0
+		}
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+			}
+
+			remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
+		}
+
+
+		remove_character_flag = sworn_peace
+
+
+		trigger_event = {
+			id = segrellion_daenerys_post_throne.0001
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# SAVE COMPATIBILITY / FAILSAFE
+# =========================================================
+
+segrellion_daenerys_post_throne_recovery_effect = {
+
+	character:Targaryen_9 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_title = title:h_the_iron_throne
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_post_throne_started
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_special_story_abandoned
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_free_cities_path
+				}
+			}
+
+
+			segrellion_start_daenerys_post_throne_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# CHANGE PACIFICATION TYRANNY
+#
+# VALUE = amount to add
+# =========================================================
+
+segrellion_change_daenerys_pacification_tyranny_effect = {
+
+	change_variable = {
+		name = segrellion_daenerys_pacification_tyranny
+		add = $VALUE$
+	}
+
+
+	if = {
+
+		limit = {
+			var:segrellion_daenerys_pacification_tyranny > 100
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_pacification_tyranny
+			value = 100
+		}
+	}
+
+
+	if = {
+
+		limit = {
+			var:segrellion_daenerys_pacification_tyranny < 0
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_pacification_tyranny
+			value = 0
+		}
+	}
+
+
+	segrellion_refresh_daenerys_pacification_modifier_effect = yes
+}
+
+
+# =========================================================
+# TYRANNY CONSEQUENCES
+# =========================================================
+
+segrellion_refresh_daenerys_pacification_modifier_effect = {
+
+	if = {
+		limit = {
+			has_character_modifier = segrellion_pacification_tyranny_1_modifier
+		}
+		remove_character_modifier = segrellion_pacification_tyranny_1_modifier
+	}
+
+	if = {
+		limit = {
+			has_character_modifier = segrellion_pacification_tyranny_2_modifier
+		}
+		remove_character_modifier = segrellion_pacification_tyranny_2_modifier
+	}
+
+	if = {
+		limit = {
+			has_character_modifier = segrellion_pacification_tyranny_3_modifier
+		}
+		remove_character_modifier = segrellion_pacification_tyranny_3_modifier
+	}
+
+	if = {
+		limit = {
+			has_character_modifier = segrellion_pacification_tyranny_4_modifier
+		}
+		remove_character_modifier = segrellion_pacification_tyranny_4_modifier
+	}
+
+
+	if = {
+
+		limit = {
+			var:segrellion_daenerys_pacification_tyranny >= 80
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_pacification_tyranny_4_modifier
+		}
+	}
+
+	else_if = {
+
+		limit = {
+			var:segrellion_daenerys_pacification_tyranny >= 60
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_pacification_tyranny_3_modifier
+		}
+	}
+
+	else_if = {
+
+		limit = {
+			var:segrellion_daenerys_pacification_tyranny >= 40
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_pacification_tyranny_2_modifier
+		}
+	}
+
+	else_if = {
+
+		limit = {
+			var:segrellion_daenerys_pacification_tyranny >= 20
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_pacification_tyranny_1_modifier
+		}
+	}
+}
+
+
+# =========================================================
+# TYRION - HAND OF THE QUEEN
+# =========================================================
+
+segrellion_daenerys_install_tyrion_hand_effect = {
+
+	character:Lannister_8 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			if = {
+
+				limit = {
+					is_ruler = no
+				}
+
+				set_employer = character:Targaryen_9
+			}
+
+
+			character:Targaryen_9 = {
+
+				assign_councillor_type = {
+					type = councillor_chancellor
+					target = character:Lannister_8
+					remove_existing_councillor = yes
+				}
+
+				add_character_flag = segrellion_tyrion_named_hand
+			}
+
+
+			character:Lannister_8 = {
+				add_character_flag = segrellion_tyrion_hand_of_daenerys
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# REBUILD THE KINGSGUARD
+#
+# Jaime remains.
+# Barristan becomes Lord Commander.
+# Every other living Kingsguard member is sent to the Wall.
+# =========================================================
+
+segrellion_daenerys_rebuild_kingsguard_effect = {
+
+	character:Targaryen_9 = {
+		save_scope_as = segrellion_daenerys_queen
+	}
+
+
+	# =====================================================
+	# REMOVE THE OLD GUARD
+	# =====================================================
+
+	character:Targaryen_9 = {
+
+		every_councillor = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_trait = kingsguard
+
+				this != character:Lannister_7
+
+				this != character:Selmy_3
+			}
+
+
+			agot_add_to_nightswatch_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# JAIME LANNISTER
+	# =====================================================
+
+	character:Lannister_7 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			if = {
+
+				limit = {
+					NOT = {
+						has_trait = kingsguard
+					}
+				}
+
+				agot_join_kingsguard_effect = {
+					KINGSGUARD = character:Lannister_7
+					KING = character:Targaryen_9
+				}
+			}
+
+			else_if = {
+
+				limit = {
+
+					NOT = {
+						is_councillor_of = character:Targaryen_9
+					}
+				}
+
+				agot_join_kingsguard_effect = {
+					KINGSGUARD = character:Lannister_7
+					KING = character:Targaryen_9
+				}
+			}
+
+
+			add_character_flag = segrellion_jaime_retained_by_daenerys
+		}
+	}
+
+
+	# =====================================================
+	# BARRISTAN SELMY
+	# =====================================================
+
+	character:Selmy_3 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			if = {
+
+				limit = {
+					NOT = {
+						has_trait = kingsguard
+					}
+				}
+
+				agot_join_kingsguard_effect = {
+					KINGSGUARD = character:Selmy_3
+					KING = character:Targaryen_9
+				}
+			}
+
+
+			agot_assign_lord_commander_effect = {
+				COMMANDER = character:Selmy_3
+				KING = character:Targaryen_9
+			}
+
+
+			add_character_flag = segrellion_barristan_lord_commander_daenerys
+		}
+	}
+
+
+	character:Targaryen_9 = {
+		add_character_flag = segrellion_daenerys_kingsguard_rebuilt
+	}
+}
+
+
+# =========================================================
+# GIVE WESTERLANDS TO TYRION
+# =========================================================
+
+segrellion_daenerys_give_westerlands_to_tyrion_effect = {
+
+	if = {
+
+		limit = {
+
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		title:e_the_westerlands = {
+			grant_title = character:Lannister_8
+		}
+
+
+		character:Lannister_8 = {
+
+			add_character_flag = segrellion_tyrion_lord_paramount_westerlands
+		}
+	}
+}
+
+
+# =========================================================
+# CURRENT WESTERLANDS HOLDER SWEARS FEALTY
+# =========================================================
+
+segrellion_westerlands_holder_swears_to_daenerys_effect = {
+
+	create_title_and_vassal_change = {
+
+		type = swear_fealty
+
+		save_scope_as = segrellion_westerlands_fealty_change
+
+		add_claim_on_loss = no
+	}
+
+
+	scope:segrellion_westerlands_holder = {
+
+		change_liege = {
+
+			liege = character:Targaryen_9
+
+			change = scope:segrellion_westerlands_fealty_change
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_westerlands_fealty_change
+
+
+	scope:segrellion_westerlands_holder = {
+		add_character_flag = segrellion_swore_fealty_to_daenerys
+	}
+}
+
+
+# =========================================================
+# EXECUTE CURRENT WESTERLANDS HOLDER
+# =========================================================
+
+segrellion_daenerys_execute_westerlands_holder_effect = {
+
+	scope:segrellion_westerlands_holder ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			death = {
+				death_reason = death_execution
+				killer = character:Targaryen_9
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# PURGE HOUSE LANNISTER
+#
+# Tyrion alone survives.
+# =========================================================
+
+segrellion_daenerys_purge_house_lannister_effect = {
+
+	dynasty:dynn_Lannister = {
+
+		every_dynasty_member = {
+
+			limit = {
+
+				is_alive = yes
+
+				this != character:Lannister_8
+			}
+
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = character:Targaryen_9
+			}
+		}
+	}
+
+
+	title:e_the_westerlands = {
+
+		grant_title = character:Targaryen_9
+	}
+
+
+	character:Lannister_8 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			add_opinion = {
+
+				target = character:Targaryen_9
+
+				modifier = segrellion_tyrion_horrified_by_lannister_purge_opinion
+
+				years = 25
+			}
+
+			add_character_flag = segrellion_tyrion_witnessed_lannister_purge
+		}
+	}
+
+
+	character:Targaryen_9 = {
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 40
+		}
+
+		add_character_flag = segrellion_daenerys_destroyed_house_lannister
+	}
+}
+
+
+# =========================================================
+# JOFFREY VLADWYN
+# RETURN OF THE TRUE SENTINELS
+# =========================================================
+
+segrellion_joffrey_returns_true_sentinels_to_essos_effect = {
+
+	character:Vladwyn_5 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			add_character_flag = segrellion_joffrey_refused_daenerys_court
+
+			add_character_flag = segrellion_joffrey_true_sentinels_returned_to_essos
+
+
+			set_location = title:c_pentos.title_province
+
+
+			domicile ?= {
+				move_domicile = title:c_pentos.title_province
+			}
+
+
+			if = {
+
+				limit = {
+					has_domicile = yes
+				}
+
+
+				create_maa_regiment = {
+					type = black_sentinels
+					check_can_recruit = no
+					size = 10
+				}
+
+				create_maa_regiment = {
+					type = armored_footmen
+					check_can_recruit = no
+					size = 8
+				}
+
+				create_maa_regiment = {
+					type = pikemen_unit
+					check_can_recruit = no
+					size = 6
+				}
+
+				create_maa_regiment = {
+					type = bowmen
+					check_can_recruit = no
+					size = 6
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# WESTERLANDS COMPLETED
+# =========================================================
+
+segrellion_daenerys_westerlands_resolved_effect = {
+
+	add_character_flag = segrellion_daenerys_westerlands_resolved
+
+	add_character_flag = segrellion_daenerys_pacification_next_issue_ready
+}

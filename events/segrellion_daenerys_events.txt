@@ -220,10 +220,16 @@ segrellion_daenerys_invasion.0001 = {
 		custom_tooltip = segrellion_daenerys_invasion.0001.b.tt
 
 
-		# AI timing is already controlled by the Game Rule.
-		# This exists primarily for the player.
+		# Until Free Cities is implemented, AI assigned that route chooses B.
 		ai_chance = {
-			base = 0
+			base = 100
+
+			modifier = {
+				factor = 0
+				NOT = {
+					has_character_flag = segrellion_daenerys_ai_free_cities_route
+				}
+			}
 		}
 
 
@@ -263,7 +269,14 @@ segrellion_daenerys_invasion.0001 = {
 
 
 		ai_chance = {
-			base = 0
+			base = 100
+
+			modifier = {
+				factor = 0
+				NOT = {
+					has_character_flag = segrellion_daenerys_ai_free_cities_route
+				}
+			}
 		}
 
 
@@ -290,77 +303,27 @@ segrellion_daenerys_invasion.0001 = {
 	# =====================================================
 	# OPTION C
 	# REJECT WESTEROS
-	#
-	# Abandons Iron Throne ambitions permanently.
-	# Keeps Dragonstone.
-	# Sets up future Free Cities storyline.
+	# FREE CITIES PATH
+	# FUTURE STORYLINE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_invasion.0001.c
 
+		trigger = {
+			always = no
+		}
+
+		show_as_unavailable = {
+			always = yes
+		}
+
 		custom_tooltip = segrellion_daenerys_invasion.0001.c.tt
 
-
 		ai_chance = {
-
 			base = 0
-
-			modifier = {
-
-				add = 100
-
-				has_character_flag = segrellion_daenerys_ai_free_cities_route
-			}
 		}
-
-
-		remove_character_flag = segrellion_daenerys_invasion_delayed
-		remove_character_flag = segrellion_daenerys_invasion_delayed_once
-		remove_character_flag = segrellion_daenerys_invasion_committed
-
-
-		# =================================================
-		# REMOVE EVERY CLAIM EXCEPT DRAGONSTONE
-		# =================================================
-
-		every_claim = {
-
-			limit = {
-
-				this != title:c_dragonstone
-			}
-
-			root = {
-				remove_claim = prev
-			}
-		}
-
-
-		# Westeros is permanently rejected.
-		remove_character_flag = sworn_peace		
-		if = {
-			limit = {
-				has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
-			}
-			remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
-		}
-		add_character_flag = segrellion_daenerys_invasion_abandoned
-		add_character_flag = segrellion_daenerys_westeros_rejected
-
-
-		# =================================================
-		# FUTURE FREE CITIES PATH
-		#
-		# Intentionally does NOTHING yet.
-		#
-		# When Essos is sufficiently implemented we can use
-		# these flags as the entry point to the next story.
-		# =================================================
-
-		add_character_flag = segrellion_daenerys_free_cities_path
-		add_character_flag = segrellion_daenerys_free_cities_path_pending
 	}
 }
 

@@ -1,0 +1,1361 @@
+namespace = segrellion_daenerys_post_throne
+
+
+# =========================================================
+# 0001 - THE WAR IS WON
+# =========================================================
+
+segrellion_daenerys_post_throne.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0001.t
+
+	desc = segrellion_daenerys_post_throne.0001.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_daenerys_post_throne_started
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0001.a
+
+
+		if = {
+
+			limit = {
+
+				character:Lannister_8 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0002
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0003
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0002 - THE QUEEN'S HAND
+# =========================================================
+
+segrellion_daenerys_post_throne.0002 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0002.t
+
+	desc = segrellion_daenerys_post_throne.0002.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		character:Lannister_8 ?= {
+			is_alive = yes
+		}
+
+		NOT = {
+			has_character_flag = segrellion_tyrion_named_hand
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_cynical
+	}
+
+
+	immediate = {
+
+		segrellion_daenerys_install_tyrion_hand_effect = yes
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0002.a
+
+
+		trigger_event = {
+			id = segrellion_daenerys_post_throne.0003
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0003 - THE WHITE BOOK
+# =========================================================
+
+segrellion_daenerys_post_throne.0003 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0003.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Selmy_3 ?= {
+						is_alive = yes
+					}
+				}
+
+				desc = segrellion_daenerys_post_throne.0003.desc_barristan
+			}
+
+
+			desc = segrellion_daenerys_post_throne.0003.desc_no_barristan
+		}
+	}
+
+	theme = martial
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_kingsguard_rebuilt
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	immediate = {
+
+		segrellion_daenerys_rebuild_kingsguard_effect = yes
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0003.a
+
+
+		trigger_event = {
+			id = segrellion_daenerys_post_throne.0010
+			days = { 2 5 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - WESTERLANDS ROUTER
+# =========================================================
+
+segrellion_daenerys_post_throne.0010 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_westerlands_resolved
+		}
+
+		title:e_the_westerlands = {
+			exists = holder
+		}
+	}
+
+
+	immediate = {
+
+		title:e_the_westerlands.holder = {
+			save_scope_as = segrellion_westerlands_holder
+		}
+
+
+		# =================================================
+		# JOFFREY VLADWYN
+		# =================================================
+
+		if = {
+
+			limit = {
+				scope:segrellion_westerlands_holder = character:Vladwyn_5
+			}
+
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0040
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# CLOSE LANNISTER FAMILY
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				OR = {
+
+					scope:segrellion_westerlands_holder = character:Lannister_6
+
+					scope:segrellion_westerlands_holder = character:Lannister_7
+
+					scope:segrellion_westerlands_holder = character:Baratheon_6
+
+					scope:segrellion_westerlands_holder = character:Baratheon_7
+				}
+			}
+
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0020
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# ANOTHER LANNISTER
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				scope:segrellion_westerlands_holder = {
+					dynasty = dynasty:dynn_Lannister
+				}
+			}
+
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0030
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# UNEXPECTED HOLDER
+		# =================================================
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0035
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - THE LION'S DEBT
+# CLOSE LANNISTER FAMILY
+# =========================================================
+
+segrellion_daenerys_post_throne.0020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0020.t
+
+	desc = segrellion_daenerys_post_throne.0020.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	immediate = {
+
+		title:e_the_westerlands.holder = {
+			save_scope_as = segrellion_westerlands_holder
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_westerlands_holder
+		animation = worry
+	}
+
+
+	# =====================================================
+	# TYRION DECIDES
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0020.a
+
+		trigger = {
+
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Lannister_8 = {
+
+			set_variable = {
+				name = segrellion_westerlands_prisoner
+				value = scope:segrellion_westerlands_holder
+			}
+		}
+
+
+		segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+
+		character:Lannister_8 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0021
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+
+	# =====================================================
+	# EXECUTE HOLDER, THEN TYRION
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0020.b
+
+		trigger = {
+
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_execute_westerlands_holder_effect = yes
+
+		segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 15
+		}
+
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# DESTROY HOUSE LANNISTER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0020.c
+
+
+		segrellion_daenerys_purge_house_lannister_effect = yes
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0021 - TYRION DECIDES THEIR FATE
+# =========================================================
+
+segrellion_daenerys_post_throne.0021 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0021.t
+
+	desc = segrellion_daenerys_post_throne.0021.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Lannister_8
+
+		is_alive = yes
+
+		has_variable = segrellion_westerlands_prisoner
+	}
+
+
+	immediate = {
+
+		var:segrellion_westerlands_prisoner = {
+			save_scope_as = segrellion_westerlands_prisoner
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_cynical
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_westerlands_prisoner
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0021.a
+
+
+		scope:segrellion_westerlands_prisoner = {
+
+			add_character_flag = segrellion_lannister_spared_by_tyrion
+		}
+
+
+		remove_variable = segrellion_westerlands_prisoner
+
+
+		character:Targaryen_9 = {
+			segrellion_daenerys_westerlands_resolved_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0021.b
+
+
+		scope:segrellion_westerlands_prisoner = {
+
+			death = {
+				death_reason = death_execution
+				killer = root
+			}
+		}
+
+
+		remove_variable = segrellion_westerlands_prisoner
+
+
+		character:Targaryen_9 = {
+			segrellion_daenerys_westerlands_resolved_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - ANOTHER LANNISTER
+# =========================================================
+
+segrellion_daenerys_post_throne.0030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0030.t
+
+	desc = segrellion_daenerys_post_throne.0030.desc
+
+	theme = crown
+
+
+	immediate = {
+
+		title:e_the_westerlands.holder = {
+			save_scope_as = segrellion_westerlands_holder
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_westerlands_holder
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0030.a
+
+		trigger = {
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Lannister_8 = {
+
+			set_variable = {
+				name = segrellion_westerlands_prisoner
+				value = scope:segrellion_westerlands_holder
+			}
+		}
+
+
+		segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+
+		character:Lannister_8 = {
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0021
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0030.b
+
+
+		segrellion_westerlands_holder_swears_to_daenerys_effect = yes
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0030.c
+
+		trigger = {
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_execute_westerlands_holder_effect = yes
+
+		segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 15
+		}
+
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0030.d
+
+
+		segrellion_daenerys_purge_house_lannister_effect = yes
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0035 - UNEXPECTED HOLDER
+# =========================================================
+
+segrellion_daenerys_post_throne.0035 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0035.t
+
+	desc = segrellion_daenerys_post_throne.0035.desc
+
+	theme = crown
+
+
+	immediate = {
+
+		title:e_the_westerlands.holder = {
+			save_scope_as = segrellion_westerlands_holder
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_westerlands_holder
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0035.a
+
+
+		segrellion_westerlands_holder_swears_to_daenerys_effect = yes
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0035.b
+
+		trigger = {
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - THE BLACK SENTINEL
+# JOFFREY VLADWYN HOLDS THE WESTERLANDS
+# =========================================================
+
+segrellion_daenerys_post_throne.0040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0040.t
+
+	desc = segrellion_daenerys_post_throne.0040.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Vladwyn_5
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# MARRIAGE / KING CONSORT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0040.a
+
+		trigger = {
+
+			is_married = no
+
+			character:Vladwyn_5 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Vladwyn_5 = {
+
+			add_opinion = {
+				target = character:Targaryen_9
+				modifier = segrellion_daenerys_offered_joffrey_crown_opinion
+			}
+
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0041
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+
+
+	# =====================================================
+	# TYRION GETS WESTERLANDS, JOFFREY OFFERED COURT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0040.b
+
+		trigger = {
+
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+
+		character:Vladwyn_5 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0042
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+
+	# =====================================================
+	# JOFFREY KEEPS WESTERLANDS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0040.c
+
+
+		segrellion_westerlands_holder_swears_to_daenerys_effect = yes
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 5
+		}
+
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_supported_vladwyn_westerlands_modifier
+			years = 5
+		}
+
+
+		character:Lannister_8 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_opinion = {
+					target = root
+					modifier = segrellion_tyrion_resented_vladwyn_westerlands_opinion
+					years = 10
+				}
+			}
+		}
+
+
+		dynasty:dynn_Lannister = {
+
+			every_dynasty_member = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_opinion = {
+					target = character:Targaryen_9
+					modifier = segrellion_lannister_resented_vladwyn_westerlands_opinion
+					years = 10
+				}
+			}
+		}
+
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+
+
+		ai_chance = {
+			base = 45
+		}
+	}
+
+
+	# =====================================================
+	# SWAP WESTERLANDS FOR STORMLANDS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0040.d
+
+		trigger = {
+
+			has_title = title:e_the_stormlands
+
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+
+			character:Vladwyn_5 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Vladwyn_5 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0044
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 0041 - JOFFREY: THE QUEEN'S OFFER
+# =========================================================
+
+segrellion_daenerys_post_throne.0041 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0041.t
+
+	desc = segrellion_daenerys_post_throne.0041.desc
+
+	theme = marriage
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0041.a
+
+
+		if = {
+
+			limit = {
+				is_married = yes
+			}
+
+
+			every_spouse = {
+				divorce = root
+			}
+		}
+
+
+		character:Targaryen_9 = {
+			add_spouse = root
+		}
+
+
+		if = {
+
+			limit = {
+				character:Lannister_8 ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Targaryen_9 = {
+				segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_joffrey_king_consort_daenerys
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_married_joffrey_vladwyn
+
+			segrellion_daenerys_westerlands_resolved_effect = yes
+		}
+
+
+		ai_chance = {
+
+			base = 45
+
+
+			modifier = {
+
+				add = 100
+
+				has_character_flag = segrellion_supported_daenerys_invasion
+			}
+
+
+			modifier = {
+
+				factor = 0.35
+
+				has_character_flag = segrellion_opposed_daenerys_invasion
+			}
+
+
+			modifier = {
+
+				factor = 0.15
+
+				is_married = yes
+			}
+
+
+			modifier = {
+
+				add = 35
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				add = -30
+
+				opinion = {
+					target = character:Targaryen_9
+					value < 0
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0041.b
+
+
+		add_opinion = {
+			target = character:Targaryen_9
+			modifier = segrellion_joffrey_rejected_daenerys_opinion
+		}
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0046
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 55
+		}
+	}
+}
+
+
+# =========================================================
+# 0042 - JOFFREY OFFERED A PLACE AT COURT
+# =========================================================
+
+segrellion_daenerys_post_throne.0042 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0042.t
+
+	desc = segrellion_daenerys_post_throne.0042.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0042.a
+
+
+		if = {
+
+			limit = {
+				is_ruler = no
+			}
+
+			set_employer = character:Targaryen_9
+		}
+
+
+		add_character_flag = segrellion_joffrey_joined_daenerys_court
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_westerlands_resolved_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0042.b
+
+
+		character:Targaryen_9 = {
+
+			segrellion_joffrey_returns_true_sentinels_to_essos_effect = yes
+
+			segrellion_daenerys_westerlands_resolved_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 75
+		}
+	}
+}
+
+
+# =========================================================
+# 0044 - JOFFREY: THE STORMLANDS EXCHANGE
+# =========================================================
+
+segrellion_daenerys_post_throne.0044 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0044.t
+
+	desc = segrellion_daenerys_post_throne.0044.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0044.a
+
+
+		title:e_the_stormlands = {
+			grant_title = root
+		}
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+			segrellion_daenerys_westerlands_resolved_effect = yes
+		}
+
+
+		add_character_flag = segrellion_joffrey_exchanged_westerlands_for_stormlands
+
+
+		ai_chance = {
+			base = 85
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0044.b
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_post_throne.0046
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}
+
+
+# =========================================================
+# 0046 - JOFFREY REFUSES
+# =========================================================
+
+segrellion_daenerys_post_throne.0046 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0046.t
+
+	desc = segrellion_daenerys_post_throne.0046.desc
+
+	theme = crown
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Vladwyn_5
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0046.a
+
+		trigger = {
+
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_give_westerlands_to_tyrion_effect = yes
+
+		segrellion_joffrey_returns_true_sentinels_to_essos_effect = yes
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0046.b
+
+
+		segrellion_westerlands_holder_swears_to_daenerys_effect = yes
+
+
+		segrellion_change_daenerys_pacification_tyranny_effect = {
+			VALUE = 5
+		}
+
+
+		segrellion_daenerys_westerlands_resolved_effect = yes
+	}
+}
