@@ -5259,26 +5259,24 @@ segrellion_cersei_young_griff_margaery_transition_effect = {
 }
 
 # =========================================================
-# YOUNG GRIFF - KNIVES AROUND THE IRON THRONE
+# YOUNG GRIFF - BLACKFYRE ASSASSINATION PRESSURE
 #
-# Canon pressure:
+# Once Aegon's Blackfyre identity is PUBLIC:
 #
-# Aegon is NOT killed by script.
-# Instead, surviving enemies repeatedly attempt legitimate
-# CK3 murder schemes until one succeeds or Aegon manages
-# to outlive / neutralize them.
+# - he becomes dramatically more vulnerable to hostile schemes
+# - murder plots are retried every month
+# - Olenna / Baelish / Cersei are handled through 8900
+# - hostile Varys continues retrying independently
 #
-# OLENNA  -> retried through event 8900
-# BAELISH -> retried through event 8900
-# CERSEI  -> retried if she wants him dead
-# VARYS   -> retried only if Aegon betrayed him over Tommen
+# This no longer waits for:
+#
+# - the Iron Throne
+# - Tommen's fate
+# - Cersei's settlement
+# - the post-conquest chain
 # =========================================================
 
 segrellion_young_griff_assassination_pressure_effect = {
-
-	# =====================================================
-	# AEGON IS KING
-	# =====================================================
 
 	if = {
 
@@ -5288,14 +5286,12 @@ segrellion_young_griff_assassination_pressure_effect = {
 
 			is_alive = yes
 
-			has_title = title:h_the_iron_throne
-
-			has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
 		}
 
 
 		# =================================================
-		# THE THRONE HAS BECOME A NEST OF KNIVES
+		# PERMANENT VULNERABILITY
 		# =================================================
 
 		if = {
@@ -5316,31 +5312,48 @@ segrellion_young_griff_assassination_pressure_effect = {
 
 
 		# =================================================
-		# OLENNA / BAELISH / CERSEI
+		# MAKE SURE THE CONSPIRACY STATE EXISTS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_post_conquest_conspiracies_started
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_post_conquest_conspiracies_started
+		}
+
+
+		# =================================================
+		# RETRY OLENNA / BAELISH / CERSEI
 		#
-		# 8900 uses can_start_scheme.
-		# Therefore:
+		# This runs from monthly_global_pulse.
 		#
-		# - an existing scheme is not duplicated
-		# - a failed scheme can be attempted again later
-		# - imprisonment / temporary restrictions merely
-		#   postpone the next attempt
+		# If a previous scheme is still running,
+		# can_start_scheme prevents duplication.
+		#
+		# If it failed, was abandoned, or became invalid,
+		# another attempt can begin on a later month.
 		# =================================================
 
 		trigger_event = {
 
 			id = segrellion_young_griff.8900
 
-			days = { 1 5 }
+			days = { 1 3 }
 		}
 
 
 		# =================================================
 		# VARYS
 		#
-		# Only hostile if Aegon already broke faith with him.
-		# Most importantly, his first failed murder attempt
-		# is no longer his only attempt.
+		# Varys only joins the knives if he has already
+		# turned against Aegon.
 		# =================================================
 
 		if = {
@@ -5389,10 +5402,6 @@ segrellion_young_griff_assassination_pressure_effect = {
 		}
 	}
 
-
-	# =====================================================
-	# NO LONGER KING
-	# =====================================================
 
 	else = {
 

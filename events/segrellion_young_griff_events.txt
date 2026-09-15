@@ -8180,13 +8180,18 @@ segrellion_young_griff.9030 = {
 }
 
 # =========================================================
-# 8900 - KNIVES AROUND THE IRON THRONE
-# Root = Aegon
+# 8900 - KNIVES AROUND THE BLACK DRAGON
+#
+# Root = Young Griff
+#
+# Once Aegon has been publicly exposed as a Blackfyre,
+# old enemies begin repeatedly attempting to murder him.
 # =========================================================
 
 segrellion_young_griff.8900 = {
 
 	hidden = yes
+
 
 	trigger = {
 
@@ -8194,28 +8199,35 @@ segrellion_young_griff.8900 = {
 
 		is_alive = yes
 
-		has_title = title:h_the_iron_throne
-
-		has_character_flag = segrellion_young_griff_cersei_settlement_resolved
+		has_character_flag = segrellion_young_griff_blackfyre_revealed
 	}
 
+
 	immediate = {
+
+		# =================================================
+		# OLENNA TYRELL
+		# =================================================
 
 		if = {
 
 			limit = {
 
 				title:k_the_reach.holder ?= {
+
 					mother ?= {
 						is_alive = yes
 					}
 				}
 			}
 
+
 			title:k_the_reach.holder.mother = {
+
 				save_scope_as = segrellion_olenna
 			}
 		}
+
 
 		else_if = {
 
@@ -8232,11 +8244,17 @@ segrellion_young_griff.8900 = {
 				}
 			}
 
+
 			title:k_the_reach.holder.father.mother = {
+
 				save_scope_as = segrellion_olenna
 			}
 		}
 
+
+		# =================================================
+		# OLENNA STARTS / RESTARTS HER MURDER SCHEME
+		# =================================================
 
 		if = {
 
@@ -8244,43 +8262,74 @@ segrellion_young_griff.8900 = {
 
 				exists = scope:segrellion_olenna
 
+
 				scope:segrellion_olenna = {
 
 					is_alive = yes
+
 					is_adult = yes
+
 					is_imprisoned = no
 
+
 					can_start_scheme = {
+
 						type = murder
+
 						target_character = root
 					}
 				}
 			}
 
+
 			scope:segrellion_olenna = {
 
 				start_scheme = {
+
 					type = murder
+
 					target_character = character:IAF_Young_Griff_1
 				}
+
 
 				add_character_flag = segrellion_olenna_murdering_young_griff
 			}
 		}
 
 
-		every_targeting_scheme = {
+		# =================================================
+		# SAVE OLENNA'S CURRENT MURDER SCHEME
+		#
+		# IMPORTANT:
+		# Previously this tried to reference the Olenna scope
+		# even when the scope had not been found.
+		# =================================================
+
+		if = {
 
 			limit = {
-				scheme_owner = scope:segrellion_olenna
+				exists = scope:segrellion_olenna
 			}
 
-			save_scope_as = segrellion_olenna_aegon_murder_scheme
+
+			every_targeting_scheme = {
+
+				limit = {
+
+					scheme_owner = scope:segrellion_olenna
+				}
+
+
+				save_scope_as = segrellion_olenna_aegon_murder_scheme
+			}
 		}
 
 
 		# =================================================
 		# CERSEI
+		#
+		# If she has explicitly decided Aegon must die,
+		# she runs her own murder scheme.
 		# =================================================
 
 		if = {
@@ -8290,7 +8339,9 @@ segrellion_young_griff.8900 = {
 				character:Lannister_6 ?= {
 
 					is_alive = yes
+
 					is_adult = yes
+
 					is_imprisoned = no
 
 					has_character_flag = segrellion_cersei_wants_young_griff_dead
@@ -8314,11 +8365,10 @@ segrellion_young_griff.8900 = {
 
 
 		# =================================================
-		# CERSEI MAY JOIN OLENNA
+		# CERSEI JOINS OLENNA
 		#
-		# But NEVER if she chose the loyal-wife route.
-		# A Cersei already running her own murder plot does
-		# not need to become Olenna's agent.
+		# Only if she is not Aegon's loyal wife and is not
+		# already operating her own murder plot.
 		# =================================================
 
 		else_if = {
@@ -8328,7 +8378,9 @@ segrellion_young_griff.8900 = {
 				character:Lannister_6 ?= {
 
 					is_alive = yes
+
 					is_adult = yes
+
 					is_imprisoned = no
 
 
@@ -8362,6 +8414,12 @@ segrellion_young_griff.8900 = {
 		}
 
 
+		# =================================================
+		# PETYR BAELISH
+		#
+		# Completely independent attempt.
+		# =================================================
+
 		if = {
 
 			limit = {
@@ -8369,22 +8427,31 @@ segrellion_young_griff.8900 = {
 				character:Baelish_2 ?= {
 
 					is_alive = yes
+
 					is_adult = yes
+
 					is_imprisoned = no
 
+
 					can_start_scheme = {
+
 						type = murder
+
 						target_character = root
 					}
 				}
 			}
 
+
 			character:Baelish_2 = {
 
 				start_scheme = {
+
 					type = murder
+
 					target_character = character:IAF_Young_Griff_1
 				}
+
 
 				add_character_flag = segrellion_baelish_murdering_young_griff
 			}
