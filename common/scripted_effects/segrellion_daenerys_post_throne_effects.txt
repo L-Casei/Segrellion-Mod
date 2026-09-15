@@ -6,6 +6,18 @@
 
 # =========================================================
 # START POST-THRONE STORY
+#
+# IMPORTANT:
+#
+# This effect is intentionally idempotent.
+# It may safely be called from:
+#
+# - on_title_gain
+# - monthly recovery
+# - war victory recovery
+# - King's Landing surrender
+#
+# without restarting the story.
 # =========================================================
 
 segrellion_start_daenerys_post_throne_effect = {
@@ -19,47 +31,158 @@ segrellion_start_daenerys_post_throne_effect = {
 			is_alive = yes
 
 			has_title = title:h_the_iron_throne
+		}
 
-			NOT = {
-				has_character_flag = segrellion_daenerys_post_throne_started
+
+		# =================================================
+		# INITIALIZE THE STORY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_post_throne_started
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_post_throne_started
+
+			add_character_flag = segrellion_daenerys_pacification_active
+		}
+
+
+		# =================================================
+		# REPAIR OLD SAVES
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_variable = segrellion_daenerys_pacification_tyranny
+				}
+			}
+
+
+			set_variable = {
+
+				name = segrellion_daenerys_pacification_tyranny
+
+				value = 0
 			}
 		}
 
 
-		add_character_flag = segrellion_daenerys_post_throne_started
+		# =================================================
+		# INVASION STATE IS OVER
+		#
+		# Once Daenerys physically owns the Iron Throne,
+		# none of these old route flags may block her
+		# post-conquest story.
+		# =================================================
 
-		add_character_flag = segrellion_daenerys_pacification_active
+		remove_character_flag = sworn_peace
 
+		remove_character_flag = segrellion_daenerys_invasion_abandoned
 
-		set_variable = {
-			name = segrellion_daenerys_pacification_tyranny
-			value = 0
-		}
+		remove_character_flag = segrellion_daenerys_special_story_abandoned
+
+		remove_character_flag = segrellion_daenerys_free_cities_path
 
 
 		if = {
 
 			limit = {
+
 				has_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
 			}
+
 
 			remove_character_modifier = segrellion_daenerys_preparing_invasion_ai_modifier
 		}
 
 
-		remove_character_flag = sworn_peace
+		# =================================================
+		# KING'S LANDING WAS BURNED
+		#
+		# Apply the political consequence only AFTER Dany
+		# owns the throne and the pacification variable exists.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_burned_kings_landing
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_kings_landing_burn_consequence_applied
+				}
+			}
 
 
-		trigger_event = {
-			id = segrellion_daenerys_post_throne.0001
-			days = 1
+			add_character_flag = segrellion_daenerys_kings_landing_burn_consequence_applied
+
+
+			segrellion_change_daenerys_pacification_tyranny_effect = {
+
+				VALUE = 40
+			}
+		}
+
+
+		# =================================================
+		# OPENING EVENT
+		#
+		# CRITICAL FIX:
+		#
+		# post_throne_started no longer means that event 0001
+		# successfully appeared.
+		#
+		# If the event was lost for any reason, the temporary
+		# scheduled flag expires and the monthly recovery may
+		# schedule it again.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_post_throne_opening_seen
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_post_throne_opening_scheduled
+				}
+			}
+
+
+			add_character_flag = {
+
+				flag = segrellion_daenerys_post_throne_opening_scheduled
+
+				days = 30
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0001
+
+				days = 1
+			}
 		}
 	}
 }
 
 
 # =========================================================
-# SAVE COMPATIBILITY / FAILSAFE
+# POST-THRONE SAVE COMPATIBILITY / FAILSAFE
 # =========================================================
 
 segrellion_daenerys_post_throne_recovery_effect = {
@@ -73,22 +196,145 @@ segrellion_daenerys_post_throne_recovery_effect = {
 				is_alive = yes
 
 				has_title = title:h_the_iron_throne
+			}
 
-				NOT = {
-					has_character_flag = segrellion_daenerys_post_throne_started
+
+			# =============================================
+			# ALWAYS RUN THE IDEMPOTENT INITIALIZER.
+			#
+			# This repairs saves where post_throne_started
+			# exists but the opening event never appeared.
+			# =============================================
+
+			segrellion_start_daenerys_post_throne_effect = yes
+
+
+			# =============================================
+			# TYRION'S HAND EVENT FAILED / WAS LOST
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_post_throne_opening_seen
+
+					NOT = {
+						has_character_flag = segrellion_tyrion_named_hand
+					}
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_hand_event_scheduled
+					}
+
+					character:Lannister_8 ?= {
+
+						is_alive = yes
+					}
 				}
 
-				NOT = {
-					has_character_flag = segrellion_daenerys_special_story_abandoned
+
+				add_character_flag = {
+
+					flag = segrellion_daenerys_hand_event_scheduled
+
+					days = 30
 				}
 
-				NOT = {
-					has_character_flag = segrellion_daenerys_free_cities_path
+
+				trigger_event = {
+
+					id = segrellion_daenerys_post_throne.0002
+
+					days = 1
 				}
 			}
 
 
-			segrellion_start_daenerys_post_throne_effect = yes
+			# =============================================
+			# KINGSGUARD EVENT FAILED / WAS LOST
+			# =============================================
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_post_throne_opening_seen
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_kingsguard_rebuilt
+					}
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_kingsguard_event_scheduled
+					}
+
+
+					OR = {
+
+						has_character_flag = segrellion_tyrion_named_hand
+
+						NOT = {
+							character:Lannister_8 ?= {
+								is_alive = yes
+							}
+						}
+					}
+				}
+
+
+				add_character_flag = {
+
+					flag = segrellion_daenerys_kingsguard_event_scheduled
+
+					days = 30
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_post_throne.0003
+
+					days = 1
+				}
+			}
+
+
+			# =============================================
+			# WESTERLANDS ROUTER FAILED / WAS LOST
+			# =============================================
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_kingsguard_rebuilt
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_westerlands_resolved
+					}
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_westerlands_issue_scheduled
+					}
+				}
+
+
+				add_character_flag = {
+
+					flag = segrellion_daenerys_westerlands_issue_scheduled
+
+					days = 30
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_post_throne.0010
+
+					days = 1
+				}
+			}
 		}
 	}
 }

@@ -32,6 +32,18 @@ segrellion_daenerys_post_throne.0001 = {
 		has_character_flag = segrellion_daenerys_post_throne_started
 	}
 
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_daenerys_post_throne_opening_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_post_throne_opening_scheduled
+
+		add_character_flag = segrellion_daenerys_post_throne_opening_seen
+	}
 
 	left_portrait = {
 		character = root
@@ -53,6 +65,13 @@ segrellion_daenerys_post_throne.0001 = {
 				}
 			}
 
+			add_character_flag = {
+
+				flag = segrellion_daenerys_hand_event_scheduled
+
+				days = 30
+			}
+
 
 			trigger_event = {
 				id = segrellion_daenerys_post_throne.0002
@@ -61,6 +80,13 @@ segrellion_daenerys_post_throne.0001 = {
 		}
 
 		else = {
+
+			add_character_flag = {
+
+				flag = segrellion_daenerys_kingsguard_event_scheduled
+
+				days = 30
+			}
 
 			trigger_event = {
 				id = segrellion_daenerys_post_throne.0003
@@ -108,6 +134,19 @@ segrellion_daenerys_post_throne.0002 = {
 		}
 	}
 
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_daenerys_hand_event_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_hand_event_scheduled
+
+		segrellion_daenerys_install_tyrion_hand_effect = yes
+	}
+
 
 	left_portrait = {
 		character = root
@@ -130,7 +169,13 @@ segrellion_daenerys_post_throne.0002 = {
 	option = {
 
 		name = segrellion_daenerys_post_throne.0002.a
+		
+		add_character_flag = {
 
+			flag = segrellion_daenerys_kingsguard_event_scheduled
+
+			days = 30
+		}
 
 		trigger_event = {
 			id = segrellion_daenerys_post_throne.0003
@@ -192,6 +237,11 @@ segrellion_daenerys_post_throne.0003 = {
 		}
 	}
 
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_daenerys_kingsguard_event_scheduled
+	}
+
 
 	left_portrait = {
 		character = root
@@ -201,14 +251,21 @@ segrellion_daenerys_post_throne.0003 = {
 
 	immediate = {
 
+		remove_character_flag = segrellion_daenerys_kingsguard_event_scheduled
+
 		segrellion_daenerys_rebuild_kingsguard_effect = yes
 	}
-
 
 	option = {
 
 		name = segrellion_daenerys_post_throne.0003.a
 
+		add_character_flag = {
+
+			flag = segrellion_daenerys_westerlands_issue_scheduled
+
+			days = 30
+		}
 
 		trigger_event = {
 			id = segrellion_daenerys_post_throne.0010
@@ -246,8 +303,15 @@ segrellion_daenerys_post_throne.0010 = {
 		}
 	}
 
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_daenerys_westerlands_issue_scheduled
+	}
+
 
 	immediate = {
+
+		remove_character_flag = segrellion_daenerys_westerlands_issue_scheduled
 
 		title:e_the_westerlands.holder = {
 			save_scope_as = segrellion_westerlands_holder

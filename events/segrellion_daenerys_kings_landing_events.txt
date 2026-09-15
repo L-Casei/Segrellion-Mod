@@ -1,0 +1,433 @@
+namespace = segrellion_daenerys_kings_landing
+
+
+# =========================================================
+# 0001 - THE CITY BELOW
+# =========================================================
+
+segrellion_daenerys_kings_landing.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_kings_landing.0001.t
+
+	desc = segrellion_daenerys_kings_landing.0001.desc
+
+	theme = warfare
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+
+		any_character_war = {
+
+			is_attacker = root
+
+
+			casus_belli = {
+
+				any_target_title = {
+
+					this = title:h_the_iron_throne
+				}
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Lannister_8
+
+		animation = thinking
+	}
+
+
+	# =====================================================
+	# BURN THEM ALL
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_kings_landing.0001.a
+
+
+		trigger = {
+
+			character:dragon_drogon ?= {
+
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_burn_kings_landing_effect = yes
+
+
+		ai_chance = {
+
+			base = 5
+
+
+			modifier = {
+
+				factor = 3
+
+				has_trait = wrathful
+			}
+
+
+			modifier = {
+
+				factor = 5
+
+				has_trait = sadistic
+			}
+
+
+			modifier = {
+
+				factor = 2
+
+				has_trait = callous
+			}
+		}
+	}
+
+
+	# =====================================================
+	# TYRION: DEMAND THEIR SURRENDER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_kings_landing.0001.b
+
+
+		add_character_flag = segrellion_daenerys_kings_landing_surrender_demanded
+
+
+		title:b_goldguard_heights.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_kings_landing.0010
+
+				days = { 1 2 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# WAIT AND SIEGE NORMALLY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_kings_landing.0001.c
+
+
+		add_character_flag = segrellion_daenerys_waited_at_kings_landing
+
+
+		ai_chance = {
+
+			base = 15
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - THE GOLD CLOAKS ANSWER
+#
+# ROOT = Commander of the Gold Cloaks
+# =========================================================
+
+segrellion_daenerys_kings_landing.0010 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	opening = segrellion_daenerys_kings_landing.0010.opening
+
+	title = segrellion_daenerys_kings_landing.0010.t
+
+	desc = segrellion_daenerys_kings_landing.0010.desc
+
+
+	trigger = {
+
+		is_alive = yes
+
+
+		character:Targaryen_9 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_daenerys_kings_landing_surrender_demanded
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+		}
+	}
+
+
+	# =====================================================
+	# OPEN THE GATES
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_kings_landing.0010.a
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_accept_kings_landing_surrender_effect = yes
+		}
+
+
+		ai_chance = {
+
+			base = 90
+
+
+			modifier = {
+
+				factor = 1.5
+
+				has_trait = craven
+			}
+
+
+			modifier = {
+
+				factor = 1.25
+
+				has_trait = content
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_kings_landing.0010.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_goldcloaks_refused_surrender
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_kings_landing.0020
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+
+
+			modifier = {
+
+				factor = 2
+
+				has_trait = brave
+			}
+
+
+			modifier = {
+
+				factor = 1.5
+
+				has_trait = stubborn
+			}
+
+
+			modifier = {
+
+				factor = 1.5
+
+				has_trait = arrogant
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - THEY REFUSED
+# =========================================================
+
+segrellion_daenerys_kings_landing.0020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_kings_landing.0020.t
+
+	desc = segrellion_daenerys_kings_landing.0020.desc
+
+	theme = warfare
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_goldcloaks_refused_surrender
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_goldcloaks_refused_surrender
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	# =====================================================
+	# DRACARYS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_kings_landing.0020.a
+
+
+		trigger = {
+
+			character:dragon_drogon ?= {
+
+				is_alive = yes
+			}
+		}
+
+
+		segrellion_daenerys_burn_kings_landing_effect = yes
+
+
+		ai_chance = {
+
+			base = 10
+
+
+			modifier = {
+
+				factor = 4
+
+				has_trait = wrathful
+			}
+
+
+			modifier = {
+
+				factor = 5
+
+				has_trait = sadistic
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CONTINUE THE SIEGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_kings_landing.0020.b
+
+
+		add_character_flag = segrellion_daenerys_waited_at_kings_landing
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - AFTER THE THRONE FALLS
+# =========================================================
+
+segrellion_daenerys_kings_landing.0030 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+	}
+
+
+	immediate = {
+
+		segrellion_daenerys_make_defeated_king_adventurer_effect = yes
+
+
+		segrellion_start_daenerys_post_throne_effect = yes
+	}
+}

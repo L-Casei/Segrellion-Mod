@@ -1,0 +1,249 @@
+# =========================================================
+# DAENERYS - KING'S LANDING
+# =========================================================
+
+
+# =========================================================
+# SAVE THE CURRENT DEFENDER
+# =========================================================
+
+segrellion_daenerys_save_kings_landing_defender_effect = {
+
+	if = {
+
+		limit = {
+
+			title:h_the_iron_throne ?= {
+
+				exists = holder
+			}
+
+
+			title:h_the_iron_throne.holder != root
+		}
+
+
+		set_variable = {
+
+			name = segrellion_daenerys_defeated_throne_holder
+
+			value = title:h_the_iron_throne.holder
+		}
+
+
+		title:h_the_iron_throne.holder = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						location ?= {
+
+							county = title:c_kings_landing
+						}
+					}
+				}
+
+
+				add_character_flag = segrellion_defeated_away_from_kings_landing
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# END DAENERYS' IRON THRONE WAR
+# =========================================================
+
+segrellion_daenerys_force_iron_throne_victory_effect = {
+
+	segrellion_daenerys_save_kings_landing_defender_effect = yes
+
+
+	random_character_war = {
+
+		limit = {
+
+			attacker = root
+
+
+			casus_belli = {
+
+				any_target_title = {
+
+					this = title:h_the_iron_throne
+				}
+			}
+		}
+
+
+		end_war = attacker
+	}
+
+
+	trigger_event = {
+
+		id = segrellion_daenerys_kings_landing.0030
+
+		days = 1
+	}
+}
+
+
+# =========================================================
+# THE QUEEN OF ASHES
+# =========================================================
+
+segrellion_daenerys_burn_kings_landing_effect = {
+
+	add_character_flag = segrellion_daenerys_burned_kings_landing
+
+
+	add_tyranny = 100
+
+	add_dread = 50
+
+
+	add_character_modifier = {
+
+		modifier = segrellion_daenerys_queen_of_ashes_modifier
+
+		years = 20
+	}
+
+
+	title:c_kings_landing = {
+
+		add_county_modifier = {
+
+			modifier = segrellion_kings_landing_burned_modifier
+
+			years = 25
+		}
+	}
+
+
+	segrellion_daenerys_force_iron_throne_victory_effect = yes
+}
+
+
+# =========================================================
+# PEACEFUL SURRENDER
+# =========================================================
+
+segrellion_daenerys_accept_kings_landing_surrender_effect = {
+
+	add_character_flag = segrellion_daenerys_goldcloaks_accepted_surrender
+
+
+	title:c_kings_landing = {
+
+		add_county_modifier = {
+
+			modifier = segrellion_kings_landing_peaceful_surrender_modifier
+
+			years = 5
+		}
+	}
+
+
+	segrellion_daenerys_force_iron_throne_victory_effect = yes
+}
+
+
+# =========================================================
+# DEFEATED KING -> ADVENTURER
+# =========================================================
+
+segrellion_daenerys_make_defeated_king_adventurer_effect = {
+
+	if = {
+
+		limit = {
+
+			has_variable = segrellion_daenerys_defeated_throne_holder
+		}
+
+
+		var:segrellion_daenerys_defeated_throne_holder ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_defeated_away_from_kings_landing
+
+					NOT = {
+						has_title = title:h_the_iron_throne
+					}
+				}
+
+
+				# =========================================
+				# KEEP HIS CLAIM
+				# =========================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_claim_on = title:h_the_iron_throne
+						}
+					}
+
+
+					add_pressed_claim = title:h_the_iron_throne
+				}
+
+
+				# =========================================
+				# HE MUST ACTUALLY BECOME LANDLESS
+				#
+				# Remaining landed titles pass to Daenerys.
+				# Future regional settlement events may
+				# redistribute them afterwards.
+				# =========================================
+
+				every_held_title = {
+
+					limit = {
+
+						tier >= tier_county
+
+						this != title:h_the_iron_throne
+					}
+
+
+					grant_title = character:Targaryen_9
+				}
+
+
+				# =========================================
+				# REAL LAAMP
+				# =========================================
+
+				create_landless_adventurer_title_effect = {
+
+					REASON = flag:voluntary
+
+					FLAVOR_CHAR = this
+				}
+
+
+				add_character_flag = segrellion_former_king_adventurer_after_daenerys
+			}
+
+
+			remove_character_flag = segrellion_defeated_away_from_kings_landing
+		}
+
+
+		remove_variable = segrellion_daenerys_defeated_throne_holder
+	}
+}

@@ -110,8 +110,12 @@ on_war_started = {
 }
 
 on_war_won_attacker = {
+
 	on_actions = {
+
 		segrellion_stepstones_attacker_victory
+
+		segrellion_daenerys_post_throne_war_victory_recovery
 	}
 }
 
@@ -1297,6 +1301,28 @@ segrellion_daenerys_ai_invasion_failsafe = {
 }
 
 # =========================================================
+# DAENERYS - POST-THRONE WAR VICTORY RECOVERY
+# =========================================================
+
+segrellion_daenerys_post_throne_war_victory_recovery = {
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+	}
+
+
+	effect = {
+
+		segrellion_start_daenerys_post_throne_effect = yes
+	}
+}
+
+# =========================================================
 # DAENERYS - PENTOS / GERIO PROGRESSION
 # =========================================================
 
@@ -1423,6 +1449,71 @@ segrellion_daenerys_pentos_gerio_progression = {
 }
 
 # =========================================================
+# DAENERYS ARRIVES AT KING'S LANDING
+#
+# ROOT = army owner
+# scope:army = arriving army
+# =========================================================
+
+segrellion_daenerys_kings_landing_arrival_check = {
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_kings_landing_choice_seen
+		}
+
+
+		any_character_war = {
+
+			is_attacker = root
+
+
+			casus_belli = {
+
+				any_target_title = {
+
+					this = title:h_the_iron_throne
+				}
+			}
+		}
+
+
+		scope:army ?= {
+
+			location = {
+
+				county = title:c_kings_landing
+			}
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_daenerys_kings_landing_choice_seen
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_kings_landing.0001
+
+			days = 1
+		}
+	}
+}
+
+# =========================================================
 # DAENERYS - MASSEY INFORMANT NETWORK
 # =========================================================
 
@@ -1453,7 +1544,9 @@ on_army_enter_province = {
 	on_actions = {
 
 		segrellion_unicorn_returns_stormflame_commander_lock
+		segrellion_unicorn_returns_beacon_arrival_check
 		segrellion_jon_baelish_same_county_capture_check
+		segrellion_daenerys_kings_landing_arrival_check
 	}
 }
 
