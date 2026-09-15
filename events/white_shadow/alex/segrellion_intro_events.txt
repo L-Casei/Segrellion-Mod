@@ -178,14 +178,34 @@ segrellion_intro.0002 = {
 		add_prestige = 75
 
 		custom_tooltip = segrellion_stepstones_route_started_tt
+		
 		hidden_effect = {
+
 			if = {
+
 				limit = {
-					character:Targaryen_61 ?= { is_alive = yes }
-					title:d_first_stepstones.holder ?= { exists = this }
+
+					character:Targaryen_61 ?= {
+						is_alive = yes
+					}
+
+					title:d_first_stepstones.holder ?= {
+						exists = this
+					}
 				}
 
+
 				character:Targaryen_61 = {
+
+					# =================================================
+					# PRIMARY PATH
+					#
+					# AGOT's Rogue Prince scenario should already have
+					# created the canonical first Stepstones war.
+					#
+					# This remains only as a failsafe in case the war
+					# does not exist for any reason.
+					# =================================================
 
 					if = {
 
@@ -231,11 +251,65 @@ segrellion_intro.0002 = {
 						}
 
 
-						add_attacker = root
+						# =================================================
+						# CANON SAFETY
+						#
+						# Corlys Velaryon must fight alongside Daemon
+						# from the beginning of the first Stepstones war.
+						#
+						# Normally AGOT's own Rogue Prince setup handles
+						# this. This is only a defensive fallback.
+						# =================================================
+
+						if = {
+
+							limit = {
+
+								character:Velaryon_31 ?= {
+									is_alive = yes
+								}
+
+								NOR = {
+
+									any_war_attacker = {
+										this = character:Velaryon_31
+									}
+
+									any_war_defender = {
+										this = character:Velaryon_31
+									}
+								}
+							}
+
+							add_attacker = character:Velaryon_31
+						}
+
+
+						# =================================================
+						# ALEX JOINS THE CANONICAL WAR
+						# =================================================
+
+						if = {
+
+							limit = {
+
+								NOR = {
+
+									any_war_attacker = {
+										this = root
+									}
+
+									any_war_defender = {
+										this = root
+									}
+								}
+							}
+
+							add_attacker = root
+						}
 
 
 						root = {
-
 							add_character_flag = segrellion_stepstones_war_joined
 						}
 
@@ -244,12 +318,18 @@ segrellion_intro.0002 = {
 					}
 				}
 
+
 				spawn_army = {
+
 					levies = 1000
+
 					location = root.capital_province
 					origin = root.capital_province
+
 					war = scope:segrellion_stepstones_war
+
 					name = segrellion_stepstones_volunteers_army
+
 					inheritable = no
 					uses_supply = yes
 				}
