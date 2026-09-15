@@ -2,22 +2,113 @@
 # TRISTAN VLADWYN
 ############################################
 
+############################################
+# TRISTAN VLADWYN
+# THE BLACK SENTINELS
+############################################
+
 d_laamp_tristan_vladwyn = {
 
-	# Tristan turns sixteen and establishes his own camp.
-	# The camp therefore already exists when the 106 AC bookmark
-	# is loaded on the following day.
+	# =====================================================
+	# 106 AC
+	#
+	# Tristan already walks his own road by the beginning
+	# of the White Shadow bookmark.
+	# =====================================================
+
 	8106.4.18 = {
+
 		liege = 0
+
 		holder = Vladwyn_1
+
 		government = landless_adventurer_government
+
 
 		succession_laws = {
 			landless_adventurer_succession_law
 		}
 
+
 		effect = {
+
+
+			# =================================================
+			# HONORABLE ADVENTURER SETUP
+			# =================================================
+
+			holder ?= {
+
+
+				# ---------------------------------------------
+				# MERCENARY CAMP PURPOSE
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_realm_law = camp_purpose_mercenaries
+						}
+					}
+
+					add_realm_law_skip_effects = camp_purpose_mercenaries
+				}
+
+
+				# ---------------------------------------------
+				# KNIGHT ERRANT
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = knight_errant
+						}
+					}
+
+					add_trait = knight_errant
+				}
+
+
+				# ---------------------------------------------
+				# TRISTAN IS NOT GALLOWSBAIT
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+						has_trait = gallowsbait
+					}
+
+					remove_trait = gallowsbait
+				}
+
+
+				# ---------------------------------------------
+				# CANON HONORABLE IDENTITY
+				# ---------------------------------------------
+
+				add_character_flag = vladwyn_honorable_adventurer
+
+
+				# ---------------------------------------------
+				# BLOCK GENERIC LAAMP OPENING
+				# ---------------------------------------------
+
+				add_character_flag = block_laamp_starting_event
+			}
+
+
+			# =================================================
+			# CREATE THE HISTORICAL ADVENTURER CAMP
+			# =================================================
+
 			create_landless_adventurer_title_history_effect = yes
+
 
 			set_variable = {
 				name = adventurer_creation_reason
@@ -26,17 +117,26 @@ d_laamp_tristan_vladwyn = {
 		}
 	}
 
-	# Only remove the camp if Roads to Power is unavailable.
-	# This is intentionally placed on the actual bookmark date.
+
+	# =====================================================
+	# ROAD TO POWER SAFETY
+	# =====================================================
+
 	8106.4.18 = {
+
 		effect = {
+
 			destroy_landless_title_no_dlc_effect = {
 				DATE = 8106.4.18
 			}
 		}
 	}
 
-	# Tristan enters the Kingsguard.
+
+	# =====================================================
+	# KINGSGUARD
+	# =====================================================
+
 	8131.1.28 = {
 		holder = 0
 	}
