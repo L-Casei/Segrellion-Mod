@@ -85,28 +85,64 @@ d_vladwyn_tristan_camp = {
 
 				add_character_flag = vladwyn_honorable_adventurer
 
+				holder ?= {
 
-				# ---------------------------------------------
-				# TRISTAN'S DREAM
-				#
-				# Tristan begins the Knightly Ideal naturally.
-				# ---------------------------------------------
 
-				if = {
+					# ---------------------------------------------
+					# MERCENARY CAMP
+					# ---------------------------------------------
 
-					limit = {
+					if = {
 
-						NOT = {
-							has_trait = segrellion_knightly_ideal_trait
+						limit = {
+
+							NOT = {
+								has_realm_law = camp_purpose_mercenaries
+							}
 						}
+
+						add_realm_law_skip_effects = camp_purpose_mercenaries
 					}
 
-					add_trait = segrellion_knightly_ideal_trait
+
+					# ---------------------------------------------
+					# KNIGHT ERRANT
+					# ---------------------------------------------
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_trait = knight_errant
+							}
+						}
+
+						add_trait = knight_errant
+					}
+
+
+					# ---------------------------------------------
+					# TRISTAN IS NOT GALLOWSBAIT
+					# ---------------------------------------------
+
+					if = {
+
+						limit = {
+							has_trait = gallowsbait
+						}
+
+						remove_trait = gallowsbait
+					}
+
+
+					# ---------------------------------------------
+					# CANON IDENTITY
+					# ---------------------------------------------
+
+					add_character_flag = vladwyn_honorable_adventurer
 				}
 
-
-				# Tristan begins by mastering himself.
-				add_character_flag = segrellion_knightly_focus_blade
 			}
 
 
