@@ -8556,6 +8556,276 @@ segrellion_young_griff.8900 = {
 }
 
 # =========================================================
+# 8904 - KNIVES FIND THEIR MARK
+#
+# Root = Young Griff
+#
+# Hard failsafe for the post-Blackfyre assassination story.
+#
+# Normal CK3 murder schemes receive several months to kill
+# Aegon first. If every scheme is blocked, invalid or simply
+# fails to resolve, one of his surviving enemies eventually
+# succeeds through script.
+# =========================================================
+
+segrellion_young_griff.8904 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		is_ai = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_young_griff_blackfyre_revealed
+
+		has_character_flag = segrellion_young_griff_scripted_assassination_scheduled
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_scripted_assassination_resolved
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_scripted_assassination_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_scripted_assassination_scheduled
+
+		add_character_flag = segrellion_young_griff_scripted_assassination_resolved
+
+
+		# =================================================
+		# FIND OLENNA
+		#
+		# Olenna is normally unlanded, so we recover her
+		# through the current Reach ruling family exactly
+		# as the existing 8900 conspiracy event does.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:k_the_reach.holder ?= {
+
+					mother ?= {
+
+						is_alive = yes
+
+						is_adult = yes
+					}
+				}
+			}
+
+
+			title:k_the_reach.holder.mother = {
+
+				save_scope_as = segrellion_scripted_olenna
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				title:k_the_reach.holder ?= {
+
+					father ?= {
+
+						mother ?= {
+
+							is_alive = yes
+
+							is_adult = yes
+						}
+					}
+				}
+			}
+
+
+			title:k_the_reach.holder.father.mother = {
+
+				save_scope_as = segrellion_scripted_olenna
+			}
+		}
+
+
+		# =================================================
+		# WHO FINALLY GETS TO AEGON?
+		#
+		# Invalid entries are automatically discarded.
+		#
+		# Cersei only qualifies if she actually chose the
+		# hostile route.
+		#
+		# Varys only qualifies if he has turned on Aegon.
+		#
+		# Baelish and Olenna remain permanent threats while
+		# alive and free.
+		# =================================================
+
+		random_list = {
+
+
+			# =============================================
+			# CERSEI LANNISTER
+			# =============================================
+
+			35 = {
+
+				trigger = {
+
+					character:Lannister_6 ?= {
+
+						is_alive = yes
+
+						is_adult = yes
+
+						is_imprisoned = no
+
+						has_character_flag = segrellion_cersei_wants_young_griff_dead
+					}
+				}
+
+
+				death = {
+
+					death_reason = death_murder
+
+					killer = character:Lannister_6
+				}
+			}
+
+
+			# =============================================
+			# PETYR BAELISH
+			# =============================================
+
+			35 = {
+
+				trigger = {
+
+					character:Baelish_2 ?= {
+
+						is_alive = yes
+
+						is_adult = yes
+
+						is_imprisoned = no
+					}
+				}
+
+
+				death = {
+
+					death_reason = death_murder
+
+					killer = character:Baelish_2
+				}
+			}
+
+
+			# =============================================
+			# OLENNA TYRELL
+			# =============================================
+
+			30 = {
+
+				trigger = {
+
+					exists = scope:segrellion_scripted_olenna
+
+					scope:segrellion_scripted_olenna = {
+
+						is_alive = yes
+
+						is_adult = yes
+
+						is_imprisoned = no
+					}
+				}
+
+
+				death = {
+
+					death_reason = death_murder
+
+					killer = scope:segrellion_scripted_olenna
+				}
+			}
+
+
+			# =============================================
+			# VARYS
+			# =============================================
+
+			15 = {
+
+				trigger = {
+
+					character:Eunuch_1 ?= {
+
+						is_alive = yes
+
+						is_adult = yes
+
+						is_imprisoned = no
+
+
+						OR = {
+
+							has_character_flag = segrellion_varys_abandoned_young_griff
+
+							has_character_flag = segrellion_varys_murdering_young_griff
+						}
+					}
+				}
+
+
+				death = {
+
+					death_reason = death_murder
+
+					killer = character:Eunuch_1
+				}
+			}
+
+
+			# =============================================
+			# UNKNOWN CONSPIRATORS
+			#
+			# Absolute fallback. If every named enemy is
+			# dead, imprisoned or unavailable, Aegon's
+			# Blackfyre revelation can still ultimately
+			# destroy his reign.
+			# =============================================
+
+			5 = {
+
+				death = {
+
+					death_reason = death_murder
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
 # 8905 - THE USURPER TAKES THE THRONE
 # Root = Cersei or Baelish
 # =========================================================
