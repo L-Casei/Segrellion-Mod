@@ -1,0 +1,303 @@
+# =========================================================
+# TRISTAN VLADWYN
+# FOLLOW THE NAME VLADWYN
+# =========================================================
+
+
+# =========================================================
+# START STORY
+# =========================================================
+
+vladwyn_follow_name_decision = {
+
+	decision_group_type = major
+
+	desc = vladwyn_follow_name_decision_desc
+	selection_tooltip = vladwyn_follow_name_decision_tooltip
+	confirm_text = vladwyn_follow_name_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		is_alive = yes
+
+		NOT = {
+			has_character_flag = vladwyn_name_story_started
+		}
+	}
+
+
+	is_valid = {
+
+		is_imprisoned = no
+	}
+
+
+	effect = {
+
+		trigger_event = vladwyn_name.1000
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+
+# =========================================================
+# SEARCH FOR ULRIC VLADWYN
+# PENTOS
+# =========================================================
+
+vladwyn_search_ulric_decision = {
+
+	decision_group_type = major
+
+	desc = vladwyn_search_ulric_decision_desc
+	selection_tooltip = vladwyn_search_ulric_decision_tooltip
+	confirm_text = vladwyn_search_ulric_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_search_ulric_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_ulric_records_found
+		}
+	}
+
+
+	is_valid = {
+
+		custom_description = {
+
+			text = vladwyn_search_ulric_in_pentos_requirement
+
+			location = title:b_pentos.title_province
+		}
+	}
+
+
+	effect = {
+
+		remove_character_flag = vladwyn_search_ulric_unlocked
+
+		trigger_event = vladwyn_name.2000
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+
+# =========================================================
+# SEEK THE HOUSE OF MY CHILDHOOD
+#
+# TEMPORARILY ABSTRACTED FOR TESTING.
+# Later we bind this to the exact Kingswood province.
+# =========================================================
+
+vladwyn_seek_childhood_house_decision = {
+
+	decision_group_type = major
+
+	desc = vladwyn_seek_childhood_house_decision_desc
+	selection_tooltip = vladwyn_seek_childhood_house_decision_tooltip
+	confirm_text = vladwyn_seek_childhood_house_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_childhood_house_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_childhood_house_found
+		}
+	}
+
+
+	is_valid = {
+
+		is_imprisoned = no
+	}
+
+
+	effect = {
+
+		remove_character_flag = vladwyn_childhood_house_unlocked
+
+		trigger_event = vladwyn_name.3000
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+
+# =========================================================
+# REQUEST ACCESS TO STORM'S END
+# =========================================================
+
+vladwyn_request_storms_end_records_decision = {
+
+	decision_group_type = major
+
+	desc = vladwyn_request_storms_end_records_decision_desc
+	selection_tooltip = vladwyn_request_storms_end_records_decision_tooltip
+	confirm_text = vladwyn_request_storms_end_records_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_storms_end_investigation_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_boremund_discovered
+		}
+
+		exists = title:b_storms_end.holder
+
+		title:b_storms_end.holder = {
+
+			NOT = {
+				has_character_flag = vladwyn_tristan_storms_end_permission
+			}
+
+			NOT = {
+				has_character_flag = vladwyn_tristan_storms_end_barred
+			}
+		}
+	}
+
+
+	is_valid = {
+
+		custom_description = {
+
+			text = vladwyn_storms_end_not_on_cooldown_requirement
+
+			title:b_storms_end.holder = {
+
+				NOT = {
+					has_character_flag = vladwyn_tristan_storms_end_request_cooldown
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		save_scope_as = vladwyn_tristan
+
+		title:b_storms_end.holder = {
+			save_scope_as = vladwyn_storm_lord
+		}
+
+		trigger_event = vladwyn_name.4000
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+
+# =========================================================
+# SEARCH THE RECORDS OF STORM'S END
+# =========================================================
+
+vladwyn_search_storms_end_records_decision = {
+
+	decision_group_type = major
+
+	desc = vladwyn_search_storms_end_records_decision_desc
+	selection_tooltip = vladwyn_search_storms_end_records_decision_tooltip
+	confirm_text = vladwyn_search_storms_end_records_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_storms_end_investigation_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_boremund_discovered
+		}
+
+		exists = title:b_storms_end.holder
+
+		title:b_storms_end.holder = {
+
+			has_character_flag = vladwyn_tristan_storms_end_permission
+		}
+	}
+
+
+	is_valid = {
+
+		custom_description = {
+
+			text = vladwyn_search_storms_end_location_requirement
+
+			location = title:b_storms_end.title_province
+		}
+	}
+
+
+	effect = {
+
+		save_scope_as = vladwyn_tristan
+
+		title:b_storms_end.holder = {
+			save_scope_as = vladwyn_storm_lord
+		}
+
+		trigger_event = vladwyn_name.4100
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

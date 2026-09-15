@@ -1,0 +1,594 @@
+namespace = vladwyn_name
+
+
+# =========================================================
+# 1000
+# THE NAME I WAS GIVEN
+#
+# ROOT = TRISTAN
+# =========================================================
+
+vladwyn_name.1000 = {
+
+	type = character_event
+
+	title = vladwyn_name.1000.t
+	desc = vladwyn_name.1000.desc
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+
+		NOT = {
+			has_character_flag = vladwyn_name_story_started
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_name_story_started
+	}
+
+
+	option = {
+
+		name = vladwyn_name.1000.a
+
+		custom_tooltip = vladwyn_name.1000.a.tt
+
+		add_character_flag = vladwyn_search_ulric_unlocked
+	}
+}
+
+
+
+# =========================================================
+# 2000
+# THE MERCHANT CALLED VLADWYN
+#
+# ROOT = TRISTAN
+# =========================================================
+
+vladwyn_name.2000 = {
+
+	type = character_event
+
+	title = vladwyn_name.2000.t
+	desc = vladwyn_name.2000.desc
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+	}
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_ulric_records_found
+	}
+
+
+	option = {
+
+		name = vladwyn_name.2000.a
+
+		custom_tooltip = vladwyn_name.2000.a.tt
+
+		add_character_flag = vladwyn_childhood_house_unlocked
+	}
+}
+
+
+
+# =========================================================
+# 3000
+# THE HOUSE THAT WASN'T MINE
+#
+# ROOT = TRISTAN
+# =========================================================
+
+vladwyn_name.3000 = {
+
+	type = character_event
+
+	title = vladwyn_name.3000.t
+	desc = vladwyn_name.3000.desc
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_ulric_records_found
+	}
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_childhood_house_found
+	}
+
+
+	option = {
+
+		name = vladwyn_name.3000.a
+
+		custom_tooltip = vladwyn_name.3000.a.tt
+
+		add_character_flag = vladwyn_storms_end_investigation_unlocked
+	}
+}
+
+
+
+# =========================================================
+# 4000
+# THE LORD OF STORM'S END
+#
+# ROOT = TRISTAN
+#
+# scope:vladwyn_storm_lord = CURRENT HOLDER OF STORM'S END
+# =========================================================
+
+vladwyn_name.4000 = {
+
+	type = letter_event
+
+	title = vladwyn_name.4000.t
+
+	opening = {
+		desc = vladwyn_name.4000.opening
+	}
+
+	desc = {
+
+		first_valid = {
+
+
+			# =================================================
+			# ACCEPT
+			# OPINION >= 50
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:vladwyn_storm_lord = {
+
+						opinion = {
+							target = root
+							value >= 50
+						}
+					}
+				}
+
+				desc = vladwyn_name.4000.desc_accept
+			}
+
+
+			# =================================================
+			# DEATH THREAT
+			# OPINION <= -75
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:vladwyn_storm_lord = {
+
+						opinion = {
+							target = root
+							value <= -75
+						}
+					}
+				}
+
+				desc = vladwyn_name.4000.desc_threat
+			}
+
+
+			# =================================================
+			# THIRD FAILED REQUEST
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:vladwyn_storm_lord = {
+
+						exists = var:vladwyn_tristan_storms_end_failed_requests
+
+						var:vladwyn_tristan_storms_end_failed_requests >= 2
+					}
+				}
+
+				desc = vladwyn_name.4000.desc_final_rejection
+			}
+
+
+			# =================================================
+			# NORMAL REJECTION
+			# =================================================
+
+			desc = vladwyn_name.4000.desc_reject
+		}
+	}
+
+
+	sender = scope:vladwyn_storm_lord
+
+
+	# =====================================================
+	# ACCEPTED
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.4000.a
+
+		trigger = {
+
+			scope:vladwyn_storm_lord = {
+
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+		}
+
+
+		custom_tooltip = vladwyn_name.4000.a.tt
+
+
+		hidden_effect = {
+
+			scope:vladwyn_storm_lord = {
+
+				add_character_flag = vladwyn_tristan_storms_end_permission
+
+				remove_character_flag = vladwyn_tristan_storms_end_request_cooldown
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DEATH THREAT
+	#
+	# OPINION <= -75
+	#
+	# PERMANENT FOR THIS LORD.
+	# A NEW LORD GETS A CLEAN STATE.
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.4000.b
+
+		trigger = {
+
+			scope:vladwyn_storm_lord = {
+
+				opinion = {
+					target = root
+					value <= -75
+				}
+			}
+		}
+
+
+		custom_tooltip = vladwyn_name.4000.b.tt
+
+
+		hidden_effect = {
+
+			scope:vladwyn_storm_lord = {
+
+				add_character_flag = vladwyn_tristan_storms_end_barred
+
+				add_character_flag = vladwyn_tristan_storms_end_death_threat
+
+				remove_character_flag = vladwyn_tristan_storms_end_request_cooldown
+			}
+		}
+	}
+
+
+	# =====================================================
+	# NORMAL REJECTION
+	#
+	# -74 TO +49
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.4000.c
+
+		trigger = {
+
+			scope:vladwyn_storm_lord = {
+
+				opinion = {
+					target = root
+					value < 50
+				}
+
+				opinion = {
+					target = root
+					value > -75
+				}
+			}
+		}
+
+
+		custom_tooltip = vladwyn_name.4000.c.tt
+
+
+		hidden_effect = {
+
+			scope:vladwyn_storm_lord = {
+
+
+				# =============================================
+				# FIRST FAILED REQUEST
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							exists = var:vladwyn_tristan_storms_end_failed_requests
+						}
+					}
+
+					set_variable = {
+						name = vladwyn_tristan_storms_end_failed_requests
+						value = 1
+					}
+				}
+
+
+				# =============================================
+				# THIRD FAILED REQUEST
+				#
+				# BEFORE THIS REQUEST:
+				# VARIABLE = 2
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						var:vladwyn_tristan_storms_end_failed_requests >= 2
+					}
+
+					change_variable = {
+						name = vladwyn_tristan_storms_end_failed_requests
+						add = 1
+					}
+
+					add_character_flag = vladwyn_tristan_storms_end_barred
+				}
+
+
+				# =============================================
+				# SECOND FAILED REQUEST
+				# =============================================
+
+				else = {
+
+					change_variable = {
+						name = vladwyn_tristan_storms_end_failed_requests
+						add = 1
+					}
+				}
+
+
+				# =============================================
+				# TWO YEAR COOLDOWN
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = vladwyn_tristan_storms_end_barred
+						}
+					}
+
+					add_character_flag = {
+						flag = vladwyn_tristan_storms_end_request_cooldown
+						years = 2
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# 4100
+# THE LORD WHO PAID
+#
+# ROOT = TRISTAN
+#
+# Tristan discovers that Boremund Baratheon was his father.
+# =========================================================
+
+vladwyn_name.4100 = {
+
+	type = character_event
+
+	title = vladwyn_name.4100.t
+	desc = vladwyn_name.4100.desc
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_childhood_house_found
+
+		NOT = {
+			has_character_flag = vladwyn_boremund_discovered
+		}
+
+		scope:vladwyn_storm_lord = {
+
+			has_character_flag = vladwyn_tristan_storms_end_permission
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_boremund_discovered
+	}
+
+
+	option = {
+
+		name = vladwyn_name.4100.a
+
+		custom_tooltip = vladwyn_name.4100.a.tt
+
+		trigger_event = vladwyn_name.4200
+	}
+}
+
+
+
+# =========================================================
+# 4200
+# BLOOD ON THE ROAD
+#
+# ROOT = TRISTAN
+#
+# Tristan learns that his mother was a Stark woman
+# who gave birth in the North.
+#
+# Alarra Stark is NOT definitively revealed yet.
+# That comes in the Northern stage.
+# =========================================================
+
+vladwyn_name.4200 = {
+
+	type = character_event
+
+	title = vladwyn_name.4200.t
+	desc = vladwyn_name.4200.desc
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_boremund_discovered
+
+		NOT = {
+			has_character_flag = vladwyn_northern_mother_clue
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_northern_mother_clue
+	}
+
+
+	option = {
+
+		name = vladwyn_name.4200.a
+
+		custom_tooltip = vladwyn_name.4200.a.tt
+
+		add_character_flag = vladwyn_follow_wolf_north_unlocked
+	}
+}
+
+
+
+# =========================================================
+# 4900
+# YOU WERE WARNED
+#
+# ROOT = TRISTAN
+#
+# Fires if Tristan enters Storm's End while the SAME ruler
+# who threatened him still controls the castle.
+# =========================================================
+
+vladwyn_name.4900 = {
+
+	type = character_event
+
+	title = vladwyn_name.4900.t
+	desc = vladwyn_name.4900.desc
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+
+		is_alive = yes
+
+		exists = current_travel_plan
+
+		current_travel_plan.travel_plan_owner = root
+
+		location = title:b_storms_end.title_province
+
+		exists = title:b_storms_end.holder
+
+		title:b_storms_end.holder = {
+
+			has_character_flag = vladwyn_tristan_storms_end_death_threat
+		}
+	}
+
+
+	immediate = {
+
+		title:b_storms_end.holder = {
+			save_scope_as = vladwyn_storm_lord
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_name.4900.a
+
+
+		hidden_effect = {
+
+			scope:vladwyn_storm_lord = {
+
+				imprison = {
+					target = root
+					type = dungeon
+				}
+			}
+
+			root = {
+
+				death = {
+					death_reason = death_execution
+					killer = scope:vladwyn_storm_lord
+				}
+			}
+		}
+	}
+}
