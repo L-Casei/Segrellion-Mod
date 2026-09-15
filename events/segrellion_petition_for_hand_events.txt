@@ -1,0 +1,305 @@
+namespace = segrellion_petition_hand
+
+
+# =========================================================
+# 1000
+# PETITION ACCEPTED
+# =========================================================
+
+segrellion_petition_hand.1000 = {
+
+	type = letter_event
+
+	title = segrellion_petition_hand.1000.t
+
+	sender = scope:petition_lord
+
+	opening = segrellion_petition_hand.1000.opening
+
+
+	desc = {
+
+		first_valid = {
+
+
+			# =================================================
+			# TRISTAN VLADWYN + ELYSE SUNGLASS
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					root = character:Vladwyn_1
+
+					scope:petition_bride = character:IAF_Sunglass_2
+				}
+
+				desc = segrellion_petition_hand.1000.desc_tristan_elyse
+			}
+
+
+			# =================================================
+			# ACCEPTED THROUGH A HOOK
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					root = {
+						has_character_flag = segrellion_petition_hand_used_hook
+					}
+				}
+
+				desc = segrellion_petition_hand.1000.desc_hook
+			}
+
+
+			# =================================================
+			# ACCEPTED WITH A BRIDE-PRICE
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					root = {
+						has_character_flag = segrellion_petition_hand_used_bride_price
+					}
+				}
+
+				desc = segrellion_petition_hand.1000.desc_bride_price
+			}
+
+
+			# =================================================
+			# GENERIC ACCEPTANCE
+			# =================================================
+
+			desc = segrellion_petition_hand.1000.desc
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_petition_hand.1000.a
+
+
+		# =================================================
+		# USE HOOK
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_petition_hand_used_hook
+
+				has_usable_hook = scope:petition_lord
+			}
+
+
+			use_hook = scope:petition_lord
+		}
+
+
+		# =================================================
+		# CLEAR WIDOW / REFUSING MARRIAGE
+		# =================================================
+
+		scope:petition_bride = {
+
+
+			if = {
+
+				limit = {
+					has_trait = widowed
+				}
+
+				remove_trait = widowed
+			}
+
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+
+
+		# =================================================
+		# MARRY
+		# =================================================
+
+		scope:petition_bride = {
+
+			add_spouse = root
+		}
+
+
+		# =================================================
+		# BRIDE JOINS THE ADVENTURER
+		# =================================================
+
+		root = {
+
+			add_courtier = scope:petition_bride
+		}
+
+
+		# =================================================
+		# CLEAN TEMPORARY FLAGS
+		# =================================================
+
+		remove_character_flag = segrellion_petition_hand_used_hook
+
+		remove_character_flag = segrellion_petition_hand_used_bride_price
+	}
+}
+
+
+
+# =========================================================
+# 2000
+# PETITION REJECTED
+# =========================================================
+
+segrellion_petition_hand.2000 = {
+
+	type = letter_event
+
+	title = segrellion_petition_hand.2000.t
+
+	sender = scope:petition_lord
+
+	opening = segrellion_petition_hand.2000.opening
+
+
+	desc = {
+
+		first_valid = {
+
+
+			# =================================================
+			# ALREADY MARRIED
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					root = {
+						is_married = yes
+					}
+				}
+
+				desc = segrellion_petition_hand.2000.desc_already_married
+			}
+
+
+			# =================================================
+			# BRIDE HERSELF DISLIKES THE MATCH
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:petition_bride = {
+
+						opinion = {
+							target = root
+							value <= -25
+						}
+					}
+				}
+
+				desc = segrellion_petition_hand.2000.desc_bride_dislikes
+			}
+
+
+			# =================================================
+			# LOWBORN PETITIONER FOR A NOBLE WOMAN
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					root = {
+						is_lowborn = yes
+					}
+
+					scope:petition_bride = {
+						is_lowborn = no
+					}
+				}
+
+				desc = segrellion_petition_hand.2000.desc_lowborn
+			}
+
+
+			# =================================================
+			# BRIDE-PRICE FAILED
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					root = {
+						has_character_flag = segrellion_petition_hand_used_bride_price
+					}
+				}
+
+				desc = segrellion_petition_hand.2000.desc_bride_price
+			}
+
+
+			# =================================================
+			# GENERIC REJECTION
+			# =================================================
+
+			desc = segrellion_petition_hand.2000.desc
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_petition_hand.2000.a
+
+
+		# =================================================
+		# A USED HOOK IS STILL SPENT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_petition_hand_used_hook
+
+				has_usable_hook = scope:petition_lord
+			}
+
+
+			use_hook = scope:petition_lord
+		}
+
+
+		# =================================================
+		# CLEAN TEMPORARY FLAGS
+		# =================================================
+
+		remove_character_flag = segrellion_petition_hand_used_hook
+
+		remove_character_flag = segrellion_petition_hand_used_bride_price
+	}
+}

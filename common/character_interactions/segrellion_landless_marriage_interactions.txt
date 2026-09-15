@@ -195,55 +195,6 @@ segrellion_petition_for_her_hand_interaction = {
 
 
 	# =====================================================
-	# AUTOMATIC ACCEPTANCE
-	#
-	# 1. Tristan + Elyse
-	# 2. Strong Hook
-	#
-	# Neither works if the petitioner already has a wife.
-	# =====================================================
-
-	auto_accept = {
-
-		scope:actor = {
-			is_married = no
-		}
-
-
-		OR = {
-
-
-			# ---------------------------------------------
-			# TRISTAN VLADWYN + ELYSE SUNGLASS
-			# ---------------------------------------------
-
-			AND = {
-
-				scope:actor = {
-					this = character:Vladwyn_1
-				}
-
-				scope:secondary_recipient = character:IAF_Sunglass_2
-			}
-
-
-			# ---------------------------------------------
-			# STRONG HOOK
-			# ---------------------------------------------
-
-			AND = {
-
-				scope:hook = yes
-
-				scope:actor = {
-					has_strong_hook = scope:recipient
-				}
-			}
-		}
-	}
-
-
-	# =====================================================
 	# SEND OPTIONS
 	# =====================================================
 
@@ -327,11 +278,14 @@ segrellion_petition_for_her_hand_interaction = {
 
 	# =====================================================
 	# ON SEND
-	#
-	# Bride-price is paid to the girl's employer.
 	# =====================================================
 
 	on_send = {
+
+
+		# -------------------------------------------------
+		# RECORD BRIDE-PRICE
+		# -------------------------------------------------
 
 		if = {
 
@@ -340,9 +294,39 @@ segrellion_petition_for_her_hand_interaction = {
 			}
 
 
+			scope:actor = {
+
+				add_character_flag = {
+					flag = segrellion_petition_hand_used_bride_price
+					days = 60
+				}
+			}
+
+
 			scope:recipient = {
 
 				add_gold = scope:actor.segrellion_petition_for_hand_bribe_cost_value
+			}
+		}
+
+
+		# -------------------------------------------------
+		# RECORD HOOK USE
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				scope:hook = yes
+			}
+
+
+			scope:actor = {
+
+				add_character_flag = {
+					flag = segrellion_petition_hand_used_hook
+					days = 60
+				}
 			}
 		}
 	}
@@ -356,67 +340,74 @@ segrellion_petition_for_her_hand_interaction = {
 
 
 		# -------------------------------------------------
-		# CONSUME HOOK
+		# SAVE EVERY CHARACTER NEEDED BY THE LETTER
 		# -------------------------------------------------
 
-		if = {
-
-			limit = {
-				scope:hook = yes
-			}
-
-
-			scope:actor = {
-				use_hook = scope:recipient
-			}
+		scope:actor = {
+			save_scope_as = petition_actor
 		}
 
 
-		# -------------------------------------------------
-		# REMOVE MARRIAGE-REFUSAL STATES
-		# -------------------------------------------------
+		scope:recipient = {
+			save_scope_as = petition_lord
+		}
+
 
 		scope:secondary_recipient = {
-
-
-			if = {
-
-				limit = {
-					has_trait = widowed
-				}
-
-				remove_trait = widowed
-			}
-
-
-			if = {
-
-				limit = {
-					has_trait = refusing_marriage
-				}
-
-				remove_trait = refusing_marriage
-			}
+			save_scope_as = petition_bride
 		}
 
 
 		# -------------------------------------------------
-		# MARRIAGE
-		# -------------------------------------------------
-
-		scope:secondary_recipient = {
-
-			add_spouse = scope:actor
-		}
-
-
-		# -------------------------------------------------
-		# BRIDE JOINS THE ADVENTURER'S CAMP / COURT
+		# SEND THE ACCEPTANCE LETTER TO THE ADVENTURER
 		# -------------------------------------------------
 
 		scope:actor = {
 
-			add_courtier = scope:secondary_recipient
+			trigger_event = {
+				id = segrellion_petition_hand.1000
+				days = 1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ON DECLINE
+	# =====================================================
+
+	on_decline = {
+
+
+		# -------------------------------------------------
+		# SAVE EVERY CHARACTER NEEDED BY THE LETTER
+		# -------------------------------------------------
+
+		scope:actor = {
+			save_scope_as = petition_actor
+		}
+
+
+		scope:recipient = {
+			save_scope_as = petition_lord
+		}
+
+
+		scope:secondary_recipient = {
+			save_scope_as = petition_bride
+		}
+
+
+		# -------------------------------------------------
+		# SEND THE REJECTION LETTER TO THE ADVENTURER
+		# -------------------------------------------------
+
+		scope:actor = {
+
+			trigger_event = {
+				id = segrellion_petition_hand.2000
+				days = 1
+			}
 		}
 	}
 
