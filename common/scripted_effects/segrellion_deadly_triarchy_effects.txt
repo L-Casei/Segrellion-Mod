@@ -290,6 +290,8 @@ segrellion_deadly_triarchy_check_final_triumph_effect = {
 			}
 		}
 
+		segrellion_deadly_triarchy_apply_final_triumph_modifier_effect = yes
+
 
 		character:Segrellion_60 = {
 
@@ -363,6 +365,16 @@ segrellion_dissolve_deadly_triarchy_effect = {
             remove_character_modifier = segrellion_deadly_triarchy_modifier
         }
 
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+			}
+
+
+			remove_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+		}
+
 
         remove_opinion = {
             target = character:IAF_Young_Griff_1
@@ -397,6 +409,16 @@ segrellion_dissolve_deadly_triarchy_effect = {
             remove_character_modifier = segrellion_deadly_triarchy_modifier
         }
 
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+			}
+
+
+			remove_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+		}
+
 
         remove_opinion = {
             target = character:Segrellion_60
@@ -430,6 +452,16 @@ segrellion_dissolve_deadly_triarchy_effect = {
 
             remove_character_modifier = segrellion_deadly_triarchy_modifier
         }
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+			}
+
+
+			remove_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+		}
 
 
         remove_opinion = {
@@ -497,6 +529,15 @@ segrellion_apply_pentos_oathbreaker_effect = {
 			remove_character_modifier = segrellion_deadly_triarchy_modifier
 		}
 
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+			}
+
+
+			remove_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+		}
 
 		# =================================================
 		# REMOVE OLD / LEGACY OATHBREAKER MODIFIERS
@@ -670,70 +711,6 @@ segrellion_deadly_triarchy_oathbreaker_effect = {
 		}
 	}
 
-
-	# =====================================================
-	# THIRD MEMBER MUST DEFEND THE VICTIM
-	# =====================================================
-
-	scope:segrellion_triarchy_third_member ?= {
-
-		if = {
-
-			limit = {
-
-				is_alive = yes
-				is_landed = yes
-
-				has_character_flag = segrellion_deadly_triarchy_formed
-
-				NOT = {
-					is_at_war_with = scope:segrellion_triarchy_defender
-				}
-			}
-
-
-			scope:segrellion_triarchy_betrayal_war = {
-
-				if = {
-
-					limit = {
-
-						NOT = {
-							any_war_attacker = {
-								this = scope:segrellion_triarchy_third_member
-							}
-						}
-
-						NOT = {
-							any_war_defender = {
-								this = scope:segrellion_triarchy_third_member
-							}
-						}
-					}
-
-
-					hidden_effect = {
-
-						if = {
-
-							limit = {
-
-								NOT = {
-									was_called = scope:segrellion_triarchy_third_member
-								}
-							}
-
-							set_called_to = scope:segrellion_triarchy_third_member
-						}
-					}
-
-
-					add_defender = scope:segrellion_triarchy_third_member
-				}
-			}
-		}
-	}
-
     # =====================================================
 	# THE PENTOS COMPACT IS DEAD
 	#
@@ -743,4 +720,145 @@ segrellion_deadly_triarchy_oathbreaker_effect = {
 	# =====================================================
 
 	segrellion_dissolve_deadly_triarchy_effect = yes
+}
+
+# =========================================================
+# DEADLY TRIARCHY - REFUSED PROMISED AID
+#
+# ROOT = member who refuses aid already owed/promised.
+# =========================================================
+
+segrellion_deadly_triarchy_refused_promised_aid_effect = {
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_deadly_triarchy_formed
+		}
+
+
+		segrellion_apply_pentos_oathbreaker_effect = yes
+
+		segrellion_dissolve_deadly_triarchy_effect = yes
+	}
+}
+
+# =========================================================
+# DEADLY TRIARCHY - FINAL TRIUMPH MODIFIER
+#
+# This effect MUST only be called after the progression
+# effect has confirmed ALL THREE territorial objectives.
+# =========================================================
+
+segrellion_deadly_triarchy_apply_final_triumph_modifier_effect = {
+
+	character:Segrellion_60 ?= {
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_deadly_triarchy_formed
+			}
+
+
+			if = {
+
+				limit = {
+					has_character_modifier = segrellion_deadly_triarchy_modifier
+				}
+
+				remove_character_modifier = segrellion_deadly_triarchy_modifier
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+					}
+				}
+
+
+				add_character_modifier = {
+					modifier = segrellion_deadly_triarchy_final_triumph_modifier
+				}
+			}
+		}
+	}
+
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_deadly_triarchy_formed
+			}
+
+
+			if = {
+
+				limit = {
+					has_character_modifier = segrellion_deadly_triarchy_modifier
+				}
+
+				remove_character_modifier = segrellion_deadly_triarchy_modifier
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+					}
+				}
+
+
+				add_character_modifier = {
+					modifier = segrellion_deadly_triarchy_final_triumph_modifier
+				}
+			}
+		}
+	}
+
+
+	character:Vladwyn_5 ?= {
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_deadly_triarchy_formed
+			}
+
+
+			if = {
+
+				limit = {
+					has_character_modifier = segrellion_deadly_triarchy_modifier
+				}
+
+				remove_character_modifier = segrellion_deadly_triarchy_modifier
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_modifier = segrellion_deadly_triarchy_final_triumph_modifier
+					}
+				}
+
+
+				add_character_modifier = {
+					modifier = segrellion_deadly_triarchy_final_triumph_modifier
+				}
+			}
+		}
+	}
 }
