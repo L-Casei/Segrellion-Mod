@@ -1,0 +1,2080 @@
+namespace = segrellion_daenerys_funding
+
+
+# =========================================================
+# 0001 - GOLD FOR A CROWN
+# =========================================================
+
+segrellion_daenerys_funding.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0001.t
+	desc = segrellion_daenerys_funding.0001.desc
+
+	theme = stewardship
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_fleet_project_active
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_funding_system_unlocked
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+
+
+		if = {
+
+			limit = {
+				NOT = {
+					exists = var:segrellion_daenerys_funding_methods_used
+				}
+			}
+
+			set_variable = {
+				name = segrellion_daenerys_funding_methods_used
+				value = 0
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Selmy_3
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0001.a
+
+		custom_tooltip = segrellion_daenerys_funding.0001.a.tt
+	}
+}
+
+
+# =========================================================
+# 0100 - THE PENTOSHI SYNDICATE
+# =========================================================
+
+segrellion_daenerys_funding.0100 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0100.t
+	desc = segrellion_daenerys_funding.0100.desc
+
+	theme = stewardship
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	immediate = {
+
+		title:k_pentos.holder ?= {
+			save_scope_as = pentoshi_magister
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = scope:pentoshi_magister
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0100.a
+
+		custom_tooltip = segrellion_daenerys_funding.0100.a.tt
+
+		add_gold = 700
+
+		add_character_flag = segrellion_daenerys_syndicate_route_resolved
+		add_character_flag = segrellion_daenerys_pentoshi_syndicate_debt
+
+		segrellion_daenerys_register_funding_method_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0100.b
+
+		add_character_flag = segrellion_daenerys_syndicate_route_resolved
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+
+# =========================================================
+# 0200 - SELL TOMORROW
+# =========================================================
+
+segrellion_daenerys_funding.0200 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0200.t
+	desc = segrellion_daenerys_funding.0200.desc
+
+	theme = stewardship
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0200.a
+
+		custom_tooltip = segrellion_daenerys_funding.0200.a.tt
+
+		add_gold = 600
+
+		add_character_flag = segrellion_daenerys_trade_route_resolved
+		add_character_flag = segrellion_daenerys_pentoshi_trade_privileges_promised
+
+		segrellion_daenerys_register_funding_method_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0200.b
+
+		add_character_flag = segrellion_daenerys_trade_route_resolved
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 0300 - THE BLOOD OF THE DRAGON
+# =========================================================
+
+segrellion_daenerys_funding.0300 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0300.t
+	desc = segrellion_daenerys_funding.0300.desc
+
+	theme = dynasty
+
+
+	immediate = {
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# CELTIGAR
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0300.a
+
+
+		trigger = {
+
+			var:segrellion_daenerys_fleet_shortfall > 0
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_asked_celtigar_for_funding
+			}
+
+			title:c_claw_isle = {
+				exists = holder
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_asked_celtigar_for_funding
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0310
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# MONTERYS VELARYON
+	# NEVER AURANE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0300.b
+
+
+		trigger = {
+
+			var:segrellion_daenerys_fleet_shortfall > 0
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_asked_monterys_for_funding
+			}
+
+			title:c_driftmark = {
+
+				exists = holder
+
+				holder = {
+
+					NOT = {
+						this = character:Velaryon_5
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_asked_monterys_for_funding
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0320
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	# =====================================================
+	# HOUSE SCALES
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0300.c
+
+
+		trigger = {
+
+			var:segrellion_daenerys_fleet_shortfall > 0
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_asked_scales_for_funding
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_asked_scales_for_funding
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0330
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+
+	# =====================================================
+	# HUGH OF VHAL
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0300.d
+
+
+		trigger = {
+
+			var:segrellion_daenerys_fleet_shortfall > 0
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_asked_hugh_for_funding
+			}
+
+			character:Segrellion_43 ?= {
+
+				is_alive = yes
+
+				is_landed = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_asked_hugh_for_funding
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0340
+			days = { 2 5 }
+		}
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+
+	# =====================================================
+	# DAEMON AT THE BEACON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0300.e
+
+
+		trigger = {
+
+			var:segrellion_daenerys_fleet_shortfall > 0
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_asked_daemon_for_funding
+			}
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				is_at_location = title:b_castle_farring.title_province
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_asked_daemon_for_funding
+
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0350
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+
+
+			modifier = {
+
+				add = 35
+
+				root = {
+					var:segrellion_daenerys_fleet_shortfall >= 750
+				}
+			}
+
+
+			modifier = {
+
+				add = 65
+
+				root = {
+					var:segrellion_daenerys_fleet_shortfall >= 1250
+				}
+			}
+
+
+			modifier = {
+
+				add = 40
+
+				root = {
+					current_date >= 8302.1.1
+				}
+			}
+
+
+			modifier = {
+
+				add = 80
+
+				root = {
+					current_date >= 8304.1.1
+				}
+			}
+
+
+			modifier = {
+
+				add = 150
+
+				character:Segrellion_60 = {
+					has_character_flag = segrellion_pledged_to_daenerys
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CLOSE THE LEDGER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0300.f
+
+		add_character_flag = segrellion_daenerys_blood_funding_route_closed
+
+
+		ai_chance = {
+
+			base = 10
+
+
+			modifier = {
+
+				add = 500
+
+				root = {
+					var:segrellion_daenerys_fleet_shortfall <= 0
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0310 - CELTIGAR ANSWERS
+# =========================================================
+
+segrellion_daenerys_funding.0310 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0310.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_celtigar_support_accepted
+				}
+
+				desc = segrellion_daenerys_funding.0310.desc_yes
+			}
+
+			desc = segrellion_daenerys_funding.0310.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		random_list = {
+
+			30 = {
+				add_character_flag = segrellion_daenerys_celtigar_support_accepted
+			}
+
+			70 = {
+				add_character_flag = segrellion_daenerys_celtigar_support_rejected
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = title:c_claw_isle.holder
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0310.a
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_celtigar_support_accepted
+		}
+
+
+		add_gold = 200
+
+		title:c_claw_isle.holder ?= {
+			add_gold = -200
+		}
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0300
+			days = 1
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0310.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_celtigar_support_rejected
+		}
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0300
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0320 - MONTERYS VELARYON
+# ALWAYS REFUSES
+# =========================================================
+
+segrellion_daenerys_funding.0320 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0320.t
+	desc = segrellion_daenerys_funding.0320.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = title:c_driftmark.holder
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0320.a
+
+		add_character_flag = segrellion_daenerys_monterys_support_rejected
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0300
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0330 - HOUSE SCALES
+# =========================================================
+
+segrellion_daenerys_funding.0330 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0330.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_scales_support_accepted
+				}
+
+				desc = segrellion_daenerys_funding.0330.desc_yes
+			}
+
+			desc = segrellion_daenerys_funding.0330.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		random_list = {
+
+			20 = {
+				add_character_flag = segrellion_daenerys_scales_support_accepted
+			}
+
+			80 = {
+				add_character_flag = segrellion_daenerys_scales_support_rejected
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0330.a
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_scales_support_accepted
+		}
+
+
+		add_gold = 150
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0300
+			days = 1
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0330.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_scales_support_rejected
+		}
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0300
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0340 - HUGH OF VHAL
+# =========================================================
+
+segrellion_daenerys_funding.0340 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0340.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_hugh_support_accepted
+				}
+
+				desc = segrellion_daenerys_funding.0340.desc_yes
+			}
+
+			desc = segrellion_daenerys_funding.0340.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		random_list = {
+
+			30 = {
+				add_character_flag = segrellion_daenerys_hugh_support_accepted
+			}
+
+			70 = {
+				add_character_flag = segrellion_daenerys_hugh_support_rejected
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Segrellion_43
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0340.a
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_hugh_support_accepted
+		}
+
+
+		add_gold = 250
+
+		character:Segrellion_43 ?= {
+			add_gold = -250
+		}
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0300
+			days = 1
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0340.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_hugh_support_rejected
+		}
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0300
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0350 - DAENERYS ASKS DAEMON
+#
+# ROOT = Daemon
+# =========================================================
+
+segrellion_daenerys_funding.0350 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0350.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daemon_funding_existing_pact
+				}
+
+				desc = segrellion_daenerys_funding.0350.desc_pact
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daemon_funding_locked_to_aegon
+				}
+
+				desc = segrellion_daenerys_funding.0350.desc_aegon
+			}
+
+
+			desc = segrellion_daenerys_funding.0350.desc
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		title:d_masseys_hook.holder ?= {
+			save_scope_as = maric_massey
+		}
+
+
+		if = {
+
+			limit = {
+				NOT = {
+					exists = scope:maric_massey
+				}
+			}
+
+			title:c_stonedance.holder ?= {
+				save_scope_as = maric_massey
+			}
+		}
+
+
+		character:Targaryen_9 = {
+			segrellion_daenerys_update_fleet_shortfall_effect = yes
+		}
+
+
+		# =================================================
+		# EXISTING DAENERYS PACT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					has_character_flag = segrellion_pledged_to_daenerys
+
+					character:Targaryen_9 = {
+						has_character_flag = segrellion_daenerys_supports_daemon
+					}
+
+					character:Targaryen_9 = {
+						has_character_flag = segrellion_marriage_promised_to_daemon
+					}
+				}
+			}
+
+
+			add_character_flag = segrellion_daemon_funding_existing_pact
+		}
+
+
+		# =================================================
+		# LOYAL TO YOUNG GRIFF
+		#
+		# If Aegon is dead, this no longer blocks Daemon.
+		# If Aegon has been exposed as Blackfyre, Daemon may
+		# betray him and negotiate with Daenerys.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				character:IAF_Young_Griff_1 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_blackfyre_revealed
+					}
+				}
+
+
+				OR = {
+
+					has_character_flag = segrellion_pledged_to_young_griff
+
+					has_relation_best_friend = character:IAF_Young_Griff_1
+
+
+					AND = {
+
+						has_relation_friend = character:IAF_Young_Griff_1
+
+						is_allied_to = character:IAF_Young_Griff_1
+					}
+
+
+					character:IAF_Young_Griff_1 = {
+
+						OR = {
+							has_character_flag = segrellion_young_griff_daemon_oath_secured
+							has_character_flag = segrellion_young_griff_supports_daemon
+						}
+					}
+				}
+			}
+
+
+			add_character_flag = segrellion_daemon_funding_locked_to_aegon
+		}
+
+
+		else = {
+
+			add_character_flag = segrellion_daemon_funding_can_bargain
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# EXISTING PACT: ACCEPT
+	# 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0350.a
+
+
+		trigger = {
+			has_character_flag = segrellion_daemon_funding_existing_pact
+		}
+
+
+		remove_character_flag = segrellion_daemon_funding_existing_pact
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0360
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# EXISTING PACT: BREAK IT
+	# 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0350.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daemon_funding_existing_pact
+		}
+
+
+		remove_character_flag = segrellion_daemon_funding_existing_pact
+
+
+		add_character_modifier = {
+			modifier = segrellion_daemon_broke_daenerys_funding_pact_modifier
+			years = 10
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_daemon_broke_daenerys_funding_pact_opinion
+			}
+
+			add_character_flag = segrellion_daenerys_daemon_funding_refused_after_pact
+		}
+
+
+		scope:maric_massey ?= {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_massey_daemon_broke_funding_pact_opinion
+			}
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+
+	# =====================================================
+	# YOUNG GRIFF LOYALTY: REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0350.c
+
+
+		trigger = {
+			has_character_flag = segrellion_daemon_funding_locked_to_aegon
+		}
+
+
+		remove_character_flag = segrellion_daemon_funding_locked_to_aegon
+
+		add_character_flag = segrellion_daemon_refused_daenerys_funding_for_aegon
+
+
+		character:Targaryen_9 = {
+			add_character_flag = segrellion_daenerys_daemon_funding_refused
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# DEMAND MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0350.d
+
+
+		trigger = {
+
+			has_character_flag = segrellion_daemon_funding_can_bargain
+
+			is_married = no
+
+			character:Targaryen_9 = {
+				is_married = no
+			}
+		}
+
+
+		remove_character_flag = segrellion_daemon_funding_can_bargain
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_funding_marriage_pending
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0370
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+
+
+	# =====================================================
+	# COUNCIL + AUTONOMY + MARRIAGE PREFERENCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0350.e
+
+
+		trigger = {
+			has_character_flag = segrellion_daemon_funding_can_bargain
+		}
+
+
+		remove_character_flag = segrellion_daemon_funding_can_bargain
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_funding_office_pending
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0370
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# INDEPENDENCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0350.f
+
+
+		trigger = {
+			has_character_flag = segrellion_daemon_funding_can_bargain
+		}
+
+
+		remove_character_flag = segrellion_daemon_funding_can_bargain
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_funding_independence_pending
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0370
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 20
+
+			modifier = {
+				add = 25
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 15
+				has_trait = arrogant
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ASK NOTHING
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0350.g
+
+
+		trigger = {
+			has_character_flag = segrellion_daemon_funding_can_bargain
+		}
+
+
+		remove_character_flag = segrellion_daemon_funding_can_bargain
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0360
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 15
+
+
+			modifier = {
+
+				add = 40
+
+				has_relation_friend = character:Targaryen_9
+			}
+
+
+			modifier = {
+
+				add = 80
+
+				has_relation_best_friend = character:Targaryen_9
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0360 - DAEMON ASKS NOTHING
+# =========================================================
+
+segrellion_daenerys_funding.0360 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0360.t
+	desc = segrellion_daenerys_funding.0360.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_content
+	}
+
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0360.a
+
+		segrellion_daenerys_daemon_pay_shortfall_effect = yes
+		segrellion_daenerys_daemon_funding_friendship_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0370 - DAEMON'S PRICE
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_funding.0370 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0370.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_funding_marriage_pending
+				}
+
+				desc = segrellion_daenerys_funding.0370.desc_marriage
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_funding_office_pending
+				}
+
+				desc = segrellion_daenerys_funding.0370.desc_office
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_funding_independence_pending
+				}
+
+				desc = segrellion_daenerys_funding.0370.desc_independence
+			}
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0370.a
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_funding_marriage_pending
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_funding_marriage_pending
+
+		add_character_flag = segrellion_daenerys_promised_beacon_marriage
+
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_daemon_has_daenerys_promise
+		}
+
+
+		segrellion_daenerys_daemon_pay_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+
+			base = 25
+
+			modifier = {
+				add = 30
+				var:segrellion_daenerys_fleet_shortfall >= 750
+			}
+
+			modifier = {
+				add = 50
+				var:segrellion_daenerys_fleet_shortfall >= 1250
+			}
+
+			modifier = {
+				add = 30
+				current_date >= 8302.1.1
+			}
+
+			modifier = {
+				add = 60
+				current_date >= 8304.1.1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT OFFICE / AUTONOMY PACKAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0370.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_funding_office_pending
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_funding_office_pending
+
+		add_character_flag = segrellion_daenerys_promised_beacon_council
+		add_character_flag = segrellion_daenerys_promised_beacon_autonomy
+		add_character_flag = segrellion_daenerys_promised_beacon_marriage_preference
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_has_daenerys_promise
+
+			add_character_modifier = {
+				modifier = segrellion_daemon_promised_council
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_daemon_promised_autonomy
+			}
+		}
+
+
+		segrellion_daenerys_daemon_pay_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+
+			base = 45
+
+			modifier = {
+				add = 30
+				var:segrellion_daenerys_fleet_shortfall >= 750
+			}
+
+			modifier = {
+				add = 50
+				var:segrellion_daenerys_fleet_shortfall >= 1250
+			}
+
+			modifier = {
+				add = 30
+				current_date >= 8302.1.1
+			}
+
+			modifier = {
+				add = 60
+				current_date >= 8304.1.1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT INDEPENDENCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0370.c
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_funding_independence_pending
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_funding_independence_pending
+
+		add_character_flag = segrellion_daenerys_promised_beacon_independence
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_has_daenerys_promise
+
+			add_character_modifier = {
+				modifier = segrellion_daemon_promised_independence
+			}
+		}
+
+
+		segrellion_daenerys_daemon_pay_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+
+			base = 20
+
+			modifier = {
+				add = 40
+				var:segrellion_daenerys_fleet_shortfall >= 1000
+			}
+
+			modifier = {
+				add = 65
+				var:segrellion_daenerys_fleet_shortfall >= 1500
+			}
+
+			modifier = {
+				add = 40
+				current_date >= 8303.1.1
+			}
+
+			modifier = {
+				add = 80
+				current_date >= 8305.1.1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE DAEMON'S PRICE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0370.d
+
+
+		remove_character_flag = segrellion_daenerys_daemon_funding_marriage_pending
+		remove_character_flag = segrellion_daenerys_daemon_funding_office_pending
+		remove_character_flag = segrellion_daenerys_daemon_funding_independence_pending
+
+		add_character_flag = segrellion_daenerys_refused_daemon_funding_price
+
+
+		character:Segrellion_60 = {
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_daenerys_refused_daemon_funding_opinion
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 80
+
+			modifier = {
+				add = -25
+				root = {
+					var:segrellion_daenerys_fleet_shortfall >= 750
+				}
+			}
+
+			modifier = {
+				add = -35
+				root = {
+					var:segrellion_daenerys_fleet_shortfall >= 1250
+				}
+			}
+
+			modifier = {
+				add = -20
+				root = {
+					current_date >= 8303.1.1
+				}
+			}
+
+			modifier = {
+				add = -30
+				root = {
+					current_date >= 8305.1.1
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0400 - TAKE THE SHIPS WE NEED
+# =========================================================
+
+segrellion_daenerys_funding.0400 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0400.t
+	desc = segrellion_daenerys_funding.0400.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = segrellion_pentos_fleet_council
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0400.a
+
+		add_character_flag = segrellion_daenerys_pirate_funding_resolved
+
+		segrellion_daenerys_register_funding_method_effect = yes
+
+
+		random_list = {
+
+			25 = {
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0410
+					days = { 4 10 }
+				}
+			}
+
+
+			55 = {
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0420
+					days = { 4 10 }
+				}
+			}
+
+
+			20 = {
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0430
+					days = { 4 10 }
+				}
+			}
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0400.b
+
+		add_character_flag = segrellion_daenerys_pirate_funding_resolved
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0410 - GREAT VICTORY
+# EFFECTIVE FLEET SAVING: 600
+# =========================================================
+
+segrellion_daenerys_funding.0410 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0410.t
+	desc = segrellion_daenerys_funding.0410.desc
+
+	theme = war
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0410.a
+
+		custom_tooltip = segrellion_daenerys_funding.0410.a.tt
+
+		hidden_effect = {
+			add_gold = 600
+		}
+
+		add_prestige = 150
+
+		add_character_flag = segrellion_daenerys_captured_major_pirate_fleet
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0420 - COSTLY VICTORY
+# EFFECTIVE FLEET SAVING: 400
+# =========================================================
+
+segrellion_daenerys_funding.0420 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0420.t
+	desc = segrellion_daenerys_funding.0420.desc
+
+	theme = war
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0420.a
+
+		custom_tooltip = segrellion_daenerys_funding.0420.a.tt
+
+		hidden_effect = {
+			add_gold = 400
+		}
+
+		add_prestige = 50
+
+		add_character_flag = segrellion_daenerys_captured_pirate_ships
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0430 - BLOOD FOR TIMBER
+# EFFECTIVE FLEET SAVING: 100
+# =========================================================
+
+segrellion_daenerys_funding.0430 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0430.t
+	desc = segrellion_daenerys_funding.0430.desc
+
+	theme = war
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0430.a
+
+		custom_tooltip = segrellion_daenerys_funding.0430.a.tt
+
+		hidden_effect = {
+			add_gold = 100
+		}
+
+		add_prestige = -75
+
+		add_character_flag = segrellion_daenerys_pirate_raid_costly_failure
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0500 - THE QUEEN'S JEWELS
+# =========================================================
+
+segrellion_daenerys_funding.0500 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0500.t
+	desc = segrellion_daenerys_funding.0500.desc
+
+	theme = stewardship
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0500.a
+
+		custom_tooltip = segrellion_daenerys_funding.0500.a.tt
+
+		add_gold = 350
+		add_prestige = -150
+
+		add_character_flag = segrellion_daenerys_jewels_route_resolved
+		add_character_flag = segrellion_daenerys_sold_royal_treasures
+
+		segrellion_daenerys_register_funding_method_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0500.b
+
+		add_character_flag = segrellion_daenerys_jewels_route_resolved
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 0600 - THE IRON BANK
+# =========================================================
+
+segrellion_daenerys_funding.0600 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0600.t
+	desc = segrellion_daenerys_funding.0600.desc
+
+	theme = stewardship
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0600.a
+
+		custom_tooltip = segrellion_daenerys_funding.0600.a.tt
+
+		add_gold = 1200
+
+		add_character_flag = segrellion_daenerys_iron_bank_route_resolved
+		add_character_flag = segrellion_daenerys_iron_bank_debt
+
+		set_variable = {
+			name = segrellion_daenerys_iron_bank_debt_value
+			value = 1700
+		}
+
+		segrellion_daenerys_register_funding_method_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+
+			base = 40
+
+			modifier = {
+				add = 50
+				root = {
+					var:segrellion_daenerys_fleet_shortfall >= 1000
+				}
+			}
+
+			modifier = {
+				add = 60
+				root = {
+					current_date >= 8303.1.1
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0600.b
+
+		add_character_flag = segrellion_daenerys_iron_bank_route_resolved
+
+
+		ai_chance = {
+			base = 60
+		}
+	}
+}
+
+
+# =========================================================
+# 0700 - PROMISES TO CAPTAINS
+# =========================================================
+
+segrellion_daenerys_funding.0700 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0700.t
+	desc = segrellion_daenerys_funding.0700.desc
+
+	theme = diplomacy
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0700.a
+
+		custom_tooltip = segrellion_daenerys_funding.0700.a.tt
+
+		hidden_effect = {
+			add_gold = 400
+		}
+
+		add_character_flag = segrellion_daenerys_captains_route_resolved
+		add_character_flag = segrellion_daenerys_captains_credit_debt
+
+		segrellion_daenerys_register_funding_method_effect = yes
+		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0700.b
+
+		add_character_flag = segrellion_daenerys_captains_route_resolved
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+
+# =========================================================
+# 0900 - A GIFT FROM AN UNKNOWN FRIEND
+# =========================================================
+
+segrellion_daenerys_funding.0900 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0900.t
+	desc = segrellion_daenerys_funding.0900.desc
+
+	theme = intrigue
+
+
+	immediate = {
+		add_character_flag = segrellion_daenerys_unknown_friend_received
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0900.a
+
+		add_gold = 500
+
+		add_character_flag = segrellion_daenerys_unknown_friend_gold_accepted
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+
+
+		ai_chance = {
+			base = 85
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0900.b
+
+		add_prestige = 75
+
+		add_character_flag = segrellion_daenerys_unknown_friend_gold_refused
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}

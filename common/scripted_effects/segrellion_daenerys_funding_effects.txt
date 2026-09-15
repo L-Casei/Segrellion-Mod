@@ -1,0 +1,394 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# INVASION FUNDING SYSTEM
+# =========================================================
+
+
+# =========================================================
+# UPDATE THE REAL FLEET FUNDING SHORTFALL
+#
+# Required Dragon Fleet contributions:
+#
+# Ships              1000
+# Supplies             250
+# Armaments            400
+# Crews                300
+# Horse transports     350
+#
+# TOTAL               2300
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_update_fleet_shortfall_effect = {
+
+	set_variable = {
+		name = segrellion_daenerys_fleet_remaining_cost
+		value = 2300
+	}
+
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_daenerys_fleet_ships_funded
+		}
+
+		change_variable = {
+			name = segrellion_daenerys_fleet_remaining_cost
+			add = -1000
+		}
+	}
+
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_daenerys_fleet_supplies_funded
+		}
+
+		change_variable = {
+			name = segrellion_daenerys_fleet_remaining_cost
+			add = -250
+		}
+	}
+
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_daenerys_fleet_armaments_funded
+		}
+
+		change_variable = {
+			name = segrellion_daenerys_fleet_remaining_cost
+			add = -400
+		}
+	}
+
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_daenerys_fleet_crews_funded
+		}
+
+		change_variable = {
+			name = segrellion_daenerys_fleet_remaining_cost
+			add = -300
+		}
+	}
+
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_daenerys_fleet_horse_transports_funded
+		}
+
+		change_variable = {
+			name = segrellion_daenerys_fleet_remaining_cost
+			add = -350
+		}
+	}
+
+
+	if = {
+		limit = {
+			var:segrellion_daenerys_fleet_remaining_cost < 0
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_fleet_remaining_cost
+			value = 0
+		}
+	}
+
+
+	set_variable = {
+		name = segrellion_daenerys_fleet_shortfall
+		value = var:segrellion_daenerys_fleet_remaining_cost
+	}
+
+
+	change_variable = {
+		name = segrellion_daenerys_fleet_shortfall
+
+		add = {
+			value = gold
+			multiply = -1
+		}
+	}
+
+
+	if = {
+		limit = {
+			var:segrellion_daenerys_fleet_shortfall < 0
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_fleet_shortfall
+			value = 0
+		}
+	}
+}
+
+
+# =========================================================
+# REGISTER ONE FUNDING METHOD
+#
+# Blood of the Dragon counts only ONCE even though Daenerys
+# may contact several houses inside that route.
+# =========================================================
+
+segrellion_daenerys_register_funding_method_effect = {
+
+	if = {
+		limit = {
+			NOT = {
+				exists = var:segrellion_daenerys_funding_methods_used
+			}
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_funding_methods_used
+			value = 0
+		}
+	}
+
+
+	change_variable = {
+		name = segrellion_daenerys_funding_methods_used
+		add = 1
+	}
+
+
+	add_character_flag = {
+		flag = segrellion_daenerys_funding_recently_used
+		days = 10
+	}
+
+
+	segrellion_daenerys_update_fleet_shortfall_effect = yes
+
+
+	if = {
+		limit = {
+			var:segrellion_daenerys_funding_methods_used >= 3
+		}
+
+		add_character_flag = segrellion_daenerys_funding_methods_exhausted
+	}
+}
+
+
+# =========================================================
+# UNKNOWN FRIEND
+#
+# Only one roll per campaign.
+# 7% chance.
+# =========================================================
+
+segrellion_daenerys_try_unknown_friend_effect = {
+
+	if = {
+		limit = {
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_unknown_friend_roll_resolved
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_unknown_friend_received
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_unknown_friend_roll_resolved
+
+
+		random = {
+			chance = 7
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0900
+				days = { 3 10 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DAEMON FUNDS THE ENTIRE REMAINING SHORTFALL
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_daemon_pay_shortfall_effect = {
+
+	segrellion_daenerys_update_fleet_shortfall_effect = yes
+
+
+	if = {
+		limit = {
+			var:segrellion_daenerys_fleet_shortfall > 0
+		}
+
+		add_gold = var:segrellion_daenerys_fleet_shortfall
+
+
+		character:Segrellion_60 ?= {
+
+			add_gold = {
+				value = character:Targaryen_9.var:segrellion_daenerys_fleet_shortfall
+				multiply = -1
+			}
+
+			add_character_flag = segrellion_daemon_financed_daenerys_fleet
+		}
+
+
+		add_character_flag = segrellion_daenerys_funded_by_daemon
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+	}
+}
+
+
+# =========================================================
+# DAENERYS / DAEMON FRIENDSHIP AFTER UNCONDITIONAL SUPPORT
+# =========================================================
+
+segrellion_daenerys_daemon_funding_friendship_effect = {
+
+	if = {
+
+		limit = {
+
+			NOR = {
+				has_relation_friend = character:Segrellion_60
+				has_relation_best_friend = character:Segrellion_60
+			}
+		}
+
+		set_relation_friend = {
+			target = character:Segrellion_60
+			reason = friend_good_relationship
+		}
+	}
+}
+
+
+# =========================================================
+# APPLY FUTURE FINANCIAL OBLIGATIONS
+#
+# Called continuously by Daenerys' invasion progression.
+# Nothing applies until she has landed in Westeros.
+# =========================================================
+
+segrellion_daenerys_funding_obligations_progression_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			has_character_flag = segrellion_daenerys_landed_in_westeros
+		}
+
+
+		# =================================================
+		# PENTOSHI SYNDICATE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_pentoshi_syndicate_debt
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_pentoshi_syndicate_debt_applied
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_pentoshi_syndicate_debt_applied
+
+			add_character_modifier = {
+				modifier = segrellion_pentoshi_syndicate_debt_modifier
+			}
+		}
+
+
+		# =================================================
+		# TRADE PRIVILEGES
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_pentoshi_trade_privileges_promised
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_pentoshi_trade_privileges_applied
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_pentoshi_trade_privileges_applied
+
+			add_character_modifier = {
+				modifier = segrellion_pentoshi_trade_privileges_modifier
+				years = 10
+			}
+		}
+
+
+		# =================================================
+		# IRON BANK
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_iron_bank_debt
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_iron_bank_debt_applied
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_iron_bank_debt_applied
+
+			add_character_modifier = {
+				modifier = segrellion_iron_bank_invasion_debt_modifier
+			}
+		}
+
+
+		# =================================================
+		# CAPTAINS ON CREDIT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_captains_credit_debt
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_captains_credit_applied
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_captains_credit_applied
+
+			add_character_modifier = {
+				modifier = segrellion_sellsail_credit_modifier
+			}
+		}
+	}
+}

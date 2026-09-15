@@ -1,0 +1,856 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# FINANCE THE DRAGON FLEET
+# =========================================================
+
+segrellion_finance_dragon_fleet_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/great_projects/segrellion_daenerys_dragon_fleet.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_finance_dragon_fleet_decision_desc
+	selection_tooltip = segrellion_finance_dragon_fleet_decision_tooltip
+	confirm_text = segrellion_finance_dragon_fleet_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_fleet_project_active
+
+		has_character_flag = segrellion_daenerys_funding_system_unlocked
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_dragon_fleet_completed
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_funding_methods_exhausted
+		}
+	}
+
+
+	is_valid = {
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_funding_recently_used
+		}
+
+		OR = {
+
+			NOT = {
+				exists = var:segrellion_daenerys_funding_methods_used
+			}
+
+			var:segrellion_daenerys_funding_methods_used < 3
+		}
+	}
+
+
+	# =====================================================
+	# FUNDING METHODS
+	# =====================================================
+
+	widget = {
+
+		gui = "decision_view_widget_option_list_generic"
+
+		controller = decision_option_list_controller
+
+		decision_to_second_step_button = "segrellion_finance_dragon_fleet_next_step"
+
+
+		# -------------------------------------------------
+		# THE PRINCE'S BARGAIN
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_prince
+
+			localization = segrellion_funding_choice_prince
+
+			current_description = segrellion_funding_choice_prince_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_pentos_financing_resolved
+					}
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+
+				value = 20
+
+				modifier = {
+
+					add = 15
+
+					root = {
+						has_character_flag = segrellion_daenerys_ai_slow_fleet
+					}
+				}
+
+				modifier = {
+
+					add = -10
+
+					root = {
+						has_character_flag = segrellion_daenerys_ai_rush_crossing
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# PENTOSHI SYNDICATE
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_syndicate
+
+			localization = segrellion_funding_choice_syndicate
+
+			current_description = segrellion_funding_choice_syndicate_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_syndicate_route_resolved
+					}
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+
+				value = 30
+
+				modifier = {
+
+					add = 25
+
+					root = {
+						has_character_flag = segrellion_daenerys_ai_slow_fleet
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# SELL TOMORROW
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_trade
+
+			localization = segrellion_funding_choice_trade
+
+			current_description = segrellion_funding_choice_trade_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_trade_route_resolved
+					}
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 18
+			}
+		}
+
+
+		# -------------------------------------------------
+		# BLOOD OF THE DRAGON
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_blood
+
+			localization = segrellion_funding_choice_blood
+
+			current_description = segrellion_funding_choice_blood_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_blood_funding_route_opened
+					}
+				}
+			}
+
+
+			is_valid = {
+
+				OR = {
+
+					title:c_claw_isle = {
+						exists = holder
+					}
+
+					title:c_driftmark = {
+						exists = holder
+					}
+
+					character:Segrellion_43 ?= {
+						is_alive = yes
+						is_landed = yes
+					}
+
+					character:Segrellion_60 ?= {
+
+						is_alive = yes
+
+						is_at_location = title:b_castle_farring.title_province
+					}
+				}
+			}
+
+
+			ai_chance = {
+
+				value = 20
+
+
+				modifier = {
+
+					add = 30
+
+					root = {
+						current_date >= 8302.1.1
+					}
+				}
+
+
+				modifier = {
+
+					add = 50
+
+					root = {
+						current_date >= 8304.1.1
+					}
+				}
+
+
+				modifier = {
+
+					add = 60
+
+					root = {
+						var:segrellion_daenerys_fleet_shortfall >= 1000
+					}
+				}
+
+
+				modifier = {
+
+					add = 100
+
+					character:Segrellion_60 ?= {
+
+						is_alive = yes
+
+						is_at_location = title:b_castle_farring.title_province
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# TAKE THE SHIPS WE NEED
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_pirates
+
+			localization = segrellion_funding_choice_pirates
+
+			current_description = segrellion_funding_choice_pirates_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_pirate_funding_resolved
+					}
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+
+				value = 25
+
+
+				modifier = {
+
+					add = 45
+
+					root = {
+						has_character_flag = segrellion_daenerys_ai_rush_crossing
+					}
+				}
+
+
+				modifier = {
+
+					add = 80
+
+					root = {
+						has_character_flag = segrellion_daenerys_ai_super_aggressive
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# THE QUEEN'S JEWELS
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_jewels
+
+			localization = segrellion_funding_choice_jewels
+
+			current_description = segrellion_funding_choice_jewels_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_jewels_route_resolved
+					}
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 10
+			}
+		}
+
+
+		# -------------------------------------------------
+		# IRON BANK
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_iron_bank
+
+			localization = segrellion_funding_choice_iron_bank
+
+			current_description = segrellion_funding_choice_iron_bank_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_iron_bank_route_resolved
+					}
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+
+				value = 7
+
+
+				modifier = {
+
+					add = 30
+
+					root = {
+						var:segrellion_daenerys_fleet_shortfall >= 1000
+					}
+				}
+
+
+				modifier = {
+
+					add = 40
+
+					root = {
+						current_date >= 8303.1.1
+					}
+				}
+
+
+				modifier = {
+
+					add = 100
+
+					root = {
+						has_character_flag = segrellion_daenerys_ai_super_aggressive
+					}
+				}
+			}
+		}
+
+
+		# -------------------------------------------------
+		# CAPTAINS ON CREDIT
+		# -------------------------------------------------
+
+		item = {
+
+			value = segrellion_funding_choice_captains
+
+			localization = segrellion_funding_choice_captains
+
+			current_description = segrellion_funding_choice_captains_desc
+
+
+			is_shown = {
+
+				root = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_captains_route_resolved
+					}
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+
+				value = 15
+
+
+				modifier = {
+
+					add = 25
+
+					root = {
+						has_character_flag = segrellion_daenerys_ai_rush_crossing
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		hidden_effect = {
+
+			segrellion_daenerys_update_fleet_shortfall_effect = yes
+
+
+			if = {
+
+				limit = {
+					scope:segrellion_funding_choice_prince = yes
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_invasion.0013
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_funding_choice_syndicate = yes
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0100
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_funding_choice_trade = yes
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0200
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_funding_choice_blood = yes
+				}
+
+				add_character_flag = segrellion_daenerys_blood_funding_route_opened
+
+				segrellion_daenerys_register_funding_method_effect = yes
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0300
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_funding_choice_pirates = yes
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0400
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_funding_choice_jewels = yes
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0500
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_funding_choice_iron_bank = yes
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0600
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_funding_choice_captains = yes
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_funding.0700
+					days = 1
+				}
+			}
+		}
+	}
+
+
+	ai_check_interval = 14
+
+
+	ai_potential = {
+
+		this = character:Targaryen_9
+
+		is_ai = yes
+
+		has_character_flag = segrellion_daenerys_fleet_project_active
+
+		has_character_flag = segrellion_daenerys_funding_system_unlocked
+	}
+
+
+	ai_will_do = {
+
+		base = 200
+
+
+		modifier = {
+
+			factor = 0.5
+
+			has_character_flag = segrellion_daenerys_ai_slow_fleet
+		}
+
+
+		modifier = {
+
+			add = 500
+
+			current_date >= 8302.1.1
+		}
+
+
+		modifier = {
+
+			add = 1500
+
+			current_date >= 8304.1.1
+		}
+	}
+}
+
+
+# =========================================================
+# SETTLE INVASION DEBTS
+# =========================================================
+
+segrellion_settle_invasion_debts_decision = {
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_settle_invasion_debts_decision_desc
+	selection_tooltip = segrellion_settle_invasion_debts_decision_tooltip
+	confirm_text = segrellion_settle_invasion_debts_decision_confirm
+
+
+	is_shown = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_landed_in_westeros
+
+		OR = {
+			has_character_flag = segrellion_daenerys_pentoshi_syndicate_debt
+			has_character_flag = segrellion_daenerys_iron_bank_debt
+			has_character_flag = segrellion_daenerys_captains_credit_debt
+		}
+	}
+
+
+	is_valid = {
+		always = yes
+	}
+
+
+	widget = {
+
+		gui = "decision_view_widget_option_list_generic"
+
+		controller = decision_option_list_controller
+
+		decision_to_second_step_button = "segrellion_settle_invasion_debts_next_step"
+
+
+		item = {
+
+			value = segrellion_repay_choice_syndicate
+
+			localization = segrellion_repay_choice_syndicate
+
+			current_description = segrellion_repay_choice_syndicate_desc
+
+
+			is_shown = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_pentoshi_syndicate_debt
+				}
+			}
+
+
+			is_valid = {
+
+				root = {
+					gold >= 1200
+				}
+			}
+		}
+
+
+		item = {
+
+			value = segrellion_repay_choice_iron_bank
+
+			localization = segrellion_repay_choice_iron_bank
+
+			current_description = segrellion_repay_choice_iron_bank_desc
+
+
+			is_shown = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_iron_bank_debt
+				}
+			}
+
+
+			is_valid = {
+
+				root = {
+					gold >= 1700
+				}
+			}
+		}
+
+
+		item = {
+
+			value = segrellion_repay_choice_captains
+
+			localization = segrellion_repay_choice_captains
+
+			current_description = segrellion_repay_choice_captains_desc
+
+
+			is_shown = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_captains_credit_debt
+				}
+			}
+
+
+			is_valid = {
+
+				root = {
+					gold >= 650
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+					scope:segrellion_repay_choice_syndicate = yes
+				}
+
+				add_gold = -1200
+
+				remove_character_flag = segrellion_daenerys_pentoshi_syndicate_debt
+				remove_character_flag = segrellion_daenerys_pentoshi_syndicate_debt_applied
+
+				remove_character_modifier = segrellion_pentoshi_syndicate_debt_modifier
+
+				add_character_flag = segrellion_daenerys_pentoshi_syndicate_debt_paid
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_repay_choice_iron_bank = yes
+				}
+
+				add_gold = -1700
+
+				remove_character_flag = segrellion_daenerys_iron_bank_debt
+				remove_character_flag = segrellion_daenerys_iron_bank_debt_applied
+
+				remove_character_modifier = segrellion_iron_bank_invasion_debt_modifier
+
+				add_character_flag = segrellion_daenerys_iron_bank_debt_paid
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_repay_choice_captains = yes
+				}
+
+				add_gold = -650
+
+				remove_character_flag = segrellion_daenerys_captains_credit_debt
+				remove_character_flag = segrellion_daenerys_captains_credit_applied
+
+				remove_character_modifier = segrellion_sellsail_credit_modifier
+
+				add_character_flag = segrellion_daenerys_captains_credit_paid
+			}
+		}
+	}
+}
