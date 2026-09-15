@@ -62,32 +62,18 @@ vladwyn_adventurer.0002 = {
 	}
 }
 
+# Compatibility entry point for calls queued before the name story was added.
 vladwyn_adventurer.0003 = {
 	type = character_event
-	title = vladwyn_adventurer.0003.t
-	desc = vladwyn_adventurer.0003.desc
-	theme = intrigue
-	override_background = { reference = study }
+	hidden = yes
 
-	left_portrait = {
-		character = root
-		animation = worry
+	trigger = {
+		has_character_flag = is_Vladwyn_1
+		NOT = { has_character_flag = vladwyn_name_story_started }
 	}
 
-	option = {
-		name = vladwyn_adventurer.0003.a
-		add_character_flag = vladwyn_followed_the_name
-		set_variable = {
-			name = vladwyn_origin_progress
-			value = 1
-		}
-		add_learning_lifestyle_xp = 200
-		add_intrigue_lifestyle_xp = 200
-		add_stress = 30
-		add_character_modifier = {
-			modifier = vladwyn_questions_without_answers_modifier
-			years = 6
-		}
+	immediate = {
+		trigger_event = vladwyn_name.1000
 	}
 }
 
