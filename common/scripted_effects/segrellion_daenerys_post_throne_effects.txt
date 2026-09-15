@@ -3,6 +3,36 @@
 # POST-THRONE PACIFICATION
 # =========================================================
 
+# =========================================================
+# CANCEL AGOT'S GENERIC WAR'S AFTERMATH
+#
+# ROOT = Daenerys
+#
+# Daenerys' conquest of the Iron Throne has its own
+# post-conquest pacification storyline.
+#
+# Therefore AGOT's generic Mega War punishment court must
+# not judge Aegon, Doran, Daemon or the other defeated
+# prisoners before our custom events can handle them.
+# =========================================================
+
+segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
+
+	every_owned_story = {
+
+		limit = {
+
+			story_type = story_agot_mw_rebel
+
+			var:mw_source = flag:mw_external
+
+			var:mw_war_cb = flag:claim_cb
+		}
+
+
+		end_story = yes
+	}
+}
 
 # =========================================================
 # START POST-THRONE STORY
@@ -46,6 +76,13 @@ segrellion_start_daenerys_post_throne_effect = {
 					has_character_flag = segrellion_daenerys_post_throne_started
 				}
 			}
+
+
+			# AGOT's generic War's Aftermath must not consume
+			# the prisoners that belong to Daenerys' custom
+			# post-conquest storyline.
+
+			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
 
 
 			add_character_flag = segrellion_daenerys_post_throne_started

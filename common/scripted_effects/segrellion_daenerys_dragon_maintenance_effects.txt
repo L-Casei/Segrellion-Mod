@@ -1,517 +1,83 @@
-# =========================================================
-# DAENERYS TARGARYEN
-# CANON DRAGON ACCELERATED GROWTH
-#
-# IMPORTANT:
-#
-# AGOT stores the real dragon size in:
-#
-# gl_dragon_variable_storage
-#     -> var:dragon_id
-#     -> var:dragon_size_base
-#
-# We modify THAT storage directly.
-#
-# The previous implementation depended on old initialization
-# flags and could therefore believe that growth had happened
-# even when the stored dragon size was still too small.
-# =========================================================
+# Daenerys's canon dragons: repair the real AGOT storage, including spawned
+# versions identified by their inactive canon identity traits.
+# Called after lobby setup and by the existing monthly global maintenance.
+# ROOT for the helper is story_dragon_variable_storage.
+segrellion_daenerys_ensure_dragon_size_effect = {
+	# Check the displayed size, which includes physique modifiers, rather than
+	# assuming dragon_size_base is the size shown in the dragon window.
+	# The count bounds the repair even if another mod changes size calculation.
+	while = {
+		count = 200
+		limit = {
+			var:dragon_id = { dragon_size < $MIN_SIZE$ }
+		}
+		change_dragon_size_direct = { VALUE = 1 }
+	}
+	set_variable = {
+		name = dragon_size
+		value = var:dragon_id.dragon_size
+	}
+}
 
-
-# =========================================================
-# LEGACY SETUP ENTRY
-#
-# This effect is referenced elsewhere in the mod.
-# Keep it valid, but growth itself is handled by the
-# maintenance effect below.
-# =========================================================
-
+# Retain the entry point used by existing setup scripts.
 segrellion_setup_daenerys_dragons_300_effect = {
-
 	character:Targaryen_9 ?= {
-
 		if = {
-
-			limit = {
-				is_alive = yes
-			}
-
-
+			limit = { is_alive = yes }
 			add_character_flag = segrellion_daenerys_dragons_300_initialized
 		}
 	}
 }
 
-
-# =========================================================
-# MAIN MAINTENANCE
-# =========================================================
-
 segrellion_daenerys_dragon_maintenance_effect = {
-
-	character:Targaryen_9 ?= {
-
-		if = {
-
+	if = {
+		limit = {
+			current_date >= 8300.1.1
+			agot_has_dragon_storage_system_global_list = yes
+		}
+		every_in_global_list = {
+			variable = gl_dragon_variable_storage
 			limit = {
-				is_alive = yes
-			}
-
-
-			save_scope_as = segrellion_daenerys_dragon_anchor
-
-
-			# =================================================
-			# DROGON
-			# =================================================
-
-			character:dragon_drogon ?= {
-
-				if = {
-
-					limit = {
-						is_alive = yes
-					}
-
-
-					save_scope_as = segrellion_daenerys_growth_dragon
-
-
-					# Keep Drogon with Daenerys unless pitted.
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_character_flag = in_dragonpit
-							}
-						}
-
-
-						set_location = scope:segrellion_daenerys_dragon_anchor.location
-					}
-
-
-					# =========================================
-					# REAL AGOT STORAGE
-					# =========================================
-
-					if = {
-
-						limit = {
-							agot_has_dragon_storage_system_global_list = yes
-						}
-
-
-						every_in_global_list = {
-
-							variable = gl_dragon_variable_storage
-
-
-							limit = {
-
-								var:dragon_id ?= scope:segrellion_daenerys_growth_dragon
-							}
-
-
-							# =================================
-							# SAVE REPAIR:
-							# BY 302 AC DROGON MUST NOT STILL
-							# BE A TINY HATCHLING.
-							# =================================
-
-							if = {
-
-								limit = {
-
-									current_date >= 8302.1.1
-
-									var:dragon_size_base < 30
-
-									scope:segrellion_daenerys_growth_dragon = {
-
-										NOT = {
-											has_character_flag = segrellion_drogon_302_size_repair
-										}
-									}
-								}
-
-
-								if = {
-
-									limit = {
-										var:dragon_size_base < 10
-									}
-
-									change_dragon_size_direct = {
-										VALUE = 30
-									}
-								}
-
-
-								else_if = {
-
-									limit = {
-										var:dragon_size_base < 20
-									}
-
-									change_dragon_size_direct = {
-										VALUE = 20
-									}
-								}
-
-
-								else = {
-
-									change_dragon_size_direct = {
-										VALUE = 10
-									}
-								}
-
-
-								scope:segrellion_daenerys_growth_dragon = {
-
-									add_prowess_skill = 5
-
-									add_character_flag = segrellion_drogon_302_size_repair
-								}
-							}
-
-
-							# =================================
-							# ACCELERATED GROWTH
-							#
-							# +5 every ~120 days while the
-							# stored base size remains below 35.
-							# =================================
-
-							if = {
-
-								limit = {
-
-									var:dragon_size_base < 35
-
-									scope:segrellion_daenerys_growth_dragon = {
-
-										NOT = {
-											has_character_flag = segrellion_drogon_storage_growth_cooldown
-										}
-									}
-								}
-
-
-								change_dragon_size_direct = {
-									VALUE = 5
-								}
-
-
-								scope:segrellion_daenerys_growth_dragon = {
-
-									add_prowess_skill = 1
-
-
-									add_character_flag = {
-
-										flag = segrellion_drogon_storage_growth_cooldown
-
-										days = 120
-									}
-								}
-							}
-						}
+				story_type = story_dragon_variable_storage
+				exists = var:dragon_id
+				var:dragon_id = {
+					is_alive = yes
+					OR = {
+						AND = { exists = character:dragon_drogon this = character:dragon_drogon }
+						AND = { exists = character:dragon_rhaegal this = character:dragon_rhaegal }
+						AND = { exists = character:dragon_viserion this = character:dragon_viserion }
+						has_inactive_trait = is_dragon_drogon
+						has_inactive_trait = is_dragon_rhaegal
+						has_inactive_trait = is_dragon_viserion
 					}
 				}
 			}
-
-
-			# =================================================
-			# RHAEGAL
-			# =================================================
-
-			character:dragon_rhaegal ?= {
-
+			var:dragon_id = {
 				if = {
-
 					limit = {
-						is_alive = yes
+						NOT = { has_character_flag = in_dragonpit }
+						exists = character:Targaryen_9
+						character:Targaryen_9 = { is_alive = yes }
 					}
-
-
-					save_scope_as = segrellion_daenerys_growth_dragon
-
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_character_flag = in_dragonpit
-							}
-						}
-
-
-						set_location = scope:segrellion_daenerys_dragon_anchor.location
+					character:Targaryen_9 ?= {
+						save_scope_as = segrellion_daenerys_dragon_anchor
 					}
-
-
-					if = {
-
-						limit = {
-							agot_has_dragon_storage_system_global_list = yes
-						}
-
-
-						every_in_global_list = {
-
-							variable = gl_dragon_variable_storage
-
-
-							limit = {
-
-								var:dragon_id ?= scope:segrellion_daenerys_growth_dragon
-							}
-
-
-							if = {
-
-								limit = {
-
-									current_date >= 8302.1.1
-
-									var:dragon_size_base < 30
-
-									scope:segrellion_daenerys_growth_dragon = {
-
-										NOT = {
-											has_character_flag = segrellion_rhaegal_302_size_repair
-										}
-									}
-								}
-
-
-								if = {
-
-									limit = {
-										var:dragon_size_base < 10
-									}
-
-									change_dragon_size_direct = {
-										VALUE = 30
-									}
-								}
-
-
-								else_if = {
-
-									limit = {
-										var:dragon_size_base < 20
-									}
-
-									change_dragon_size_direct = {
-										VALUE = 20
-									}
-								}
-
-
-								else = {
-
-									change_dragon_size_direct = {
-										VALUE = 10
-									}
-								}
-
-
-								scope:segrellion_daenerys_growth_dragon = {
-
-									add_prowess_skill = 4
-
-									add_character_flag = segrellion_rhaegal_302_size_repair
-								}
-							}
-
-
-							if = {
-
-								limit = {
-
-									var:dragon_size_base < 30
-
-									scope:segrellion_daenerys_growth_dragon = {
-
-										NOT = {
-											has_character_flag = segrellion_rhaegal_storage_growth_cooldown
-										}
-									}
-								}
-
-
-								change_dragon_size_direct = {
-									VALUE = 4
-								}
-
-
-								scope:segrellion_daenerys_growth_dragon = {
-
-									add_prowess_skill = 1
-
-
-									add_character_flag = {
-
-										flag = segrellion_rhaegal_storage_growth_cooldown
-
-										days = 120
-									}
-								}
-							}
-						}
-					}
+					set_location = scope:segrellion_daenerys_dragon_anchor.location
 				}
 			}
-
-
-			# =================================================
-			# VISERION
-			# =================================================
-
-			character:dragon_viserion ?= {
-
-				if = {
-
-					limit = {
-						is_alive = yes
-					}
-
-
-					save_scope_as = segrellion_daenerys_growth_dragon
-
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_character_flag = in_dragonpit
-							}
-						}
-
-
-						set_location = scope:segrellion_daenerys_dragon_anchor.location
-					}
-
-
-					if = {
-
-						limit = {
-							agot_has_dragon_storage_system_global_list = yes
-						}
-
-
-						every_in_global_list = {
-
-							variable = gl_dragon_variable_storage
-
-
-							limit = {
-
-								var:dragon_id ?= scope:segrellion_daenerys_growth_dragon
-							}
-
-
-							if = {
-
-								limit = {
-
-									current_date >= 8302.1.1
-
-									var:dragon_size_base < 30
-
-									scope:segrellion_daenerys_growth_dragon = {
-
-										NOT = {
-											has_character_flag = segrellion_viserion_302_size_repair
-										}
-									}
-								}
-
-
-								if = {
-
-									limit = {
-										var:dragon_size_base < 10
-									}
-
-									change_dragon_size_direct = {
-										VALUE = 30
-									}
-								}
-
-
-								else_if = {
-
-									limit = {
-										var:dragon_size_base < 20
-									}
-
-									change_dragon_size_direct = {
-										VALUE = 20
-									}
-								}
-
-
-								else = {
-
-									change_dragon_size_direct = {
-										VALUE = 10
-									}
-								}
-
-
-								scope:segrellion_daenerys_growth_dragon = {
-
-									add_prowess_skill = 4
-
-									add_character_flag = segrellion_viserion_302_size_repair
-								}
-							}
-
-
-							if = {
-
-								limit = {
-
-									var:dragon_size_base < 30
-
-									scope:segrellion_daenerys_growth_dragon = {
-
-										NOT = {
-											has_character_flag = segrellion_viserion_storage_growth_cooldown
-										}
-									}
-								}
-
-
-								change_dragon_size_direct = {
-									VALUE = 4
-								}
-
-
-								scope:segrellion_daenerys_growth_dragon = {
-
-									add_prowess_skill = 1
-
-
-									add_character_flag = {
-
-										flag = segrellion_viserion_storage_growth_cooldown
-
-										days = 120
-									}
-								}
-							}
+			if = {
+				limit = {
+					var:dragon_id = {
+						OR = {
+							AND = { exists = character:dragon_drogon this = character:dragon_drogon }
+							has_inactive_trait = is_dragon_drogon
 						}
 					}
 				}
+				segrellion_daenerys_ensure_dragon_size_effect = { MIN_SIZE = 40 }
+			}
+			else = {
+				segrellion_daenerys_ensure_dragon_size_effect = { MIN_SIZE = 35 }
 			}
 		}
 	}
