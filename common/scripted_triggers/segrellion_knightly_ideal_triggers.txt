@@ -1,0 +1,100 @@
+# =========================================================
+# KNIGHTLY IDEAL
+# SCRIPTED TRIGGERS
+# =========================================================
+
+
+# =========================================================
+# CAN BEGIN THE KNIGHTLY IDEAL
+# =========================================================
+
+segrellion_can_begin_knightly_ideal_trigger = {
+
+	is_alive = yes
+	is_adult = yes
+
+	is_landless_adventurer = yes
+
+	is_imprisoned = no
+
+	NOT = {
+		has_trait = incapable
+	}
+
+	NOT = {
+		has_trait = gallowsbait
+	}
+
+	NOT = {
+		has_trait = segrellion_knightly_ideal_trait
+	}
+
+	prowess >= 8
+}
+
+
+
+# =========================================================
+# CAN CONTINUE PROGRESS
+#
+# Once started, becoming landed does NOT cancel the journey.
+# =========================================================
+
+segrellion_knightly_ideal_can_progress_trigger = {
+
+	is_alive = yes
+	is_adult = yes
+
+	has_trait = segrellion_knightly_ideal_trait
+
+	NOT = {
+		has_trait = incapable
+	}
+
+	NOT = {
+		has_trait = gallowsbait
+	}
+
+	NOT = {
+		has_character_flag = segrellion_knightly_ideal_completed
+	}
+}
+
+
+
+# =========================================================
+# ALL FOUR PATHS MASTERED
+# =========================================================
+
+segrellion_knightly_ideal_completed_trigger = {
+
+	has_trait = segrellion_knightly_ideal_trait
+
+
+	has_trait_xp = {
+		trait = segrellion_knightly_ideal_trait
+		track = knightly_blade
+		value >= 100
+	}
+
+
+	has_trait_xp = {
+		trait = segrellion_knightly_ideal_trait
+		track = knightly_shield
+		value >= 100
+	}
+
+
+	has_trait_xp = {
+		trait = segrellion_knightly_ideal_trait
+		track = knightly_oath
+		value >= 100
+	}
+
+
+	has_trait_xp = {
+		trait = segrellion_knightly_ideal_trait
+		track = knightly_laurel
+		value >= 100
+	}
+}

@@ -1,0 +1,642 @@
+# =========================================================
+# KNIGHTLY IDEAL
+# SCRIPTED EFFECTS
+# =========================================================
+
+
+# =========================================================
+# CLEAR CURRENT FOCUS
+# =========================================================
+
+segrellion_knightly_ideal_clear_focus_effect = {
+
+	remove_character_flag = segrellion_knightly_focus_blade
+	remove_character_flag = segrellion_knightly_focus_shield
+	remove_character_flag = segrellion_knightly_focus_oath
+	remove_character_flag = segrellion_knightly_focus_laurel
+}
+
+
+
+# =========================================================
+# SELECT THE BLADE
+# =========================================================
+
+segrellion_knightly_ideal_select_blade_effect = {
+
+	segrellion_knightly_ideal_clear_focus_effect = yes
+
+	add_character_flag = segrellion_knightly_focus_blade
+}
+
+
+
+# =========================================================
+# SELECT THE SHIELD
+# =========================================================
+
+segrellion_knightly_ideal_select_shield_effect = {
+
+	segrellion_knightly_ideal_clear_focus_effect = yes
+
+	add_character_flag = segrellion_knightly_focus_shield
+}
+
+
+
+# =========================================================
+# SELECT THE OATH
+# =========================================================
+
+segrellion_knightly_ideal_select_oath_effect = {
+
+	segrellion_knightly_ideal_clear_focus_effect = yes
+
+	add_character_flag = segrellion_knightly_focus_oath
+}
+
+
+
+# =========================================================
+# SELECT THE LAUREL
+# =========================================================
+
+segrellion_knightly_ideal_select_laurel_effect = {
+
+	segrellion_knightly_ideal_clear_focus_effect = yes
+
+	add_character_flag = segrellion_knightly_focus_laurel
+}
+
+
+
+# =========================================================
+# BEGIN THE KNIGHTLY IDEAL
+# =========================================================
+
+segrellion_begin_knightly_ideal_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_trait = segrellion_knightly_ideal_trait
+			}
+		}
+
+		add_trait = segrellion_knightly_ideal_trait
+	}
+
+	segrellion_knightly_ideal_clear_focus_effect = yes
+}
+
+
+
+# =========================================================
+# AI
+# MOVE TO NEXT UNFINISHED TRACK
+# =========================================================
+
+segrellion_knightly_ideal_ai_choose_unfinished_focus_effect = {
+
+
+	# =====================================================
+	# BLADE
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_blade
+					value >= 100
+				}
+			}
+		}
+
+		segrellion_knightly_ideal_select_blade_effect = yes
+	}
+
+
+	# =====================================================
+	# SHIELD
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_shield
+					value >= 100
+				}
+			}
+		}
+
+		segrellion_knightly_ideal_select_shield_effect = yes
+	}
+
+
+	# =====================================================
+	# OATH
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_oath
+					value >= 100
+				}
+			}
+		}
+
+		segrellion_knightly_ideal_select_oath_effect = yes
+	}
+
+
+	# =====================================================
+	# LAUREL
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_laurel
+					value >= 100
+				}
+			}
+		}
+
+		segrellion_knightly_ideal_select_laurel_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# YEARLY PROGRESS
+#
+# BASE:
+# 8 XP / YEAR
+#
+# PERSONALITY AND EXPERIENCE CAN PUSH THIS HIGHER.
+# =========================================================
+
+segrellion_knightly_ideal_yearly_progress_effect = {
+
+
+	# =====================================================
+	# FAILSAFE
+	# NO FOCUS
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOR = {
+
+				has_character_flag = segrellion_knightly_focus_blade
+
+				has_character_flag = segrellion_knightly_focus_shield
+
+				has_character_flag = segrellion_knightly_focus_oath
+
+				has_character_flag = segrellion_knightly_focus_laurel
+			}
+		}
+
+		segrellion_knightly_ideal_select_blade_effect = yes
+	}
+
+
+
+	# =====================================================
+	# THE BLADE
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			has_character_flag = segrellion_knightly_focus_blade
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_blade
+					value >= 100
+				}
+			}
+		}
+
+
+		add_trait_xp = {
+			trait = segrellion_knightly_ideal_trait
+			track = knightly_blade
+			value = 8
+		}
+
+
+		if = {
+
+			limit = {
+				prowess >= 20
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_blade
+				value = 2
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = lifestyle_blademaster
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_blade
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = brave
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_blade
+				value = 1
+			}
+		}
+	}
+
+
+
+	# =====================================================
+	# THE SHIELD
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			has_character_flag = segrellion_knightly_focus_shield
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_shield
+					value >= 100
+				}
+			}
+		}
+
+
+		add_trait_xp = {
+			trait = segrellion_knightly_ideal_trait
+			track = knightly_shield
+			value = 8
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = brave
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_shield
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = just
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_shield
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = compassionate
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_shield
+				value = 1
+			}
+		}
+	}
+
+
+
+	# =====================================================
+	# THE OATH
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			has_character_flag = segrellion_knightly_focus_oath
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_oath
+					value >= 100
+				}
+			}
+		}
+
+
+		add_trait_xp = {
+			trait = segrellion_knightly_ideal_trait
+			track = knightly_oath
+			value = 8
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = just
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_oath
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = honest
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_oath
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = loyal
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_oath
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = temperate
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_oath
+				value = 1
+			}
+		}
+	}
+
+
+
+	# =====================================================
+	# THE LAUREL
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			has_character_flag = segrellion_knightly_focus_laurel
+
+			NOT = {
+
+				has_trait_xp = {
+					trait = segrellion_knightly_ideal_trait
+					track = knightly_laurel
+					value >= 100
+				}
+			}
+		}
+
+
+		add_trait_xp = {
+			trait = segrellion_knightly_ideal_trait
+			track = knightly_laurel
+			value = 8
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = tourney_participant
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_laurel
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = gallant
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_laurel
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = knight_errant
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_laurel
+				value = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_trait = ambitious
+			}
+
+			add_trait_xp = {
+				trait = segrellion_knightly_ideal_trait
+				track = knightly_laurel
+				value = 1
+			}
+		}
+	}
+
+
+
+	# =====================================================
+	# AI AUTOMATICALLY MOVES TO NEXT PATH
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			is_ai = yes
+
+			NOT = {
+				segrellion_knightly_ideal_completed_trigger = yes
+			}
+
+			OR = {
+
+
+				AND = {
+
+					has_character_flag = segrellion_knightly_focus_blade
+
+					has_trait_xp = {
+						trait = segrellion_knightly_ideal_trait
+						track = knightly_blade
+						value >= 100
+					}
+				}
+
+
+				AND = {
+
+					has_character_flag = segrellion_knightly_focus_shield
+
+					has_trait_xp = {
+						trait = segrellion_knightly_ideal_trait
+						track = knightly_shield
+						value >= 100
+					}
+				}
+
+
+				AND = {
+
+					has_character_flag = segrellion_knightly_focus_oath
+
+					has_trait_xp = {
+						trait = segrellion_knightly_ideal_trait
+						track = knightly_oath
+						value >= 100
+					}
+				}
+
+
+				AND = {
+
+					has_character_flag = segrellion_knightly_focus_laurel
+
+					has_trait_xp = {
+						trait = segrellion_knightly_ideal_trait
+						track = knightly_laurel
+						value >= 100
+					}
+				}
+			}
+		}
+
+		segrellion_knightly_ideal_ai_choose_unfinished_focus_effect = yes
+	}
+
+
+
+	# =====================================================
+	# FINAL COMPLETION
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			segrellion_knightly_ideal_completed_trigger = yes
+
+			NOT = {
+				has_character_flag = segrellion_knightly_ideal_completed
+			}
+		}
+
+
+		add_character_flag = segrellion_knightly_ideal_completed
+
+
+		trigger_event = {
+			id = segrellion_knightly_ideal.9000
+		}
+	}
+}

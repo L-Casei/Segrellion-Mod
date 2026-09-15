@@ -1,0 +1,170 @@
+d_vladwyn_tristan_camp = {
+
+
+	# =====================================================
+	# TRISTAN COMES OF AGE
+	# =====================================================
+
+	8096.4.18 = {
+
+		liege = 0
+
+		holder = Vladwyn_1
+
+		government = landless_adventurer_government
+
+		succession_laws = {
+			landless_adventurer_succession_law
+		}
+
+
+		effect = {
+
+
+			# =================================================
+			# SET UP TRISTAN AS AN HONORABLE ADVENTURER
+			# =================================================
+
+			holder ?= {
+
+
+				# ---------------------------------------------
+				# MERCENARY CAMP
+				#
+				# Gives Tristan access to the martial side
+				# of the Roads to Power contract system.
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_realm_law = camp_purpose_mercenaries
+						}
+					}
+
+					add_realm_law_skip_effects = camp_purpose_mercenaries
+				}
+
+
+				# ---------------------------------------------
+				# KNIGHT ERRANT
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = knight_errant
+						}
+					}
+
+					add_trait = knight_errant
+				}
+
+
+				# ---------------------------------------------
+				# TRISTAN IS NOT GALLOWSBAIT
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+						has_trait = gallowsbait
+					}
+
+					remove_trait = gallowsbait
+				}
+
+
+				# ---------------------------------------------
+				# CANON IDENTITY
+				# ---------------------------------------------
+
+				add_character_flag = vladwyn_honorable_adventurer
+
+
+				# ---------------------------------------------
+				# TRISTAN'S DREAM
+				#
+				# Tristan begins the Knightly Ideal naturally.
+				# ---------------------------------------------
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_trait = segrellion_knightly_ideal_trait
+						}
+					}
+
+					add_trait = segrellion_knightly_ideal_trait
+				}
+
+
+				# Tristan begins by mastering himself.
+				add_character_flag = segrellion_knightly_focus_blade
+			}
+
+
+			# =================================================
+			# CREATE LANDLESS ADVENTURER
+			# =================================================
+
+			create_landless_adventurer_title_history_effect = yes
+
+			set_variable = {
+				name = adventurer_creation_reason
+				value = flag:historical
+			}
+
+
+			# =================================================
+			# ROAD TO POWER SAFETY
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_dlc_feature = roads_to_power
+					}
+				}
+
+				holder ?= {
+					destroy_title = prev
+				}
+			}
+
+			else = {
+
+				holder ?= {
+					add_character_flag = block_laamp_starting_event
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# 123 AC
+	#
+	# Tristan enters Rhaenyra's service.
+	# His camp ceases to exist.
+	# His Knightly Ideal progression DOES NOT end.
+	# =====================================================
+
+	8123.1.1 = {
+
+		effect = {
+
+			holder ?= {
+				destroy_title = prev
+			}
+		}
+	}
+}

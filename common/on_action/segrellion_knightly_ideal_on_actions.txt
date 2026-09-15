@@ -1,0 +1,164 @@
+# =========================================================
+# KNIGHTLY IDEAL
+# ON ACTIONS
+# =========================================================
+
+
+# =========================================================
+# PLAYABLE CHARACTERS
+# =========================================================
+
+yearly_playable_pulse = {
+
+	on_actions = {
+
+		segrellion_knightly_ideal_yearly_playable
+	}
+}
+
+
+
+segrellion_knightly_ideal_yearly_playable = {
+
+	trigger = {
+
+		has_trait = segrellion_knightly_ideal_trait
+	}
+
+
+	effect = {
+
+		if = {
+
+			limit = {
+
+				segrellion_knightly_ideal_can_progress_trigger = yes
+			}
+
+			segrellion_knightly_ideal_yearly_progress_effect = yes
+		}
+	}
+}
+
+
+
+# =========================================================
+# TRISTAN
+# ANTI-GALLOWSBAIT GUARD
+#
+# While Tristan is playable as an adventurer this checks
+# quarterly rather than allowing criminal reputation to
+# remain attached to him.
+# =========================================================
+
+quarterly_playable_pulse = {
+
+	on_actions = {
+
+		vladwyn_honorable_adventurer_quarterly_check
+	}
+}
+
+
+
+vladwyn_honorable_adventurer_quarterly_check = {
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+	}
+
+
+	effect = {
+
+
+		# =================================================
+		# NEVER KEEP GALLOWSBAIT
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_trait = gallowsbait
+			}
+
+			remove_trait = gallowsbait
+		}
+
+
+		# =================================================
+		# WHILE AN ADVENTURER, PRESERVE KNIGHT ERRANT
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_landless_adventurer = yes
+
+				NOT = {
+					has_trait = knight_errant
+				}
+			}
+
+			add_trait = knight_errant
+		}
+	}
+}
+
+
+
+# =========================================================
+# TRISTAN AFTER BECOMING A COURTIER
+#
+# Playable pulse no longer handles him when he is serving
+# Rhaenyra, so his personal story continues here.
+# =========================================================
+
+yearly_global_pulse = {
+
+	effect = {
+
+		character:Vladwyn_1 ?= {
+
+
+			# =================================================
+			# HONOR SAFETY
+			# =================================================
+
+			if = {
+
+				limit = {
+					has_trait = gallowsbait
+				}
+
+				remove_trait = gallowsbait
+			}
+
+
+			# =================================================
+			# COURTIER PROGRESSION
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_trait = segrellion_knightly_ideal_trait
+
+					NOT = {
+						is_landless_adventurer = yes
+					}
+
+					is_landed = no
+
+					segrellion_knightly_ideal_can_progress_trigger = yes
+				}
+
+				segrellion_knightly_ideal_yearly_progress_effect = yes
+			}
+		}
+	}
+}
