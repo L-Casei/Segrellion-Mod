@@ -79,37 +79,24 @@ segrellion_icebringer_canon_rejected_trigger = {
 
 
 # ---------------------------------------------------------
-# FULL ACCEPTANCE
+# ACCEPTANCE
+#
+# Icebringer either accepts the bearer or rejects them.
+# There is no intermediate state.
 # ---------------------------------------------------------
 
 segrellion_icebringer_accepted_trigger = {
-	NOR = {
-		segrellion_icebringer_canon_rejected_trigger = yes
-	}
 
-	OR = {
-		segrellion_icebringer_canon_bearer_trigger = yes
+    NOR = {
+        segrellion_icebringer_canon_rejected_trigger = yes
+    }
 
-		segrellion_icebringer_affinity_value >= 8
-	}
-}
+    OR = {
 
+        segrellion_icebringer_canon_bearer_trigger = yes
 
-# ---------------------------------------------------------
-# PARTIAL ACCEPTANCE
-#
-# The bearer receives Icebringer's full artifact bonuses,
-# but the blade remains uncomfortable and unpredictable.
-# ---------------------------------------------------------
-
-segrellion_icebringer_partial_trigger = {
-	NOR = {
-		segrellion_icebringer_canon_bearer_trigger = yes
-		segrellion_icebringer_canon_rejected_trigger = yes
-	}
-
-	segrellion_icebringer_affinity_value >= 4
-	segrellion_icebringer_affinity_value < 8
+        segrellion_icebringer_affinity_value >= 4
+    }
 }
 
 
@@ -118,32 +105,32 @@ segrellion_icebringer_partial_trigger = {
 # ---------------------------------------------------------
 
 segrellion_icebringer_rejected_trigger = {
-	OR = {
-		segrellion_icebringer_canon_rejected_trigger = yes
 
-		AND = {
-			NOT = {
-				segrellion_icebringer_canon_bearer_trigger = yes
-			}
+    OR = {
 
-			segrellion_icebringer_affinity_value < 4
-		}
-	}
+        segrellion_icebringer_canon_rejected_trigger = yes
+
+        AND = {
+
+            NOT = {
+                segrellion_icebringer_canon_bearer_trigger = yes
+            }
+
+            segrellion_icebringer_affinity_value < 4
+        }
+    }
 }
 
 
 # ---------------------------------------------------------
 # GAMEPLAY "CHOSEN"
 #
-# Both partial and complete acceptance unlock the full
-# artifact modifier.
+# Only a bearer accepted by Icebringer is chosen.
 # ---------------------------------------------------------
 
 segrellion_icebringer_chosen_trigger = {
-	OR = {
-		segrellion_icebringer_partial_trigger = yes
-		segrellion_icebringer_accepted_trigger = yes
-	}
+
+    segrellion_icebringer_accepted_trigger = yes
 }
 
 

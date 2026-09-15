@@ -137,76 +137,75 @@ segrellion_find_icebringer_effect = {
 
 
 segrellion_refresh_icebringer_affinity_effect = {
-	segrellion_find_icebringer_effect = yes
 
-	global_var:segrellion_icebringer ?= {
-		artifact_owner ?= {
+    segrellion_find_icebringer_effect = yes
 
-			# -------------------------------------------------
-			# Clear previous state
-			# -------------------------------------------------
+    global_var:segrellion_icebringer ?= {
 
-			remove_character_flag = segrellion_icebringer_state_rejected
-			remove_character_flag = segrellion_icebringer_state_partial
-			remove_character_flag = segrellion_icebringer_state_accepted
+        artifact_owner ?= {
 
+            # -------------------------------------------------
+            # CLEAR PREVIOUS STATE
+            #
+            # The obsolete partial flag is still removed here
+            # so old saves are migrated automatically.
+            # -------------------------------------------------
 
-			# -------------------------------------------------
-			# Determine current relationship with the blade
-			# -------------------------------------------------
-
-			if = {
-				limit = {
-					segrellion_icebringer_accepted_trigger = yes
-				}
-
-				add_character_flag = segrellion_icebringer_state_accepted
-			}
-
-			else_if = {
-				limit = {
-					segrellion_icebringer_partial_trigger = yes
-				}
-
-				add_character_flag = segrellion_icebringer_state_partial
-			}
-
-			else = {
-				add_character_flag = segrellion_icebringer_state_rejected
-			}
+            remove_character_flag = segrellion_icebringer_state_rejected
+            remove_character_flag = segrellion_icebringer_state_partial
+            remove_character_flag = segrellion_icebringer_state_accepted
 
 
-			# -------------------------------------------------
-			# Rejection penalty only matters while equipped
-			# -------------------------------------------------
+            # -------------------------------------------------
+            # BINARY RELATIONSHIP
+            # -------------------------------------------------
 
-			if = {
-				limit = {
-					has_character_flag = segrellion_icebringer_state_rejected
+            if = {
+                limit = {
+                    segrellion_icebringer_accepted_trigger = yes
+                }
 
-					any_equipped_character_artifact = {
-						has_variable = segrellion_icebringer_artifact
-					}
-				}
+                add_character_flag = segrellion_icebringer_state_accepted
+            }
 
-				if = {
-					limit = {
-						NOT = {
-							has_character_modifier = segrellion_icebringer_rejection_modifier
-						}
-					}
+            else = {
+                add_character_flag = segrellion_icebringer_state_rejected
+            }
 
-					add_character_modifier = {
-						modifier = segrellion_icebringer_rejection_modifier
-					}
-				}
-			}
 
-			else = {
-				remove_character_modifier = segrellion_icebringer_rejection_modifier
-			}
-		}
-	}
+            # -------------------------------------------------
+            # REJECTION PENALTY ONLY WHILE EQUIPPED
+            # -------------------------------------------------
+
+            if = {
+                limit = {
+
+                    has_character_flag = segrellion_icebringer_state_rejected
+
+                    any_equipped_character_artifact = {
+                        has_variable = segrellion_icebringer_artifact
+                    }
+                }
+
+                if = {
+                    limit = {
+
+                        NOT = {
+                            has_character_modifier = segrellion_icebringer_rejection_modifier
+                        }
+                    }
+
+                    add_character_modifier = {
+                        modifier = segrellion_icebringer_rejection_modifier
+                    }
+                }
+            }
+
+            else = {
+                remove_character_modifier = segrellion_icebringer_rejection_modifier
+            }
+        }
+    }
 }
 
 # =========================================================
@@ -214,92 +213,72 @@ segrellion_refresh_icebringer_affinity_effect = {
 # =========================================================
 
 segrellion_icebringer_monthly_event_pulse_effect = {
-	segrellion_find_icebringer_effect = yes
 
-	global_var:segrellion_icebringer ?= {
-		artifact_owner ?= {
+    segrellion_find_icebringer_effect = yes
 
-			if = {
-				limit = {
-					is_alive = yes
+    global_var:segrellion_icebringer ?= {
 
-					any_equipped_character_artifact = {
-						has_variable = segrellion_icebringer_artifact
-					}
-				}
+        artifact_owner ?= {
 
-				# Keep the state up to date.
-				segrellion_refresh_icebringer_affinity_effect = yes
+            if = {
+                limit = {
 
+                    is_alive = yes
 
-				# ---------------------------------------------
-				# REJECTED
-				# Roughly 1.2 events/year on average.
-				# ---------------------------------------------
+                    any_equipped_character_artifact = {
+                        has_variable = segrellion_icebringer_artifact
+                    }
+                }
 
-				if = {
-					limit = {
-						has_character_flag = segrellion_icebringer_state_rejected
-					}
-
-					random = {
-						chance = 10
-
-						trigger_event = {
-							id = segrellion_icebringer.0001
-							days = 1
-						}
-					}
-				}
+                # Keep the relationship state synchronized.
+                segrellion_refresh_icebringer_affinity_effect = yes
 
 
-				# ---------------------------------------------
-				# PARTIAL
-				# Roughly 0.8 events/year.
-				# ---------------------------------------------
+                # ---------------------------------------------
+                # REJECTED
+                # ---------------------------------------------
 
-				else_if = {
-					limit = {
-						has_character_flag = segrellion_icebringer_state_partial
-					}
+                if = {
+                    limit = {
+                        has_character_flag = segrellion_icebringer_state_rejected
+                    }
 
-					random = {
-						chance = 7
+                    random = {
+                        chance = 10
 
-						trigger_event = {
-							id = segrellion_icebringer.0002
-							days = 1
-						}
-					}
-				}
+                        trigger_event = {
+                            id = segrellion_icebringer.0001
+                            days = 1
+                        }
+                    }
+                }
 
 
-				# ---------------------------------------------
-				# ACCEPTED
-				# Roughly 0.6 events/year.
-				# ---------------------------------------------
+                # ---------------------------------------------
+                # ACCEPTED
+                # ---------------------------------------------
 
-				else_if = {
-					limit = {
-						has_character_flag = segrellion_icebringer_state_accepted
-					}
+                else_if = {
+                    limit = {
+                        has_character_flag = segrellion_icebringer_state_accepted
+                    }
 
-					random = {
-						chance = 5
+                    random = {
+                        chance = 5
 
-						trigger_event = {
-							id = segrellion_icebringer.0003
-							days = 1
-						}
-					}
-				}
-			}
+                        trigger_event = {
+                            id = segrellion_icebringer.0003
+                            days = 1
+                        }
+                    }
+                }
+            }
 
-			else = {
-				remove_character_modifier = segrellion_icebringer_rejection_modifier
-			}
-		}
-	}
+            else = {
+                remove_character_modifier = segrellion_icebringer_rejection_modifier
+            }
+        }
+    }
 }
 
 segrellion_create_artifact_plate_of_segrell_effect = {
