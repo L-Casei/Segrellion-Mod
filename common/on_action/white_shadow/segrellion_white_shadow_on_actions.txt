@@ -2,9 +2,72 @@
 # WHITE SHADOW - 106 AC
 # =========================================================
 
+# =========================================================
+# ALEX INTRO - 106 AC
+#
+# Primary startup:
+#   on_game_start_after_lobby
+#
+# Secondary fallback:
+#   on_player_select_destiny_confirmed
+#
+# Long-term failsafe:
+#   yearly_global_pulse
+#
+# segrellion_intro_event_queued prevents more than one
+# copy of the opening event from being scheduled.
+# =========================================================
+
 
 # =========================================================
-# ALEX INTRO
+# PRIMARY STARTUP
+# =========================================================
+
+segrellion_intro_106_startup = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+				game_start_date = 8106.4.18
+			}
+
+
+			character:Segrellion_1 ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						NOT = {
+							has_character_flag = segrellion_intro_event_seen
+						}
+
+						NOT = {
+							has_character_flag = segrellion_intro_event_queued
+						}
+					}
+
+
+					add_character_flag = segrellion_intro_event_queued
+
+
+					trigger_event = {
+						id = segrellion_intro.0001
+						days = 3
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# PLAYER-SELECTION FALLBACK
 # =========================================================
 
 segrellion_intro_on_player_select_destiny_confirmed = {
@@ -22,7 +85,15 @@ segrellion_intro_on_player_select_destiny_confirmed = {
 				NOT = {
 					has_character_flag = segrellion_intro_event_seen
 				}
+
+				NOT = {
+					has_character_flag = segrellion_intro_event_queued
+				}
 			}
+
+
+			add_character_flag = segrellion_intro_event_queued
+
 
 			trigger_event = {
 				id = segrellion_intro.0001
@@ -32,6 +103,10 @@ segrellion_intro_on_player_select_destiny_confirmed = {
 	}
 }
 
+
+# =========================================================
+# YEARLY FAILSAFE
+# =========================================================
 
 segrellion_intro_yearly_fallback = {
 
@@ -48,7 +123,15 @@ segrellion_intro_yearly_fallback = {
 				NOT = {
 					has_character_flag = segrellion_intro_event_seen
 				}
+
+				NOT = {
+					has_character_flag = segrellion_intro_event_queued
+				}
 			}
+
+
+			add_character_flag = segrellion_intro_event_queued
+
 
 			trigger_event = {
 				id = segrellion_intro.0001
@@ -57,7 +140,6 @@ segrellion_intro_yearly_fallback = {
 		}
 	}
 }
-
 
 # =========================================================
 # TRISTAN VLADWYN - 106 STARTUP
