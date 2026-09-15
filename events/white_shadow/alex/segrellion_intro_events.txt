@@ -319,19 +319,72 @@ segrellion_intro.0002 = {
 				}
 
 
-				spawn_army = {
+				# =================================================
+				# DAEMON'S STEPSTONES VOLUNTEERS
+				#
+				# Persistent special troops.
+				# They are NOT tied to the first war.
+				# =================================================
 
-					levies = 1000
+				character:Targaryen_61 = {
 
-					location = root.capital_province
-					origin = root.capital_province
+					if = {
 
-					war = scope:segrellion_stepstones_war
+						limit = {
 
-					name = segrellion_stepstones_volunteers_army
+							NOT = {
+								has_character_flag = segrellion_daemon_stepstones_special_troops_granted
+							}
+						}
 
-					inheritable = no
-					uses_supply = yes
+						add_character_flag = segrellion_daemon_stepstones_special_troops_granted
+
+						spawn_army = {
+
+							levies = 500
+
+							location = character:Targaryen_61.capital_province
+							origin = character:Targaryen_61.capital_province
+
+							name = segrellion_daemon_stepstones_volunteers_army
+
+							inheritable = no
+							uses_supply = yes
+						}
+					}
+				}
+
+
+				# =================================================
+				# ALEX'S STEPSTONES VOLUNTEERS
+				#
+				# Persistent special troops.
+				# They remain available after the first war.
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_alex_stepstones_special_troops_granted
+						}
+					}
+
+					add_character_flag = segrellion_alex_stepstones_special_troops_granted
+
+					spawn_army = {
+
+						levies = 250
+
+						location = root.capital_province
+						origin = root.capital_province
+
+						name = segrellion_stepstones_volunteers_army
+
+						inheritable = no
+						uses_supply = yes
+					}
 				}
 			}
 		}
@@ -805,7 +858,9 @@ segrellion_intro.0005 = {
 
 
 # =========================================================
-# DAEMON CALLS ALEX BACK TO THE STEPSTONES
+# THE STEPSTONES WAR CONTINUES
+# Alex has already remained with Daemon's campaign.
+# This is a narrative acknowledgement, not a new summons.
 # =========================================================
 
 segrellion_intro.0101 = {
@@ -837,17 +892,33 @@ segrellion_intro.0101 = {
 
 	trigger = {
 
+		this = character:Segrellion_1
+
 		has_character_flag = segrellion_stepstones_campaign_active
 
 		NOT = {
 			has_character_flag = segrellion_stepstones_story_completed
 		}
+
+		NOT = {
+			has_character_flag = segrellion_stepstones_followup_notice_seen
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_stepstones_followup_notice_seen
 	}
 
 
 	option = {
 
 		name = segrellion_intro.0101.a
+
+		ai_chance = {
+			base = 100
+		}
 
 		add_prestige = 50
 	}
