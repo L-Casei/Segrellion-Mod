@@ -1,0 +1,795 @@
+# =========================================================
+# SEGRELLION MOD
+# LANDLESS MARRIAGE INTERACTIONS
+# =========================================================
+
+
+# =========================================================
+# PETITION FOR HER HAND
+#
+# ACTOR = LANDLESS ADVENTURER
+# ORIGINAL RECIPIENT = WOMAN
+#
+# AFTER REDIRECT:
+# RECIPIENT = HER EMPLOYER / COURT RULER
+# SECONDARY_RECIPIENT = WOMAN
+# =========================================================
+
+segrellion_petition_for_her_hand_interaction = {
+
+	category = interaction_category_diplomacy
+	icon = icon_marriage
+
+	common_interaction = yes
+	interface_priority = 65
+
+	desc = segrellion_petition_for_her_hand_interaction_desc
+
+	greeting = positive
+	notification_text = segrellion_petition_for_her_hand_interaction_notification
+
+
+	# =====================================================
+	# AI RESPONSE
+	# =====================================================
+
+	ai_maybe = yes
+
+	can_send_despite_rejection = yes
+
+	ai_min_reply_days = 2
+	ai_max_reply_days = 6
+
+
+	# =====================================================
+	# REDIRECT
+	#
+	# The player clicks on the woman.
+	#
+	# She becomes secondary_recipient.
+	# Her employer becomes recipient.
+	# =====================================================
+
+	redirect = {
+
+		scope:recipient = {
+
+			if = {
+
+				limit = {
+					exists = employer
+				}
+
+				save_scope_as = secondary_recipient
+
+				employer = {
+					save_scope_as = recipient
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# LOCALIZATION VALUES
+	# =====================================================
+
+	localization_values = {
+
+		BRIBE_COST = scope:actor.segrellion_petition_for_hand_bribe_cost_value
+	}
+
+
+	# =====================================================
+	# HOOK ICON
+	# =====================================================
+
+	should_use_extra_icon = {
+
+		scope:actor = {
+			has_usable_hook = scope:recipient
+		}
+	}
+
+	extra_icon = "gfx/interface/icons/character_interactions/hook_icon.dds"
+
+
+	# =====================================================
+	# IS SHOWN
+	# =====================================================
+
+	is_shown = {
+
+		scope:actor != scope:recipient
+
+
+		scope:actor = {
+
+			is_alive = yes
+
+			is_adult = yes
+
+			has_government = landless_adventurer_government
+
+			can_marry_trigger = yes
+		}
+
+
+		exists = scope:secondary_recipient
+
+
+		scope:secondary_recipient = {
+
+			is_alive = yes
+
+			is_female = yes
+
+			age >= 16
+
+			is_ruler = no
+
+			is_married = no
+
+			is_betrothed = no
+
+			exists = employer
+		}
+
+
+		scope:recipient = {
+
+			is_alive = yes
+
+			is_ruler = yes
+		}
+	}
+
+
+	# =====================================================
+	# VALIDITY
+	# =====================================================
+
+	is_valid_showing_failures_only = {
+
+
+		scope:actor = {
+
+			is_imprisoned = no
+		}
+
+
+		scope:secondary_recipient = {
+
+			is_imprisoned = no
+		}
+
+
+		# -------------------------------------------------
+		# Normal marriage legality.
+		#
+		# refusing_marriage is explicitly allowed because
+		# this interaction can overcome that particular
+		# refusal if her court accepts the petition.
+		# -------------------------------------------------
+
+		custom_description = {
+
+			text = segrellion_petition_for_hand_marriage_valid_tt
+
+			OR = {
+
+				scope:actor = {
+
+					can_marry_character_trigger = {
+						CHARACTER = scope:secondary_recipient
+					}
+				}
+
+
+				scope:secondary_recipient = {
+					has_trait = refusing_marriage
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AUTOMATIC ACCEPTANCE
+	#
+	# 1. Tristan + Elyse
+	# 2. Strong Hook
+	#
+	# Neither works if the petitioner already has a wife.
+	# =====================================================
+
+	auto_accept = {
+
+		scope:actor = {
+			is_married = no
+		}
+
+
+		OR = {
+
+
+			# ---------------------------------------------
+			# TRISTAN VLADWYN + ELYSE SUNGLASS
+			# ---------------------------------------------
+
+			AND = {
+
+				scope:actor = {
+					this = character:Vladwyn_1
+				}
+
+				scope:secondary_recipient = character:IAF_Sunglass_2
+			}
+
+
+			# ---------------------------------------------
+			# STRONG HOOK
+			# ---------------------------------------------
+
+			AND = {
+
+				scope:hook = yes
+
+				scope:actor = {
+					has_strong_hook = scope:recipient
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# SEND OPTIONS
+	# =====================================================
+
+	send_options_exclusive = yes
+
+
+	# -----------------------------------------------------
+	# USE HOOK
+	# -----------------------------------------------------
+
+	send_option = {
+
+		is_shown = {
+
+			scope:actor = {
+				has_usable_hook = scope:recipient
+			}
+		}
+
+
+		is_valid = {
+
+			scope:actor = {
+
+				is_married = no
+
+				has_usable_hook = scope:recipient
+			}
+		}
+
+
+		flag = hook
+
+		localization = segrellion_petition_for_hand_use_hook
+	}
+
+
+	# -----------------------------------------------------
+	# OFFER BRIDE-PRICE
+	# -----------------------------------------------------
+
+	send_option = {
+
+		is_valid = {
+
+			scope:actor = {
+
+				gold >= scope:actor.segrellion_petition_for_hand_bribe_cost_value
+			}
+		}
+
+
+		flag = bride_price
+
+		localization = segrellion_petition_for_hand_offer_bride_price
+	}
+
+
+	# =====================================================
+	# COST
+	# =====================================================
+
+	cost = {
+
+		gold = {
+
+			value = 0
+
+
+			if = {
+
+				limit = {
+					scope:bride_price = yes
+				}
+
+				add = scope:actor.segrellion_petition_for_hand_bribe_cost_value
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ON SEND
+	#
+	# Bride-price is paid to the girl's employer.
+	# =====================================================
+
+	on_send = {
+
+		if = {
+
+			limit = {
+				scope:bride_price = yes
+			}
+
+
+			scope:recipient = {
+
+				add_gold = scope:actor.segrellion_petition_for_hand_bribe_cost_value
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ON ACCEPT
+	# =====================================================
+
+	on_accept = {
+
+
+		# -------------------------------------------------
+		# CONSUME HOOK
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				scope:hook = yes
+			}
+
+
+			scope:actor = {
+				use_hook = scope:recipient
+			}
+		}
+
+
+		# -------------------------------------------------
+		# REMOVE MARRIAGE-REFUSAL STATES
+		# -------------------------------------------------
+
+		scope:secondary_recipient = {
+
+
+			if = {
+
+				limit = {
+					has_trait = widowed
+				}
+
+				remove_trait = widowed
+			}
+
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+
+
+		# -------------------------------------------------
+		# MARRIAGE
+		# -------------------------------------------------
+
+		scope:secondary_recipient = {
+
+			add_spouse = scope:actor
+		}
+
+
+		# -------------------------------------------------
+		# BRIDE JOINS THE ADVENTURER'S CAMP / COURT
+		# -------------------------------------------------
+
+		scope:actor = {
+
+			add_courtier = scope:secondary_recipient
+		}
+	}
+
+
+	# =====================================================
+	# AI ACCEPTANCE
+	# =====================================================
+
+	ai_accept = {
+
+		base = -30
+
+
+		# =================================================
+		# TRISTAN + ELYSE
+		# =================================================
+
+		modifier = {
+
+			add = 1000
+
+			desc = segrellion_petition_for_hand_tristan_elyse_reason
+
+
+			scope:actor = {
+
+				this = character:Vladwyn_1
+
+				is_married = no
+			}
+
+
+			scope:secondary_recipient = character:IAF_Sunglass_2
+		}
+
+
+		# =================================================
+		# ALREADY MARRIED
+		#
+		# This catches faiths which allow multiple wives.
+		# =================================================
+
+		modifier = {
+
+			add = -10000
+
+			desc = segrellion_petition_for_hand_already_married_reason
+
+
+			scope:actor = {
+				is_married = yes
+			}
+		}
+
+
+		# =================================================
+		# COURT RULER OPINION
+		# =================================================
+
+		opinion_modifier = {
+
+			opinion_target = scope:actor
+
+			who = scope:recipient
+
+			multiplier = 0.35
+		}
+
+
+		# =================================================
+		# WOMAN'S OPINION
+		# =================================================
+
+		opinion_modifier = {
+
+			opinion_target = scope:actor
+
+			who = scope:secondary_recipient
+
+			multiplier = 0.50
+		}
+
+
+		# =================================================
+		# MILITARY STRENGTH
+		# =================================================
+
+
+		# -------------------------------------------------
+		# STRONGER
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 15
+
+			desc = segrellion_petition_for_hand_military_stronger_reason
+
+
+			scope:actor.current_military_strength > scope:recipient.current_military_strength
+		}
+
+
+		# -------------------------------------------------
+		# MUCH STRONGER
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 20
+
+			desc = segrellion_petition_for_hand_military_much_stronger_reason
+
+
+			scope:actor.current_military_strength >= scope:recipient.fifty_percent_more_of_current_military_strength
+		}
+
+
+		# -------------------------------------------------
+		# WEAKER
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -10
+
+			desc = segrellion_petition_for_hand_military_weaker_reason
+
+
+			scope:recipient.current_military_strength > scope:actor.current_military_strength
+		}
+
+
+		# -------------------------------------------------
+		# MUCH WEAKER
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = -20
+
+			desc = segrellion_petition_for_hand_military_much_weaker_reason
+
+
+			scope:recipient.current_military_strength >= scope:actor.fifty_percent_more_of_current_military_strength
+		}
+
+
+		# =================================================
+		# DYNASTY SPLENDOR
+		#
+		# +/- 10 per level of difference.
+		# =================================================
+
+		modifier = {
+
+			desc = segrellion_petition_for_hand_dynasty_splendor_reason
+
+
+			scope:actor = {
+				exists = dynasty
+			}
+
+
+			scope:secondary_recipient = {
+				exists = dynasty
+			}
+
+
+			add = {
+
+				value = scope:actor.dynasty.dynasty_prestige_level
+
+				subtract = scope:secondary_recipient.dynasty.dynasty_prestige_level
+
+				multiply = 10
+			}
+		}
+
+
+		# =================================================
+		# LOWBORN PETITIONER
+		# =================================================
+
+		modifier = {
+
+			add = -35
+
+			desc = segrellion_petition_for_hand_lowborn_actor_reason
+
+
+			scope:actor = {
+				is_lowborn = yes
+			}
+
+
+			scope:secondary_recipient = {
+				is_lowborn = no
+			}
+		}
+
+
+		# =================================================
+		# NOBLE PETITIONER FOR A LOWBORN WOMAN
+		# =================================================
+
+		modifier = {
+
+			add = 15
+
+			desc = segrellion_petition_for_hand_lowborn_bride_reason
+
+
+			scope:actor = {
+				is_lowborn = no
+			}
+
+
+			scope:secondary_recipient = {
+				is_lowborn = yes
+			}
+		}
+
+
+		# =================================================
+		# LEVEL OF FAME
+		# =================================================
+
+		modifier = {
+
+			desc = segrellion_petition_for_hand_fame_reason
+
+
+			add = {
+
+				value = scope:actor.prestige_level
+
+				multiply = 10
+			}
+		}
+
+
+		# =================================================
+		# LEVEL OF DEVOTION
+		#
+		# Deliberately smaller than fame.
+		# =================================================
+
+		modifier = {
+
+			desc = segrellion_petition_for_hand_piety_reason
+
+
+			add = {
+
+				value = scope:actor.piety_level
+
+				multiply = 3
+			}
+		}
+
+
+		# =================================================
+		# DRAGONRIDER
+		# =================================================
+
+		modifier = {
+
+			add = 60
+
+			desc = segrellion_petition_for_hand_dragon_reason
+
+
+			scope:actor = {
+				is_current_dragonrider = yes
+			}
+		}
+
+
+		# =================================================
+		# CLOSE FAMILY OF THE COURT RULER
+		#
+		# Lords care more about daughters, sisters, etc.
+		# =================================================
+
+		modifier = {
+
+			add = -20
+
+			desc = segrellion_petition_for_hand_close_family_reason
+
+
+			scope:secondary_recipient = {
+				is_close_family_of = scope:recipient
+			}
+		}
+
+
+		# =================================================
+		# WEAK HOOK
+		# =================================================
+
+		modifier = {
+
+			add = 50
+
+			desc = segrellion_petition_for_hand_weak_hook_reason
+
+
+			scope:hook = yes
+
+
+			scope:actor = {
+
+				NOT = {
+					has_strong_hook = scope:recipient
+				}
+			}
+		}
+
+
+		# =================================================
+		# STRONG HOOK
+		# =================================================
+
+		modifier = {
+
+			add = 1000
+
+			desc = segrellion_petition_for_hand_strong_hook_reason
+
+
+			scope:hook = yes
+
+
+			scope:actor = {
+
+				is_married = no
+
+				has_strong_hook = scope:recipient
+			}
+		}
+
+
+		# =================================================
+		# BRIDE-PRICE
+		# =================================================
+
+		modifier = {
+
+			add = 40
+
+			desc = segrellion_petition_for_hand_bride_price_reason
+
+
+			scope:bride_price = yes
+		}
+	}
+
+
+	# =====================================================
+	# AI USE
+	#
+	# AI landless characters can technically use the
+	# mechanic, but we do not make them spam the world
+	# searching for brides.
+	# =====================================================
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

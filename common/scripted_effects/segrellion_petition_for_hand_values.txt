@@ -1,0 +1,83 @@
+# =========================================================
+# SEGRELLION MOD
+# PETITION FOR HER HAND VALUES
+# =========================================================
+
+
+# =========================================================
+# BRIDE-PRICE
+#
+# Base:
+#   50 gold
+#
+# Noble woman:
+#   +25
+#
+# Dynasty Splendor:
+#   +25 per level
+#
+# Close family of her court ruler:
+#   +75
+# =========================================================
+
+segrellion_petition_for_hand_bribe_cost_value = {
+
+	value = 50
+
+
+	# =====================================================
+	# NOBLE BIRTH
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			scope:secondary_recipient = {
+				is_lowborn = no
+			}
+		}
+
+		add = 25
+	}
+
+
+	# =====================================================
+	# DYNASTY SPLENDOR
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			scope:secondary_recipient = {
+				exists = dynasty
+			}
+		}
+
+
+		add = {
+
+			value = scope:secondary_recipient.dynasty.dynasty_prestige_level
+
+			multiply = 25
+		}
+	}
+
+
+	# =====================================================
+	# CLOSE FAMILY OF THE COURT RULER
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			scope:secondary_recipient = {
+				is_close_family_of = scope:recipient
+			}
+		}
+
+		add = 75
+	}
+}
