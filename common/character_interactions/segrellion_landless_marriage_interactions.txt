@@ -198,20 +198,20 @@ segrellion_petition_for_her_hand_interaction = {
 	# SEND OPTIONS
 	# =====================================================
 
-	send_options_exclusive = yes
+	send_options_exclusive = no
 
 
 	# -----------------------------------------------------
 	# USE HOOK
+	#
+	# Always visible.
+	# Disabled if the actor has no usable hook.
 	# -----------------------------------------------------
 
 	send_option = {
 
 		is_shown = {
-
-			scope:actor = {
-				has_usable_hook = scope:recipient
-			}
+			always = yes
 		}
 
 
@@ -229,14 +229,29 @@ segrellion_petition_for_her_hand_interaction = {
 		flag = hook
 
 		localization = segrellion_petition_for_hand_use_hook
+
+		current_description = segrellion_petition_for_hand_use_hook_desc
+
+
+		starts_enabled = {
+			always = no
+		}
 	}
 
 
 	# -----------------------------------------------------
 	# OFFER BRIDE-PRICE
+	#
+	# Always visible.
+	# Starts disabled.
 	# -----------------------------------------------------
 
 	send_option = {
+
+		is_shown = {
+			always = yes
+		}
+
 
 		is_valid = {
 
@@ -250,6 +265,13 @@ segrellion_petition_for_her_hand_interaction = {
 		flag = bride_price
 
 		localization = segrellion_petition_for_hand_offer_bride_price
+
+		current_description = segrellion_petition_for_hand_offer_bride_price_desc
+
+
+		starts_enabled = {
+			always = no
+		}
 	}
 
 
@@ -493,7 +515,24 @@ segrellion_petition_for_her_hand_interaction = {
 
 		# =================================================
 		# MILITARY STRENGTH
+		#
+		# Only ONE military modifier should appear.
 		# =================================================
+
+
+		# -------------------------------------------------
+		# MUCH STRONGER
+		# -------------------------------------------------
+
+		modifier = {
+
+			add = 35
+
+			desc = segrellion_petition_for_hand_military_much_stronger_reason
+
+
+			scope:actor.current_military_strength >= scope:recipient.fifty_percent_more_of_current_military_strength
+		}
 
 
 		# -------------------------------------------------
@@ -508,21 +547,23 @@ segrellion_petition_for_her_hand_interaction = {
 
 
 			scope:actor.current_military_strength > scope:recipient.current_military_strength
+
+			scope:actor.current_military_strength < scope:recipient.fifty_percent_more_of_current_military_strength
 		}
 
 
 		# -------------------------------------------------
-		# MUCH STRONGER
+		# MUCH WEAKER
 		# -------------------------------------------------
 
 		modifier = {
 
-			add = 20
+			add = -30
 
-			desc = segrellion_petition_for_hand_military_much_stronger_reason
+			desc = segrellion_petition_for_hand_military_much_weaker_reason
 
 
-			scope:actor.current_military_strength >= scope:recipient.fifty_percent_more_of_current_military_strength
+			scope:recipient.current_military_strength >= scope:actor.fifty_percent_more_of_current_military_strength
 		}
 
 
@@ -538,28 +579,17 @@ segrellion_petition_for_her_hand_interaction = {
 
 
 			scope:recipient.current_military_strength > scope:actor.current_military_strength
-		}
 
-
-		# -------------------------------------------------
-		# MUCH WEAKER
-		# -------------------------------------------------
-
-		modifier = {
-
-			add = -20
-
-			desc = segrellion_petition_for_hand_military_much_weaker_reason
-
-
-			scope:recipient.current_military_strength >= scope:actor.fifty_percent_more_of_current_military_strength
+			scope:recipient.current_military_strength < scope:actor.fifty_percent_more_of_current_military_strength
 		}
 
 
 		# =================================================
 		# DYNASTY SPLENDOR
 		#
-		# +/- 10 per level of difference.
+		# +/- 10 acceptance for each level of difference.
+		# Does not display if both dynasties have equal
+		# Splendor.
 		# =================================================
 
 		modifier = {
@@ -574,6 +604,11 @@ segrellion_petition_for_her_hand_interaction = {
 
 			scope:secondary_recipient = {
 				exists = dynasty
+			}
+
+
+			NOT = {
+				scope:actor.dynasty.dynasty_prestige_level = scope:secondary_recipient.dynasty.dynasty_prestige_level
 			}
 
 
@@ -641,6 +676,11 @@ segrellion_petition_for_her_hand_interaction = {
 			desc = segrellion_petition_for_hand_fame_reason
 
 
+			scope:actor = {
+				prestige_level > 0
+			}
+
+
 			add = {
 
 				value = scope:actor.prestige_level
@@ -653,12 +693,17 @@ segrellion_petition_for_her_hand_interaction = {
 		# =================================================
 		# LEVEL OF DEVOTION
 		#
-		# Deliberately smaller than fame.
+		# Deliberately weaker than Fame.
 		# =================================================
 
 		modifier = {
 
 			desc = segrellion_petition_for_hand_piety_reason
+
+
+			scope:actor = {
+				piety_level > 0
+			}
 
 
 			add = {
