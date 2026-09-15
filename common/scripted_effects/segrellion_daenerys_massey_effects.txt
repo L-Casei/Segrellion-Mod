@@ -255,3 +255,168 @@ segrellion_daenerys_massey_news_progression_effect = {
 		}
 	}
 }
+
+# =========================================================
+# DAENERYS - START THE BEACON CROSSING
+#
+# ROOT = Daenerys
+#
+# Used both by the normal Massey -> Daemon negotiation
+# chain and by the save-compatible recovery.
+# =========================================================
+
+segrellion_daenerys_start_beacon_crossing_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+
+			NOT = {
+				exists = current_travel_plan
+			}
+
+
+			segrellion_daemon_controls_flamelands_trigger = yes
+		}
+
+
+		start_travel_plan = {
+
+			destination = title:c_farring_cross.title_province
+
+			players_use_planner = no
+
+			return_trip = no
+
+			travel_with_domicile = yes
+
+			on_arrival_event = segrellion_daenerys_invasion.0018
+
+			on_arrival_destinations = last
+
+			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+		}
+	}
+}
+
+
+# =========================================================
+# DAENERYS - BEACON NEGOTIATION / TRAVEL RECOVERY
+#
+# Repairs two possible broken states:
+#
+# 1. Daemon accepted, but "The Beacon Is Open" never fired.
+#
+# 2. Daenerys selected the Beacon, but the travel plan
+#    failed to start.
+#
+# Save-compatible.
+# =========================================================
+
+segrellion_daenerys_beacon_negotiation_recovery_effect = {
+
+	character:Targaryen_9 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_daenerys_camped_at_pentos
+
+				has_character_flag = segrellion_daenerys_invasion_committed
+
+				has_character_flag = segrellion_daenerys_crossing_committed
+
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_daemon_accepts_daenerys_beacon_negotiation
+				}
+
+
+				segrellion_daemon_controls_flamelands_trigger = yes
+			}
+
+
+			# =================================================
+			# DAEMON ACCEPTED BUT THE FINAL EVENT NEVER ARRIVED
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_beacon_negotiation_started
+
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_beacon_invitation_ready
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_landing_chosen
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_beacon_open_event_pending
+					}
+				}
+
+
+				add_character_flag = {
+
+					flag = segrellion_daenerys_beacon_open_event_pending
+
+					days = 15
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_massey.0150
+
+					days = 1
+				}
+			}
+
+
+			# =================================================
+			# THE BEACON WAS CHOSEN BUT TRAVEL NEVER STARTED
+			#
+			# camped_at_pentos disappears when .0018 fires,
+			# so this cannot send Daenerys back after arrival.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_landing_chosen
+
+					has_character_flag = segrellion_daenerys_landing_flamelands
+
+					has_character_flag = segrellion_daenerys_landing_beacon
+
+
+					NOT = {
+						exists = current_travel_plan
+					}
+				}
+
+
+				segrellion_daenerys_start_beacon_crossing_effect = yes
+			}
+		}
+	}
+}
