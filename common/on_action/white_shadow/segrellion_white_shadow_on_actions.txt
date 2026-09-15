@@ -17,6 +17,8 @@ segrellion_intro_on_player_select_destiny_confirmed = {
 
 				this = character:Segrellion_1
 
+				game_start_date = 8106.4.19
+
 				NOT = {
 					has_character_flag = segrellion_intro_event_seen
 				}
@@ -738,6 +740,202 @@ segrellion_stepstones_followup_war_started = {
 	}
 }
 
+# =========================================================
+# STEPSTONES - EXISTING FOLLOWUP WAR FAILSAFE
+# Catches wars already active after save loads or missed starts
+# =========================================================
+
+segrellion_stepstones_followup_existing_war_check = {
+
+	effect = {
+
+		character:Segrellion_1 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_stepstones_campaign_active
+
+					NOT = {
+						has_character_flag = segrellion_stepstones_story_completed
+					}
+				}
+
+
+				# =================================================
+				# DAEMON'S SECOND STEPSTONES WAR
+				# =================================================
+
+				character:Targaryen_61 ?= {
+
+					random_character_war = {
+
+						limit = {
+
+							using_cb = daemon_stepstones_second_war
+
+							OR = {
+								primary_attacker ?= character:Targaryen_61
+								primary_attacker ?= character:Velaryon_31
+							}
+						}
+
+						set_variable = {
+							name = segrellion_tracked_second_stepstones_war
+							value = yes
+						}
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									is_participant = character:Segrellion_1
+								}
+							}
+
+							add_attacker = character:Segrellion_1
+						}
+
+						character:Segrellion_1 = {
+
+							if = {
+
+								limit = {
+
+									NOT = {
+										has_character_flag = segrellion_stepstones_second_war_joined
+									}
+								}
+
+								add_character_flag = segrellion_stepstones_second_war_joined
+
+								trigger_event = {
+									id = segrellion_intro.0101
+									days = 1
+								}
+							}
+						}
+					}
+
+
+					# =================================================
+					# TRIARCHY COUNTERATTACK
+					# =================================================
+
+					random_character_war = {
+
+						limit = {
+
+							using_cb = triarchy_anti_daemon_war
+
+							primary_defender ?= character:Targaryen_61
+						}
+
+						set_variable = {
+							name = segrellion_tracked_triarchy_stepstones_war
+							value = yes
+						}
+
+						if = {
+
+							limit = {
+
+								NOT = {
+									is_participant = character:Segrellion_1
+								}
+							}
+
+							add_defender = character:Segrellion_1
+						}
+
+						character:Segrellion_1 = {
+
+							if = {
+
+								limit = {
+
+									NOT = {
+										has_character_flag = segrellion_stepstones_triarchy_war_joined
+									}
+								}
+
+								add_character_flag = segrellion_stepstones_triarchy_war_joined
+
+								trigger_event = {
+									id = segrellion_intro.0101
+									days = 1
+								}
+							}
+						}
+					}
+				}
+
+
+				# =================================================
+				# CORLYS-LED SECOND WAR FALLBACK
+				# =================================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_stepstones_second_war_joined
+						}
+
+						character:Velaryon_31 ?= {
+							is_alive = yes
+						}
+					}
+
+					character:Velaryon_31 = {
+
+						random_character_war = {
+
+							limit = {
+
+								using_cb = daemon_stepstones_second_war
+
+								primary_attacker ?= character:Velaryon_31
+							}
+
+							set_variable = {
+								name = segrellion_tracked_second_stepstones_war
+								value = yes
+							}
+
+							if = {
+
+								limit = {
+
+									NOT = {
+										is_participant = character:Segrellion_1
+									}
+								}
+
+								add_attacker = character:Segrellion_1
+							}
+
+							character:Segrellion_1 = {
+
+								add_character_flag = segrellion_stepstones_second_war_joined
+
+								trigger_event = {
+									id = segrellion_intro.0101
+									days = 1
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 # =========================================================
 # STEPSTONES - ATTACKER VICTORY

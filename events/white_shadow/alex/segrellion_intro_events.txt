@@ -2,11 +2,14 @@ namespace = segrellion_intro
 
 segrellion_intro.0001 = {
 	type = character_event
+
 	title = segrellion_intro.0001.t
 	desc = segrellion_intro.0001.desc
 	theme = realm
 
-	override_background = { reference = segrellion_vhal_island }
+	override_background = {
+		reference = segrellion_vhal_island
+	}
 
 	left_portrait = {
 		character = root
@@ -14,7 +17,11 @@ segrellion_intro.0001 = {
 	}
 
 	trigger = {
-		NOT = { has_character_flag = segrellion_intro_event_seen }
+		this = character:Segrellion_1
+
+		NOT = {
+			has_character_flag = segrellion_intro_event_seen
+		}
 	}
 
 	immediate = {
@@ -23,40 +30,115 @@ segrellion_intro.0001 = {
 
 	option = {
 		name = segrellion_intro.0001.a
-		ai_chance = { base = 75 }
-		add_character_flag = segrellion_opening_route_dragonstone
-		custom_tooltip = segrellion_intro_dragonstone_route_tt
-		if = {
-			limit = {
-				location = title:c_dragonstone.title_province
-			}
-			trigger_event = {
-				id = segrellion_intro.0002
-				days = 1
-			}
+
+		ai_chance = {
+			base = 75
 		}
-		else = {
-			start_travel_plan = {
-				destination = title:c_dragonstone.title_province
-				on_arrival_event = segrellion_intro.0002
-				on_arrival_destinations = all
-				return_trip = no
-			}
-			trigger_event = {
-				id = segrellion_intro.0002
-				days = 180
-			}
+
+		add_character_flag = segrellion_opening_route_dragonstone
+
+		custom_tooltip = segrellion_intro_dragonstone_route_tt
+
+		trigger_event = {
+			id = segrellion_intro.0009
+			days = 1
 		}
 	}
 
 	option = {
 		name = segrellion_intro.0001.b
-		ai_chance = { base = 25 }
+
+		ai_chance = {
+			base = 25
+		}
+
 		add_character_flag = segrellion_opening_route_vhalerion
+
 		custom_tooltip = segrellion_intro_vhalerion_route_tt
+
 		trigger_event = {
-			id = segrellion_intro.0003
-			days = 3
+			id = segrellion_intro.0009
+			days = 1
+		}
+	}
+}
+
+# =========================================================
+# ALEX MARRIES DAENERYS
+# Canon family settlement before the opening route continues
+# =========================================================
+
+segrellion_intro.0009 = {
+	type = character_event
+
+	title = segrellion_intro.0009.t
+	desc = segrellion_intro.0009.desc
+	theme = realm
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Segrellion_3
+		animation = personality_bold
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+
+		OR = {
+			has_character_flag = segrellion_opening_route_dragonstone
+			has_character_flag = segrellion_opening_route_vhalerion
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_opening_marriage_resolved
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_daenerys_opening_marriage_resolved
+
+		if = {
+			limit = {
+				character:Segrellion_3 ?= {
+					is_alive = yes
+				}
+			}
+
+			marry = character:Segrellion_3
+		}
+	}
+
+	option = {
+		name = segrellion_intro.0009.a
+
+		ai_chance = {
+			base = 100
+		}
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_opening_route_dragonstone
+			}
+
+			trigger_event = {
+				id = segrellion_intro.0002
+				days = 1
+			}
+		}
+
+		else = {
+			trigger_event = {
+				id = segrellion_intro.0003
+				days = 1
+			}
 		}
 	}
 }
@@ -305,26 +387,21 @@ segrellion_intro.0006 = {
 			base = 35
 		}
 
-
 		add_character_flag = segrellion_homeward_purpose_path
 		add_character_flag = segrellion_stepstones_campaign_abandoned
 		add_character_flag = segrellion_stepstones_story_completed
 		add_character_flag = segrellion_targaryen_service_remembered
 
-
 		remove_character_flag = segrellion_stepstones_campaign_active
 		remove_character_flag = segrellion_stepstones_route_active
-
 
 		add_character_modifier = {
 			modifier = segrellion_homeward_purpose_modifier
 			years = 5
 		}
 
-
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
 		custom_tooltip = segrellion_stepstones_daemon_friendship_tt
-
 
 		hidden_effect = {
 
@@ -348,12 +425,24 @@ segrellion_intro.0006 = {
 			}
 		}
 
-
 		character:Targaryen_63 ?= {
 
 			add_opinion = {
 				target = root
 				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
+			}
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_character_flag = segrellion_vhalerion_chain_started
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_intro.0003
+				days = 14
 			}
 		}
 	}
@@ -396,32 +485,62 @@ segrellion_intro.0008 = {
 	}
 
 	option = {
+		
 		name = segrellion_intro.0008.a
-		ai_chance = { base = 100 }
+
+		ai_chance = {
+			base = 100
+		}
+
 		add_prestige = 250
+
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
+
 		character:Targaryen_61 ?= {
+
 			add_opinion = {
 				target = root
 				modifier = segrellion_bled_for_daemon_in_failed_stepstones_opinion
 			}
 		}
+
 		character:Targaryen_63 ?= {
+
 			add_opinion = {
 				target = root
 				modifier = segrellion_bled_for_targaryens_in_failed_stepstones_opinion
 			}
 		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_character_flag = segrellion_vhalerion_chain_started
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_intro.0003
+				days = 14
+			}
+		}
 	}
 }
 
-segrellion_intro.0003 = {
+# =========================================================
+# THE FORTUNE OF AEGOR AND SAERA
+# =========================================================
+
+segrellion_intro.0010 = {
 	type = character_event
-	title = segrellion_intro.0003.t
-	desc = segrellion_intro.0003.desc
+
+	title = segrellion_intro.0010.t
+	desc = segrellion_intro.0010.desc
 	theme = stewardship
 
-	override_background = { reference = segrellion_vhal_island }
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
 
 	left_portrait = {
 		character = root
@@ -429,19 +548,95 @@ segrellion_intro.0003 = {
 	}
 
 	trigger = {
-		NOT = { has_character_flag = segrellion_vhalerion_chain_started }
+		this = character:Segrellion_1
+
+		NOT = {
+			has_character_flag = segrellion_hidden_fortune_found
+		}
+	}
+
+	immediate = {
+		add_character_flag = segrellion_hidden_fortune_found
+
+		add_gold = 1500
+	}
+
+	option = {
+		name = segrellion_intro.0010.a
+
+		ai_chance = {
+			base = 100
+		}
+
+		if = {
+			limit = {
+				province:4427 = {
+					has_special_building = no
+				}
+			}
+
+			add_gold = -500
+
+			province:4427 = {
+				add_special_building = segrellion_fort_01
+			}
+		}
+
+		add_stewardship_lifestyle_xp = 250
+
+		add_character_flag = segrellion_vhal_investment_mindset
+	}
+}
+
+segrellion_intro.0003 = {
+	type = character_event
+
+	title = segrellion_intro.0003.t
+	desc = segrellion_intro.0003.desc
+	theme = stewardship
+
+	override_background = {
+		reference = segrellion_vhal_island
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	trigger = {
+		NOT = {
+			has_character_flag = segrellion_vhalerion_chain_started
+		}
 	}
 
 	option = {
 		name = segrellion_intro.0003.a
+
 		add_character_flag = segrellion_vhalerion_chain_started
+
 		title:c_blackmark = {
 			change_county_control = 10
+
 			add_county_modifier = {
 				modifier = segrellion_lords_promise_county_modifier
 				years = 5
 			}
 		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_character_flag = segrellion_hidden_fortune_found
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_intro.0010
+				days = 1
+			}
+		}
+
 		trigger_event = {
 			id = segrellion_intro.0004
 			days = { 365 730 }
@@ -637,10 +832,8 @@ segrellion_intro.0103 = {
 
 		name = segrellion_intro.0103.a
 
-
 		add_prestige = 750
 		add_martial_lifestyle_xp = 500
-
 
 		character:Targaryen_61 ?= {
 
@@ -648,7 +841,6 @@ segrellion_intro.0103 = {
 				target = root
 				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
 			}
-
 
 			if = {
 
@@ -667,12 +859,24 @@ segrellion_intro.0103 = {
 			}
 		}
 
-
 		character:Targaryen_63 ?= {
 
 			add_opinion = {
 				target = root
 				modifier = segrellion_served_house_targaryen_in_stepstones_opinion
+			}
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_character_flag = segrellion_hidden_fortune_found
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_intro.0010
+				days = 14
 			}
 		}
 	}
