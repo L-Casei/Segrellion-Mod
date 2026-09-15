@@ -498,6 +498,15 @@ segrellion_intro.0006 = {
 		}
 
 
+		# Give AGOT time to launch another canonical
+		# Stepstones war. If nothing happens, the
+		# storyline will be considered concluded.
+		trigger_event = {
+			id = segrellion_intro.0190
+			days = 365
+		}
+
+
 		custom_tooltip = segrellion_targaryen_remembers_stepstones_service_tt
 		custom_tooltip = segrellion_stepstones_daemon_friendship_tt
 
@@ -1063,6 +1072,16 @@ segrellion_intro.0103 = {
 
 # =========================================================
 # STEPSTONES CAMPAIGN CLOSURE FAILSAFE
+#
+# If Alex chose to remain with Daemon after the first war,
+# this event gives AGOT time to launch another canonical
+# Stepstones conflict.
+#
+# If another relevant war is active, keep waiting.
+# If Daemon has secured the Stepstones, use the final
+# victory event.
+# If nothing else happens, silently conclude the storyline
+# so Alex is not permanently locked out of later content.
 # =========================================================
 
 segrellion_intro.0190 = {
@@ -1074,10 +1093,12 @@ segrellion_intro.0190 = {
 
 	trigger = {
 
+		this = character:Segrellion_1
+
 		is_alive = yes
 
 		has_character_flag = segrellion_stepstones_campaign_active
-		has_character_flag = segrellion_stepstones_second_war_completed
+		has_character_flag = segrellion_stepstones_first_war_completed
 
 		NOT = {
 			has_character_flag = segrellion_stepstones_story_completed
@@ -1088,7 +1109,9 @@ segrellion_intro.0190 = {
 	immediate = {
 
 
-		# Daemon died before the campaign was resolved.
+		# =====================================================
+		# DAEMON DIED
+		# =====================================================
 
 		if = {
 
@@ -1109,8 +1132,12 @@ segrellion_intro.0190 = {
 		}
 
 
-		# A Triarchy counter-war is currently active.
-		# Its normal war-result hooks will resolve the story.
+		# =====================================================
+		# ANOTHER STEPSTONES WAR IS ACTIVE
+		#
+		# Do not close the storyline while Daemon is still
+		# fighting either the second campaign or the Triarchy.
+		# =====================================================
 
 		else_if = {
 
@@ -1118,11 +1145,21 @@ segrellion_intro.0190 = {
 
 				character:Targaryen_61 ?= {
 
-					any_character_war = {
+					OR = {
 
-						using_cb = triarchy_anti_daemon_war
+						any_character_war = {
 
-						primary_defender ?= prev
+							using_cb = daemon_stepstones_second_war
+
+							primary_attacker ?= prev
+						}
+
+						any_character_war = {
+
+							using_cb = triarchy_anti_daemon_war
+
+							primary_defender ?= prev
+						}
 					}
 				}
 			}
@@ -1134,8 +1171,9 @@ segrellion_intro.0190 = {
 		}
 
 
-		# Daemon has consolidated the Stepstones and no
-		# counter-war remains.
+		# =====================================================
+		# DAEMON HAS CONSOLIDATED THE STEPSTONES
+		# =====================================================
 
 		else_if = {
 
@@ -1156,14 +1194,22 @@ segrellion_intro.0190 = {
 		}
 
 
-		# AGOT has not resolved its scenario yet.
+		# =====================================================
+		# NO MORE STEPSTONES WARS
+		#
+		# The campaign simply ran out of momentum. The story
+		# ends without treating it as either a grand victory
+		# or a defeat.
+		# =====================================================
 
 		else = {
 
-			trigger_event = {
-				id = segrellion_intro.0190
-				days = 180
-			}
+			add_character_flag = segrellion_stepstones_story_completed
+
+			remove_character_flag = segrellion_stepstones_campaign_active
+			remove_character_flag = segrellion_stepstones_route_active
+			remove_character_flag = segrellion_stepstones_aftermath_pending
+			remove_character_flag = segrellion_stepstones_followup_notice_queued
 		}
 	}
 }
