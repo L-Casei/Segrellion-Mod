@@ -592,3 +592,534 @@ segrellion_daenerys_call_promised_supporters_effect = {
 		}
 	}
 }
+
+# =========================================================
+# CALL THE LESSER LORDS OF WESTEROS
+#
+# ROOT = DAENERYS
+#
+# When Daenerys openly claims the Iron Throne, every
+# duchy-tier or kingdom-tier ruler in the Seven Kingdoms
+# receives an opportunity to abandon the established order
+# and join her war.
+#
+# Lords Paramount / equivalent great rulers are excluded.
+# Their allegiance is already handled through Gather Support
+# and the existing promised-support system.
+# =========================================================
+
+segrellion_daenerys_call_lesser_westerosi_lords_effect = {
+
+	# =====================================================
+	# SAVE DAENERYS' NEW THRONE WAR
+	#
+	# Take What Is Mine requires Daenerys to have no active
+	# war before pressing the decision, so this should be
+	# the newly-created Iron Throne war.
+	# =====================================================
+
+	every_character_war = {
+
+		save_scope_as = segrellion_daenerys_throne_war
+	}
+
+
+	# =====================================================
+	# EVERY ELIGIBLE WESTEROSI RULER
+	# =====================================================
+
+	every_ruler = {
+
+		limit = {
+
+			is_alive = yes
+
+			is_landed = yes
+
+
+			# =================================================
+			# DUCHY / KINGDOM RULERS ONLY
+			# =================================================
+
+			OR = {
+
+				primary_title.tier = tier_duchy
+
+				primary_title.tier = tier_kingdom
+			}
+
+
+			# =================================================
+			# WESTEROS
+			#
+			# Excludes Essos and Beyond the Wall.
+			# =================================================
+
+			capital_county.title_province = {
+
+				geographical_region = world_westeros_seven_kingdoms_without_wall
+			}
+
+
+			# =================================================
+			# BASIC EXCLUSIONS
+			# =================================================
+
+			this != root
+
+			this != title:h_the_iron_throne.holder
+
+
+			NOT = {
+				target_is_vassal_or_below = root
+			}
+
+
+			# =================================================
+			# LORDS PARAMOUNT / GREAT REALMS
+			#
+			# They already have their own political routes.
+			# =================================================
+
+			NOT = {
+				has_title = title:e_the_north
+			}
+
+			NOT = {
+				has_title = title:e_the_vale
+			}
+
+			NOT = {
+				has_title = title:e_the_westerlands
+			}
+
+			NOT = {
+				has_title = title:e_the_riverlands
+			}
+
+			NOT = {
+				has_title = title:k_the_reach
+			}
+
+			NOT = {
+				has_title = title:e_dorne
+			}
+
+			NOT = {
+				has_title = title:e_the_stormlands
+			}
+
+			NOT = {
+				has_title = title:e_the_iron_islands
+			}
+
+			NOT = {
+				has_title = title:e_flamelands
+			}
+
+
+			# =================================================
+			# ONE ROLL ONLY
+			# =================================================
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_lesser_lord_call_resolved
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_lesser_lord_call_resolved
+
+
+		# =====================================================
+		# BASE CHANCE: 3%
+		#
+		# The following modifiers are deliberately additive.
+		# A genuinely rebellious / pro-Daenerys lord can become
+		# substantially more likely to answer the call.
+		# =====================================================
+
+		random = {
+
+			chance = 3
+
+
+			# =================================================
+			# OPINION OF DAENERYS
+			# =================================================
+
+			modifier = {
+
+				add = 5
+
+				opinion = {
+					target = root
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = 8
+
+				opinion = {
+					target = root
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				opinion = {
+					target = root
+					value >= 75
+				}
+			}
+
+
+			modifier = {
+
+				add = -3
+
+				opinion = {
+					target = root
+					value <= -25
+				}
+			}
+
+
+			modifier = {
+
+				add = -7
+
+				opinion = {
+					target = root
+					value <= -50
+				}
+			}
+
+
+			# =================================================
+			# PERSONAL RELATIONSHIP WITH DAENERYS
+			# =================================================
+
+			modifier = {
+
+				add = 10
+
+				has_relation_friend = root
+			}
+
+
+			modifier = {
+
+				add = 18
+
+				has_relation_best_friend = root
+			}
+
+
+			modifier = {
+
+				add = -15
+
+				has_relation_rival = root
+			}
+
+
+			# =================================================
+			# OPINION OF THEIR OWN LIEGE
+			#
+			# A lord who despises his liege has a much better
+			# reason to use Daenerys' invasion as an opportunity.
+			# =================================================
+
+			modifier = {
+
+				add = 6
+
+				exists = liege
+
+				opinion = {
+					target = liege
+					value <= -25
+				}
+			}
+
+
+			modifier = {
+
+				add = 8
+
+				exists = liege
+
+				opinion = {
+					target = liege
+					value <= -50
+				}
+			}
+
+
+			modifier = {
+
+				add = 8
+
+				exists = liege
+
+				opinion = {
+					target = liege
+					value <= -75
+				}
+			}
+
+
+			modifier = {
+
+				add = -4
+
+				exists = liege
+
+				opinion = {
+					target = liege
+					value >= 50
+				}
+			}
+
+
+			# =================================================
+			# OPINION OF THE CURRENT KING
+			# =================================================
+
+			modifier = {
+
+				add = 5
+
+				opinion = {
+					target = title:h_the_iron_throne.holder
+					value <= -25
+				}
+			}
+
+
+			modifier = {
+
+				add = 7
+
+				opinion = {
+					target = title:h_the_iron_throne.holder
+					value <= -50
+				}
+			}
+
+
+			modifier = {
+
+				add = 8
+
+				opinion = {
+					target = title:h_the_iron_throne.holder
+					value <= -75
+				}
+			}
+
+
+			modifier = {
+
+				add = -5
+
+				opinion = {
+					target = title:h_the_iron_throne.holder
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				add = -8
+
+				opinion = {
+					target = title:h_the_iron_throne.holder
+					value >= 75
+				}
+			}
+
+
+			# =================================================
+			# PERSONAL RELATIONSHIP WITH THE KING
+			# =================================================
+
+			modifier = {
+
+				add = 10
+
+				has_relation_rival = title:h_the_iron_throne.holder
+			}
+
+
+			modifier = {
+
+				add = -10
+
+				has_relation_friend = title:h_the_iron_throne.holder
+			}
+
+
+			modifier = {
+
+				add = -18
+
+				has_relation_best_friend = title:h_the_iron_throne.holder
+			}
+
+
+			# =================================================
+			# AEGON REVEALED AS BLACKFYRE
+			# =================================================
+
+			modifier = {
+
+				add = 6
+
+				title:h_the_iron_throne.holder = character:IAF_Young_Griff_1
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			# =================================================
+			# PERSONALITY
+			# =================================================
+
+			modifier = {
+
+				add = 5
+
+				has_trait = ambitious
+			}
+
+
+			modifier = {
+
+				add = 3
+
+				has_trait = brave
+			}
+
+
+			modifier = {
+
+				add = 3
+
+				has_trait = vengeful
+			}
+
+
+			modifier = {
+
+				add = 2
+
+				has_trait = deceitful
+			}
+
+
+			modifier = {
+
+				add = 2
+
+				has_trait = arbitrary
+			}
+
+
+			modifier = {
+
+				add = -4
+
+				has_trait = content
+			}
+
+
+			modifier = {
+
+				add = -4
+
+				has_trait = craven
+			}
+
+
+			modifier = {
+
+				add = -2
+
+				has_trait = honest
+			}
+
+
+			modifier = {
+
+				add = -2
+
+				has_trait = just
+			}
+
+
+			modifier = {
+
+				add = -1
+
+				has_trait = humble
+			}
+
+
+			# =================================================
+			# THE LORD ANSWERS THE DRAGON'S CALL
+			# =================================================
+
+			add_character_flag = segrellion_lesser_lord_supports_daenerys_in_throne_war
+
+
+			save_scope_as = segrellion_daenerys_lesser_lord_supporter
+
+
+			# =================================================
+			# ADD THEM DIRECTLY TO THE THRONE WAR
+			# =================================================
+
+			scope:segrellion_daenerys_throne_war = {
+
+				set_called_to = scope:segrellion_daenerys_lesser_lord_supporter
+
+				add_attacker = scope:segrellion_daenerys_lesser_lord_supporter
+			}
+
+
+			# =================================================
+			# KEEP COUNT FOR FUTURE EVENTS / DEBUGGING
+			# =================================================
+
+			root = {
+
+				change_variable = {
+
+					name = segrellion_daenerys_lesser_lords_joined
+
+					add = 1
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_support.0800
+
+					days = { 1 7 }
+				}
+			}
+		}
+	}
+}

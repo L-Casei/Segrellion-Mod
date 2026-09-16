@@ -4304,3 +4304,109 @@ segrellion_daenerys_support.0780 = {
 		}
 	}
 }
+
+# =========================================================
+# 0800 - WE REMEMBER THE DRAGONS
+#
+# ROOT = DAENERYS
+# SENDER = LESSER WESTEROSI LORD WHO JOINED HER WAR
+# =========================================================
+
+segrellion_daenerys_support.0800 = {
+
+	type = letter_event
+
+	theme = war
+
+
+	sender = scope:segrellion_daenerys_lesser_lord_supporter
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	title = segrellion_daenerys_support.0800.t
+
+
+	desc = {
+
+		first_valid = {
+
+			# =================================================
+			# THE LORD HATES THE KING
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:segrellion_daenerys_lesser_lord_supporter = {
+
+						opinion = {
+							target = title:h_the_iron_throne.holder
+							value <= -50
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_support.0800.desc_against_king
+			}
+
+
+			# =================================================
+			# AMBITIOUS LORD
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:segrellion_daenerys_lesser_lord_supporter = {
+						has_trait = ambitious
+					}
+				}
+
+				desc = segrellion_daenerys_support.0800.desc_ambitious
+			}
+
+
+			# =================================================
+			# OLD LOYALTY / GENERIC
+			# =================================================
+
+			desc = segrellion_daenerys_support.0800.desc
+		}
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+
+		exists = scope:segrellion_daenerys_lesser_lord_supporter
+
+
+		scope:segrellion_daenerys_lesser_lord_supporter = {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_lesser_lord_supports_daenerys_in_throne_war
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0800.a
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
