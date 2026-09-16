@@ -389,7 +389,7 @@ vladwyn_search_storms_end_records_decision = {
 }
 
 # =========================================================
-# FOLLOW THE WOLF NORTH
+# REQUEST ACCESS TO WINTERFELL
 # =========================================================
 
 vladwyn_follow_wolf_north_decision = {
@@ -414,6 +414,20 @@ vladwyn_follow_wolf_north_decision = {
 		NOT = {
 			has_character_flag = vladwyn_alarra_identified
 		}
+
+		exists = title:c_winterfell.holder
+
+
+		title:c_winterfell.holder = {
+
+			NOT = {
+				has_character_flag = vladwyn_tristan_winterfell_permission
+			}
+
+			NOT = {
+				has_character_flag = vladwyn_tristan_winterfell_barred
+			}
+		}
 	}
 
 
@@ -421,9 +435,99 @@ vladwyn_follow_wolf_north_decision = {
 
 		is_imprisoned = no
 
+
 		custom_description = {
 
-			text = vladwyn_follow_wolf_north_location_requirement
+			text = vladwyn_winterfell_not_on_cooldown_requirement
+
+
+			title:c_winterfell.holder = {
+
+				NOT = {
+					has_character_flag = vladwyn_tristan_winterfell_request_cooldown
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		custom_tooltip = vladwyn_request_winterfell_effect_opinion_tt
+
+		custom_tooltip = vladwyn_request_winterfell_effect_retry_tt
+
+
+		hidden_effect = {
+
+			save_scope_as = vladwyn_tristan
+
+
+			title:c_winterfell.holder = {
+				save_scope_as = vladwyn_winterfell_lord
+			}
+
+
+			trigger_event = vladwyn_name.4950
+		}
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+# =========================================================
+# SEARCH THE RECORDS OF WINTERFELL
+# =========================================================
+
+vladwyn_search_winterfell_records_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tristan_vladwyn_landless_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = vladwyn_search_winterfell_records_decision_desc
+	selection_tooltip = vladwyn_search_winterfell_records_decision_tooltip
+	confirm_text = vladwyn_search_winterfell_records_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_follow_wolf_north_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_alarra_identified
+		}
+
+		exists = title:c_winterfell.holder
+
+
+		title:c_winterfell.holder = {
+
+			has_character_flag = vladwyn_tristan_winterfell_permission
+		}
+	}
+
+
+	is_valid = {
+
+		is_imprisoned = no
+
+
+		custom_description = {
+
+			text = vladwyn_search_winterfell_location_requirement
+
 
 			location.county = {
 				this = title:c_winterfell
@@ -436,12 +540,18 @@ vladwyn_follow_wolf_north_decision = {
 
 		add_learning_lifestyle_xp = 200
 
-		custom_tooltip = vladwyn_follow_wolf_north_effect_tt
+		custom_tooltip = vladwyn_search_winterfell_effect_tt
 
 
 		hidden_effect = {
 
-			remove_character_flag = vladwyn_follow_wolf_north_unlocked
+			save_scope_as = vladwyn_tristan
+
+
+			title:c_winterfell.holder = {
+				save_scope_as = vladwyn_winterfell_lord
+			}
+
 
 			trigger_event = vladwyn_name.5000
 		}
@@ -613,9 +723,17 @@ vladwyn_choose_blood_decision = {
 	confirm_text = vladwyn_choose_blood_decision_confirm
 
 
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
 	is_shown = {
 
 		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_full_truth_known
+
+		has_character_flag = vladwyn_parentage_proven
 
 		has_character_flag = vladwyn_blood_choice_unlocked
 
@@ -625,18 +743,322 @@ vladwyn_choose_blood_decision = {
 	}
 
 
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
 	is_valid = {
 
 		is_alive = yes
+
 		is_imprisoned = no
+
+		has_character_flag = vladwyn_full_truth_known
+
+		has_character_flag = vladwyn_parentage_proven
 	}
 
 
+	# =====================================================
+	# BLOOD AND NAME OPTIONS
+	# =====================================================
+
+	widget = {
+
+		gui = "decision_view_widget_option_list_generic"
+
+		controller = decision_option_list_controller
+
+		decision_to_second_step_button = "vladwyn_choose_blood_next_step"
+
+
+		# -------------------------------------------------
+		# STARK
+		# -------------------------------------------------
+
+		item = {
+
+			value = vladwyn_blood_choice_stark
+
+			localization = vladwyn_blood_choice_stark
+
+			current_description = vladwyn_blood_choice_stark_desc
+
+			icon = "gfx/interface/icons/modifiers/segrellion_stark_direwolf.dds"
+
+
+			is_shown = {
+				always = yes
+			}
+
+
+			is_valid = {
+
+				root = {
+					has_character_flag = vladwyn_parentage_proven
+				}
+			}
+
+
+			ai_chance = {
+				value = 0
+			}
+		}
+
+
+		# -------------------------------------------------
+		# BARATHEON
+		# -------------------------------------------------
+
+		item = {
+
+			value = vladwyn_blood_choice_baratheon
+
+			localization = vladwyn_blood_choice_baratheon
+
+			current_description = vladwyn_blood_choice_baratheon_desc
+
+			icon = "gfx/interface/icons/artifact/stannis_crown.dds"
+
+
+			is_shown = {
+				always = yes
+			}
+
+
+			is_valid = {
+
+				root = {
+					has_character_flag = vladwyn_parentage_proven
+				}
+			}
+
+
+			ai_chance = {
+				value = 0
+			}
+		}
+
+
+		# -------------------------------------------------
+		# VLADWYN
+		# -------------------------------------------------
+
+		item = {
+
+			value = vladwyn_blood_choice_vladwyn
+
+			localization = vladwyn_blood_choice_vladwyn
+
+			current_description = vladwyn_blood_choice_vladwyn_desc
+
+			icon = "gfx/interface/icons/modifiers/vladwyn_canon_raven.dds"
+
+
+			is_shown = {
+				always = yes
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 0
+			}
+		}
+
+
+		# -------------------------------------------------
+		# KEEP THE TRUTH SECRET
+		# -------------------------------------------------
+
+		item = {
+
+			value = vladwyn_blood_choice_secret
+
+			localization = vladwyn_blood_choice_secret
+
+			current_description = vladwyn_blood_choice_secret_desc
+
+			icon = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+
+
+			is_shown = {
+				always = yes
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 0
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
 	effect = {
 
-		custom_tooltip = vladwyn_choose_blood_effect_tt
 
-		trigger_event = vladwyn_name.6000
+		# -------------------------------------------------
+		# STARK
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				scope:vladwyn_blood_choice_stark = yes
+			}
+
+
+			custom_tooltip = vladwyn_blood_choice_stark_effect_tt
+
+
+			hidden_effect = {
+
+				vladwyn_reveal_true_parentage_effect = yes
+
+				set_house = character:Stark_79.house
+
+				vladwyn_add_north_pressed_claims_effect = yes
+
+				add_character_flag = vladwyn_northern_road_unlocked
+
+				add_character_flag = vladwyn_blood_choice_made
+
+				add_character_flag = vladwyn_name_story_completed
+
+				remove_character_flag = vladwyn_blood_choice_unlocked
+			}
+		}
+
+
+		# -------------------------------------------------
+		# BARATHEON
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				scope:vladwyn_blood_choice_baratheon = yes
+			}
+
+
+			custom_tooltip = vladwyn_blood_choice_baratheon_effect_tt
+
+
+			hidden_effect = {
+
+				vladwyn_reveal_true_parentage_effect = yes
+
+				set_house = character:Baratheon_34.house
+
+				vladwyn_add_stormlands_pressed_claims_effect = yes
+
+				add_character_flag = vladwyn_stormlander_road_unlocked
+
+
+				character:Baratheon_34.house = {
+
+					every_house_member = {
+
+						limit = {
+
+							is_alive = yes
+
+							NOT = {
+								this = root
+							}
+						}
+
+
+						add_opinion = {
+
+							target = root
+
+							modifier = vladwyn_claimed_baratheon_blood_opinion
+
+							years = 20
+						}
+					}
+				}
+
+
+				add_character_flag = vladwyn_blood_choice_made
+
+				add_character_flag = vladwyn_name_story_completed
+
+				remove_character_flag = vladwyn_blood_choice_unlocked
+			}
+		}
+
+
+		# -------------------------------------------------
+		# REMAIN VLADWYN PUBLICLY
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				scope:vladwyn_blood_choice_vladwyn = yes
+			}
+
+
+			custom_tooltip = vladwyn_blood_choice_vladwyn_effect_tt
+
+
+			hidden_effect = {
+
+				vladwyn_reveal_true_parentage_effect = yes
+
+				vladwyn_add_both_unpressed_claims_effect = yes
+
+				add_character_flag = vladwyn_remained_vladwyn_publicly
+
+				add_character_flag = vladwyn_blood_choice_made
+
+				add_character_flag = vladwyn_name_story_completed
+
+				remove_character_flag = vladwyn_blood_choice_unlocked
+			}
+		}
+
+
+		# -------------------------------------------------
+		# KEEP IT SECRET
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				scope:vladwyn_blood_choice_secret = yes
+			}
+
+
+			custom_tooltip = vladwyn_blood_choice_secret_effect_tt
+
+
+			hidden_effect = {
+
+				add_character_flag = vladwyn_parentage_secret
+
+				add_character_flag = vladwyn_blood_choice_made
+
+				add_character_flag = vladwyn_name_story_completed
+
+				remove_character_flag = vladwyn_blood_choice_unlocked
+			}
+		}
 	}
 
 

@@ -642,6 +642,389 @@ vladwyn_name.4200 = {
 	}
 }
 
+# =========================================================
+# 4950
+# THE LORD OF WINTERFELL
+# =========================================================
+
+vladwyn_name.4950 = {
+
+	type = character_event
+
+	title = vladwyn_name.4950.t
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+	right_portrait = scope:vladwyn_winterfell_lord
+
+
+	desc = {
+
+		first_valid = {
+
+
+			# =================================================
+			# ACCEPT
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:vladwyn_winterfell_lord = {
+
+						opinion = {
+							target = root
+							value >= 25
+						}
+					}
+				}
+
+				desc = vladwyn_name.4950.desc_accept
+			}
+
+
+			# =================================================
+			# DEATH THREAT
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:vladwyn_winterfell_lord = {
+
+						opinion = {
+							target = root
+							value <= -75
+						}
+					}
+				}
+
+				desc = vladwyn_name.4950.desc_threat
+			}
+
+
+			# =================================================
+			# THIRD FAILED REQUEST
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+
+					scope:vladwyn_winterfell_lord = {
+
+						exists = var:vladwyn_tristan_winterfell_failed_requests
+
+						var:vladwyn_tristan_winterfell_failed_requests >= 2
+					}
+				}
+
+				desc = vladwyn_name.4950.desc_final_rejection
+			}
+
+
+			# =================================================
+			# NORMAL REJECTION
+			# =================================================
+
+			desc = vladwyn_name.4950.desc_reject
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPTED
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.4950.a
+
+
+		trigger = {
+
+			scope:vladwyn_winterfell_lord = {
+
+				opinion = {
+					target = root
+					value >= 25
+				}
+			}
+		}
+
+
+		custom_tooltip = vladwyn_name.4950.a.tt
+
+
+		hidden_effect = {
+
+			scope:vladwyn_winterfell_lord = {
+
+				add_character_flag = vladwyn_tristan_winterfell_permission
+
+				remove_character_flag = vladwyn_tristan_winterfell_request_cooldown
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DEATH THREAT
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.4950.b
+
+
+		trigger = {
+
+			scope:vladwyn_winterfell_lord = {
+
+				opinion = {
+					target = root
+					value <= -75
+				}
+			}
+		}
+
+
+		custom_tooltip = vladwyn_name.4950.b.tt
+
+
+		hidden_effect = {
+
+			scope:vladwyn_winterfell_lord = {
+
+				add_character_flag = vladwyn_tristan_winterfell_barred
+
+				add_character_flag = vladwyn_tristan_winterfell_death_threat
+
+				remove_character_flag = vladwyn_tristan_winterfell_request_cooldown
+			}
+		}
+	}
+
+
+	# =====================================================
+	# NORMAL REJECTION
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.4950.c
+
+
+		trigger = {
+
+			scope:vladwyn_winterfell_lord = {
+
+				opinion = {
+					target = root
+					value < 25
+				}
+
+				opinion = {
+					target = root
+					value > -75
+				}
+			}
+		}
+
+
+		custom_tooltip = vladwyn_name.4950.c.tt
+
+
+		hidden_effect = {
+
+			scope:vladwyn_winterfell_lord = {
+
+
+				# =============================================
+				# FIRST FAILED REQUEST
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							exists = var:vladwyn_tristan_winterfell_failed_requests
+						}
+					}
+
+
+					set_variable = {
+						name = vladwyn_tristan_winterfell_failed_requests
+						value = 1
+					}
+				}
+
+
+				# =============================================
+				# THIRD FAILED REQUEST
+				# =============================================
+
+				else_if = {
+
+					limit = {
+
+						var:vladwyn_tristan_winterfell_failed_requests >= 2
+					}
+
+
+					change_variable = {
+						name = vladwyn_tristan_winterfell_failed_requests
+						add = 1
+					}
+
+
+					add_character_flag = vladwyn_tristan_winterfell_barred
+				}
+
+
+				# =============================================
+				# SECOND FAILED REQUEST
+				# =============================================
+
+				else = {
+
+					change_variable = {
+						name = vladwyn_tristan_winterfell_failed_requests
+						add = 1
+					}
+				}
+
+
+				# =============================================
+				# TWO YEAR COOLDOWN
+				# =============================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = vladwyn_tristan_winterfell_barred
+						}
+					}
+
+
+					add_character_flag = {
+						flag = vladwyn_tristan_winterfell_request_cooldown
+						years = 2
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# 4990
+# THE WOLF'S WARNING
+# =========================================================
+
+vladwyn_name.4990 = {
+
+	type = character_event
+
+	title = vladwyn_name.4990.t
+	desc = vladwyn_name.4990.desc
+
+	theme = martial
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+
+		is_alive = yes
+
+		exists = current_travel_plan
+
+		current_travel_plan.travel_plan_owner = root
+
+		location.county = {
+			this = title:c_winterfell
+		}
+
+		exists = title:c_winterfell.holder
+
+
+		title:c_winterfell.holder = {
+
+			has_character_flag = vladwyn_tristan_winterfell_death_threat
+		}
+	}
+
+
+	immediate = {
+
+		title:c_winterfell.holder = {
+			save_scope_as = vladwyn_winterfell_lord
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_name.4990.a
+
+
+		hidden_effect = {
+
+			scope:vladwyn_winterfell_lord = {
+
+				imprison = {
+					target = root
+					type = dungeon
+				}
+			}
+
+
+			root = {
+
+				death = {
+					death_reason = death_execution
+					killer = scope:vladwyn_winterfell_lord
+				}
+			}
+		}
+	}
+}
+
 
 
 # =========================================================
@@ -768,10 +1151,22 @@ vladwyn_name.5000 = {
 		NOT = {
 			has_character_flag = vladwyn_alarra_identified
 		}
+
+		exists = title:c_winterfell.holder
+
+
+		title:c_winterfell.holder = {
+
+			has_character_flag = vladwyn_tristan_winterfell_permission
+		}
 	}
 
 
 	immediate = {
+
+		remove_character_flag = vladwyn_follow_wolf_north_unlocked
+
+		add_character_flag = vladwyn_winterfell_records_searched
 
 		add_character_flag = vladwyn_alarra_identified
 	}
@@ -793,11 +1188,13 @@ vladwyn_name.5000 = {
 				}
 			}
 
+
 			trigger_event = {
 				id = vladwyn_name.5100
 				days = 1
 			}
 		}
+
 
 		else = {
 
@@ -842,6 +1239,11 @@ vladwyn_name.5100 = {
 
 	trigger = {
 
+		has_character_flag = vladwyn_winterfell_records_searched
+
+		has_character_flag = vladwyn_alarra_identified
+
+
 		character:Stark_79 = {
 			is_alive = yes
 		}
@@ -864,11 +1266,13 @@ vladwyn_name.5100 = {
 				}
 			}
 
+
 			trigger_event = {
 				id = vladwyn_name.5200
 				days = 1
 			}
 		}
+
 
 		else = {
 
@@ -1004,7 +1408,6 @@ vladwyn_name.5250 = {
 	immediate = {
 
 		add_character_flag = vladwyn_full_truth_known
-		add_character_flag = vladwyn_blood_choice_unlocked
 	}
 
 
@@ -1013,14 +1416,8 @@ vladwyn_name.5250 = {
 		name = vladwyn_name.5250.a
 
 		custom_tooltip = vladwyn_name.5250.a.tt
-
-		trigger_event = {
-			id = vladwyn_name.5900
-			days = 1
-		}
 	}
 }
-
 
 
 # =========================================================
@@ -1063,6 +1460,12 @@ vladwyn_name.5260 = {
 		name = vladwyn_name.5260.a
 
 		custom_tooltip = vladwyn_name.5260.a.tt
+
+
+		trigger_event = {
+			id = vladwyn_name.5900
+			days = 1
+		}
 	}
 }
 
@@ -1323,8 +1726,8 @@ vladwyn_name.5700 = {
 	immediate = {
 
 		add_character_flag = vladwyn_full_truth_known
+
 		add_character_flag = vladwyn_parentage_proven
-		add_character_flag = vladwyn_blood_choice_unlocked
 	}
 
 
@@ -1373,172 +1776,20 @@ vladwyn_name.5900 = {
 	left_portrait = root
 
 
+	trigger = {
+
+		has_character_flag = vladwyn_full_truth_known
+
+		has_character_flag = vladwyn_parentage_proven
+	}
+
+
 	option = {
 
 		name = vladwyn_name.5900.a
 
 		custom_tooltip = vladwyn_name.5900.a.tt
-	}
-}
 
-
-
-# =========================================================
-# 6000
-# WHAT SHALL MY BLOOD MEAN?
-# =========================================================
-
-vladwyn_name.6000 = {
-
-	type = character_event
-
-	title = vladwyn_name.6000.t
-	desc = vladwyn_name.6000.desc
-
-	theme = diplomacy
-
-	override_header_background = {
-		reference = "gfx/interface/window_event/event_header_blue.dds"
-	}
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	override_background = {
-		reference = segrellion_deciding_landmark
-	}
-
-	left_portrait = root
-
-
-	# =====================================================
-	# STARK
-	# =====================================================
-
-	option = {
-
-		name = vladwyn_name.6000.a
-
-		trigger = {
-
-			has_character_flag = vladwyn_parentage_proven
-		}
-
-
-		custom_tooltip = vladwyn_name.6000.a.tt
-
-
-		vladwyn_reveal_true_parentage_effect = yes
-
-		set_house = character:Stark_79.house
-
-		vladwyn_add_north_pressed_claims_effect = yes
-
-		add_character_flag = vladwyn_northern_road_unlocked
-
-		add_character_flag = vladwyn_blood_choice_made
-		add_character_flag = vladwyn_name_story_completed
-
-		remove_character_flag = vladwyn_blood_choice_unlocked
-	}
-
-
-	# =====================================================
-	# BARATHEON
-	# =====================================================
-
-	option = {
-
-		name = vladwyn_name.6000.b
-
-		trigger = {
-
-			has_character_flag = vladwyn_parentage_proven
-		}
-
-
-		custom_tooltip = vladwyn_name.6000.b.tt
-
-
-		vladwyn_reveal_true_parentage_effect = yes
-
-		set_house = character:Baratheon_34.house
-
-		vladwyn_add_stormlands_pressed_claims_effect = yes
-
-		add_character_flag = vladwyn_stormlander_road_unlocked
-
-
-		character:Baratheon_34.house = {
-
-			every_house_member = {
-
-				limit = {
-
-					is_alive = yes
-
-					NOT = {
-						this = root
-					}
-				}
-
-				add_opinion = {
-					target = root
-					modifier = vladwyn_claimed_baratheon_blood_opinion
-					years = 20
-				}
-			}
-		}
-
-
-		add_character_flag = vladwyn_blood_choice_made
-		add_character_flag = vladwyn_name_story_completed
-
-		remove_character_flag = vladwyn_blood_choice_unlocked
-	}
-
-
-	# =====================================================
-	# VLADWYN, BUT PUBLIC
-	# =====================================================
-
-	option = {
-
-		name = vladwyn_name.6000.c
-
-
-		custom_tooltip = vladwyn_name.6000.c.tt
-
-
-		vladwyn_reveal_true_parentage_effect = yes
-
-		vladwyn_add_both_unpressed_claims_effect = yes
-
-		add_character_flag = vladwyn_remained_vladwyn_publicly
-
-		add_character_flag = vladwyn_blood_choice_made
-		add_character_flag = vladwyn_name_story_completed
-
-		remove_character_flag = vladwyn_blood_choice_unlocked
-	}
-
-
-	# =====================================================
-	# KEEP IT SECRET
-	# =====================================================
-
-	option = {
-
-		name = vladwyn_name.6000.d
-
-		custom_tooltip = vladwyn_name.6000.d.tt
-
-		add_character_flag = vladwyn_parentage_secret
-
-		add_character_flag = vladwyn_blood_choice_made
-		add_character_flag = vladwyn_name_story_completed
-
-		remove_character_flag = vladwyn_blood_choice_unlocked
+		add_character_flag = vladwyn_blood_choice_unlocked
 	}
 }
