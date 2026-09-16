@@ -87,6 +87,7 @@ segrellion_call_the_banners_effect = {
 
 		remove_character_flag = segrellion_banner_answered_current_call
 		remove_character_flag = segrellion_banner_refused_current_call
+		remove_character_flag = segrellion_banner_betrayed_current_call
 	}
 
 	# =====================================================
@@ -1074,183 +1075,665 @@ segrellion_banner_remain_loyal_to_upper_liege_effect = {
 #
 # ROOT = vassal
 # scope:segrellion_banner_liege = liege
+#
+# Possible responses:
+#
+# - Answer the call
+# - Refuse the call
+# - Betray the liege and join the enemy
+#
+# Betrayal intentionally begins with a very low base weight.
+# It should normally require several strong political or
+# personality reasons before the AI considers it seriously.
 # =========================================================
 
 segrellion_resolve_banner_vassal_response_effect = {
 
-
 	# =====================================================
-	# LOYAL TRAIT
-	# 95% answers the call
+	# FIND AN ENEMY LORD TO USE FOR POLITICAL EVALUATION
+	#
+	# The banner system may currently involve several wars.
+	# We save one opposing primary war leader as the
+	# representative enemy for AI opinion calculations.
 	# =====================================================
 
-	if = {
+	clear_saved_scope = segrellion_banner_enemy_lord
+	clear_saved_scope = segrellion_banner_ai_war
 
-		limit = {
-			has_trait = loyal
-		}
 
-		random_list = {
+	scope:segrellion_banner_liege = {
 
-			95 = {
-				segrellion_banner_join_liege_wars_effect = yes
+		every_character_war = {
+
+			limit = {
+
+				NOT = {
+					exists = scope:segrellion_banner_enemy_lord
+				}
 			}
 
-			5 = {
-				segrellion_banner_refuse_liege_effect = yes
-			}
-		}
-	}
+
+			save_scope_as = segrellion_banner_ai_war
 
 
-	# =====================================================
-	# DISLOYAL TRAIT
-	# 20% answers the call
-	# =====================================================
+			if = {
 
-	else_if = {
+				limit = {
+					is_attacker = scope:segrellion_banner_liege
+				}
 
-		limit = {
-			has_trait = disloyal
-		}
-
-		random_list = {
-
-			20 = {
-				segrellion_banner_join_liege_wars_effect = yes
+				primary_defender = {
+					save_scope_as = segrellion_banner_enemy_lord
+				}
 			}
 
-			80 = {
-				segrellion_banner_refuse_liege_effect = yes
-			}
-		}
-	}
 
+			else = {
 
-	# =====================================================
-	# VERY LOYAL
-	# Opinion 60+
-	# 100% joins
-	# =====================================================
-
-	else_if = {
-
-		limit = {
-
-			opinion = {
-				target = scope:segrellion_banner_liege
-				value >= 60
-			}
-		}
-
-		segrellion_banner_join_liege_wars_effect = yes
-	}
-
-
-	# =====================================================
-	# LOYAL
-	# Opinion 20 to 59
-	# 85% joins
-	# =====================================================
-
-	else_if = {
-
-		limit = {
-
-			opinion = {
-				target = scope:segrellion_banner_liege
-				value >= 20
-			}
-		}
-
-		random_list = {
-
-			85 = {
-				segrellion_banner_join_liege_wars_effect = yes
-			}
-
-			15 = {
-				segrellion_banner_refuse_liege_effect = yes
+				primary_attacker = {
+					save_scope_as = segrellion_banner_enemy_lord
+				}
 			}
 		}
 	}
 
 
 	# =====================================================
-	# UNCERTAIN
-	# Opinion -20 to 19
-	# 60% joins
+	# THREE-WAY RESPONSE
 	# =====================================================
 
-	else_if = {
+	random_list = {
 
-		limit = {
 
-			opinion = {
-				target = scope:segrellion_banner_liege
-				value >= -20
+		# =================================================
+		# ANSWER THE CALL
+		#
+		# Normal and expected response.
+		# =================================================
+
+		60 = {
+
+			# ---------------------------------------------
+			# LOYAL / DISLOYAL
+			# ---------------------------------------------
+
+			modifier = {
+				factor = 3.00
+				has_trait = loyal
 			}
+
+			modifier = {
+				factor = 0.35
+				has_trait = disloyal
+			}
+
+
+			# ---------------------------------------------
+			# OPINION OF LIEGE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 2.00
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value >= 60
+				}
+			}
+
+			modifier = {
+
+				factor = 1.50
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value >= 20
+				}
+			}
+
+			modifier = {
+
+				factor = 0.60
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value < -20
+				}
+			}
+
+			modifier = {
+
+				factor = 0.25
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value < -50
+				}
+			}
+
+
+			# ---------------------------------------------
+			# PERSONALITY
+			# ---------------------------------------------
+
+			modifier = {
+				factor = 1.35
+				has_trait = honest
+			}
+
+			modifier = {
+				factor = 1.40
+				has_trait = just
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = trusting
+			}
+
+			modifier = {
+				factor = 0.75
+				has_trait = deceitful
+			}
+
+			modifier = {
+				factor = 0.80
+				has_trait = arbitrary
+			}
+
+
+			# ---------------------------------------------
+			# PERSONAL RELATIONSHIP WITH LIEGE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 1.75
+
+				is_friend = scope:segrellion_banner_liege
+			}
+
+			modifier = {
+
+				factor = 0.45
+
+				is_rival = scope:segrellion_banner_liege
+			}
+
+
+			# ---------------------------------------------
+			# CLAIM AGAINST THE LIEGE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0.55
+
+				has_claim_on = scope:segrellion_banner_liege.primary_title
+			}
+
+
+			# ---------------------------------------------
+			# ENEMY RELATIONSHIP
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0.70
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				opinion = {
+					target = scope:segrellion_banner_enemy_lord
+					value >= 50
+				}
+			}
+
+			modifier = {
+
+				factor = 1.30
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				opinion = {
+					target = scope:segrellion_banner_enemy_lord
+					value < -50
+				}
+			}
+
+
+			segrellion_banner_join_liege_wars_effect = yes
 		}
 
-		random_list = {
 
-			60 = {
-				segrellion_banner_join_liege_wars_effect = yes
+
+		# =================================================
+		# REFUSE THE CALL
+		#
+		# Considerably more acceptable than active treason.
+		# =================================================
+
+		30 = {
+
+			# ---------------------------------------------
+			# LOYAL / DISLOYAL
+			# ---------------------------------------------
+
+			modifier = {
+				factor = 0.30
+				has_trait = loyal
 			}
 
-			40 = {
-				segrellion_banner_refuse_liege_effect = yes
+			modifier = {
+				factor = 2.50
+				has_trait = disloyal
 			}
+
+
+			# ---------------------------------------------
+			# OPINION OF LIEGE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0.35
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value >= 60
+				}
+			}
+
+			modifier = {
+
+				factor = 0.65
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value >= 20
+				}
+			}
+
+			modifier = {
+
+				factor = 1.50
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value < -20
+				}
+			}
+
+			modifier = {
+
+				factor = 2.00
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value < -50
+				}
+			}
+
+
+			# ---------------------------------------------
+			# PERSONALITY
+			# ---------------------------------------------
+
+			modifier = {
+				factor = 1.40
+				has_trait = craven
+			}
+
+			modifier = {
+				factor = 1.25
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 1.20
+				has_trait = cynical
+			}
+
+			modifier = {
+				factor = 0.70
+				has_trait = brave
+			}
+
+			modifier = {
+				factor = 0.65
+				has_trait = just
+			}
+
+			modifier = {
+				factor = 0.70
+				has_trait = honest
+			}
+
+
+			# ---------------------------------------------
+			# RELATIONSHIP WITH LIEGE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0.55
+
+				is_friend = scope:segrellion_banner_liege
+			}
+
+			modifier = {
+
+				factor = 1.50
+
+				is_rival = scope:segrellion_banner_liege
+			}
+
+
+			# ---------------------------------------------
+			# CLAIM ON LIEGE TITLE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 1.35
+
+				has_claim_on = scope:segrellion_banner_liege.primary_title
+			}
+
+
+			segrellion_banner_refuse_liege_effect = yes
 		}
-	}
 
 
-	# =====================================================
-	# RELUCTANT
-	# Opinion -50 to -21
-	# 30% joins
-	# =====================================================
 
-	else_if = {
+		# =================================================
+		# BETRAY THE LIEGE
+		#
+		# Very low base weight.
+		#
+		# Multiple serious reasons should normally be
+		# required before this becomes competitive.
+		# =================================================
 
-		limit = {
+		4 = {
 
-			opinion = {
-				target = scope:segrellion_banner_liege
-				value >= -50
-			}
-		}
+			# ---------------------------------------------
+			# LOYAL / DISLOYAL
+			#
+			# These are among the strongest factors.
+			# ---------------------------------------------
 
-		random_list = {
-
-			30 = {
-				segrellion_banner_join_liege_wars_effect = yes
-			}
-
-			70 = {
-				segrellion_banner_refuse_liege_effect = yes
-			}
-		}
-	}
-
-
-	# =====================================================
-	# HOSTILE
-	# Below -50
-	# 10% joins
-	# =====================================================
-
-	else = {
-
-		random_list = {
-
-			10 = {
-				segrellion_banner_join_liege_wars_effect = yes
+			modifier = {
+				factor = 0.05
+				has_trait = loyal
 			}
 
-			90 = {
-				segrellion_banner_refuse_liege_effect = yes
+			modifier = {
+				factor = 6.00
+				has_trait = disloyal
 			}
+
+
+			# ---------------------------------------------
+			# OPINION OF LIEGE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0.10
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value >= 60
+				}
+			}
+
+			modifier = {
+
+				factor = 0.35
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value >= 20
+				}
+			}
+
+			modifier = {
+
+				factor = 1.75
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value < -20
+				}
+			}
+
+			modifier = {
+
+				factor = 2.50
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value < -50
+				}
+			}
+
+			modifier = {
+
+				factor = 2.00
+
+				opinion = {
+					target = scope:segrellion_banner_liege
+					value < -75
+				}
+			}
+
+
+			# ---------------------------------------------
+			# PERSONALITY FAVORING TREASON
+			# ---------------------------------------------
+
+			modifier = {
+				factor = 2.00
+				has_trait = ambitious
+			}
+
+			modifier = {
+				factor = 2.00
+				has_trait = deceitful
+			}
+
+			modifier = {
+				factor = 1.60
+				has_trait = arbitrary
+			}
+
+			modifier = {
+				factor = 1.50
+				has_trait = callous
+			}
+
+			modifier = {
+				factor = 1.50
+				has_trait = vengeful
+			}
+
+
+			# ---------------------------------------------
+			# PERSONALITY AGAINST TREASON
+			# ---------------------------------------------
+
+			modifier = {
+				factor = 0.20
+				has_trait = honest
+			}
+
+			modifier = {
+				factor = 0.15
+				has_trait = just
+			}
+
+			modifier = {
+				factor = 0.35
+				has_trait = trusting
+			}
+
+			modifier = {
+				factor = 0.50
+				has_trait = content
+			}
+
+			modifier = {
+				factor = 0.45
+				has_trait = compassionate
+			}
+
+
+			# ---------------------------------------------
+			# RELATIONSHIP WITH LIEGE
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0.10
+
+				is_friend = scope:segrellion_banner_liege
+			}
+
+			modifier = {
+
+				factor = 3.00
+
+				is_rival = scope:segrellion_banner_liege
+			}
+
+
+			# ---------------------------------------------
+			# CLAIM ON THE LIEGE'S PRIMARY TITLE
+			#
+			# A very serious political motive.
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 2.50
+
+				has_claim_on = scope:segrellion_banner_liege.primary_title
+			}
+
+
+			# ---------------------------------------------
+			# OPINION OF THE ENEMY
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 2.50
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				opinion = {
+					target = scope:segrellion_banner_enemy_lord
+					value >= 50
+				}
+			}
+
+			modifier = {
+
+				factor = 1.50
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				opinion = {
+					target = scope:segrellion_banner_enemy_lord
+					value >= 20
+				}
+			}
+
+			modifier = {
+
+				factor = 0.35
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				opinion = {
+					target = scope:segrellion_banner_enemy_lord
+					value < -20
+				}
+			}
+
+			modifier = {
+
+				factor = 0.15
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				opinion = {
+					target = scope:segrellion_banner_enemy_lord
+					value < -50
+				}
+			}
+
+
+			# ---------------------------------------------
+			# PERSONAL RELATIONSHIP WITH ENEMY
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 2.50
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				is_friend = scope:segrellion_banner_enemy_lord
+			}
+
+			modifier = {
+
+				factor = 0.20
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				is_rival = scope:segrellion_banner_enemy_lord
+			}
+
+
+			# ---------------------------------------------
+			# CLAIM AGAINST THE ENEMY
+			#
+			# Less reason to help somebody whose throne or
+			# lands you yourself desire.
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0.50
+
+				exists = scope:segrellion_banner_enemy_lord
+
+				has_claim_on = scope:segrellion_banner_enemy_lord.primary_title
+			}
+
+
+			# ---------------------------------------------
+			# SAFETY
+			#
+			# No valid opposing lord means active betrayal
+			# should never be selected.
+			# ---------------------------------------------
+
+			modifier = {
+
+				factor = 0
+
+				NOT = {
+					exists = scope:segrellion_banner_enemy_lord
+				}
+			}
+
+
+			segrellion_banner_join_enemy_wars_effect = yes
 		}
 	}
 }
