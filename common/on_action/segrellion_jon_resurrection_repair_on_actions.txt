@@ -1,8 +1,12 @@
 # =========================================================
 # RESURRECTED JON
-# NIGHT'S WATCH HANDOFF RECOVERY
+# STORY RECOVERY
 #
-# Repairs saves created before the handoff fix.
+# Repairs:
+#
+# 1. Broken Night's Watch handoffs.
+# 2. Accepted Stannis North offers whose title transfer
+#    became stranded.
 # =========================================================
 
 on_game_start_after_lobby = {
@@ -17,6 +21,10 @@ on_game_start_after_lobby = {
 segrellion_jon_resurrection_handoff_recovery = {
 
 	effect = {
+
+		# =================================================
+		# NIGHT'S WATCH HANDOFF RECOVERY
+		# =================================================
 
 		if = {
 
@@ -39,6 +47,106 @@ segrellion_jon_resurrection_handoff_recovery = {
 			global_var:segrellion_resurrected_jon = {
 
 				segrellion_repair_resurrected_jon_watch_handoff_effect = yes
+			}
+		}
+
+
+		# =================================================
+		# STANNIS -> JON NORTH HANDOVER RECOVERY
+		#
+		# Jon accepted.
+		# Stannis still holds the North.
+		# The handover never completed.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Baratheon_3 ?= {
+
+					is_alive = yes
+
+					has_title = title:e_the_north
+
+					has_character_flag = segrellion_stannis_holds_north_in_trust
+				}
+
+
+				has_global_variable = segrellion_resurrected_jon
+
+
+				global_var:segrellion_resurrected_jon ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_canonical_current_jon
+
+					has_character_flag = segrellion_jon_accepted_stannis_north_offer
+
+					NOT = {
+						has_character_flag = segrellion_jon_north_handover_completed
+					}
+				}
+			}
+
+
+			global_var:segrellion_resurrected_jon = {
+
+				add_character_flag = segrellion_jon_north_transfer_failed
+
+
+				trigger_event = {
+					id = segrellion_stannis.1012
+					days = 1
+				}
+			}
+		}
+
+
+		# =================================================
+		# HISTORICAL JON FALLBACK
+		#
+		# Only relevant if the runtime resurrected variable
+		# has somehow not been established.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				character:Baratheon_3 ?= {
+
+					is_alive = yes
+
+					has_title = title:e_the_north
+
+					has_character_flag = segrellion_stannis_holds_north_in_trust
+				}
+
+
+				character:Stark_7 ?= {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_jon_accepted_stannis_north_offer
+
+					NOT = {
+						has_character_flag = segrellion_jon_north_handover_completed
+					}
+				}
+			}
+
+
+			character:Stark_7 = {
+
+				add_character_flag = segrellion_jon_north_transfer_failed
+
+
+				trigger_event = {
+					id = segrellion_stannis.1012
+					days = 1
+				}
 			}
 		}
 	}

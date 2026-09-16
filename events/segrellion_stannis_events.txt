@@ -1152,6 +1152,11 @@ segrellion_stannis.1010 = {
 # 1011 - JON HAS ACCEPTED
 #
 # Root = Stannis
+#
+# IMPORTANT:
+# Do not consume the acceptance state until the living
+# runtime Jon has actually been resolved and the mechanical
+# handover has been scheduled.
 # =========================================================
 
 segrellion_stannis.1011 = {
@@ -1162,15 +1167,14 @@ segrellion_stannis.1011 = {
 	desc = segrellion_stannis.1011.desc
 
 	theme = diplomacy
+
 	override_header_background = {
 		reference = "gfx/interface/window_event/event_header_blue.dds"
 	}
 
-
 	override_background = {
 		reference = segrellion_castle_black_great_hall
 	}
-
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
@@ -1193,18 +1197,58 @@ segrellion_stannis.1011 = {
 
 	immediate = {
 
-		remove_character_flag = segrellion_stannis_jon_answer_scheduled
+		# Always resolve Jon again at execution time.
+		# The historical Jon may already have been replaced by
+		# the resurrected runtime character.
 
-		add_character_flag = segrellion_stannis_received_jon_acceptance
-
-
-		# Resolve the ACTUAL living Jon.
 		segrellion_resolve_stannis_jon_effect = yes
 
 
-		scope:stannis_jon ?= {
+		# =====================================================
+		# JON FOUND
+		# =====================================================
 
-			trigger_event = segrellion_stannis.1012
+		if = {
+
+			limit = {
+				exists = scope:stannis_jon
+			}
+
+
+			remove_character_flag = segrellion_stannis_jon_answer_scheduled
+
+			add_character_flag = segrellion_stannis_received_jon_acceptance
+
+
+			scope:stannis_jon = {
+
+				trigger_event = {
+					id = segrellion_stannis.1012
+					days = 1
+				}
+			}
+		}
+
+
+		# =====================================================
+		# JON TEMPORARILY COULD NOT BE RESOLVED
+		#
+		# Do NOT consume the acceptance.
+		# Try again instead.
+		# =====================================================
+
+		else = {
+
+			add_character_flag = {
+				flag = segrellion_stannis_jon_answer_scheduled
+				days = 30
+			}
+
+
+			trigger_event = {
+				id = segrellion_stannis.1011
+				days = 3
+			}
 		}
 	}
 
@@ -1269,11 +1313,17 @@ segrellion_stannis.1011 = {
 	}
 }
 
+
 # =========================================================
 # 1012 - JON NORTH TRANSFER
 #
 # Root = Jon
+#
 # Hidden mechanical transfer.
+#
+# The final title ownership is authoritative.
+# We NEVER consider the handover complete merely because
+# an intermediate failure flag was not set.
 # =========================================================
 
 segrellion_stannis.1012 = {
@@ -1300,44 +1350,73 @@ segrellion_stannis.1012 = {
 
 	immediate = {
 
-		segrellion_jon_accepts_north_effect = yes
-
+		# =====================================================
+		# ALREADY CORRECT
+		#
+		# A previous delayed effect, save repair or another
+		# recovery route may already have completed the handover.
+		# =====================================================
 
 		if = {
 
 			limit = {
-				has_character_flag = segrellion_jon_north_transfer_failed
+				title:e_the_north.holder ?= root
 			}
 
 
-			trigger_event = {
-				id = segrellion_stannis.1012
-				days = 10
-			}
-		}
-
-
-		else = {
-
+			remove_character_flag = segrellion_jon_north_transfer_failed
 			remove_character_flag = segrellion_jon_accepted_stannis_north_offer
 
 			add_character_flag = segrellion_jon_north_handover_completed
+		}
 
 
-			# Northern lords approve of Stannis restoring a Stark.
-			every_vassal = {
+		# =====================================================
+		# ATTEMPT HANDOVER
+		# =====================================================
+
+		else = {
+
+			segrellion_jon_accepts_north_effect = yes
+
+
+			# =================================================
+			# ACTUAL SUCCESS CHECK
+			#
+			# The only fact that matters is:
+			#
+			#     WHO HOLDS THE NORTH?
+			#
+			# =================================================
+
+			if = {
 
 				limit = {
-					is_landed = yes
-					primary_title = { empire ?= title:e_the_north }
+					title:e_the_north.holder ?= root
 				}
 
 
-				add_opinion = {
+				remove_character_flag = segrellion_jon_north_transfer_failed
+				remove_character_flag = segrellion_jon_accepted_stannis_north_offer
 
-					target = character:Baratheon_3
+				add_character_flag = segrellion_jon_north_handover_completed
+			}
 
-					modifier = segrellion_stannis_restored_stark_north_opinion
+
+			# =================================================
+			# STILL FAILED
+			#
+			# Never abandon the chain.
+			# =================================================
+
+			else = {
+
+				add_character_flag = segrellion_jon_north_transfer_failed
+
+
+				trigger_event = {
+					id = segrellion_stannis.1012
+					days = 10
 				}
 			}
 		}
