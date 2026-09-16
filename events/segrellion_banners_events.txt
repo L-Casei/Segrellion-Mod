@@ -403,3 +403,661 @@ segrellion_banners.0100 = {
 		}
 	}
 }
+
+# =========================================================
+# 0030 - THE OATHS THEY BROKE
+#
+# ROOT = lord or successor
+# scope:segrellion_banner_review_title = title whose
+# bannermen refused the call
+# =========================================================
+
+segrellion_banners.0030 = {
+
+	type = character_event
+
+	title = segrellion_banners.0030.t
+	desc = segrellion_banners.0030.desc
+
+	theme = war
+
+
+	trigger = {
+
+		is_alive = yes
+		is_landed = yes
+
+		exists = scope:segrellion_banner_review_title
+
+		scope:segrellion_banner_review_title = {
+
+			has_variable_list = segrellion_banner_pending_oathbreakers
+
+			any_in_list = {
+
+				variable = segrellion_banner_pending_oathbreakers
+
+				is_alive = yes
+
+				has_character_flag = segrellion_banner_oathbreaker_unpunished
+
+				NOT = {
+					has_character_flag = segrellion_banner_fought_against_liege
+				}
+			}
+		}
+	}
+
+
+	immediate = {
+
+		scope:segrellion_banner_review_title = {
+
+			random_in_list = {
+
+				variable = segrellion_banner_pending_oathbreakers
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_banner_oathbreaker_unpunished
+
+					NOT = {
+						has_character_flag = segrellion_banner_fought_against_liege
+					}
+				}
+
+				save_scope_as = segrellion_banner_example_oathbreaker
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_banner_example_oathbreaker
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# THEY WILL ANSWER FOR IT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0030.a
+
+		segrellion_banner_summon_refusers_effect = yes
+
+
+		ai_chance = {
+
+			base = 55
+
+
+			modifier = {
+				add = 35
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = 35
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 30
+				has_trait = sadistic
+			}
+
+			modifier = {
+				add = 20
+				has_trait = callous
+			}
+
+			modifier = {
+				add = 20
+				has_trait = just
+			}
+
+			modifier = {
+				add = 15
+				has_trait = brave
+			}
+
+			modifier = {
+				add = -35
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = -30
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -15
+				has_trait = content
+			}
+
+			modifier = {
+				add = -15
+				has_trait = craven
+			}
+		}
+	}
+
+
+	# =====================================================
+	# LET THE MATTER DIE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0030.b
+
+		segrellion_banner_pardon_refusers_effect = yes
+
+
+		ai_chance = {
+
+			base = 45
+
+
+			modifier = {
+				add = 40
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 35
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 20
+				has_trait = content
+			}
+
+			modifier = {
+				add = 15
+				has_trait = craven
+			}
+
+			modifier = {
+				add = -35
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = -35
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = -30
+				has_trait = sadistic
+			}
+
+			modifier = {
+				add = -20
+				has_trait = callous
+			}
+
+			modifier = {
+				add = -15
+				has_trait = just
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - SUMMONED TO ANSWER FOR THE BROKEN OATH
+#
+# ROOT = oathbreaker
+# var:segrellion_banner_judging_liege = lord / successor
+# =========================================================
+
+segrellion_banners.0040 = {
+
+	type = character_event
+
+	title = segrellion_banners.0040.t
+	desc = segrellion_banners.0040.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_banner_summoned_for_judgment
+
+		has_variable = segrellion_banner_judging_liege
+
+		var:segrellion_banner_judging_liege = {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+		character = var:segrellion_banner_judging_liege
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	# =====================================================
+	# SUBMIT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0040.a
+
+		save_scope_as = segrellion_banner_submitting_oathbreaker
+
+		var:segrellion_banner_judging_liege = {
+
+			save_scope_as = segrellion_banner_judging_liege
+
+			imprison = {
+				target = scope:segrellion_banner_submitting_oathbreaker
+				type = house_arrest
+			}
+
+			trigger_event = {
+				id = segrellion_banners.0050
+				days = 1
+			}
+		}
+
+
+		remove_character_flag = segrellion_banner_summoned_for_judgment
+
+
+		ai_chance = {
+
+			base = 65
+
+
+			modifier = {
+				add = 25
+				has_trait = craven
+			}
+
+			modifier = {
+				add = 20
+				has_trait = humble
+			}
+
+			modifier = {
+				add = 15
+				has_trait = content
+			}
+
+			modifier = {
+				add = 10
+				has_trait = just
+			}
+
+			modifier = {
+				add = -25
+				has_trait = brave
+			}
+
+			modifier = {
+				add = -25
+				has_trait = arrogant
+			}
+
+			modifier = {
+				add = -20
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = -20
+				has_trait = wrathful
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE JUDGMENT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0040.b
+
+		add_character_flag = segrellion_banner_refused_judgment
+
+		remove_character_flag = segrellion_banner_summoned_for_judgment
+
+
+		ai_chance = {
+
+			base = 35
+
+
+			modifier = {
+				add = 30
+				has_trait = brave
+			}
+
+			modifier = {
+				add = 25
+				has_trait = arrogant
+			}
+
+			modifier = {
+				add = 25
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = 20
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = -30
+				has_trait = craven
+			}
+
+			modifier = {
+				add = -20
+				has_trait = humble
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0050 - JUDGMENT OF A SUBMITTED OATHBREAKER
+#
+# ROOT = lord
+# scope:segrellion_banner_submitting_oathbreaker = prisoner
+# =========================================================
+
+segrellion_banners.0050 = {
+
+	type = character_event
+
+	title = segrellion_banners.0050.t
+	desc = segrellion_banners.0050.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		exists = scope:segrellion_banner_submitting_oathbreaker
+
+		scope:segrellion_banner_submitting_oathbreaker = {
+
+			is_alive = yes
+			is_imprisoned = yes
+
+			prisoner_of = root
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = scope:segrellion_banner_submitting_oathbreaker
+		animation = worry
+	}
+
+
+	# =====================================================
+	# EXECUTION
+	# Rare and severe.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0050.a
+
+
+		scope:segrellion_banner_submitting_oathbreaker = {
+
+			save_scope_as = segrellion_banner_condemned_oathbreaker
+
+			remove_character_flag = segrellion_banner_oathbreaker_unpunished
+			remove_character_flag = segrellion_banner_refused_judgment
+
+			death = {
+				death_reason = death_execution
+				killer = root
+			}
+		}
+
+
+		add_tyranny = 20
+
+
+		ai_chance = {
+
+			base = 5
+
+			modifier = {
+				add = 25
+				has_trait = sadistic
+			}
+
+			modifier = {
+				add = 20
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = 20
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 10
+				has_trait = callous
+			}
+
+			modifier = {
+				add = -100
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -75
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = -40
+				has_trait = just
+			}
+		}
+	}
+
+
+	# =====================================================
+	# NIGHT'S WATCH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0050.b
+
+
+		trigger = {
+
+			scope:segrellion_banner_submitting_oathbreaker = {
+
+				is_male = yes
+
+				NOT = {
+					has_trait = nightswatch
+				}
+			}
+		}
+
+
+		scope:segrellion_banner_submitting_oathbreaker = {
+
+			add_character_flag = segrellion_banner_sentence_nights_watch
+		}
+
+
+		ai_chance = {
+
+			base = 55
+
+			modifier = {
+				add = 25
+				has_trait = just
+			}
+
+			modifier = {
+				add = 15
+				has_trait = zealous
+			}
+
+			modifier = {
+				add = 10
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -15
+				has_trait = sadistic
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EXILE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0050.c
+
+
+		scope:segrellion_banner_submitting_oathbreaker = {
+
+			remove_character_flag = segrellion_banner_oathbreaker_unpunished
+
+			banish = yes
+		}
+
+
+		ai_chance = {
+
+			base = 30
+
+			modifier = {
+				add = 20
+				has_trait = callous
+			}
+
+			modifier = {
+				add = 15
+				has_trait = arbitrary
+			}
+
+			modifier = {
+				add = 10
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = -10
+				has_trait = just
+			}
+		}
+	}
+
+
+	# =====================================================
+	# PARDON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_banners.0050.d
+
+
+		scope:segrellion_banner_submitting_oathbreaker = {
+
+			remove_character_flag = segrellion_banner_oathbreaker_unpunished
+			remove_character_flag = segrellion_banner_refused_judgment
+
+			release_from_prison = yes
+
+			add_opinion = {
+				target = root
+				modifier = segrellion_banner_pardoned_oathbreaker_opinion
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 20
+
+			modifier = {
+				add = 40
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 30
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 15
+				has_trait = content
+			}
+
+			modifier = {
+				add = -30
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = -25
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = -25
+				has_trait = sadistic
+			}
+		}
+	}
+}

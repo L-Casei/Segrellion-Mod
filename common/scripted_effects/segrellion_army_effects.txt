@@ -80,6 +80,16 @@ segrellion_call_the_banners_effect = {
 	save_scope_as = segrellion_banner_liege
 
 	# =====================================================
+	# RESET RESPONSE STATE FOR THIS CALL
+	# =====================================================
+
+	every_vassal = {
+
+		remove_character_flag = segrellion_banner_answered_current_call
+		remove_character_flag = segrellion_banner_refused_current_call
+	}
+
+	# =====================================================
 	# UNICORN RETURNS
 	#
 	# Gaunt and Pyle initially support Leo Stormflame,
@@ -257,7 +267,21 @@ segrellion_banner_refuse_liege_effect = {
 
 
 	# =====================================================
-	# LIGHT OATHBREAKER
+	# RESPONSE STATE
+	# =====================================================
+
+	add_character_flag = {
+		flag = segrellion_banner_refused_current_call
+		years = 1
+	}
+
+	remove_character_flag = segrellion_banner_answered_current_call
+
+
+	# =====================================================
+	# OATHBREAKER STATUS
+	#
+	# A simple refusal is the lesser form of oathbreaking.
 	# =====================================================
 
 	if = {
@@ -269,14 +293,71 @@ segrellion_banner_refuse_liege_effect = {
 			}
 		}
 
+		remove_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+
 		add_character_modifier = {
 			modifier = segrellion_banner_oathbreaker_minor_modifier
-			years = 10
+			years = 5
 		}
 	}
 
 
-	add_character_flag = segrellion_banner_oathbreaker_unpunished
+	add_character_flag = {
+		flag = segrellion_banner_oathbreaker_unpunished
+		years = 5
+	}
+
+
+	# =====================================================
+	# STORE THE LORD WHOSE CALL WAS REFUSED
+	# =====================================================
+
+	set_variable = {
+		name = segrellion_banner_oathbreaker_liege
+		value = scope:segrellion_banner_liege
+		years = 5
+	}
+
+
+	# =====================================================
+	# STORE THE LIEGE'S PRIMARY TITLE
+	#
+	# Unlike the character, the title survives succession.
+	# This lets the heir deal with the matter if the lord dies.
+	# =====================================================
+
+	set_variable = {
+		name = segrellion_banner_oathbreaker_liege_title
+		value = scope:segrellion_banner_liege.primary_title
+		years = 5
+	}
+
+
+	# =====================================================
+	# REGISTER OATHBREAKER ON THE LIEGE'S TITLE
+	# =====================================================
+
+	scope:segrellion_banner_liege.primary_title = {
+
+		add_to_variable_list = {
+			name = segrellion_banner_pending_oathbreakers
+			target = scope:segrellion_banner_refuser
+		}
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_variable = segrellion_banner_original_liege
+				}
+			}
+
+			set_variable = {
+				name = segrellion_banner_original_liege
+				value = scope:segrellion_banner_liege
+			}
+		}
+	}
 
 
 	# =====================================================
@@ -292,7 +373,8 @@ segrellion_banner_refuse_liege_effect = {
 
 
 		# =================================================
-		# LOYAL CO-VASSALS DESPISE THE OATHBREAKER
+		# ONLY VASSALS WHO HAVE ALREADY ANSWERED THE CALL
+		# DESPISE THIS OATHBREAKER
 		# =================================================
 
 		every_vassal = {
@@ -305,6 +387,8 @@ segrellion_banner_refuse_liege_effect = {
 				is_landed = yes
 
 				highest_held_title_tier > tier_barony
+
+				has_character_flag = segrellion_banner_answered_current_call
 			}
 
 			add_opinion = {
@@ -644,6 +728,47 @@ segrellion_banner_join_liege_wars_effect = {
 
 	save_scope_as = segrellion_banner_joiner
 
+	# =====================================================
+	# RESPONSE STATE
+	# =====================================================
+
+	add_character_flag = {
+		flag = segrellion_banner_answered_current_call
+		years = 1
+	}
+
+	remove_character_flag = segrellion_banner_refused_current_call
+
+
+	# =====================================================
+	# THIS LOYAL VASSAL RESENTS OATHBREAKERS WHO ALREADY
+	# REFUSED THE SAME CALL
+	# =====================================================
+
+	scope:segrellion_banner_liege = {
+
+		every_vassal = {
+
+			limit = {
+
+				this != scope:segrellion_banner_joiner
+
+				is_alive = yes
+				is_landed = yes
+
+				has_character_flag = segrellion_banner_refused_current_call
+			}
+
+			scope:segrellion_banner_joiner = {
+
+				add_opinion = {
+					target = prev
+					modifier = segrellion_banner_oathbreaker_fellow_vassal_opinion
+				}
+			}
+		}
+	}
+
 
 	scope:segrellion_banner_liege = {
 
@@ -978,6 +1103,179 @@ segrellion_imprison_unicorn_returns_traitors_effect = {
 			}
 
 			add_character_flag = segrellion_unicorn_returns_judgments_available
+		}
+	}
+}
+
+# =========================================================
+# POSTWAR OATHBREAKER CLEANUP
+#
+# ROOT = lord judging the oathbreakers
+# scope:segrellion_banner_review_title = title that stored them
+# =========================================================
+
+segrellion_banner_pardon_refusers_effect = {
+
+	save_scope_as = segrellion_banner_pardoning_liege
+
+
+	scope:segrellion_banner_review_title = {
+
+		every_in_list = {
+
+			variable = segrellion_banner_pending_oathbreakers
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_banner_oathbreaker_unpunished
+
+				NOT = {
+					has_character_flag = segrellion_banner_fought_against_liege
+				}
+			}
+
+
+			save_scope_as = segrellion_banner_pardoned_refuser
+
+
+			# ---------------------------------------------
+			# The oathbreaker appreciates being spared.
+			# ---------------------------------------------
+
+			add_opinion = {
+				target = scope:segrellion_banner_pardoning_liege
+				modifier = segrellion_banner_pardoned_oathbreaker_opinion
+			}
+
+
+			# ---------------------------------------------
+			# The matter is considered legally settled.
+			#
+			# The temporary Oathbreaker modifier remains.
+			# It disappears naturally after five years.
+			# ---------------------------------------------
+
+			remove_character_flag = segrellion_banner_oathbreaker_unpunished
+			remove_variable = segrellion_banner_oathbreaker_liege
+			remove_variable = segrellion_banner_oathbreaker_liege_title
+		}
+
+
+		# =================================================
+		# LOYAL VASSALS REACT TO THE LORD'S MERCY
+		# =================================================
+
+		scope:segrellion_banner_pardoning_liege = {
+
+			every_vassal = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_banner_answered_current_call
+				}
+
+
+				# -----------------------------------------
+				# Forgiving / compassionate personalities
+				# tend to respect mercy.
+				# -----------------------------------------
+
+				if = {
+
+					limit = {
+
+						OR = {
+							has_trait = forgiving
+							has_trait = compassionate
+							has_trait = content
+						}
+					}
+
+					add_opinion = {
+						target = scope:segrellion_banner_pardoning_liege
+						modifier = segrellion_banner_liege_pardoned_oathbreakers_opinion
+					}
+				}
+
+
+				# -----------------------------------------
+				# Harsh / honor-conscious personalities
+				# see it as weakness.
+				# -----------------------------------------
+
+				else_if = {
+
+					limit = {
+
+						OR = {
+							has_trait = wrathful
+							has_trait = vengeful
+							has_trait = sadistic
+							has_trait = callous
+							has_trait = just
+						}
+					}
+
+					add_opinion = {
+						target = scope:segrellion_banner_pardoning_liege
+						modifier = segrellion_banner_liege_abandoned_loyal_vassals_opinion
+					}
+				}
+			}
+		}
+
+
+		clear_variable_list = segrellion_banner_pending_oathbreakers
+		remove_variable = segrellion_banner_original_liege
+	}
+}
+
+
+# =========================================================
+# MARK OATHBREAKERS FOR FORMAL JUDGMENT
+#
+# ROOT = lord
+# =========================================================
+
+segrellion_banner_summon_refusers_effect = {
+
+	save_scope_as = segrellion_banner_judging_liege
+
+
+	scope:segrellion_banner_review_title = {
+
+		every_in_list = {
+
+			variable = segrellion_banner_pending_oathbreakers
+
+			limit = {
+
+				is_alive = yes
+				is_landed = yes
+				is_imprisoned = no
+
+				has_character_flag = segrellion_banner_oathbreaker_unpunished
+
+				NOT = {
+					has_character_flag = segrellion_banner_fought_against_liege
+				}
+			}
+
+			add_character_flag = segrellion_banner_summoned_for_judgment
+
+			set_variable = {
+				name = segrellion_banner_judging_liege
+				value = scope:segrellion_banner_judging_liege
+			}
+
+			trigger_event = {
+				id = segrellion_banners.0040
+				days = { 2 5 }
+			}
 		}
 	}
 }
