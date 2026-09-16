@@ -1,0 +1,2688 @@
+namespace = segrellion_daenerys_support
+
+
+# =========================================================
+# 0100 - TYRION: THE NORTH
+# =========================================================
+
+segrellion_daenerys_support.0100 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0100.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+
+						title:e_the_north.holder = character:Stark_7
+
+
+						AND = {
+
+							has_global_variable = segrellion_resurrected_jon
+
+							title:e_the_north.holder = global_var:segrellion_resurrected_jon
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_support.0100.desc_jon
+			}
+
+
+			desc = segrellion_daenerys_support.0100.desc
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0100.a
+
+
+		title:e_the_north.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0110
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - THE NORTH ANSWERS
+# =========================================================
+
+segrellion_daenerys_support.0110 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0110.t
+	desc = segrellion_daenerys_support.0110.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0110.a
+
+
+		add_character_flag = segrellion_north_supports_daenerys
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_north_support_secured
+
+			add_character_flag = segrellion_daenerys_vale_support_secured_with_north
+
+			add_character_flag = segrellion_daenerys_north_answer_yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0120
+
+				days = 2
+			}
+		}
+
+
+		title:e_the_vale.holder ?= {
+			add_character_flag = segrellion_vale_follows_north_for_daenerys
+		}
+
+
+		ai_chance = {
+
+			base = 65
+
+
+			modifier = {
+
+				add = 30
+
+				OR = {
+
+					this = character:Stark_7
+
+
+					AND = {
+
+						has_global_variable = segrellion_resurrected_jon
+
+						this = global_var:segrellion_resurrected_jon
+					}
+				}
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0110.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_north_answer_no
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0120
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 35
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - NORTH RESULT
+# =========================================================
+
+segrellion_daenerys_support.0120 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0120.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_north_answer_yes
+				}
+
+				desc = segrellion_daenerys_support.0120.desc_yes
+			}
+
+
+			desc = segrellion_daenerys_support.0120.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_north_answer_yes
+
+		remove_character_flag = segrellion_daenerys_north_answer_no
+	}
+
+
+	option = {
+		name = segrellion_daenerys_support.0120.a
+	}
+}
+
+
+# =========================================================
+# 0200 - TYRION: THE REACH
+# =========================================================
+
+segrellion_daenerys_support.0200 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0200.t
+	desc = segrellion_daenerys_support.0200.desc
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		# =================================================
+		# FIND OLENNA THROUGH THE CURRENT REACH FAMILY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:k_the_reach.holder ?= {
+
+					mother ?= {
+						is_alive = yes
+					}
+				}
+			}
+
+
+			title:k_the_reach.holder.mother = {
+				save_scope_as = segrellion_daenerys_support_olenna
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				title:k_the_reach.holder ?= {
+
+					father ?= {
+
+						mother ?= {
+							is_alive = yes
+						}
+					}
+				}
+			}
+
+
+			title:k_the_reach.holder.father.mother = {
+				save_scope_as = segrellion_daenerys_support_olenna
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0200.a
+
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_daenerys_support_olenna
+			}
+
+
+			scope:segrellion_daenerys_support_olenna = {
+
+				trigger_event = {
+
+					id = segrellion_daenerys_support.0210
+
+					days = { 3 7 }
+				}
+			}
+		}
+
+
+		else = {
+
+			title:k_the_reach.holder = {
+
+				add_character_flag = segrellion_reach_direct_contact_for_daenerys
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_support.0210
+
+					days = { 3 7 }
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0210 - OLENNA / REACH ANSWER
+# =========================================================
+
+segrellion_daenerys_support.0210 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0210.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_reach_direct_contact_for_daenerys
+				}
+
+				desc = segrellion_daenerys_support.0210.desc_direct
+			}
+
+
+			desc = segrellion_daenerys_support.0210.desc_olenna
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0210.a
+
+
+		title:k_the_reach.holder = {
+			add_character_flag = segrellion_reach_secretly_supports_daenerys
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_reach_support_secured
+
+			add_character_flag = segrellion_daenerys_reach_answer_yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0220
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 85
+
+
+			modifier = {
+
+				factor = 0.75
+
+				has_character_flag = segrellion_reach_direct_contact_for_daenerys
+			}
+
+
+			modifier = {
+
+				add = 40
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0210.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_reach_answer_no
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0220
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}
+
+
+# =========================================================
+# 0220 - REACH RESULT
+# =========================================================
+
+segrellion_daenerys_support.0220 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0220.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_reach_answer_yes
+				}
+
+				desc = segrellion_daenerys_support.0220.desc_yes
+			}
+
+
+			desc = segrellion_daenerys_support.0220.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_reach_answer_yes
+
+		remove_character_flag = segrellion_daenerys_reach_answer_no
+	}
+
+
+	option = {
+		name = segrellion_daenerys_support.0220.a
+	}
+}
+
+
+# =========================================================
+# 0300 - TYRION: THE WESTERLANDS
+# =========================================================
+
+segrellion_daenerys_support.0300 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0300.t
+	desc = segrellion_daenerys_support.0300.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0300.a
+
+
+		title:e_the_westerlands.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0310
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0310 - WESTERLANDS ANSWER
+# =========================================================
+
+segrellion_daenerys_support.0310 = {
+
+	type = letter_event
+
+	theme = intrigue
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0310.t
+	desc = segrellion_daenerys_support.0310.desc
+
+
+	# SUPPORT DAENERYS
+
+	option = {
+
+		name = segrellion_daenerys_support.0310.a
+
+
+		add_character_flag = segrellion_westerlands_secretly_supports_daenerys
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_secret_westerlands_support_against_aegon
+
+			add_character_flag = segrellion_daenerys_westerlands_answer_yes
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0320
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 15
+
+
+			modifier = {
+
+				add = 60
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 25
+
+				character:Lannister_6 = {
+					is_alive = no
+				}
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
+				}
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -25
+				}
+			}
+		}
+	}
+
+
+	# REMAIN NEUTRAL
+
+	option = {
+
+		name = segrellion_daenerys_support.0310.b
+
+
+		add_character_flag = segrellion_westerlands_neutral_in_daenerys_war
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_westerlands_answer_neutral
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0320
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+
+	# SUPPORT AEGON
+
+	option = {
+
+		name = segrellion_daenerys_support.0310.c
+
+
+		add_character_flag = segrellion_westerlands_supports_aegon_against_daenerys
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_westerlands_answer_aegon
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0320
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 25
+
+
+			modifier = {
+
+				add = 60
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.10
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0320 - WESTERLANDS RESULT
+# =========================================================
+
+segrellion_daenerys_support.0320 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0320.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_westerlands_answer_yes
+				}
+
+				desc = segrellion_daenerys_support.0320.desc_yes
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_westerlands_answer_aegon
+				}
+
+				desc = segrellion_daenerys_support.0320.desc_aegon
+			}
+
+
+			desc = segrellion_daenerys_support.0320.desc_neutral
+		}
+	}
+
+
+	theme = intrigue
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_westerlands_answer_yes
+
+		remove_character_flag = segrellion_daenerys_westerlands_answer_neutral
+
+		remove_character_flag = segrellion_daenerys_westerlands_answer_aegon
+	}
+
+
+	option = {
+		name = segrellion_daenerys_support.0320.a
+	}
+}
+
+
+# =========================================================
+# 0400 - TYRION: DORNE
+# =========================================================
+
+segrellion_daenerys_support.0400 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0400.t
+	desc = segrellion_daenerys_support.0400.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0400.a
+
+
+		title:e_dorne.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0410
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0410 - DORNE ANSWERS
+# =========================================================
+
+segrellion_daenerys_support.0410 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0410.t
+	desc = segrellion_daenerys_support.0410.desc
+
+
+	# =====================================================
+	# SUPPORT DAENERYS
+	#
+	# HARD BLOCK:
+	# - Arianne currently married to Aegon
+	# - OR Arianne has a living child by Aegon
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0410.a
+
+
+		trigger = {
+
+			NOT = {
+
+				character:IAF_Young_Griff_1 ?= {
+
+					any_spouse = {
+						this = character:Martell_9
+					}
+				}
+			}
+
+
+			NOT = {
+
+				character:Martell_9 ?= {
+
+					any_child = {
+
+						is_alive = yes
+
+						father = character:IAF_Young_Griff_1
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_dorne_secretly_supports_daenerys
+
+		remove_character_flag = segrellion_dorne_supports_young_griff
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+
+			add_character_flag = segrellion_daenerys_dorne_answer_yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0420
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 45
+
+
+			modifier = {
+
+				add = 90
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 80
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_lost_dorne_over_margaery
+				}
+			}
+
+
+			modifier = {
+
+				add = 50
+
+				character:Martell_9 ?= {
+					has_character_flag = segrellion_arianne_rejects_margaery_second_wife
+				}
+			}
+
+
+			modifier = {
+
+				add = 40
+
+				title:h_the_iron_throne.holder != character:IAF_Young_Griff_1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0410.b
+
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					character:IAF_Young_Griff_1 ?= {
+
+						any_spouse = {
+							this = character:Martell_9
+						}
+					}
+
+
+					character:Martell_9 ?= {
+
+						any_child = {
+
+							is_alive = yes
+
+							father = character:IAF_Young_Griff_1
+						}
+					}
+				}
+			}
+
+
+			add_character_flag = segrellion_dorne_supports_young_griff
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_dorne_answer_no
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0420
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 55
+
+
+			modifier = {
+
+				add = 1000
+
+				OR = {
+
+					character:IAF_Young_Griff_1 ?= {
+
+						any_spouse = {
+							this = character:Martell_9
+						}
+					}
+
+
+					character:Martell_9 ?= {
+
+						any_child = {
+
+							is_alive = yes
+
+							father = character:IAF_Young_Griff_1
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0420 - DORNE RESULT
+# =========================================================
+
+segrellion_daenerys_support.0420 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0420.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_dorne_answer_yes
+				}
+
+				desc = segrellion_daenerys_support.0420.desc_yes
+			}
+
+
+			desc = segrellion_daenerys_support.0420.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_dorne_answer_yes
+
+		remove_character_flag = segrellion_daenerys_dorne_answer_no
+	}
+
+
+	option = {
+		name = segrellion_daenerys_support.0420.a
+	}
+}
+
+
+# =========================================================
+# 0500 - TYRION: RIVERLANDS
+# =========================================================
+
+segrellion_daenerys_support.0500 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0500.t
+	desc = segrellion_daenerys_support.0500.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0500.a
+
+
+		title:e_the_riverlands.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0510
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0510 - RIVERLANDS ANSWER
+# =========================================================
+
+segrellion_daenerys_support.0510 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0510.t
+	desc = segrellion_daenerys_support.0510.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0510.a
+
+
+		add_character_flag = segrellion_riverlands_supports_daenerys
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_riverlands_support_secured
+
+			add_character_flag = segrellion_daenerys_riverlands_answer_yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0520
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 30
+
+
+			modifier = {
+
+				add = 25
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 25
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
+				}
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0510.b
+
+
+		add_character_flag = segrellion_riverlands_neutral_in_daenerys_war
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_riverlands_answer_no
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0520
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+}
+
+
+# =========================================================
+# 0520 - RIVERLANDS RESULT
+# =========================================================
+
+segrellion_daenerys_support.0520 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0520.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_riverlands_answer_yes
+				}
+
+				desc = segrellion_daenerys_support.0520.desc_yes
+			}
+
+			desc = segrellion_daenerys_support.0520.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_riverlands_answer_yes
+
+		remove_character_flag = segrellion_daenerys_riverlands_answer_no
+	}
+
+
+	option = {
+		name = segrellion_daenerys_support.0520.a
+	}
+}
+
+
+# =========================================================
+# 0600 - TYRION: THE FLAMELANDS
+# =========================================================
+
+segrellion_daenerys_support.0600 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0600.t
+	desc = segrellion_daenerys_support.0600.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0600.a
+
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0610
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0610 - DAEMON ANSWERS THE SUMMONS
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daenerys_support.0610 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0610.t
+	desc = segrellion_daenerys_support.0610.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0610.a
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_meeting_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0620
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 70
+
+
+			modifier = {
+
+				factor = 0.35
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 120
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 45
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
+				}
+			}
+
+
+			modifier = {
+
+				add = 100
+
+				has_relation_friend = character:Targaryen_9
+			}
+
+
+			modifier = {
+
+				add = 200
+
+				has_relation_best_friend = character:Targaryen_9
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0610.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_meeting_rejected
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0620
+
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 30
+
+
+			modifier = {
+
+				add = 120
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				factor = 0.10
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0620 - DAEMON'S ANSWER
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support.0620 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0620.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_meeting_accepted
+				}
+
+				desc = segrellion_daenerys_support.0620.desc_yes
+			}
+
+			desc = segrellion_daenerys_support.0620.desc_no
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0620.a
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_meeting_accepted
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_meeting_accepted
+
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0630
+
+				days = { 7 14 }
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0620.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_meeting_rejected
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_meeting_rejected
+
+		add_character_flag = segrellion_daenerys_support_flamelands_resolved
+	}
+}
+
+
+# =========================================================
+# 0630 - DAEMON ARRIVES
+#
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daenerys_support.0630 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		set_location = character:Targaryen_9.location
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_meeting_from_gather_support
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0640
+
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0640 - DRAGON AND UNICORN
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support.0640 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0640.t
+	desc = segrellion_daenerys_support.0640.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0640.a
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_support.0650
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0650 - OLD OATHS
+# =========================================================
+
+segrellion_daenerys_support.0650 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0650.t
+	desc = segrellion_daenerys_support.0650.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0650.a
+
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0660
+
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0660 - WHAT DRAGONS OWE UNICORNS
+#
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daenerys_support.0660 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0660.t
+	desc = segrellion_daenerys_support.0660.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_rational
+	}
+
+
+	immediate = {
+
+		add_opinion = {
+
+			target = character:Targaryen_9
+
+			modifier = segrellion_daemon_daenerys_old_debts_argument_opinion
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daemon_daenerys_old_debts_argument_opinion
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0660.a
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_support.0670
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0670 - DAEMON'S PRICE
+#
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daenerys_support.0670 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0670.t
+	desc = segrellion_daenerys_support.0670.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# SUPPORT HER WITHOUT A PRICE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0670.a
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_secure_daemon_support_effect = yes
+
+			add_character_flag = segrellion_daenerys_daemon_support_result_free
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0690
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 55
+
+
+			modifier = {
+
+				factor = 0.20
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 100
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 80
+
+				has_relation_friend = character:Targaryen_9
+			}
+
+
+			modifier = {
+
+				add = 150
+
+				has_relation_best_friend = character:Targaryen_9
+			}
+		}
+	}
+
+
+	# =====================================================
+	# MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0670.b
+
+
+		trigger = {
+
+			is_married = no
+
+			character:Targaryen_9 = {
+				is_married = no
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0680
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 25
+
+
+			modifier = {
+
+				add = 70
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# COUNCIL + AUTONOMY + DYNASTIC PREFERENCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0670.c
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_support_office_pending
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0680
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 20
+
+
+			modifier = {
+
+				add = 80
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# INDEPENDENCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0670.d
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_support_independence_pending
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0680
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+
+
+			modifier = {
+
+				add = 70
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				has_trait = ambitious
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0670.e
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_daemon_support_result_refused
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0690
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 20
+
+
+			modifier = {
+
+				add = 100
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				factor = 0.15
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0680 - DAENERYS ANSWERS DAEMON'S PRICE
+# =========================================================
+
+segrellion_daenerys_support.0680 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0680.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+				}
+
+				desc = segrellion_daenerys_support.0680.desc_marriage
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_support_office_pending
+				}
+
+				desc = segrellion_daenerys_support.0680.desc_office
+			}
+
+
+			desc = segrellion_daenerys_support.0680.desc_independence
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+
+	# MARRIAGE
+
+	option = {
+
+		name = segrellion_daenerys_support.0680.a
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+
+
+		add_character_flag = segrellion_marriage_promised_to_daemon
+
+		add_character_flag = segrellion_daenerys_promised_beacon_marriage
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daenerys_marriage_promised
+
+			add_character_flag = segrellion_daemon_has_daenerys_promise
+		}
+
+
+		segrellion_daenerys_secure_daemon_support_effect = yes
+
+
+		add_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+
+		trigger_event = {
+			id = segrellion_daenerys_support.0690
+			days = 1
+		}
+	}
+
+
+	# OFFICE / AUTONOMY
+
+	option = {
+
+		name = segrellion_daenerys_support.0680.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_support_office_pending
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_support_office_pending
+
+
+		add_character_flag = segrellion_daenerys_promised_beacon_council
+
+		add_character_flag = segrellion_daenerys_promised_beacon_autonomy
+
+		add_character_flag = segrellion_daenerys_promised_beacon_marriage_preference
+
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_daemon_has_daenerys_promise
+		}
+
+
+		segrellion_daenerys_secure_daemon_support_effect = yes
+
+
+		add_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+
+		trigger_event = {
+			id = segrellion_daenerys_support.0690
+			days = 1
+		}
+	}
+
+
+	# INDEPENDENCE
+
+	option = {
+
+		name = segrellion_daenerys_support.0680.c
+
+
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_support_independence_pending
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_support_independence_pending
+
+
+		add_character_flag = segrellion_daenerys_promised_beacon_independence
+
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_daemon_has_daenerys_promise
+		}
+
+
+		segrellion_daenerys_secure_daemon_support_effect = yes
+
+
+		add_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+
+		trigger_event = {
+			id = segrellion_daenerys_support.0690
+			days = 1
+		}
+	}
+
+
+	# REFUSE HIS PRICE
+
+	option = {
+
+		name = segrellion_daenerys_support.0680.d
+
+
+		remove_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+
+		remove_character_flag = segrellion_daenerys_daemon_support_office_pending
+
+		remove_character_flag = segrellion_daenerys_daemon_support_independence_pending
+
+
+		add_character_flag = segrellion_daenerys_daemon_support_result_refused
+
+
+		trigger_event = {
+			id = segrellion_daenerys_support.0690
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0690 - DAEMON MEETING ENDS
+# =========================================================
+
+segrellion_daenerys_support.0690 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0690.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_support_result_free
+				}
+
+				desc = segrellion_daenerys_support.0690.desc_free
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_support_result_accepted
+				}
+
+				desc = segrellion_daenerys_support.0690.desc_accepted
+			}
+
+
+			desc = segrellion_daenerys_support.0690.desc_refused
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_daemon_support_result_free
+
+		remove_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+		remove_character_flag = segrellion_daenerys_daemon_support_result_refused
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0690.a
+
+
+		segrellion_daenerys_finish_daemon_support_meeting_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0700 - TYRION: THE STORMLANDS
+# =========================================================
+
+segrellion_daenerys_support.0700 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0700.t
+	desc = segrellion_daenerys_support.0700.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	# ASK DAEMON TO PERSUADE JOFFREY
+
+	option = {
+
+		name = segrellion_daenerys_support.0700.a
+
+
+		trigger = {
+
+			has_character_flag = segrellion_daenerys_flamelands_support_secured
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		character:Vladwyn_5 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0710
+
+				days = { 2 5 }
+			}
+		}
+	}
+
+
+	# OFFER HER HAND
+
+	option = {
+
+		name = segrellion_daenerys_support.0700.b
+
+
+		trigger = {
+
+			is_married = no
+
+			character:Vladwyn_5 = {
+				is_married = no
+			}
+		}
+
+
+		character:Vladwyn_5 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0720
+
+				days = { 2 5 }
+			}
+		}
+	}
+
+
+	# GUARANTEED COUNCIL SEAT
+
+	option = {
+
+		name = segrellion_daenerys_support.0700.c
+
+
+		character:Vladwyn_5 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0730
+
+				days = { 2 5 }
+			}
+		}
+	}
+
+
+	# DEMAND HIS OATH
+
+	option = {
+
+		name = segrellion_daenerys_support.0700.d
+
+
+		character:Vladwyn_5 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0740
+
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0710 - DAEMON PERSUADES JOFFREY
+# =========================================================
+
+segrellion_daenerys_support.0710 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Segrellion_60
+
+	title = segrellion_daenerys_support.0710.t
+	desc = segrellion_daenerys_support.0710.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0710.a
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_secure_joffrey_support_effect = yes
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_yes
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0750
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0710.b
+
+
+		add_character_flag = segrellion_joffrey_neutral_in_daenerys_war
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_neutral
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0750
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0720 - DAENERYS OFFERS HER HAND
+# =========================================================
+
+segrellion_daenerys_support.0720 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0720.t
+	desc = segrellion_daenerys_support.0720.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0720.a
+
+
+		marry = character:Targaryen_9
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_secure_joffrey_support_effect = yes
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_yes
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0750
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0730 - COUNCIL SEAT
+# =========================================================
+
+segrellion_daenerys_support.0730 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0730.t
+	desc = segrellion_daenerys_support.0730.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0730.a
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_promised_joffrey_council
+
+			segrellion_daenerys_secure_joffrey_support_effect = yes
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_yes
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0750
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0730.b
+
+
+		add_character_flag = segrellion_joffrey_neutral_in_daenerys_war
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_neutral
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0750
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+
+# =========================================================
+# 0740 - DEMAND JOFFREY'S OATH
+# =========================================================
+
+segrellion_daenerys_support.0740 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_support.0740.t
+	desc = segrellion_daenerys_support.0740.desc
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0740.a
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_secure_joffrey_support_effect = yes
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_yes
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0750
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0740.b
+
+
+		add_character_flag = segrellion_joffrey_neutral_in_daenerys_war
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_neutral
+
+
+			trigger_event = {
+				id = segrellion_daenerys_support.0750
+				days = 2
+			}
+		}
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+}
+
+
+# =========================================================
+# 0750 - STORMLANDS RESULT
+# =========================================================
+
+segrellion_daenerys_support.0750 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0750.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_stormlands_answer_yes
+				}
+
+				desc = segrellion_daenerys_support.0750.desc_yes
+			}
+
+			desc = segrellion_daenerys_support.0750.desc_neutral
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_stormlands_answer_yes
+
+		remove_character_flag = segrellion_daenerys_stormlands_answer_neutral
+	}
+
+
+	option = {
+		name = segrellion_daenerys_support.0750.a
+	}
+}

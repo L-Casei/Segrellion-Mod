@@ -1,0 +1,490 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# WESTEROS SUPPORT EFFECTS
+# =========================================================
+
+
+# =========================================================
+# SECURE DAEMON
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_secure_daemon_support_effect = {
+
+	add_character_flag = segrellion_daenerys_flamelands_support_secured
+
+
+	character:Segrellion_60 ?= {
+
+		add_character_flag = segrellion_daemon_supports_daenerys_in_throne_war
+
+
+		if = {
+
+			limit = {
+				is_allied_to = character:IAF_Young_Griff_1
+			}
+
+			break_alliance = character:IAF_Young_Griff_1
+		}
+
+
+		if = {
+
+			limit = {
+
+				liege ?= {
+					this = character:IAF_Young_Griff_1
+				}
+			}
+
+			becomes_independent = yes
+		}
+	}
+
+
+	create_alliance = character:Segrellion_60
+
+
+	character:IAF_Young_Griff_1 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			add_opinion = {
+
+				target = character:Segrellion_60
+
+				modifier = segrellion_aegon_daemon_betrayed_for_daenerys_opinion
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# FINISH DAEMON MEETING
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_finish_daemon_support_meeting_effect = {
+
+	add_character_flag = segrellion_daenerys_support_flamelands_resolved
+
+
+	remove_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+
+	remove_character_flag = segrellion_daenerys_daemon_support_office_pending
+
+	remove_character_flag = segrellion_daenerys_daemon_support_independence_pending
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_daemon_meeting_from_beacon
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_meeting_from_beacon
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0020
+
+			days = 1
+		}
+	}
+
+
+	else = {
+
+		remove_character_flag = segrellion_daenerys_daemon_meeting_from_gather_support
+	}
+}
+
+
+# =========================================================
+# SECURE JOFFREY VLADWYN
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_secure_joffrey_support_effect = {
+
+	add_character_flag = segrellion_daenerys_stormlands_support_secured
+
+
+	character:Vladwyn_5 ?= {
+
+		add_character_flag = segrellion_joffrey_supports_daenerys_in_throne_war
+
+
+		if = {
+
+			limit = {
+				is_allied_to = character:IAF_Young_Griff_1
+			}
+
+			break_alliance = character:IAF_Young_Griff_1
+		}
+
+
+		if = {
+
+			limit = {
+
+				liege ?= {
+					this = character:IAF_Young_Griff_1
+				}
+			}
+
+			becomes_independent = yes
+		}
+	}
+
+
+	create_alliance = character:Vladwyn_5
+}
+
+
+# =========================================================
+# CALL ALL PROMISED SUPPORTERS
+#
+# ROOT = DAENERYS
+#
+# The war has just been created, and the Declare War
+# decision requires Daenerys to have no previous active war.
+# Therefore every_character_war contains the newly created
+# throne war.
+# =========================================================
+
+segrellion_daenerys_call_promised_supporters_effect = {
+
+	every_character_war = {
+
+
+		# =================================================
+		# NORTH
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_north_support_secured
+				}
+
+
+				title:e_the_north.holder ?= {
+
+					is_alive = yes
+
+					this != root
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = title:e_the_north.holder
+
+			add_attacker = title:e_the_north.holder
+		}
+
+
+		# =================================================
+		# VALE FOLLOWS THE NORTH
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_vale_support_secured_with_north
+				}
+
+
+				title:e_the_vale.holder ?= {
+
+					is_alive = yes
+
+					this != root
+
+					this != title:e_the_north.holder
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = title:e_the_vale.holder
+
+			add_attacker = title:e_the_vale.holder
+		}
+
+
+		# =================================================
+		# REACH
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_reach_support_secured
+				}
+
+
+				title:k_the_reach.holder ?= {
+
+					is_alive = yes
+
+					this != root
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = title:k_the_reach.holder
+
+			add_attacker = title:k_the_reach.holder
+		}
+
+
+		# =================================================
+		# WESTERLANDS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_secret_westerlands_support_against_aegon
+				}
+
+
+				title:e_the_westerlands.holder ?= {
+
+					is_alive = yes
+
+					this != root
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = title:e_the_westerlands.holder
+
+			add_attacker = title:e_the_westerlands.holder
+		}
+
+
+		# =================================================
+		# DORNE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+				}
+
+
+				title:e_dorne.holder ?= {
+
+					is_alive = yes
+
+					this != root
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = title:e_dorne.holder
+
+			add_attacker = title:e_dorne.holder
+		}
+
+
+		# =================================================
+		# RIVERLANDS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_riverlands_support_secured
+				}
+
+
+				title:e_the_riverlands.holder ?= {
+
+					is_alive = yes
+
+					this != root
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = title:e_the_riverlands.holder
+
+			add_attacker = title:e_the_riverlands.holder
+		}
+
+
+		# =================================================
+		# FLAMELANDS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_flamelands_support_secured
+				}
+
+
+				character:Segrellion_60 ?= {
+
+					is_alive = yes
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = character:Segrellion_60
+
+			add_attacker = character:Segrellion_60
+		}
+
+
+		# =================================================
+		# STORMLANDS / JOFFREY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_stormlands_support_secured
+				}
+
+
+				character:Vladwyn_5 ?= {
+
+					is_alive = yes
+
+					has_title = title:e_the_stormlands
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = character:Vladwyn_5
+
+			add_attacker = character:Vladwyn_5
+		}
+
+
+		# =================================================
+		# REACH AUTOMATICALLY SUPPORTS AEGON IF HE IS
+		# CURRENTLY MARRIED TO MARGAERY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:h_the_iron_throne.holder = character:IAF_Young_Griff_1
+
+
+				character:IAF_Young_Griff_1 = {
+
+					any_spouse = {
+						this = character:Tyrell_14
+					}
+				}
+
+
+				title:k_the_reach.holder ?= {
+
+					is_alive = yes
+
+					this != character:IAF_Young_Griff_1
+				}
+			}
+
+
+			set_called_to = title:k_the_reach.holder
+
+			add_defender = title:k_the_reach.holder
+		}
+
+
+		# =================================================
+		# WESTERLANDS CHOSE AEGON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:e_the_westerlands.holder ?= {
+					has_character_flag = segrellion_westerlands_supports_aegon_against_daenerys
+				}
+			}
+
+
+			set_called_to = title:e_the_westerlands.holder
+
+			add_defender = title:e_the_westerlands.holder
+		}
+
+
+		# =================================================
+		# DORNE ALREADY COMMITTED TO AEGON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:e_dorne.holder ?= {
+
+					has_character_flag = segrellion_dorne_supports_young_griff
+
+					this != title:h_the_iron_throne.holder
+				}
+			}
+
+
+			set_called_to = title:e_dorne.holder
+
+			add_defender = title:e_dorne.holder
+		}
+	}
+}

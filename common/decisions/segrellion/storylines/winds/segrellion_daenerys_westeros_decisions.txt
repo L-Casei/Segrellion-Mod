@@ -1,0 +1,633 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# WESTEROS POLITICAL PHASE
+# =========================================================
+
+
+# =========================================================
+# GATHER SUPPORT
+# =========================================================
+
+segrellion_daenerys_gather_support_decision = {
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_daenerys_gather_support_decision_desc
+	selection_tooltip = segrellion_daenerys_gather_support_decision_tooltip
+	confirm_text = segrellion_daenerys_gather_support_decision_confirm
+
+
+	is_shown = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_landed_in_westeros
+
+		has_character_flag = segrellion_daenerys_westeros_strategy_unlocked
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_iron_throne_war_started
+		}
+
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+
+		segrellion_daenerys_has_westeros_support_route_trigger = yes
+	}
+
+
+	is_valid = {
+
+		custom_description = {
+
+			text = segrellion_daenerys_gather_support_not_travelling_requirement
+
+			NOT = {
+				exists = current_travel_plan
+			}
+		}
+
+
+		custom_description = {
+
+			text = segrellion_daenerys_gather_support_cooldown_requirement
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_support_recently_used
+			}
+		}
+	}
+
+
+	widget = {
+
+		gui = "decision_view_widget_option_list_generic"
+
+		controller = decision_option_list_controller
+
+		decision_to_second_step_button = "segrellion_daenerys_gather_support_next_step"
+
+
+		# =================================================
+		# NORTH
+		# =================================================
+
+		item = {
+
+			value = segrellion_daenerys_support_choice_north
+
+			localization = segrellion_daenerys_support_choice_north
+
+			current_description = segrellion_daenerys_support_choice_north_desc
+
+			icon = "gfx/interface/icons/decisions/segrellion_daenerys_support_north.dds"
+
+
+			is_shown = {
+
+				root = {
+					segrellion_daenerys_north_support_available_trigger = yes
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+
+				value = 90
+
+
+				modifier = {
+
+					add = 40
+
+					root = {
+
+						OR = {
+
+							title:e_the_north.holder = character:Stark_7
+
+
+							AND = {
+
+								has_global_variable = segrellion_resurrected_jon
+
+								title:e_the_north.holder = global_var:segrellion_resurrected_jon
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# REACH
+		# =================================================
+
+		item = {
+
+			value = segrellion_daenerys_support_choice_reach
+
+			localization = segrellion_daenerys_support_choice_reach
+
+			current_description = segrellion_daenerys_support_choice_reach_desc
+
+			icon = "gfx/interface/icons/decisions/segrellion_daenerys_support_reach.dds"
+
+
+			is_shown = {
+
+				root = {
+					segrellion_daenerys_reach_support_available_trigger = yes
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 75
+			}
+		}
+
+
+		# =================================================
+		# WESTERLANDS
+		# =================================================
+
+		item = {
+
+			value = segrellion_daenerys_support_choice_westerlands
+
+			localization = segrellion_daenerys_support_choice_westerlands
+
+			current_description = segrellion_daenerys_support_choice_westerlands_desc
+
+			icon = "gfx/interface/icons/decisions/segrellion_daenerys_support_westerlands.dds"
+
+
+			is_shown = {
+
+				root = {
+					segrellion_daenerys_westerlands_support_available_trigger = yes
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 40
+			}
+		}
+
+
+		# =================================================
+		# DORNE
+		# =================================================
+
+		item = {
+
+			value = segrellion_daenerys_support_choice_dorne
+
+			localization = segrellion_daenerys_support_choice_dorne
+
+			current_description = segrellion_daenerys_support_choice_dorne_desc
+
+			icon = "gfx/interface/icons/decisions/segrellion_daenerys_support_dorne.dds"
+
+
+			is_shown = {
+
+				root = {
+					segrellion_daenerys_dorne_support_available_trigger = yes
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 70
+			}
+		}
+
+
+		# =================================================
+		# RIVERLANDS
+		# =================================================
+
+		item = {
+
+			value = segrellion_daenerys_support_choice_riverlands
+
+			localization = segrellion_daenerys_support_choice_riverlands
+
+			current_description = segrellion_daenerys_support_choice_riverlands_desc
+
+			icon = "gfx/interface/icons/decisions/segrellion_daenerys_support_riverlands.dds"
+
+
+			is_shown = {
+
+				root = {
+					segrellion_daenerys_riverlands_support_available_trigger = yes
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 25
+			}
+		}
+
+
+		# =================================================
+		# FLAMELANDS
+		# =================================================
+
+		item = {
+
+			value = segrellion_daenerys_support_choice_flamelands
+
+			localization = segrellion_daenerys_support_choice_flamelands
+
+			current_description = segrellion_daenerys_support_choice_flamelands_desc
+
+			icon = "gfx/interface/icons/decisions/segrellion_daenerys_support_flamelands.dds"
+
+
+			is_shown = {
+
+				root = {
+					segrellion_daenerys_flamelands_support_available_trigger = yes
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+				value = 80
+			}
+		}
+
+
+		# =================================================
+		# STORMLANDS
+		# =================================================
+
+		item = {
+
+			value = segrellion_daenerys_support_choice_stormlands
+
+			localization = segrellion_daenerys_support_choice_stormlands
+
+			current_description = segrellion_daenerys_support_choice_stormlands_desc
+
+			icon = "gfx/interface/icons/decisions/segrellion_daenerys_support_stormlands.dds"
+
+
+			is_shown = {
+
+				root = {
+					segrellion_daenerys_stormlands_support_available_trigger = yes
+				}
+			}
+
+
+			is_valid = {
+				always = yes
+			}
+
+
+			ai_chance = {
+
+				value = 50
+
+
+				modifier = {
+
+					add = 60
+
+					root = {
+						has_character_flag = segrellion_daenerys_flamelands_support_secured
+					}
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		custom_tooltip = segrellion_daenerys_gather_support_effect_contact_tt
+
+		custom_tooltip = segrellion_daenerys_gather_support_effect_secret_tt
+
+
+		hidden_effect = {
+
+			add_character_flag = {
+
+				flag = segrellion_daenerys_support_recently_used
+
+				days = 5
+			}
+
+
+			if = {
+
+				limit = {
+					scope:segrellion_daenerys_support_choice_north = yes
+				}
+
+				add_character_flag = segrellion_daenerys_support_north_approached
+
+				trigger_event = {
+					id = segrellion_daenerys_support.0100
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_daenerys_support_choice_reach = yes
+				}
+
+				add_character_flag = segrellion_daenerys_support_reach_approached
+
+				trigger_event = {
+					id = segrellion_daenerys_support.0200
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_daenerys_support_choice_westerlands = yes
+				}
+
+				add_character_flag = segrellion_daenerys_support_westerlands_approached
+
+				trigger_event = {
+					id = segrellion_daenerys_support.0300
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_daenerys_support_choice_dorne = yes
+				}
+
+				add_character_flag = segrellion_daenerys_support_dorne_approached
+
+				trigger_event = {
+					id = segrellion_daenerys_support.0400
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_daenerys_support_choice_riverlands = yes
+				}
+
+				add_character_flag = segrellion_daenerys_support_riverlands_approached
+
+				trigger_event = {
+					id = segrellion_daenerys_support.0500
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_daenerys_support_choice_flamelands = yes
+				}
+
+				add_character_flag = segrellion_daenerys_support_flamelands_approached
+
+				trigger_event = {
+					id = segrellion_daenerys_support.0600
+					days = 1
+				}
+			}
+
+
+			else_if = {
+
+				limit = {
+					scope:segrellion_daenerys_support_choice_stormlands = yes
+				}
+
+				add_character_flag = segrellion_daenerys_support_stormlands_approached
+
+				trigger_event = {
+					id = segrellion_daenerys_support.0700
+					days = 1
+				}
+			}
+		}
+	}
+
+
+	ai_check_interval = 14
+
+	ai_potential = {
+		this = character:Targaryen_9
+		is_ai = yes
+	}
+
+	ai_will_do = {
+		base = 150
+	}
+}
+
+
+# =========================================================
+# DECLARE THE WAR FOR THE IRON THRONE
+# =========================================================
+
+segrellion_daenerys_claim_iron_throne_decision = {
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_daenerys_claim_iron_throne_decision_desc
+	selection_tooltip = segrellion_daenerys_claim_iron_throne_decision_tooltip
+	confirm_text = segrellion_daenerys_claim_iron_throne_decision_confirm
+
+
+	is_shown = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_landed_in_westeros
+
+		has_character_flag = segrellion_daenerys_westeros_strategy_unlocked
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_iron_throne_war_started
+		}
+
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+
+		title:h_the_iron_throne = {
+			exists = holder
+		}
+	}
+
+
+	is_valid = {
+
+		custom_description = {
+
+			text = segrellion_daenerys_claim_iron_throne_not_travelling_requirement
+
+			NOT = {
+				exists = current_travel_plan
+			}
+		}
+
+
+		custom_description = {
+
+			text = segrellion_daenerys_claim_iron_throne_not_at_war_requirement
+
+			is_at_war = no
+		}
+	}
+
+
+	effect = {
+
+		custom_tooltip = segrellion_daenerys_claim_iron_throne_effect_war_tt
+
+		custom_tooltip = segrellion_daenerys_claim_iron_throne_effect_supporters_tt
+
+
+		hidden_effect = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_claim_on = title:h_the_iron_throne
+					}
+				}
+
+				add_pressed_claim = title:h_the_iron_throne
+			}
+
+
+			title:h_the_iron_throne.holder = {
+				save_scope_as = segrellion_daenerys_throne_defender
+			}
+
+
+			start_war = {
+
+				cb = claim_cb
+
+				target = scope:segrellion_daenerys_throne_defender
+
+				claimant = root
+
+				target_title = title:h_the_iron_throne
+			}
+
+
+			add_character_flag = segrellion_daenerys_iron_throne_war_started
+
+
+			segrellion_daenerys_call_promised_supporters_effect = yes
+		}
+	}
+
+
+	ai_check_interval = 14
+
+
+	ai_potential = {
+
+		this = character:Targaryen_9
+
+		is_ai = yes
+	}
+
+
+	ai_will_do = {
+
+		base = 100
+
+
+		modifier = {
+
+			factor = 0
+
+			has_character_flag = segrellion_daenerys_recently_landed_in_westeros
+		}
+
+
+		modifier = {
+
+			add = 75
+
+			OR = {
+
+				has_character_flag = segrellion_daenerys_north_support_secured
+
+				has_character_flag = segrellion_daenerys_reach_support_secured
+
+				has_character_flag = segrellion_daenerys_flamelands_support_secured
+			}
+		}
+	}
+}

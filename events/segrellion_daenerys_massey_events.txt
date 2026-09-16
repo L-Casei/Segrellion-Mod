@@ -720,6 +720,7 @@ segrellion_daenerys_massey.0130 = {
 
 # =========================================================
 # 0135 - DAEMON REFUSES
+# ROOT = DAENERYS
 # =========================================================
 
 segrellion_daenerys_massey.0135 = {
@@ -730,37 +731,40 @@ segrellion_daenerys_massey.0135 = {
 	desc = segrellion_daenerys_massey.0135.desc
 
 	theme = diplomacy
+
 	override_header_background = {
 		reference = "gfx/interface/window_event/event_header_blue.dds"
 	}
+
 
 	left_portrait = {
 		character = root
 		animation = personality_rational
 	}
 
+
 	option = {
 
-		name = segrellion_daenerys_massey.0150.a
+		name = segrellion_daenerys_massey.0135.a
 
 
 		remove_character_flag = segrellion_daenerys_beacon_invitation_ready
 
 		remove_character_flag = segrellion_daenerys_beacon_negotiation_started
 
-
-		add_character_flag = segrellion_daenerys_landing_chosen
-
-		add_character_flag = segrellion_daenerys_landing_flamelands
-
-		add_character_flag = segrellion_daenerys_landing_beacon
+		remove_character_flag = segrellion_daenerys_beacon_open_event_pending
 
 
-		add_character_modifier = {
-			modifier = segrellion_daenerys_invasion_provisions_modifier
+		add_character_flag = segrellion_daenerys_beacon_negotiation_refused
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0010
+
+			days = 2
 		}
 
-		segrellion_daenerys_start_beacon_crossing_effect = yes
 
 		ai_chance = {
 			base = 100
@@ -818,6 +822,7 @@ segrellion_daenerys_massey.0140 = {
 
 # =========================================================
 # 0150 - THE BEACON IS OPEN
+# ROOT = DAENERYS
 # =========================================================
 
 segrellion_daenerys_massey.0150 = {
@@ -828,19 +833,23 @@ segrellion_daenerys_massey.0150 = {
 	desc = segrellion_daenerys_massey.0150.desc
 
 	theme = diplomacy
+
 	override_header_background = {
 		reference = "gfx/interface/window_event/event_header_blue.dds"
 	}
+
 
 	left_portrait = {
 		character = root
 		animation = personality_bold
 	}
 
+
 	right_portrait = {
 		character = character:Segrellion_60
 		animation = personality_rational
 	}
+
 
 	immediate = {
 
@@ -851,9 +860,11 @@ segrellion_daenerys_massey.0150 = {
 		add_character_flag = segrellion_daenerys_beacon_invitation_ready
 	}
 
+
 	option = {
 
 		name = segrellion_daenerys_massey.0150.a
+
 
 		remove_character_flag = segrellion_daenerys_beacon_invitation_ready
 
@@ -868,12 +879,312 @@ segrellion_daenerys_massey.0150 = {
 
 
 		add_character_modifier = {
-
 			modifier = segrellion_daenerys_invasion_provisions_modifier
 		}
 
+
+		segrellion_daenerys_start_beacon_crossing_effect = yes
+
+
 		ai_chance = {
 			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 0160 - MASSEY MUST CHOOSE
+#
+# ROOT = LORD MASSEY
+# =========================================================
+
+segrellion_daenerys_massey.0160 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0160.t
+	desc = segrellion_daenerys_massey.0160.desc
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+
+		character:Targaryen_9 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_daenerys_massey_landing_request_pending
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Segrellion_60
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# BETRAY DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_massey.0160.a
+
+		custom_tooltip = segrellion_daenerys_massey.0160.a.tt
+
+
+		if = {
+
+			limit = {
+
+				liege ?= {
+					this = character:Segrellion_60
+				}
+			}
+
+			becomes_independent = yes
+		}
+
+
+		create_alliance = character:Targaryen_9
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_massey_oathbreaker_modifier
+
+			years = 15
+		}
+
+
+		add_character_flag = segrellion_massey_betrayed_daemon_for_daenerys
+
+
+		character:Segrellion_60 ?= {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_daemon_massey_betrayal_opinion
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_massey_landing_request_pending
+
+			add_character_flag = segrellion_daenerys_massey_betrayal_secured
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_massey.0161
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 8
+
+
+			modifier = {
+
+				add = 12
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.25
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 60
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REMAIN LOYAL TO DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_massey.0160.b
+
+		custom_tooltip = segrellion_daenerys_massey.0160.b.tt
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_massey_landing_request_pending
+
+			add_character_flag = segrellion_daenerys_massey_landing_refused
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_massey.0162
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 92
+
+
+			modifier = {
+
+				add = 100
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 60
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0161 - MASSEY OPENS THE HOOK
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_massey.0161 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0161.t
+	desc = segrellion_daenerys_massey.0161.desc
+
+	theme = war
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_massey.0161.a
+
+		custom_tooltip = segrellion_daenerys_massey.0161.a.tt
+
+
+		add_character_flag = segrellion_daenerys_landing_chosen
+
+		add_character_flag = segrellion_daenerys_landing_flamelands
+
+		add_character_flag = segrellion_daenerys_landing_masseys_hook
+
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+
+		start_travel_plan = {
+
+			destination = title:c_stonedance.title_province
+
+			players_use_planner = no
+
+			return_trip = no
+
+			travel_with_domicile = yes
+
+			on_arrival_event = segrellion_daenerys_invasion.0018
+
+			on_arrival_destinations = last
+
+			on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+		}
+	}
+}
+
+
+# =========================================================
+# 0162 - MASSEY REFUSES
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_massey.0162 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0162.t
+	desc = segrellion_daenerys_massey.0162.desc
+
+	theme = diplomacy
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_massey.0162.a
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_invasion.0010
+
+			days = 1
 		}
 	}
 }

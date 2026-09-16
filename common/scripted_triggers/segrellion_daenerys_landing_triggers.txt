@@ -1,12 +1,11 @@
 # =========================================================
+# DAENERYS TARGARYEN
+# WESTEROS LANDING ROUTES
+# =========================================================
+
+
+# =========================================================
 # DRAGONSTONE LANDING
-#
-# Dragonstone cannot be Daenerys' invasion landing while
-# Stannis Baratheon remains alive.
-#
-# His Dragonstone / Northern / Iron Throne storyline must
-# resolve before Daenerys can use the island as her entry
-# point into Westeros.
 # =========================================================
 
 segrellion_daenerys_dragonstone_landing_available_trigger = {
@@ -16,19 +15,167 @@ segrellion_daenerys_dragonstone_landing_available_trigger = {
 	}
 }
 
+
+# =========================================================
+# DAEMON IS FIRMLY COMMITTED TO AEGON
+#
+# ROOT = Daemon
+# =========================================================
+
+segrellion_daemon_committed_to_aegon_trigger = {
+
+	character:IAF_Young_Griff_1 ?= {
+		is_alive = yes
+	}
+
+	OR = {
+
+		has_character_flag = segrellion_pledged_to_young_griff
+
+		has_character_flag = segrellion_deadly_triarchy_formed
+
+		has_character_flag = segrellion_daemon_aegon_fealty_accepted
+
+		has_character_flag = segrellion_daemon_aegon_hand_and_regent
+
+		has_character_flag = segrellion_daemon_aegon_confidant
+
+		has_relation_best_friend = character:IAF_Young_Griff_1
+
+
+		AND = {
+
+			has_relation_friend = character:IAF_Young_Griff_1
+
+			is_allied_to = character:IAF_Young_Griff_1
+		}
+
+
+		character:IAF_Young_Griff_1 = {
+
+			OR = {
+
+				has_character_flag = segrellion_young_griff_daemon_oath_secured
+
+				has_character_flag = segrellion_young_griff_supports_daemon
+
+				has_character_flag = segrellion_young_griff_daemon_confidant
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DAEMON IS PERSONALLY INCLINED TOWARD DAENERYS
+#
+# ROOT = Daemon
+# =========================================================
+
+segrellion_daemon_inclined_to_daenerys_trigger = {
+
+	character:Targaryen_9 ?= {
+		is_alive = yes
+	}
+
+	OR = {
+
+		has_character_flag = segrellion_pledged_to_daenerys
+
+		has_relation_friend = character:Targaryen_9
+
+		has_relation_best_friend = character:Targaryen_9
+
+
+		character:Targaryen_9 = {
+
+			OR = {
+
+				has_character_flag = segrellion_daenerys_supports_daemon
+
+				has_character_flag = segrellion_marriage_promised_to_daemon
+
+				has_character_flag = segrellion_daenerys_promised_beacon_marriage
+			}
+		}
+
+
+		AND = {
+
+			opinion = {
+				target = character:Targaryen_9
+				value >= 40
+			}
+
+			NOT = {
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# MASSEY MUST BETRAY DAEMON TO ALLOW THE LANDING
+#
+# ROOT = Daenerys
+# =========================================================
+
+segrellion_daenerys_massey_betrayal_required_trigger = {
+
+	segrellion_daemon_controls_flamelands_trigger = yes
+
+
+	character:Segrellion_60 = {
+
+		segrellion_daemon_committed_to_aegon_trigger = yes
+
+		NOT = {
+			segrellion_daemon_inclined_to_daenerys_trigger = yes
+		}
+	}
+
+
+	title:d_masseys_hook.holder ?= {
+
+		is_alive = yes
+
+		this != character:Segrellion_60
+
+
+		liege ?= {
+			this = character:Segrellion_60
+		}
+	}
+}
+
+
+# =========================================================
+# MASSEY'S HOOK LANDING
+# =========================================================
+
+segrellion_daenerys_masseys_hook_landing_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_massey_landing_refused
+	}
+
+
+	OR = {
+
+		title:d_masseys_hook.holder ?= {
+			is_alive = yes
+		}
+
+		title:c_stonedance.holder ?= {
+			is_alive = yes
+		}
+	}
+}
+
+
 # =========================================================
 # BEACON DIRECT LANDING
-#
-# Direct route only if:
-#
-# - Daemon controls the Flamelands
-# - Daenerys already has an invitation from the later
-#   negotiation chain
-#
-# OR
-#
-# - Daemon previously asked Daenerys for reinforcements
-#   to reclaim the Flamelands and pledged himself to her
 # =========================================================
 
 segrellion_daenerys_beacon_direct_landing_available_trigger = {
@@ -52,9 +199,9 @@ segrellion_daenerys_beacon_direct_landing_available_trigger = {
 # =========================================================
 # BEACON NEGOTIATION
 #
-# If Daemon controls the Flamelands but he and Daenerys
-# have had no previous reinforcement / political contact,
-# Daenerys may attempt to negotiate with him.
+# Daemon may be neutral or aligned with Aegon.
+# His political situation affects his ANSWER, not whether
+# Daenerys is allowed to ask.
 # =========================================================
 
 segrellion_daenerys_beacon_negotiation_available_trigger = {
@@ -82,24 +229,12 @@ segrellion_daenerys_beacon_negotiation_available_trigger = {
 		is_alive = yes
 
 		is_landed = yes
-
-
-		NOT = {
-			segrellion_daemon_daenerys_reinforcement_route_used_trigger = yes
-		}
 	}
 }
 
 
 # =========================================================
-# BEACON OPTION
-#
-# ONE BUTTON.
-#
-# It is usable when:
-# - Daenerys may sail directly to Daemon
-# OR
-# - Daenerys may attempt negotiations with him
+# BEACON ROUTE
 # =========================================================
 
 segrellion_daenerys_beacon_route_available_trigger = {

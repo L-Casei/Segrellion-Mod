@@ -1,0 +1,268 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# GATHER SUPPORT IN WESTEROS
+# =========================================================
+
+
+# =========================================================
+# NORTH
+# =========================================================
+
+segrellion_daenerys_north_support_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_north_approached
+	}
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_invited_davos_and_jon
+	}
+
+
+	title:e_the_north.holder ?= {
+		is_alive = yes
+	}
+}
+
+
+# =========================================================
+# REACH
+# =========================================================
+
+segrellion_daenerys_reach_support_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_reach_approached
+	}
+
+
+	title:k_the_reach.holder ?= {
+		is_alive = yes
+	}
+
+
+	# If Aegon is married to Margaery, the Reach is already
+	# politically committed to him.
+
+	NOT = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			any_spouse = {
+				this = character:Tyrell_14
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# WESTERLANDS
+# =========================================================
+
+segrellion_daenerys_westerlands_support_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_westerlands_approached
+	}
+
+
+	title:e_the_westerlands.holder ?= {
+
+		is_alive = yes
+
+
+		NOT = {
+			this = character:Lannister_6
+		}
+
+
+		NOT = {
+
+			mother ?= {
+				this = character:Lannister_6
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DORNE
+# =========================================================
+
+segrellion_daenerys_dorne_support_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_dorne_approached
+	}
+
+
+	title:e_dorne.holder ?= {
+		is_alive = yes
+	}
+}
+
+
+# =========================================================
+# RIVERLANDS
+#
+# Edmure is blocked conservatively through the Tully
+# dynasty so the route cannot accidentally target him.
+# =========================================================
+
+segrellion_daenerys_riverlands_support_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_riverlands_approached
+	}
+
+
+	title:e_the_riverlands.holder ?= {
+
+		is_alive = yes
+
+
+		NOT = {
+			this = character:Baelish_2
+		}
+
+
+		NOT = {
+			this = character:Stark_Dummy_8
+		}
+
+
+		NOT = {
+			this = character:Stark_7
+		}
+
+
+		NOT = {
+			dynasty = dynasty:dynn_Tully
+		}
+	}
+
+
+	if = {
+
+		limit = {
+			has_global_variable = segrellion_resurrected_jon
+		}
+
+
+		title:e_the_riverlands.holder = {
+
+			NOT = {
+				this = global_var:segrellion_resurrected_jon
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# FLAMELANDS
+# =========================================================
+
+segrellion_daenerys_flamelands_support_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_flamelands_approached
+	}
+
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_landing_flamelands
+	}
+
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_beacon_negotiation_refused
+	}
+
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_promised_beacon_marriage
+	}
+
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_promised_beacon_council
+	}
+
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_promised_beacon_independence
+	}
+
+
+	NOT = {
+		has_character_flag = segrellion_marriage_promised_to_daemon
+	}
+
+
+	is_married = no
+
+
+	character:Segrellion_60 ?= {
+
+		is_alive = yes
+
+		is_landed = yes
+
+		segrellion_daemon_controls_flamelands_trigger = yes
+
+
+		NOT = {
+			has_character_flag = segrellion_pledged_to_daenerys
+		}
+	}
+}
+
+
+# =========================================================
+# STORMLANDS
+#
+# Only Joffrey Vladwyn receives this special negotiation.
+# =========================================================
+
+segrellion_daenerys_stormlands_support_available_trigger = {
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_stormlands_approached
+	}
+
+
+	character:Vladwyn_5 ?= {
+		is_alive = yes
+	}
+
+
+	title:e_the_stormlands.holder = character:Vladwyn_5
+}
+
+
+# =========================================================
+# ANY ROUTE AVAILABLE
+# =========================================================
+
+segrellion_daenerys_has_westeros_support_route_trigger = {
+
+	OR = {
+
+		segrellion_daenerys_north_support_available_trigger = yes
+
+		segrellion_daenerys_reach_support_available_trigger = yes
+
+		segrellion_daenerys_westerlands_support_available_trigger = yes
+
+		segrellion_daenerys_dorne_support_available_trigger = yes
+
+		segrellion_daenerys_riverlands_support_available_trigger = yes
+
+		segrellion_daenerys_flamelands_support_available_trigger = yes
+
+		segrellion_daenerys_stormlands_support_available_trigger = yes
+	}
+}
