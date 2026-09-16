@@ -390,3 +390,113 @@ segrellion_knightly_ideal.9000 = {
 		name = segrellion_knightly_ideal.9000.a
 	}
 }
+
+# =========================================================
+# 9900
+# PRIVATE YEARLY KNIGHTLY IDEAL TICK
+# =========================================================
+
+segrellion_knightly_ideal.9900 = {
+
+	type = character_event
+
+	hidden = yes
+
+
+	immediate = {
+
+
+		# =================================================
+		# SAVE REPAIR
+		#
+		# Allows this event to initialize old saves too.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_knightly_ideal_yearly_tick_started
+				}
+			}
+
+
+			add_character_flag = segrellion_knightly_ideal_yearly_tick_started
+		}
+
+
+		# =================================================
+		# STILL FOLLOWING THE KNIGHTLY IDEAL
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_trait = segrellion_knightly_ideal_trait
+
+				NOT = {
+					has_character_flag = segrellion_knightly_ideal_completed
+				}
+			}
+
+
+			# =============================================
+			# PROGRESS THIS YEAR
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					segrellion_knightly_ideal_can_progress_trigger = yes
+				}
+
+
+				segrellion_knightly_ideal_yearly_progress_effect = yes
+			}
+
+
+			# =============================================
+			# SCHEDULE NEXT YEAR
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_knightly_ideal_completed
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_knightly_ideal.9900
+
+					days = 365
+				}
+			}
+
+
+			else = {
+
+				remove_character_flag = segrellion_knightly_ideal_yearly_tick_started
+			}
+		}
+
+
+		# =================================================
+		# DEAD / TRAIT REMOVED / ALREADY COMPLETED
+		# =================================================
+
+		else = {
+
+			remove_character_flag = segrellion_knightly_ideal_yearly_tick_started
+		}
+	}
+}

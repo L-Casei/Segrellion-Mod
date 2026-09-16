@@ -1,68 +1,209 @@
+# =========================================================
+# SEGRELLION MOD
+# CANON CHARACTER ON ACTIONS
+# =========================================================
+
+
+# =========================================================
+# BIRTH
+# =========================================================
+
 on_birth_child = {
+
 	on_actions = {
+
 		segrellion_canon_trait_on_birth
 	}
 }
 
-on_birthday = {
-	on_actions = {
-		segrellion_canon_child_personality_on_birthday
-		segrellion_vhalyrax_birthday_growth
-		segrellion_check_dragonriding_house_on_birthday
-	}
-}
+
 
 segrellion_canon_trait_on_birth = {
+
 	effect = {
+
 		scope:child = {
+
 			segrellion_assign_canon_trait_from_identity_effect = yes
+
 			segrellion_assign_later_canon_trait_from_identity_effect = yes
 		}
+	}
+}
+
+
+
+# =========================================================
+# BIRTHDAYS
+#
+# IMPORTANT:
+# These effects must NOT run for every character in the
+# world. AGOT has enormous numbers of characters and many
+# historical characters use January 1 as an approximate
+# birthday.
+# =========================================================
+
+on_birthday = {
+
+	on_actions = {
+
+		segrellion_canon_child_personality_on_birthday
+
+		segrellion_canon_marriage_maintenance_on_birthday
+
+		segrellion_later_canon_story_on_birthday
+
+		segrellion_vhalyrax_birthday_growth
+	}
+}
+
+
+
+# =========================================================
+# CANON PERSONALITY / EDUCATION
+# =========================================================
+
+segrellion_canon_child_personality_on_birthday = {
+
+	trigger = {
+
+		segrellion_is_canon_birthday_character_trigger = yes
+	}
+
+
+	effect = {
+
+		segrellion_assign_canon_child_personality_effect = yes
+
+		segrellion_assign_later_canon_child_personality_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# CANON MARRIAGE MAINTENANCE
+# =========================================================
+
+segrellion_canon_marriage_maintenance_on_birthday = {
+
+	trigger = {
+
+		segrellion_is_canon_marriage_checkpoint_character_trigger = yes
+	}
+
+
+	effect = {
+
 		segrellion_try_force_later_canon_marriages_effect = yes
 	}
 }
 
-segrellion_canon_child_personality_on_birthday = {
+
+
+# =========================================================
+# LATER CANON STORY START
+# =========================================================
+
+segrellion_later_canon_story_on_birthday = {
+
+	trigger = {
+
+		segrellion_is_later_canon_story_birthday_character_trigger = yes
+	}
+
+
 	effect = {
-		segrellion_assign_canon_child_personality_effect = yes
-		segrellion_assign_later_canon_child_personality_effect = yes
-		segrellion_try_force_later_canon_marriages_effect = yes
+
 		iaf_try_start_later_segrellion_canon_story_effect = yes
 	}
 }
 
+
+
+# =========================================================
+# VHALYRAX GROWTH
+# =========================================================
+
 segrellion_vhalyrax_birthday_growth = {
+
+	trigger = {
+
+		has_character_flag = segrellion_vhalyrax_dragon
+	}
+
+
 	effect = {
+
 		segrellion_vhalyrax_growth_effect = yes
 	}
 }
 
 
-segrellion_check_dragonriding_house_on_birthday = {
+
+# =========================================================
+# DRAGONRIDING HOUSE MAINTENANCE
+#
+# This is a world-level check and therefore only needs
+# to happen once per year, not on every character birthday.
+# =========================================================
+
+yearly_global_pulse = {
+
+	on_actions = {
+
+		segrellion_dragonriding_house_yearly_check
+	}
+}
+
+
+
+segrellion_dragonriding_house_yearly_check = {
+
 	effect = {
+
 		if = {
+
 			limit = {
+
 				current_date >= 8120.1.1
 			}
 
+
 			house:house_Segrellion = {
+
 				if = {
+
 					limit = {
-						NOT = { has_house_modifier = dragonrider_house_modifier }
+
+						NOT = {
+							has_house_modifier = dragonrider_house_modifier
+						}
 					}
+
+
 					add_house_modifier = {
+
 						modifier = dragonrider_house_modifier
 					}
 				}
 			}
 
-			# Opcional
+
 			house:house_Stormflame = {
+
 				if = {
+
 					limit = {
-						NOT = { has_house_modifier = dragonrider_house_modifier }
+
+						NOT = {
+							has_house_modifier = dragonrider_house_modifier
+						}
 					}
+
+
 					add_house_modifier = {
+
 						modifier = dragonrider_house_modifier
 					}
 				}
