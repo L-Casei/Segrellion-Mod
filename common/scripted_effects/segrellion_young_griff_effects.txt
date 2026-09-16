@@ -1730,21 +1730,22 @@ segrellion_young_griff_grant_westerlands_effect = {
 
 
 	# =====================================================
-	# COLLECT EVERY TITLE PERSONALLY HELD BY CERSEI
+	# COLLECT CERSEI'S PERSONAL WESTERLAND TITLES
 	#
-	# This deliberately avoids maintaining a hardcoded list.
-	#
-	# Therefore it also catches:
-	# - Westerlands
-	# - Kingdom of the Rock
-	# - Casterly Rock
-	# - Clegane lands
-	# - any other personal titles she currently controls
+	# e_the_westerlands is handled separately below.
+	# This matters because after the Iron Throne war it may
+	# temporarily be held by Aegon, Tommen or somebody else.
 	# =====================================================
 
 	character:Lannister_6 = {
 
 		every_held_title = {
+
+			limit = {
+
+				this != title:e_the_westerlands
+			}
+
 
 			add_to_list = segrellion_cersei_titles_to_transfer
 		}
@@ -1756,8 +1757,59 @@ segrellion_young_griff_grant_westerlands_effect = {
 		type = conquest
 
 		save_scope_as = segrellion_cersei_lannister_transfer
+
+		add_claim_on_loss = no
 	}
 
+
+	# =====================================================
+	# LORD PARAMOUNTCY OF THE WESTERLANDS
+	#
+	# Do NOT assume Cersei currently holds it.
+	#
+	# Tommen can retain it after AGOT's realm reconstruction,
+	# or Aegon may temporarily hold it after removing Tommen.
+	#
+	# Whoever currently holds it, the final chosen ruler
+	# receives it here together with its vassal structure.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			title:e_the_westerlands ?= {
+
+				exists = holder
+
+				NOT = {
+
+					holder = scope:segrellion_new_lannister_lord
+				}
+			}
+		}
+
+
+		title:e_the_westerlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = scope:segrellion_new_lannister_lord
+
+				change = scope:segrellion_cersei_lannister_transfer
+
+				take_baronies = no
+			}
+		}
+	}
+
+
+	# =====================================================
+	# CERSEI'S REMAINING PERSONAL TITLES
+	#
+	# Casterly Rock and any other personal holdings she
+	# controls are transferred as before.
+	# =====================================================
 
 	every_in_list = {
 
@@ -2937,6 +2989,62 @@ segrellion_transfer_tommen_deerfield_effect = {
 
 
 	resolve_title_and_vassal_change = scope:segrellion_tommen_deerfield_change
+}
+
+# =========================================================
+# TOMMEN - REMOVE THE WESTERLANDS
+#
+# ROOT = Young Griff
+#
+# Tommen may still hold the Westerlands after the Iron
+# Throne transfer. He must lose them before his personal
+# fate is resolved.
+#
+# Aegon temporarily takes the Lord Paramountcy. The later
+# Cersei/Westerlands settlement will give it to the final
+# chosen ruler.
+# =========================================================
+
+segrellion_transfer_tommen_westerlands_effect = {
+
+	if = {
+
+		limit = {
+
+			title:e_the_westerlands ?= {
+
+				exists = holder
+
+				holder = character:Baratheon_7
+			}
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = conquest
+
+			save_scope_as = segrellion_tommen_westerlands_change
+
+			add_claim_on_loss = no
+		}
+
+
+		title:e_the_westerlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = root
+
+				change = scope:segrellion_tommen_westerlands_change
+
+				take_baronies = no
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_tommen_westerlands_change
+	}
 }
 
 # =========================================================
