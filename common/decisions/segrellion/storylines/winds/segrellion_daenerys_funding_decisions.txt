@@ -40,19 +40,34 @@ segrellion_finance_dragon_fleet_decision = {
 	}
 
 
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
 	is_valid = {
 
-		NOT = {
-			has_character_flag = segrellion_daenerys_funding_recently_used
-		}
+		custom_description = {
 
-		OR = {
+			text = segrellion_finance_dragon_fleet_recent_use_requirement
 
 			NOT = {
-				exists = var:segrellion_daenerys_funding_methods_used
+				has_character_flag = segrellion_daenerys_funding_recently_used
 			}
+		}
 
-			var:segrellion_daenerys_funding_methods_used < 3
+
+		custom_description = {
+
+			text = segrellion_finance_dragon_fleet_methods_remaining_requirement
+
+			OR = {
+
+				NOT = {
+					exists = var:segrellion_daenerys_funding_methods_used
+				}
+
+				var:segrellion_daenerys_funding_methods_used < 3
+			}
 		}
 	}
 
@@ -81,6 +96,8 @@ segrellion_finance_dragon_fleet_decision = {
 			localization = segrellion_funding_choice_prince
 
 			current_description = segrellion_funding_choice_prince_desc
+
+			icon = "gfx/interface/icons/kingdom_crown.dds"
 
 
 			is_shown = {
@@ -136,6 +153,8 @@ segrellion_finance_dragon_fleet_decision = {
 
 			current_description = segrellion_funding_choice_syndicate_desc
 
+			icon = "gfx/interface/icons/icon_gold.dds"
+
 
 			is_shown = {
 
@@ -181,6 +200,8 @@ segrellion_finance_dragon_fleet_decision = {
 
 			current_description = segrellion_funding_choice_trade_desc
 
+			icon = "gfx/interface/icons/icon_barter.dds"
+
 
 			is_shown = {
 
@@ -216,6 +237,8 @@ segrellion_finance_dragon_fleet_decision = {
 
 			current_description = segrellion_funding_choice_blood_desc
 
+			icon = "gfx/interface/icons/icon_dragon.dds"
+
 
 			is_shown = {
 
@@ -230,26 +253,31 @@ segrellion_finance_dragon_fleet_decision = {
 
 			is_valid = {
 
-				OR = {
+				custom_description = {
 
-					title:c_claw_isle = {
-						exists = holder
-					}
+					text = segrellion_funding_choice_blood_available_requirement
 
-					title:c_driftmark = {
-						exists = holder
-					}
+					OR = {
 
-					character:Segrellion_43 ?= {
-						is_alive = yes
-						is_landed = yes
-					}
+						title:c_claw_isle = {
+							exists = holder
+						}
 
-					character:Segrellion_60 ?= {
+						title:c_driftmark = {
+							exists = holder
+						}
 
-						is_alive = yes
+						character:Segrellion_43 ?= {
+							is_alive = yes
+							is_landed = yes
+						}
 
-						is_at_location = title:b_castle_farring.title_province
+						character:Segrellion_60 ?= {
+
+							is_alive = yes
+
+							is_at_location = title:b_castle_farring.title_province
+						}
 					}
 				}
 			}
@@ -317,6 +345,8 @@ segrellion_finance_dragon_fleet_decision = {
 
 			current_description = segrellion_funding_choice_pirates_desc
 
+			icon = "gfx/interface/icons/icon_soldier.dds"
+
 
 			is_shown = {
 
@@ -373,6 +403,8 @@ segrellion_finance_dragon_fleet_decision = {
 
 			current_description = segrellion_funding_choice_jewels_desc
 
+			icon = "gfx/interface/icons/modifiers/icon_prestige_04.dds"
+
 
 			is_shown = {
 
@@ -407,6 +439,8 @@ segrellion_finance_dragon_fleet_decision = {
 			localization = segrellion_funding_choice_iron_bank
 
 			current_description = segrellion_funding_choice_iron_bank_desc
+
+			icon = "gfx/interface/icons/icon_imperial_treasury.dds"
 
 
 			is_shown = {
@@ -474,6 +508,8 @@ segrellion_finance_dragon_fleet_decision = {
 
 			current_description = segrellion_funding_choice_captains_desc
 
+			icon = "gfx/interface/icons/icon_group_of_characters.dds"
+
 
 			is_shown = {
 
@@ -514,6 +550,10 @@ segrellion_finance_dragon_fleet_decision = {
 	# =====================================================
 
 	effect = {
+
+		custom_tooltip = segrellion_finance_dragon_fleet_effect_route_tt
+		custom_tooltip = segrellion_finance_dragon_fleet_effect_funding_tt
+		custom_tooltip = segrellion_finance_dragon_fleet_effect_obligations_tt
 
 		hidden_effect = {
 
@@ -705,8 +745,34 @@ segrellion_settle_invasion_debts_decision = {
 	}
 
 
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
 	is_valid = {
-		always = yes
+
+		custom_description = {
+
+			text = segrellion_settle_invasion_debts_affordable_requirement
+
+			OR = {
+
+				AND = {
+					has_character_flag = segrellion_daenerys_pentoshi_syndicate_debt
+					gold >= 1200
+				}
+
+				AND = {
+					has_character_flag = segrellion_daenerys_iron_bank_debt
+					gold >= 1700
+				}
+
+				AND = {
+					has_character_flag = segrellion_daenerys_captains_credit_debt
+					gold >= 650
+				}
+			}
+		}
 	}
 
 
@@ -727,6 +793,8 @@ segrellion_settle_invasion_debts_decision = {
 
 			current_description = segrellion_repay_choice_syndicate_desc
 
+			icon = "gfx/interface/icons/icon_gold.dds"
+
 
 			is_shown = {
 
@@ -739,7 +807,13 @@ segrellion_settle_invasion_debts_decision = {
 			is_valid = {
 
 				root = {
-					gold >= 1200
+
+					custom_description = {
+
+						text = segrellion_repay_choice_syndicate_gold_requirement
+
+						gold >= 1200
+					}
 				}
 			}
 		}
@@ -749,9 +823,13 @@ segrellion_settle_invasion_debts_decision = {
 
 			value = segrellion_repay_choice_iron_bank
 
+			value = segrellion_repay_choice_iron_bank
+
 			localization = segrellion_repay_choice_iron_bank
 
 			current_description = segrellion_repay_choice_iron_bank_desc
+
+			icon = "gfx/interface/icons/icon_imperial_treasury.dds"
 
 
 			is_shown = {
@@ -765,7 +843,13 @@ segrellion_settle_invasion_debts_decision = {
 			is_valid = {
 
 				root = {
-					gold >= 1700
+
+					custom_description = {
+
+						text = segrellion_repay_choice_iron_bank_gold_requirement
+
+						gold >= 1700
+					}
 				}
 			}
 		}
@@ -779,6 +863,8 @@ segrellion_settle_invasion_debts_decision = {
 
 			current_description = segrellion_repay_choice_captains_desc
 
+			icon = "gfx/interface/icons/icon_group_of_characters.dds"
+
 
 			is_shown = {
 
@@ -791,7 +877,13 @@ segrellion_settle_invasion_debts_decision = {
 			is_valid = {
 
 				root = {
-					gold >= 650
+
+					custom_description = {
+
+						text = segrellion_repay_choice_captains_gold_requirement
+
+						gold >= 650
+					}
 				}
 			}
 		}
@@ -799,6 +891,9 @@ segrellion_settle_invasion_debts_decision = {
 
 
 	effect = {
+
+		custom_tooltip = segrellion_settle_invasion_debts_effect_one_debt_tt
+		custom_tooltip = segrellion_settle_invasion_debts_effect_remove_penalty_tt
 
 		hidden_effect = {
 
