@@ -193,10 +193,6 @@ vladwyn_name.4000 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-
-
-
-
 	override_background = {
 		reference = segrellion_insidious_castle
 	}
@@ -210,6 +206,18 @@ vladwyn_name.4000 = {
 	desc = {
 
 		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Baratheon_34 = {
+						is_alive = yes
+					}
+				}
+
+				desc = vladwyn_name.4000.desc_boremund_alive
+			}
 
 
 			# =================================================
@@ -294,6 +302,10 @@ vladwyn_name.4000 = {
 
 		trigger = {
 
+			character:Baratheon_34 = {
+				is_alive = no
+			}
+
 			scope:vladwyn_storm_lord = {
 
 				opinion = {
@@ -329,6 +341,10 @@ vladwyn_name.4000 = {
 
 
 		trigger = {
+
+			character:Baratheon_34 = {
+				is_alive = no
+			}
 
 			scope:vladwyn_storm_lord = {
 
@@ -367,6 +383,10 @@ vladwyn_name.4000 = {
 
 
 		trigger = {
+
+			character:Baratheon_34 = {
+				is_alive = no
+			}
 
 			scope:vladwyn_storm_lord = {
 
@@ -461,6 +481,34 @@ vladwyn_name.4000 = {
 						flag = vladwyn_tristan_storms_end_request_cooldown
 						years = 2
 					}
+				}
+			}
+		}
+	}
+
+	option = {
+
+		name = vladwyn_name.4000.d
+
+
+		trigger = {
+
+			character:Baratheon_34 = {
+				is_alive = yes
+			}
+		}
+
+
+		custom_tooltip = vladwyn_name.4000.d.tt
+
+
+		hidden_effect = {
+
+			scope:vladwyn_storm_lord = {
+
+				add_character_flag = {
+					flag = vladwyn_tristan_storms_end_request_cooldown
+					years = 2
 				}
 			}
 		}
@@ -679,5 +727,818 @@ vladwyn_name.4900 = {
 				}
 			}
 		}
+	}
+}
+
+# =========================================================
+# 5000
+# A NAME AMONG WOLVES
+# =========================================================
+
+vladwyn_name.5000 = {
+
+	type = character_event
+
+	title = vladwyn_name.5000.t
+	desc = vladwyn_name.5000.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+
+
+	trigger = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_northern_mother_clue
+
+		NOT = {
+			has_character_flag = vladwyn_alarra_identified
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_alarra_identified
+	}
+
+
+	option = {
+
+		name = vladwyn_name.5000.a
+
+		custom_tooltip = vladwyn_name.5000.a.tt
+
+
+		if = {
+
+			limit = {
+
+				character:Stark_79 = {
+					is_alive = yes
+				}
+			}
+
+			trigger_event = {
+				id = vladwyn_name.5100
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = vladwyn_name.5300
+				days = 1
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5100
+# SHE STILL LIVES
+# =========================================================
+
+vladwyn_name.5100 = {
+
+	type = character_event
+
+	title = vladwyn_name.5100.t
+	desc = vladwyn_name.5100.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+
+
+	trigger = {
+
+		character:Stark_79 = {
+			is_alive = yes
+		}
+	}
+
+
+	option = {
+
+		name = vladwyn_name.5100.a
+
+		custom_tooltip = vladwyn_name.5100.a.tt
+
+
+		if = {
+
+			limit = {
+
+				character:Stark_79 = {
+					location = root.location
+				}
+			}
+
+			trigger_event = {
+				id = vladwyn_name.5200
+				days = 1
+			}
+		}
+
+		else = {
+
+			add_character_flag = vladwyn_seek_alarra_unlocked
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5200
+# THE SON SHE LOST
+# =========================================================
+
+vladwyn_name.5200 = {
+
+	type = character_event
+
+	title = vladwyn_name.5200.t
+	desc = vladwyn_name.5200.desc
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+	right_portrait = character:Stark_79
+
+
+	trigger = {
+
+		character:Stark_79 = {
+			is_alive = yes
+		}
+
+		NOT = {
+			has_character_flag = vladwyn_alarra_reunited
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_alarra_reunited
+	}
+
+
+	option = {
+
+		name = vladwyn_name.5200.a
+
+		custom_tooltip = vladwyn_name.5200.a.tt
+
+
+		add_stress = -100
+
+
+		add_opinion = {
+			target = character:Stark_79
+			modifier = vladwyn_reunited_mother_opinion
+			years = 50
+		}
+
+
+		character:Stark_79 = {
+
+			add_stress = -150
+
+			add_opinion = {
+				target = root
+				modifier = vladwyn_reunited_mother_opinion
+				years = 50
+			}
+		}
+
+
+		trigger_event = {
+			id = vladwyn_name.5250
+			days = 1
+		}
+
+
+		trigger_event = {
+			id = vladwyn_name.5270
+			days = 30
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5250
+# WHAT BOREMUND DID
+# =========================================================
+
+vladwyn_name.5250 = {
+
+	type = character_event
+
+	title = vladwyn_name.5250.t
+	desc = vladwyn_name.5250.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+	right_portrait = character:Stark_79
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_full_truth_known
+		add_character_flag = vladwyn_blood_choice_unlocked
+	}
+
+
+	option = {
+
+		name = vladwyn_name.5250.a
+
+		custom_tooltip = vladwyn_name.5250.a.tt
+
+		trigger_event = {
+			id = vladwyn_name.5900
+			days = 1
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5260
+# THE DEAD GUARDS
+# =========================================================
+
+vladwyn_name.5260 = {
+
+	type = character_event
+
+	title = vladwyn_name.5260.t
+	desc = vladwyn_name.5260.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_ruins
+	}
+
+	left_portrait = root
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_parentage_proven
+	}
+
+
+	option = {
+
+		name = vladwyn_name.5260.a
+
+		custom_tooltip = vladwyn_name.5260.a.tt
+	}
+}
+
+
+
+# =========================================================
+# 5270
+# A LIFETIME IN AN AFTERNOON
+# =========================================================
+
+vladwyn_name.5270 = {
+
+	type = character_event
+
+	title = vladwyn_name.5270.t
+	desc = vladwyn_name.5270.desc
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+	right_portrait = character:Stark_79
+
+
+	trigger = {
+
+		character:Stark_79 = {
+			is_alive = yes
+		}
+
+		has_character_flag = vladwyn_alarra_reunited
+	}
+
+
+	option = {
+
+		name = vladwyn_name.5270.a
+
+		add_stress = -40
+
+
+		character:Stark_79 = {
+			add_stress = -40
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5300
+# THE HOUSE IN THE WOLFSWOOD
+# =========================================================
+
+vladwyn_name.5300 = {
+
+	type = character_event
+
+	title = vladwyn_name.5300.t
+	desc = vladwyn_name.5300.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_westerosi_northern_tavern
+	}
+
+	left_portrait = root
+
+
+	option = {
+
+		name = vladwyn_name.5300.a
+
+		trigger_event = {
+			id = vladwyn_name.5400
+			days = 7
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5400
+# FOUR RIDERS SOUTH
+# =========================================================
+
+vladwyn_name.5400 = {
+
+	type = character_event
+
+	title = vladwyn_name.5400.t
+	desc = vladwyn_name.5400.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_westerosi_northern_tavern
+	}
+
+	left_portrait = root
+
+
+	option = {
+
+		name = vladwyn_name.5400.a
+
+		trigger_event = {
+			id = vladwyn_name.5500
+			days = 7
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5500
+# NORTHBOUND, ALONE
+# =========================================================
+
+vladwyn_name.5500 = {
+
+	type = character_event
+
+	title = vladwyn_name.5500.t
+	desc = vladwyn_name.5500.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_westerosi_northern_tavern
+	}
+
+	left_portrait = root
+
+
+	option = {
+
+		name = vladwyn_name.5500.a
+
+		trigger_event = {
+			id = vladwyn_name.5600
+			days = 7
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5600
+# THE MEN WHO NEVER RETURNED
+# =========================================================
+
+vladwyn_name.5600 = {
+
+	type = character_event
+
+	title = vladwyn_name.5600.t
+	desc = vladwyn_name.5600.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_ruins
+	}
+
+	left_portrait = root
+
+
+	option = {
+
+		name = vladwyn_name.5600.a
+
+		trigger_event = {
+			id = vladwyn_name.5700
+			days = 7
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5700
+# ALARRA'S CONFESSION
+# =========================================================
+
+vladwyn_name.5700 = {
+
+	type = character_event
+
+	title = vladwyn_name.5700.t
+	desc = vladwyn_name.5700.desc
+
+	theme = intrigue
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+
+
+	immediate = {
+
+		add_character_flag = vladwyn_full_truth_known
+		add_character_flag = vladwyn_parentage_proven
+		add_character_flag = vladwyn_blood_choice_unlocked
+	}
+
+
+	option = {
+
+		name = vladwyn_name.5700.a
+
+		custom_tooltip = vladwyn_name.5700.a.tt
+
+
+		trigger_event = {
+			id = vladwyn_name.5900
+			days = 1
+		}
+	}
+}
+
+
+
+# =========================================================
+# 5900
+# THE NAME THEY COULD NOT TAKE
+# =========================================================
+
+vladwyn_name.5900 = {
+
+	type = character_event
+
+	title = vladwyn_name.5900.t
+	desc = vladwyn_name.5900.desc
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	left_portrait = root
+
+
+	option = {
+
+		name = vladwyn_name.5900.a
+
+		custom_tooltip = vladwyn_name.5900.a.tt
+	}
+}
+
+
+
+# =========================================================
+# 6000
+# WHAT SHALL MY BLOOD MEAN?
+# =========================================================
+
+vladwyn_name.6000 = {
+
+	type = character_event
+
+	title = vladwyn_name.6000.t
+	desc = vladwyn_name.6000.desc
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = segrellion_deciding_landmark
+	}
+
+	left_portrait = root
+
+
+	# =====================================================
+	# STARK
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.6000.a
+
+		trigger = {
+
+			has_character_flag = vladwyn_parentage_proven
+		}
+
+
+		custom_tooltip = vladwyn_name.6000.a.tt
+
+
+		vladwyn_reveal_true_parentage_effect = yes
+
+		set_house = character:Stark_79.house
+
+		vladwyn_add_north_pressed_claims_effect = yes
+
+		add_character_flag = vladwyn_northern_road_unlocked
+
+		add_character_flag = vladwyn_blood_choice_made
+		add_character_flag = vladwyn_name_story_completed
+
+		remove_character_flag = vladwyn_blood_choice_unlocked
+	}
+
+
+	# =====================================================
+	# BARATHEON
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.6000.b
+
+		trigger = {
+
+			has_character_flag = vladwyn_parentage_proven
+		}
+
+
+		custom_tooltip = vladwyn_name.6000.b.tt
+
+
+		vladwyn_reveal_true_parentage_effect = yes
+
+		set_house = character:Baratheon_34.house
+
+		vladwyn_add_stormlands_pressed_claims_effect = yes
+
+		add_character_flag = vladwyn_stormlander_road_unlocked
+
+
+		character:Baratheon_34.house = {
+
+			every_house_member = {
+
+				limit = {
+
+					is_alive = yes
+
+					NOT = {
+						this = root
+					}
+				}
+
+				add_opinion = {
+					target = root
+					modifier = vladwyn_claimed_baratheon_blood_opinion
+					years = 20
+				}
+			}
+		}
+
+
+		add_character_flag = vladwyn_blood_choice_made
+		add_character_flag = vladwyn_name_story_completed
+
+		remove_character_flag = vladwyn_blood_choice_unlocked
+	}
+
+
+	# =====================================================
+	# VLADWYN, BUT PUBLIC
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.6000.c
+
+
+		custom_tooltip = vladwyn_name.6000.c.tt
+
+
+		vladwyn_reveal_true_parentage_effect = yes
+
+		vladwyn_add_both_unpressed_claims_effect = yes
+
+		add_character_flag = vladwyn_remained_vladwyn_publicly
+
+		add_character_flag = vladwyn_blood_choice_made
+		add_character_flag = vladwyn_name_story_completed
+
+		remove_character_flag = vladwyn_blood_choice_unlocked
+	}
+
+
+	# =====================================================
+	# KEEP IT SECRET
+	# =====================================================
+
+	option = {
+
+		name = vladwyn_name.6000.d
+
+		custom_tooltip = vladwyn_name.6000.d.tt
+
+		add_character_flag = vladwyn_parentage_secret
+
+		add_character_flag = vladwyn_blood_choice_made
+		add_character_flag = vladwyn_name_story_completed
+
+		remove_character_flag = vladwyn_blood_choice_unlocked
 	}
 }

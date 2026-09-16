@@ -387,3 +387,264 @@ vladwyn_search_storms_end_records_decision = {
 		base = 0
 	}
 }
+
+# =========================================================
+# FOLLOW THE WOLF NORTH
+# =========================================================
+
+vladwyn_follow_wolf_north_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tristan_vladwyn_landless_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = vladwyn_follow_wolf_north_decision_desc
+	selection_tooltip = vladwyn_follow_wolf_north_decision_tooltip
+	confirm_text = vladwyn_follow_wolf_north_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_follow_wolf_north_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_alarra_identified
+		}
+	}
+
+
+	is_valid = {
+
+		is_imprisoned = no
+
+		custom_description = {
+
+			text = vladwyn_follow_wolf_north_location_requirement
+
+			location.county = {
+				this = title:c_winterfell
+			}
+		}
+	}
+
+
+	effect = {
+
+		add_learning_lifestyle_xp = 200
+
+		custom_tooltip = vladwyn_follow_wolf_north_effect_tt
+
+
+		hidden_effect = {
+
+			remove_character_flag = vladwyn_follow_wolf_north_unlocked
+
+			trigger_event = vladwyn_name.5000
+		}
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+
+# =========================================================
+# FIND ALARRA
+# =========================================================
+
+vladwyn_meet_alarra_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tristan_vladwyn_landless_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = vladwyn_meet_alarra_decision_desc
+	selection_tooltip = vladwyn_meet_alarra_decision_tooltip
+	confirm_text = vladwyn_meet_alarra_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_seek_alarra_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_alarra_reunited
+		}
+
+		character:Stark_79 = {
+			is_alive = yes
+		}
+	}
+
+
+	is_valid = {
+
+		is_imprisoned = no
+
+		custom_description = {
+
+			text = vladwyn_meet_alarra_location_requirement
+
+			character:Stark_79 = {
+				location = root.location
+			}
+		}
+	}
+
+
+	effect = {
+
+		add_learning_lifestyle_xp = 100
+
+		custom_tooltip = vladwyn_meet_alarra_effect_tt
+
+
+		hidden_effect = {
+
+			remove_character_flag = vladwyn_seek_alarra_unlocked
+
+			trigger_event = vladwyn_name.5200
+		}
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+
+# =========================================================
+# FIND PROOF OF BOREMUND'S CRIME
+# =========================================================
+
+vladwyn_find_boremund_proof_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tristan_vladwyn_landless_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = vladwyn_find_boremund_proof_decision_desc
+	selection_tooltip = vladwyn_find_boremund_proof_decision_tooltip
+	confirm_text = vladwyn_find_boremund_proof_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_full_truth_known
+
+		has_character_flag = vladwyn_alarra_reunited
+
+		NOT = {
+			has_character_flag = vladwyn_parentage_proven
+		}
+	}
+
+
+	is_valid = {
+
+		is_imprisoned = no
+	}
+
+
+	effect = {
+
+		add_learning_lifestyle_xp = 200
+
+		custom_tooltip = vladwyn_find_boremund_proof_effect_tt
+
+
+		hidden_effect = {
+
+			trigger_event = vladwyn_name.5260
+		}
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+
+
+# =========================================================
+# WHAT SHALL MY BLOOD MEAN?
+# =========================================================
+
+vladwyn_choose_blood_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/tristan_vladwyn_blood_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = vladwyn_choose_blood_decision_desc
+	selection_tooltip = vladwyn_choose_blood_decision_tooltip
+	confirm_text = vladwyn_choose_blood_decision_confirm
+
+
+	is_shown = {
+
+		has_character_flag = is_Vladwyn_1
+
+		has_character_flag = vladwyn_blood_choice_unlocked
+
+		NOT = {
+			has_character_flag = vladwyn_blood_choice_made
+		}
+	}
+
+
+	is_valid = {
+
+		is_alive = yes
+		is_imprisoned = no
+	}
+
+
+	effect = {
+
+		custom_tooltip = vladwyn_choose_blood_effect_tt
+
+		trigger_event = vladwyn_name.6000
+	}
+
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
