@@ -2553,6 +2553,34 @@ segrellion_daenerys_invasion.0018 = {
 
 	immediate = {
 
+		# =================================================
+		# HARD-CLOSE THE NARROW SEA CROSSING
+		#
+		# Once Daenerys physically reaches Westeros no
+		# recovery system may interpret her as still being
+		# in transit or restart another landing route.
+		# =================================================
+
+		add_character_flag = segrellion_daenerys_landed_in_westeros
+
+		remove_character_flag = segrellion_daenerys_crossing_underway
+
+		remove_character_flag = segrellion_daenerys_journey_ready
+
+		remove_character_flag = segrellion_daenerys_landing_choice_pending
+
+		remove_variable = segrellion_daenerys_crossing_destination
+
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_landing_beacon
+			}
+
+			remove_character_flag = segrellion_daenerys_landing_masseys_hook
+		}
+
 		# Daenerys has left Pentos for good.
 		remove_character_flag = segrellion_daenerys_camped_at_pentos
 		remove_character_flag = segrellion_daenerys_waiting_at_pentos
@@ -2590,8 +2618,6 @@ segrellion_daenerys_invasion.0018 = {
 				}
 			}
 
-
-			add_character_flag = segrellion_daenerys_landed_in_westeros
 			remove_character_flag = sworn_peace
 		}
 

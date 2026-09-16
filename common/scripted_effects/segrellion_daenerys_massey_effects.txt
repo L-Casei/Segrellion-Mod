@@ -256,15 +256,6 @@ segrellion_daenerys_massey_news_progression_effect = {
 	}
 }
 
-# =========================================================
-# DAENERYS - START THE BEACON CROSSING
-#
-# ROOT = Daenerys
-#
-# Used both by the normal Massey -> Daemon negotiation
-# chain and by the save-compatible recovery.
-# =========================================================
-
 segrellion_daenerys_start_beacon_crossing_effect = {
 
 	if = {
@@ -275,14 +266,22 @@ segrellion_daenerys_start_beacon_crossing_effect = {
 
 			is_alive = yes
 
-
 			NOT = {
 				exists = current_travel_plan
 			}
 
+			NOT = {
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+			}
 
 			segrellion_daemon_controls_flamelands_trigger = yes
 		}
+
+
+		# Beacon and Massey's Hook must be mutually exclusive.
+		remove_character_flag = segrellion_daenerys_landing_masseys_hook
+
+		add_character_flag = segrellion_daenerys_landing_beacon
 
 
 		start_travel_plan = {
@@ -334,6 +333,10 @@ segrellion_daenerys_beacon_negotiation_recovery_effect = {
 
 				has_character_flag = segrellion_daenerys_crossing_committed
 
+				NOT = {
+					has_character_flag = segrellion_daenerys_landed_in_westeros
+				}
+
 
 				character:Segrellion_60 ?= {
 
@@ -370,6 +373,10 @@ segrellion_daenerys_beacon_negotiation_recovery_effect = {
 
 					NOT = {
 						has_character_flag = segrellion_daenerys_beacon_open_event_pending
+					}
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_beacon_open_event_seen
 					}
 				}
 
@@ -408,6 +415,9 @@ segrellion_daenerys_beacon_negotiation_recovery_effect = {
 
 					has_character_flag = segrellion_daenerys_landing_beacon
 
+					NOT = {
+						has_character_flag = segrellion_daenerys_landed_in_westeros
+					}
 
 					NOT = {
 						exists = current_travel_plan
