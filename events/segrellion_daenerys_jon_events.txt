@@ -1,0 +1,710 @@
+namespace = segrellion_daenerys_jon
+
+
+# =========================================================
+# 0001 - A RAVEN FROM THE DRAGON QUEEN
+# =========================================================
+
+segrellion_daenerys_jon.0001 = {
+
+	type = letter_event
+
+	sender = character:Targaryen_9
+
+	title = segrellion_daenerys_jon.0001.t
+	desc = segrellion_daenerys_jon.0001.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_jon_daenerys_letter_seen
+	}
+
+
+	# =====================================================
+	# THE WINTERFELL COUNCIL IS STILL ACTIVE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0001.d
+
+		trigger = {
+
+			has_character_flag = segrellion_jon_winterfell_council_called
+		}
+
+
+		add_character_flag = segrellion_jon_daenerys_reply_deferred
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_jon_parley_pending
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# GO PERSONALLY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0001.a
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_called
+			}
+		}
+
+
+		hidden_effect = {
+
+			segrellion_jon_accept_daenerys_parley_effect = yes
+		}
+
+
+		ai_chance = {
+
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# SEND AN ENVOY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0001.b
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_called
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_sent_envoy_to_daenerys
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_jon_parley_pending
+
+			add_character_flag = segrellion_daenerys_jon_envoy_route_open
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0040
+				days = { 3 6 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 15
+		}
+	}
+
+
+	# =====================================================
+	# REJECT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0001.c
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_called
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_rejected_daenerys_parley
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_jon_parley_pending
+
+			add_character_flag = segrellion_daenerys_jon_parley_rejected
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0041
+				days = { 3 6 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 5
+		}
+	}
+}
+
+
+# =========================================================
+# 0002 - THE UNANSWERED RAVEN
+# DAVOS
+# =========================================================
+
+segrellion_daenerys_jon.0002 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0002.t
+	desc = segrellion_daenerys_jon.0002.desc
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_daenerys_reply_deferred
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+
+		character:Seaworth_1 ?= {
+
+			is_alive = yes
+			is_imprisoned = no
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Seaworth_1
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0002.a
+
+		hidden_effect = {
+
+			segrellion_jon_accept_daenerys_parley_effect = yes
+		}
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0003 - THE UNANSWERED RAVEN
+# FALLBACK IF DAVOS IS UNAVAILABLE
+# =========================================================
+
+segrellion_daenerys_jon.0003 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0003.t
+	desc = segrellion_daenerys_jon.0003.desc
+
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_daenerys_reply_deferred
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0003.a
+
+		hidden_effect = {
+
+			segrellion_jon_accept_daenerys_parley_effect = yes
+		}
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - THE NORTH DOES NOT LIKE IT
+# =========================================================
+
+segrellion_daenerys_jon.0010 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0010.t
+	desc = segrellion_daenerys_jon.0010.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = council_chamber
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_daenerys_parley_accepted
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# KING IN THE NORTH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0010.a
+
+		custom_tooltip = segrellion_daenerys_jon.0010.travel_tt
+
+
+		add_character_flag = segrellion_jon_parley_independence_stance
+
+
+		hidden_effect = {
+
+			segrellion_jon_begin_daenerys_parley_journey_effect = yes
+		}
+
+
+		ai_chance = {
+
+			base = 40
+		}
+	}
+
+
+	# =====================================================
+	# LONG NIGHT FIRST
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0010.b
+
+		custom_tooltip = segrellion_daenerys_jon.0010.travel_tt
+
+
+		add_character_flag = segrellion_jon_parley_long_night_stance
+
+
+		hidden_effect = {
+
+			segrellion_jon_begin_daenerys_parley_journey_effect = yes
+		}
+
+
+		ai_chance = {
+
+			base = 45
+		}
+	}
+
+
+	# =====================================================
+	# PRAGMATIC
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0010.c
+
+		custom_tooltip = segrellion_daenerys_jon.0010.travel_tt
+
+
+		add_character_flag = segrellion_jon_parley_pragmatic_stance
+
+
+		hidden_effect = {
+
+			segrellion_jon_begin_daenerys_parley_journey_effect = yes
+		}
+
+
+		ai_chance = {
+
+			base = 15
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - THE DRAGON QUEEN
+#
+# JON ARRIVES AND MEETS DAENERYS
+# =========================================================
+
+segrellion_daenerys_jon.0030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0030.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					has_character_flag = segrellion_jon_daenerys_parley_destination_beacon
+				}
+
+				desc = segrellion_daenerys_jon.0030.desc_beacon
+			}
+
+
+			desc = segrellion_daenerys_jon.0030.desc
+		}
+	}
+
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_travelling_to_daenerys_parley
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_jon_travelling_to_daenerys_parley
+
+		add_character_flag = segrellion_jon_arrived_for_daenerys_parley
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_jon_travelling_to_parley
+		}
+
+
+		# =================================================
+		# THE BEACON
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_jon_daenerys_parley_destination_beacon
+			}
+
+
+			set_location = title:b_castle_farring.title_province
+
+
+			character:Seaworth_1 ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						has_character_flag = segrellion_davos_travels_with_jon_to_daenerys
+					}
+
+					set_location = title:b_castle_farring.title_province
+
+					remove_character_flag = segrellion_davos_travels_with_jon_to_daenerys
+				}
+			}
+		}
+
+
+		# =================================================
+		# DAENERYS' CURRENT LOCATION
+		# =================================================
+
+		else = {
+
+			character:Targaryen_9 = {
+
+				location ?= {
+
+					save_scope_as = segrellion_daenerys_parley_location
+				}
+			}
+
+
+			if = {
+
+				limit = {
+
+					exists = scope:segrellion_daenerys_parley_location
+				}
+
+
+				set_location = scope:segrellion_daenerys_parley_location
+
+
+				character:Seaworth_1 ?= {
+
+					if = {
+
+						limit = {
+
+							is_alive = yes
+
+							has_character_flag = segrellion_davos_travels_with_jon_to_daenerys
+						}
+
+						set_location = scope:segrellion_daenerys_parley_location
+
+						remove_character_flag = segrellion_davos_travels_with_jon_to_daenerys
+					}
+				}
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0030.a
+
+
+		add_character_flag = segrellion_jon_daenerys_first_audience_complete
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_jon_first_audience_complete
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - JON SENDS AN ENVOY
+# =========================================================
+
+segrellion_daenerys_jon.0040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0040.t
+	desc = segrellion_daenerys_jon.0040.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_jon_envoy_route_open
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0040.a
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0041 - THE NORTH REFUSES
+# =========================================================
+
+segrellion_daenerys_jon.0041 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0041.t
+	desc = segrellion_daenerys_jon.0041.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_jon_parley_rejected
+	}
+
+
+	left_portrait = {
+
+		character = root
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0041.a
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}

@@ -8,6 +8,7 @@ segrellion_prepare_davos_for_dragonstone_story_effect = {
 				is_alive = yes
 			}
 
+
 			random_child = {
 
 				limit = {
@@ -51,13 +52,40 @@ segrellion_prepare_davos_for_dragonstone_story_effect = {
 			}
 
 
+			# =================================================
+			# PUT DAVOS WITH THE CURRENT JON
+			# =================================================
+
 			if = {
 
 				limit = {
+
 					has_global_variable = segrellion_resurrected_jon
+
+					global_var:segrellion_resurrected_jon = {
+						is_alive = yes
+					}
 				}
 
-				global_var:segrellion_resurrected_jon ?= {
+				global_var:segrellion_resurrected_jon = {
+
+					add_courtier = character:Seaworth_1
+				}
+
+				return_to_court = yes
+			}
+
+			else_if = {
+
+				limit = {
+
+					character:Stark_7 ?= {
+
+						segrellion_is_current_jon_trigger = yes
+					}
+				}
+
+				character:Stark_7 = {
 
 					add_courtier = character:Seaworth_1
 				}

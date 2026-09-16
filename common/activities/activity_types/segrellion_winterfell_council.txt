@@ -483,6 +483,7 @@ activity_segrellion_winterfell_council = {
 			}
 		}
 
+
 		scope:host = {
 
 			remove_variable = segrellion_council_king_support
@@ -493,10 +494,6 @@ activity_segrellion_winterfell_council = {
 
 			# =================================================
 			# CANON HARD FAILSAFE
-			#
-			# If the proclamation event was delayed or lost,
-			# Jon still receives the North before the Council
-			# removes its active storyline flag.
 			# =================================================
 
 			segrellion_jon_force_canon_north_recovery_effect = yes
@@ -505,6 +502,56 @@ activity_segrellion_winterfell_council = {
 			remove_character_flag = segrellion_jon_winterfell_council_called
 
 			add_character_flag = segrellion_jon_winterfell_council_completed
+
+
+			# =================================================
+			# DAENERYS' UNANSWERED LETTER
+			#
+			# Jon deliberately postponed the matter until
+			# after the Winterfell Council.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_jon_daenerys_reply_deferred
+
+					character:Targaryen_9 ?= {
+						is_alive = yes
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						character:Seaworth_1 ?= {
+
+							is_alive = yes
+							is_imprisoned = no
+						}
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_jon.0002
+						days = 1
+					}
+				}
+
+
+				else = {
+
+					trigger_event = {
+
+						id = segrellion_daenerys_jon.0003
+						days = 1
+					}
+				}
+			}
 		}
 	}
 

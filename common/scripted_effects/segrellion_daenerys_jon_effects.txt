@@ -1,0 +1,241 @@
+# =========================================================
+# DAENERYS + JON
+# SCRIPTED EFFECTS
+# =========================================================
+
+
+# =========================================================
+# SEND DAENERYS' LETTER TO THE CURRENT JON
+# =========================================================
+
+segrellion_daenerys_send_jon_parley_letter_effect = {
+
+	# =====================================================
+	# RESURRECTED / RUNTIME JON
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			has_global_variable = segrellion_resurrected_jon
+
+			global_var:segrellion_resurrected_jon = {
+
+				segrellion_is_current_jon_trigger = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_jon_parley_invitation_sent
+		add_character_flag = segrellion_daenerys_jon_parley_pending
+
+
+		global_var:segrellion_resurrected_jon = {
+
+			add_character_flag = segrellion_jon_invited_to_dragonstone
+			add_character_flag = segrellion_jon_daenerys_parley_invitation_received
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0001
+				days = { 2 5 }
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HISTORICAL JON
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			character:Stark_7 ?= {
+
+				segrellion_is_current_jon_trigger = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_jon_parley_invitation_sent
+		add_character_flag = segrellion_daenerys_jon_parley_pending
+
+
+		character:Stark_7 = {
+
+			add_character_flag = segrellion_jon_invited_to_dragonstone
+			add_character_flag = segrellion_jon_daenerys_parley_invitation_received
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0001
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# JON ACCEPTS THE PERSONAL MEETING
+# =========================================================
+
+segrellion_jon_accept_daenerys_parley_effect = {
+
+	remove_character_flag = segrellion_jon_daenerys_reply_deferred
+
+	add_character_flag = segrellion_jon_daenerys_parley_accepted
+
+
+	character:Targaryen_9 ?= {
+
+		remove_character_flag = segrellion_daenerys_jon_parley_pending
+
+		add_character_flag = segrellion_daenerys_jon_parley_accepted
+	}
+
+
+	trigger_event = {
+
+		id = segrellion_daenerys_jon.0010
+		days = 1
+	}
+}
+
+
+# =========================================================
+# JON BEGINS THE JOURNEY SOUTH
+# =========================================================
+
+segrellion_jon_begin_daenerys_parley_journey_effect = {
+
+	save_scope_as = segrellion_jon_daenerys_parley_root
+
+
+	# =====================================================
+	# NORTHERN LORDS DISLIKE THE JOURNEY
+	# =====================================================
+
+	every_vassal = {
+
+		limit = {
+
+			is_alive = yes
+		}
+
+		add_opinion = {
+
+			target = scope:segrellion_jon_daenerys_parley_root
+			modifier = segrellion_jon_rides_south_to_targaryen_opinion
+		}
+	}
+
+
+	add_character_flag = segrellion_jon_travelling_to_daenerys_parley
+
+
+	character:Targaryen_9 ?= {
+
+		add_character_flag = segrellion_daenerys_jon_travelling_to_parley
+	}
+
+
+	# =====================================================
+	# CLEAR OLD DESTINATION FLAGS
+	# =====================================================
+
+	remove_character_flag = segrellion_jon_daenerys_parley_destination_beacon
+	remove_character_flag = segrellion_jon_daenerys_parley_destination_daenerys
+
+
+	# =====================================================
+	# THE BEACON
+	#
+	# If Daenerys is married or allied to Daemon,
+	# their political meeting takes place at The Beacon.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+
+			OR = {
+
+				character:Targaryen_9 = {
+
+					any_spouse = {
+
+						this = character:Segrellion_60
+					}
+				}
+
+				character:Targaryen_9 = {
+
+					is_allied_to = character:Segrellion_60
+				}
+
+				character:Targaryen_9 = {
+
+					has_character_flag = segrellion_daenerys_supports_daemon
+				}
+
+				character:Segrellion_60 = {
+
+					has_character_flag = segrellion_pledged_to_daenerys
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_daenerys_parley_destination_beacon
+	}
+
+
+	# =====================================================
+	# OTHERWISE FOLLOW DAENERYS
+	# =====================================================
+
+	else = {
+
+		add_character_flag = segrellion_jon_daenerys_parley_destination_daenerys
+	}
+
+
+	# =====================================================
+	# DAVOS TRAVELS WITH JON IF POSSIBLE
+	# =====================================================
+
+	character:Seaworth_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+				is_imprisoned = no
+			}
+
+			add_character_flag = segrellion_davos_travels_with_jon_to_daenerys
+		}
+	}
+
+
+	# =====================================================
+	# JOURNEY
+	# =====================================================
+
+	trigger_event = {
+
+		id = segrellion_daenerys_jon.0030
+		days = { 21 35 }
+	}
+}
