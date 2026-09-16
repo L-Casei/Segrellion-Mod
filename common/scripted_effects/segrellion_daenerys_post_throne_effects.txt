@@ -8,12 +8,10 @@
 #
 # ROOT = Daenerys
 #
-# Daenerys' conquest of the Iron Throne has its own
-# post-conquest pacification storyline.
-#
-# Therefore AGOT's generic Mega War punishment court must
-# not judge Aegon, Doran, Daemon or the other defeated
-# prisoners before our custom events can handle them.
+# Mirrors Young Griff's custom Iron Throne aftermath guard.
+# Daenerys handles the defeated realm through her own
+# pacification storyline, so AGOT must not open its generic
+# punishment court.
 # =========================================================
 
 segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
@@ -21,16 +19,71 @@ segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
 	every_owned_story = {
 
 		limit = {
-
 			story_type = story_agot_mw_rebel
-
-			var:mw_source = flag:mw_external
-
-			var:mw_war_cb = flag:claim_cb
 		}
 
 
-		end_story = yes
+		story_owner = {
+			save_scope_as = segrellion_daenerys_aftermath_story_owner
+		}
+
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					# =====================================
+					# NORMAL CASE
+					#
+					# AGOT still remembers Daenerys as
+					# the victorious throne-side top liege.
+					# =====================================
+
+					AND = {
+
+						exists = root.var:mw_top_liege
+
+						root.var:mw_top_liege = character:Targaryen_9
+					}
+
+
+					# =====================================
+					# FALLBACK
+					#
+					# AGOT may already have cleaned the
+					# mw_top_liege pointer during the war
+					# resolution tick.
+					# =====================================
+
+					scope:segrellion_daenerys_aftermath_story_owner = character:Targaryen_9
+				}
+			}
+
+
+			# =============================================
+			# NEVER LET AGOT PROCESS THE DEFEATED LORD LIST
+			# =============================================
+
+			remove_variable = lords_to_be_punished
+
+
+			# =============================================
+			# DO NOT FORCE end_story = yes
+			#
+			# AGOT's story cleanup expects an outcome.
+			# Mark the story as invalidated exactly like
+			# the working Young Griff implementation.
+			# =============================================
+
+			set_variable = {
+
+				name = mw_outcome
+
+				value = flag:invalidated
+			}
+		}
 	}
 }
 
@@ -40,6 +93,7 @@ segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
 # IMPORTANT:
 #
 # This effect is intentionally idempotent.
+#
 # It may safely be called from:
 #
 # - on_title_gain
@@ -65,6 +119,20 @@ segrellion_start_daenerys_post_throne_effect = {
 
 
 		# =================================================
+		# ALWAYS KILL AGOT'S GENERIC AFTERMATH FIRST
+		#
+		# This deliberately sits OUTSIDE the
+		# post_throne_started check.
+		#
+		# Every recovery pass repeats the cleanup in case
+		# AGOT created / repaired its story after our first
+		# initialization.
+		# =================================================
+
+		segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+
+
+		# =================================================
 		# INITIALIZE THE STORY
 		# =================================================
 
@@ -76,13 +144,6 @@ segrellion_start_daenerys_post_throne_effect = {
 					has_character_flag = segrellion_daenerys_post_throne_started
 				}
 			}
-
-
-			# AGOT's generic War's Aftermath must not consume
-			# the prisoners that belong to Daenerys' custom
-			# post-conquest storyline.
-
-			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
 
 
 			add_character_flag = segrellion_daenerys_post_throne_started
@@ -116,10 +177,6 @@ segrellion_start_daenerys_post_throne_effect = {
 
 		# =================================================
 		# INVASION STATE IS OVER
-		#
-		# Once Daenerys physically owns the Iron Throne,
-		# none of these old route flags may block her
-		# post-conquest story.
 		# =================================================
 
 		remove_character_flag = sworn_peace
@@ -145,9 +202,6 @@ segrellion_start_daenerys_post_throne_effect = {
 
 		# =================================================
 		# KING'S LANDING WAS BURNED
-		#
-		# Apply the political consequence only AFTER Dany
-		# owns the throne and the pacification variable exists.
 		# =================================================
 
 		if = {
@@ -155,6 +209,7 @@ segrellion_start_daenerys_post_throne_effect = {
 			limit = {
 
 				has_character_flag = segrellion_daenerys_burned_kings_landing
+
 
 				NOT = {
 					has_character_flag = segrellion_daenerys_kings_landing_burn_consequence_applied
@@ -166,7 +221,6 @@ segrellion_start_daenerys_post_throne_effect = {
 
 
 			segrellion_change_daenerys_pacification_tyranny_effect = {
-
 				VALUE = 40
 			}
 		}
@@ -175,14 +229,7 @@ segrellion_start_daenerys_post_throne_effect = {
 		# =================================================
 		# OPENING EVENT
 		#
-		# CRITICAL FIX:
-		#
-		# post_throne_started no longer means that event 0001
-		# successfully appeared.
-		#
-		# If the event was lost for any reason, the temporary
-		# scheduled flag expires and the monthly recovery may
-		# schedule it again.
+		# NO DAY DELAY.
 		# =================================================
 
 		if = {
@@ -192,6 +239,7 @@ segrellion_start_daenerys_post_throne_effect = {
 				NOT = {
 					has_character_flag = segrellion_daenerys_post_throne_opening_seen
 				}
+
 
 				NOT = {
 					has_character_flag = segrellion_daenerys_post_throne_opening_scheduled
@@ -208,15 +256,11 @@ segrellion_start_daenerys_post_throne_effect = {
 
 
 			trigger_event = {
-
 				id = segrellion_daenerys_post_throne.0001
-
-				days = 1
 			}
 		}
 	}
 }
-
 
 # =========================================================
 # POST-THRONE SAVE COMPATIBILITY / FAILSAFE
@@ -282,8 +326,6 @@ segrellion_daenerys_post_throne_recovery_effect = {
 				trigger_event = {
 
 					id = segrellion_daenerys_post_throne.0002
-
-					days = 1
 				}
 			}
 
@@ -331,8 +373,6 @@ segrellion_daenerys_post_throne_recovery_effect = {
 				trigger_event = {
 
 					id = segrellion_daenerys_post_throne.0003
-
-					days = 1
 				}
 			}
 
@@ -368,8 +408,6 @@ segrellion_daenerys_post_throne_recovery_effect = {
 				trigger_event = {
 
 					id = segrellion_daenerys_post_throne.0010
-
-					days = 1
 				}
 			}
 		}
@@ -909,6 +947,7 @@ segrellion_joffrey_returns_true_sentinels_to_essos_effect = {
 segrellion_daenerys_westerlands_resolved_effect = {
 
 	add_character_flag = segrellion_daenerys_westerlands_resolved
+
 	add_character_flag = segrellion_daenerys_pacification_next_issue_ready
 
 
@@ -920,6 +959,7 @@ segrellion_daenerys_westerlands_resolved_effect = {
 				has_character_flag = segrellion_daenerys_dorne_resolved
 			}
 
+
 			NOT = {
 				has_character_flag = segrellion_daenerys_dorne_issue_scheduled
 			}
@@ -930,10 +970,7 @@ segrellion_daenerys_westerlands_resolved_effect = {
 
 
 		trigger_event = {
-
 			id = segrellion_daenerys_post_throne.0100
-
-			days = { 5 10 }
 		}
 	}
 }
