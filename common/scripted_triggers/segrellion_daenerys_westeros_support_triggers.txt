@@ -89,6 +89,13 @@ segrellion_daenerys_westerlands_support_available_trigger = {
 
 # =========================================================
 # DORNE
+#
+# The option is only shown when approaching Sunspear is
+# politically plausible.
+#
+# Arianne's marriage / children remain INTERNAL safeguards.
+# The player does not need to be told about impossible
+# alternate histories in the decision UI.
 # =========================================================
 
 segrellion_daenerys_dorne_support_available_trigger = {
@@ -100,6 +107,106 @@ segrellion_daenerys_dorne_support_available_trigger = {
 
 	title:e_dorne.holder ?= {
 		is_alive = yes
+	}
+
+
+	# =====================================================
+	# HARD BLOCK
+	#
+	# If Arianne is currently married to Aegon, Dorne is
+	# already too deeply committed for this route.
+	# =====================================================
+
+	NOT = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			any_spouse = {
+				this = character:Martell_9
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HARD BLOCK
+	#
+	# Even if Arianne is dead or no longer married to him,
+	# a living child between them binds Dorne to Aegon's
+	# dynasty strongly enough that Daenerys does not waste
+	# time approaching Sunspear.
+	# =====================================================
+
+	NOT = {
+
+		character:Martell_9 ?= {
+
+			any_child = {
+
+				is_alive = yes
+
+				father = character:IAF_Young_Griff_1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# THERE MUST BE AN ACTUAL POLITICAL OPENING
+	# =====================================================
+
+	OR = {
+
+		# Aegon is dead.
+		character:IAF_Young_Griff_1 = {
+			is_alive = no
+		}
+
+
+		# Aegon does not currently hold the Iron Throne.
+		title:h_the_iron_throne.holder != character:IAF_Young_Griff_1
+
+
+		# Dorne's own ruler is not the Iron Throne holder.
+		title:h_the_iron_throne.holder != title:e_dorne.holder
+
+
+		# Aegon's legitimacy has suffered badly.
+		character:IAF_Young_Griff_1 = {
+			has_character_flag = segrellion_young_griff_blackfyre_revealed
+		}
+
+
+		# Aegon already alienated Dorne through the
+		# Margaery / second-wife conflict.
+		character:IAF_Young_Griff_1 = {
+			has_character_flag = segrellion_young_griff_lost_dorne_over_margaery
+		}
+
+
+		character:Martell_9 ?= {
+			has_character_flag = segrellion_arianne_rejects_margaery_second_wife
+		}
+
+
+		# The current ruler of Dorne simply dislikes Aegon.
+		title:e_dorne.holder = {
+
+			opinion = {
+				target = character:IAF_Young_Griff_1
+				value <= -25
+			}
+		}
+
+
+		# Or already has a favorable view of Daenerys.
+		title:e_dorne.holder = {
+
+			opinion = {
+				target = character:Targaryen_9
+				value >= 25
+			}
+		}
 	}
 }
 
