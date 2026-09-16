@@ -8,6 +8,11 @@
 # SECURE DAEMON
 #
 # ROOT = DAENERYS
+#
+# Daemon has explicitly chosen Daenerys over Aegon.
+# If the Pentos Compact still exists, this is a political
+# betrayal and must destroy every remaining live commitment
+# between Daemon and Young Griff.
 # =========================================================
 
 segrellion_daenerys_secure_daemon_support_effect = {
@@ -20,15 +25,80 @@ segrellion_daenerys_secure_daemon_support_effect = {
 		add_character_flag = segrellion_daemon_supports_daenerys_in_throne_war
 
 
+		# =================================================
+		# THE DEADLY TRIARCHY STILL EXISTS
+		#
+		# Daemon is the character breaking the compact.
+		# Apply the canonical Pentos oathbreaker consequence
+		# BEFORE dissolving the Triarchy for everyone.
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_deadly_triarchy_formed
+			}
+
+
+			segrellion_apply_pentos_oathbreaker_effect = yes
+
+			segrellion_dissolve_deadly_triarchy_effect = yes
+		}
+
+
+		# =================================================
+		# PENTOS PLEDGE EXISTS WITHOUT AN ACTIVE TRIARCHY
+		#
+		# This can happen in intermediate / repaired saves.
+		# The political betrayal still happened, but we must
+		# NOT call dissolve_deadly_triarchy because that
+		# effect marks the Triarchy as having existed.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_pledged_to_young_griff
+			}
+
+
+			segrellion_apply_pentos_oathbreaker_effect = yes
+		}
+
+
+		# =================================================
+		# DESTROY DAEMON'S LIVE AEGON COMMITMENTS
+		#
+		# CRITICAL:
+		# pledged_to_young_griff is used by the war
+		# allegiance guard to force Daemon back into
+		# Aegon's wars.
+		# =================================================
+
+		remove_character_flag = segrellion_pledged_to_young_griff
+
+		remove_character_flag = segrellion_daemon_supported_by_young_griff
+
+
+		# =================================================
+		# BREAK POLITICAL ALLIANCE
+		# =================================================
+
 		if = {
 
 			limit = {
 				is_allied_to = character:IAF_Young_Griff_1
 			}
 
+
 			break_alliance = character:IAF_Young_Griff_1
 		}
 
+
+		# =================================================
+		# DAEMON CANNOT REMAIN AEGON'S VASSAL
+		# WHILE FIGHTING FOR DAENERYS
+		# =================================================
 
 		if = {
 
@@ -39,13 +109,15 @@ segrellion_daenerys_secure_daemon_support_effect = {
 				}
 			}
 
+
 			becomes_independent = yes
 		}
 	}
 
 
-	create_alliance = character:Segrellion_60
-
+	# =====================================================
+	# AEGON'S SIDE OF THE BROKEN COMPACT
+	# =====================================================
 
 	character:IAF_Young_Griff_1 ?= {
 
@@ -55,6 +127,14 @@ segrellion_daenerys_secure_daemon_support_effect = {
 				is_alive = yes
 			}
 
+
+			# Daemon has abandoned Aegon's cause.
+			# Aegon no longer waits for or supports
+			# Daemon's restoration.
+
+			segrellion_young_griff_leave_daemon_restoration_effect = yes
+
+
 			add_opinion = {
 
 				target = character:Segrellion_60
@@ -63,6 +143,13 @@ segrellion_daenerys_secure_daemon_support_effect = {
 			}
 		}
 	}
+
+
+	# =====================================================
+	# DAENERYS / DAEMON ALLIANCE
+	# =====================================================
+
+	create_alliance = character:Segrellion_60
 }
 
 
