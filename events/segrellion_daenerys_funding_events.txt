@@ -1919,7 +1919,10 @@ segrellion_daenerys_funding.0500 = {
 
 
 # =========================================================
-# 0600 - THE IRON BANK
+# 0600 - THE IRON BANK WILL SEE THEM
+#
+# Tyrion and Torgo Nudho have reached Braavos.
+# No gold is received yet. This is the negotiation itself.
 # =========================================================
 
 segrellion_daenerys_funding.0600 = {
@@ -1931,10 +1934,44 @@ segrellion_daenerys_funding.0600 = {
 
 	theme = stewardship
 
+
 	override_background = {
 		reference = segrellion_iron_bank_braavos_event_background
 	}
 
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_iron_bank_route_pending
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_iron_bank_route_resolved
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_iron_bank_route_pending
+	}
+
+
+	# =====================================================
+	# 500 GOLD
+	#
+	# Principal: 500
+	# Repayment: 650
+	# Deadline: 2 years after the money arrives
+	# =====================================================
 
 	option = {
 
@@ -1942,50 +1979,716 @@ segrellion_daenerys_funding.0600 = {
 
 		custom_tooltip = segrellion_daenerys_funding.0600.a.tt
 
-		add_gold = 1200
 
 		add_character_flag = segrellion_daenerys_iron_bank_route_resolved
+
 		add_character_flag = segrellion_daenerys_iron_bank_debt
+
+		add_character_flag = segrellion_daenerys_iron_bank_loan_small
+
+		add_character_flag = segrellion_daenerys_iron_bank_return_pending
+
 
 		set_variable = {
 			name = segrellion_daenerys_iron_bank_debt_value
-			value = 1700
+			value = 650
 		}
 
+
 		segrellion_daenerys_register_funding_method_effect = yes
-		segrellion_daenerys_try_unknown_friend_effect = yes
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0610
+			days = { 35 45 }
+		}
 
 
 		ai_chance = {
-
-			base = 40
-
-			modifier = {
-				add = 50
-				root = {
-					var:segrellion_daenerys_fleet_shortfall >= 1000
-				}
-			}
-
-			modifier = {
-				add = 60
-				root = {
-					current_date >= 8303.1.1
-				}
-			}
+			base = 20
 		}
 	}
 
+
+	# =====================================================
+	# 1000 GOLD
+	#
+	# Principal: 1000
+	# Repayment: 1400
+	# Deadline: 3 years
+	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_funding.0600.b
 
+		custom_tooltip = segrellion_daenerys_funding.0600.b.tt
+
+
+		add_character_flag = segrellion_daenerys_iron_bank_route_resolved
+
+		add_character_flag = segrellion_daenerys_iron_bank_debt
+
+		add_character_flag = segrellion_daenerys_iron_bank_loan_medium
+
+		add_character_flag = segrellion_daenerys_iron_bank_return_pending
+
+
+		set_variable = {
+			name = segrellion_daenerys_iron_bank_debt_value
+			value = 1400
+		}
+
+
+		segrellion_daenerys_register_funding_method_effect = yes
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0610
+			days = { 35 45 }
+		}
+
+
+		ai_chance = {
+			base = 45
+		}
+	}
+
+
+	# =====================================================
+	# 2000 GOLD
+	#
+	# Principal: 2000
+	# Repayment: 3000
+	# Deadline: 5 years
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0600.c
+
+		custom_tooltip = segrellion_daenerys_funding.0600.c.tt
+
+
+		add_character_flag = segrellion_daenerys_iron_bank_route_resolved
+
+		add_character_flag = segrellion_daenerys_iron_bank_debt
+
+		add_character_flag = segrellion_daenerys_iron_bank_loan_large
+
+		add_character_flag = segrellion_daenerys_iron_bank_return_pending
+
+
+		set_variable = {
+			name = segrellion_daenerys_iron_bank_debt_value
+			value = 3000
+		}
+
+
+		segrellion_daenerys_register_funding_method_effect = yes
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0610
+			days = { 35 45 }
+		}
+
+
+		ai_chance = {
+
+			base = 25
+
+			modifier = {
+				add = 35
+				var:segrellion_daenerys_fleet_shortfall >= 1500
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0600.d
+
 		add_character_flag = segrellion_daenerys_iron_bank_route_resolved
 
 
 		ai_chance = {
-			base = 60
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0610 - COIN FROM BRAAVOS
+#
+# Tyrion and Torgo return.
+# Only NOW does Daenerys receive the borrowed gold.
+# The repayment clock starts here.
+# =========================================================
+
+segrellion_daenerys_funding.0610 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0610.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_loan_large
+				}
+
+				desc = segrellion_daenerys_funding.0610.desc_large
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_loan_medium
+				}
+
+				desc = segrellion_daenerys_funding.0610.desc_medium
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_loan_small
+				}
+
+				desc = segrellion_daenerys_funding.0610.desc_small
+			}
+
+
+			desc = segrellion_daenerys_funding.0610.desc_fallback
+		}
+	}
+
+
+	theme = stewardship
+
+
+	override_background = {
+		reference = segrellion_iron_bank_braavos_event_background
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_iron_bank_debt
+
+		has_character_flag = segrellion_daenerys_iron_bank_return_pending
+
+		OR = {
+			has_character_flag = segrellion_daenerys_iron_bank_loan_small
+			has_character_flag = segrellion_daenerys_iron_bank_loan_medium
+			has_character_flag = segrellion_daenerys_iron_bank_loan_large
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:IAF_Torgo_Nudho_1
+		animation = personality_honorable
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0610.a
+
+
+		remove_character_flag = segrellion_daenerys_iron_bank_return_pending
+
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_iron_bank_loan_small
+			}
+
+			add_gold = 500
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0620
+				days = 730
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_iron_bank_loan_medium
+			}
+
+			add_gold = 1000
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0620
+				days = 1095
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_daenerys_iron_bank_loan_large
+			}
+
+			add_gold = 2000
+
+			trigger_event = {
+				id = segrellion_daenerys_funding.0620
+				days = 1825
+			}
+		}
+
+
+		segrellion_daenerys_update_fleet_shortfall_effect = yes
+
+		segrellion_daenerys_try_unknown_friend_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0620 - THE IRON BANK REMEMBERS
+#
+# Generic repayment deadline event.
+# Reused once if Daenerys purchases an extension.
+# =========================================================
+
+segrellion_daenerys_funding.0620 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0620.t
+
+
+	desc = {
+
+		first_valid = {
+
+			# -------------------------------------------------
+			# EXTENDED LOANS
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_extension_used
+					has_character_flag = segrellion_daenerys_iron_bank_loan_large
+				}
+
+				desc = segrellion_daenerys_funding.0620.desc_large_extended
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_extension_used
+					has_character_flag = segrellion_daenerys_iron_bank_loan_medium
+				}
+
+				desc = segrellion_daenerys_funding.0620.desc_medium_extended
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_extension_used
+					has_character_flag = segrellion_daenerys_iron_bank_loan_small
+				}
+
+				desc = segrellion_daenerys_funding.0620.desc_small_extended
+			}
+
+
+			# -------------------------------------------------
+			# ORIGINAL LOANS
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_loan_large
+				}
+
+				desc = segrellion_daenerys_funding.0620.desc_large
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_loan_medium
+				}
+
+				desc = segrellion_daenerys_funding.0620.desc_medium
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_iron_bank_loan_small
+				}
+
+				desc = segrellion_daenerys_funding.0620.desc_small
+			}
+
+
+			desc = segrellion_daenerys_funding.0620.desc_fallback
+		}
+	}
+
+
+	theme = stewardship
+
+
+	override_background = {
+		reference = segrellion_iron_bank_braavos_event_background
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_iron_bank_debt
+
+		exists = var:segrellion_daenerys_iron_bank_debt_value
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	# =====================================================
+	# PAY THE ENTIRE OUTSTANDING BALANCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0620.a
+
+		trigger = {
+			gold >= var:segrellion_daenerys_iron_bank_debt_value
+		}
+
+
+		custom_tooltip = segrellion_daenerys_funding.0620.a.tt
+
+
+		add_gold = {
+			value = var:segrellion_daenerys_iron_bank_debt_value
+			multiply = -1
+		}
+
+
+		segrellion_daenerys_clear_iron_bank_debt_state_effect = yes
+
+		add_character_flag = segrellion_daenerys_iron_bank_debt_paid
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# =====================================================
+	# SMALL LOAN EXTENSION
+	#
+	# 650 -> 750
+	# +1 year
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0620.b_small
+
+		trigger = {
+
+			has_character_flag = segrellion_daenerys_iron_bank_loan_small
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_iron_bank_extension_used
+			}
+		}
+
+
+		custom_tooltip = segrellion_daenerys_funding.0620.b_small.tt
+
+
+		set_variable = {
+			name = segrellion_daenerys_iron_bank_debt_value
+			value = 750
+		}
+
+
+		add_character_flag = segrellion_daenerys_iron_bank_extension_used
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0620
+			days = 365
+		}
+
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+
+	# =====================================================
+	# MEDIUM LOAN EXTENSION
+	#
+	# 1400 -> 1650
+	# +18 months
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0620.b_medium
+
+		trigger = {
+
+			has_character_flag = segrellion_daenerys_iron_bank_loan_medium
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_iron_bank_extension_used
+			}
+		}
+
+
+		custom_tooltip = segrellion_daenerys_funding.0620.b_medium.tt
+
+
+		set_variable = {
+			name = segrellion_daenerys_iron_bank_debt_value
+			value = 1650
+		}
+
+
+		add_character_flag = segrellion_daenerys_iron_bank_extension_used
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0620
+			days = 548
+		}
+
+
+		ai_chance = {
+			base = 45
+		}
+	}
+
+
+	# =====================================================
+	# LARGE LOAN EXTENSION
+	#
+	# 3000 -> 3600
+	# +2 years
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0620.b_large
+
+		trigger = {
+
+			has_character_flag = segrellion_daenerys_iron_bank_loan_large
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_iron_bank_extension_used
+			}
+		}
+
+
+		custom_tooltip = segrellion_daenerys_funding.0620.b_large.tt
+
+
+		set_variable = {
+			name = segrellion_daenerys_iron_bank_debt_value
+			value = 3600
+		}
+
+
+		add_character_flag = segrellion_daenerys_iron_bank_extension_used
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0620
+			days = 730
+		}
+
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+
+	# =====================================================
+	# SURRENDER ALL CURRENT GOLD + FUTURE INCOME
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0620.c
+
+		trigger = {
+			gold < var:segrellion_daenerys_iron_bank_debt_value
+		}
+
+
+		custom_tooltip = segrellion_daenerys_funding.0620.c.tt
+
+
+		segrellion_daenerys_assign_income_to_iron_bank_effect = yes
+
+
+		ai_chance = {
+			base = 45
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE THE IRON BANK
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_funding.0620.d
+
+		custom_tooltip = segrellion_daenerys_funding.0620.d.tt
+
+
+		segrellion_daenerys_clear_iron_bank_debt_state_effect = yes
+
+		add_character_flag = segrellion_daenerys_iron_bank_defaulted
+
+		add_character_flag = segrellion_daenerys_iron_bank_faceless_man_sent
+
+
+		trigger_event = {
+			id = segrellion_daenerys_funding.0650
+			days = { 180 360 }
+		}
+
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+
+# =========================================================
+# 0650 - A DEBT COLLECTED
+#
+# Daenerys explicitly refused the Iron Bank.
+# A Faceless Man eventually fulfils the contract.
+# =========================================================
+
+segrellion_daenerys_funding.0650 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_funding.0650.t
+	desc = segrellion_daenerys_funding.0650.desc
+
+	theme = intrigue
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_iron_bank_defaulted
+
+		has_character_flag = segrellion_daenerys_iron_bank_faceless_man_sent
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_iron_bank_faceless_man_arrived
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_iron_bank_faceless_man_arrived
+
+		remove_character_flag = segrellion_daenerys_iron_bank_faceless_man_sent
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_funding.0650.a
+
+
+		death = {
+			death_reason = death_murder_unknown
 		}
 	}
 }

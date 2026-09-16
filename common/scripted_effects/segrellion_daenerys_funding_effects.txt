@@ -392,3 +392,172 @@ segrellion_daenerys_funding_obligations_progression_effect = {
 		}
 	}
 }
+
+# =========================================================
+# CLEAR IRON BANK DEBT STATE
+#
+# ROOT = Daenerys
+#
+# Does NOT remove historical outcome flags such as:
+# - debt_paid
+# - debt_settled_by_income_assignment
+# - defaulted
+# =========================================================
+
+segrellion_daenerys_clear_iron_bank_debt_state_effect = {
+
+	remove_character_flag = segrellion_daenerys_iron_bank_debt
+
+	remove_character_flag = segrellion_daenerys_iron_bank_debt_applied
+
+	remove_character_flag = segrellion_daenerys_iron_bank_return_pending
+
+	remove_character_flag = segrellion_daenerys_iron_bank_loan_small
+
+	remove_character_flag = segrellion_daenerys_iron_bank_loan_medium
+
+	remove_character_flag = segrellion_daenerys_iron_bank_loan_large
+
+	remove_character_flag = segrellion_daenerys_iron_bank_extension_used
+
+
+	remove_character_modifier = segrellion_iron_bank_invasion_debt_modifier
+
+
+	remove_variable = segrellion_daenerys_iron_bank_debt_value
+}
+
+
+# =========================================================
+# SURRENDER CURRENT GOLD + ASSIGN FUTURE INCOME
+#
+# ROOT = Daenerys
+#
+# Every positive coin currently held is surrendered.
+# That exact amount is deducted from the outstanding debt.
+#
+# Remaining debt determines the future income assignment:
+#
+# <= 500    -> -15% income for 3 years
+# <= 1000   -> -20% income for 5 years
+# <= 2000   -> -30% income for 8 years
+# >  2000   -> -40% income for 10 years
+# =========================================================
+
+segrellion_daenerys_assign_income_to_iron_bank_effect = {
+
+	# =====================================================
+	# GIVE THE BANK EVERY POSITIVE COIN CURRENTLY HELD
+	# =====================================================
+
+	if = {
+
+		limit = {
+			gold > 0
+		}
+
+
+		change_variable = {
+
+			name = segrellion_daenerys_iron_bank_debt_value
+
+			add = {
+				value = gold
+				multiply = -1
+			}
+		}
+
+
+		add_gold = {
+			value = gold
+			multiply = -1
+		}
+	}
+
+
+	# =====================================================
+	# SAFETY CLAMP
+	# =====================================================
+
+	if = {
+
+		limit = {
+			var:segrellion_daenerys_iron_bank_debt_value < 0
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_iron_bank_debt_value
+			value = 0
+		}
+	}
+
+
+	# =====================================================
+	# UP TO 500 REMAINING
+	# =====================================================
+
+	if = {
+
+		limit = {
+			var:segrellion_daenerys_iron_bank_debt_value <= 500
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_iron_bank_income_assignment_small_modifier
+			years = 3
+		}
+	}
+
+
+	# =====================================================
+	# 501 - 1000 REMAINING
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			var:segrellion_daenerys_iron_bank_debt_value <= 1000
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_iron_bank_income_assignment_medium_modifier
+			years = 5
+		}
+	}
+
+
+	# =====================================================
+	# 1001 - 2000 REMAINING
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			var:segrellion_daenerys_iron_bank_debt_value <= 2000
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_iron_bank_income_assignment_large_modifier
+			years = 8
+		}
+	}
+
+
+	# =====================================================
+	# MORE THAN 2000 REMAINING
+	# =====================================================
+
+	else = {
+
+		add_character_modifier = {
+			modifier = segrellion_iron_bank_income_assignment_severe_modifier
+			years = 10
+		}
+	}
+
+
+	add_character_flag = segrellion_daenerys_iron_bank_debt_settled_by_income_assignment
+
+
+	segrellion_daenerys_clear_iron_bank_debt_state_effect = yes
+}
