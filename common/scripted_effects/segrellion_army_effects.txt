@@ -408,17 +408,149 @@ segrellion_banner_refuse_liege_effect = {
 	}
 }
 
+# =========================================================
+# BANNER TURNS AGAINST THE LIEGE
+#
+# ROOT = traitorous vassal
+# scope:segrellion_banner_liege = current liege
+#
+# The vassal joins the opposite side of every valid war
+# in which the liege is participating.
+# =========================================================
+
+segrellion_banner_join_enemy_wars_effect = {
+
+	save_scope_as = segrellion_banner_traitor
+
+
+	# =====================================================
+	# RESPONSE STATE
+	# =====================================================
+
+	remove_character_flag = segrellion_banner_answered_current_call
+	remove_character_flag = segrellion_banner_refused_current_call
+
+	add_character_flag = {
+		flag = segrellion_banner_betrayed_current_call
+		years = 1
+	}
+
+
+	# =====================================================
+	# JOIN THE OPPOSITE SIDE
+	# =====================================================
+
+	scope:segrellion_banner_liege = {
+
+		every_character_war = {
+
+			save_scope_as = segrellion_banner_betrayal_war
+
+
+			if = {
+
+				limit = {
+
+					NOR = {
+
+						any_war_attacker = {
+							this = scope:segrellion_banner_traitor
+						}
+
+						any_war_defender = {
+							this = scope:segrellion_banner_traitor
+						}
+					}
+
+
+					scope:segrellion_banner_traitor = {
+
+						NOT = {
+							is_at_war_with = scope:segrellion_banner_betrayal_war.primary_attacker
+						}
+
+						NOT = {
+							is_at_war_with = scope:segrellion_banner_betrayal_war.primary_defender
+						}
+					}
+				}
+
+
+				hidden_effect = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								was_called = scope:segrellion_banner_traitor
+							}
+						}
+
+						set_called_to = scope:segrellion_banner_traitor
+					}
+				}
+
+
+				if = {
+
+					limit = {
+						is_attacker = scope:segrellion_banner_liege
+					}
+
+					add_defender = scope:segrellion_banner_traitor
+				}
+
+
+				else = {
+
+					add_attacker = scope:segrellion_banner_traitor
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# APPLY THE BETRAYAL CONSEQUENCES
+	# =====================================================
+
+	scope:segrellion_banner_traitor = {
+
+		segrellion_banner_joined_enemy_effect = yes
+	}
+}
+
 
 # =========================================================
 # BANNER JOINS THE ENEMY
 #
 # ROOT = treacherous vassal
-# scope:segrellion_banner_liege = liege
+# scope:segrellion_banner_liege = betrayed liege
 # =========================================================
 
 segrellion_banner_joined_enemy_effect = {
 
 	save_scope_as = segrellion_banner_traitor
+
+
+	# =====================================================
+	# TRAITOR REPUTATION
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_trait = segrellion_traitor
+			}
+		}
+
+		add_trait = segrellion_traitor
+
+		add_prestige_level = -1
+	}
 
 
 	# =====================================================
@@ -447,7 +579,38 @@ segrellion_banner_joined_enemy_effect = {
 
 
 	# =====================================================
-	# UNICORN RETURNS TRAITOR
+	# STORE THE BETRAYED LIEGE
+	# =====================================================
+
+	set_variable = {
+		name = segrellion_banner_betrayed_liege
+		value = scope:segrellion_banner_liege
+	}
+
+
+	set_variable = {
+		name = segrellion_banner_betrayed_liege_title
+		value = scope:segrellion_banner_liege.primary_title
+	}
+
+
+	# =====================================================
+	# REGISTER TRAITOR ON THE LIEGE TITLE
+	#
+	# Needed later for postwar judgment.
+	# =====================================================
+
+	scope:segrellion_banner_liege.primary_title = {
+
+		add_to_variable_list = {
+			name = segrellion_banner_pending_traitors
+			target = scope:segrellion_banner_traitor
+		}
+	}
+
+
+	# =====================================================
+	# UNICORN RETURNS COMPATIBILITY
 	# =====================================================
 
 	if = {
@@ -467,7 +630,7 @@ segrellion_banner_joined_enemy_effect = {
 
 
 	# =====================================================
-	# LIEGE OPINION
+	# BETRAYED LIEGE OPINION
 	# =====================================================
 
 	scope:segrellion_banner_liege = {
@@ -479,7 +642,7 @@ segrellion_banner_joined_enemy_effect = {
 
 
 		# =================================================
-		# LOYAL CO-VASSALS DESPISE THE TRAITOR
+		# VASSALS WHO ANSWERED THE CALL DESPISE THE TRAITOR
 		# =================================================
 
 		every_vassal = {
@@ -492,10 +655,15 @@ segrellion_banner_joined_enemy_effect = {
 				is_landed = yes
 
 				highest_held_title_tier > tier_barony
+
+				has_character_flag = segrellion_banner_answered_current_call
 			}
 
+
 			add_opinion = {
+
 				target = scope:segrellion_banner_traitor
+
 				modifier = segrellion_banner_traitor_fellow_vassal_opinion
 			}
 		}
@@ -503,8 +671,23 @@ segrellion_banner_joined_enemy_effect = {
 
 
 	# =====================================================
-	# BETRAYAL LETTER
-	# Prevent duplicate letters from the call + on_action
+	# THE TRAITOR'S OWN BANNERS MUST NOW CHOOSE
+	# =====================================================
+
+	segrellion_banner_resolve_traitor_vassals_effect = yes
+
+
+	# =====================================================
+	# REPUTATION EVENT
+	# =====================================================
+
+	trigger_event = {
+		id = segrellion_banners.0023
+	}
+
+
+	# =====================================================
+	# BETRAYAL LETTER TO THE ORIGINAL LIEGE
 	# =====================================================
 
 	if = {
@@ -521,6 +704,7 @@ segrellion_banner_joined_enemy_effect = {
 			days = 30
 		}
 
+
 		scope:segrellion_banner_liege = {
 
 			trigger_event = {
@@ -529,6 +713,361 @@ segrellion_banner_joined_enemy_effect = {
 		}
 	}
 }
+
+# =========================================================
+# TRAITOR'S OWN BANNERS
+#
+# ROOT = traitor
+# scope:segrellion_banner_liege = original upper liege
+# =========================================================
+
+segrellion_banner_resolve_traitor_vassals_effect = {
+
+	save_scope_as = segrellion_banner_rebel_liege
+
+
+	every_vassal = {
+
+		limit = {
+
+			is_alive = yes
+			is_landed = yes
+
+			is_imprisoned = no
+			is_incapable = no
+
+			highest_held_title_tier > tier_barony
+
+			NOT = {
+				government_has_flag = government_is_nw
+			}
+		}
+
+
+		save_scope_as = segrellion_banner_traitor_vassal
+
+
+		if = {
+
+			limit = {
+				is_ai = no
+			}
+
+			trigger_event = {
+				id = segrellion_banners.0024
+			}
+		}
+
+
+		else = {
+
+			segrellion_resolve_traitor_vassal_ai_effect = yes
+		}
+	}
+}
+
+# =========================================================
+# AI RESPONSE TO A TRAITOROUS DIRECT LIEGE
+#
+# ROOT = vassal of the traitor
+#
+# Following the traitor remains the most common result.
+# Refusing is common.
+# Actively turning against the traitor is possible but rare.
+# =========================================================
+
+segrellion_resolve_traitor_vassal_ai_effect = {
+
+
+	# =====================================================
+	# LOYAL
+	# Strongly inclined to follow their direct liege.
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_trait = loyal
+		}
+
+		random_list = {
+
+			75 = {
+				segrellion_banner_follow_traitor_liege_effect = yes
+			}
+
+			23 = {
+				segrellion_banner_refuse_traitor_liege_effect = yes
+			}
+
+			2 = {
+				segrellion_banner_remain_loyal_to_upper_liege_effect = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DISLOYAL
+	# Much more willing to abandon their direct liege.
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+			has_trait = disloyal
+		}
+
+		random_list = {
+
+			25 = {
+				segrellion_banner_follow_traitor_liege_effect = yes
+			}
+
+			50 = {
+				segrellion_banner_refuse_traitor_liege_effect = yes
+			}
+
+			25 = {
+				segrellion_banner_remain_loyal_to_upper_liege_effect = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HONORABLE PERSONALITIES
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			OR = {
+				has_trait = honest
+				has_trait = just
+				has_trait = trusting
+			}
+		}
+
+		random_list = {
+
+			45 = {
+				segrellion_banner_follow_traitor_liege_effect = yes
+			}
+
+			40 = {
+				segrellion_banner_refuse_traitor_liege_effect = yes
+			}
+
+			15 = {
+				segrellion_banner_remain_loyal_to_upper_liege_effect = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AMBITIOUS / TREACHEROUS PERSONALITIES
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			OR = {
+				has_trait = ambitious
+				has_trait = deceitful
+				has_trait = arbitrary
+			}
+		}
+
+		random_list = {
+
+			35 = {
+				segrellion_banner_follow_traitor_liege_effect = yes
+			}
+
+			45 = {
+				segrellion_banner_refuse_traitor_liege_effect = yes
+			}
+
+			20 = {
+				segrellion_banner_remain_loyal_to_upper_liege_effect = yes
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DEFAULT
+	# =====================================================
+
+	else = {
+
+		random_list = {
+
+			60 = {
+				segrellion_banner_follow_traitor_liege_effect = yes
+			}
+
+			33 = {
+				segrellion_banner_refuse_traitor_liege_effect = yes
+			}
+
+			7 = {
+				segrellion_banner_remain_loyal_to_upper_liege_effect = yes
+			}
+		}
+	}
+}
+
+# =========================================================
+# FOLLOW THE TRAITOR
+#
+# ROOT = vassal
+# scope:segrellion_banner_rebel_liege = traitorous lord
+#
+# They are obeying their direct liege.
+# They DO NOT receive the Traitor trait.
+# =========================================================
+
+segrellion_banner_follow_traitor_liege_effect = {
+
+	add_character_flag = {
+		flag = segrellion_banner_followed_traitor_liege
+		years = 1
+	}
+
+
+	scope:segrellion_banner_rebel_liege = {
+
+		every_character_war = {
+
+			if = {
+
+				limit = {
+
+					OR = {
+
+						any_war_attacker = {
+							this = scope:segrellion_banner_rebel_liege
+						}
+
+						any_war_defender = {
+							this = scope:segrellion_banner_rebel_liege
+						}
+					}
+
+
+					NOR = {
+
+						any_war_attacker = {
+							this = root
+						}
+
+						any_war_defender = {
+							this = root
+						}
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						any_war_attacker = {
+							this = scope:segrellion_banner_rebel_liege
+						}
+					}
+
+					add_attacker = root
+				}
+
+
+				else = {
+
+					add_defender = root
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# REFUSE THE TRAITOR'S CALL
+#
+# ROOT = vassal
+# =========================================================
+
+segrellion_banner_refuse_traitor_liege_effect = {
+
+	add_character_flag = {
+		flag = segrellion_banner_refused_traitor_liege
+		years = 1
+	}
+}
+
+
+# =========================================================
+# REMAIN LOYAL TO THE UPPER LIEGE
+#
+# ROOT = vassal of traitor
+#
+# This character is NOT considered a traitor.
+# They are refusing to follow their immediate lord's treason.
+# =========================================================
+
+segrellion_banner_remain_loyal_to_upper_liege_effect = {
+
+	add_character_flag = {
+		flag = segrellion_banner_defied_traitor_liege
+		years = 1
+	}
+
+
+	scope:segrellion_banner_liege = {
+
+		every_character_war = {
+
+			if = {
+
+				limit = {
+
+					NOR = {
+
+						any_war_attacker = {
+							this = root
+						}
+
+						any_war_defender = {
+							this = root
+						}
+					}
+				}
+
+
+				if = {
+
+					limit = {
+						is_attacker = scope:segrellion_banner_liege
+					}
+
+					add_attacker = root
+				}
+
+
+				else = {
+
+					add_defender = root
+				}
+			}
+		}
+	}
+}
+
 
 # =========================================================
 # RESOLVE AI VASSAL RESPONSE
