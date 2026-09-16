@@ -474,3 +474,89 @@ segrellion_daenerys_crossing_90_effect = {
 		}
 	}
 }
+
+# =========================================================
+# DAENERYS - BEACON ANCHOR GUARD
+#
+# AI Daenerys is still effectively landless after landing
+# at the Beacon. CK3 can therefore immediately generate an
+# autonomous travel plan for her.
+#
+# Keep her physically based at the Beacon until:
+#
+# - her war begins
+# - she becomes landed
+# - she leaves the Beacon storyline
+# =========================================================
+
+segrellion_daenerys_beacon_anchor_guard_effect = {
+
+	character:Targaryen_9 ?= {
+
+		# =================================================
+		# RELEASE THE ANCHOR
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_beacon_anchor_active
+
+
+				OR = {
+
+					is_at_war = yes
+
+					is_landed = yes
+
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_landing_beacon
+					}
+				}
+			}
+
+
+			remove_character_flag = segrellion_daenerys_beacon_anchor_active
+		}
+
+
+		# =================================================
+		# KEEP AI DAENERYS AT THE BEACON
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_ai = yes
+
+				has_character_flag = segrellion_daenerys_beacon_anchor_active
+
+				has_character_flag = segrellion_daenerys_landing_beacon
+
+				is_at_war = no
+
+				is_landed = no
+			}
+
+
+			current_travel_plan ?= {
+
+				abort_travel_plan = yes
+			}
+
+
+			domicile ?= {
+
+				move_domicile = title:c_farring_cross.title_province
+			}
+
+
+			set_location = title:c_farring_cross.title_province
+		}
+	}
+}

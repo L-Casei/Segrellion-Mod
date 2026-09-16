@@ -1438,12 +1438,18 @@ segrellion_daenerys_support.0600 = {
 				days = { 2 5 }
 			}
 		}
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }
 
 
 # =========================================================
 # 0610 - DAEMON ANSWERS THE SUMMONS
+#
 # ROOT = DAEMON
 # =========================================================
 
@@ -1462,6 +1468,10 @@ segrellion_daenerys_support.0610 = {
 	title = segrellion_daenerys_support.0610.t
 	desc = segrellion_daenerys_support.0610.desc
 
+
+	# =====================================================
+	# HEAR DAENERYS OUT
+	# =====================================================
 
 	option = {
 
@@ -1485,12 +1495,12 @@ segrellion_daenerys_support.0610 = {
 
 		ai_chance = {
 
-			base = 70
+			base = 75
 
 
 			modifier = {
 
-				factor = 0.35
+				factor = 0.30
 
 				segrellion_daemon_committed_to_aegon_trigger = yes
 			}
@@ -1498,7 +1508,7 @@ segrellion_daenerys_support.0610 = {
 
 			modifier = {
 
-				add = 120
+				add = 150
 
 				character:IAF_Young_Griff_1 = {
 					has_character_flag = segrellion_young_griff_blackfyre_revealed
@@ -1535,6 +1545,10 @@ segrellion_daenerys_support.0610 = {
 	}
 
 
+	# =====================================================
+	# REFUSE TO EVEN NEGOTIATE
+	# =====================================================
+
 	option = {
 
 		name = segrellion_daenerys_support.0610.b
@@ -1557,12 +1571,12 @@ segrellion_daenerys_support.0610 = {
 
 		ai_chance = {
 
-			base = 30
+			base = 25
 
 
 			modifier = {
 
-				add = 120
+				add = 130
 
 				segrellion_daemon_committed_to_aegon_trigger = yes
 			}
@@ -1570,10 +1584,21 @@ segrellion_daenerys_support.0610 = {
 
 			modifier = {
 
-				factor = 0.10
+				factor = 0.05
 
 				character:IAF_Young_Griff_1 = {
 					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.50
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
 				}
 			}
 		}
@@ -1582,7 +1607,8 @@ segrellion_daenerys_support.0610 = {
 
 
 # =========================================================
-# 0620 - DAEMON'S ANSWER
+# 0620 - THE UNICORN ANSWERS
+#
 # ROOT = DAENERYS
 # =========================================================
 
@@ -1606,6 +1632,7 @@ segrellion_daenerys_support.0620 = {
 				desc = segrellion_daenerys_support.0620.desc_yes
 			}
 
+
 			desc = segrellion_daenerys_support.0620.desc_no
 		}
 	}
@@ -1617,10 +1644,22 @@ segrellion_daenerys_support.0620 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-	override_background = {
-		reference = council_chamber
+
+	left_portrait = {
+		character = root
+		animation = thinking
 	}
 
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# DAEMON AGREED TO TALK
+	# =====================================================
 
 	option = {
 
@@ -1644,8 +1683,17 @@ segrellion_daenerys_support.0620 = {
 				days = { 7 14 }
 			}
 		}
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 
+
+	# =====================================================
+	# DAEMON REFUSED - ACCEPT HIS ANSWER
+	# =====================================================
 
 	option = {
 
@@ -1659,7 +1707,173 @@ segrellion_daenerys_support.0620 = {
 
 		remove_character_flag = segrellion_daenerys_daemon_meeting_rejected
 
+
+		add_opinion = {
+
+			target = character:Segrellion_60
+
+			modifier = segrellion_daenerys_daemon_refused_parley_opinion
+		}
+
+
 		add_character_flag = segrellion_daenerys_support_flamelands_resolved
+
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# DAEMON REFUSED - TYRION SUGGESTS MASSEY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0620.c
+
+
+		trigger = {
+
+			has_character_flag = segrellion_daenerys_daemon_meeting_rejected
+
+
+			character:Lannister_8 ?= {
+				is_alive = yes
+			}
+
+
+			title:d_masseys_hook ?= {
+
+				exists = holder
+
+				holder = {
+					is_alive = yes
+				}
+			}
+		}
+
+
+		remove_character_flag = segrellion_daenerys_daemon_meeting_rejected
+
+
+		add_opinion = {
+
+			target = character:Segrellion_60
+
+			modifier = segrellion_daenerys_daemon_refused_parley_opinion
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_support.0625
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 70
+		}
+	}
+}
+
+
+# =========================================================
+# 0625 - DO NOT GIVE UP ON THE UNICORN
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support.0625 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0625.t
+	desc = segrellion_daenerys_support.0625.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = council_chamber
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# SEND LORD MASSEY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0625.a
+
+
+		trigger = {
+
+			title:d_masseys_hook ?= {
+
+				exists = holder
+
+				holder = {
+					is_alive = yes
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_massey_intercession_requested
+
+
+		title:d_masseys_hook.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0760
+
+				days = { 2 4 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	# =====================================================
+	# LEAVE DAEMON ALONE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0625.b
+
+
+		add_character_flag = segrellion_daenerys_support_flamelands_resolved
+
+
+		ai_chance = {
+			base = 20
+		}
 	}
 }
 
@@ -1724,11 +1938,6 @@ segrellion_daenerys_support.0640 = {
 
 	theme = diplomacy
 
-	override_background = {
-		reference = council_chamber
-	}
-
-
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
@@ -1757,12 +1966,19 @@ segrellion_daenerys_support.0640 = {
 
 			days = 1
 		}
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }
 
 
 # =========================================================
 # 0650 - OLD OATHS
+#
+# ROOT = DAENERYS
 # =========================================================
 
 segrellion_daenerys_support.0650 = {
@@ -1776,10 +1992,6 @@ segrellion_daenerys_support.0650 = {
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	override_background = {
-		reference = council_chamber
 	}
 
 
@@ -1809,6 +2021,11 @@ segrellion_daenerys_support.0650 = {
 				days = 1
 			}
 		}
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }
 
@@ -1830,10 +2047,6 @@ segrellion_daenerys_support.0660 = {
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	override_background = {
-		reference = council_chamber
 	}
 
 
@@ -1876,20 +2089,31 @@ segrellion_daenerys_support.0660 = {
 		name = segrellion_daenerys_support.0660.a
 
 
-		trigger_event = {
+		character:Targaryen_9 = {
 
-			id = segrellion_daenerys_support.0670
+			trigger_event = {
 
-			days = 1
+				id = segrellion_daenerys_support.0670
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
 		}
 	}
 }
 
 
 # =========================================================
-# 0670 - DAEMON'S PRICE
+# 0670 - WHAT WILL I OFFER THE UNICORN?
 #
-# ROOT = DAEMON
+# ROOT = DAENERYS
+#
+# DAENERYS chooses what she is willing to offer.
+# DAEMON has demanded nothing yet.
 # =========================================================
 
 segrellion_daenerys_support.0670 = {
@@ -1905,10 +2129,6 @@ segrellion_daenerys_support.0670 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-	override_background = {
-		reference = council_chamber
-	}
-
 
 	left_portrait = {
 		character = root
@@ -1917,53 +2137,39 @@ segrellion_daenerys_support.0670 = {
 
 
 	right_portrait = {
-		character = character:Targaryen_9
-		animation = personality_rational
+		character = character:Segrellion_60
+		animation = personality_bold
 	}
 
 
 	# =====================================================
-	# SUPPORT HER WITHOUT A PRICE
+	# NO MATERIAL PRICE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0670.a
-		custom_tooltip = segrellion_daenerys_support.0670.a.tt
 
 
-		character:Targaryen_9 = {
-
-			segrellion_daenerys_secure_daemon_support_effect = yes
-
-			add_character_flag = segrellion_daenerys_daemon_support_result_free
+		add_character_flag = segrellion_daenerys_daemon_offer_common_cause_pending
 
 
-			trigger_event = {
+		trigger_event = {
 
-				id = segrellion_daenerys_support.0690
+			id = segrellion_daenerys_support.0680
 
-				days = 1
-			}
+			days = 1
 		}
 
 
 		ai_chance = {
 
-			base = 55
+			base = 15
 
 
 			modifier = {
 
-				factor = 0.20
-
-				segrellion_daemon_committed_to_aegon_trigger = yes
-			}
-
-
-			modifier = {
-
-				add = 100
+				add = 60
 
 				character:IAF_Young_Griff_1 = {
 					has_character_flag = segrellion_young_griff_blackfyre_revealed
@@ -1973,178 +2179,164 @@ segrellion_daenerys_support.0670 = {
 
 			modifier = {
 
-				add = 80
+				add = 20
 
-				has_relation_friend = character:Targaryen_9
-			}
-
-
-			modifier = {
-
-				add = 150
-
-				has_relation_best_friend = character:Targaryen_9
+				opinion = {
+					target = character:Segrellion_60
+					value >= 40
+				}
 			}
 		}
 	}
 
 
 	# =====================================================
-	# MARRIAGE
+	# OFFER HER HAND
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0670.b
-		custom_tooltip = segrellion_daenerys_support.0670.b.tt
 
 
 		trigger = {
 
 			is_married = no
 
-			character:Targaryen_9 = {
+
+			NOT = {
+				has_trait = refusing_marriage
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_marriage_promised_to_daemon
+			}
+
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
 				is_married = no
+
+
+				NOT = {
+					has_character_flag = segrellion_mya_marriage_deferred
+				}
 			}
 		}
 
 
-		character:Targaryen_9 = {
-
-			add_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+		add_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
 
 
-			trigger_event = {
+		trigger_event = {
 
-				id = segrellion_daenerys_support.0680
+			id = segrellion_daenerys_support.0680
 
-				days = 1
-			}
+			days = 1
 		}
 
 
 		ai_chance = {
 
-			base = 25
+			base = 35
 
 
 			modifier = {
 
-				add = 70
+				add = 25
 
-				segrellion_daemon_committed_to_aegon_trigger = yes
+				opinion = {
+					target = character:Segrellion_60
+					value >= 40
+				}
+			}
+
+
+			modifier = {
+
+				add = 25
+
+				character:Segrellion_60 = {
+					segrellion_daemon_committed_to_aegon_trigger = yes
+				}
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				has_trait = lustful
+			}
+
+
+			modifier = {
+
+				add = -15
+
+				has_trait = chaste
 			}
 		}
 	}
 
 
 	# =====================================================
-	# COUNCIL + AUTONOMY + DYNASTIC PREFERENCE
+	# OFFER A PERMANENT COUNCIL SEAT
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0670.c
-		custom_tooltip = segrellion_daenerys_support.0670.c.tt
 
 
-		character:Targaryen_9 = {
-
-			add_character_flag = segrellion_daenerys_daemon_support_office_pending
+		add_character_flag = segrellion_daenerys_daemon_offer_council_pending
 
 
-			trigger_event = {
+		trigger_event = {
 
-				id = segrellion_daenerys_support.0680
+			id = segrellion_daenerys_support.0680
 
-				days = 1
-			}
+			days = 1
 		}
 
 
 		ai_chance = {
 
-			base = 20
+			base = 30
 
 
 			modifier = {
 
-				add = 80
+				add = 20
 
-				segrellion_daemon_committed_to_aegon_trigger = yes
+				character:Segrellion_60 = {
+					segrellion_daemon_committed_to_aegon_trigger = yes
+				}
 			}
 		}
 	}
 
 
 	# =====================================================
-	# INDEPENDENCE
+	# PROMISE FLAMELANDS INDEPENDENCE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0670.d
-		custom_tooltip = segrellion_daenerys_support.0670.d.tt
 
 
-		character:Targaryen_9 = {
-
-			add_character_flag = segrellion_daenerys_daemon_support_independence_pending
+		add_character_flag = segrellion_daenerys_daemon_offer_independence_pending
 
 
-			trigger_event = {
+		trigger_event = {
 
-				id = segrellion_daenerys_support.0680
+			id = segrellion_daenerys_support.0680
 
-				days = 1
-			}
-		}
-
-
-		ai_chance = {
-
-			base = 10
-
-
-			modifier = {
-
-				add = 70
-
-				segrellion_daemon_committed_to_aegon_trigger = yes
-			}
-
-
-			modifier = {
-
-				add = 30
-
-				has_trait = ambitious
-			}
-		}
-	}
-
-
-	# =====================================================
-	# REFUSE
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_support.0670.e
-		custom_tooltip = segrellion_daenerys_support.0670.e.tt
-
-
-		character:Targaryen_9 = {
-
-			add_character_flag = segrellion_daenerys_daemon_support_result_refused
-
-
-			trigger_event = {
-
-				id = segrellion_daenerys_support.0690
-
-				days = 1
-			}
+			days = 1
 		}
 
 
@@ -2155,19 +2347,19 @@ segrellion_daenerys_support.0670 = {
 
 			modifier = {
 
-				add = 100
+				add = 35
 
-				segrellion_daemon_committed_to_aegon_trigger = yes
+				character:Segrellion_60 = {
+					segrellion_daemon_committed_to_aegon_trigger = yes
+				}
 			}
 
 
 			modifier = {
 
-				factor = 0.15
+				add = 15
 
-				character:IAF_Young_Griff_1 = {
-					has_character_flag = segrellion_young_griff_blackfyre_revealed
-				}
+				has_trait = generous
 			}
 		}
 	}
@@ -2175,7 +2367,11 @@ segrellion_daenerys_support.0670 = {
 
 
 # =========================================================
-# 0680 - DAENERYS ANSWERS DAEMON'S PRICE
+# 0680 - DAENERYS CONSIDERS HER OFFER
+#
+# ROOT = DAENERYS
+#
+# Personal POV event BEFORE the proposal reaches Daemon.
 # =========================================================
 
 segrellion_daenerys_support.0680 = {
@@ -2192,7 +2388,7 @@ segrellion_daenerys_support.0680 = {
 			triggered_desc = {
 
 				trigger = {
-					has_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+					has_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
 				}
 
 				desc = segrellion_daenerys_support.0680.desc_marriage
@@ -2202,14 +2398,24 @@ segrellion_daenerys_support.0680 = {
 			triggered_desc = {
 
 				trigger = {
-					has_character_flag = segrellion_daenerys_daemon_support_office_pending
+					has_character_flag = segrellion_daenerys_daemon_offer_council_pending
 				}
 
-				desc = segrellion_daenerys_support.0680.desc_office
+				desc = segrellion_daenerys_support.0680.desc_council
 			}
 
 
-			desc = segrellion_daenerys_support.0680.desc_independence
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_daemon_offer_independence_pending
+				}
+
+				desc = segrellion_daenerys_support.0680.desc_independence
+			}
+
+
+			desc = segrellion_daenerys_support.0680.desc_common
 		}
 	}
 
@@ -2218,10 +2424,6 @@ segrellion_daenerys_support.0680 = {
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	override_background = {
-		reference = council_chamber
 	}
 
 
@@ -2237,154 +2439,692 @@ segrellion_daenerys_support.0680 = {
 	}
 
 
-	# MARRIAGE
+	# =====================================================
+	# COMMON CAUSE
+	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0680.a
-		custom_tooltip = segrellion_daenerys_support.0680.a.tt
 
 
 		trigger = {
-			has_character_flag = segrellion_daenerys_daemon_support_marriage_pending
+			has_character_flag = segrellion_daenerys_daemon_offer_common_cause_pending
 		}
-
-
-		remove_character_flag = segrellion_daenerys_daemon_support_marriage_pending
-
-
-		add_character_flag = segrellion_marriage_promised_to_daemon
-
-		add_character_flag = segrellion_daenerys_promised_beacon_marriage
 
 
 		character:Segrellion_60 = {
 
-			add_character_flag = segrellion_daenerys_marriage_promised
+			trigger_event = {
 
-			add_character_flag = segrellion_daemon_has_daenerys_promise
+				id = segrellion_daenerys_support.0685
+
+				days = 1
+			}
 		}
 
 
-		segrellion_daenerys_secure_daemon_support_effect = yes
-
-
-		add_character_flag = segrellion_daenerys_daemon_support_result_accepted
-
-
-		trigger_event = {
-			id = segrellion_daenerys_support.0690
-			days = 1
+		ai_chance = {
+			base = 100
 		}
 	}
 
 
-	# OFFICE / AUTONOMY
+	# =====================================================
+	# MARRIAGE
+	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0680.b
-		custom_tooltip = segrellion_daenerys_support.0680.b.tt
 
 
 		trigger = {
-			has_character_flag = segrellion_daenerys_daemon_support_office_pending
+			has_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
 		}
-
-
-		remove_character_flag = segrellion_daenerys_daemon_support_office_pending
-
-
-		add_character_flag = segrellion_daenerys_promised_beacon_council
-
-		add_character_flag = segrellion_daenerys_promised_beacon_autonomy
-
-		add_character_flag = segrellion_daenerys_promised_beacon_marriage_preference
 
 
 		character:Segrellion_60 = {
-			add_character_flag = segrellion_daemon_has_daenerys_promise
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0685
+
+				days = 1
+			}
 		}
 
 
-		segrellion_daenerys_secure_daemon_support_effect = yes
-
-
-		add_character_flag = segrellion_daenerys_daemon_support_result_accepted
-
-
-		trigger_event = {
-			id = segrellion_daenerys_support.0690
-			days = 1
+		ai_chance = {
+			base = 100
 		}
 	}
 
 
-	# INDEPENDENCE
+	# =====================================================
+	# COUNCIL
+	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0680.c
-		custom_tooltip = segrellion_daenerys_support.0680.c.tt
 
 
 		trigger = {
-			has_character_flag = segrellion_daenerys_daemon_support_independence_pending
+			has_character_flag = segrellion_daenerys_daemon_offer_council_pending
 		}
-
-
-		remove_character_flag = segrellion_daenerys_daemon_support_independence_pending
-
-
-		add_character_flag = segrellion_daenerys_promised_beacon_independence
 
 
 		character:Segrellion_60 = {
-			add_character_flag = segrellion_daemon_has_daenerys_promise
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0685
+
+				days = 1
+			}
 		}
 
 
-		segrellion_daenerys_secure_daemon_support_effect = yes
-
-
-		add_character_flag = segrellion_daenerys_daemon_support_result_accepted
-
-
-		trigger_event = {
-			id = segrellion_daenerys_support.0690
-			days = 1
+		ai_chance = {
+			base = 100
 		}
 	}
 
 
-	# REFUSE HIS PRICE
+	# =====================================================
+	# INDEPENDENCE
+	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_support.0680.d
-		custom_tooltip = segrellion_daenerys_support.0680.d.tt
 
 
-		remove_character_flag = segrellion_daenerys_daemon_support_marriage_pending
-
-		remove_character_flag = segrellion_daenerys_daemon_support_office_pending
-
-		remove_character_flag = segrellion_daenerys_daemon_support_independence_pending
+		trigger = {
+			has_character_flag = segrellion_daenerys_daemon_offer_independence_pending
+		}
 
 
-		add_character_flag = segrellion_daenerys_daemon_support_result_refused
+		character:Segrellion_60 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0685
+
+				days = 1
+			}
+		}
 
 
-		trigger_event = {
-			id = segrellion_daenerys_support.0690
-			days = 1
+		ai_chance = {
+			base = 100
 		}
 	}
 }
 
 
 # =========================================================
-# 0690 - DAEMON MEETING ENDS
+# 0685 - DAENERYS' OFFER
+#
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daenerys_support.0685 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0685.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Targaryen_9 = {
+						has_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
+					}
+				}
+
+				desc = segrellion_daenerys_support.0685.desc_marriage
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Targaryen_9 = {
+						has_character_flag = segrellion_daenerys_daemon_offer_council_pending
+					}
+				}
+
+				desc = segrellion_daenerys_support.0685.desc_council
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Targaryen_9 = {
+						has_character_flag = segrellion_daenerys_daemon_offer_independence_pending
+					}
+				}
+
+				desc = segrellion_daenerys_support.0685.desc_independence
+			}
+
+
+			desc = segrellion_daenerys_support.0685.desc_common
+		}
+	}
+
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+
+		character:Targaryen_9 ?= {
+
+			is_alive = yes
+
+
+			OR = {
+
+				has_character_flag = segrellion_daenerys_daemon_offer_common_cause_pending
+
+				has_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
+
+				has_character_flag = segrellion_daenerys_daemon_offer_council_pending
+
+				has_character_flag = segrellion_daenerys_daemon_offer_independence_pending
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = character:Targaryen_9
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# ACCEPT - COMMON CAUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0685.a
+
+
+		trigger = {
+
+			character:Targaryen_9 = {
+				has_character_flag = segrellion_daenerys_daemon_offer_common_cause_pending
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_common_cause_pending
+
+
+			segrellion_daenerys_secure_daemon_support_effect = yes
+
+
+			add_character_flag = segrellion_daenerys_daemon_support_result_free
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0690
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 45
+
+
+			modifier = {
+
+				factor = 0.35
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 100
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				add = 45
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
+				}
+			}
+
+
+			modifier = {
+
+				add = 100
+
+				has_relation_friend = character:Targaryen_9
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT - MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0685.b
+
+
+		trigger = {
+
+			is_married = no
+
+
+			character:Targaryen_9 = {
+
+				has_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
+
+				is_married = no
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
+
+
+			add_character_flag = segrellion_marriage_promised_to_daemon
+
+			add_character_flag = segrellion_daenerys_promised_beacon_marriage
+		}
+
+
+		add_character_flag = segrellion_daenerys_marriage_promised
+
+		add_character_flag = segrellion_daemon_has_daenerys_promise
+
+
+		segrellion_apply_winds_story_marriage_locks_effect = yes
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_secure_daemon_support_effect = yes
+
+			add_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0690
+
+				days = 1
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				has_title = title:e_flamelands
+			}
+
+
+			add_character_flag = segrellion_daenerys_marriage_event_pending
+
+
+			trigger_event = {
+
+				id = segrellion_support.4000
+
+				days = { 5 10 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 80
+
+
+			modifier = {
+
+				factor = 0.45
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 45
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = 55
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 60
+				}
+			}
+
+
+			modifier = {
+
+				add = 70
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT - COUNCIL SEAT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0685.c
+
+
+		trigger = {
+
+			character:Targaryen_9 = {
+				has_character_flag = segrellion_daenerys_daemon_offer_council_pending
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_council_pending
+
+
+			add_character_flag = segrellion_daenerys_promised_beacon_council
+
+
+			segrellion_daenerys_secure_daemon_support_effect = yes
+
+
+			add_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0690
+
+				days = 1
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_has_daenerys_promise
+
+
+		ai_chance = {
+
+			base = 70
+
+
+			modifier = {
+
+				factor = 0.40
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 40
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 40
+				}
+			}
+
+
+			modifier = {
+
+				add = 60
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# ACCEPT - INDEPENDENCE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0685.d
+
+
+		trigger = {
+
+			character:Targaryen_9 = {
+				has_character_flag = segrellion_daenerys_daemon_offer_independence_pending
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_independence_pending
+
+
+			add_character_flag = segrellion_daenerys_promised_beacon_independence
+
+
+			segrellion_daenerys_secure_daemon_support_effect = yes
+
+
+			add_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0690
+
+				days = 1
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_has_daenerys_promise
+
+
+		ai_chance = {
+
+			base = 85
+
+
+			modifier = {
+
+				factor = 0.55
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 45
+
+				has_trait = ambitious
+			}
+
+
+			modifier = {
+
+				add = 50
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = 70
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REJECT DAENERYS' OFFER
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0685.e
+
+
+		character:Targaryen_9 = {
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_common_cause_pending
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_marriage_pending
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_council_pending
+
+			remove_character_flag = segrellion_daenerys_daemon_offer_independence_pending
+
+
+			add_character_flag = segrellion_daenerys_daemon_support_result_refused
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0690
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 35
+
+
+			modifier = {
+
+				add = 100
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 60
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.15
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.50
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 50
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0690 - THE NEGOTIATION ENDS
+#
+# ROOT = DAENERYS
 # =========================================================
 
 segrellion_daenerys_support.0690 = {
@@ -2429,18 +3169,16 @@ segrellion_daenerys_support.0690 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-	override_background = {
-		reference = council_chamber
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
 	}
 
 
-	immediate = {
-
-		remove_character_flag = segrellion_daenerys_daemon_support_result_free
-
-		remove_character_flag = segrellion_daenerys_daemon_support_result_accepted
-
-		remove_character_flag = segrellion_daenerys_daemon_support_result_refused
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
 	}
 
 
@@ -2449,7 +3187,19 @@ segrellion_daenerys_support.0690 = {
 		name = segrellion_daenerys_support.0690.a
 
 
+		remove_character_flag = segrellion_daenerys_daemon_support_result_free
+
+		remove_character_flag = segrellion_daenerys_daemon_support_result_accepted
+
+		remove_character_flag = segrellion_daenerys_daemon_support_result_refused
+
+
 		segrellion_daenerys_finish_daemon_support_meeting_effect = yes
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }
 
@@ -2488,7 +3238,9 @@ segrellion_daenerys_support.0700 = {
 	}
 
 
+	# =====================================================
 	# ASK DAEMON TO PERSUADE JOFFREY
+	# =====================================================
 
 	option = {
 
@@ -2499,6 +3251,7 @@ segrellion_daenerys_support.0700 = {
 		trigger = {
 
 			has_character_flag = segrellion_daenerys_flamelands_support_secured
+
 
 			character:Segrellion_60 ?= {
 				is_alive = yes
@@ -2515,10 +3268,17 @@ segrellion_daenerys_support.0700 = {
 				days = { 2 5 }
 			}
 		}
+
+
+		ai_chance = {
+			base = 55
+		}
 	}
 
 
+	# =====================================================
 	# OFFER HER HAND
+	# =====================================================
 
 	option = {
 
@@ -2530,8 +3290,32 @@ segrellion_daenerys_support.0700 = {
 
 			is_married = no
 
-			character:Vladwyn_5 = {
+
+			NOT = {
+				has_trait = refusing_marriage
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_marriage_promised_to_daemon
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_promised_beacon_marriage
+			}
+
+
+			character:Vladwyn_5 ?= {
+
+				is_alive = yes
+
 				is_married = no
+
+
+				NOT = {
+					has_trait = refusing_marriage
+				}
 			}
 		}
 
@@ -2545,10 +3329,17 @@ segrellion_daenerys_support.0700 = {
 				days = { 2 5 }
 			}
 		}
+
+
+		ai_chance = {
+			base = 25
+		}
 	}
 
 
+	# =====================================================
 	# GUARANTEED COUNCIL SEAT
+	# =====================================================
 
 	option = {
 
@@ -2565,10 +3356,17 @@ segrellion_daenerys_support.0700 = {
 				days = { 2 5 }
 			}
 		}
+
+
+		ai_chance = {
+			base = 15
+		}
 	}
 
 
+	# =====================================================
 	# DEMAND HIS OATH
+	# =====================================================
 
 	option = {
 
@@ -2584,6 +3382,11 @@ segrellion_daenerys_support.0700 = {
 
 				days = { 2 5 }
 			}
+		}
+
+
+		ai_chance = {
+			base = 5
 		}
 	}
 }
@@ -2683,6 +3486,61 @@ segrellion_daenerys_support.0720 = {
 	desc = segrellion_daenerys_support.0720.desc
 
 
+	trigger = {
+
+		this = character:Vladwyn_5
+
+		is_alive = yes
+
+		is_married = no
+
+
+		NOT = {
+			has_trait = refusing_marriage
+		}
+
+
+		character:Targaryen_9 ?= {
+
+			is_alive = yes
+
+			is_married = no
+
+
+			NOT = {
+				has_trait = refusing_marriage
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_marriage_promised_to_daemon
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_promised_beacon_marriage
+			}
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		character:Targaryen_9 ?= {
+
+			add_character_flag = segrellion_daenerys_stormlands_answer_neutral
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0750
+
+				days = 1
+			}
+		}
+	}
+
+
 	option = {
 
 		name = segrellion_daenerys_support.0720.a
@@ -2700,7 +3558,9 @@ segrellion_daenerys_support.0720 = {
 
 
 			trigger_event = {
+
 				id = segrellion_daenerys_support.0750
+
 				days = 2
 			}
 		}
@@ -2912,6 +3772,492 @@ segrellion_daenerys_support.0750 = {
 
 
 	option = {
+
 		name = segrellion_daenerys_support.0750.a
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 0760 - THE QUEEN ASKS MASSEY
+#
+# ROOT = LORD MASSEY
+# =========================================================
+
+segrellion_daenerys_support.0760 = {
+
+	type = letter_event
+
+	title = segrellion_daenerys_support.0760.t
+	desc = segrellion_daenerys_support.0760.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	sender = character:Targaryen_9
+
+
+	trigger = {
+
+		this = title:d_masseys_hook.holder
+
+		is_alive = yes
+
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	# =====================================================
+	# SPEAK TO DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0760.a
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_massey_intercession_active
+		}
+
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0770
+
+				days = { 2 5 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 85
+
+
+			modifier = {
+
+				add = 25
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				has_relation_friend = character:Segrellion_60
+			}
+
+
+			modifier = {
+
+				add = -50
+
+				opinion = {
+					target = character:Targaryen_9
+					value <= -25
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE DAENERYS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0760.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_massey_intercession_failed
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0780
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 15
+		}
+	}
+}
+
+
+# =========================================================
+# 0770 - MASSEY SPEAKS TO THE UNICORN
+#
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daenerys_support.0770 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0770.t
+	desc = segrellion_daenerys_support.0770.desc
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+
+		character:Targaryen_9 ?= {
+			is_alive = yes
+		}
+
+
+		title:d_masseys_hook ?= {
+
+			exists = holder
+
+			holder = {
+				is_alive = yes
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = title:d_masseys_hook.holder
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# MASSEY CONVINCES DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0770.a
+
+
+		character:Targaryen_9 = {
+
+			segrellion_daenerys_secure_daemon_support_effect = yes
+
+
+			add_character_flag = segrellion_daenerys_massey_intercession_success
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0780
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 60
+
+
+			# Daemon respects Massey.
+
+			modifier = {
+
+				add = 30
+
+				opinion = {
+					target = title:d_masseys_hook.holder
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = 50
+
+				opinion = {
+					target = title:d_masseys_hook.holder
+					value >= 50
+				}
+			}
+
+
+			# Daemon already has some sympathy for Daenerys.
+
+			modifier = {
+
+				add = 20
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = 35
+
+				opinion = {
+					target = character:Targaryen_9
+					value >= 50
+				}
+			}
+
+
+			# A good relationship with Aegon makes betrayal harder.
+
+			modifier = {
+
+				add = -40
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+
+				add = -70
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 50
+				}
+			}
+
+
+			# A poor relationship with Aegon makes Massey's argument stronger.
+
+			modifier = {
+
+				add = 30
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= 0
+				}
+			}
+
+
+			modifier = {
+
+				add = 50
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value <= -25
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.55
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 100
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DAEMON STILL REFUSES
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support.0770.b
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_massey_intercession_failed
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_support.0780
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 40
+
+
+			modifier = {
+
+				add = 80
+
+				segrellion_daemon_committed_to_aegon_trigger = yes
+			}
+
+
+			modifier = {
+
+				add = 50
+
+				opinion = {
+					target = character:IAF_Young_Griff_1
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.15
+
+				character:IAF_Young_Griff_1 = {
+					has_character_flag = segrellion_young_griff_blackfyre_revealed
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.50
+
+				opinion = {
+					target = title:d_masseys_hook.holder
+					value >= 50
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0780 - MASSEY'S ANSWER
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support.0780 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support.0780.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daenerys_massey_intercession_success
+				}
+
+				desc = segrellion_daenerys_support.0780.desc_success
+			}
+
+
+			desc = segrellion_daenerys_support.0780.desc_failure
+		}
+	}
+
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_support.0780.a
+
+
+		remove_character_flag = segrellion_daenerys_massey_intercession_requested
+
+		remove_character_flag = segrellion_daenerys_massey_intercession_active
+
+		remove_character_flag = segrellion_daenerys_massey_intercession_success
+
+		remove_character_flag = segrellion_daenerys_massey_intercession_failed
+
+
+		add_character_flag = segrellion_daenerys_support_flamelands_resolved
+
+
+		ai_chance = {
+			base = 100
+		}
 	}
 }

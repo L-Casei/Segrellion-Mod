@@ -2568,6 +2568,73 @@ segrellion_apply_winds_story_marriage_locks_effect = {
 				remove_character_flag = segrellion_daemon_story_marriage_lock_added
 			}
 		}
+
+		# =================================================
+		# DAENERYS - PROMISED TO DAEMON
+		#
+		# If Daenerys has formally offered her hand and
+		# Daemon accepted, neither ordinary CK3 nor AGOT
+		# may marry her to somebody else.
+		# =================================================
+
+		character:Targaryen_9 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_married = no
+
+					has_character_flag = segrellion_marriage_promised_to_daemon
+
+
+					NOT = {
+						has_trait = refusing_marriage
+					}
+				}
+
+
+				add_trait = refusing_marriage
+
+				add_character_flag = segrellion_daenerys_daemon_promise_marriage_lock_active
+			}
+
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_daemon_promise_marriage_lock_active
+
+
+					OR = {
+
+						is_married = yes
+
+
+						NOT = {
+							has_character_flag = segrellion_marriage_promised_to_daemon
+						}
+					}
+				}
+
+
+				if = {
+
+					limit = {
+						has_trait = refusing_marriage
+					}
+
+
+					remove_trait = refusing_marriage
+				}
+
+
+				remove_character_flag = segrellion_daenerys_daemon_promise_marriage_lock_active
+			}
+		}
 	}
 }
 
