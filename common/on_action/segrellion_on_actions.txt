@@ -67,16 +67,48 @@ monthly_global_pulse = {
 }
 
 on_game_start_after_lobby = {
-    on_actions = {
+	on_actions = {
 		segrellion_historical_dragons_zero_tick_setup
-        segrellion_on_game_start_after_lobby
+		segrellion_on_game_start_after_lobby
+		segrellion_daenerys_dragons_delayed_startup
 		segrellion_stannis_opening_after_lobby
 		segrellion_intro_106_startup
-        iaf_canon_children_on_game_start_after_lobby
-        vladwyn_8106_startup
+		iaf_canon_children_on_game_start_after_lobby
+		vladwyn_8106_startup
 		segrellion_tommen_peace_guard
 		segrellion_black_unicorn_personal_lock_progression
-    }
+	}
+}
+
+# =========================================================
+# DAENERYS' DRAGONS - DELAYED STARTUP
+#
+# AGOT finishes building the dragon storage during the
+# initial game setup. Wait one day before forcing the
+# canon sizes of Drogon, Rhaegal and Viserion.
+# =========================================================
+
+segrellion_daenerys_dragons_delayed_startup = {
+
+	on_actions = {
+
+		delay = {
+			days = 1
+		}
+
+		segrellion_daenerys_dragons_delayed_repair
+	}
+}
+
+
+segrellion_daenerys_dragons_delayed_repair = {
+
+	effect = {
+
+		segrellion_setup_daenerys_dragons_300_effect = yes
+
+		segrellion_daenerys_dragon_maintenance_effect = yes
+	}
 }
 
 on_birth_child = {
