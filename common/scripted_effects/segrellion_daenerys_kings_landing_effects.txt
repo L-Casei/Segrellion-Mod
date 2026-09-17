@@ -128,8 +128,6 @@ segrellion_daenerys_force_iron_throne_victory_effect = {
 	trigger_event = {
 
 		id = segrellion_daenerys_kings_landing.0030
-
-		days = 1
 	}
 }
 
@@ -243,80 +241,70 @@ segrellion_daenerys_accept_kings_landing_surrender_effect = {
 
 
 # =========================================================
-# DEFEATED KING -> ADVENTURER
+# FINALIZE THE DEFEATED IRON THRONE HOLDER
+#
+# ROOT = DAENERYS
+#
+# - Invalidates every other war involving the defeated king
+# - Transfers EVERY remaining title personally held by them
+#   to Daenerys
+# - Leaves their fate to The Fallen Crown
 # =========================================================
 
-segrellion_daenerys_make_defeated_king_adventurer_effect = {
+segrellion_daenerys_finalize_defeated_throne_holder_effect = {
 
 	if = {
 
 		limit = {
 
+			this = character:Targaryen_9
+
 			has_variable = segrellion_daenerys_defeated_throne_holder
+
+
+			var:segrellion_daenerys_defeated_throne_holder = {
+
+				is_alive = yes
+
+
+				NOT = {
+					has_character_flag = segrellion_defeated_throne_holder_titles_seized
+				}
+			}
 		}
 
 
-		var:segrellion_daenerys_defeated_throne_holder ?= {
+		var:segrellion_daenerys_defeated_throne_holder = {
 
-			if = {
-
-				limit = {
-
-					is_alive = yes
-
-					has_character_flag = segrellion_defeated_away_from_kings_landing
+			save_scope_as = segrellion_daenerys_fallen_king
 
 
-					NOT = {
-						has_title = title:h_the_iron_throne
-					}
-				}
+			# =================================================
+			# THEIR OTHER WARS END INCONCLUSIVELY
+			# =================================================
+
+			every_character_war = {
+
+				end_war = invalidated
+			}
 
 
-				if = {
+			# =================================================
+			# DAENERYS TAKES EVERYTHING
+			#
+			# No counties, duchies, kingdoms or secondary
+			# personal titles remain with the defeated monarch.
+			# =================================================
 
-					limit = {
+			every_held_title = {
 
-						NOT = {
-							has_claim_on = title:h_the_iron_throne
-						}
-					}
-
-
-					add_pressed_claim = title:h_the_iron_throne
-				}
-
-
-				every_held_title = {
-
-					limit = {
-
-						tier >= tier_county
-
-						this != title:h_the_iron_throne
-					}
-
-
-					grant_title = character:Targaryen_9
-				}
-
-
-				create_landless_adventurer_title_effect = {
-
-					REASON = flag:voluntary
-
-					FLAVOR_CHAR = this
-				}
-
-
-				add_character_flag = segrellion_former_king_adventurer_after_daenerys
+				grant_title = character:Targaryen_9
 			}
 
 
 			remove_character_flag = segrellion_defeated_away_from_kings_landing
+
+			add_character_flag = segrellion_defeated_throne_holder_titles_seized
 		}
-
-
-		remove_variable = segrellion_daenerys_defeated_throne_holder
 	}
 }
