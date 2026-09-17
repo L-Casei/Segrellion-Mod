@@ -16,7 +16,34 @@ segrellion_daenerys_clear_support_negotiation_effect = {
 			has_variable = segrellion_daenerys_support_negotiator
 		}
 
+
+		# =================================================
+		# STORE THE FINAL POLITICAL POSITION
+		#
+		# If no agreement was reached, this character has
+		# explicitly declined Daenerys' cause and cannot
+		# later opportunistically betray their liege to
+		# join her through Call the Banners.
+		# =================================================
+
 		var:segrellion_daenerys_support_negotiator = {
+
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_support_agreement_reached_with_daenerys
+				}
+
+				remove_character_flag = segrellion_support_declined_daenerys
+			}
+
+			else = {
+
+				add_character_flag = segrellion_support_declined_daenerys
+
+				remove_character_flag = segrellion_support_agreement_reached_with_daenerys
+			}
+
 
 			remove_character_flag = segrellion_support_negotiation_reach
 			remove_character_flag = segrellion_support_negotiation_westerlands
@@ -32,6 +59,7 @@ segrellion_daenerys_clear_support_negotiation_effect = {
 			remove_character_flag = segrellion_support_demand_future_favor
 		}
 	}
+
 
 	remove_variable = segrellion_daenerys_support_negotiator
 
@@ -165,6 +193,13 @@ segrellion_daenerys_secure_current_support_negotiator_effect = {
 					add_character_flag = segrellion_support_agreement_reached_with_daenerys
 				}
 			}
+		}
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			add_character_flag = segrellion_support_agreement_reached_with_daenerys
+
+			remove_character_flag = segrellion_support_declined_daenerys
 		}
 	}
 }

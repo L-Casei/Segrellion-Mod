@@ -1,0 +1,79 @@
+# =========================================================
+# CALL THE BANNERS
+# DAENERYS POLITICAL CONSISTENCY
+# =========================================================
+
+
+# =========================================================
+# CAN THIS VASSAL BETRAY THEIR LIEGE?
+#
+# ROOT = banner vassal
+# scope:segrellion_banner_liege = current liege
+#
+# A character who explicitly declined Daenerys during
+# Gather Support cannot later opportunistically join her
+# through the generic Call the Banners betrayal route.
+#
+# This restriction applies only when Daenerys is actually
+# fighting on the opposite side of one of the liege's wars.
+# =========================================================
+
+segrellion_banner_can_betray_current_liege_trigger = {
+
+	exists = scope:segrellion_banner_liege
+
+
+	scope:segrellion_banner_liege = {
+		is_at_war = yes
+	}
+
+
+	NOT = {
+
+		AND = {
+
+			has_character_flag = segrellion_support_declined_daenerys
+
+
+			scope:segrellion_banner_liege = {
+
+				any_character_war = {
+
+					OR = {
+
+						# =================================
+						# LIEGE = ATTACKER
+						# DAENERYS = DEFENDER
+						# =================================
+
+						AND = {
+
+							is_attacker = scope:segrellion_banner_liege
+
+							any_war_defender = {
+								this = character:Targaryen_9
+							}
+						}
+
+
+						# =================================
+						# LIEGE = DEFENDER
+						# DAENERYS = ATTACKER
+						# =================================
+
+						AND = {
+
+							NOT = {
+								is_attacker = scope:segrellion_banner_liege
+							}
+
+							any_war_attacker = {
+								this = character:Targaryen_9
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

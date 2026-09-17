@@ -424,12 +424,46 @@ segrellion_daenerys_gather_support_decision = {
 
 		hidden_effect = {
 
-			add_character_flag = {
+		# =================================================
+		# GATHER SUPPORT COUNTER
+		#
+		# Each regional diplomatic approach counts once.
+		# The Iron Throne war cannot begin until Daenerys
+		# has made at least two such approaches.
+		# =================================================
 
-				flag = segrellion_daenerys_support_recently_used
+		if = {
 
-				days = 5
+			limit = {
+
+				NOT = {
+					has_variable = segrellion_daenerys_gather_support_attempts
+				}
 			}
+
+			set_variable = {
+
+				name = segrellion_daenerys_gather_support_attempts
+
+				value = 0
+			}
+		}
+
+
+		change_variable = {
+
+			name = segrellion_daenerys_gather_support_attempts
+
+			add = 1
+		}
+
+
+		add_character_flag = {
+
+			flag = segrellion_daenerys_support_recently_used
+
+			days = 5
+		}
 
 
 			if = {
@@ -600,6 +634,41 @@ segrellion_daenerys_claim_iron_throne_decision = {
 
 	is_valid = {
 
+		# =================================================
+		# DAENERYS MUST FIRST TEST THE POLITICAL LANDSCAPE
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_daenerys_claim_iron_throne_gather_support_requirement
+
+			AND = {
+
+				has_variable = segrellion_daenerys_gather_support_attempts
+
+				var:segrellion_daenerys_gather_support_attempts >= 2
+			}
+		}
+
+
+		# =================================================
+		# NO ACTIVE SUPPORT NEGOTIATION
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_daenerys_claim_iron_throne_support_pending_requirement
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_support_negotiation_pending
+			}
+		}
+
+
+		# =================================================
+		# NOT TRAVELLING
+		# =================================================
+
 		custom_description = {
 
 			text = segrellion_daenerys_claim_iron_throne_not_travelling_requirement
@@ -609,6 +678,10 @@ segrellion_daenerys_claim_iron_throne_decision = {
 			}
 		}
 
+
+		# =================================================
+		# NOT ALREADY AT WAR
+		# =================================================
 
 		custom_description = {
 
@@ -624,9 +697,6 @@ segrellion_daenerys_claim_iron_throne_decision = {
 		custom_tooltip = segrellion_daenerys_claim_iron_throne_effect_war_tt
 
 		custom_tooltip = segrellion_daenerys_claim_iron_throne_effect_supporters_tt
-
-		custom_tooltip = segrellion_daenerys_claim_iron_throne_effect_lesser_lords_tt
-
 
 		hidden_effect = {
 
@@ -668,13 +738,6 @@ segrellion_daenerys_claim_iron_throne_decision = {
 			# =================================================
 
 			segrellion_daenerys_call_promised_supporters_effect = yes
-
-
-			# =================================================
-			# GENERAL CALL TO THE LESSER LORDS OF WESTEROS
-			# =================================================
-
-			segrellion_daenerys_call_lesser_westerosi_lords_effect = yes
 		}
 	}
 

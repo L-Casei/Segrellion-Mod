@@ -24,6 +24,10 @@ segrellion_daenerys_secure_daemon_support_effect = {
 
 		add_character_flag = segrellion_daemon_supports_daenerys_in_throne_war
 
+		add_character_flag = segrellion_support_agreement_reached_with_daenerys
+
+		remove_character_flag = segrellion_support_declined_daenerys
+
 
 		# =================================================
 		# THE DEADLY TRIARCHY STILL EXISTS
@@ -161,8 +165,35 @@ segrellion_daenerys_secure_daemon_support_effect = {
 
 segrellion_daenerys_finish_daemon_support_meeting_effect = {
 
-	add_character_flag = segrellion_daenerys_support_flamelands_resolved
+		add_character_flag = segrellion_daenerys_support_flamelands_resolved
 
+	# =====================================================
+	# STORE DAEMON'S FINAL POSITION
+	# =====================================================
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_daenerys_flamelands_support_secured
+		}
+
+		character:Segrellion_60 ?= {
+
+			add_character_flag = segrellion_support_agreement_reached_with_daenerys
+
+			remove_character_flag = segrellion_support_declined_daenerys
+		}
+	}
+
+	else = {
+
+		character:Segrellion_60 ?= {
+
+			add_character_flag = segrellion_support_declined_daenerys
+
+			remove_character_flag = segrellion_support_agreement_reached_with_daenerys
+		}
+	}
 
 	# =====================================================
 	# OLD NEGOTIATION STATE
@@ -229,6 +260,9 @@ segrellion_daenerys_secure_joffrey_support_effect = {
 
 		add_character_flag = segrellion_joffrey_supports_daenerys_in_throne_war
 
+		add_character_flag = segrellion_support_agreement_reached_with_daenerys
+
+		remove_character_flag = segrellion_support_declined_daenerys
 
 		if = {
 
@@ -296,6 +330,8 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					this != root
 
 					this != title:h_the_iron_throne.holder
+
+					has_character_flag = segrellion_jon_supports_daenerys_throne_claim
 				}
 			}
 
@@ -358,6 +394,8 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					this != root
 
 					this != title:h_the_iron_throne.holder
+
+					has_character_flag = segrellion_reach_secretly_supports_daenerys
 				}
 			}
 
@@ -388,6 +426,8 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					this != root
 
 					this != title:h_the_iron_throne.holder
+
+					has_character_flag = segrellion_westerlands_secretly_supports_daenerys
 				}
 			}
 
@@ -410,7 +450,6 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					has_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
 				}
 
-
 				title:e_dorne.holder ?= {
 
 					is_alive = yes
@@ -418,6 +457,8 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					this != root
 
 					this != title:h_the_iron_throne.holder
+
+					has_character_flag = segrellion_dorne_secretly_supports_daenerys
 				}
 			}
 
@@ -448,6 +489,8 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					this != root
 
 					this != title:h_the_iron_throne.holder
+
+					has_character_flag = segrellion_riverlands_supports_daenerys
 				}
 			}
 
@@ -516,6 +559,8 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					is_alive = yes
 
 					this != title:h_the_iron_throne.holder
+
+					has_character_flag = segrellion_daemon_supports_daenerys_in_throne_war
 				}
 			}
 
