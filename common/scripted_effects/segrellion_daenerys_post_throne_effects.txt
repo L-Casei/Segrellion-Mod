@@ -16,66 +16,44 @@
 
 segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
 
-	every_owned_story = {
+	if = {
 
 		limit = {
-			story_type = story_agot_mw_rebel
+
+			this = character:Targaryen_9
 		}
 
 
-		story_owner = {
-			save_scope_as = segrellion_daenerys_aftermath_story_owner
-		}
+		# =================================================
+		# CLEAN ANY GENERIC MEGA WAR PUNISHMENT STATE
+		# ALREADY PREPARED DIRECTLY ON DAENERYS
+		# =================================================
+
+		clear_variable_list = mw_traitors_list
+
+		remove_variable = mw_punishment_window
 
 
-		if = {
+		# =================================================
+		# INVALIDATE AGOT'S EXTERNAL CLAIM AFTERMATH
+		#
+		# Same working pattern used by Young Griff.
+		# =================================================
+
+		every_owned_story = {
 
 			limit = {
 
-				OR = {
+				story_type = story_agot_mw_rebel
 
-					# =====================================
-					# NORMAL CASE
-					#
-					# AGOT still remembers Daenerys as
-					# the victorious throne-side top liege.
-					# =====================================
+				var:mw_source = flag:mw_external
 
-					AND = {
-
-						exists = root.var:mw_top_liege
-
-						root.var:mw_top_liege = character:Targaryen_9
-					}
-
-
-					# =====================================
-					# FALLBACK
-					#
-					# AGOT may already have cleaned the
-					# mw_top_liege pointer during the war
-					# resolution tick.
-					# =====================================
-
-					scope:segrellion_daenerys_aftermath_story_owner = character:Targaryen_9
-				}
+				var:mw_war_cb = flag:claim_cb
 			}
 
 
-			# =============================================
-			# NEVER LET AGOT PROCESS THE DEFEATED LORD LIST
-			# =============================================
+			clear_variable_list = mw_punishers_list
 
-			remove_variable = lords_to_be_punished
-
-
-			# =============================================
-			# DO NOT FORCE end_story = yes
-			#
-			# AGOT's story cleanup expects an outcome.
-			# Mark the story as invalidated exactly like
-			# the working Young Griff implementation.
-			# =============================================
 
 			set_variable = {
 
@@ -84,6 +62,9 @@ segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
 				value = flag:invalidated
 			}
 		}
+
+
+		add_character_flag = segrellion_daenerys_custom_aftermath_active
 	}
 }
 
@@ -143,6 +124,47 @@ segrellion_start_daenerys_post_throne_effect = {
 		# =================================================
 
 		segrellion_daenerys_restore_fertility_effect = yes
+
+		# =================================================
+		# DEFEATED IRON THRONE HOLDER
+		#
+		# The fallen king is dealt with BEFORE the normal
+		# post-throne government and regional settlements.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+				has_variable = segrellion_daenerys_defeated_throne_holder
+
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_defeated_throne_holder_fate_resolved
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
+				}
+			}
+
+
+			add_character_flag = {
+
+				flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
+
+				days = 30
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_post_throne.0000
+			}
+		}
 
 		# =================================================
 		# INITIALIZE THE STORY
@@ -255,6 +277,10 @@ segrellion_start_daenerys_post_throne_effect = {
 
 				NOT = {
 					has_character_flag = segrellion_daenerys_post_throne_opening_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
 				}
 			}
 

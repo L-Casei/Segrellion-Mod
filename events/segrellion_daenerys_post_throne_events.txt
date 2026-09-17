@@ -1,5 +1,234 @@
 namespace = segrellion_daenerys_post_throne
 
+# =========================================================
+# 0000 - THE FALLEN CROWN
+#
+# ROOT = DAENERYS
+#
+# The ruler who held the Iron Throne when Daenerys won
+# is brought before the new queen.
+# =========================================================
+
+segrellion_daenerys_post_throne.0000 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_post_throne.0000.t
+
+	desc = segrellion_daenerys_post_throne.0000.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+		has_variable = segrellion_daenerys_defeated_throne_holder
+
+
+		var:segrellion_daenerys_defeated_throne_holder = {
+
+			is_alive = yes
+
+			this != root
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
+
+		remove_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+		add_character_flag = segrellion_daenerys_defeated_throne_holder_fate_resolved
+
+		remove_variable = segrellion_daenerys_defeated_throne_holder
+
+
+		segrellion_start_daenerys_post_throne_effect = yes
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
+
+
+		segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+
+
+		var:segrellion_daenerys_defeated_throne_holder = {
+
+			save_scope_as = segrellion_daenerys_fallen_king
+		}
+
+
+		if = {
+
+			limit = {
+
+				scope:segrellion_daenerys_fallen_king = {
+
+					is_imprisoned = no
+				}
+			}
+
+
+			imprison = {
+
+				target = scope:segrellion_daenerys_fallen_king
+
+				type = house_arrest
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_daenerys_fallen_king
+
+		animation = fear
+	}
+
+
+	# =====================================================
+	# EXECUTION
+	#
+	# CANON / AI ROUTE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0000.a
+
+
+		hidden_effect = {
+
+			scope:segrellion_daenerys_fallen_king = {
+
+				death = {
+
+					death_reason = death_execution
+
+					killer = root
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_executed_defeated_throne_holder
+
+			remove_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+			add_character_flag = segrellion_daenerys_defeated_throne_holder_fate_resolved
+
+			remove_variable = segrellion_daenerys_defeated_throne_holder
+
+
+			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+
+			segrellion_start_daenerys_post_throne_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# EXILE
+	#
+	# PLAYER ALTERNATIVE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_post_throne.0000.b
+
+		custom_tooltip = segrellion_daenerys_post_throne.0000.b.tt
+
+
+		hidden_effect = {
+
+			scope:segrellion_daenerys_fallen_king = {
+
+				if = {
+
+					limit = {
+						is_imprisoned = yes
+					}
+
+					release_from_prison = yes
+				}
+
+
+				banish = yes
+
+				add_character_flag = segrellion_exiled_by_daenerys_after_throne
+
+
+				if = {
+
+					limit = {
+
+						is_landed = no
+
+						title:c_pentos = {
+							exists = holder
+						}
+					}
+
+
+					set_employer = title:c_pentos.holder
+
+					set_location = title:c_pentos.title_province
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_exiled_defeated_throne_holder
+
+			remove_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+			add_character_flag = segrellion_daenerys_defeated_throne_holder_fate_resolved
+
+			remove_variable = segrellion_daenerys_defeated_throne_holder
+
+
+			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+
+			segrellion_start_daenerys_post_throne_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
 
 # =========================================================
 # 0001 - THE WAR IS WON

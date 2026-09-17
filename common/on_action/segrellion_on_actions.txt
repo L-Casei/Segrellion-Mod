@@ -1316,10 +1316,55 @@ segrellion_daenerys_post_throne_war_victory_recovery = {
 		is_alive = yes
 
 		has_title = title:h_the_iron_throne
+
+
+		scope:war ?= {
+
+			casus_belli = {
+
+				any_target_title = {
+
+					this = title:h_the_iron_throne
+				}
+			}
+		}
 	}
 
 
 	effect = {
+
+		# =================================================
+		# SAVE THE ACTUAL DEFEATED KING
+		#
+		# This overwrites any stale pre-war state if the
+		# throne changed hands during the conflict.
+		# =================================================
+
+		scope:defender ?= {
+
+			root = {
+
+				set_variable = {
+
+					name = segrellion_daenerys_defeated_throne_holder
+
+					value = scope:defender
+				}
+			}
+		}
+
+
+		# =================================================
+		# KILL AGOT'S GENERIC "THE WAR'S AFTERMATH"
+		# IMMEDIATELY ON THE WAR-VICTORY TICK.
+		# =================================================
+
+		segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+
+
+		# =================================================
+		# INITIALIZE DAENERYS' OWN POST-THRONE FLOW
+		# =================================================
 
 		segrellion_start_daenerys_post_throne_effect = yes
 	}
