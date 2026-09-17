@@ -15,6 +15,118 @@
 
 segrellion_form_deadly_triarchy_effect = {
 
+	# =====================================================
+    # CANONICAL BOND - DAEMON / JOFFREY
+    #
+    # Daemon Segrellion and Joffrey Vladwyn are canonical
+    # best friends.
+    #
+    # This bond exists independently of:
+    # - Young Griff
+    # - the Pentos Compact
+    # - the Deadly Triarchy
+    #
+    # This also repairs existing saves if the relation
+    # was lost or never initialized.
+    # =====================================================
+
+    if = {
+
+        limit = {
+
+            game_start_date >= 8300.8.20
+            game_start_date < 8301.1.1
+
+
+            character:Segrellion_60 ?= {
+                is_alive = yes
+            }
+
+
+            character:Vladwyn_5 ?= {
+                is_alive = yes
+            }
+
+
+            character:Segrellion_60 = {
+
+                NOT = {
+                    has_relation_best_friend = character:Vladwyn_5
+                }
+            }
+        }
+
+
+        character:Segrellion_60 = {
+
+            # Upgrade an old normal friendship if one exists.
+
+            if = {
+
+                limit = {
+                    has_relation_friend = character:Vladwyn_5
+                }
+
+
+                remove_relation_friend = character:Vladwyn_5
+            }
+
+
+            set_relation_best_friend = character:Vladwyn_5
+        }
+    }
+
+	# =====================================================
+    # AEGON / DAEMON FRIENDSHIP GUARD
+    #
+    # Fighting together or belonging to the Deadly Triarchy
+    # is NOT enough to make them friends.
+    #
+    # Their friendship is exclusive to the route where
+    # Daemon becomes Aegon's Hand and designated Regent.
+    # =====================================================
+
+    if = {
+
+        limit = {
+
+            game_start_date >= 8300.8.20
+            game_start_date < 8301.1.1
+
+
+            character:Segrellion_60 ?= {
+
+                is_alive = yes
+
+                has_relation_friend = character:IAF_Young_Griff_1
+            }
+
+
+            character:IAF_Young_Griff_1 ?= {
+                is_alive = yes
+            }
+
+
+            NOR = {
+
+                character:Segrellion_60 = {
+                    has_character_flag = segrellion_daemon_aegon_hand_and_regent
+                }
+
+
+                character:IAF_Young_Griff_1 = {
+                    has_character_flag = segrellion_young_griff_daemon_hand_and_regent
+                }
+            }
+        }
+
+
+        character:Segrellion_60 = {
+
+            remove_relation_friend = character:IAF_Young_Griff_1
+        }
+    }
+
     # =====================================================
     # ONLY THE 300 AC BOOKMARK
     # =====================================================
