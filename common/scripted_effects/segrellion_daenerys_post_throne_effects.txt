@@ -218,16 +218,6 @@ segrellion_start_daenerys_post_throne_effect = {
 		}
 
 		# =================================================
-		# THE QUEEN'S PEACE
-		#
-		# Visible Situation representing the state of
-		# Westeros under Daenerys' new rule.
-		# =================================================
-
-		segrellion_daenerys_ensure_pacification_situation_effect = yes
-
-
-		# =================================================
 		# INVASION STATE IS OVER
 		# =================================================
 
@@ -344,6 +334,28 @@ segrellion_daenerys_post_throne_recovery_effect = {
 			# =============================================
 
 			segrellion_start_daenerys_post_throne_effect = yes
+
+			# =============================================
+			# THE QUEEN'S PEACE SITUATION RECOVERY
+			#
+			# Only attempt this AFTER the opening event has
+			# successfully appeared.
+			# =============================================
+
+			if = {
+
+				limit = {
+
+					has_character_flag = segrellion_daenerys_post_throne_opening_seen
+
+					NOT = {
+						exists = situation:segrellion_daenerys_pacification
+					}
+				}
+
+
+				segrellion_daenerys_ensure_pacification_situation_effect = yes
+			}
 
 
 			# =============================================
