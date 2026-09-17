@@ -7,7 +7,12 @@
 # =========================================================
 # NORTH
 #
-# LEFT AS-IS FOR THE NEXT REWORK.
+# Gather Support can only target Jon Snow as King in the North.
+# If another ruler controls the North, there is no direct route.
+#
+# The separate Dragonstone / Shireen storyline may already
+# have opened negotiations with Jon. In that case we do not
+# send a duplicate raven.
 # =========================================================
 
 segrellion_daenerys_north_support_available_trigger = {
@@ -20,8 +25,15 @@ segrellion_daenerys_north_support_available_trigger = {
 		has_character_flag = segrellion_daenerys_invited_davos_and_jon
 	}
 
+	NOT = {
+		has_character_flag = segrellion_daenerys_jon_parley_invitation_sent
+	}
+
 	title:e_the_north.holder ?= {
+
 		is_alive = yes
+
+		segrellion_is_current_jon_trigger = yes
 	}
 }
 

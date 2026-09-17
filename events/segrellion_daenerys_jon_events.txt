@@ -2,28 +2,157 @@ namespace = segrellion_daenerys_jon
 
 
 # =========================================================
-# 0001 - A RAVEN FROM THE DRAGON QUEEN
+# DAENERYS + JON
+#
+# NORTHERN GATHER SUPPORT STORYLINE
+#
+# 0000  Daenerys sends the raven
+# 0001  Davos presents the raven to Jon
+# 0002  Deferred answer after Winterfell Council
+# 0003  Deferred answer fallback
+# 0010  Compatibility journey router
+# 0020  Daenerys receives Jon's refusal
+#
+# 0030  The Dragon and the Wolf
+# 0040  Daenerys demands submission
+# 0050  Jon refuses
+# 0060  Daenerys chooses private audience / ends talks
+# 0070  Private confrontation
+# 0080  Jon tells his story
+# 0090  Daenerys notices something unsaid
+# 0100  Jon's romantic choice
+#
+# 0110  Daenerys reacts to Jon's kiss
+# 0111  Jon POV after the kiss
+# 0120  Daenerys POV after intimacy
+# 0121  Jon POV after intimacy
+#
+# 0130  Delayed romance: Jon comes to her chambers
+# 0131  Jon POV delayed-romance resolution
+#
+# 0140  The political pact
+# 0150  Secret marriage
+# 0160  Destined / pregnancy
+# 0170  Jon returns North
+# 0180  Jon informs the Northern lords
+# 0200  Northern lords receive the raven
 # =========================================================
 
-segrellion_daenerys_jon.0001 = {
 
-	type = letter_event
+# =========================================================
+# 0000 - A RAVEN FOR THE KING IN THE NORTH
+#
+# ROOT = DAENERYS
+# =========================================================
 
-	sender = character:Targaryen_9
+segrellion_daenerys_jon.0000 = {
 
-	title = segrellion_daenerys_jon.0001.t
-	desc = segrellion_daenerys_jon.0001.desc
+	type = character_event
+
+	title = segrellion_daenerys_jon.0000.t
+	desc = segrellion_daenerys_jon.0000.desc
 
 	theme = diplomacy
+
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
 
+	override_background = {
+		reference = council_chamber
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+
+		title:e_the_north.holder ?= {
+
+			is_alive = yes
+
+			segrellion_is_current_jon_trigger = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Lannister_8
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0000.a
+
+		custom_tooltip = segrellion_daenerys_jon.raven_north_travel_tt
+
+
+		hidden_effect = {
+
+			segrellion_daenerys_send_jon_parley_letter_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0001 - A RAVEN FROM THE DRAGON QUEEN
+#
+# ROOT = JON
+#
+# Davos presents Daenerys' demand.
+# =========================================================
+
+segrellion_daenerys_jon.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0001.t
+	desc = segrellion_daenerys_jon.0001.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = council_chamber
+	}
+
+
 	trigger = {
 
 		segrellion_is_current_jon_trigger = yes
+
+		title:e_the_north = {
+			holder = root
+		}
+
 
 		character:Targaryen_9 ?= {
 			is_alive = yes
@@ -37,16 +166,32 @@ segrellion_daenerys_jon.0001 = {
 	}
 
 
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Seaworth_1
+
+		animation = personality_rational
+	}
+
+
 	# =====================================================
-	# THE WINTERFELL COUNCIL IS STILL ACTIVE
+	# WINTERFELL COUNCIL STILL ACTIVE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_jon.0001.d
 
-		trigger = {
 
+		trigger = {
 			has_character_flag = segrellion_jon_winterfell_council_called
 		}
 
@@ -55,25 +200,26 @@ segrellion_daenerys_jon.0001 = {
 
 
 		character:Targaryen_9 = {
-
 			add_character_flag = segrellion_daenerys_jon_parley_pending
 		}
 
 
 		ai_chance = {
-
 			base = 100
 		}
 	}
 
 
 	# =====================================================
-	# GO PERSONALLY
+	# GO SOUTH PERSONALLY
+	#
+	# AI CANON ROUTE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_jon.0001.a
+
 
 		trigger = {
 
@@ -81,6 +227,9 @@ segrellion_daenerys_jon.0001 = {
 				has_character_flag = segrellion_jon_winterfell_council_called
 			}
 		}
+
+
+		custom_tooltip = segrellion_daenerys_jon.0001.a.tt
 
 
 		hidden_effect = {
@@ -90,60 +239,21 @@ segrellion_daenerys_jon.0001 = {
 
 
 		ai_chance = {
-
-			base = 80
+			base = 100
 		}
 	}
 
 
 	# =====================================================
-	# SEND AN ENVOY
+	# REFUSE HER
+	#
+	# PLAYER-ONLY ROUTE
 	# =====================================================
 
 	option = {
 
 		name = segrellion_daenerys_jon.0001.b
 
-		trigger = {
-
-			NOT = {
-				has_character_flag = segrellion_jon_winterfell_council_called
-			}
-		}
-
-
-		add_character_flag = segrellion_jon_sent_envoy_to_daenerys
-
-
-		character:Targaryen_9 = {
-
-			remove_character_flag = segrellion_daenerys_jon_parley_pending
-
-			add_character_flag = segrellion_daenerys_jon_envoy_route_open
-
-
-			trigger_event = {
-
-				id = segrellion_daenerys_jon.0040
-				days = { 3 6 }
-			}
-		}
-
-
-		ai_chance = {
-
-			base = 15
-		}
-	}
-
-
-	# =====================================================
-	# REJECT
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_jon.0001.c
 
 		trigger = {
 
@@ -151,6 +261,9 @@ segrellion_daenerys_jon.0001 = {
 				has_character_flag = segrellion_jon_winterfell_council_called
 			}
 		}
+
+
+		custom_tooltip = segrellion_daenerys_jon.0001.b.tt
 
 
 		add_character_flag = segrellion_jon_rejected_daenerys_parley
@@ -165,15 +278,15 @@ segrellion_daenerys_jon.0001 = {
 
 			trigger_event = {
 
-				id = segrellion_daenerys_jon.0041
-				days = { 3 6 }
+				id = segrellion_daenerys_jon.0020
+
+				days = { 14 24 }
 			}
 		}
 
 
 		ai_chance = {
-
-			base = 5
+			base = 0
 		}
 	}
 }
@@ -181,7 +294,10 @@ segrellion_daenerys_jon.0001 = {
 
 # =========================================================
 # 0002 - THE UNANSWERED RAVEN
-# DAVOS
+#
+# ROOT = JON
+#
+# Davos reminds Jon after the Winterfell Council.
 # =========================================================
 
 segrellion_daenerys_jon.0002 = {
@@ -193,12 +309,14 @@ segrellion_daenerys_jon.0002 = {
 
 	theme = diplomacy
 
-	override_header_background = {
-		reference = "gfx/interface/window_event/event_header_blue.dds"
-	}
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = council_chamber
 	}
 
 
@@ -208,13 +326,16 @@ segrellion_daenerys_jon.0002 = {
 
 		has_character_flag = segrellion_jon_daenerys_reply_deferred
 
+
 		character:Targaryen_9 ?= {
 			is_alive = yes
 		}
 
+
 		character:Seaworth_1 ?= {
 
 			is_alive = yes
+
 			is_imprisoned = no
 		}
 	}
@@ -223,6 +344,7 @@ segrellion_daenerys_jon.0002 = {
 	left_portrait = {
 
 		character = root
+
 		animation = thinking
 	}
 
@@ -230,6 +352,7 @@ segrellion_daenerys_jon.0002 = {
 	right_portrait = {
 
 		character = character:Seaworth_1
+
 		animation = personality_rational
 	}
 
@@ -238,13 +361,14 @@ segrellion_daenerys_jon.0002 = {
 
 		name = segrellion_daenerys_jon.0002.a
 
+
 		hidden_effect = {
 
 			segrellion_jon_accept_daenerys_parley_effect = yes
 		}
 
-		ai_chance = {
 
+		ai_chance = {
 			base = 100
 		}
 	}
@@ -253,7 +377,10 @@ segrellion_daenerys_jon.0002 = {
 
 # =========================================================
 # 0003 - THE UNANSWERED RAVEN
-# FALLBACK IF DAVOS IS UNAVAILABLE
+#
+# ROOT = JON
+#
+# Fallback if Davos cannot appear.
 # =========================================================
 
 segrellion_daenerys_jon.0003 = {
@@ -265,67 +392,11 @@ segrellion_daenerys_jon.0003 = {
 
 	theme = diplomacy
 
-	override_header_background = {
-		reference = "gfx/interface/window_event/event_header_blue.dds"
-	}
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-
-	trigger = {
-
-		segrellion_is_current_jon_trigger = yes
-
-		has_character_flag = segrellion_jon_daenerys_reply_deferred
-
-		character:Targaryen_9 ?= {
-			is_alive = yes
-		}
-	}
-
-
-	left_portrait = {
-
-		character = root
-		animation = thinking
-	}
-
-
-	option = {
-
-		name = segrellion_daenerys_jon.0003.a
-
-		hidden_effect = {
-
-			segrellion_jon_accept_daenerys_parley_effect = yes
-		}
-
-		ai_chance = {
-
-			base = 100
-		}
-	}
-}
-
-
-# =========================================================
-# 0010 - THE NORTH DOES NOT LIKE IT
-# =========================================================
-
-segrellion_daenerys_jon.0010 = {
-
-	type = character_event
-
-	title = segrellion_daenerys_jon.0010.t
-	desc = segrellion_daenerys_jon.0010.desc
-
-	theme = diplomacy
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
 
 	override_background = {
 		reference = council_chamber
@@ -336,7 +407,8 @@ segrellion_daenerys_jon.0010 = {
 
 		segrellion_is_current_jon_trigger = yes
 
-		has_character_flag = segrellion_jon_daenerys_parley_accepted
+		has_character_flag = segrellion_jon_daenerys_reply_deferred
+
 
 		character:Targaryen_9 ?= {
 			is_alive = yes
@@ -347,96 +419,149 @@ segrellion_daenerys_jon.0010 = {
 	left_portrait = {
 
 		character = root
-		animation = personality_bold
+
+		animation = thinking
 	}
 
 
-	# =====================================================
-	# KING IN THE NORTH
-	# =====================================================
-
 	option = {
 
-		name = segrellion_daenerys_jon.0010.a
-
-		custom_tooltip = segrellion_daenerys_jon.0010.travel_tt
-
-
-		add_character_flag = segrellion_jon_parley_independence_stance
+		name = segrellion_daenerys_jon.0003.a
 
 
 		hidden_effect = {
 
-			segrellion_jon_begin_daenerys_parley_journey_effect = yes
+			segrellion_jon_accept_daenerys_parley_effect = yes
 		}
 
 
 		ai_chance = {
-
-			base = 40
-		}
-	}
-
-
-	# =====================================================
-	# LONG NIGHT FIRST
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_jon.0010.b
-
-		custom_tooltip = segrellion_daenerys_jon.0010.travel_tt
-
-
-		add_character_flag = segrellion_jon_parley_long_night_stance
-
-
-		hidden_effect = {
-
-			segrellion_jon_begin_daenerys_parley_journey_effect = yes
-		}
-
-
-		ai_chance = {
-
-			base = 45
-		}
-	}
-
-
-	# =====================================================
-	# PRAGMATIC
-	# =====================================================
-
-	option = {
-
-		name = segrellion_daenerys_jon.0010.c
-
-		custom_tooltip = segrellion_daenerys_jon.0010.travel_tt
-
-
-		add_character_flag = segrellion_jon_parley_pragmatic_stance
-
-
-		hidden_effect = {
-
-			segrellion_jon_begin_daenerys_parley_journey_effect = yes
-		}
-
-
-		ai_chance = {
-
-			base = 15
+			base = 100
 		}
 	}
 }
 
 
 # =========================================================
-# 0030 - THE DRAGON QUEEN
+# 0010 - BEGIN THE JOURNEY SOUTH
 #
-# JON ARRIVES AND MEETS DAENERYS
+# ROOT = JON
+#
+# Compatibility router.
+# Keeps the old effect safe if it still calls .0010.
+# =========================================================
+
+segrellion_daenerys_jon.0010 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_character_flag = segrellion_jon_daenerys_parley_accepted
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_jon_parley_independence_stance
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_jon_travelling_to_daenerys_parley
+				}
+			}
+
+
+			segrellion_jon_begin_daenerys_parley_journey_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - THE NORTH REMEMBERS
+#
+# ROOT = DAENERYS
+#
+# Jon refused the initial raven.
+# =========================================================
+
+segrellion_daenerys_jon.0020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0020.t
+	desc = segrellion_daenerys_jon.0020.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = council_chamber
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_jon_parley_rejected
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = disapproval
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0020.a
+
+
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		add_character_flag = segrellion_daenerys_north_route_closed
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - THE DRAGON AND THE WOLF
+#
+# ROOT = JON
+#
+# Jon arrives at Daenerys' current location.
 # =========================================================
 
 segrellion_daenerys_jon.0030 = {
@@ -444,35 +569,23 @@ segrellion_daenerys_jon.0030 = {
 	type = character_event
 
 	title = segrellion_daenerys_jon.0030.t
-
-	desc = {
-
-		first_valid = {
-
-			triggered_desc = {
-
-				trigger = {
-
-					has_character_flag = segrellion_jon_daenerys_parley_destination_beacon
-				}
-
-				desc = segrellion_daenerys_jon.0030.desc_beacon
-			}
-
-
-			desc = segrellion_daenerys_jon.0030.desc
-		}
-	}
-
+	desc = segrellion_daenerys_jon.0030.desc
 
 	theme = diplomacy
+
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
+
 	override_header_background = {
 		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
 	}
 
 
@@ -481,6 +594,7 @@ segrellion_daenerys_jon.0030 = {
 		segrellion_is_current_jon_trigger = yes
 
 		has_character_flag = segrellion_jon_travelling_to_daenerys_parley
+
 
 		character:Targaryen_9 ?= {
 			is_alive = yes
@@ -498,22 +612,22 @@ segrellion_daenerys_jon.0030 = {
 		character:Targaryen_9 = {
 
 			remove_character_flag = segrellion_daenerys_jon_travelling_to_parley
+
+
+			location ?= {
+				save_scope_as = segrellion_daenerys_parley_location
+			}
 		}
 
-
-		# =================================================
-		# THE BEACON
-		# =================================================
 
 		if = {
 
 			limit = {
-
-				has_character_flag = segrellion_jon_daenerys_parley_destination_beacon
+				exists = scope:segrellion_daenerys_parley_location
 			}
 
 
-			set_location = title:b_castle_farring.title_province
+			set_location = scope:segrellion_daenerys_parley_location
 
 
 			character:Seaworth_1 ?= {
@@ -521,61 +635,13 @@ segrellion_daenerys_jon.0030 = {
 				if = {
 
 					limit = {
-
 						is_alive = yes
-
-						has_character_flag = segrellion_davos_travels_with_jon_to_daenerys
 					}
 
-					set_location = title:b_castle_farring.title_province
+
+					set_location = scope:segrellion_daenerys_parley_location
 
 					remove_character_flag = segrellion_davos_travels_with_jon_to_daenerys
-				}
-			}
-		}
-
-
-		# =================================================
-		# DAENERYS' CURRENT LOCATION
-		# =================================================
-
-		else = {
-
-			character:Targaryen_9 = {
-
-				location ?= {
-
-					save_scope_as = segrellion_daenerys_parley_location
-				}
-			}
-
-
-			if = {
-
-				limit = {
-
-					exists = scope:segrellion_daenerys_parley_location
-				}
-
-
-				set_location = scope:segrellion_daenerys_parley_location
-
-
-				character:Seaworth_1 ?= {
-
-					if = {
-
-						limit = {
-
-							is_alive = yes
-
-							has_character_flag = segrellion_davos_travels_with_jon_to_daenerys
-						}
-
-						set_location = scope:segrellion_daenerys_parley_location
-
-						remove_character_flag = segrellion_davos_travels_with_jon_to_daenerys
-					}
 				}
 			}
 		}
@@ -585,6 +651,7 @@ segrellion_daenerys_jon.0030 = {
 	left_portrait = {
 
 		character = root
+
 		animation = personality_rational
 	}
 
@@ -592,7 +659,16 @@ segrellion_daenerys_jon.0030 = {
 	right_portrait = {
 
 		character = character:Targaryen_9
+
 		animation = personality_bold
+	}
+
+
+	lower_left_portrait = {
+
+		character = character:Seaworth_1
+
+		animation = personality_rational
 	}
 
 
@@ -607,11 +683,18 @@ segrellion_daenerys_jon.0030 = {
 		character:Targaryen_9 = {
 
 			add_character_flag = segrellion_daenerys_jon_first_audience_complete
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0040
+
+				days = 1
+			}
 		}
 
 
 		ai_chance = {
-
 			base = 100
 		}
 	}
@@ -619,7 +702,9 @@ segrellion_daenerys_jon.0030 = {
 
 
 # =========================================================
-# 0040 - JON SENDS AN ENVOY
+# 0040 - BEND THE KNEE
+#
+# ROOT = DAENERYS
 # =========================================================
 
 segrellion_daenerys_jon.0040 = {
@@ -631,23 +716,37 @@ segrellion_daenerys_jon.0040 = {
 
 	theme = diplomacy
 
+
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
 
-	trigger = {
-
-		this = character:Targaryen_9
-		is_alive = yes
-
-		has_character_flag = segrellion_daenerys_jon_envoy_route_open
+	override_background = {
+		reference = throne_room
 	}
 
 
 	left_portrait = {
 
 		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_rational
+	}
+
+
+	lower_right_portrait = {
+
+		character = character:Seaworth_1
+
 		animation = personality_rational
 	}
 
@@ -656,8 +755,19 @@ segrellion_daenerys_jon.0040 = {
 
 		name = segrellion_daenerys_jon.0040.a
 
-		ai_chance = {
 
+		title:e_the_north.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0050
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
 			base = 100
 		}
 	}
@@ -665,45 +775,1481 @@ segrellion_daenerys_jon.0040 = {
 
 
 # =========================================================
-# 0041 - THE NORTH REFUSES
+# 0050 - NO DEBT TO DRAGONS
+#
+# ROOT = JON
 # =========================================================
 
-segrellion_daenerys_jon.0041 = {
+segrellion_daenerys_jon.0050 = {
 
 	type = character_event
 
-	title = segrellion_daenerys_jon.0041.t
-	desc = segrellion_daenerys_jon.0041.desc
+	title = segrellion_daenerys_jon.0050.t
+	desc = segrellion_daenerys_jon.0050.desc
 
 	theme = diplomacy
+
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
 
-	trigger = {
-
-		this = character:Targaryen_9
-		is_alive = yes
-
-		has_character_flag = segrellion_daenerys_jon_parley_rejected
+	override_background = {
+		reference = throne_room
 	}
 
 
 	left_portrait = {
 
 		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0050.a
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0060
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0060 - TOO MANY EYES
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_jon.0060 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0060.t
+	desc = segrellion_daenerys_jon.0060.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_bold
+	}
+
+
+	# =====================================================
+	# SPEAK IN PRIVATE
+	#
+	# CANON AI ROUTE.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0060.a
+
+
+		add_character_flag = segrellion_daenerys_jon_private_audience
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_jon.0070
+
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# END NEGOTIATIONS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0060.b
+
+
+		custom_tooltip = segrellion_daenerys_jon.0060.b.tt
+
+
+		add_character_flag = segrellion_daenerys_jon_parley_failed
+
+		add_character_flag = segrellion_daenerys_north_route_closed
+
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+
+		title:e_the_north.holder = {
+
+			add_character_flag = segrellion_jon_daenerys_parley_failed
+
+			set_location = title:c_winterfell.title_province
+		}
+
+
+		character:Seaworth_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_location = title:c_winterfell.title_province
+			}
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+
+# =========================================================
+# 0070 - NO AUDIENCE NOW
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_jon.0070 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0070.t
+	desc = segrellion_daenerys_jon.0070.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
 		animation = personality_rational
 	}
 
 
 	option = {
 
-		name = segrellion_daenerys_jon.0041.a
+		name = segrellion_daenerys_jon.0070.a
+
+
+		title:e_the_north.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0080
+
+				days = 1
+			}
+		}
+
 
 		ai_chance = {
+			base = 100
+		}
+	}
+}
 
+
+# =========================================================
+# 0080 - WHAT WE SURVIVED
+#
+# ROOT = JON
+# =========================================================
+
+segrellion_daenerys_jon.0080 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0080.t
+	desc = segrellion_daenerys_jon.0080.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0080.a
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0090
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0090 - SOMETHING UNSAID
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_jon.0090 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0090.t
+	desc = segrellion_daenerys_jon.0090.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0090.a
+
+
+		title:e_the_north.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0100
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0100 - ONE STEP
+#
+# ROOT = JON
+#
+# Jon makes the decisive personal choice.
+# =========================================================
+
+segrellion_daenerys_jon.0100 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0100.t
+	desc = segrellion_daenerys_jon.0100.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# KISS HER
+	#
+	# CANON AI ROUTE.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0100.a
+
+
+		add_character_flag = segrellion_jon_kissed_daenerys
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_kissed_jon
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0110
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# WALK AWAY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0100.b
+
+
+		custom_tooltip = segrellion_daenerys_jon.0100.b.tt
+
+
+		add_opinion = {
+
+			target = character:Targaryen_9
+
+			modifier = segrellion_jon_daenerys_failed_parley_opinion
+		}
+
+
+		character:Targaryen_9 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_jon_daenerys_failed_parley_opinion
+			}
+
+
+			add_character_flag = segrellion_daenerys_north_route_closed
+
+			remove_character_flag = segrellion_daenerys_support_negotiation_pending
+		}
+
+
+		add_character_flag = segrellion_jon_daenerys_parley_failed
+
+
+		set_location = title:c_winterfell.title_province
+
+
+		character:Seaworth_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_location = title:c_winterfell.title_province
+			}
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+
+
+	# =====================================================
+	# LET HER KISS HIM, THEN RETREAT
+	#
+	# Alternate player route.
+	# Jon remains with Daenerys for several days.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0100.c
+
+
+		custom_tooltip = segrellion_daenerys_jon.0100.c.tt
+
+
+		add_character_flag = segrellion_jon_fled_daenerys_after_kiss
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_kissed_jon_first
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0130
+
+				days = { 3 6 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - THE KISS
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_jon.0110 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0110.t
+	desc = segrellion_daenerys_jon.0110.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# CONTINUE
+	#
+	# AI CANON ROUTE.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0110.a
+
+
+		title:e_the_north.holder = {
+
+			segrellion_jon_daenerys_become_soulmates_effect = yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0111
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# STOP
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_jon.0110.b
+
+
+		add_character_flag = segrellion_daenerys_stopped_jon_romance
+
+		add_character_flag = segrellion_daenerys_north_route_closed
+
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+
+		title:e_the_north.holder = {
+
+			add_character_flag = segrellion_jon_daenerys_parley_failed
+
+			set_location = title:c_winterfell.title_province
+		}
+
+
+		character:Seaworth_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				set_location = title:c_winterfell.title_province
+			}
+		}
+
+
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+
+# =========================================================
+# 0111 - NO GOING BACK
+#
+# ROOT = JON
+#
+# Jon's POV after Daenerys reciprocates.
+# =========================================================
+
+segrellion_daenerys_jon.0111 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0111.t
+	desc = segrellion_daenerys_jon.0111.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0111.a
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0120
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - BEFORE MORNING
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_jon.0120 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0120.t
+	desc = segrellion_daenerys_jon.0120.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_slept_with_jon
+
+
+		title:e_the_north.holder = {
+			add_character_flag = segrellion_jon_slept_with_daenerys
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0120.a
+
+
+		title:e_the_north.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0121
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0121 - THE MORNING AFTER
+#
+# ROOT = JON
+# =========================================================
+
+segrellion_daenerys_jon.0121 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0121.t
+	desc = segrellion_daenerys_jon.0121.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0121.a
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0140
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0130 - A KNOCK AFTER MIDNIGHT
+#
+# ROOT = DAENERYS
+#
+# Delayed romance route.
+# =========================================================
+
+segrellion_daenerys_jon.0130 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0130.t
+	desc = segrellion_daenerys_jon.0130.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0130.a
+
+
+		title:e_the_north.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0131
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0131 - I CAME BACK
+#
+# ROOT = JON
+# =========================================================
+
+segrellion_daenerys_jon.0131 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0131.t
+	desc = segrellion_daenerys_jon.0131.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0131.a
+
+
+		segrellion_jon_daenerys_become_soulmates_effect = yes
+
+
+		add_character_flag = segrellion_jon_slept_with_daenerys
+
+
+		character:Targaryen_9 = {
+
+			add_character_flag = segrellion_daenerys_slept_with_jon
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0120
+
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0140 - FIRE AND ICE
+#
+# ROOT = DAENERYS
+#
+# Jon pledges his support.
+# Daenerys promises aid against the dead after victory.
+# =========================================================
+
+segrellion_daenerys_jon.0140 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0140.t
+	desc = segrellion_daenerys_jon.0140.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0140.a
+
+
+		title:e_the_north.holder = {
+
+			segrellion_jon_daenerys_secure_northern_pact_effect = yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0150
+
+				days = { 2 4 }
+			}
+		}
+
+
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0150 - NO WITNESS BUT US
+#
+# ROOT = JON
+#
+# Jon and Daenerys secretly marry.
+# =========================================================
+
+segrellion_daenerys_jon.0150 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0150.t
+	desc = segrellion_daenerys_jon.0150.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0150.a
+
+
+		segrellion_jon_daenerys_secret_marriage_effect = yes
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0160
+
+				days = { 8 14 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0160 - DESTINED
+#
+# ROOT = DAENERYS
+#
+# Daenerys realises she can carry life again.
+# =========================================================
+
+segrellion_daenerys_jon.0160 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0160.t
+	desc = segrellion_daenerys_jon.0160.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = bedchamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = title:e_the_north.holder
+
+		animation = personality_rational
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# DESTINED
+		#
+		# The exact old Daenerys infertility modifier must
+		# be removed here once its actual AGOT ID is wired.
+		#
+		# Do NOT invent a modifier ID.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_daenerys_destined_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_daenerys_destined_modifier
+			}
+		}
+
+
+		# =================================================
+		# JON'S CHILD
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_pregnant = no
+
+
+				title:e_the_north.holder ?= {
+					is_alive = yes
+				}
+			}
+
+
+			make_pregnant = {
+
+				father = title:e_the_north.holder
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_destined_with_jon
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0160.a
+
+
+		title:e_the_north.holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0170
+
+				days = { 4 7 }
+			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0170 - WINTER IS WAITING
+#
+# ROOT = JON
+#
+# Jon leaves Daenerys and returns to Winterfell.
+# =========================================================
+
+segrellion_daenerys_jon.0170 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0170.t
+	desc = segrellion_daenerys_jon.0170.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = throne_room
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0170.a
+
+
+		set_location = title:c_winterfell.title_province
+
+
+		character:Seaworth_1 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_location = title:c_winterfell.title_province
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_jon.0180
+
+			days = 2
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0180 - WHAT I HAVE DONE
+#
+# ROOT = JON
+#
+# Jon announces the political agreement to the North.
+# The secret marriage remains secret.
+# =========================================================
+
+segrellion_daenerys_jon.0180 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_jon.0180.t
+	desc = segrellion_daenerys_jon.0180.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	override_background = {
+		reference = council_chamber
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Seaworth_1
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0180.a
+
+
+		segrellion_jon_daenerys_notify_northern_lords_effect = yes
+
+
+		add_character_flag = segrellion_jon_submitted_north_to_daenerys
+
+		add_character_flag = segrellion_jon_no_longer_independent_king_in_north
+
+
+		# =================================================
+		# DO NOT REMOVE THE KING IN THE NORTH TRAIT YET.
+		#
+		# The later political settlement will handle that.
+		# =================================================
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0200 - THE KING'S RAVEN
+#
+# ROOT = NORTHERN VASSAL
+#
+# Every Northern lord accepts Jon's command,
+# but dislikes the surrender of independence.
+# =========================================================
+
+segrellion_daenerys_jon.0200 = {
+
+	type = letter_event
+
+	sender = title:e_the_north.holder
+
+	title = segrellion_daenerys_jon.0200.t
+	desc = segrellion_daenerys_jon.0200.desc
+
+	theme = diplomacy
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_jon.0200.a
+
+
+		add_character_flag = segrellion_northern_lord_accepts_daenerys_pact
+
+
+		ai_chance = {
 			base = 100
 		}
 	}

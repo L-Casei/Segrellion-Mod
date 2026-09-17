@@ -105,41 +105,33 @@ segrellion_daenerys_gather_support_decision = {
 			is_shown = {
 
 				root = {
-					segrellion_daenerys_north_support_available_trigger = yes
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_support_north_approached
+					}
+				}
+
+				title:e_the_north.holder ?= {
+					is_alive = yes
 				}
 			}
 
 
 			is_valid = {
-				always = yes
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_north_requires_jon
+
+					root = {
+						segrellion_daenerys_north_support_available_trigger = yes
+					}
+				}
 			}
 
 
 			ai_chance = {
-
-				value = 90
-
-
-				modifier = {
-
-					add = 40
-
-					root = {
-
-						OR = {
-
-							title:e_the_north.holder = character:Stark_7
-
-
-							AND = {
-
-								has_global_variable = segrellion_resurrected_jon
-
-								title:e_the_north.holder = global_var:segrellion_resurrected_jon
-							}
-						}
-					}
-				}
+				value = 100
 			}
 		}
 
@@ -448,9 +440,11 @@ segrellion_daenerys_gather_support_decision = {
 
 				add_character_flag = segrellion_daenerys_support_north_approached
 
+				add_character_flag = segrellion_daenerys_support_negotiation_pending
+
 				trigger_event = {
-					id = segrellion_daenerys_support.0100
-					days = { 45 60 }
+					id = segrellion_daenerys_jon.0000
+					days = 1
 				}
 			}
 

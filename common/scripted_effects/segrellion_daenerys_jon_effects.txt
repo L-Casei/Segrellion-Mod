@@ -82,7 +82,9 @@ segrellion_daenerys_send_jon_parley_letter_effect = {
 
 
 # =========================================================
-# JON ACCEPTS THE PERSONAL MEETING
+# JON ACCEPTS DAENERYS' PERSONAL PARLEY
+#
+# ROOT = JON
 # =========================================================
 
 segrellion_jon_accept_daenerys_parley_effect = {
@@ -100,11 +102,12 @@ segrellion_jon_accept_daenerys_parley_effect = {
 	}
 
 
-	trigger_event = {
+	# Jon is going south personally.
 
-		id = segrellion_daenerys_jon.0010
-		days = 1
-	}
+	add_character_flag = segrellion_jon_parley_independence_stance
+
+
+	segrellion_jon_begin_daenerys_parley_journey_effect = yes
 }
 
 
@@ -238,4 +241,138 @@ segrellion_jon_begin_daenerys_parley_journey_effect = {
 		id = segrellion_daenerys_jon.0030
 		days = { 21 35 }
 	}
+}
+
+# =========================================================
+# DAENERYS + JON
+# POLITICAL / ROMANTIC SETTLEMENT
+# =========================================================
+
+
+# =========================================================
+# SECURE THE NORTHERN PACT
+#
+# ROOT = JON
+# =========================================================
+
+segrellion_jon_daenerys_secure_northern_pact_effect = {
+
+	add_character_flag = segrellion_jon_supports_daenerys_throne_claim
+
+	add_character_flag = segrellion_jon_daenerys_northern_pact
+
+
+	character:Targaryen_9 = {
+
+		add_character_flag = segrellion_daenerys_north_support_secured
+
+		add_character_flag = segrellion_daenerys_jon_northern_pact
+
+		add_character_flag = segrellion_daenerys_promised_long_night_support
+	}
+
+
+	add_character_flag = segrellion_jon_daenerys_promised_long_night_support
+
+
+	# Real political alliance.
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				is_allied_to = character:Targaryen_9
+			}
+		}
+
+		create_alliance = character:Targaryen_9
+	}
+}
+
+
+# =========================================================
+# JON + DAENERYS BECOME SOULMATES
+#
+# ROOT = JON
+# =========================================================
+
+segrellion_jon_daenerys_become_soulmates_effect = {
+
+	add_character_flag = segrellion_jon_daenerys_lovers
+
+	character:Targaryen_9 = {
+		add_character_flag = segrellion_daenerys_jon_lovers
+	}
+
+
+	add_relation_soulmate = character:Targaryen_9
+}
+
+
+# =========================================================
+# SECRET MARRIAGE
+#
+# ROOT = JON
+# =========================================================
+
+segrellion_jon_daenerys_secret_marriage_effect = {
+
+	if = {
+
+		limit = {
+
+			is_married = no
+
+			character:Targaryen_9 = {
+				is_married = no
+			}
+		}
+
+		marry = character:Targaryen_9
+	}
+
+
+	add_character_flag = segrellion_jon_secretly_married_daenerys
+
+	character:Targaryen_9 = {
+		add_character_flag = segrellion_daenerys_secretly_married_jon
+	}
+}
+
+
+# =========================================================
+# NORTHERN LORDS LEARN OF JON'S OATH
+#
+# ROOT = JON
+# =========================================================
+
+segrellion_jon_daenerys_notify_northern_lords_effect = {
+
+	save_scope_as = segrellion_jon_northern_oath_root
+
+
+	every_vassal = {
+
+		limit = {
+			is_alive = yes
+		}
+
+		add_opinion = {
+
+			target = scope:segrellion_jon_northern_oath_root
+
+			modifier = segrellion_jon_swore_to_daenerys_opinion
+		}
+
+		trigger_event = {
+
+			id = segrellion_daenerys_jon.0200
+
+			days = { 2 10 }
+		}
+	}
+
+
+	add_character_flag = segrellion_jon_north_informed_of_daenerys_pact
 }
