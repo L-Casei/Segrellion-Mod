@@ -1,0 +1,499 @@
+# =========================================================
+# DAENERYS - THE GREAT TYRANNY REVOLT
+# =========================================================
+
+segrellion_daenerys_tyranny_revolt_cb = {
+
+	icon = peasant_war
+
+	group = civil_war
+
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = no
+
+	allow_hostages = no
+
+
+	target_titles = none
+
+
+	allowed_for_character = {
+
+		has_character_flag = segrellion_daenerys_tyranny_revolt_leader
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = character:Targaryen_9
+
+		scope:defender = {
+
+			has_character_flag = segrellion_daenerys_tyranny_revolt_pending
+		}
+	}
+
+
+	valid_to_start = {
+
+		scope:attacker = {
+
+			is_alive = yes
+
+			this != scope:defender
+		}
+
+
+		scope:defender = {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+		}
+	}
+
+
+	should_invalidate = {
+
+		always = no
+	}
+
+
+	cost = {
+	}
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_daenerys_tyranny_revolt_leader
+		}
+
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_daenerys_tyranny_revolt_pending
+
+			add_character_flag = segrellion_daenerys_tyranny_revolt_active
+
+
+			set_variable = {
+
+				name = segrellion_daenerys_tyranny_revolt_war
+
+				value = scope:war
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_daenerys_abandoned_by_lords_modifier
+			}
+		}
+
+
+		# =================================================
+		# EVERY LORD PERSONALLY WRONGED BY DAENERYS
+		# OR WHO FOUGHT AGAINST HER JOINS THE REVOLT.
+		# =================================================
+
+		scope:defender = {
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					highest_held_title_tier > tier_barony
+
+					this != scope:attacker
+
+
+					NOT = {
+						segrellion_is_current_jon_trigger = yes
+					}
+
+
+					OR = {
+
+						has_character_flag = segrellion_wronged_by_daenerys
+
+						has_character_flag = segrellion_opposed_daenerys_invasion
+
+						has_character_flag = segrellion_house_punished_by_daenerys
+					}
+				}
+
+
+				save_temporary_scope_as = segrellion_tyranny_rebel
+
+
+				scope:war = {
+
+					if = {
+
+						limit = {
+
+							NOR = {
+
+								any_war_attacker = {
+									this = scope:segrellion_tyranny_rebel
+								}
+
+								any_war_defender = {
+									this = scope:segrellion_tyranny_rebel
+								}
+							}
+						}
+
+
+						add_attacker = scope:segrellion_tyranny_rebel
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# JON SNOW
+		#
+		# Only a married soulmate Jon even considers
+		# defending Daenerys at this point.
+		# =================================================
+
+		title:e_the_north.holder ?= {
+
+			if = {
+
+				limit = {
+
+					segrellion_is_current_jon_trigger = yes
+
+					is_alive = yes
+
+					is_spouse_of = character:Targaryen_9
+
+					has_relation_soulmate = character:Targaryen_9
+
+
+					NOT = {
+						has_character_flag = segrellion_wronged_by_daenerys
+					}
+				}
+
+
+				if = {
+
+					limit = {
+						is_ai = yes
+					}
+
+
+					random_list = {
+
+						20 = {
+
+							scope:war = {
+
+								add_defender = prev
+							}
+						}
+
+
+						80 = {
+						}
+					}
+				}
+
+
+				else = {
+
+					trigger_event = {
+
+						id = segrellion_daenerys_tyranny.0002
+
+						days = 1
+					}
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REBELS WIN
+	# =====================================================
+
+	on_victory_desc = {
+
+		desc = segrellion_daenerys_tyranny_revolt_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:defender = {
+
+			segrellion_daenerys_dissolve_seven_kingdoms_effect = yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_tyranny.0010
+
+				days = 1
+			}
+		}
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	# =====================================================
+	# WHITE PEACE
+	# =====================================================
+
+	on_white_peace_desc = {
+
+		desc = segrellion_daenerys_tyranny_revolt_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:defender = {
+
+			segrellion_daenerys_white_peace_tyranny_revolt_effect = yes
+		}
+
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	# =====================================================
+	# DAENERYS WINS
+	# =====================================================
+
+	on_defeat_desc = {
+
+		desc = segrellion_daenerys_tyranny_revolt_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:defender = {
+
+			segrellion_daenerys_survived_tyranny_revolt_effect = yes
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_tyranny.0011
+
+				days = 1
+			}
+		}
+
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_invalidated = {
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_daenerys_tyranny_revolt_pending
+
+			remove_character_flag = segrellion_daenerys_tyranny_revolt_active
+
+
+			if = {
+
+				limit = {
+					has_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+				}
+
+				remove_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+			}
+
+
+			remove_variable = segrellion_daenerys_tyranny_revolt_war
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_daenerys_tyranny_revolt_war_name"
+
+	war_name_base = "segrellion_daenerys_tyranny_revolt_war_name_base"
+
+	cb_name = "segrellion_daenerys_tyranny_revolt_cb_name"
+
+
+	interface_priority = 200
+}
+
+
+# =========================================================
+# REFUSED POST-THRONE SUBMISSION
+# =========================================================
+
+segrellion_daenerys_post_throne_vassalization_cb = {
+
+	icon = invasion
+
+	group = invasion
+
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = no
+
+	allow_hostages = no
+
+
+	target_titles = none
+
+
+	allowed_for_character = {
+
+		this = character:Targaryen_9
+
+		has_title = title:h_the_iron_throne
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = {
+
+			is_alive = yes
+
+			is_independent_ruler = yes
+
+			has_character_flag = segrellion_refused_daenerys_post_throne_submission
+		}
+	}
+
+
+	valid_to_start = {
+
+		scope:attacker = {
+
+			this = character:Targaryen_9
+
+			this != scope:defender
+		}
+	}
+
+
+	should_invalidate = {
+
+		always = no
+	}
+
+
+	cost = {
+
+		prestige = 100
+	}
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+	}
+
+
+	on_victory_desc = {
+
+		desc = segrellion_daenerys_post_throne_vassalization_victory_desc
+	}
+
+
+	on_victory = {
+
+		create_title_and_vassal_change = {
+
+			type = swear_fealty
+
+			save_scope_as = segrellion_daenerys_forced_vassalization_change
+
+			add_claim_on_loss = no
+		}
+
+
+		scope:defender = {
+
+			change_liege = {
+
+				liege = scope:attacker
+
+				change = scope:segrellion_daenerys_forced_vassalization_change
+			}
+
+
+			remove_character_flag = segrellion_refused_daenerys_post_throne_submission
+
+			add_character_flag = segrellion_swore_fealty_to_daenerys
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_daenerys_forced_vassalization_change
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	on_white_peace = {
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	on_defeat = {
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+
+	on_primary_defender_death = inherit
+
+
+	war_name = "segrellion_daenerys_post_throne_vassalization_war_name"
+
+	war_name_base = "segrellion_daenerys_post_throne_vassalization_war_name_base"
+
+	cb_name = "segrellion_daenerys_post_throne_vassalization_cb_name"
+
+
+	interface_priority = 150
+}

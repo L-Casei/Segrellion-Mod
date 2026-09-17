@@ -1,0 +1,1297 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# POST-THRONE REGIONAL SETTLEMENT V2
+#
+# WESTERLANDS
+# DORNE
+# REACH
+# RIVERLANDS
+# VALE
+# STORMLANDS
+#
+# NORTH / FLAMELANDS / IRON ISLANDS ARE EXCLUDED.
+# =========================================================
+
+
+# =========================================================
+# START
+# =========================================================
+
+segrellion_daenerys_start_regional_settlement_v2_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_regional_settlement_v2_started
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_lost_tyranny_revolt
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_regional_settlement_v2_started
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0001
+
+			days = 5
+		}
+	}
+}
+
+
+# =========================================================
+# CLEAR ACTIVE REGION
+# =========================================================
+
+segrellion_daenerys_clear_current_settlement_region_effect = {
+
+	remove_character_flag = segrellion_settlement_region_westerlands
+
+	remove_character_flag = segrellion_settlement_region_dorne
+
+	remove_character_flag = segrellion_settlement_region_reach
+
+	remove_character_flag = segrellion_settlement_region_riverlands
+
+	remove_character_flag = segrellion_settlement_region_vale
+
+	remove_character_flag = segrellion_settlement_region_stormlands
+}
+
+
+# =========================================================
+# REFRESH CURRENT HOLDER
+# =========================================================
+
+segrellion_daenerys_refresh_current_settlement_holder_effect = {
+
+	remove_variable = segrellion_daenerys_current_settlement_holder
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_westerlands
+		}
+
+		title:e_the_westerlands.holder ?= {
+
+			character:Targaryen_9 = {
+
+				set_variable = {
+
+					name = segrellion_daenerys_current_settlement_holder
+
+					value = prev
+				}
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_dorne
+		}
+
+		title:e_dorne.holder ?= {
+
+			character:Targaryen_9 = {
+
+				set_variable = {
+
+					name = segrellion_daenerys_current_settlement_holder
+
+					value = prev
+				}
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_reach
+		}
+
+		title:e_the_reach.holder ?= {
+
+			character:Targaryen_9 = {
+
+				set_variable = {
+
+					name = segrellion_daenerys_current_settlement_holder
+
+					value = prev
+				}
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_riverlands
+		}
+
+		title:e_the_riverlands.holder ?= {
+
+			character:Targaryen_9 = {
+
+				set_variable = {
+
+					name = segrellion_daenerys_current_settlement_holder
+
+					value = prev
+				}
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_vale
+		}
+
+		title:e_the_vale.holder ?= {
+
+			character:Targaryen_9 = {
+
+				set_variable = {
+
+					name = segrellion_daenerys_current_settlement_holder
+
+					value = prev
+				}
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_stormlands
+		}
+
+		title:e_the_stormlands.holder ?= {
+
+			character:Targaryen_9 = {
+
+				set_variable = {
+
+					name = segrellion_daenerys_current_settlement_holder
+
+					value = prev
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# ROUTE CURRENT REGION
+# =========================================================
+
+segrellion_daenerys_route_current_settlement_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_variable = segrellion_daenerys_current_settlement_holder
+			}
+		}
+
+
+		segrellion_daenerys_finish_current_settlement_effect = yes
+	}
+
+
+	else_if = {
+
+		limit = {
+
+			var:segrellion_daenerys_current_settlement_holder = root
+		}
+
+
+		segrellion_daenerys_finish_current_settlement_effect = yes
+	}
+
+
+	# =====================================================
+	# ALLY
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			var:segrellion_daenerys_current_settlement_holder = {
+
+				OR = {
+
+					has_character_flag = segrellion_supported_daenerys_invasion
+
+					has_character_flag = segrellion_support_agreement_reached_with_daenerys
+				}
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0100
+		}
+	}
+
+
+	# =====================================================
+	# ENEMY
+	# =====================================================
+
+	else_if = {
+
+		limit = {
+
+			var:segrellion_daenerys_current_settlement_holder = {
+
+				has_character_flag = segrellion_opposed_daenerys_invasion
+			}
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0200
+		}
+	}
+
+
+	# =====================================================
+	# NEUTRAL
+	# =====================================================
+
+	else = {
+
+		var:segrellion_daenerys_current_settlement_holder = {
+
+			trigger_event = {
+
+				id = segrellion_daenerys_settlement.0400
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# SWEAR FEALTY
+# =========================================================
+
+segrellion_daenerys_current_region_swears_fealty_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	if = {
+
+		limit = {
+
+			has_variable = segrellion_daenerys_current_settlement_holder
+
+
+			var:segrellion_daenerys_current_settlement_holder != root
+
+
+			var:segrellion_daenerys_current_settlement_holder = {
+
+				NOT = {
+					top_liege = character:Targaryen_9
+				}
+			}
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = swear_fealty
+
+			save_scope_as = segrellion_daenerys_regional_fealty_change
+
+			add_claim_on_loss = no
+		}
+
+
+		var:segrellion_daenerys_current_settlement_holder = {
+
+			change_liege = {
+
+				liege = character:Targaryen_9
+
+				change = scope:segrellion_daenerys_regional_fealty_change
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_daenerys_regional_fealty_change
+	}
+
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		add_character_flag = segrellion_swore_fealty_to_daenerys
+	}
+}
+
+
+# =========================================================
+# PARDON EVERY LORD WHO ACTUALLY HELPED DAENERYS
+# =========================================================
+
+segrellion_daenerys_pardon_current_region_supporters_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		if = {
+
+			limit = {
+
+				OR = {
+
+					has_character_flag = segrellion_supported_daenerys_invasion
+
+					has_character_flag = segrellion_support_agreement_reached_with_daenerys
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					has_trait = segrellion_traitor
+				}
+
+				remove_trait = segrellion_traitor
+			}
+
+
+			add_character_flag = segrellion_pardoned_by_daenerys
+		}
+
+
+		every_vassal_or_below = {
+
+			limit = {
+
+				is_alive = yes
+
+
+				OR = {
+
+					has_character_flag = segrellion_supported_daenerys_invasion
+
+					has_character_flag = segrellion_support_agreement_reached_with_daenerys
+				}
+			}
+
+
+			if = {
+
+				limit = {
+					has_trait = segrellion_traitor
+				}
+
+				remove_trait = segrellion_traitor
+			}
+
+
+			add_character_flag = segrellion_pardoned_by_daenerys
+		}
+	}
+}
+
+
+# =========================================================
+# MARK CURRENT LORD AS PERSONALLY WRONGED
+# =========================================================
+
+segrellion_daenerys_mark_current_holder_wronged_effect = {
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		add_character_flag = segrellion_wronged_by_daenerys
+	}
+}
+
+
+# =========================================================
+# FAVORABLE CONTRACT
+# LOW TAXES + LOW LEVIES
+# =========================================================
+
+segrellion_daenerys_honor_favorable_contract_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		if = {
+
+			limit = {
+
+				vassal_contract_has_modifiable_obligations = yes
+			}
+
+
+			vassal_contract_set_obligation_level = {
+
+				type = feudal_government_taxes
+
+				level = 1
+			}
+
+
+			vassal_contract_set_obligation_level = {
+
+				type = feudal_government_levies
+
+				level = 1
+			}
+
+
+			set_subject_contract_modification_blocked = no
+		}
+
+
+		remove_character_flag = segrellion_daenerys_promised_favorable_vassal_contract
+
+		add_character_flag = segrellion_daenerys_favorable_contract_honored
+	}
+}
+
+
+# =========================================================
+# BREAK EVERY PROMISE HELD BY CURRENT LORD
+# =========================================================
+
+segrellion_daenerys_break_current_holder_promises_effect = {
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		remove_character_flag = segrellion_daenerys_promised_marriage_for_support
+
+		remove_character_flag = segrellion_daenerys_promised_favorable_vassal_contract
+
+		remove_character_flag = segrellion_daenerys_promised_hand_of_the_queen
+
+		remove_character_flag = segrellion_daenerys_promised_council_seat
+
+		remove_character_flag = segrellion_daenerys_owes_future_favor_for_support
+
+
+		add_character_flag = segrellion_daenerys_broke_support_promise
+
+		add_character_flag = segrellion_wronged_by_daenerys
+	}
+}
+
+
+# =========================================================
+# MERCY FOR A DEFEATED ENEMY
+# =========================================================
+
+segrellion_daenerys_pardon_enemy_house_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_daenerys_current_settlement_holder
+		}
+
+
+		add_hook = {
+
+			target = var:segrellion_daenerys_current_settlement_holder
+
+			type = favor_hook
+		}
+
+
+		var:segrellion_daenerys_current_settlement_holder = {
+
+			save_scope_as = segrellion_pardoned_enemy_lord
+
+
+			if = {
+
+				limit = {
+					is_imprisoned = yes
+				}
+
+				release_from_prison = yes
+			}
+
+
+			if = {
+
+				limit = {
+					has_trait = segrellion_traitor
+				}
+
+				remove_trait = segrellion_traitor
+			}
+
+
+			add_character_flag = segrellion_pardoned_by_daenerys
+
+
+			add_opinion = {
+
+				target = character:Targaryen_9
+
+				modifier = segrellion_daenerys_granted_full_pardon_opinion
+
+				years = 20
+			}
+
+
+			house = {
+
+				every_house_member = {
+
+					limit = {
+						is_alive = yes
+					}
+
+
+					if = {
+
+						limit = {
+							has_trait = segrellion_traitor
+						}
+
+						remove_trait = segrellion_traitor
+					}
+
+
+					hidden_effect = {
+
+						add_opinion = {
+
+							target = character:Targaryen_9
+
+							modifier = segrellion_daenerys_pardoned_house_opinion
+
+							years = 20
+						}
+					}
+				}
+			}
+		}
+
+
+		segrellion_daenerys_current_region_swears_fealty_effect = yes
+	}
+}
+
+
+# =========================================================
+# SEND DEFEATED LORD TO THE WALL
+# =========================================================
+
+segrellion_daenerys_send_enemy_holder_to_wall_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		house = {
+
+			every_house_member = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				add_character_flag = segrellion_house_punished_by_daenerys
+
+
+				hidden_effect = {
+
+					add_opinion = {
+
+						target = character:Targaryen_9
+
+						modifier = segrellion_daenerys_sent_house_lord_to_wall_opinion
+
+						years = 15
+					}
+				}
+			}
+		}
+
+
+		agot_add_to_nightswatch_effect = yes
+	}
+
+
+	segrellion_change_daenerys_pacification_tyranny_effect = {
+
+		VALUE = 10
+	}
+
+
+	segrellion_daenerys_current_region_swears_fealty_effect = yes
+}
+
+
+# =========================================================
+# EXECUTE DEFEATED LORD
+# =========================================================
+
+segrellion_daenerys_execute_enemy_holder_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		house = {
+
+			every_house_member = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				add_character_flag = segrellion_house_punished_by_daenerys
+
+
+				hidden_effect = {
+
+					add_opinion = {
+
+						target = character:Targaryen_9
+
+						modifier = segrellion_daenerys_executed_house_lord_opinion
+
+						years = 20
+					}
+				}
+			}
+		}
+
+
+		death = {
+
+			death_reason = death_execution
+
+			killer = character:Targaryen_9
+		}
+	}
+
+
+	segrellion_change_daenerys_pacification_tyranny_effect = {
+
+		VALUE = 15
+	}
+
+
+	segrellion_daenerys_current_region_swears_fealty_effect = yes
+}
+
+
+# =========================================================
+# TAKE THE CURRENT LORD PARAMOUNTCY
+# =========================================================
+
+segrellion_daenerys_take_current_paramountcy_effect = {
+
+	create_title_and_vassal_change = {
+
+		type = conquest
+
+		save_scope_as = segrellion_daenerys_paramountcy_confiscation_change
+
+		add_claim_on_loss = no
+	}
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_westerlands
+		}
+
+		title:e_the_westerlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = root
+
+				change = scope:segrellion_daenerys_paramountcy_confiscation_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_dorne
+		}
+
+		title:e_dorne = {
+
+			change_title_holder_include_vassals = {
+
+				holder = root
+
+				change = scope:segrellion_daenerys_paramountcy_confiscation_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_reach
+		}
+
+		title:e_the_reach = {
+
+			change_title_holder_include_vassals = {
+
+				holder = root
+
+				change = scope:segrellion_daenerys_paramountcy_confiscation_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_riverlands
+		}
+
+		title:e_the_riverlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = root
+
+				change = scope:segrellion_daenerys_paramountcy_confiscation_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_vale
+		}
+
+		title:e_the_vale = {
+
+			change_title_holder_include_vassals = {
+
+				holder = root
+
+				change = scope:segrellion_daenerys_paramountcy_confiscation_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_stormlands
+		}
+
+		title:e_the_stormlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = root
+
+				change = scope:segrellion_daenerys_paramountcy_confiscation_change
+			}
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_daenerys_paramountcy_confiscation_change
+
+
+	add_character_flag = segrellion_daenerys_paramountcy_appointment_pending
+}
+
+
+# =========================================================
+# PURGE THE ENTIRE DEFEATED HOUSE
+#
+# UNLANDED MEMBERS HAVE A SMALL CHANCE TO ESCAPE.
+# =========================================================
+
+segrellion_daenerys_purge_enemy_house_effect = {
+
+	segrellion_daenerys_refresh_current_settlement_holder_effect = yes
+
+
+	title:c_pentos.holder ?= {
+
+		save_scope_as = segrellion_pentos_refuge_holder
+	}
+
+
+	var:segrellion_daenerys_current_settlement_holder ?= {
+
+		house = {
+
+			every_house_member = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				random_list = {
+
+					10 = {
+
+						trigger = {
+
+							is_landed = no
+						}
+
+
+						add_character_flag = segrellion_escaped_daenerys_house_purge
+
+
+						if = {
+
+							limit = {
+								exists = scope:segrellion_pentos_refuge_holder
+							}
+
+							set_employer = scope:segrellion_pentos_refuge_holder
+						}
+
+
+						set_location = title:c_pentos.title_province
+					}
+
+
+					90 = {
+
+						death = {
+
+							death_reason = death_execution
+
+							killer = character:Targaryen_9
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	add_character_flag = segrellion_daenerys_destroyed_enemy_house
+
+
+	segrellion_daenerys_take_current_paramountcy_effect = yes
+
+
+	segrellion_change_daenerys_pacification_tyranny_effect = {
+
+		VALUE = 40
+	}
+}
+
+
+# =========================================================
+# GRANT CURRENT PARAMOUNTCY
+#
+# RECIPIENT = character
+# =========================================================
+
+segrellion_daenerys_grant_current_paramountcy_effect = {
+
+	create_title_and_vassal_change = {
+
+		type = granted
+
+		save_scope_as = segrellion_daenerys_new_paramount_change
+
+		add_claim_on_loss = no
+	}
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_westerlands
+		}
+
+		title:e_the_westerlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = $RECIPIENT$
+
+				change = scope:segrellion_daenerys_new_paramount_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_dorne
+		}
+
+		title:e_dorne = {
+
+			change_title_holder_include_vassals = {
+
+				holder = $RECIPIENT$
+
+				change = scope:segrellion_daenerys_new_paramount_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_reach
+		}
+
+		title:e_the_reach = {
+
+			change_title_holder_include_vassals = {
+
+				holder = $RECIPIENT$
+
+				change = scope:segrellion_daenerys_new_paramount_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_riverlands
+		}
+
+		title:e_the_riverlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = $RECIPIENT$
+
+				change = scope:segrellion_daenerys_new_paramount_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_vale
+		}
+
+		title:e_the_vale = {
+
+			change_title_holder_include_vassals = {
+
+				holder = $RECIPIENT$
+
+				change = scope:segrellion_daenerys_new_paramount_change
+			}
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_stormlands
+		}
+
+		title:e_the_stormlands = {
+
+			change_title_holder_include_vassals = {
+
+				holder = $RECIPIENT$
+
+				change = scope:segrellion_daenerys_new_paramount_change
+			}
+		}
+	}
+
+
+	resolve_title_and_vassal_change = scope:segrellion_daenerys_new_paramount_change
+
+
+	$RECIPIENT$ = {
+
+		add_character_flag = segrellion_daenerys_appointed_lord_paramount
+
+
+		add_opinion = {
+
+			target = character:Targaryen_9
+
+			modifier = segrellion_daenerys_raised_house_to_paramountcy_opinion
+
+			years = 25
+		}
+	}
+
+
+	remove_character_flag = segrellion_daenerys_paramountcy_appointment_pending
+}
+
+
+# =========================================================
+# AI PICKS A SUCCESSOR
+#
+# PREFER SOMEONE WHO FOUGHT FOR DAENERYS.
+# =========================================================
+
+segrellion_daenerys_ai_appoint_current_paramount_effect = {
+
+	random_vassal = {
+
+		limit = {
+
+			segrellion_daenerys_valid_paramount_candidate_trigger = yes
+
+			has_character_flag = segrellion_supported_daenerys_invasion
+		}
+
+
+		save_scope_as = segrellion_ai_paramount_candidate
+	}
+
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				exists = scope:segrellion_ai_paramount_candidate
+			}
+		}
+
+
+		random_vassal = {
+
+			limit = {
+
+				segrellion_daenerys_valid_paramount_candidate_trigger = yes
+			}
+
+
+			save_scope_as = segrellion_ai_paramount_candidate
+		}
+	}
+
+
+	if = {
+
+		limit = {
+			exists = scope:segrellion_ai_paramount_candidate
+		}
+
+
+		segrellion_daenerys_grant_current_paramountcy_effect = {
+
+			RECIPIENT = scope:segrellion_ai_paramount_candidate
+		}
+	}
+
+
+	else = {
+
+		remove_character_flag = segrellion_daenerys_paramountcy_appointment_pending
+	}
+}
+
+
+# =========================================================
+# FINISH CURRENT REGION AND CONTINUE
+# =========================================================
+
+segrellion_daenerys_finish_current_settlement_effect = {
+
+	remove_variable = segrellion_daenerys_current_settlement_holder
+
+
+	if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_westerlands
+		}
+
+
+		remove_character_flag = segrellion_settlement_region_westerlands
+
+		add_character_flag = segrellion_daenerys_v2_westerlands_resolved
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0002
+
+			days = 5
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_dorne
+		}
+
+
+		remove_character_flag = segrellion_settlement_region_dorne
+
+		add_character_flag = segrellion_daenerys_v2_dorne_resolved
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0003
+
+			days = 5
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_reach
+		}
+
+
+		remove_character_flag = segrellion_settlement_region_reach
+
+		add_character_flag = segrellion_daenerys_v2_reach_resolved
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0004
+
+			days = 5
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_riverlands
+		}
+
+
+		remove_character_flag = segrellion_settlement_region_riverlands
+
+		add_character_flag = segrellion_daenerys_v2_riverlands_resolved
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0005
+
+			days = 5
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_vale
+		}
+
+
+		remove_character_flag = segrellion_settlement_region_vale
+
+		add_character_flag = segrellion_daenerys_v2_vale_resolved
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_settlement.0006
+
+			days = 5
+		}
+	}
+
+
+	else_if = {
+
+		limit = {
+			has_character_flag = segrellion_settlement_region_stormlands
+		}
+
+
+		remove_character_flag = segrellion_settlement_region_stormlands
+
+		add_character_flag = segrellion_daenerys_v2_stormlands_resolved
+
+		add_character_flag = segrellion_daenerys_generic_settlements_complete
+	}
+}

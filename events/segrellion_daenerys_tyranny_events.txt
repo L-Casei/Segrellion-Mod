@@ -1,0 +1,319 @@
+namespace = segrellion_daenerys_tyranny
+
+
+# =========================================================
+# 0001 - THE REALM ERUPTS
+# =========================================================
+
+segrellion_daenerys_tyranny.0001 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_tyranny.0001.t
+
+	desc = segrellion_daenerys_tyranny.0001.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+
+		has_character_flag = segrellion_daenerys_tyranny_revolt_pending
+	}
+
+
+	immediate = {
+
+		# ================================================
+		# FIRST CHOICE:
+		# A LORD PERSONALLY WRONGED BY DAENERYS.
+		# ================================================
+
+		random_vassal_or_below = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_adult = yes
+
+				is_landed = yes
+
+				highest_held_title_tier >= tier_duchy
+
+
+				OR = {
+
+					has_character_flag = segrellion_wronged_by_daenerys
+
+					has_character_flag = segrellion_opposed_daenerys_invasion
+
+					has_character_flag = segrellion_house_punished_by_daenerys
+				}
+
+
+				NOT = {
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+
+			save_scope_as = segrellion_tyranny_revolt_leader
+		}
+
+
+		# ================================================
+		# FALLBACK:
+		# ANY POWERFUL LANDED VASSAL.
+		# ================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = scope:segrellion_tyranny_revolt_leader
+				}
+			}
+
+
+			random_vassal = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_landed = yes
+
+					highest_held_title_tier >= tier_duchy
+
+
+					NOT = {
+						segrellion_is_current_jon_trigger = yes
+					}
+				}
+
+
+				save_scope_as = segrellion_tyranny_revolt_leader
+			}
+		}
+
+
+		scope:segrellion_tyranny_revolt_leader ?= {
+
+			add_character_flag = segrellion_daenerys_tyranny_revolt_leader
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_tyranny_revolt_leader
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_tyranny.0001.a
+
+
+		trigger = {
+
+			exists = scope:segrellion_tyranny_revolt_leader
+		}
+
+
+		scope:segrellion_tyranny_revolt_leader = {
+
+			start_war = {
+
+				casus_belli = segrellion_daenerys_tyranny_revolt_cb
+
+				target = character:Targaryen_9
+			}
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_tyranny.0001.b
+
+
+		trigger = {
+
+			NOT = {
+				exists = scope:segrellion_tyranny_revolt_leader
+			}
+		}
+
+
+		remove_character_flag = segrellion_daenerys_tyranny_revolt_pending
+
+
+		set_variable = {
+
+			name = segrellion_daenerys_pacification_tyranny
+
+			value = 95
+		}
+
+
+		segrellion_refresh_daenerys_pacification_modifier_effect = yes
+
+		segrellion_daenerys_sync_pacification_story_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0002 - JON MUST CHOOSE
+# ROOT = JON
+# =========================================================
+
+segrellion_daenerys_tyranny.0002 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_tyranny.0002.t
+
+	desc = segrellion_daenerys_tyranny.0002.desc
+
+	theme = diplomacy
+
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	right_portrait = {
+
+		character = character:Targaryen_9
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_tyranny.0002.a
+
+
+		character:Targaryen_9 = {
+
+			var:segrellion_daenerys_tyranny_revolt_war ?= {
+
+				add_defender = root
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_defended_daenerys_tyranny_revolt
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_tyranny.0002.b
+
+
+		add_character_flag = segrellion_jon_refused_daenerys_tyranny_revolt
+	}
+}
+
+
+# =========================================================
+# 0010 - THE SEVEN KINGDOMS ARE BROKEN
+# =========================================================
+
+segrellion_daenerys_tyranny.0010 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_tyranny.0010.t
+
+	desc = segrellion_daenerys_tyranny.0010.desc
+
+	theme = crown
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_tyranny.0010.a
+	}
+}
+
+
+# =========================================================
+# 0011 - FIRE AND BLOOD PREVAIL
+# =========================================================
+
+segrellion_daenerys_tyranny.0011 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_tyranny.0011.t
+
+	desc = segrellion_daenerys_tyranny.0011.desc
+
+	theme = crown
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_daenerys_tyranny.0011.a
+	}
+}

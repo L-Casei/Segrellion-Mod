@@ -1,0 +1,632 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# POST-THRONE TYRANNY SYSTEM V2
+# =========================================================
+
+
+# =========================================================
+# ENSURE THE VISIBLE STORY EXISTS
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_ensure_pacification_story_effect = {
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_variable = segrellion_daenerys_pacification_tyranny
+			}
+		}
+
+
+		set_variable = {
+
+			name = segrellion_daenerys_pacification_tyranny
+
+			value = 0
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
+			NOT = {
+
+				any_owned_story = {
+
+					story_type = story_segrellion_daenerys_pacification
+				}
+			}
+		}
+
+
+		create_story = {
+
+			type = story_segrellion_daenerys_pacification
+
+			save_scope_as = segrellion_daenerys_pacification_story
+		}
+	}
+
+
+	segrellion_daenerys_sync_pacification_story_effect = yes
+}
+
+
+# =========================================================
+# SYNC CHARACTER VARIABLE -> STORY BAR
+# =========================================================
+
+segrellion_daenerys_sync_pacification_story_effect = {
+
+	every_owned_story = {
+
+		limit = {
+
+			story_type = story_segrellion_daenerys_pacification
+		}
+
+
+		set_variable = {
+
+			name = segrellion_daenerys_pacification_tyranny
+
+			value = root.var:segrellion_daenerys_pacification_tyranny
+		}
+	}
+}
+
+
+# =========================================================
+# KING'S LANDING WAS BURNED
+#
+# The meter can never start below 50 after this.
+# =========================================================
+
+segrellion_daenerys_set_pacification_tyranny_minimum_50_effect = {
+
+	segrellion_daenerys_ensure_pacification_story_effect = yes
+
+
+	if = {
+
+		limit = {
+
+			var:segrellion_daenerys_pacification_tyranny < 50
+		}
+
+
+		set_variable = {
+
+			name = segrellion_daenerys_pacification_tyranny
+
+			value = 50
+		}
+	}
+
+
+	segrellion_refresh_daenerys_pacification_modifier_effect = yes
+
+	segrellion_daenerys_sync_pacification_story_effect = yes
+
+	segrellion_daenerys_check_tyranny_revolt_effect = yes
+}
+
+
+# =========================================================
+# CHECK FOR THE GREAT TYRANNY REVOLT
+# =========================================================
+
+segrellion_daenerys_check_tyranny_revolt_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_daenerys_post_throne_started
+
+			var:segrellion_daenerys_pacification_tyranny >= 100
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_tyranny_revolt_pending
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_tyranny_revolt_active
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_tyranny_revolt_cooldown
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_lost_tyranny_revolt
+			}
+		}
+
+
+		add_character_flag = {
+
+			flag = segrellion_daenerys_tyranny_revolt_pending
+
+			days = 30
+		}
+
+
+		trigger_event = {
+
+			id = segrellion_daenerys_tyranny.0001
+
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# DAENERYS SURVIVES THE REVOLT
+# =========================================================
+
+segrellion_daenerys_survived_tyranny_revolt_effect = {
+
+	remove_character_flag = segrellion_daenerys_tyranny_revolt_pending
+
+	remove_character_flag = segrellion_daenerys_tyranny_revolt_active
+
+
+	add_character_flag = {
+
+		flag = segrellion_daenerys_tyranny_revolt_cooldown
+
+		years = 3
+	}
+
+
+	set_variable = {
+
+		name = segrellion_daenerys_pacification_tyranny
+
+		value = 70
+	}
+
+
+	if = {
+
+		limit = {
+
+			has_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+		}
+
+
+		remove_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+	}
+
+
+	remove_variable = segrellion_daenerys_tyranny_revolt_war
+
+
+	segrellion_refresh_daenerys_pacification_modifier_effect = yes
+
+	segrellion_daenerys_sync_pacification_story_effect = yes
+}
+
+
+# =========================================================
+# WHITE PEACE
+# =========================================================
+
+segrellion_daenerys_white_peace_tyranny_revolt_effect = {
+
+	remove_character_flag = segrellion_daenerys_tyranny_revolt_pending
+
+	remove_character_flag = segrellion_daenerys_tyranny_revolt_active
+
+
+	add_character_flag = {
+
+		flag = segrellion_daenerys_tyranny_revolt_cooldown
+
+		years = 2
+	}
+
+
+	set_variable = {
+
+		name = segrellion_daenerys_pacification_tyranny
+
+		value = 85
+	}
+
+
+	if = {
+
+		limit = {
+
+			has_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+		}
+
+
+		remove_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+	}
+
+
+	remove_variable = segrellion_daenerys_tyranny_revolt_war
+
+
+	segrellion_refresh_daenerys_pacification_modifier_effect = yes
+
+	segrellion_daenerys_sync_pacification_story_effect = yes
+}
+
+
+# =========================================================
+# DISSOLVE THE SEVEN KINGDOMS
+#
+# We deliberately dissolve them politically rather than
+# destroying h_the_iron_throne itself.
+# =========================================================
+
+segrellion_daenerys_dissolve_seven_kingdoms_effect = {
+
+	add_character_flag = segrellion_daenerys_lost_tyranny_revolt
+
+	add_character_flag = segrellion_daenerys_seven_kingdoms_dissolved
+
+
+	remove_character_flag = segrellion_daenerys_tyranny_revolt_pending
+
+	remove_character_flag = segrellion_daenerys_tyranny_revolt_active
+
+	remove_character_flag = segrellion_daenerys_pacification_active
+
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+		}
+
+		remove_character_modifier = segrellion_daenerys_abandoned_by_lords_modifier
+	}
+
+
+	# =====================================================
+	# WESTERLANDS
+	# =====================================================
+
+	title:e_the_westerlands.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_westerlands_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_westerlands_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_westerlands_independence_change
+		}
+	}
+
+
+	# =====================================================
+	# DORNE
+	# =====================================================
+
+	title:e_dorne.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_dorne_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_dorne_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_dorne_independence_change
+		}
+	}
+
+
+	# =====================================================
+	# REACH
+	# =====================================================
+
+	title:e_the_reach.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_reach_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_reach_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_reach_independence_change
+		}
+	}
+
+
+	# =====================================================
+	# RIVERLANDS
+	# =====================================================
+
+	title:e_the_riverlands.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_riverlands_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_riverlands_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_riverlands_independence_change
+		}
+	}
+
+
+	# =====================================================
+	# VALE
+	# =====================================================
+
+	title:e_the_vale.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_vale_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_vale_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_vale_independence_change
+		}
+	}
+
+
+	# =====================================================
+	# STORMLANDS
+	# =====================================================
+
+	title:e_the_stormlands.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_stormlands_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_stormlands_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_stormlands_independence_change
+		}
+	}
+
+
+	# =====================================================
+	# NORTH
+	# =====================================================
+
+	title:e_the_north.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_north_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_north_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_north_independence_change
+		}
+	}
+
+
+	# =====================================================
+	# FLAMELANDS
+	# =====================================================
+
+	title:e_flamelands.holder ?= {
+
+		if = {
+
+			limit = {
+
+				this != character:Targaryen_9
+
+				liege = character:Targaryen_9
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = independency
+
+				save_scope_as = segrellion_flamelands_independence_change
+
+				add_claim_on_loss = no
+			}
+
+
+			change_liege_or_become_independent = {
+
+				CHANGE = scope:segrellion_flamelands_independence_change
+
+				VASSAL = this
+			}
+
+
+			resolve_title_and_vassal_change = scope:segrellion_flamelands_independence_change
+		}
+	}
+
+
+	remove_variable = segrellion_daenerys_tyranny_revolt_war
+
+
+	every_owned_story = {
+
+		limit = {
+
+			story_type = story_segrellion_daenerys_pacification
+		}
+
+
+		end_story = yes
+	}
+}

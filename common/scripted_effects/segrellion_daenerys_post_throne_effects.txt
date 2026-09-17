@@ -313,6 +313,10 @@ segrellion_daenerys_post_throne_recovery_effect = {
 					has_character_flag = segrellion_daenerys_post_throne_opening_seen
 
 					NOT = {
+						has_character_flag = segrellion_daenerys_has_post_throne_hand_promise
+					}
+
+					NOT = {
 						has_character_flag = segrellion_tyrion_named_hand
 					}
 
@@ -390,7 +394,7 @@ segrellion_daenerys_post_throne_recovery_effect = {
 
 
 			# =============================================
-			# WESTERLANDS ROUTER FAILED / WAS LOST
+			# REGIONAL SETTLEMENT V2 FAILED / WAS LOST
 			# =============================================
 
 			else_if = {
@@ -399,28 +403,24 @@ segrellion_daenerys_post_throne_recovery_effect = {
 
 					has_character_flag = segrellion_daenerys_kingsguard_rebuilt
 
-					NOT = {
-						has_character_flag = segrellion_daenerys_westerlands_resolved
-					}
 
 					NOT = {
-						has_character_flag = segrellion_daenerys_westerlands_issue_scheduled
+						has_character_flag = segrellion_daenerys_regional_settlement_v2_started
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_generic_settlements_complete
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_lost_tyranny_revolt
 					}
 				}
 
 
-				add_character_flag = {
-
-					flag = segrellion_daenerys_westerlands_issue_scheduled
-
-					days = 30
-				}
-
-
-				trigger_event = {
-
-					id = segrellion_daenerys_post_throne.0010
-				}
+				segrellion_daenerys_start_regional_settlement_v2_effect = yes
 			}
 		}
 	}
@@ -435,8 +435,13 @@ segrellion_daenerys_post_throne_recovery_effect = {
 
 segrellion_change_daenerys_pacification_tyranny_effect = {
 
+	segrellion_daenerys_ensure_pacification_story_effect = yes
+
+
 	change_variable = {
+
 		name = segrellion_daenerys_pacification_tyranny
+
 		add = $VALUE$
 	}
 
@@ -444,11 +449,15 @@ segrellion_change_daenerys_pacification_tyranny_effect = {
 	if = {
 
 		limit = {
+
 			var:segrellion_daenerys_pacification_tyranny > 100
 		}
 
+
 		set_variable = {
+
 			name = segrellion_daenerys_pacification_tyranny
+
 			value = 100
 		}
 	}
@@ -457,17 +466,25 @@ segrellion_change_daenerys_pacification_tyranny_effect = {
 	if = {
 
 		limit = {
+
 			var:segrellion_daenerys_pacification_tyranny < 0
 		}
 
+
 		set_variable = {
+
 			name = segrellion_daenerys_pacification_tyranny
+
 			value = 0
 		}
 	}
 
 
 	segrellion_refresh_daenerys_pacification_modifier_effect = yes
+
+	segrellion_daenerys_sync_pacification_story_effect = yes
+
+	segrellion_daenerys_check_tyranny_revolt_effect = yes
 }
 
 
@@ -608,7 +625,10 @@ segrellion_daenerys_install_tyrion_hand_effect = {
 segrellion_daenerys_rebuild_kingsguard_effect = {
 
 	character:Targaryen_9 = {
+
 		save_scope_as = segrellion_daenerys_queen
+
+		remove_character_flag = segrellion_daenerys_kingsguard_purge_happened
 	}
 
 
@@ -629,6 +649,12 @@ segrellion_daenerys_rebuild_kingsguard_effect = {
 				this != character:Lannister_7
 
 				this != character:Selmy_3
+			}
+
+
+			character:Targaryen_9 = {
+
+				add_character_flag = segrellion_daenerys_kingsguard_purge_happened
 			}
 
 
@@ -653,16 +679,21 @@ segrellion_daenerys_rebuild_kingsguard_effect = {
 			if = {
 
 				limit = {
+
 					NOT = {
 						has_trait = kingsguard
 					}
 				}
 
+
 				agot_join_kingsguard_effect = {
+
 					KINGSGUARD = character:Lannister_7
+
 					KING = character:Targaryen_9
 				}
 			}
+
 
 			else_if = {
 
@@ -673,8 +704,11 @@ segrellion_daenerys_rebuild_kingsguard_effect = {
 					}
 				}
 
+
 				agot_join_kingsguard_effect = {
+
 					KINGSGUARD = character:Lannister_7
+
 					KING = character:Targaryen_9
 				}
 			}
@@ -701,20 +735,26 @@ segrellion_daenerys_rebuild_kingsguard_effect = {
 			if = {
 
 				limit = {
+
 					NOT = {
 						has_trait = kingsguard
 					}
 				}
 
+
 				agot_join_kingsguard_effect = {
+
 					KINGSGUARD = character:Selmy_3
+
 					KING = character:Targaryen_9
 				}
 			}
 
 
 			agot_assign_lord_commander_effect = {
+
 				COMMANDER = character:Selmy_3
+
 				KING = character:Targaryen_9
 			}
 
@@ -725,7 +765,26 @@ segrellion_daenerys_rebuild_kingsguard_effect = {
 
 
 	character:Targaryen_9 = {
+
 		add_character_flag = segrellion_daenerys_kingsguard_rebuilt
+
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_kingsguard_purge_happened
+			}
+
+
+			remove_character_flag = segrellion_daenerys_kingsguard_purge_happened
+
+
+			segrellion_change_daenerys_pacification_tyranny_effect = {
+
+				VALUE = 5
+			}
+		}
 	}
 }
 

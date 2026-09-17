@@ -13,8 +13,12 @@ segrellion_daenerys_save_kings_landing_defender_effect = {
 
 		limit = {
 
-			title:h_the_iron_throne ?= {
+			NOT = {
+				has_variable = segrellion_daenerys_defeated_throne_holder
+			}
 
+
+			title:h_the_iron_throne ?= {
 				exists = holder
 			}
 
@@ -40,7 +44,6 @@ segrellion_daenerys_save_kings_landing_defender_effect = {
 					NOT = {
 
 						location ?= {
-
 							county = title:c_kings_landing
 						}
 					}
@@ -56,6 +59,8 @@ segrellion_daenerys_save_kings_landing_defender_effect = {
 
 # =========================================================
 # END DAENERYS' IRON THRONE WAR
+#
+# ALSO RECORD WHO ACTUALLY FOUGHT FOR EACH SIDE.
 # =========================================================
 
 segrellion_daenerys_force_iron_throne_victory_effect = {
@@ -80,6 +85,42 @@ segrellion_daenerys_force_iron_throne_victory_effect = {
 		}
 
 
+		# =================================================
+		# ACTUAL SUPPORTERS
+		# =================================================
+
+		every_war_attacker = {
+
+			limit = {
+
+				this != character:Targaryen_9
+			}
+
+
+			add_character_flag = segrellion_supported_daenerys_invasion
+
+			remove_character_flag = segrellion_opposed_daenerys_invasion
+		}
+
+
+		# =================================================
+		# ACTUAL ENEMIES
+		# =================================================
+
+		every_war_defender = {
+
+			limit = {
+
+				this != character:Targaryen_9
+			}
+
+
+			add_character_flag = segrellion_opposed_daenerys_invasion
+
+			remove_character_flag = segrellion_supported_daenerys_invasion
+		}
+
+
 		end_war = attacker
 	}
 
@@ -99,8 +140,24 @@ segrellion_daenerys_force_iron_throne_victory_effect = {
 
 segrellion_daenerys_burn_kings_landing_effect = {
 
+	# Save the king BEFORE the massacre can alter succession.
+
+	segrellion_daenerys_save_kings_landing_defender_effect = yes
+
+
 	add_character_flag = segrellion_daenerys_burned_kings_landing
 
+
+	# =====================================================
+	# CUSTOM POST-THRONE TYRANNY
+	#
+	# Burning King's Landing guarantees a minimum of 50/100.
+	# =====================================================
+
+	segrellion_daenerys_set_pacification_tyranny_minimum_50_effect = yes
+
+
+	# Vanilla tyranny remains deliberately catastrophic.
 
 	add_tyranny = 100
 
@@ -112,6 +169,37 @@ segrellion_daenerys_burn_kings_landing_effect = {
 		modifier = segrellion_daenerys_queen_of_ashes_modifier
 
 		years = 20
+	}
+
+
+	# =====================================================
+	# EVERY LIVING PERSON PHYSICALLY IN KING'S LANDING DIES
+	#
+	# Daenerys herself and Drogon are excluded.
+	# =====================================================
+
+	every_living_character = {
+
+		limit = {
+
+			this != root
+
+			this != character:dragon_drogon
+
+
+			location ?= {
+
+				county = title:c_kings_landing
+			}
+		}
+
+
+		death = {
+
+			death_reason = death_burned
+
+			killer = root
+		}
 	}
 
 
@@ -178,15 +266,12 @@ segrellion_daenerys_make_defeated_king_adventurer_effect = {
 
 					has_character_flag = segrellion_defeated_away_from_kings_landing
 
+
 					NOT = {
 						has_title = title:h_the_iron_throne
 					}
 				}
 
-
-				# =========================================
-				# KEEP HIS CLAIM
-				# =========================================
 
 				if = {
 
@@ -202,14 +287,6 @@ segrellion_daenerys_make_defeated_king_adventurer_effect = {
 				}
 
 
-				# =========================================
-				# HE MUST ACTUALLY BECOME LANDLESS
-				#
-				# Remaining landed titles pass to Daenerys.
-				# Future regional settlement events may
-				# redistribute them afterwards.
-				# =========================================
-
 				every_held_title = {
 
 					limit = {
@@ -223,10 +300,6 @@ segrellion_daenerys_make_defeated_king_adventurer_effect = {
 					grant_title = character:Targaryen_9
 				}
 
-
-				# =========================================
-				# REAL LAAMP
-				# =========================================
 
 				create_landless_adventurer_title_effect = {
 

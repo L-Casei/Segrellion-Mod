@@ -1,0 +1,61 @@
+segrellion_daenerys_appoint_lord_paramount_interaction = {
+
+	icon = icon_contract_modification_single
+
+	category = interaction_category_diplomacy
+
+	interface_priority = 120
+
+
+	desc = segrellion_daenerys_appoint_lord_paramount_interaction_desc
+
+
+	is_shown = {
+
+		scope:actor = {
+
+			this = character:Targaryen_9
+
+			has_character_flag = segrellion_daenerys_paramountcy_appointment_pending
+		}
+
+
+		scope:recipient = {
+
+			segrellion_daenerys_valid_paramount_candidate_trigger = yes
+		}
+	}
+
+
+	is_valid_showing_failures_only = {
+
+		scope:recipient = {
+
+			segrellion_daenerys_valid_paramount_candidate_trigger = yes
+		}
+	}
+
+
+	on_accept = {
+
+		scope:actor = {
+
+			segrellion_daenerys_grant_current_paramountcy_effect = {
+
+				RECIPIENT = scope:recipient
+			}
+
+
+			segrellion_daenerys_finish_current_settlement_effect = yes
+		}
+	}
+
+
+	auto_accept = yes
+
+
+	ai_will_do = {
+
+		base = 0
+	}
+}
