@@ -66,6 +66,15 @@ segrellion_daenerys_gather_support_decision = {
 				has_character_flag = segrellion_daenerys_support_recently_used
 			}
 		}
+
+		custom_description = {
+
+			text = segrellion_daenerys_gather_support_pending_requirement
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_support_negotiation_pending
+			}
+		}
 	}
 
 
@@ -153,18 +162,26 @@ segrellion_daenerys_gather_support_decision = {
 			is_shown = {
 
 				root = {
-					segrellion_daenerys_reach_support_available_trigger = yes
+					segrellion_daenerys_reach_support_shown_trigger = yes
 				}
 			}
 
 
 			is_valid = {
-				always = yes
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_reach_blocked_margaery
+
+					root = {
+						segrellion_daenerys_reach_support_available_trigger = yes
+					}
+				}
 			}
 
 
 			ai_chance = {
-				value = 75
+				value = 80
 			}
 		}
 
@@ -187,18 +204,26 @@ segrellion_daenerys_gather_support_decision = {
 			is_shown = {
 
 				root = {
-					segrellion_daenerys_westerlands_support_available_trigger = yes
+					segrellion_daenerys_westerlands_support_shown_trigger = yes
 				}
 			}
 
 
 			is_valid = {
-				always = yes
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_westerlands_blocked_cersei
+
+					root = {
+						segrellion_daenerys_westerlands_support_available_trigger = yes
+					}
+				}
 			}
 
 
 			ai_chance = {
-				value = 40
+				value = 45
 			}
 		}
 
@@ -221,18 +246,26 @@ segrellion_daenerys_gather_support_decision = {
 			is_shown = {
 
 				root = {
-					segrellion_daenerys_dorne_support_available_trigger = yes
+					segrellion_daenerys_dorne_support_shown_trigger = yes
 				}
 			}
 
 
 			is_valid = {
-				always = yes
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_dorne_blocked_arianne
+
+					root = {
+						segrellion_daenerys_dorne_support_available_trigger = yes
+					}
+				}
 			}
 
 
 			ai_chance = {
-				value = 70
+				value = 85
 			}
 		}
 
@@ -255,18 +288,26 @@ segrellion_daenerys_gather_support_decision = {
 			is_shown = {
 
 				root = {
-					segrellion_daenerys_riverlands_support_available_trigger = yes
+					segrellion_daenerys_riverlands_support_shown_trigger = yes
 				}
 			}
 
 
 			is_valid = {
-				always = yes
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_riverlands_blocked_jon
+
+					root = {
+						segrellion_daenerys_riverlands_support_available_trigger = yes
+					}
+				}
 			}
 
 
 			ai_chance = {
-				value = 25
+				value = 45
 			}
 		}
 
@@ -323,24 +364,55 @@ segrellion_daenerys_gather_support_decision = {
 			is_shown = {
 
 				root = {
-					segrellion_daenerys_stormlands_support_available_trigger = yes
+					segrellion_daenerys_stormlands_support_shown_trigger = yes
 				}
 			}
 
 
 			is_valid = {
-				always = yes
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_stormlands_blocked_aegon
+
+					OR = {
+
+						root = {
+							title:e_the_stormlands.holder != character:IAF_Young_Griff_1
+						}
+
+						root = {
+							segrellion_daenerys_stormlands_holder_negotiable_trigger = yes
+						}
+					}
+				}
+
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_stormlands_blocked_loyalist
+
+					OR = {
+
+						root = {
+							title:e_the_stormlands.holder = character:IAF_Young_Griff_1
+						}
+
+						root = {
+							segrellion_daenerys_stormlands_holder_negotiable_trigger = yes
+						}
+					}
+				}
 			}
 
 
 			ai_chance = {
 
-				value = 50
-
+				value = 60
 
 				modifier = {
 
-					add = 60
+					add = 50
 
 					root = {
 						has_character_flag = segrellion_daenerys_flamelands_support_secured
@@ -392,8 +464,8 @@ segrellion_daenerys_gather_support_decision = {
 				add_character_flag = segrellion_daenerys_support_reach_approached
 
 				trigger_event = {
-					id = segrellion_daenerys_support.0200
-					days = { 20 30 }
+					id = segrellion_daenerys_support_v2.2000
+					days = 1
 				}
 			}
 
@@ -407,8 +479,8 @@ segrellion_daenerys_gather_support_decision = {
 				add_character_flag = segrellion_daenerys_support_westerlands_approached
 
 				trigger_event = {
-					id = segrellion_daenerys_support.0300
-					days = { 25 35 }
+					id = segrellion_daenerys_support_v2.3000
+					days = 1
 				}
 			}
 
@@ -422,8 +494,8 @@ segrellion_daenerys_gather_support_decision = {
 				add_character_flag = segrellion_daenerys_support_dorne_approached
 
 				trigger_event = {
-					id = segrellion_daenerys_support.0400
-					days = { 30 45 }
+					id = segrellion_daenerys_support_v2.4000
+					days = 1
 				}
 			}
 
@@ -437,8 +509,8 @@ segrellion_daenerys_gather_support_decision = {
 				add_character_flag = segrellion_daenerys_support_riverlands_approached
 
 				trigger_event = {
-					id = segrellion_daenerys_support.0500
-					days = { 15 25 }
+					id = segrellion_daenerys_support_v2.5000
+					days = 1
 				}
 			}
 
@@ -467,8 +539,8 @@ segrellion_daenerys_gather_support_decision = {
 				add_character_flag = segrellion_daenerys_support_stormlands_approached
 
 				trigger_event = {
-					id = segrellion_daenerys_support.0700
-					days = { 10 18 }
+					id = segrellion_daenerys_support_v2.7000
+					days = 1
 				}
 			}
 		}

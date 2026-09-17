@@ -273,6 +273,8 @@ segrellion_daenerys_call_promised_supporters_effect = {
 
 	every_character_war = {
 
+		save_scope_as = segrellion_daenerys_promised_support_war
+
 
 		# =================================================
 		# NORTH
@@ -455,6 +457,46 @@ segrellion_daenerys_call_promised_supporters_effect = {
 			add_attacker = title:e_the_riverlands.holder
 		}
 
+		# =================================================
+		# RIVERLANDS - SECRET LORDS AGAINST BAELISH
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				root = {
+					has_character_flag = segrellion_daenerys_riverlands_rebellion_support_secured
+				}
+
+				title:e_the_riverlands.holder ?= {
+					is_alive = yes
+				}
+			}
+
+			title:e_the_riverlands.holder = {
+
+				every_vassal = {
+
+					limit = {
+
+						is_alive = yes
+
+						this != root
+
+						has_character_flag = segrellion_riverlord_secretly_supports_daenerys
+					}
+
+					scope:segrellion_daenerys_promised_support_war = {
+
+						set_called_to = prev
+
+						add_attacker = prev
+					}
+				}
+			}
+		}
+
 
 		# =================================================
 		# FLAMELANDS
@@ -485,7 +527,11 @@ segrellion_daenerys_call_promised_supporters_effect = {
 
 
 		# =================================================
-		# STORMLANDS / JOFFREY
+		# STORMLANDS
+		#
+		# Not hard-coded to Joffrey anymore.
+		# Mya / Edric / another accepted special ruler
+		# may now have promised support.
 		# =================================================
 
 		if = {
@@ -496,21 +542,26 @@ segrellion_daenerys_call_promised_supporters_effect = {
 					has_character_flag = segrellion_daenerys_stormlands_support_secured
 				}
 
-
-				character:Vladwyn_5 ?= {
+				title:e_the_stormlands.holder ?= {
 
 					is_alive = yes
 
-					has_title = title:e_the_stormlands
+					this != root
 
 					this != title:h_the_iron_throne.holder
+
+					OR = {
+
+						has_character_flag = segrellion_joffrey_supports_daenerys_in_throne_war
+
+						has_character_flag = segrellion_stormlands_supports_daenerys
+					}
 				}
 			}
 
+			set_called_to = title:e_the_stormlands.holder
 
-			set_called_to = character:Vladwyn_5
-
-			add_attacker = character:Vladwyn_5
+			add_attacker = title:e_the_stormlands.holder
 		}
 
 

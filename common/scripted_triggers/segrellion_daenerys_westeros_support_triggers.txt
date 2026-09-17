@@ -6,6 +6,8 @@
 
 # =========================================================
 # NORTH
+#
+# LEFT AS-IS FOR THE NEXT REWORK.
 # =========================================================
 
 segrellion_daenerys_north_support_available_trigger = {
@@ -18,7 +20,6 @@ segrellion_daenerys_north_support_available_trigger = {
 		has_character_flag = segrellion_daenerys_invited_davos_and_jon
 	}
 
-
 	title:e_the_north.holder ?= {
 		is_alive = yes
 	}
@@ -29,20 +30,24 @@ segrellion_daenerys_north_support_available_trigger = {
 # REACH
 # =========================================================
 
-segrellion_daenerys_reach_support_available_trigger = {
+segrellion_daenerys_reach_support_shown_trigger = {
 
 	NOT = {
 		has_character_flag = segrellion_daenerys_support_reach_approached
 	}
 
-
 	title:k_the_reach.holder ?= {
 		is_alive = yes
 	}
+}
 
 
-	# If Aegon is married to Margaery, the Reach is already
-	# politically committed to him.
+segrellion_daenerys_reach_support_available_trigger = {
+
+	segrellion_daenerys_reach_support_shown_trigger = yes
+
+	# Margaery is Aegon's queen.
+	# The option remains visible, but cannot be selected.
 
 	NOT = {
 
@@ -60,62 +65,50 @@ segrellion_daenerys_reach_support_available_trigger = {
 # WESTERLANDS
 # =========================================================
 
-segrellion_daenerys_westerlands_support_available_trigger = {
+segrellion_daenerys_westerlands_support_shown_trigger = {
 
 	NOT = {
 		has_character_flag = segrellion_daenerys_support_westerlands_approached
 	}
 
-
 	title:e_the_westerlands.holder ?= {
-
 		is_alive = yes
-
-
-		NOT = {
-			this = character:Lannister_6
-		}
-
-
-		NOT = {
-
-			mother ?= {
-				this = character:Lannister_6
-			}
-		}
 	}
+}
+
+
+segrellion_daenerys_westerlands_support_available_trigger = {
+
+	segrellion_daenerys_westerlands_support_shown_trigger = yes
+
+	# Cersei will never negotiate with Tyrion and Daenerys.
+
+	title:e_the_westerlands.holder != character:Lannister_6
 }
 
 
 # =========================================================
 # DORNE
-#
-# The option is only shown when approaching Sunspear is
-# politically plausible.
-#
-# Arianne's marriage / children remain INTERNAL safeguards.
-# The player does not need to be told about impossible
-# alternate histories in the decision UI.
 # =========================================================
 
-segrellion_daenerys_dorne_support_available_trigger = {
+segrellion_daenerys_dorne_support_shown_trigger = {
 
 	NOT = {
 		has_character_flag = segrellion_daenerys_support_dorne_approached
 	}
 
-
 	title:e_dorne.holder ?= {
 		is_alive = yes
 	}
+}
 
 
-	# =====================================================
-	# HARD BLOCK
-	#
-	# If Arianne is currently married to Aegon, Dorne is
-	# already too deeply committed for this route.
-	# =====================================================
+segrellion_daenerys_dorne_support_available_trigger = {
+
+	segrellion_daenerys_dorne_support_shown_trigger = yes
+
+	# Arianne married to Aegon means Dorne is already
+	# politically tied to his cause.
 
 	NOT = {
 
@@ -126,150 +119,87 @@ segrellion_daenerys_dorne_support_available_trigger = {
 			}
 		}
 	}
+}
 
 
-	# =====================================================
-	# HARD BLOCK
-	#
-	# Even if Arianne is dead or no longer married to him,
-	# a living child between them binds Dorne to Aegon's
-	# dynasty strongly enough that Daenerys does not waste
-	# time approaching Sunspear.
-	# =====================================================
+# =========================================================
+# RIVERLANDS HELPERS
+# =========================================================
 
-	NOT = {
-
-		character:Martell_9 ?= {
-
-			any_child = {
-
-				is_alive = yes
-
-				father = character:IAF_Young_Griff_1
-			}
-		}
-	}
-
-
-	# =====================================================
-	# THERE MUST BE AN ACTUAL POLITICAL OPENING
-	# =====================================================
+segrellion_daenerys_riverlands_holder_is_jon_trigger = {
 
 	OR = {
 
-		# Aegon is dead.
-		character:IAF_Young_Griff_1 = {
-			is_alive = no
+		title:e_the_riverlands.holder = character:Stark_7
+
+		AND = {
+
+			has_global_variable = segrellion_resurrected_jon
+
+			title:e_the_riverlands.holder = global_var:segrellion_resurrected_jon
 		}
+	}
+}
 
 
-		# Aegon does not currently hold the Iron Throne.
-		title:h_the_iron_throne.holder != character:IAF_Young_Griff_1
+segrellion_daenerys_riverlands_holder_is_sansa_trigger = {
 
+	title:e_the_riverlands.holder = {
 
-		# Dorne's own ruler is not the Iron Throne holder.
-		title:h_the_iron_throne.holder != title:e_dorne.holder
+		OR = {
 
+			this = character:Stark_Dummy_8
 
-		# Aegon's legitimacy has suffered badly.
-		character:IAF_Young_Griff_1 = {
-			has_character_flag = segrellion_young_griff_blackfyre_revealed
-		}
-
-
-		# Aegon already alienated Dorne through the
-		# Margaery / second-wife conflict.
-		character:IAF_Young_Griff_1 = {
-			has_character_flag = segrellion_young_griff_lost_dorne_over_margaery
-		}
-
-
-		character:Martell_9 ?= {
-			has_character_flag = segrellion_arianne_rejects_margaery_second_wife
-		}
-
-
-		# The current ruler of Dorne simply dislikes Aegon.
-		title:e_dorne.holder = {
-
-			opinion = {
-				target = character:IAF_Young_Griff_1
-				value <= -25
+			AND = {
+				is_female = yes
+				dynasty = dynasty:dynn_Stark
 			}
 		}
+	}
+}
 
 
-		# Or already has a favorable view of Daenerys.
-		title:e_dorne.holder = {
+segrellion_daenerys_riverlands_holder_is_tully_trigger = {
 
-			opinion = {
-				target = character:Targaryen_9
-				value >= 25
-			}
-		}
+	title:e_the_riverlands.holder = {
+		dynasty = dynasty:dynn_Tully
 	}
 }
 
 
 # =========================================================
 # RIVERLANDS
-#
-# Edmure is blocked conservatively through the Tully
-# dynasty so the route cannot accidentally target him.
 # =========================================================
 
-segrellion_daenerys_riverlands_support_available_trigger = {
+segrellion_daenerys_riverlands_support_shown_trigger = {
 
 	NOT = {
 		has_character_flag = segrellion_daenerys_support_riverlands_approached
 	}
 
-
 	title:e_the_riverlands.holder ?= {
-
 		is_alive = yes
-
-
-		NOT = {
-			this = character:Baelish_2
-		}
-
-
-		NOT = {
-			this = character:Stark_Dummy_8
-		}
-
-
-		NOT = {
-			this = character:Stark_7
-		}
-
-
-		NOT = {
-			dynasty = dynasty:dynn_Tully
-		}
 	}
+}
 
 
-	if = {
+segrellion_daenerys_riverlands_support_available_trigger = {
 
-		limit = {
-			has_global_variable = segrellion_resurrected_jon
-		}
+	segrellion_daenerys_riverlands_support_shown_trigger = yes
 
+	# Jon means Daenerys is really negotiating with
+	# the King in the North, not the Riverlands.
 
-		title:e_the_riverlands.holder = {
-
-			NOT = {
-				this = global_var:segrellion_resurrected_jon
-			}
-		}
+	NOT = {
+		segrellion_daenerys_riverlands_holder_is_jon_trigger = yes
 	}
 }
 
 
 # =========================================================
 # FLAMELANDS
+#
+# LEFT AS-IS FOR THE NEXT REWORK.
 # =========================================================
 
 segrellion_daenerys_flamelands_support_available_trigger = {
@@ -278,48 +208,38 @@ segrellion_daenerys_flamelands_support_available_trigger = {
 		has_character_flag = segrellion_daenerys_support_flamelands_approached
 	}
 
-
 	NOT = {
 		has_character_flag = segrellion_daenerys_landing_flamelands
 	}
-
 
 	NOT = {
 		has_character_flag = segrellion_daenerys_beacon_negotiation_refused
 	}
 
-
 	NOT = {
 		has_character_flag = segrellion_daenerys_promised_beacon_marriage
 	}
-
 
 	NOT = {
 		has_character_flag = segrellion_daenerys_promised_beacon_council
 	}
 
-
 	NOT = {
 		has_character_flag = segrellion_daenerys_promised_beacon_independence
 	}
-
 
 	NOT = {
 		has_character_flag = segrellion_marriage_promised_to_daemon
 	}
 
-
 	is_married = no
-
 
 	character:Segrellion_60 ?= {
 
 		is_alive = yes
-
 		is_landed = yes
 
 		segrellion_daemon_controls_flamelands_trigger = yes
-
 
 		NOT = {
 			has_character_flag = segrellion_pledged_to_daenerys
@@ -329,29 +249,95 @@ segrellion_daenerys_flamelands_support_available_trigger = {
 
 
 # =========================================================
-# STORMLANDS
-#
-# Only Joffrey Vladwyn receives this special negotiation.
+# STORMLANDS HELPERS
 # =========================================================
 
-segrellion_daenerys_stormlands_support_available_trigger = {
+segrellion_daenerys_stormlands_holder_is_roberts_bastard_trigger = {
+
+	title:e_the_stormlands.holder = {
+
+		OR = {
+			has_trait = bastard
+			has_trait = legitimized_bastard
+		}
+
+		father ?= {
+			dynasty = dynasty:dynn_Baratheon
+		}
+	}
+}
+
+
+segrellion_daenerys_stormlands_holder_negotiable_trigger = {
+
+	OR = {
+
+		title:e_the_stormlands.holder = character:Vladwyn_5
+
+		segrellion_daenerys_stormlands_holder_is_roberts_bastard_trigger = yes
+	}
+}
+
+
+# =========================================================
+# STORMLANDS
+# =========================================================
+
+segrellion_daenerys_stormlands_support_shown_trigger = {
 
 	NOT = {
 		has_character_flag = segrellion_daenerys_support_stormlands_approached
 	}
 
-
-	character:Vladwyn_5 ?= {
+	title:e_the_stormlands.holder ?= {
 		is_alive = yes
 	}
+}
 
 
-	title:e_the_stormlands.holder = character:Vladwyn_5
+segrellion_daenerys_stormlands_support_available_trigger = {
+
+	segrellion_daenerys_stormlands_support_shown_trigger = yes
+
+	title:e_the_stormlands.holder != character:IAF_Young_Griff_1
+
+	segrellion_daenerys_stormlands_holder_negotiable_trigger = yes
 }
 
 
 # =========================================================
-# ANY ROUTE AVAILABLE
+# DAENERYS MARRIAGE PROMISE AVAILABILITY
+#
+# A lord may still ASK for marriage without knowing that
+# Daenerys has promised herself elsewhere.
+#
+# This trigger only determines whether SHE may accept.
+# =========================================================
+
+segrellion_daenerys_can_accept_support_marriage_trigger = {
+
+	is_married = no
+
+	NOT = {
+		has_trait = refusing_marriage
+	}
+
+	NOT = {
+		has_character_flag = segrellion_marriage_promised_to_daemon
+	}
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_promised_beacon_marriage
+	}
+
+	NOT = {
+		has_character_flag = segrellion_daenerys_support_marriage_already_promised
+	}
+}
+
+
+# =========================================================
+# ANY ROUTE SHOWN
 # =========================================================
 
 segrellion_daenerys_has_westeros_support_route_trigger = {
@@ -360,16 +346,16 @@ segrellion_daenerys_has_westeros_support_route_trigger = {
 
 		segrellion_daenerys_north_support_available_trigger = yes
 
-		segrellion_daenerys_reach_support_available_trigger = yes
+		segrellion_daenerys_reach_support_shown_trigger = yes
 
-		segrellion_daenerys_westerlands_support_available_trigger = yes
+		segrellion_daenerys_westerlands_support_shown_trigger = yes
 
-		segrellion_daenerys_dorne_support_available_trigger = yes
+		segrellion_daenerys_dorne_support_shown_trigger = yes
 
-		segrellion_daenerys_riverlands_support_available_trigger = yes
+		segrellion_daenerys_riverlands_support_shown_trigger = yes
 
 		segrellion_daenerys_flamelands_support_available_trigger = yes
 
-		segrellion_daenerys_stormlands_support_available_trigger = yes
+		segrellion_daenerys_stormlands_support_shown_trigger = yes
 	}
 }

@@ -1,0 +1,248 @@
+# =========================================================
+# DAENERYS - GATHER SUPPORT V2
+# =========================================================
+
+
+# =========================================================
+# CLEAR ACTIVE NEGOTIATION
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_clear_support_negotiation_effect = {
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_daenerys_support_negotiator
+		}
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			remove_character_flag = segrellion_support_negotiation_reach
+			remove_character_flag = segrellion_support_negotiation_westerlands
+			remove_character_flag = segrellion_support_negotiation_dorne
+			remove_character_flag = segrellion_support_negotiation_riverlands
+			remove_character_flag = segrellion_support_negotiation_stormlands
+
+			remove_character_flag = segrellion_support_demand_marriage
+			remove_character_flag = segrellion_support_demand_favorable_contract
+			remove_character_flag = segrellion_support_demand_hand
+			remove_character_flag = segrellion_support_demand_council
+			remove_character_flag = segrellion_support_demand_gold
+			remove_character_flag = segrellion_support_demand_future_favor
+		}
+	}
+
+	remove_variable = segrellion_daenerys_support_negotiator
+
+	remove_character_flag = segrellion_daenerys_support_negotiation_pending
+}
+
+
+# =========================================================
+# SECURE SUPPORT FROM CURRENT NEGOTIATOR
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_secure_current_support_negotiator_effect = {
+
+	if = {
+
+		limit = {
+			has_variable = segrellion_daenerys_support_negotiator
+		}
+
+
+		# =================================================
+		# WESTERLANDS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				var:segrellion_daenerys_support_negotiator = {
+					has_character_flag = segrellion_support_negotiation_westerlands
+				}
+			}
+
+			add_character_flag = segrellion_daenerys_secret_westerlands_support_against_aegon
+
+			var:segrellion_daenerys_support_negotiator = {
+
+				add_character_flag = segrellion_westerlands_secretly_supports_daenerys
+
+				remove_character_flag = segrellion_westerlands_supports_aegon_against_daenerys
+
+				add_character_flag = segrellion_support_agreement_reached_with_daenerys
+			}
+		}
+
+
+		# =================================================
+		# DORNE
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				var:segrellion_daenerys_support_negotiator = {
+					has_character_flag = segrellion_support_negotiation_dorne
+				}
+			}
+
+			add_character_flag = segrellion_daenerys_secret_dornish_support_against_aegon
+
+			var:segrellion_daenerys_support_negotiator = {
+
+				add_character_flag = segrellion_dorne_secretly_supports_daenerys
+
+				remove_character_flag = segrellion_dorne_supports_young_griff
+
+				add_character_flag = segrellion_support_agreement_reached_with_daenerys
+			}
+		}
+
+
+		# =================================================
+		# RIVERLANDS
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				var:segrellion_daenerys_support_negotiator = {
+					has_character_flag = segrellion_support_negotiation_riverlands
+				}
+			}
+
+			add_character_flag = segrellion_daenerys_riverlands_support_secured
+
+			var:segrellion_daenerys_support_negotiator = {
+
+				add_character_flag = segrellion_riverlands_supports_daenerys
+
+				add_character_flag = segrellion_support_agreement_reached_with_daenerys
+			}
+		}
+
+
+		# =================================================
+		# STORMLANDS
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				var:segrellion_daenerys_support_negotiator = {
+					has_character_flag = segrellion_support_negotiation_stormlands
+				}
+			}
+
+			if = {
+
+				limit = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						this = character:Vladwyn_5
+					}
+				}
+
+				segrellion_daenerys_secure_joffrey_support_effect = yes
+			}
+
+			else = {
+
+				add_character_flag = segrellion_daenerys_stormlands_support_secured
+
+				var:segrellion_daenerys_support_negotiator = {
+
+					add_character_flag = segrellion_stormlands_supports_daenerys
+
+					add_character_flag = segrellion_support_agreement_reached_with_daenerys
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# STORE MARRIAGE PROMISE
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_store_support_marriage_promise_effect = {
+
+	add_character_flag = segrellion_daenerys_support_marriage_already_promised
+
+	add_character_flag = segrellion_daenerys_has_post_throne_marriage_promise
+
+	var:segrellion_daenerys_support_negotiator = {
+
+		add_character_flag = segrellion_daenerys_promised_marriage_for_support
+
+		add_trait = refusing_marriage
+	}
+}
+
+
+# =========================================================
+# STORE FAVORABLE CONTRACT PROMISE
+# =========================================================
+
+segrellion_daenerys_store_favorable_contract_promise_effect = {
+
+	add_character_flag = segrellion_daenerys_has_post_throne_contract_promises
+
+	var:segrellion_daenerys_support_negotiator = {
+		add_character_flag = segrellion_daenerys_promised_favorable_vassal_contract
+	}
+}
+
+
+# =========================================================
+# STORE HAND OF THE QUEEN PROMISE
+# =========================================================
+
+segrellion_daenerys_store_hand_promise_effect = {
+
+	add_character_flag = segrellion_daenerys_hand_already_promised
+
+	add_character_flag = segrellion_daenerys_has_post_throne_hand_promise
+
+	var:segrellion_daenerys_support_negotiator = {
+		add_character_flag = segrellion_daenerys_promised_hand_of_the_queen
+	}
+}
+
+
+# =========================================================
+# STORE COUNCIL PROMISE
+# =========================================================
+
+segrellion_daenerys_store_council_promise_effect = {
+
+	add_character_flag = segrellion_daenerys_has_post_throne_council_promises
+
+	var:segrellion_daenerys_support_negotiator = {
+		add_character_flag = segrellion_daenerys_promised_council_seat
+	}
+}
+
+
+# =========================================================
+# STORE FUTURE FAVOR
+# =========================================================
+
+segrellion_daenerys_store_future_favor_effect = {
+
+	add_character_flag = segrellion_daenerys_has_post_throne_favors_owed
+
+	var:segrellion_daenerys_support_negotiator = {
+		add_character_flag = segrellion_daenerys_owes_future_favor_for_support
+	}
+}

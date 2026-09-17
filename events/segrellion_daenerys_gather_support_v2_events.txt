@@ -1,0 +1,3428 @@
+namespace = segrellion_daenerys_support_v2
+
+
+# =========================================================
+# COMMON EVENT PRESENTATION
+# =========================================================
+
+
+# =========================================================
+# 2000 - THE REACH
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support_v2.2000 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.2000.t
+
+	desc = {
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Tyrell_14 ?= {
+
+						father ?= {
+
+							mother ?= {
+								is_alive = yes
+							}
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.2000.desc_olenna
+			}
+
+			desc = segrellion_daenerys_support_v2.2000.desc_lord
+		}
+	}
+
+	theme = diplomacy
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		# Olenna is Margaery's paternal grandmother.
+		# This is much safer than deriving her through
+		# whichever character happens to hold the Reach.
+
+		if = {
+
+			limit = {
+
+				character:Tyrell_14 ?= {
+
+					father ?= {
+
+						mother ?= {
+							is_alive = yes
+						}
+					}
+				}
+			}
+
+			character:Tyrell_14.father.mother = {
+				save_scope_as = segrellion_reach_contact
+			}
+		}
+
+		else = {
+
+			title:k_the_reach.holder = {
+				save_scope_as = segrellion_reach_contact
+			}
+		}
+
+		set_variable = {
+			name = segrellion_reach_contact
+			value = scope:segrellion_reach_contact
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.2000.a
+
+		custom_tooltip = segrellion_daenerys_support_v2.reply_weeks_tt
+
+		var:segrellion_reach_contact = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.2010
+				days = { 14 24 }
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 2010 - REACH RESPONSE ROUTER
+# ROOT = OLENNA OR CURRENT REACH LORD
+# =========================================================
+
+segrellion_daenerys_support_v2.2010 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			80 = {
+
+				character:Targaryen_9 = {
+
+					add_character_flag = segrellion_daenerys_reach_support_secured
+
+					title:k_the_reach.holder = {
+						add_character_flag = segrellion_reach_secretly_supports_daenerys
+					}
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.2020
+						days = 1
+					}
+				}
+			}
+
+
+			15 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.2030
+						days = 1
+					}
+				}
+			}
+
+
+			5 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.2040
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 2020 - THE REACH ACCEPTS
+# =========================================================
+
+segrellion_daenerys_support_v2.2020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.2020.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Tyrell_14 ?= {
+
+						father ?= {
+
+							mother ?= {
+
+								this = root.var:segrellion_reach_contact
+							}
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.2020.desc_olenna
+			}
+
+			desc = segrellion_daenerys_support_v2.2020.desc_lord
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_reach_contact
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.2020.a
+
+		remove_variable = segrellion_reach_contact
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+	}
+}
+
+
+# =========================================================
+# 2030 - THE REACH WANTS A PLACE AT COURT
+# =========================================================
+
+segrellion_daenerys_support_v2.2030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.2030.t
+	desc = segrellion_daenerys_support_v2.2030.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = var:segrellion_reach_contact
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# PROMISE COUNCIL ACCESS
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.2030.a
+
+		custom_tooltip = segrellion_daenerys_support_v2.2030.a.tt
+
+		add_character_flag = segrellion_daenerys_reach_support_secured
+		add_character_flag = segrellion_daenerys_has_post_throne_council_promises
+
+		title:k_the_reach.holder = {
+
+			add_character_flag = segrellion_reach_secretly_supports_daenerys
+
+			add_character_flag = segrellion_daenerys_promised_council_seat
+		}
+
+		remove_variable = segrellion_reach_contact
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# REFUSE THE PRICE
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.2030.b
+
+		custom_tooltip = segrellion_daenerys_support_v2.2030.b.tt
+
+		remove_variable = segrellion_reach_contact
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+
+# =========================================================
+# 2040 - THE REACH REFUSES
+# =========================================================
+
+segrellion_daenerys_support_v2.2040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.2040.t
+	desc = segrellion_daenerys_support_v2.2040.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_reach_contact
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.2040.a
+
+		remove_variable = segrellion_reach_contact
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+	}
+}
+
+# =========================================================
+# 3000 - THE WESTERLANDS
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support_v2.3000 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.3000.t
+	desc = segrellion_daenerys_support_v2.3000.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		title:e_the_westerlands.holder = {
+			save_scope_as = segrellion_westerlands_target
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_support_negotiator
+			value = scope:segrellion_westerlands_target
+		}
+
+		scope:segrellion_westerlands_target = {
+			add_character_flag = segrellion_support_negotiation_westerlands
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# ASK DAEMON TO INTERCEDE WITH JOFFREY
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3000.a
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				this = character:Vladwyn_5
+			}
+
+			has_character_flag = segrellion_daenerys_flamelands_support_secured
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.daemon_intercession_tt
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.3050
+				days = { 5 9 }
+			}
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# SEND TYRION'S RAVEN DIRECTLY
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3000.b
+
+		custom_tooltip = segrellion_daenerys_support_v2.reply_weeks_tt
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.3010
+				days = { 16 26 }
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 3010 - WESTERLANDS ROUTER
+# ROOT = CURRENT WESTERLANDS LORD
+# =========================================================
+
+segrellion_daenerys_support_v2.3010 = {
+
+	hidden = yes
+
+	immediate = {
+
+
+		# =================================================
+		# JOFFREY VLADWYN
+		# 60 ACCEPT / 15 NEGOTIATE / 25 REJECT
+		# =================================================
+
+		if = {
+
+			limit = {
+				this = character:Vladwyn_5
+			}
+
+			random_list = {
+
+				60 = {
+
+					modifier = {
+						add = 25
+
+						opinion = {
+							target = character:Targaryen_9
+							value >= 40
+						}
+					}
+
+					modifier = {
+						add = -20
+
+						opinion = {
+							target = character:IAF_Young_Griff_1
+							value >= 40
+						}
+					}
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.3030
+							days = 1
+						}
+					}
+				}
+
+
+				15 = {
+
+					modifier = {
+
+						add = 15
+
+						opinion = {
+							target = character:Targaryen_9
+							value >= 10
+						}
+					}
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.8000
+						days = 1
+					}
+				}
+
+
+				25 = {
+
+					modifier = {
+						add = 25
+
+						opinion = {
+							target = character:IAF_Young_Griff_1
+							value >= 40
+						}
+					}
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.3040
+							days = 1
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# JAIME
+		#
+		# Male sibling of Tyrion.
+		# Cersei is already excluded by the decision.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				is_male = yes
+
+				character:Lannister_8 = {
+
+					any_sibling = {
+						this = root
+					}
+				}
+			}
+
+			character:Targaryen_9 = {
+
+				trigger_event = {
+					id = segrellion_daenerys_support_v2.3020
+					days = 1
+				}
+			}
+		}
+
+
+		# =================================================
+		# MYRCELLA / TOMMEN
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				mother = character:Lannister_6
+			}
+
+			character:Targaryen_9 = {
+
+				trigger_event = {
+					id = segrellion_daenerys_support_v2.3021
+					days = 1
+				}
+			}
+		}
+
+
+		# =================================================
+		# ANOTHER LANNISTER
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				dynasty = dynasty:dynn_Lannister
+			}
+
+			random_list = {
+
+				15 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.3030
+							days = 1
+						}
+					}
+				}
+
+
+				25 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.8000
+						days = 1
+					}
+				}
+
+
+				60 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.3040
+							days = 1
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# UNEXPECTED NON-LANNISTER HOLDER
+		# =================================================
+
+		else = {
+
+			random_list = {
+
+				25 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.3030
+							days = 1
+						}
+					}
+				}
+
+				35 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.8000
+						days = 1
+					}
+				}
+
+				40 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.3040
+							days = 1
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3020 - JAIME'S ANSWER
+# =========================================================
+
+segrellion_daenerys_support_v2.3020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.3020.t
+	desc = segrellion_daenerys_support_v2.3020.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = anger
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3020.a
+
+		var:segrellion_daenerys_support_negotiator = {
+			add_character_flag = segrellion_support_refused_daenerys
+		}
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 3021 - MYRCELLA / TOMMEN'S ANSWER
+# =========================================================
+
+segrellion_daenerys_support_v2.3021 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.3021.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						is_female = yes
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.3021.desc_myrcella
+			}
+
+			desc = segrellion_daenerys_support_v2.3021.desc_tommen
+		}
+	}
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3021.a
+
+		var:segrellion_daenerys_support_negotiator = {
+			add_character_flag = segrellion_support_refused_daenerys
+		}
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 3030 - WESTERLANDS ACCEPT
+# =========================================================
+
+segrellion_daenerys_support_v2.3030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.3030.t
+	desc = segrellion_daenerys_support_v2.3030.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3030.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 3040 - WESTERLANDS REJECT
+# =========================================================
+
+segrellion_daenerys_support_v2.3040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.3040.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						this = character:Vladwyn_5
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.3040.desc_joffrey
+			}
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						dynasty = dynasty:dynn_Lannister
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.3040.desc_lannister
+			}
+
+			desc = segrellion_daenerys_support_v2.3040.desc_generic
+		}
+	}
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3040.a
+
+		var:segrellion_daenerys_support_negotiator = {
+			add_character_flag = segrellion_support_refused_daenerys
+		}
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 3050 - DAEMON INTERCEDES WITH JOFFREY
+# ROOT = DAEMON
+# =========================================================
+
+segrellion_daenerys_support_v2.3050 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			95 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.3051
+						days = { 4 8 }
+					}
+				}
+			}
+
+			5 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.3052
+						days = { 4 8 }
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 3051 - DAEMON SUCCEEDS
+# =========================================================
+
+segrellion_daenerys_support_v2.3051 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.3051.t
+	desc = segrellion_daenerys_support_v2.3051.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Vladwyn_5
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3051.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 3052 - DAEMON FAILS
+# =========================================================
+
+segrellion_daenerys_support_v2.3052 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.3052.t
+	desc = segrellion_daenerys_support_v2.3052.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Vladwyn_5
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.3052.a
+
+		character:Vladwyn_5 = {
+			add_character_flag = segrellion_support_refused_daenerys
+		}
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+# =========================================================
+# 4000 - DORNE
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support_v2.4000 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.4000.t
+	desc = segrellion_daenerys_support_v2.4000.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		title:e_dorne.holder = {
+			save_scope_as = segrellion_dorne_target
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_support_negotiator
+			value = scope:segrellion_dorne_target
+		}
+
+		scope:segrellion_dorne_target = {
+			add_character_flag = segrellion_support_negotiation_dorne
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.4000.a
+
+		custom_tooltip = segrellion_daenerys_support_v2.reply_weeks_tt
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.4010
+				days = { 17 28 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 4010 - DORNE ROUTER
+#
+# 95% SUPPORT
+# 5% TERMS
+# NO DIRECT REFUSAL
+# =========================================================
+
+segrellion_daenerys_support_v2.4010 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			95 = {
+
+				modifier = {
+
+					add = 100
+
+					character:IAF_Young_Griff_1 = {
+						has_character_flag = segrellion_young_griff_lost_dorne_over_margaery
+					}
+				}
+
+				modifier = {
+
+					add = 75
+
+					character:Martell_9 ?= {
+						has_character_flag = segrellion_arianne_rejects_margaery_second_wife
+					}
+				}
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.4030
+						days = 1
+					}
+				}
+			}
+
+
+			5 = {
+
+				random_list = {
+
+					50 = {
+
+						character:Targaryen_9 = {
+
+							trigger_event = {
+								id = segrellion_daenerys_support_v2.4020
+								days = 1
+							}
+						}
+					}
+
+					50 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.8000
+							days = 1
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 4020 - DORNE DEMANDS INDEPENDENCE
+# =========================================================
+
+segrellion_daenerys_support_v2.4020 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.4020.t
+	desc = segrellion_daenerys_support_v2.4020.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.4020.a
+
+		custom_tooltip = segrellion_daenerys_support_v2.4020.a.tt
+
+		add_character_flag = segrellion_daenerys_promised_dorne_independence
+
+		var:segrellion_daenerys_support_negotiator = {
+			add_character_flag = segrellion_daenerys_dorne_independence_promised
+		}
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 35
+		}
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.4020.b
+
+		custom_tooltip = segrellion_daenerys_support_v2.4020.b.tt
+
+		var:segrellion_daenerys_support_negotiator = {
+			add_character_flag = segrellion_support_terms_refused_by_daenerys
+		}
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 65
+		}
+	}
+}
+
+
+# =========================================================
+# 4030 - DORNE ACCEPTS
+# =========================================================
+
+segrellion_daenerys_support_v2.4030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.4030.t
+	desc = segrellion_daenerys_support_v2.4030.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.4030.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+# =========================================================
+# 5000 - THE RIVERLANDS
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support_v2.5000 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5000.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					title:e_the_riverlands.holder = character:Baelish_2
+				}
+
+				desc = segrellion_daenerys_support_v2.5000.desc_baelish
+			}
+
+			triggered_desc = {
+
+				trigger = {
+					segrellion_daenerys_riverlands_holder_is_sansa_trigger = yes
+				}
+
+				desc = segrellion_daenerys_support_v2.5000.desc_sansa
+			}
+
+			triggered_desc = {
+
+				trigger = {
+					segrellion_daenerys_riverlands_holder_is_tully_trigger = yes
+				}
+
+				desc = segrellion_daenerys_support_v2.5000.desc_tully
+			}
+
+			desc = segrellion_daenerys_support_v2.5000.desc_generic
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	immediate = {
+		add_character_flag = segrellion_daenerys_support_negotiation_pending
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# BAELISH
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5000.a
+
+		trigger = {
+			title:e_the_riverlands.holder = character:Baelish_2
+		}
+
+		trigger_event = {
+			id = segrellion_daenerys_support_v2.5010
+			days = 1
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# SANSA
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5000.b
+
+		trigger = {
+			segrellion_daenerys_riverlands_holder_is_sansa_trigger = yes
+		}
+
+		title:e_the_riverlands.holder = {
+			save_scope_as = segrellion_riverlands_sansa
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_support_negotiator
+			value = scope:segrellion_riverlands_sansa
+		}
+
+		scope:segrellion_riverlands_sansa = {
+			add_character_flag = segrellion_support_negotiation_riverlands
+		}
+
+		trigger_event = {
+			id = segrellion_daenerys_support_v2.5100
+			days = 1
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# EDMURE / TULLY RULE
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5000.c
+
+		trigger = {
+			segrellion_daenerys_riverlands_holder_is_tully_trigger = yes
+		}
+
+		trigger_event = {
+			id = segrellion_daenerys_support_v2.5200
+			days = 1
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# GENERIC LORD
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5000.d
+
+		trigger = {
+
+			title:e_the_riverlands.holder != character:Baelish_2
+
+			NOT = {
+				segrellion_daenerys_riverlands_holder_is_sansa_trigger = yes
+			}
+
+			NOT = {
+				segrellion_daenerys_riverlands_holder_is_tully_trigger = yes
+			}
+		}
+
+		title:e_the_riverlands.holder = {
+			save_scope_as = segrellion_riverlands_target
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_support_negotiator
+			value = scope:segrellion_riverlands_target
+		}
+
+		scope:segrellion_riverlands_target = {
+			add_character_flag = segrellion_support_negotiation_riverlands
+		}
+
+		trigger_event = {
+			id = segrellion_daenerys_support_v2.5300
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 5010 - CAN BAELISH BE TRUSTED?
+# =========================================================
+
+segrellion_daenerys_support_v2.5010 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5010.t
+	desc = segrellion_daenerys_support_v2.5010.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# SECRETLY APPEAL TO THE RIVER LORDS
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5010.a
+
+		custom_tooltip = segrellion_daenerys_support_v2.5010.a.tt
+
+		add_character_flag = segrellion_daenerys_riverlords_secretly_contacted
+
+		title:e_the_riverlands.holder = {
+
+			every_vassal = {
+
+				limit = {
+
+					is_alive = yes
+
+					OR = {
+
+						dynasty = dynasty:dynn_Blackwood
+						dynasty = dynasty:dynn_Bracken
+						dynasty = dynasty:dynn_Mallister
+						dynasty = dynasty:dynn_Vance
+						dynasty = dynasty:dynn_Piper
+						dynasty = dynasty:dynn_Mooton
+						dynasty = dynasty:dynn_Frey
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_daenerys_support_v2.5020
+					days = { 8 22 }
+				}
+			}
+		}
+
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# DO NOT RISK IT
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5010.b
+
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 5020 - RIVER LORD SECRET ROUTER
+# ROOT = RIVER LORD
+# =========================================================
+
+segrellion_daenerys_support_v2.5020 = {
+
+	hidden = yes
+
+	immediate = {
+
+		save_scope_as = segrellion_secret_riverlord
+
+		random_list = {
+
+			75 = {
+
+				modifier = {
+
+					add = 20
+
+					opinion = {
+						target = character:Baelish_2
+						value <= -25
+					}
+				}
+
+				modifier = {
+
+					add = 15
+
+					opinion = {
+						target = character:Targaryen_9
+						value >= 25
+					}
+				}
+
+				add_character_flag = segrellion_riverlord_secretly_supports_daenerys
+
+				character:Targaryen_9 = {
+
+					add_character_flag = segrellion_daenerys_riverlands_rebellion_support_secured
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5030
+						days = 1
+					}
+				}
+			}
+
+
+			25 = {
+
+				modifier = {
+
+					add = 20
+
+					opinion = {
+						target = character:Baelish_2
+						value >= 25
+					}
+				}
+
+				add_character_flag = segrellion_riverlord_refused_daenerys
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5040
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5030 - A RIVER LORD ACCEPTS
+# =========================================================
+
+segrellion_daenerys_support_v2.5030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5030.t
+	desc = segrellion_daenerys_support_v2.5030.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:segrellion_secret_riverlord
+		animation = personality_honorable
+	}
+
+	option = {
+		name = segrellion_daenerys_support_v2.5030.a
+	}
+}
+
+
+# =========================================================
+# 5040 - A RIVER LORD REFUSES
+# =========================================================
+
+segrellion_daenerys_support_v2.5040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5040.t
+	desc = segrellion_daenerys_support_v2.5040.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:segrellion_secret_riverlord
+		animation = disapproval
+	}
+
+	option = {
+		name = segrellion_daenerys_support_v2.5040.a
+	}
+}
+
+
+# =========================================================
+# 5100 - A RAVEN TO SANSA
+# =========================================================
+
+segrellion_daenerys_support_v2.5100 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5100.t
+	desc = segrellion_daenerys_support_v2.5100.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5100.a
+
+		custom_tooltip = segrellion_daenerys_support_v2.reply_weeks_tt
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.5110
+				days = { 14 25 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5110 - SANSA ROUTER
+# =========================================================
+
+segrellion_daenerys_support_v2.5110 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			15 = {
+
+				modifier = {
+
+					add = 20
+
+					opinion = {
+						target = character:Targaryen_9
+						value >= 50
+					}
+				}
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5120
+						days = 1
+					}
+				}
+			}
+
+
+			85 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5130
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5120 - SANSA ACCEPTS
+# =========================================================
+
+segrellion_daenerys_support_v2.5120 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5120.t
+	desc = segrellion_daenerys_support_v2.5120.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5120.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5130 - SANSA REFUSES
+# =========================================================
+
+segrellion_daenerys_support_v2.5130 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5130.t
+	desc = segrellion_daenerys_support_v2.5130.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	lower_right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# DAEMON, IF HE IS SANSA'S HUSBAND
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5130.a
+
+		trigger = {
+
+			has_character_flag = segrellion_daenerys_flamelands_support_secured
+
+			character:Segrellion_60 ?= {
+
+				is_alive = yes
+
+				any_spouse = {
+					this = root.var:segrellion_daenerys_support_negotiator
+				}
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.5130.daemon_tt
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.5140
+				days = { 10 18 }
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# SEND TYRION
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5130.b
+
+		custom_tooltip = segrellion_daenerys_support_v2.5130.tyrion_tt
+
+		character:Lannister_8 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.5160
+				days = { 12 22 }
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# ACCEPT HER REFUSAL
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5130.c
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5140 - DAEMON TRIES TO CONVINCE SANSA
+# =========================================================
+
+segrellion_daenerys_support_v2.5140 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			85 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5150
+						days = 1
+					}
+				}
+			}
+
+			15 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5151
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5150 - DAEMON CONVINCES SANSA
+# =========================================================
+
+segrellion_daenerys_support_v2.5150 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5150.t
+	desc = segrellion_daenerys_support_v2.5150.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5150.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5151 - DAEMON FAILS
+# =========================================================
+
+segrellion_daenerys_support_v2.5151 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5151.t
+	desc = segrellion_daenerys_support_v2.5151.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5151.a
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5160 - TYRION TRIES TO CONVINCE SANSA
+# =========================================================
+
+segrellion_daenerys_support_v2.5160 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			65 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5170
+						days = 1
+					}
+				}
+			}
+
+			35 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5171
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5170 - TYRION SUCCEEDS
+# =========================================================
+
+segrellion_daenerys_support_v2.5170 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5170.t
+	desc = segrellion_daenerys_support_v2.5170.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5170.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5171 - TYRION FAILS
+# =========================================================
+
+segrellion_daenerys_support_v2.5171 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5171.t
+	desc = segrellion_daenerys_support_v2.5171.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5171.a
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 5200 - EDMURE / TULLY RULE
+# =========================================================
+
+segrellion_daenerys_support_v2.5200 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5200.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					title:e_the_riverlands.holder = {
+
+						liege ?= {
+							this = title:e_the_north.holder
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.5200.desc_north
+			}
+
+			triggered_desc = {
+
+				trigger = {
+
+					title:e_the_riverlands.holder = {
+
+						liege ?= {
+							this = title:e_the_vale.holder
+						}
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.5200.desc_vale
+			}
+
+			desc = segrellion_daenerys_support_v2.5200.desc_generic
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5200.a
+
+		if = {
+
+			limit = {
+
+				title:e_the_riverlands.holder = {
+
+					liege ?= {
+						this = title:e_the_vale.holder
+					}
+				}
+			}
+
+			add_character_flag = segrellion_daenerys_riverlands_redirected_to_vale
+		}
+
+		else = {
+			add_character_flag = segrellion_daenerys_riverlands_redirected_to_north
+		}
+
+		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+	}
+}
+
+
+# =========================================================
+# 5300 - GENERIC RIVER LORD
+# =========================================================
+
+segrellion_daenerys_support_v2.5300 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5300.t
+	desc = segrellion_daenerys_support_v2.5300.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5300.a
+
+		custom_tooltip = segrellion_daenerys_support_v2.reply_weeks_tt
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.5310
+				days = { 12 22 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 5310 - GENERIC RIVERLORD ROUTER
+# =========================================================
+
+segrellion_daenerys_support_v2.5310 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			35 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5320
+						days = 1
+					}
+				}
+			}
+
+			40 = {
+
+				trigger_event = {
+					id = segrellion_daenerys_support_v2.8000
+					days = 1
+				}
+			}
+
+			25 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.5330
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+
+segrellion_daenerys_support_v2.5320 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5320.t
+	desc = segrellion_daenerys_support_v2.5320.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5320.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+segrellion_daenerys_support_v2.5330 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.5330.t
+	desc = segrellion_daenerys_support_v2.5330.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.5330.a
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+# =========================================================
+# 7000 - THE STORMLANDS
+# =========================================================
+
+segrellion_daenerys_support_v2.7000 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.7000.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					title:e_the_stormlands.holder = character:Vladwyn_5
+				}
+
+				desc = segrellion_daenerys_support_v2.7000.desc_joffrey
+			}
+
+			triggered_desc = {
+
+				trigger = {
+					segrellion_daenerys_stormlands_holder_is_roberts_bastard_trigger = yes
+				}
+
+				desc = segrellion_daenerys_support_v2.7000.desc_bastard
+			}
+
+			desc = segrellion_daenerys_support_v2.7000.desc_generic
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_daenerys_support_negotiation_pending
+
+		title:e_the_stormlands.holder = {
+			save_scope_as = segrellion_stormlands_target
+		}
+
+		set_variable = {
+			name = segrellion_daenerys_support_negotiator
+			value = scope:segrellion_stormlands_target
+		}
+
+		scope:segrellion_stormlands_target = {
+			add_character_flag = segrellion_support_negotiation_stormlands
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Lannister_8
+		animation = personality_rational
+	}
+
+
+	# -----------------------------------------------------
+	# DAEMON -> JOFFREY
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.7000.a
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				this = character:Vladwyn_5
+			}
+
+			has_character_flag = segrellion_daenerys_flamelands_support_secured
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.daemon_intercession_tt
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.7050
+				days = { 5 9 }
+			}
+		}
+
+		ai_chance = {
+			base = 80
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# DAEMON -> MYA, IF THEY ARE MARRIED
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.7000.b
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+
+				is_female = yes
+
+				any_spouse = {
+					this = character:Segrellion_60
+				}
+			}
+
+			character:Segrellion_60 ?= {
+				is_alive = yes
+			}
+
+			has_character_flag = segrellion_daenerys_flamelands_support_secured
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.daemon_intercession_tt
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.7050
+				days = { 5 9 }
+			}
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# DIRECT RAVEN
+	# -----------------------------------------------------
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.7000.c
+
+		custom_tooltip = segrellion_daenerys_support_v2.reply_weeks_tt
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.7010
+				days = { 10 18 }
+			}
+		}
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 7010 - STORMLANDS ROUTER
+# =========================================================
+
+segrellion_daenerys_support_v2.7010 = {
+
+	hidden = yes
+
+	immediate = {
+
+
+		# =================================================
+		# JOFFREY
+		#
+		# 70 / 15 / 15
+		# =================================================
+
+		if = {
+
+			limit = {
+				this = character:Vladwyn_5
+			}
+
+			random_list = {
+
+				70 = {
+
+					modifier = {
+
+						add = 25
+
+						opinion = {
+							target = character:Targaryen_9
+							value >= 40
+						}
+					}
+
+					modifier = {
+
+						add = -20
+
+						opinion = {
+							target = character:IAF_Young_Griff_1
+							value >= 40
+						}
+					}
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.7030
+							days = 1
+						}
+					}
+				}
+
+
+				15 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.8000
+						days = 1
+					}
+				}
+
+
+				15 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.7040
+							days = 1
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# MYA / FEMALE BASTARD OF ROBERT
+		#
+		# Mya is suspicious and much more likely to refuse.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+				is_female = yes
+			}
+
+			random_list = {
+
+				15 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.7030
+							days = 1
+						}
+					}
+				}
+
+				25 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.8000
+						days = 1
+					}
+				}
+
+				60 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.7040
+							days = 1
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# EDRIC / OTHER MALE BASTARD
+		# =================================================
+
+		else = {
+
+			random_list = {
+
+				35 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.7030
+							days = 1
+						}
+					}
+				}
+
+				45 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.8000
+						days = 1
+					}
+				}
+
+				20 = {
+
+					character:Targaryen_9 = {
+
+						trigger_event = {
+							id = segrellion_daenerys_support_v2.7040
+							days = 1
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 7030 - STORMLANDS ACCEPT
+# =========================================================
+
+segrellion_daenerys_support_v2.7030 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.7030.t
+	desc = segrellion_daenerys_support_v2.7030.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.7030.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 7040 - STORMLANDS REJECT
+# =========================================================
+
+segrellion_daenerys_support_v2.7040 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.7040.t
+	desc = segrellion_daenerys_support_v2.7040.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.7040.a
+
+		var:segrellion_daenerys_support_negotiator = {
+			add_character_flag = segrellion_support_refused_daenerys
+		}
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 7050 - DAEMON INTERCEDES
+# =========================================================
+
+segrellion_daenerys_support_v2.7050 = {
+
+	hidden = yes
+
+	immediate = {
+
+		random_list = {
+
+			95 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.7051
+						days = { 3 7 }
+					}
+				}
+			}
+
+			5 = {
+
+				character:Targaryen_9 = {
+
+					trigger_event = {
+						id = segrellion_daenerys_support_v2.7052
+						days = { 3 7 }
+					}
+				}
+			}
+		}
+	}
+}
+
+
+segrellion_daenerys_support_v2.7051 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.7051.t
+	desc = segrellion_daenerys_support_v2.7051.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	left_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_honorable
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.7051.a
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+
+segrellion_daenerys_support_v2.7052 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.7052.t
+	desc = segrellion_daenerys_support_v2.7052.desc
+
+	theme = diplomacy
+
+	override_background = {
+		reference = throne_room
+	}
+
+	left_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = disapproval
+	}
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.7052.a
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+	}
+}
+
+# =========================================================
+# 8000 - GENERIC SUPPORT PRICE ROUTER
+#
+# ROOT = LORD WHO IS WILLING TO NEGOTIATE
+# =========================================================
+
+segrellion_daenerys_support_v2.8000 = {
+
+	hidden = yes
+
+	immediate = {
+
+		character:Targaryen_9 = {
+
+			set_variable = {
+				name = segrellion_daenerys_support_negotiator
+				value = root
+			}
+		}
+
+		random_list = {
+
+
+			# =================================================
+			# MARRIAGE
+			#
+			# They may ASK even if Daenerys has secretly
+			# promised herself elsewhere.
+			# =================================================
+
+			15 = {
+
+				trigger = {
+
+					is_male = yes
+					is_married = no
+
+					character:Targaryen_9 = {
+						is_married = no
+					}
+				}
+
+				add_character_flag = segrellion_support_demand_marriage
+			}
+
+
+			# =================================================
+			# FAVORABLE VASSAL CONTRACT
+			# =================================================
+
+			25 = {
+				add_character_flag = segrellion_support_demand_favorable_contract
+			}
+
+
+			# =================================================
+			# HAND OF THE QUEEN
+			# =================================================
+
+			15 = {
+				add_character_flag = segrellion_support_demand_hand
+			}
+
+
+			# =================================================
+			# COUNCIL SEAT
+			# =================================================
+
+			25 = {
+				add_character_flag = segrellion_support_demand_council
+			}
+
+
+			# =================================================
+			# GOLD
+			# =================================================
+
+			25 = {
+				add_character_flag = segrellion_support_demand_gold
+			}
+
+
+			# =================================================
+			# FUTURE FAVOR
+			# =================================================
+
+			20 = {
+				add_character_flag = segrellion_support_demand_future_favor
+			}
+		}
+
+
+		character:Targaryen_9 = {
+
+			trigger_event = {
+				id = segrellion_daenerys_support_v2.8010
+				days = { 2 5 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 8010 - THEIR PRICE
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_daenerys_support_v2.8010 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_support_v2.8010.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						has_character_flag = segrellion_support_demand_marriage
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.8010.desc_marriage
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						has_character_flag = segrellion_support_demand_favorable_contract
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.8010.desc_contract
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						has_character_flag = segrellion_support_demand_hand
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.8010.desc_hand
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						has_character_flag = segrellion_support_demand_council
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.8010.desc_council
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					var:segrellion_daenerys_support_negotiator = {
+						has_character_flag = segrellion_support_demand_gold
+					}
+				}
+
+				desc = segrellion_daenerys_support_v2.8010.desc_gold
+			}
+
+
+			desc = segrellion_daenerys_support_v2.8010.desc_favor
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = var:segrellion_daenerys_support_negotiator
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.8010.marriage_accept
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				has_character_flag = segrellion_support_demand_marriage
+			}
+
+			segrellion_daenerys_can_accept_support_marriage_trigger = yes
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.marriage_promise_tt
+
+		segrellion_daenerys_store_support_marriage_promise_effect = yes
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+
+	# =====================================================
+	# FAVORABLE CONTRACT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.8010.contract_accept
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				has_character_flag = segrellion_support_demand_favorable_contract
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.contract_promise_tt
+
+		segrellion_daenerys_store_favorable_contract_promise_effect = yes
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 50
+		}
+	}
+
+
+	# =====================================================
+	# HAND OF THE QUEEN
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.8010.hand_accept
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				has_character_flag = segrellion_support_demand_hand
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_hand_already_promised
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.hand_promise_tt
+
+		segrellion_daenerys_store_hand_promise_effect = yes
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# COUNCIL SEAT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.8010.council_accept
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				has_character_flag = segrellion_support_demand_council
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.council_promise_tt
+
+		segrellion_daenerys_store_council_promise_effect = yes
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 55
+		}
+	}
+
+
+	# =====================================================
+	# GOLD
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.8010.gold_accept
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				has_character_flag = segrellion_support_demand_gold
+			}
+
+			gold >= 500
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.gold_payment_tt
+
+		add_gold = -500
+
+		var:segrellion_daenerys_support_negotiator = {
+			add_gold = 500
+		}
+
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 40
+		}
+	}
+
+
+	# =====================================================
+	# FUTURE FAVOR
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.8010.favor_accept
+
+		trigger = {
+
+			var:segrellion_daenerys_support_negotiator = {
+				has_character_flag = segrellion_support_demand_future_favor
+			}
+		}
+
+		custom_tooltip = segrellion_daenerys_support_v2.future_favor_tt
+
+		segrellion_daenerys_store_future_favor_effect = yes
+		segrellion_daenerys_secure_current_support_negotiator_effect = yes
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+			base = 60
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE THEIR PRICE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_daenerys_support_v2.8010.refuse
+
+		custom_tooltip = segrellion_daenerys_support_v2.negotiation_refused_tt
+
+		var:segrellion_daenerys_support_negotiator = {
+
+			add_character_flag = segrellion_support_terms_refused_by_daenerys
+		}
+
+		segrellion_daenerys_clear_support_negotiation_effect = yes
+
+		ai_chance = {
+
+			base = 30
+
+			modifier = {
+
+				add = 70
+
+				var:segrellion_daenerys_support_negotiator = {
+					dynasty = dynasty:dynn_Lannister
+				}
+			}
+		}
+	}
+}
