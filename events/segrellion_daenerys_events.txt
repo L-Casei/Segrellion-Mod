@@ -1392,6 +1392,8 @@ segrellion_daenerys_invasion.0013 = {
 
 		add_character_flag = segrellion_daenerys_pentos_financing_resolved
 
+		remove_character_flag = segrellion_daenerys_pentos_financing_pending
+
 		add_character_flag = segrellion_daenerys_pentos_investment_accepted
 
 		segrellion_daenerys_register_funding_method_effect = yes
@@ -1400,38 +1402,40 @@ segrellion_daenerys_invasion.0013 = {
 		hidden_effect = {
 
 			segrellion_daenerys_try_unknown_friend_effect = yes
-		}
 
-		# =================================================
-		# GERIO'S HIDDEN PRICE
-		#
-		# Lukkio is reserved for Daenerys until Gerio
-		# formally demands the marriage 2-3 years later.
-		# =================================================
 
-		character:Quaranis_32 ?= {
+			# =================================================
+			# GERIO'S HIDDEN PRICE
+			#
+			# This must remain hidden from the player.
+			# =================================================
 
-			if = {
-
-				limit = {
-					is_alive = yes
-					is_married = no
-				}
-
+			character:Quaranis_32 ?= {
 
 				if = {
 
 					limit = {
-						NOT = {
-							has_trait = refusing_marriage
-						}
+
+						is_alive = yes
+						is_married = no
 					}
 
-					add_trait = refusing_marriage
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_trait = refusing_marriage
+							}
+						}
+
+						add_trait = refusing_marriage
+					}
+
+
+					add_character_flag = segrellion_lukkio_reserved_for_daenerys
 				}
-
-
-				add_character_flag = segrellion_lukkio_reserved_for_daenerys
 			}
 		}
 
@@ -1465,6 +1469,7 @@ segrellion_daenerys_invasion.0013 = {
 
 
 		add_character_flag = segrellion_daenerys_pentos_financing_resolved
+		remove_character_flag = segrellion_daenerys_pentos_financing_pending
 		add_character_flag = segrellion_daenerys_pentos_investment_refused
 
 

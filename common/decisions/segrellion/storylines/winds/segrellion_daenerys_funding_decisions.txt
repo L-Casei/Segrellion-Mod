@@ -104,7 +104,10 @@ segrellion_finance_dragon_fleet_decision = {
 
 				root = {
 
-					NOT = {
+					NOR = {
+
+						has_character_flag = segrellion_daenerys_pentos_financing_pending
+
 						has_character_flag = segrellion_daenerys_pentos_financing_resolved
 					}
 				}
@@ -257,26 +260,76 @@ segrellion_finance_dragon_fleet_decision = {
 
 					text = segrellion_funding_choice_blood_available_requirement
 
-					OR = {
+					AND = {
 
-						title:c_claw_isle = {
-							exists = holder
-						}
+						var:segrellion_daenerys_fleet_shortfall > 0
 
-						title:c_driftmark = {
-							exists = holder
-						}
+						OR = {
 
-						character:Segrellion_43 ?= {
-							is_alive = yes
-							is_landed = yes
-						}
+							AND = {
 
-						character:Segrellion_60 ?= {
+								NOT = {
+									has_character_flag = segrellion_daenerys_asked_celtigar_for_funding
+								}
 
-							is_alive = yes
+								title:c_claw_isle = {
+									exists = holder
+								}
+							}
 
-							is_at_location = title:b_castle_farring.title_province
+
+							AND = {
+
+								NOT = {
+									has_character_flag = segrellion_daenerys_asked_monterys_for_funding
+								}
+
+								title:c_driftmark = {
+
+									exists = holder
+
+									holder = {
+
+										NOT = {
+											this = character:Velaryon_5
+										}
+									}
+								}
+							}
+
+
+							NOT = {
+								has_character_flag = segrellion_daenerys_asked_scales_for_funding
+							}
+
+
+							AND = {
+
+								NOT = {
+									has_character_flag = segrellion_daenerys_asked_hugh_for_funding
+								}
+
+								character:Segrellion_43 ?= {
+
+									is_alive = yes
+									is_landed = yes
+								}
+							}
+
+
+							AND = {
+
+								NOT = {
+									has_character_flag = segrellion_daenerys_asked_daemon_for_funding
+								}
+
+								character:Segrellion_60 ?= {
+
+									is_alive = yes
+
+									is_at_location = title:b_castle_farring.title_province
+								}
+							}
 						}
 					}
 				}
@@ -567,6 +620,8 @@ segrellion_finance_dragon_fleet_decision = {
 					scope:segrellion_funding_choice_prince = yes
 				}
 
+				add_character_flag = segrellion_daenerys_pentos_financing_pending
+
 				trigger_event = {
 					id = segrellion_daenerys_invasion.0013
 					days = { 10 20 }
@@ -608,11 +663,9 @@ segrellion_finance_dragon_fleet_decision = {
 
 				add_character_flag = segrellion_daenerys_blood_funding_route_opened
 
-				segrellion_daenerys_register_funding_method_effect = yes
-
 				trigger_event = {
 					id = segrellion_daenerys_funding.0300
-					days = { 20 30 }
+					days = { 5 10 }
 				}
 			}
 
