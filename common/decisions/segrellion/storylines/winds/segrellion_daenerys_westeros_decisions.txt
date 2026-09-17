@@ -105,14 +105,7 @@ segrellion_daenerys_gather_support_decision = {
 			is_shown = {
 
 				root = {
-
-					NOT = {
-						has_character_flag = segrellion_daenerys_support_north_approached
-					}
-				}
-
-				title:e_the_north.holder ?= {
-					is_alive = yes
+					segrellion_daenerys_north_support_shown_trigger = yes
 				}
 			}
 
@@ -124,7 +117,29 @@ segrellion_daenerys_gather_support_decision = {
 					text = segrellion_daenerys_support_north_requires_jon
 
 					root = {
-						segrellion_daenerys_north_support_available_trigger = yes
+
+						title:e_the_north.holder ?= {
+
+							is_alive = yes
+
+							segrellion_is_current_jon_trigger = yes
+						}
+					}
+				}
+
+
+				custom_description = {
+
+					text = segrellion_daenerys_support_north_council_pending
+
+					root = {
+
+						title:e_the_north.holder ?= {
+
+							NOT = {
+								has_character_flag = segrellion_jon_winterfell_council_called
+							}
+						}
 					}
 				}
 			}
