@@ -1,0 +1,270 @@
+# =========================================================
+# DAENERYS TARGARYEN
+# THE QUEEN'S PEACE
+#
+# Visible Situation representing the political condition
+# of the realm after Daenerys takes the Iron Throne.
+# =========================================================
+
+segrellion_daenerys_pacification = {
+
+	is_unique = yes
+
+	gui_window_name = "window_situation"
+
+	gui_participation_window_name = "window_situation_participation"
+
+	situation_group_type = major
+
+	sort_order = 100
+
+	map_mode = participant_groups
+
+
+	icon = {
+
+		trigger = {
+			always = yes
+		}
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	# =====================================================
+	# REGION
+	#
+	# Populated dynamically from Daenerys' realm when
+	# the Situation begins and during monthly refreshes.
+	# =====================================================
+
+	sub_regions = {
+
+		the_queens_realm = {
+
+			icon = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+
+			map_color = {
+				0.20
+				0.24
+				0.35
+			}
+		}
+	}
+
+
+	# =====================================================
+	# PARTICIPANT GROUPS
+	#
+	# ORDER MATTERS:
+	# first valid group wins.
+	# =====================================================
+
+	participant_groups = {
+
+		# =================================================
+		# THE CROWN
+		# =================================================
+
+		the_crown = {
+
+			icon = "gfx/interface/icons/flat_icons/prestige.dds"
+
+			auto_add_rulers = yes
+
+			auto_add_landless_rulers = no
+
+			require_realm_in_sub_region = yes
+
+
+			is_character_valid = {
+
+				this = character:Targaryen_9
+
+				is_alive = yes
+			}
+
+
+			map_color = {
+				0.35
+				0.20
+				0.55
+			}
+		}
+
+
+		# =================================================
+		# HOSTILE LORDS
+		# =================================================
+
+		hostile_lords = {
+
+			icon = "gfx/interface/icons/flat_icons/vassal.dds"
+
+			auto_add_rulers = yes
+
+			auto_add_landless_rulers = no
+
+			require_realm_in_sub_region = yes
+
+
+			is_character_valid = {
+
+				is_landed = yes
+
+				this != character:Targaryen_9
+
+
+				OR = {
+
+					has_character_flag = segrellion_opposed_daenerys_invasion
+
+					has_character_flag = segrellion_wronged_by_daenerys
+
+					has_character_flag = segrellion_house_punished_by_daenerys
+
+					has_character_flag = segrellion_refused_daenerys_post_throne_submission
+				}
+			}
+
+
+			map_color = {
+				0.65
+				0.12
+				0.12
+			}
+		}
+
+
+		# =================================================
+		# LOYAL LORDS
+		# =================================================
+
+		loyal_lords = {
+
+			icon = "gfx/interface/icons/flat_icons/vassal.dds"
+
+			auto_add_rulers = yes
+
+			auto_add_landless_rulers = no
+
+			require_realm_in_sub_region = yes
+
+
+			is_character_valid = {
+
+				is_landed = yes
+
+				this != character:Targaryen_9
+
+
+				has_character_flag = segrellion_supported_daenerys_invasion
+			}
+
+
+			map_color = {
+				0.18
+				0.45
+				0.65
+			}
+		}
+
+
+		# =================================================
+		# UNSETTLED / RECONCILED LORDS
+		#
+		# Fallback for landed rulers in the affected realm
+		# who are neither marked hostile nor loyal.
+		# =================================================
+
+		unsettled_lords = {
+
+			icon = "gfx/interface/icons/flat_icons/vassal.dds"
+
+			auto_add_rulers = yes
+
+			auto_add_landless_rulers = no
+
+			require_realm_in_sub_region = yes
+
+
+			is_character_valid = {
+
+				is_landed = yes
+
+				this != character:Targaryen_9
+			}
+
+
+			map_color = {
+				0.50
+				0.50
+				0.50
+			}
+		}
+	}
+
+
+	# =====================================================
+	# PHASE
+	#
+	# V1 uses one stable phase.
+	# Royal Tyranny remains the dynamic 0-100 mechanic.
+	#
+	# We can later split this into:
+	# - Reconciliation
+	# - Uneasy Peace
+	# - Growing Fear
+	# - Realm on the Brink
+	# - Open Rebellion
+	# =====================================================
+
+	start_phase = consolidation
+
+
+	phases = {
+
+		consolidation = {
+
+			icon = "gfx/interface/icons/flat_icons/prestige.dds"
+		}
+	}
+
+
+	# =====================================================
+	# MONTHLY REFRESH / FAILSAFE
+	# =====================================================
+
+	on_monthly = {
+
+		if = {
+
+			limit = {
+
+				character:Targaryen_9 ?= {
+
+					is_alive = yes
+
+					has_title = title:h_the_iron_throne
+
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_lost_tyranny_revolt
+					}
+				}
+			}
+
+
+			character:Targaryen_9 = {
+
+				segrellion_daenerys_ensure_pacification_situation_effect = yes
+			}
+		}
+
+
+		else = {
+
+			end_situation = yes
+		}
+	}
+}

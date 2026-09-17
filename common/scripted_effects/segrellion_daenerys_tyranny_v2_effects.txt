@@ -56,6 +56,105 @@ segrellion_daenerys_ensure_pacification_story_effect = {
 	segrellion_daenerys_sync_pacification_story_effect = yes
 }
 
+# =========================================================
+# ENSURE THE QUEEN'S PEACE SITUATION EXISTS
+#
+# ROOT = DAENERYS
+#
+# This is the visible player-facing Situation.
+# The hidden Story Cycle remains responsible for backend
+# continuity and save-state tracking.
+# =========================================================
+
+segrellion_daenerys_ensure_pacification_situation_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			has_character_flag = segrellion_daenerys_post_throne_started
+
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_lost_tyranny_revolt
+			}
+
+
+			NOT = {
+				exists = situation:segrellion_daenerys_pacification
+			}
+		}
+
+
+		start_situation = {
+
+			type = segrellion_daenerys_pacification
+
+			save_scope_as = segrellion_daenerys_pacification_situation
+		}
+
+
+		scope:segrellion_daenerys_pacification_situation ?= {
+
+			set_situation_center_province = title:c_kings_landing.title_province
+		}
+	}
+
+
+	# =====================================================
+	# REFRESH SITUATION REGION
+	#
+	# Add every county currently belonging to Daenerys'
+	# realm to the Situation.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			exists = situation:segrellion_daenerys_pacification
+		}
+
+
+		every_realm_county = {
+
+			save_temporary_scope_as = segrellion_daenerys_pacification_county
+
+
+			situation:segrellion_daenerys_pacification = {
+
+				situation_sub_region:the_queens_realm = {
+
+					add_dejure_title_to_sub_region = scope:segrellion_daenerys_pacification_county
+				}
+			}
+		}
+
+
+		# =================================================
+		# COPY ROYAL TYRANNY INTO THE SITUATION
+		#
+		# Useful for the Situation UI and future expansion.
+		# =================================================
+
+		situation:segrellion_daenerys_pacification = {
+
+			set_variable = {
+
+				name = segrellion_daenerys_pacification_tyranny
+
+				value = root.var:segrellion_daenerys_pacification_tyranny
+			}
+		}
+	}
+}
+
 
 # =========================================================
 # SYNC CHARACTER VARIABLE -> STORY BAR
@@ -76,6 +175,30 @@ segrellion_daenerys_sync_pacification_story_effect = {
 			name = segrellion_daenerys_pacification_tyranny
 
 			value = root.var:segrellion_daenerys_pacification_tyranny
+		}
+	}
+
+
+	# =====================================================
+	# KEEP THE VISIBLE SITUATION SYNCHRONIZED TOO
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			exists = situation:segrellion_daenerys_pacification
+		}
+
+
+		situation:segrellion_daenerys_pacification = {
+
+			set_variable = {
+
+				name = segrellion_daenerys_pacification_tyranny
+
+				value = root.var:segrellion_daenerys_pacification_tyranny
+			}
 		}
 	}
 }
