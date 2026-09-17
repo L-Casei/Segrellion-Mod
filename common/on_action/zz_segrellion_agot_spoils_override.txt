@@ -1,0 +1,287 @@
+# =========================================================
+# AGOT WAR SPOILS OVERRIDE
+#
+# SEGRELLION MOD
+#
+# CK3AGOT normally schedules:
+#
+#   agot_war.0001 - To the Victors Belong the Spoils
+#
+# for the three largest contributors to a successful
+# empire-tier claimant war.
+#
+# Daenerys has her own Gather Support commitments and
+# post-throne regional settlement system, so those generic
+# royal-boon requests must not fire after her conquest of
+# the Iron Throne.
+#
+# All other AGOT wars preserve the original behavior.
+# =========================================================
+
+agot_spoils_demands = {
+
+	trigger = {
+
+		has_multiple_players = no
+
+
+		# =================================================
+		# DAENERYS' IRON THRONE CONQUEST
+		#
+		# Her supporters are handled by the custom
+		# post-throne settlement chain instead.
+		# =================================================
+
+		NOT = {
+
+			AND = {
+
+				scope:war ?= {
+
+					casus_belli = {
+
+						any_target_title = {
+
+							this = title:h_the_iron_throne
+						}
+					}
+				}
+
+
+				OR = {
+
+					scope:attacker = character:Targaryen_9
+
+
+					scope:claimant ?= {
+
+						this = character:Targaryen_9
+					}
+
+
+					scope:war ?= {
+
+						using_cb = segrellion_daenerys_iron_throne_cb
+					}
+				}
+			}
+		}
+	}
+
+
+	effect = {
+
+		scope:attacker = {
+
+			save_scope_as = winner
+		}
+
+
+		scope:defender = {
+
+			save_scope_as = loser
+		}
+
+
+		if = {
+
+			limit = {
+
+				scope:war = {
+
+					any_in_list = {
+
+						list = target_titles
+
+						tier >= tier_empire
+
+						save_temporary_scope_as = temp_scope
+					}
+
+
+					scope:claimant ?= {
+
+						has_title = scope:temp_scope
+					}
+				}
+			}
+
+
+			scope:claimant = {
+
+				save_scope_as = attacker
+			}
+
+
+			scope:war = {
+
+				# =================================================
+				# FIRST CONTRIBUTOR
+				# =================================================
+
+				ordered_war_attacker = {
+
+					limit = {
+
+						this != scope:attacker
+
+
+						save_temporary_scope_as = temp_scope
+
+
+						prev = {
+
+							war_contribution = {
+
+								target = scope:temp_scope
+
+								value >= 10
+							}
+						}
+					}
+
+
+					order_by = {
+
+						save_temporary_scope_as = char_temp
+
+						add = "scope:war.war_contribution(scope:char_temp)"
+					}
+
+
+					position = 0
+
+
+					save_scope_as = whiner_1
+
+
+					scope:whiner_1 = {
+
+						trigger_event = {
+
+							id = agot_war.0001
+
+							days = 8
+						}
+					}
+				}
+
+
+				# =================================================
+				# SECOND CONTRIBUTOR
+				# =================================================
+
+				ordered_war_attacker = {
+
+					limit = {
+
+						this != scope:attacker
+
+						exists = scope:whiner_1
+
+						this != scope:whiner_1
+
+
+						save_temporary_scope_as = temp_scope
+
+
+						prev = {
+
+							war_contribution = {
+
+								target = scope:temp_scope
+
+								value >= 10
+							}
+						}
+					}
+
+
+					order_by = {
+
+						save_temporary_scope_as = char_temp
+
+						add = "scope:war.war_contribution(scope:char_temp)"
+					}
+
+
+					position = 1
+
+
+					save_scope_as = whiner_2
+
+
+					scope:whiner_2 = {
+
+						trigger_event = {
+
+							id = agot_war.0001
+
+							days = 9
+						}
+					}
+				}
+
+
+				# =================================================
+				# THIRD CONTRIBUTOR
+				# =================================================
+
+				ordered_war_attacker = {
+
+					limit = {
+
+						this != scope:attacker
+
+						exists = scope:whiner_1
+
+						this != scope:whiner_1
+
+						exists = scope:whiner_2
+
+						this != scope:whiner_2
+
+
+						save_temporary_scope_as = temp_scope
+
+
+						prev = {
+
+							war_contribution = {
+
+								target = scope:temp_scope
+
+								value >= 10
+							}
+						}
+					}
+
+
+					order_by = {
+
+						save_temporary_scope_as = char_temp
+
+						add = "scope:war.war_contribution(scope:char_temp)"
+					}
+
+
+					position = 2
+
+
+					save_scope_as = whiner_3
+
+
+					scope:whiner_3 = {
+
+						trigger_event = {
+
+							id = agot_war.0001
+
+							days = 10
+						}
+					}
+				}
+			}
+		}
+	}
+}
