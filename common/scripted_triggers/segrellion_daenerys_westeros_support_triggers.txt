@@ -48,8 +48,28 @@ segrellion_daenerys_reach_support_shown_trigger = {
 		has_character_flag = segrellion_daenerys_support_reach_approached
 	}
 
-	title:k_the_reach.holder ?= {
-		is_alive = yes
+
+	OR = {
+
+		# Normal case: the Reach still has a living ruler.
+
+		title:k_the_reach.holder ?= {
+			is_alive = yes
+		}
+
+
+		# Even if the Reach title is in an unusual state,
+		# keep the option visible when Aegon has married Margaery.
+		# It will then be shown as blocked rather than disappearing.
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			any_spouse = {
+				this = character:Tyrell_14
+			}
+		}
 	}
 }
 
@@ -57,6 +77,7 @@ segrellion_daenerys_reach_support_shown_trigger = {
 segrellion_daenerys_reach_support_available_trigger = {
 
 	segrellion_daenerys_reach_support_shown_trigger = yes
+
 
 	# Margaery is Aegon's queen.
 	# The option remains visible, but cannot be selected.
