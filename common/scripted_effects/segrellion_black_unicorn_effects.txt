@@ -2625,28 +2625,37 @@ segrellion_black_unicorn_abandon_current_wife_effect = {
 				add_character_flag = segrellion_major_lady_abandoned_by_daemon
 
 
-				# Mark her actual House.
+				# Mark her actual House, except Daenerys. Her retaliation
+				# is handled by the dedicated dragonfire escalation
+				# rather than by making House Targaryen auto-hostile.
 
-				house ?= {
+				if = {
 
-					set_variable = {
-						name = segrellion_house_betrayed_by_daemon_for_visenya
-						value = yes
+					limit = {
+						this != character:Targaryen_9
 					}
 
+					house ?= {
 
-					every_house_member = {
+						set_variable = {
+							name = segrellion_house_betrayed_by_daemon_for_visenya
+							value = yes
+						}
 
-						add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
+
+						every_house_member = {
+
+							add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
 
 
-						if = {
+							if = {
 
-							limit = {
-								is_allied_to = character:Segrellion_60
+								limit = {
+									is_allied_to = character:Segrellion_60
+								}
+
+								break_alliance = character:Segrellion_60
 							}
-
-							break_alliance = character:Segrellion_60
 						}
 					}
 				}
@@ -2663,40 +2672,12 @@ segrellion_black_unicorn_abandon_current_wife_effect = {
 		# =================================================
 
 
-		# DAENERYS -> HOUSE TARGARYEN
-
-		if = {
-
-			limit = {
-				scope:segrellion_black_unicorn_abandoned_wife = character:Targaryen_9
-			}
-
-			character:Targaryen_9.house ?= {
-
-				set_variable = {
-					name = segrellion_house_betrayed_by_daemon_for_visenya
-					value = yes
-				}
-
-				every_house_member = {
-
-					add_character_flag = segrellion_house_betrayed_by_daemon_for_visenya
-
-					if = {
-						limit = {
-							is_allied_to = character:Segrellion_60
-						}
-
-						break_alliance = character:Segrellion_60
-					}
-				}
-			}
-		}
-
+		# DAENERYS IS EXCLUDED HERE.
+		# Her dedicated negative branch handles retaliation.
 
 		# MYA STONE -> HOUSE BARATHEON
 
-		else_if = {
+		if = {
 
 			limit = {
 				scope:segrellion_black_unicorn_abandoned_wife = character:Baratheon_10
