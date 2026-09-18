@@ -1,0 +1,1435 @@
+namespace = segrellion_joffrey_stormlands
+
+
+# =========================================================
+# 0001 - THE QUESTION OF AN HEIR
+#
+# Root = Joffrey Vladwyn
+#
+# One of the new Stormlords advises Joffrey that the fastest
+# way to stabilize his unexpected rule is marriage and heirs.
+# =========================================================
+
+segrellion_joffrey_stormlands.0001 = {
+
+	type = character_event
+
+	title = segrellion_joffrey_stormlands.0001.t
+	desc = segrellion_joffrey_stormlands.0001.desc
+
+	theme = marriage
+
+
+	override_background = {
+
+		reference = council_chamber
+	}
+
+
+	override_icon = {
+
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Vladwyn_5
+
+		is_alive = yes
+
+		is_married = no
+
+		has_title = title:e_the_stormlands
+
+		has_character_flag = segrellion_joffrey_stormlands_marriage_story_active
+
+
+		NOT = {
+			has_character_flag = segrellion_joffrey_stormlands_marriage_story_resolved
+		}
+
+
+		OR = {
+
+			any_vassal = {
+
+				is_alive = yes
+
+				is_adult = yes
+
+				is_imprisoned = no
+			}
+
+
+			any_courtier = {
+
+				is_alive = yes
+
+				is_adult = yes
+
+				is_imprisoned = no
+			}
+		}
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_joffrey_stormlands_marriage_council_scheduled
+
+		add_character_flag = segrellion_joffrey_stormlands_marriage_council_seen
+
+
+		if = {
+
+			limit = {
+
+				any_vassal = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+				}
+			}
+
+
+			random_vassal = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+				}
+
+
+				save_scope_as = segrellion_joffrey_marriage_advisor
+			}
+		}
+
+
+		else = {
+
+			random_courtier = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+				}
+
+
+				save_scope_as = segrellion_joffrey_marriage_advisor
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_joffrey_marriage_advisor
+
+		animation = personality_rational
+	}
+
+
+	# =====================================================
+	# MARGAERY TYRELL
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0001.a
+
+		custom_tooltip = segrellion_joffrey_stormlands.0001.a.tt
+
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_joffrey_margaery_offer_failed
+			}
+
+
+			character:Tyrell_14 ?= {
+
+				is_alive = yes
+
+				is_adult = yes
+
+				is_married = no
+
+
+				father ?= {
+
+					is_alive = yes
+				}
+			}
+
+
+			# Explicit Aegon/Margaery game rules retain priority.
+
+			NOR = {
+
+				has_game_rule = segrellion_young_griff_marriage_margaery
+
+				has_game_rule = segrellion_young_griff_marriage_two_wives
+			}
+		}
+
+
+		add_character_flag = segrellion_joffrey_margaery_offer_pending
+
+
+		hidden_effect = {
+
+			character:Tyrell_14 = {
+
+				father = {
+
+					trigger_event = {
+
+						id = segrellion_joffrey_stormlands.0100
+
+						days = { 7 14 }
+					}
+				}
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 45
+		}
+	}
+
+
+	# =====================================================
+	# MYA STONE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0001.b
+
+		custom_tooltip = segrellion_joffrey_stormlands.0001.b.tt
+
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_joffrey_mya_offer_refused
+			}
+
+
+			character:Baratheon_10 ?= {
+
+				is_alive = yes
+
+				is_adult = yes
+
+				is_married = no
+			}
+
+
+			title:e_the_vale.holder ?= {
+
+				is_alive = yes
+			}
+
+
+			# Do not steal Mya from Daemon's existing pact.
+
+			NOT = {
+
+				character:Segrellion_60 ?= {
+
+					has_character_flag = segrellion_mya_marriage_deferred
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_joffrey_mya_offer_pending
+
+
+		title:e_the_vale.holder = {
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0200
+
+				days = { 7 14 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 60
+		}
+	}
+
+
+	# =====================================================
+	# ALAYNE STONE / SANSA STARK
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0001.c
+
+		custom_tooltip = segrellion_joffrey_stormlands.0001.c.tt
+
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_joffrey_alayne_offer_refused
+			}
+
+
+			character:Baelish_2 ?= {
+
+				is_alive = yes
+
+				is_imprisoned = no
+			}
+
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				age >= 16
+
+				is_married = no
+
+
+				NOT = {
+					has_character_flag = segrellion_sansa_identity_revealed
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_sansa_sent_to_jon
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_daemon_sansa_dynastic_pact
+				}
+			}
+
+
+			NOT = {
+
+				character:Segrellion_60 ?= {
+
+					OR = {
+
+						has_character_flag = segrellion_yohn_approved_sansa_marriage
+
+						has_character_flag = segrellion_sansa_marriage_proposal_sent
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_joffrey_alayne_offer_pending
+
+
+		character:Baelish_2 = {
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0300
+
+				days = { 7 14 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 30
+		}
+	}
+
+
+	# =====================================================
+	# WAIT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0001.d
+
+		custom_tooltip = segrellion_joffrey_stormlands.0001.d.tt
+
+
+		add_character_flag = segrellion_joffrey_waiting_for_right_woman
+
+
+		segrellion_finish_joffrey_stormlands_marriage_story_effect = yes
+
+
+		ai_chance = {
+
+			base = 5
+		}
+	}
+}
+
+
+# =========================================================
+# MARGAERY TYRELL
+# =========================================================
+
+
+# =========================================================
+# 0100 - A PROPOSAL FROM STORM'S END
+#
+# Root = Margaery's father
+# =========================================================
+
+segrellion_joffrey_stormlands.0100 = {
+
+	type = letter_event
+
+	sender = character:Vladwyn_5
+
+	opening = segrellion_joffrey_stormlands.0100.opening
+
+	title = segrellion_joffrey_stormlands.0100.t
+	desc = segrellion_joffrey_stormlands.0100.desc
+
+	theme = marriage
+
+
+	trigger = {
+
+		is_alive = yes
+
+
+		character:Vladwyn_5 ?= {
+
+			is_alive = yes
+
+			is_married = no
+
+			has_title = title:e_the_stormlands
+
+			has_character_flag = segrellion_joffrey_margaery_offer_pending
+		}
+
+
+		character:Tyrell_14 ?= {
+
+			is_alive = yes
+
+			is_married = no
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Tyrell_14
+
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# LORD TYRELL ACCEPTS
+	# 100%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0100.a
+
+
+		character:Vladwyn_5 = {
+
+			add_character_flag = segrellion_joffrey_margaery_offer_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0110
+
+				days = { 7 14 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0110 - HIGHGARDEN ACCEPTS
+#
+# Root = Joffrey
+# =========================================================
+
+segrellion_joffrey_stormlands.0110 = {
+
+	type = letter_event
+
+	sender = title:k_the_reach.holder
+
+	opening = segrellion_joffrey_stormlands.0110.opening
+
+	title = segrellion_joffrey_stormlands.0110.t
+	desc = segrellion_joffrey_stormlands.0110.desc
+
+	theme = marriage
+
+
+	trigger = {
+
+		this = character:Vladwyn_5
+
+		is_alive = yes
+
+		has_character_flag = segrellion_joffrey_margaery_offer_pending
+
+		has_character_flag = segrellion_joffrey_margaery_offer_accepted
+	}
+
+
+	# =====================================================
+	# MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0110.a
+
+
+		trigger = {
+
+			is_married = no
+
+
+			character:Tyrell_14 ?= {
+
+				is_alive = yes
+
+				is_married = no
+			}
+		}
+
+
+		character:Tyrell_14 = {
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+
+
+		marry = character:Tyrell_14
+
+
+		add_character_flag = segrellion_joffrey_married_margaery
+
+
+		character:Tyrell_14 = {
+
+			add_character_flag = segrellion_margaery_married_joffrey_vladwyn
+		}
+
+
+		segrellion_finish_joffrey_stormlands_marriage_story_effect = yes
+	}
+
+
+	# =====================================================
+	# THE MATCH BECAME IMPOSSIBLE DURING THE EXCHANGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0110.b
+
+
+		trigger = {
+
+			OR = {
+
+				is_married = yes
+
+
+				character:Tyrell_14 = {
+
+					OR = {
+
+						is_alive = no
+
+						is_married = yes
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_joffrey_margaery_offer_failed
+
+
+		segrellion_reopen_joffrey_stormlands_marriage_council_effect = yes
+	}
+}
+
+
+# =========================================================
+# MYA STONE
+# =========================================================
+
+
+# =========================================================
+# 0200 - A RAVEN TO THE VALE
+#
+# Root = current Lord of the Vale
+# =========================================================
+
+segrellion_joffrey_stormlands.0200 = {
+
+	type = letter_event
+
+	sender = character:Vladwyn_5
+
+	opening = segrellion_joffrey_stormlands.0200.opening
+
+	title = segrellion_joffrey_stormlands.0200.t
+	desc = segrellion_joffrey_stormlands.0200.desc
+
+	theme = marriage
+
+
+	trigger = {
+
+		is_alive = yes
+
+
+		character:Vladwyn_5 ?= {
+
+			is_alive = yes
+
+			is_married = no
+
+			has_title = title:e_the_stormlands
+
+			has_character_flag = segrellion_joffrey_mya_offer_pending
+		}
+
+
+		character:Baratheon_10 ?= {
+
+			is_alive = yes
+
+			is_married = no
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_10
+
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	#
+	# Base = 80
+	#
+	# Mya's opinion and attraction alter the final chance.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0200.a
+
+
+		ai_chance = {
+
+			base = 80
+
+
+			modifier = {
+
+				add = 10
+
+				character:Baratheon_10 = {
+
+					opinion = {
+
+						target = character:Vladwyn_5
+
+						value >= 20
+					}
+				}
+			}
+
+
+			modifier = {
+
+				add = 25
+
+				character:Baratheon_10 = {
+
+					opinion = {
+
+						target = character:Vladwyn_5
+
+						value >= 50
+					}
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.50
+
+				character:Baratheon_10 = {
+
+					opinion = {
+
+						target = character:Vladwyn_5
+
+						value <= -25
+					}
+				}
+			}
+
+
+			modifier = {
+
+				add = 15
+
+				character:Baratheon_10 = {
+
+					is_attracted_to_gender_of = character:Vladwyn_5
+				}
+			}
+
+
+			modifier = {
+
+				add = 10
+
+				character:Vladwyn_5 = {
+
+					has_trait = comely
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				character:Vladwyn_5 = {
+
+					has_trait = handsome
+				}
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				character:Vladwyn_5 = {
+
+					has_trait = beautiful
+				}
+			}
+		}
+
+
+		character:Vladwyn_5 = {
+
+			add_character_flag = segrellion_joffrey_mya_offer_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0210
+
+				days = { 7 14 }
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	#
+	# Base = 20
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0200.b
+
+
+		ai_chance = {
+
+			base = 20
+
+
+			modifier = {
+
+				add = 30
+
+				character:Baratheon_10 = {
+
+					opinion = {
+
+						target = character:Vladwyn_5
+
+						value <= -25
+					}
+				}
+			}
+
+
+			modifier = {
+
+				add = 40
+
+				character:Baratheon_10 = {
+
+					opinion = {
+
+						target = character:Vladwyn_5
+
+						value <= -50
+					}
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.50
+
+				character:Baratheon_10 = {
+
+					opinion = {
+
+						target = character:Vladwyn_5
+
+						value >= 50
+					}
+				}
+			}
+
+
+			modifier = {
+
+				factor = 0.65
+
+				character:Baratheon_10 = {
+
+					is_attracted_to_gender_of = character:Vladwyn_5
+				}
+			}
+		}
+
+
+		character:Vladwyn_5 = {
+
+			add_character_flag = segrellion_joffrey_mya_offer_refused
+
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0220
+
+				days = { 7 14 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0210 - THE VALE CONSENTS
+# =========================================================
+
+segrellion_joffrey_stormlands.0210 = {
+
+	type = letter_event
+
+	sender = title:e_the_vale.holder
+
+	opening = segrellion_joffrey_stormlands.0210.opening
+
+	title = segrellion_joffrey_stormlands.0210.t
+	desc = segrellion_joffrey_stormlands.0210.desc
+
+	theme = marriage
+
+
+	trigger = {
+
+		this = character:Vladwyn_5
+
+		is_alive = yes
+
+		has_character_flag = segrellion_joffrey_mya_offer_pending
+
+		has_character_flag = segrellion_joffrey_mya_offer_accepted
+	}
+
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0210.a
+
+
+		trigger = {
+
+			is_married = no
+
+
+			character:Baratheon_10 ?= {
+
+				is_alive = yes
+
+				is_married = no
+			}
+		}
+
+
+		character:Baratheon_10 = {
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+
+
+		marry = character:Baratheon_10
+
+
+		add_character_flag = segrellion_joffrey_married_mya_stone
+
+
+		character:Baratheon_10 = {
+
+			add_character_flag = segrellion_mya_married_joffrey_vladwyn
+		}
+
+
+		segrellion_finish_joffrey_stormlands_marriage_story_effect = yes
+	}
+
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0210.b
+
+
+		trigger = {
+
+			OR = {
+
+				is_married = yes
+
+
+				character:Baratheon_10 = {
+
+					OR = {
+
+						is_alive = no
+
+						is_married = yes
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_joffrey_mya_offer_refused
+
+
+		segrellion_reopen_joffrey_stormlands_marriage_council_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0220 - THE VALE REFUSES
+# =========================================================
+
+segrellion_joffrey_stormlands.0220 = {
+
+	type = letter_event
+
+	sender = title:e_the_vale.holder
+
+	opening = segrellion_joffrey_stormlands.0220.opening
+
+	title = segrellion_joffrey_stormlands.0220.t
+	desc = segrellion_joffrey_stormlands.0220.desc
+
+	theme = diplomacy
+
+
+	trigger = {
+
+		this = character:Vladwyn_5
+
+		is_alive = yes
+
+		has_character_flag = segrellion_joffrey_mya_offer_pending
+
+		has_character_flag = segrellion_joffrey_mya_offer_refused
+	}
+
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0220.a
+
+
+		segrellion_reopen_joffrey_stormlands_marriage_council_effect = yes
+	}
+}
+
+
+# =========================================================
+# ALAYNE STONE / SANSA STARK
+# =========================================================
+
+
+# =========================================================
+# 0300 - BAELISH RECEIVES THE PROPOSAL
+# =========================================================
+
+segrellion_joffrey_stormlands.0300 = {
+
+	type = letter_event
+
+	sender = character:Vladwyn_5
+
+	opening = segrellion_joffrey_stormlands.0300.opening
+
+	title = segrellion_joffrey_stormlands.0300.t
+	desc = segrellion_joffrey_stormlands.0300.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:Baelish_2
+
+		is_alive = yes
+
+
+		character:Vladwyn_5 ?= {
+
+			is_alive = yes
+
+			is_married = no
+
+			has_title = title:e_the_stormlands
+
+			has_character_flag = segrellion_joffrey_alayne_offer_pending
+		}
+
+
+		character:Stark_Dummy_8 ?= {
+
+			is_alive = yes
+
+			is_married = no
+
+
+			NOT = {
+				has_character_flag = segrellion_sansa_identity_revealed
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = scheming
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_8
+
+		animation = personality_content
+	}
+
+
+	# =====================================================
+	# ACCEPT
+	# 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0300.a
+
+
+		add_character_flag = segrellion_baelish_joffrey_marriage_bargain
+
+
+		character:Vladwyn_5 = {
+
+			add_character_flag = segrellion_joffrey_alayne_offer_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0310
+
+				days = { 7 14 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0300.b
+
+
+		character:Vladwyn_5 = {
+
+			add_character_flag = segrellion_joffrey_alayne_offer_refused
+
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0320
+
+				days = { 7 14 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0310 - BAELISH'S PRICE
+# =========================================================
+
+segrellion_joffrey_stormlands.0310 = {
+
+	type = letter_event
+
+	sender = character:Baelish_2
+
+	opening = segrellion_joffrey_stormlands.0310.opening
+
+	title = segrellion_joffrey_stormlands.0310.t
+	desc = segrellion_joffrey_stormlands.0310.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:Vladwyn_5
+
+		is_alive = yes
+
+		has_character_flag = segrellion_joffrey_alayne_offer_pending
+
+		has_character_flag = segrellion_joffrey_alayne_offer_accepted
+	}
+
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0310.a
+
+
+		trigger = {
+
+			is_married = no
+
+
+			character:Baelish_2 ?= {
+
+				is_alive = yes
+			}
+
+
+			character:Stark_Dummy_8 ?= {
+
+				is_alive = yes
+
+				is_married = no
+
+
+				NOT = {
+					has_character_flag = segrellion_sansa_identity_revealed
+				}
+			}
+		}
+
+
+		# =================================================
+		# BAELISH'S PRICE
+		# =================================================
+
+		character:Baelish_2 = {
+
+			if = {
+
+				limit = {
+
+					can_add_hook = {
+
+						target = character:Vladwyn_5
+
+						type = favor_hook
+					}
+				}
+
+
+				add_hook = {
+
+					target = character:Vladwyn_5
+
+					type = favor_hook
+				}
+			}
+
+
+			add_character_flag = segrellion_baelish_holds_joffrey_favor
+		}
+
+
+		add_character_flag = segrellion_joffrey_owes_baelish_favor
+
+
+		# =================================================
+		# SANSA REMAINS PUBLICLY ALAYNE
+		# =================================================
+
+		character:Stark_Dummy_8 = {
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+
+
+			if = {
+
+				limit = {
+					is_ruler = no
+				}
+
+				set_employer = character:Vladwyn_5
+			}
+
+
+			set_location = character:Vladwyn_5.capital_province
+
+
+			add_character_flag = segrellion_sansa_married_joffrey_as_alayne
+
+			add_character_flag = segrellion_sansa_baelish_joffrey_story_active
+		}
+
+
+		marry = character:Stark_Dummy_8
+
+
+		# =================================================
+		# BAELISH / JOFFREY POLITICAL ALLIANCE
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_allied_to = character:Baelish_2
+				}
+			}
+
+
+			create_alliance = character:Baelish_2
+		}
+
+
+		add_character_flag = segrellion_joffrey_married_alayne
+
+		add_character_flag = segrellion_joffrey_sansa_baelish_conflict_pending
+
+
+		segrellion_finish_joffrey_stormlands_marriage_story_effect = yes
+	}
+
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0310.b
+
+
+		trigger = {
+
+			OR = {
+
+				is_married = yes
+
+
+				character:Baelish_2 = {
+
+					is_alive = no
+				}
+
+
+				character:Stark_Dummy_8 = {
+
+					OR = {
+
+						is_alive = no
+
+						is_married = yes
+
+						has_character_flag = segrellion_sansa_identity_revealed
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_joffrey_alayne_offer_refused
+
+
+		segrellion_reopen_joffrey_stormlands_marriage_council_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0320 - BAELISH REFUSES
+# =========================================================
+
+segrellion_joffrey_stormlands.0320 = {
+
+	type = letter_event
+
+	sender = character:Baelish_2
+
+	opening = segrellion_joffrey_stormlands.0320.opening
+
+	title = segrellion_joffrey_stormlands.0320.t
+	desc = segrellion_joffrey_stormlands.0320.desc
+
+	theme = intrigue
+
+
+	trigger = {
+
+		this = character:Vladwyn_5
+
+		is_alive = yes
+
+		has_character_flag = segrellion_joffrey_alayne_offer_pending
+
+		has_character_flag = segrellion_joffrey_alayne_offer_refused
+	}
+
+
+	option = {
+
+		name = segrellion_joffrey_stormlands.0320.a
+
+
+		segrellion_reopen_joffrey_stormlands_marriage_council_effect = yes
+	}
+}

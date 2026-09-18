@@ -1079,6 +1079,12 @@ segrellion_young_griff_start_path_1_throne_war_effect = {
 
 		segrellion_young_griff_open_scripted_war_window_effect = yes
 
+		# =============================================
+		# AUTHORIZE OUR STORY-ONLY CB
+		# =============================================
+
+		add_character_flag = segrellion_young_griff_iron_throne_cb_authorized
+
 
 		# =============================================
 		# START WAR
@@ -1095,6 +1101,7 @@ segrellion_young_griff_start_path_1_throne_war_effect = {
 			target_title = title:h_the_iron_throne
 		}
 
+		remove_character_flag = segrellion_young_griff_iron_throne_cb_authorized
 
 		segrellion_young_griff_apply_scripted_war_lock_effect = yes
 
@@ -2792,6 +2799,17 @@ segrellion_young_griff_schedule_margaery_effect = {
 
 			has_character_flag = segrellion_young_griff_cersei_settlement_resolved
 
+			# Joffrey has just been granted the Stormlands and
+			# is considering Margaery himself.
+
+			NOT = {
+
+				character:Vladwyn_5 ?= {
+
+					has_character_flag = segrellion_joffrey_stormlands_marriage_story_active
+				}
+			}
+
 
 			OR = {
 
@@ -2815,6 +2833,8 @@ segrellion_young_griff_schedule_margaery_effect = {
 			var:segrellion_young_griff_margaery = {
 
 				is_alive = yes
+
+				is_married = no
 			}
 
 

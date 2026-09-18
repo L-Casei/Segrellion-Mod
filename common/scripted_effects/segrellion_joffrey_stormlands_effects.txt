@@ -1,0 +1,160 @@
+# =========================================================
+# JOFFREY VLADWYN
+# LORD OF THE STORMLANDS
+# =========================================================
+
+
+# =========================================================
+# SCHEDULE MARRIAGE COUNCIL
+# =========================================================
+
+segrellion_schedule_joffrey_stormlands_marriage_council_effect = {
+
+	character:Vladwyn_5 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_married = no
+
+				has_title = title:e_the_stormlands
+
+
+				NOT = {
+					has_character_flag = segrellion_joffrey_stormlands_marriage_story_resolved
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_joffrey_stormlands_marriage_council_scheduled
+				}
+			}
+
+
+			add_character_flag = segrellion_joffrey_stormlands_marriage_story_active
+
+
+			add_character_flag = {
+
+				flag = segrellion_joffrey_stormlands_marriage_council_scheduled
+
+				days = 30
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0001
+
+				days = { 5 10 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# FINISH MARRIAGE STORY
+#
+# Once Joffrey has married or deliberately decided to wait,
+# Aegon's own post-conquest Margaery storyline may continue.
+# =========================================================
+
+segrellion_finish_joffrey_stormlands_marriage_story_effect = {
+
+	character:Vladwyn_5 ?= {
+
+		remove_character_flag = segrellion_joffrey_stormlands_marriage_story_active
+
+		remove_character_flag = segrellion_joffrey_stormlands_marriage_council_scheduled
+
+		remove_character_flag = segrellion_joffrey_margaery_offer_pending
+
+		remove_character_flag = segrellion_joffrey_mya_offer_pending
+
+		remove_character_flag = segrellion_joffrey_alayne_offer_pending
+
+
+		add_character_flag = segrellion_joffrey_stormlands_marriage_story_resolved
+	}
+
+
+	character:IAF_Young_Griff_1 ?= {
+
+		segrellion_young_griff_schedule_margaery_effect = yes
+	}
+}
+
+
+# =========================================================
+# REOPEN THE MARRIAGE COUNCIL
+#
+# Used when Mya / Baelish refuse the offer, or a proposed
+# bride becomes unavailable while the ravens are travelling.
+# =========================================================
+
+segrellion_reopen_joffrey_stormlands_marriage_council_effect = {
+
+	character:Vladwyn_5 ?= {
+
+		remove_character_flag = segrellion_joffrey_margaery_offer_pending
+
+		remove_character_flag = segrellion_joffrey_mya_offer_pending
+
+		remove_character_flag = segrellion_joffrey_alayne_offer_pending
+
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				is_married = no
+
+				has_title = title:e_the_stormlands
+
+
+				NOT = {
+					has_character_flag = segrellion_joffrey_stormlands_marriage_story_resolved
+				}
+			}
+
+
+			add_character_flag = segrellion_joffrey_stormlands_marriage_story_active
+
+
+			add_character_flag = {
+
+				flag = segrellion_joffrey_stormlands_marriage_council_scheduled
+
+				days = 60
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_joffrey_stormlands.0001
+
+				days = { 20 30 }
+			}
+		}
+
+
+		else = {
+
+			remove_character_flag = segrellion_joffrey_stormlands_marriage_story_active
+
+			add_character_flag = segrellion_joffrey_stormlands_marriage_story_resolved
+
+
+			character:IAF_Young_Griff_1 ?= {
+
+				segrellion_young_griff_schedule_margaery_effect = yes
+			}
+		}
+	}
+}
