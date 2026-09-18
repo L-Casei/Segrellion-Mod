@@ -21,6 +21,46 @@ segrellion_black_unicorn.0900 = {
 		segrellion_black_unicorn_part_iii_ready_trigger = yes
 	}
 
+	on_trigger_fail = {
+
+		character:Segrellion_60 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_black_unicorn_post_beacon_timer_v4
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+					}
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_path_iii_variant_started
+					}
+
+					exists = character:Black_Unicorn_1
+
+					character:Black_Unicorn_1 = {
+						is_alive = yes
+
+						NOT = {
+							has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+						}
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0900
+					days = 30
+				}
+			}
+		}
+	}
+
+
 	immediate = {
 
 		remove_character_flag = segrellion_black_unicorn_post_beacon_queued
@@ -39,7 +79,6 @@ segrellion_black_unicorn.0900 = {
 			}
 
 			add_character_flag = segrellion_black_unicorn_path_iii_variant_started
-			add_character_flag = segrellion_black_unicorn_post_beacon_started
 			add_character_flag = segrellion_black_unicorn_path_iii_cold_trail_entry
 
 			trigger_event = {
@@ -59,7 +98,6 @@ segrellion_black_unicorn.0900 = {
 			}
 
 			add_character_flag = segrellion_black_unicorn_path_iii_variant_started
-			add_character_flag = segrellion_black_unicorn_post_beacon_started
 			add_character_flag = segrellion_black_unicorn_path_iii_unfinished_business_entry
 
 			trigger_event = {
@@ -366,6 +404,7 @@ segrellion_black_unicorn.0910 = {
 
 		this = character:Segrellion_60
 		is_alive = yes
+		is_imprisoned = no
 
 		has_character_flag = segrellion_black_unicorn_path_iii_variant_started
 
@@ -379,7 +418,44 @@ segrellion_black_unicorn.0910 = {
 		}
 	}
 
+	on_trigger_fail = {
+
+		character:Segrellion_60 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_character_flag = segrellion_black_unicorn_path_iii_variant_started
+
+					NOT = {
+						has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+					}
+
+					exists = character:Black_Unicorn_1
+
+					character:Black_Unicorn_1 = {
+						is_alive = yes
+
+						NOT = {
+							has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+						}
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0910
+					days = 30
+				}
+			}
+		}
+	}
+
 	immediate = {
+
+		add_character_flag = segrellion_black_unicorn_post_beacon_started
 
 		# -----------------------------------------------------
 		# DAEMON IS AT THE BEACON
