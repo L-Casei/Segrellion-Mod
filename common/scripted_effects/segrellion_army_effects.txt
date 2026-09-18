@@ -1786,24 +1786,65 @@ segrellion_banner_join_liege_wars_effect = {
 
 	scope:segrellion_banner_liege = {
 
-		every_vassal = {
+		every_character_war = {
 
 			limit = {
 
-				this != scope:segrellion_banner_joiner
+				# The liege must actually be a participant
+				# in this exact war.
+				is_participant = scope:segrellion_banner_liege
 
-				is_alive = yes
-				is_landed = yes
 
-				has_character_flag = segrellion_banner_refused_current_call
+				# Do nothing if the bannerman is already
+				# fighting in this exact war.
+				NOT = {
+					is_participant = scope:segrellion_banner_joiner
+				}
 			}
 
-			scope:segrellion_banner_joiner = {
 
-				add_opinion = {
-					target = prev
-					modifier = segrellion_banner_oathbreaker_fellow_vassal_opinion
+			# Mark the bannerman as formally called
+			# to this exact war.
+			hidden_effect = {
+
+				if = {
+
+					limit = {
+						NOT = {
+							was_called = scope:segrellion_banner_joiner
+						}
+					}
+
+					set_called_to = scope:segrellion_banner_joiner
 				}
+			}
+
+
+			# =================================================
+			# LIEGE IS FIGHTING ON THE ATTACKER SIDE
+			# =================================================
+
+			if = {
+
+				limit = {
+					is_attacker = scope:segrellion_banner_liege
+				}
+
+				add_attacker = scope:segrellion_banner_joiner
+			}
+
+
+			# =================================================
+			# LIEGE IS FIGHTING ON THE DEFENDER SIDE
+			# =================================================
+
+			else_if = {
+
+				limit = {
+					is_defender = scope:segrellion_banner_liege
+				}
+
+				add_defender = scope:segrellion_banner_joiner
 			}
 		}
 	}
