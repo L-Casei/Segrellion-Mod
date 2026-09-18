@@ -5,6 +5,101 @@
 
 
 # =========================================================
+# JON SNOW - START THE WINTERFELL COUNCIL
+#
+# ROOT = current Jon
+#
+# The Council is story-critical. Once Stannis is dead and
+# Jon has called the lords, AI Jon must actually host it.
+# =========================================================
+
+segrellion_jon_try_start_winterfell_council_effect = {
+
+	if = {
+
+		limit = {
+
+			segrellion_is_current_jon_trigger = yes
+
+			is_alive = yes
+			is_ai = yes
+
+			character:Baratheon_3 ?= {
+				is_alive = no
+			}
+
+			has_character_flag = segrellion_jon_winterfell_council_called
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_completed
+			}
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
+			}
+
+			NOT = {
+				in_activity_type = activity_segrellion_winterfell_council
+			}
+		}
+
+
+		add_character_flag = segrellion_jon_winterfell_council_war_locked
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = sworn_peace
+				}
+			}
+
+			add_character_flag = sworn_peace
+		}
+
+
+		save_scope_as = segrellion_winterfell_council_ai_host
+
+
+		every_character_war = {
+
+			if = {
+
+				limit = {
+
+					primary_attacker != scope:segrellion_winterfell_council_ai_host
+
+					primary_defender != scope:segrellion_winterfell_council_ai_host
+				}
+
+				remove_participant = scope:segrellion_winterfell_council_ai_host
+			}
+		}
+
+
+		add_character_flag = {
+			flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
+			days = 30
+		}
+
+
+		title:c_winterfell.title_province = {
+
+			spawn_activity = {
+
+				owner = scope:segrellion_winterfell_council_ai_host
+
+				type = activity_segrellion_winterfell_council
+
+				days = 365
+			}
+		}
+	}
+}
+
+# =========================================================
 # INITIALIZE
 # =========================================================
 

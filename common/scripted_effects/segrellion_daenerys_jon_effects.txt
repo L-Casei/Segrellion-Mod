@@ -10,11 +10,39 @@
 
 segrellion_daenerys_send_jon_parley_letter_effect = {
 
-	# =====================================================
-	# RESURRECTED / RUNTIME JON
-	# =====================================================
-
 	if = {
+
+		limit = {
+
+			title:e_the_north.holder ?= {
+
+				is_alive = yes
+
+				segrellion_is_current_jon_trigger = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_daenerys_jon_parley_invitation_sent
+		add_character_flag = segrellion_daenerys_jon_parley_pending
+
+
+		title:e_the_north.holder = {
+
+			add_character_flag = segrellion_jon_invited_to_dragonstone
+			add_character_flag = segrellion_jon_daenerys_parley_invitation_received
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_jon.0001
+				days = { 2 5 }
+			}
+		}
+	}
+
+
+	else_if = {
 
 		limit = {
 
@@ -46,10 +74,6 @@ segrellion_daenerys_send_jon_parley_letter_effect = {
 	}
 
 
-	# =====================================================
-	# HISTORICAL JON
-	# =====================================================
-
 	else_if = {
 
 		limit = {
@@ -80,6 +104,117 @@ segrellion_daenerys_send_jon_parley_letter_effect = {
 	}
 }
 
+
+# =========================================================
+# DAENERYS / JON - GATHER SUPPORT RECOVERY
+# =========================================================
+
+segrellion_daenerys_jon_parley_recovery_effect = {
+
+	character:Targaryen_9 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_daenerys_support_north_approached
+
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_north_support_secured
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_north_route_closed
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_jon_parley_accepted
+				}
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_jon_parley_rejected
+				}
+
+
+				title:e_the_north.holder ?= {
+
+					is_alive = yes
+
+					segrellion_is_current_jon_trigger = yes
+
+					has_character_flag = segrellion_jon_winterfell_council_completed
+				}
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_support_negotiation_pending
+					}
+				}
+
+				add_character_flag = segrellion_daenerys_support_negotiation_pending
+			}
+
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_jon_parley_invitation_sent
+					}
+				}
+
+				segrellion_daenerys_send_jon_parley_letter_effect = yes
+			}
+
+
+			else_if = {
+
+				limit = {
+
+					title:e_the_north.holder = {
+
+						is_ai = yes
+
+						NOT = {
+							has_character_flag = segrellion_jon_daenerys_letter_seen
+						}
+
+						NOT = {
+							has_character_flag = segrellion_jon_daenerys_parley_accepted
+						}
+
+						NOT = {
+							has_character_flag = segrellion_jon_rejected_daenerys_parley
+						}
+					}
+				}
+
+
+				title:e_the_north.holder = {
+
+					add_character_flag = segrellion_jon_invited_to_dragonstone
+					add_character_flag = segrellion_jon_daenerys_parley_invitation_received
+
+
+					trigger_event = {
+
+						id = segrellion_daenerys_jon.0001
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
 
 # =========================================================
 # JON ACCEPTS DAENERYS' PERSONAL PARLEY

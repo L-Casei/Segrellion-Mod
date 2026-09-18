@@ -43,8 +43,10 @@ monthly_global_pulse = {
 		segrellion_young_griff_iron_throne_invasion_failsafe
 		segrellion_young_griff_kings_landing_arrival_fallback
 		segrellion_jon_resurrection_progression
-		segrellion_jon_canon_north_recovery
+		segrellion_jon_stannis_death_news_progression
 		segrellion_jon_winterfell_council_ai_failsafe
+		segrellion_jon_canon_north_recovery
+		segrellion_daenerys_jon_parley_recovery
 		segrellion_jon_nights_watch_status_guard
 		segrellion_jon_targaryen_reveal_progression
 		segrellion_jon_body_in_ice_failsafe
@@ -6038,7 +6040,7 @@ segrellion_jon_winterfell_council_war_lock_on_start = {
 		# Same principle already used for Ramsay.
 		# =================================================
 
-		title:c_winterfell.holder ?= {
+		title:e_the_north.holder ?= {
 
 			if = {
 
@@ -6276,15 +6278,46 @@ segrellion_jon_stannis_death_news_progression = {
 			limit = {
 
 				character:Baratheon_3 ?= {
-
 					is_alive = no
-
-					has_dead_character_flag = segrellion_stannis_murdered_by_baelish
 				}
 			}
 
 
 			segrellion_schedule_stannis_death_news_for_jon_effect = yes
+
+
+			title:e_the_north.holder ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						segrellion_is_current_jon_trigger = yes
+
+						NOT = {
+							has_character_flag = segrellion_jon_winterfell_council_completed
+						}
+
+						NOT = {
+							has_character_flag = segrellion_jon_winterfell_council_called
+						}
+
+						OR = {
+
+							has_character_flag = segrellion_jon_stannis_death_news_received
+
+							has_character_flag = segrellion_jon_king_in_the_north
+						}
+					}
+
+
+					add_character_flag = segrellion_jon_winterfell_council_called
+
+					segrellion_jon_try_start_winterfell_council_effect = yes
+				}
+			}
 		}
 	}
 }
@@ -6480,6 +6513,18 @@ segrellion_hugh_death_black_unicorn_fallback = {
 }
 
 # =========================================================
+# DAENERYS / JON - NORTH PARLEY RECOVERY
+# =========================================================
+
+segrellion_daenerys_jon_parley_recovery = {
+
+	effect = {
+
+		segrellion_daenerys_jon_parley_recovery_effect = yes
+	}
+}
+
+# =========================================================
 # JON SNOW - WINTERFELL COUNCIL AI FAILSAFE
 # =========================================================
 
@@ -6487,7 +6532,7 @@ segrellion_jon_winterfell_council_ai_failsafe = {
 
 	trigger = {
 
-		title:c_winterfell.holder ?= {
+		title:e_the_north.holder ?= {
 
 			is_alive = yes
 			is_ai = yes
@@ -6510,120 +6555,12 @@ segrellion_jon_winterfell_council_ai_failsafe = {
 		}
 	}
 
+
 	effect = {
 
-		character:Stark_7 ?= {
+		title:e_the_north.holder = {
 
-			if = {
-
-				limit = {
-
-					has_character_flag = segrellion_jon_winterfell_council_completed
-				}
-
-
-				remove_character_flag = segrellion_jon_winterfell_council_war_locked
-
-				remove_character_flag = sworn_peace
-			}
-		}
-
-		title:c_winterfell.holder = {
-
-			# =================================================
-			# STORY WAR LOCK
-			#
-			# Jon must finish the Winterfell Council before
-			# involving himself in any unrelated war.
-			# =================================================
-
-			if = {
-
-				limit = {
-
-					is_ai = yes
-
-					segrellion_is_current_jon_trigger = yes
-
-					has_character_flag = segrellion_jon_winterfell_council_called
-
-					NOT = {
-						has_character_flag = segrellion_jon_winterfell_council_completed
-					}
-				}
-
-
-				add_character_flag = segrellion_jon_winterfell_council_war_locked
-
-
-				if = {
-
-					limit = {
-
-						NOT = {
-							has_character_flag = sworn_peace
-						}
-					}
-
-					add_character_flag = sworn_peace
-				}
-
-
-				# ---------------------------------------------
-				# REMOVE JON FROM ANY SECONDARY WAR
-				#
-				# This catches wars inserted by Mega Wars,
-				# alliances or another scripted system.
-				# ---------------------------------------------
-
-				save_scope_as = segrellion_winterfell_locked_jon
-
-
-				every_character_war = {
-
-					if = {
-
-						limit = {
-
-							primary_attacker != scope:segrellion_winterfell_locked_jon
-
-							primary_defender != scope:segrellion_winterfell_locked_jon
-						}
-
-
-						remove_participant = scope:segrellion_winterfell_locked_jon
-					}
-				}
-			}
-
-
-			# =================================================
-			# ACTIVITY FAILSAFE
-			# =================================================
-
-			random = {
-
-				chance = 100
-
-				add_character_flag = {
-					flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
-					days = 60
-				}
-
-				save_scope_as = segrellion_winterfell_council_ai_host
-
-				title:c_winterfell.title_province = {
-
-					spawn_activity = {
-
-						owner = scope:segrellion_winterfell_council_ai_host
-
-						type = activity_segrellion_winterfell_council
-
-						days = 365
-					}
-				}
-			}
+			segrellion_jon_try_start_winterfell_council_effect = yes
 		}
 	}
 }
