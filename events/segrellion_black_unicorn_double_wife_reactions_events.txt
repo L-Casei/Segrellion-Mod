@@ -1,0 +1,921 @@
+namespace = segrellion_black_unicorn
+
+# =========================================================
+# DOUBLE-WIFE REACTIONS
+# =========================================================
+
+
+# =========================================================
+# 0940 - THE FIRST WIFE ACCEPTS
+#
+# ROOT = DAEMON'S ORIGINAL WIFE
+# =========================================================
+
+segrellion_black_unicorn.0940 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0940.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					this = character:Targaryen_9
+				}
+				desc = segrellion_black_unicorn.0940.desc_daenerys
+			}
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_trait = wrathful
+						has_trait = vengeful
+						has_trait = stubborn
+						has_trait = arrogant
+					}
+				}
+				desc = segrellion_black_unicorn.0940.desc_aggressive
+			}
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_relation_soulmate = character:Segrellion_60
+						has_relation_lover = character:Segrellion_60
+						has_trait = jealous
+					}
+				}
+				desc = segrellion_black_unicorn.0940.desc_possessive
+			}
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_trait = compassionate
+						has_trait = forgiving
+						has_trait = trusting
+					}
+				}
+				desc = segrellion_black_unicorn.0940.desc_friendly
+			}
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_trait = humble
+						has_trait = content
+					}
+				}
+				desc = segrellion_black_unicorn.0940.desc_docile
+			}
+
+			desc = segrellion_black_unicorn.0940.desc_impartial
+		}
+	}
+
+	theme = marriage
+
+	override_background = {
+		reference = sitting_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_rational
+	}
+
+	# =====================================================
+	# DAENERYS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0940.dany
+
+		trigger = {
+			this = character:Targaryen_9
+		}
+
+		add_character_flag = segrellion_daenerys_accepted_visenya_as_primary_wife
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_dual_wife_impartial_daemon_opinion
+		}
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0946
+			days = { 1 3 }
+		}
+	}
+
+	# =====================================================
+	# ANY OTHER WIFE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0940.a
+
+		trigger = {
+			this != character:Targaryen_9
+		}
+
+		# -------------------------------------------------
+		# AGGRESSIVE ACCEPTANCE
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				OR = {
+					has_trait = wrathful
+					has_trait = vengeful
+					has_trait = stubborn
+					has_trait = arrogant
+				}
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_dual_wife_aggressive_daemon_opinion
+			}
+
+			add_opinion = {
+				target = character:Black_Unicorn_1
+				modifier = segrellion_dual_wife_aggressive_visenya_opinion
+			}
+
+			add_character_flag = segrellion_double_wife_positive_aggressive
+		}
+
+		# -------------------------------------------------
+		# POSSESSIVE ACCEPTANCE
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				OR = {
+					has_relation_soulmate = character:Segrellion_60
+					has_relation_lover = character:Segrellion_60
+					has_trait = jealous
+				}
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_dual_wife_possessive_daemon_opinion
+			}
+
+			add_opinion = {
+				target = character:Black_Unicorn_1
+				modifier = segrellion_dual_wife_possessive_visenya_opinion
+			}
+
+			add_character_flag = segrellion_double_wife_positive_possessive
+		}
+
+		# -------------------------------------------------
+		# FRIENDLY ACCEPTANCE
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				OR = {
+					has_trait = compassionate
+					has_trait = forgiving
+					has_trait = trusting
+				}
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_dual_wife_friendly_daemon_opinion
+			}
+
+			add_opinion = {
+				target = character:Black_Unicorn_1
+				modifier = segrellion_dual_wife_friendly_visenya_opinion
+			}
+
+			add_character_flag = segrellion_double_wife_positive_friendly
+		}
+
+		# -------------------------------------------------
+		# DOCILE ACCEPTANCE
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				OR = {
+					has_trait = humble
+					has_trait = content
+				}
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_dual_wife_docile_daemon_opinion
+			}
+
+			add_opinion = {
+				target = character:Black_Unicorn_1
+				modifier = segrellion_dual_wife_docile_visenya_opinion
+			}
+
+			add_character_flag = segrellion_double_wife_positive_docile
+		}
+
+		# -------------------------------------------------
+		# IMPARTIAL ACCEPTANCE
+		# -------------------------------------------------
+
+		else = {
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_dual_wife_impartial_daemon_opinion
+			}
+
+			add_opinion = {
+				target = character:Black_Unicorn_1
+				modifier = segrellion_dual_wife_impartial_visenya_opinion
+			}
+
+			add_character_flag = segrellion_double_wife_positive_impartial
+		}
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0881
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0946 - THREE FLAMES
+#
+# ROOT = DAENERYS
+#
+# The scene is deliberately intimate but non-graphic.
+# Both women conceive Daemon's children.
+# =========================================================
+
+segrellion_black_unicorn.0946 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0946.t
+	desc = segrellion_black_unicorn.0946.desc
+
+	theme = romance
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+		is_alive = yes
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+		}
+
+		character:Black_Unicorn_1 ?= {
+			is_alive = yes
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0946.a
+		custom_tooltip = segrellion_black_unicorn.0946.a.tt
+
+		# Daenerys' special acceptance deliberately overrides
+		# her normal canonical fertility lock for this union.
+
+		segrellion_daenerys_restore_fertility_effect = yes
+
+		if = {
+			limit = {
+				has_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+			}
+			remove_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+		}
+
+		add_character_flag = segrellion_daenerys_double_wife_pregnancy_override
+
+		had_sex_with_effect = {
+			CHARACTER = character:Segrellion_60
+			PREGNANCY_CHANCE = 100
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_character_flag = agot_is_pregnant
+				}
+			}
+
+			make_pregnant = {
+				father = character:Segrellion_60
+			}
+		}
+
+		character:Black_Unicorn_1 = {
+
+			had_sex_with_effect = {
+				CHARACTER = character:Segrellion_60
+				PREGNANCY_CHANCE = 100
+			}
+
+			if = {
+				limit = {
+					NOT = {
+						has_character_flag = agot_is_pregnant
+					}
+				}
+
+				make_pregnant = {
+					father = character:Segrellion_60
+				}
+			}
+
+			add_opinion = {
+				target = character:Targaryen_9
+				modifier = segrellion_visenya_daenerys_grudge_opinion
+			}
+
+			add_character_flag = segrellion_visenya_grudge_against_daenerys
+		}
+
+		add_opinion = {
+			target = character:Black_Unicorn_1
+			modifier = segrellion_daenerys_visenya_grudge_opinion
+		}
+
+		add_character_flag = segrellion_daenerys_grudge_against_visenya
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_daemon_shared_night_with_daenerys_and_visenya
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0881
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0950 - NEGATIVE REACTION ROUTER
+#
+# ROOT = ABANDONED / OVERRULED WIFE
+# =========================================================
+
+segrellion_black_unicorn.0950 = {
+
+	type = character_event
+	hidden = yes
+
+	immediate = {
+
+		if = {
+
+			limit = {
+				this = character:Targaryen_9
+			}
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0960
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0951
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0951 - HE CHOSE HER
+#
+# Generic / special non-Daenerys negative reaction.
+# =========================================================
+
+segrellion_black_unicorn.0951 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0951.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						this = character:Baratheon_10
+						this = character:Tyrell_14
+						this = character:Martell_9
+					}
+				}
+				desc = segrellion_black_unicorn.0951.desc_special
+			}
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_trait = wrathful
+						has_trait = vengeful
+						has_trait = stubborn
+						has_trait = arrogant
+					}
+				}
+				desc = segrellion_black_unicorn.0951.desc_aggressive
+			}
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_relation_soulmate = character:Segrellion_60
+						has_relation_lover = character:Segrellion_60
+						has_trait = jealous
+					}
+				}
+				desc = segrellion_black_unicorn.0951.desc_possessive
+			}
+
+			triggered_desc = {
+				trigger = {
+					OR = {
+						has_trait = humble
+						has_trait = content
+						has_trait = forgiving
+					}
+				}
+				desc = segrellion_black_unicorn.0951.desc_docile
+			}
+
+			desc = segrellion_black_unicorn.0951.desc_impartial
+		}
+	}
+
+	theme = marriage
+
+	override_background = {
+		reference = sitting_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0951.a
+
+		# -------------------------------------------------
+		# AGGRESSIVE
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+				OR = {
+					has_trait = wrathful
+					has_trait = vengeful
+					has_trait = stubborn
+					has_trait = arrogant
+				}
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_double_wife_refusal_aggressive_opinion
+			}
+
+			if = {
+				limit = {
+					NOT = {
+						has_relation_rival = character:Segrellion_60
+					}
+				}
+
+				set_relation_rival = {
+					target = character:Segrellion_60
+				}
+			}
+
+			add_character_flag = segrellion_double_wife_negative_aggressive
+		}
+
+		# -------------------------------------------------
+		# POSSESSIVE
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				OR = {
+					has_relation_soulmate = character:Segrellion_60
+					has_relation_lover = character:Segrellion_60
+					has_trait = jealous
+				}
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_double_wife_refusal_possessive_opinion
+			}
+
+			if = {
+				limit = {
+					OR = {
+						has_trait = jealous
+						has_trait = vengeful
+					}
+
+					NOT = {
+						has_relation_rival = character:Segrellion_60
+					}
+				}
+
+				set_relation_rival = {
+					target = character:Segrellion_60
+				}
+			}
+
+			add_character_flag = segrellion_double_wife_negative_possessive
+		}
+
+		# -------------------------------------------------
+		# DOCILE
+		# -------------------------------------------------
+
+		else_if = {
+
+			limit = {
+				OR = {
+					has_trait = humble
+					has_trait = content
+					has_trait = forgiving
+				}
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_double_wife_refusal_docile_opinion
+			}
+
+			add_character_flag = segrellion_double_wife_negative_docile
+		}
+
+		# -------------------------------------------------
+		# IMPARTIAL
+		# -------------------------------------------------
+
+		else = {
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_double_wife_refusal_impartial_opinion
+			}
+
+			add_character_flag = segrellion_double_wife_negative_impartial
+		}
+
+		# -------------------------------------------------
+		# IMPORTANT NAMED WIVES WITH REAL POWER
+		# -------------------------------------------------
+
+		if = {
+
+			limit = {
+
+				is_landed = yes
+
+				OR = {
+					this = character:Baratheon_10
+					this = character:Tyrell_14
+					this = character:Martell_9
+				}
+			}
+
+			add_character_flag = segrellion_special_wife_opposes_daemon_wars
+		}
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0881
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0960 - DAENERYS REFUSED AND DAEMON CHOSE VISENYA
+# =========================================================
+
+segrellion_black_unicorn.0960 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0960.t
+	desc = segrellion_black_unicorn.0960.desc
+
+	theme = marriage
+
+	override_background = {
+		reference = throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0960.a
+		custom_tooltip = segrellion_black_unicorn.0960.a.tt
+
+		add_opinion = {
+			target = character:Segrellion_60
+			modifier = segrellion_daenerys_rejected_for_visenya_opinion
+		}
+
+		add_character_flag = segrellion_daenerys_double_wife_revenge_watch
+		add_character_flag = segrellion_daenerys_humiliated_by_visenya_marriage
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0961
+			days = 90
+		}
+
+		character:Segrellion_60 = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0881
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0961 - DAENERYS REVENGE WATCHDOG
+#
+# Only reaches the dragonfire event if her opinion of
+# Daemon naturally falls all the way to -100.
+# =========================================================
+
+segrellion_black_unicorn.0961 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+
+		this = character:Targaryen_9
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_double_wife_revenge_watch
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_double_wife_revenge_resolved
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				opinion = {
+					target = character:Segrellion_60
+					value <= -100
+				}
+
+				has_variable = current_dragon
+
+				var:current_dragon = {
+					is_alive = yes
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0962
+				days = { 3 10 }
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0961
+				days = 90
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0962 - FIRE ANSWERS INSULT
+#
+# ROOT = DAENERYS
+# =========================================================
+
+segrellion_black_unicorn.0962 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0962.t
+	desc = segrellion_black_unicorn.0962.desc
+
+	theme = death
+
+	override_background = {
+		reference = dragonstone
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Targaryen_9
+		is_alive = yes
+		is_imprisoned = no
+
+		opinion = {
+			target = character:Segrellion_60
+			value <= -100
+		}
+
+		has_variable = current_dragon
+
+		var:current_dragon = {
+			is_alive = yes
+		}
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+		}
+	}
+
+	# =====================================================
+	# 10% - BURN THE BEACON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0962.a
+		custom_tooltip = segrellion_black_unicorn.0962.a.tt
+
+		title:c_farring_cross = {
+
+			add_county_modifier = {
+				modifier = segrellion_beacon_scorched_by_daenerys_modifier
+				years = 20
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_burned_the_beacon_for_visenya_insult
+		add_character_flag = segrellion_daenerys_double_wife_revenge_resolved
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	# =====================================================
+	# 30% - BURN DAEMON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0962.b
+		custom_tooltip = segrellion_black_unicorn.0962.b.tt
+
+		add_internal_flag = dangerous
+
+		character:Segrellion_60 = {
+
+			death = {
+				death_reason = death_burned
+				killer = root
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_burned_daemon_for_visenya_insult
+		add_character_flag = segrellion_daenerys_double_wife_revenge_resolved
+
+		ai_chance = {
+			base = 30
+		}
+	}
+
+	# =====================================================
+	# 60% - REFUSE THE IMPULSE, BUT NEVER FORGIVE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0962.c
+		custom_tooltip = segrellion_black_unicorn.0962.c.tt
+
+		if = {
+			limit = {
+				NOT = {
+					has_relation_rival = character:Segrellion_60
+				}
+			}
+
+			set_relation_rival = {
+				target = character:Segrellion_60
+			}
+		}
+
+		add_character_flag = segrellion_daenerys_refused_dragonfire_revenge
+		add_character_flag = segrellion_daenerys_double_wife_revenge_resolved
+
+		ai_chance = {
+			base = 60
+		}
+	}
+}
