@@ -135,6 +135,40 @@ segrellion_start_daenerys_post_throne_effect = {
 		segrellion_daenerys_ensure_pacification_story_effect = yes
 
 		# =================================================
+		# BROKEN-SAVE RECOVERY
+		#
+		# Older versions could leave fate_pending behind
+		# without preserving the actual defeated ruler.
+		#
+		# That state blocks BOTH The Fallen Crown and the
+		# normal post-throne opening forever.
+		#
+		# Fresh wars now preserve the defeated ruler before
+		# war resolution, so this is strictly a recovery
+		# path for already-corrupted saves.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+
+				NOT = {
+					has_variable = segrellion_daenerys_defeated_throne_holder
+				}
+			}
+
+
+			remove_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+			remove_character_flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
+
+			add_character_flag = segrellion_daenerys_defeated_throne_holder_fate_resolved
+		}
+
+		# =================================================
 		# DEFEATED IRON THRONE HOLDER
 		#
 		# The fallen king is dealt with BEFORE the normal

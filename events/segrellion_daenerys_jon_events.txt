@@ -1928,22 +1928,74 @@ segrellion_daenerys_jon.0140 = {
 
 		name = segrellion_daenerys_jon.0140.a
 
+		add_internal_flag = special
+
 
 		title:e_the_north.holder = {
 
 			segrellion_jon_daenerys_secure_northern_pact_effect = yes
-
-
-			trigger_event = {
-
-				id = segrellion_daenerys_jon.0150
-
-				days = { 2 4 }
-			}
 		}
 
 
 		remove_character_flag = segrellion_daenerys_support_negotiation_pending
+
+
+		# =================================================
+		# SECRET MARRIAGE
+		#
+		# Only continue into the marriage / child route
+		# when both Jon and Daenerys are actually free
+		# to marry.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_married = no
+
+
+				title:e_the_north.holder ?= {
+
+					is_alive = yes
+
+					is_married = no
+				}
+			}
+
+
+			title:e_the_north.holder = {
+
+				trigger_event = {
+
+					id = segrellion_daenerys_jon.0150
+
+					days = { 2 4 }
+				}
+			}
+		}
+
+
+		# =================================================
+		# POLITICAL PACT WITHOUT SECRET MARRIAGE
+		#
+		# The alliance remains valid, but we do not set
+		# fake marriage flags when either character already
+		# has a spouse.
+		# =================================================
+
+		else = {
+
+			title:e_the_north.holder = {
+
+				trigger_event = {
+
+					id = segrellion_daenerys_jon.0170
+
+					days = { 2 4 }
+				}
+			}
+		}
 
 
 		ai_chance = {

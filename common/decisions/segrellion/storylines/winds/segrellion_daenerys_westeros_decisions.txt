@@ -741,7 +741,21 @@ segrellion_daenerys_claim_iron_throne_decision = {
 
 			remove_character_flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
 
-			remove_variable = segrellion_daenerys_defeated_throne_holder
+
+			# =================================================
+			# SAVE THE KING DAENERYS IS ACTUALLY FIGHTING
+			#
+			# Do this BEFORE the war starts so the post-throne
+			# chain never depends solely on title-gain or
+			# war-resolution on_action ordering.
+			# =================================================
+
+			set_variable = {
+
+				name = segrellion_daenerys_defeated_throne_holder
+
+				value = scope:segrellion_daenerys_throne_defender
+			}
 
 
 			start_war = {
