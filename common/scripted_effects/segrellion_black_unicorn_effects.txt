@@ -2963,6 +2963,10 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 
 	# =====================================================
 	# CREATE SECOND MARRIAGE
+	#
+	# Daemon may already have a wife here.
+	# Use the same temporary story-marriage window used by
+	# the other scripted Daemon / Visenya wedding.
 	# =====================================================
 
 	if = {
@@ -2975,9 +2979,15 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 		}
 
 
+		segrellion_daemon_open_story_marriage_window_effect = yes
+
+
 		marry = character:Black_Unicorn_1
 
 		segrellion_daemon_visenya_marriage_traits_effect = yes
+
+
+		segrellion_daemon_close_story_marriage_window_effect = yes
 	}
 
 
@@ -3173,19 +3183,31 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 
 	# =====================================================
 	# LITERAL MARRIAGE
+	#
+	# Use Daemon's existing scripted marriage window.
+	# This removes his temporary story marriage lock before
+	# the marriage and restores the normal lock state after.
 	# =====================================================
 
 	if = {
 
 		limit = {
+
 			NOT = {
 				is_spouse_of = character:Black_Unicorn_1
 			}
 		}
 
 
+		segrellion_daemon_open_story_marriage_window_effect = yes
+
+
 		marry = character:Black_Unicorn_1
+
 		segrellion_daemon_visenya_marriage_traits_effect = yes
+
+
+		segrellion_daemon_close_story_marriage_window_effect = yes
 	}
 
 
