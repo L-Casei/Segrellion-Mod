@@ -657,6 +657,12 @@ segrellion_black_unicorn.0951 = {
 			}
 
 			add_character_flag = segrellion_special_wife_opposes_daemon_wars
+			add_character_flag = segrellion_special_wife_execution_watch
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0952
+				days = 90
+			}
 		}
 
 		character:Segrellion_60 = {
@@ -665,6 +671,178 @@ segrellion_black_unicorn.0951 = {
 				id = segrellion_black_unicorn.0881
 				days = 1
 			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0952 - SPECIAL WIFE EXECUTION WATCH
+#
+# If a rejected titled wife ever personally gets Daemon
+# into her prison, she receives the chance to finish it.
+# =========================================================
+
+segrellion_black_unicorn.0952 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+
+		is_alive = yes
+		is_landed = yes
+
+		has_character_flag = segrellion_special_wife_execution_watch
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				character:Segrellion_60 = {
+					is_imprisoned_by = root
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0953
+				days = { 1 5 }
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0952
+				days = 90
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0953 - THE UNICORN IN CHAINS
+# =========================================================
+
+segrellion_black_unicorn.0953 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0953.t
+	desc = segrellion_black_unicorn.0953.desc
+
+	theme = death
+
+	override_background = {
+		reference = dungeon
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		is_alive = yes
+
+		has_character_flag = segrellion_special_wife_execution_watch
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			is_imprisoned_by = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = fear
+		override_imprisonment_visuals = yes
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0953.a
+		custom_tooltip = segrellion_black_unicorn.0953.a.tt
+
+		add_internal_flag = dangerous
+
+		character:Segrellion_60 = {
+
+			death = {
+				death_reason = death_execution
+				killer = root
+			}
+		}
+
+		remove_character_flag = segrellion_special_wife_execution_watch
+		add_character_flag = segrellion_special_wife_executed_daemon
+
+		ai_chance = {
+
+			base = 70
+
+			modifier = {
+				add = 25
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 20
+				has_trait = wrathful
+			}
+
+			modifier = {
+				add = 15
+				has_relation_rival = character:Segrellion_60
+			}
+
+			modifier = {
+				add = -45
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -35
+				has_trait = forgiving
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0953.b
+		custom_tooltip = segrellion_black_unicorn.0953.b.tt
+
+		remove_character_flag = segrellion_special_wife_execution_watch
+		add_character_flag = segrellion_special_wife_spared_daemon_in_chains
+
+		if = {
+			limit = {
+				NOT = {
+					has_relation_rival = character:Segrellion_60
+				}
+			}
+
+			set_relation_rival = {
+				target = character:Segrellion_60
+			}
+		}
+
+		ai_chance = {
+			base = 30
 		}
 	}
 }
