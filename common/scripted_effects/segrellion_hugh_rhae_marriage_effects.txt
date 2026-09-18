@@ -1,0 +1,224 @@
+# =========================================================
+# HUGH SEGRELLION + RHAE VELARYON
+#
+# Canon marriage.
+#
+# Hugh       = character:Segrellion_43
+# Rhae       = character:Velaryon_82
+#
+# From 300 AC onward:
+# - remove refusing_marriage
+# - clear incompatible existing marriages
+# - marry Hugh and Rhae
+# - increase Hugh's current and target weight by +15
+#
+# The weight increase is applied only once.
+# =========================================================
+
+
+segrellion_hugh_rhae_marriage_effect = {
+
+	if = {
+
+		limit = {
+
+			current_date >= 8300.1.1
+
+
+			character:Segrellion_43 ?= {
+
+				is_alive = yes
+				is_adult = yes
+
+				NOT = {
+					has_character_flag = segrellion_hugh_rhae_marriage_resolved
+				}
+			}
+
+
+			character:Velaryon_82 ?= {
+
+				is_alive = yes
+				is_adult = yes
+			}
+		}
+
+
+		# =================================================
+		# HUGH
+		# =================================================
+
+		character:Segrellion_43 = {
+
+
+			# Hugh historically refused marriage.
+			# That ends here.
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+
+
+			# Remove any non-canon marriage that may have
+			# happened before this setup fired.
+
+			every_spouse = {
+
+				limit = {
+					this != character:Velaryon_82
+				}
+
+				divorce = character:Segrellion_43
+			}
+
+
+			# Remove an incompatible betrothal.
+
+			if = {
+
+				limit = {
+					exists = betrothed
+				}
+
+				break_betrothal = betrothed
+			}
+		}
+
+
+		# =================================================
+		# RHAE VELARYON
+		# =================================================
+
+		character:Velaryon_82 = {
+
+
+			# Safety in case AGOT has given her the same
+			# restriction through another historical setup.
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+
+
+			# Hugh is her canonical husband for this mod.
+
+			every_spouse = {
+
+				limit = {
+					this != character:Segrellion_43
+				}
+
+				divorce = character:Velaryon_82
+			}
+
+
+			if = {
+
+				limit = {
+					exists = betrothed
+				}
+
+				break_betrothal = betrothed
+			}
+		}
+
+
+		# =================================================
+		# MARRIAGE
+		# =================================================
+
+		character:Segrellion_43 = {
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						is_spouse_of = character:Velaryon_82
+					}
+				}
+
+
+				marry = character:Velaryon_82
+			}
+		}
+
+
+		# =================================================
+		# SUCCESS
+		# =================================================
+
+		character:Segrellion_43 = {
+
+			if = {
+
+				limit = {
+					is_spouse_of = character:Velaryon_82
+				}
+
+
+				add_character_flag = segrellion_hugh_rhae_marriage_resolved
+
+				add_character_flag = segrellion_hugh_married_rhae_velaryon
+
+
+				# =========================================
+				# HUGH GAINS +15 WEIGHT AFTER MARRIAGE
+				#
+				# Current weight:
+				# immediate visual/body change.
+				#
+				# Target weight:
+				# stops CK3 gradually returning Hugh to
+				# his previous body weight.
+				# =========================================
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_hugh_rhae_weight_applied
+						}
+					}
+
+
+					change_current_weight = 15
+
+					change_target_weight = 15
+
+
+					add_character_flag = segrellion_hugh_rhae_weight_applied
+				}
+			}
+		}
+
+
+		# =================================================
+		# RHAE FLAGS
+		# =================================================
+
+		character:Velaryon_82 = {
+
+			if = {
+
+				limit = {
+					is_spouse_of = character:Segrellion_43
+				}
+
+
+				add_character_flag = segrellion_rhae_married_hugh_segrellion
+			}
+		}
+	}
+}
