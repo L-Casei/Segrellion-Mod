@@ -7395,7 +7395,6 @@ segrellion_black_unicorn.0610 = {
 	}
 
 	title = segrellion_black_unicorn.0610.t
-
 	desc = segrellion_black_unicorn.0610.desc
 
 	theme = intrigue
@@ -7405,29 +7404,26 @@ segrellion_black_unicorn.0610 = {
 
 		segrellion_reveal_black_unicorn_identity_effect = yes
 
-
 		add_character_flag = segrellion_black_unicorn_visenya_revealed_at_beacon
 	}
 
 
 	left_portrait = {
-
 		character = root
-
 		animation = shock
 	}
 
 
 	right_portrait = {
-
 		character = character:Black_Unicorn_1
-
 		animation = anger
 	}
 
 
 	# =====================================================
 	# 1 - GRAB A SWORD
+	#
+	# Still dangerous, but no longer an 85% death sentence.
 	# =====================================================
 
 	option = {
@@ -7443,38 +7439,49 @@ segrellion_black_unicorn.0610 = {
 
 			random_list = {
 
-
-				# -----------------------------------------
-				# SUCCESS - 15%
-				# -----------------------------------------
-
-				15 = {
+				# 10% - DAEMON GETS THE SWORD
+				10 = {
 
 					add_character_flag = segrellion_black_unicorn_escape_attempt_success
 
-
 					trigger_event = {
-
 						id = segrellion_black_unicorn.0620
-
 						days = 1
 					}
 				}
 
 
-				# -----------------------------------------
-				# FAILURE - 85%
-				# -----------------------------------------
+				# 70% - VISENYA DISARMS HIM, BUT DOES NOT KILL HIM
+				70 = {
 
-				85 = {
-
-					add_character_flag = segrellion_black_unicorn_escape_attempt_failed
-
+					add_character_flag = segrellion_black_unicorn_escape_attempt_disarmed
 
 					trigger_event = {
-
 						id = segrellion_black_unicorn.0621
+						days = 1
+					}
+				}
 
+
+				# 15% - DAEMON IS WOUNDED
+				15 = {
+
+					add_character_flag = segrellion_black_unicorn_escape_attempt_wounded
+
+					trigger_event = {
+						id = segrellion_black_unicorn.0622
+						days = 1
+					}
+				}
+
+
+				# 5% - GENUINELY FATAL
+				5 = {
+
+					add_character_flag = segrellion_black_unicorn_escape_attempt_fatal
+
+					trigger_event = {
+						id = segrellion_black_unicorn.0623
 						days = 1
 					}
 				}
@@ -7483,13 +7490,13 @@ segrellion_black_unicorn.0610 = {
 
 
 		ai_chance = {
-			base = 15
+			base = 5
 		}
 	}
 
 
 	# =====================================================
-	# 2 - HAVE YOU CONFUSED ME WITH LEO STORMFLAME?
+	# 2 - TALK
 	# =====================================================
 
 	option = {
@@ -7498,16 +7505,15 @@ segrellion_black_unicorn.0610 = {
 
 		custom_tooltip = segrellion_black_unicorn.0610.b.tt
 
+
 		trigger_event = {
-
 			id = segrellion_black_unicorn.0660
-
 			days = 1
 		}
 
 
 		ai_chance = {
-			base = 70
+			base = 75
 		}
 	}
 
@@ -7522,22 +7528,20 @@ segrellion_black_unicorn.0610 = {
 
 		custom_tooltip = segrellion_black_unicorn.0610.c.tt
 
-		trigger = {
 
+		trigger = {
 			has_trait = arrogant
 		}
 
 
 		trigger_event = {
-
 			id = segrellion_black_unicorn.0690
-
 			days = 1
 		}
 
 
 		ai_chance = {
-			base = 15
+			base = 20
 		}
 	}
 }
@@ -7618,6 +7622,7 @@ segrellion_black_unicorn.0620 = {
 
 # =========================================================
 # 0621 - TOO SLOW
+# VISENYA DISARMS DAEMON, BUT SPARES HIM
 # =========================================================
 
 segrellion_black_unicorn.0621 = {
@@ -7633,33 +7638,147 @@ segrellion_black_unicorn.0621 = {
 	}
 
 	title = segrellion_black_unicorn.0621.t
-
 	desc = segrellion_black_unicorn.0621.desc
 
-	theme = death
+	theme = intrigue
 
 
 	left_portrait = {
-
 		character = root
-
 		animation = pain
 	}
 
 
 	right_portrait = {
-
 		character = character:Black_Unicorn_1
-
-		animation = anger
+		animation = personality_bold
 	}
 
 
 	option = {
 
 		name = segrellion_black_unicorn.0621.a
-		custom_tooltip = segrellion_black_unicorn.ui.0621.a.tt
 
+
+		add_character_flag = segrellion_black_unicorn_visenya_spared_daemon_after_disarm
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+		add_character_flag = segrellion_black_unicorn_visenya_given_safe_conduct
+
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0730
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0622 - BLOOD, NOT DEATH
+# =========================================================
+
+segrellion_black_unicorn.0622 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	title = segrellion_black_unicorn.0622.t
+	desc = segrellion_black_unicorn.0622.desc
+
+	theme = intrigue
+
+
+	left_portrait = {
+		character = root
+		animation = pain
+	}
+
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				NOR = {
+					has_trait = wounded_1
+					has_trait = wounded_2
+					has_trait = wounded_3
+				}
+			}
+
+			add_trait = wounded_1
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0622.a
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_wounded_but_spared_daemon
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+		add_character_flag = segrellion_black_unicorn_visenya_given_safe_conduct
+
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0730
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0623 - ONE HEARTBEAT TOO LATE
+# THE RARE FATAL RESULT
+# =========================================================
+
+segrellion_black_unicorn.0623 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	title = segrellion_black_unicorn.0623.t
+	desc = segrellion_black_unicorn.0623.desc
+
+	theme = death
+
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_black_unicorn.0623.a
 
 		segrellion_black_unicorn_visenya_take_flamelands_effect = yes
 	}
@@ -7814,7 +7933,7 @@ segrellion_black_unicorn.0630 = {
 }
 
 # =========================================================
-# 0635 - THE LAST MISTAKE
+# 0635 - AT HER MERCY
 # =========================================================
 
 segrellion_black_unicorn.0635 = {
@@ -7830,27 +7949,86 @@ segrellion_black_unicorn.0635 = {
 	}
 
 	title = segrellion_black_unicorn.0635.t
-
 	desc = segrellion_black_unicorn.0635.desc
 
-	theme = death
+	theme = war
+
+
+	left_portrait = {
+		character = root
+		animation = pain
+	}
 
 
 	right_portrait = {
-
 		character = character:Black_Unicorn_1
-
 		animation = personality_bold
 	}
 
 
+	# =====================================================
+	# ACCEPT DEFEAT
+	# =====================================================
+
 	option = {
 
 		name = segrellion_black_unicorn.0635.a
-		custom_tooltip = segrellion_black_unicorn.ui.0635.a.tt
+
+
+		if = {
+
+			limit = {
+
+				NOR = {
+					has_trait = wounded_1
+					has_trait = wounded_2
+					has_trait = wounded_3
+				}
+			}
+
+			add_trait = wounded_1
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_beacon_duel_visenya_spared_daemon
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+		add_character_flag = segrellion_black_unicorn_visenya_given_safe_conduct
+
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0730
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 98
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE TO YIELD
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0635.b
+
+		add_internal_flag = dangerous
+
+
+		add_character_flag = segrellion_black_unicorn_daemon_refused_to_yield_to_visenya
 
 
 		segrellion_black_unicorn_visenya_take_flamelands_effect = yes
+
+
+		ai_chance = {
+			base = 2
+		}
 	}
 }
 
@@ -7968,6 +8146,10 @@ segrellion_black_unicorn.0640 = {
 
 		add_character_flag = segrellion_black_unicorn_post_beacon_resolved
 
+		ai_chance = {
+			base = 2
+		}
+
 
 		death = {
 
@@ -7998,6 +8180,10 @@ segrellion_black_unicorn.0640 = {
 
 
 		custom_tooltip = segrellion_black_unicorn_council_route_pending_tt
+
+		ai_chance = {
+			base = 98
+		}
 
 		trigger_event = {
 
@@ -8064,6 +8250,10 @@ segrellion_black_unicorn.0660 = {
 
 		add_character_flag = segrellion_black_unicorn_visenya_given_safe_conduct
 
+		ai_chance = {
+			base = 95
+		}
+
 
 		trigger_event = {
 
@@ -8086,6 +8276,9 @@ segrellion_black_unicorn.0660 = {
 
 		custom_tooltip = segrellion_black_unicorn.0660.b.tt
 
+		ai_chance = {
+			base = 5
+		}
 
 		trigger_event = {
 
@@ -8098,7 +8291,7 @@ segrellion_black_unicorn.0660 = {
 
 
 # =========================================================
-# 0685 - YOUR LAST WORDS
+# 0685 - NOT TONIGHT
 # =========================================================
 
 segrellion_black_unicorn.0685 = {
@@ -8114,16 +8307,19 @@ segrellion_black_unicorn.0685 = {
 	}
 
 	title = segrellion_black_unicorn.0685.t
-
 	desc = segrellion_black_unicorn.0685.desc
 
-	theme = death
+	theme = intrigue
+
+
+	left_portrait = {
+		character = root
+		animation = pain
+	}
 
 
 	right_portrait = {
-
 		character = character:Black_Unicorn_1
-
 		animation = anger
 	}
 
@@ -8131,10 +8327,19 @@ segrellion_black_unicorn.0685 = {
 	option = {
 
 		name = segrellion_black_unicorn.0685.a
-		custom_tooltip = segrellion_black_unicorn.ui.0685.a.tt
 
 
-		segrellion_black_unicorn_visenya_take_flamelands_effect = yes
+		add_character_flag = segrellion_black_unicorn_visenya_rejected_daemon_demand
+
+		add_character_flag = segrellion_black_unicorn_beacon_council_route_pending
+
+		add_character_flag = segrellion_black_unicorn_visenya_given_safe_conduct
+
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0730
+			days = 1
+		}
 	}
 }
 
@@ -8469,7 +8674,7 @@ segrellion_black_unicorn.0742 = {
 
 
 		ai_chance = {
-			base = 25
+			base = 15
 		}
 	}
 
@@ -8499,7 +8704,7 @@ segrellion_black_unicorn.0742 = {
 
 
 		ai_chance = {
-			base = 75
+			base = 85
 		}
 	}
 }
@@ -8786,7 +8991,7 @@ segrellion_black_unicorn.0760 = {
 
 
 		ai_chance = {
-			base = 80
+			base = 90
 		}
 	}
 
@@ -8818,7 +9023,7 @@ segrellion_black_unicorn.0760 = {
 
 
 		ai_chance = {
-			base = 20
+			base = 10
 		}
 	}
 }
@@ -8872,6 +9077,11 @@ segrellion_black_unicorn.0771 = {
 
 # =========================================================
 # 0775 - THE CONQUEROR'S PRECEDENT
+#
+# Daemon already has a wife.
+# Visenya has accepted marriage in principle.
+# The existing wife must now decide whether she accepts
+# remaining married while Visenya becomes primary wife.
 # =========================================================
 
 segrellion_black_unicorn.0775 = {
@@ -8893,7 +9103,6 @@ segrellion_black_unicorn.0775 = {
 
 		first_valid = {
 
-
 			triggered_desc = {
 
 				trigger = {
@@ -8902,7 +9111,6 @@ segrellion_black_unicorn.0775 = {
 
 				desc = segrellion_black_unicorn.0775.desc_present
 			}
-
 
 			desc = segrellion_black_unicorn.0775.desc_absent
 		}
@@ -8920,11 +9128,13 @@ segrellion_black_unicorn.0775 = {
 	}
 
 
-	left_portrait = root
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
 
 
 	right_portrait = {
-
 		character = character:Black_Unicorn_1
 		animation = personality_suspicious
 	}
@@ -8933,59 +9143,15 @@ segrellion_black_unicorn.0775 = {
 	option = {
 
 		name = segrellion_black_unicorn.0775.a
-		custom_tooltip = segrellion_black_unicorn.ui.0775.a.tt
 
 
 		hidden_effect = {
 
-			random_list = {
+			var:segrellion_black_unicorn_current_wife ?= {
 
-
-				# PROPOSAL ACCEPTED - DAEMON CHOOSES VISENYA
-				1 = {
-
-					trigger_event = {
-
-						id = segrellion_black_unicorn.0780
-
-						days = 1
-					}
-				}
-
-
-				# WIFE ACCEPTS / VISENYA REFUSES
-				9 = {
-
-					trigger_event = {
-
-						id = segrellion_black_unicorn.0781
-
-						days = 1
-					}
-				}
-
-
-				# VISENYA ACCEPTS / WIFE REFUSES
-				45 = {
-
-					trigger_event = {
-
-						id = segrellion_black_unicorn.0782
-
-						days = 1
-					}
-				}
-
-
-				# BOTH REFUSE
-				45 = {
-
-					trigger_event = {
-
-						id = segrellion_black_unicorn.0783
-
-						days = 1
-					}
+				trigger_event = {
+					id = segrellion_black_unicorn.0776
+					days = 1
 				}
 			}
 		}
@@ -8994,33 +9160,624 @@ segrellion_black_unicorn.0775 = {
 
 
 # =========================================================
-# 0780 - DAEMON CHOOSES VISENYA
+# 0776 - THE FIRST WIFE'S ANSWER
+#
+# ROOT = DAEMON'S CURRENT WIFE
+#
+# This is intentionally highly dynamic.
 # =========================================================
 
-segrellion_black_unicorn.0780 = {
+segrellion_black_unicorn.0776 = {
 
 	type = character_event
 
 	override_background = {
-		reference = council_chamber
+		reference = sitting_room
 	}
 
 	override_icon = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-	title = segrellion_black_unicorn.0780.t
-
-	desc = segrellion_black_unicorn.0780.desc
+	title = segrellion_black_unicorn.0776.t
+	desc = segrellion_black_unicorn.0776.desc
 
 	theme = marriage
 
 
-	left_portrait = root
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
 
 
 	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_bold
+	}
 
+
+	# =====================================================
+	# ACCEPT
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0776.a
+
+
+		add_character_flag = segrellion_black_unicorn_accepted_visenya_as_primary_wife
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_black_unicorn_existing_wife_accepted_dual_marriage
+
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0777
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			# A GENERIC WIFE HAS A FAIRLY DECENT CHANCE.
+			base = 60
+
+
+			# =================================================
+			# OPINION OF DAEMON
+			# =================================================
+
+			modifier = {
+				add = 45
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 80
+				}
+			}
+
+
+			modifier = {
+				add = 25
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+				add = 10
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 25
+				}
+			}
+
+
+			modifier = {
+				add = -30
+
+				opinion = {
+					target = character:Segrellion_60
+					value < 0
+				}
+			}
+
+
+			modifier = {
+				add = -40
+
+				opinion = {
+					target = character:Segrellion_60
+					value < -50
+				}
+			}
+
+
+			# =================================================
+			# PERSONAL RELATIONSHIP
+			#
+			# A wife deeply in love with Daemon is more likely
+			# to see Visenya as a personal threat.
+			# =================================================
+
+			modifier = {
+				add = -35
+				has_relation_soulmate = character:Segrellion_60
+			}
+
+
+			modifier = {
+				add = -15
+				has_relation_lover = character:Segrellion_60
+			}
+
+
+			# =================================================
+			# PERSONALITY
+			# =================================================
+
+			modifier = {
+				add = 25
+				has_trait = trusting
+			}
+
+			modifier = {
+				add = 20
+				has_trait = humble
+			}
+
+			modifier = {
+				add = 20
+				has_trait = content
+			}
+
+			modifier = {
+				add = 15
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = 15
+				has_trait = forgiving
+			}
+
+
+			modifier = {
+				add = -35
+				has_trait = arrogant
+			}
+
+			modifier = {
+				add = -35
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = -30
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = -25
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = -20
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = -15
+				has_trait = wrathful
+			}
+
+
+			# =================================================
+			# CULTURE / FAITH
+			#
+			# Characters accustomed to plural marriage are
+			# dramatically easier to convince.
+			# =================================================
+
+			modifier = {
+
+				add = 50
+
+				faith = {
+					has_doctrine = doctrine_polygamy
+				}
+			}
+
+
+			modifier = {
+
+				add = 30
+
+				culture = {
+					has_cultural_tradition = tradition_polygamous
+				}
+			}
+
+
+			modifier = {
+
+				add = 25
+
+				faith = {
+					has_doctrine = tenet_polyamory
+				}
+			}
+
+
+			# =================================================
+			# POLITICAL IMPORTANCE
+			# =================================================
+
+			modifier = {
+				add = -20
+				is_landed = yes
+			}
+
+
+			modifier = {
+
+				add = -20
+
+				highest_held_title_tier >= tier_duchy
+			}
+
+
+			modifier = {
+
+				add = -20
+
+				father ?= {
+					highest_held_title_tier >= tier_kingdom
+				}
+			}
+
+
+			modifier = {
+
+				add = -20
+
+				mother ?= {
+					highest_held_title_tier >= tier_kingdom
+				}
+			}
+
+
+			modifier = {
+
+				add = -25
+
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 7
+				}
+			}
+
+
+			# =================================================
+			# IMPORTANT NAMED WIVES
+			# =================================================
+
+			# DAENERYS TARGARYEN
+			modifier = {
+				add = -75
+				this = character:Targaryen_9
+			}
+
+
+			# ARIANNE MARTELL
+			modifier = {
+				add = -55
+				this = character:Martell_9
+			}
+
+
+			# MARGAERY TYRELL
+			modifier = {
+				add = -55
+				this = character:Tyrell_14
+			}
+
+
+			# MYA STONE
+			# Far fewer dynastic expectations are attached to
+			# her position, so she is somewhat easier to convince.
+			modifier = {
+				add = 20
+				this = character:Baratheon_10
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0776.b
+
+
+		add_character_flag = segrellion_black_unicorn_refused_visenya_as_primary_wife
+
+
+		character:Segrellion_60 = {
+
+			add_character_flag = segrellion_black_unicorn_existing_wife_refused_dual_marriage
+
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0778
+				days = 1
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 40
+
+
+			# =================================================
+			# OPINION
+			# =================================================
+
+			modifier = {
+				add = -30
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 80
+				}
+			}
+
+
+			modifier = {
+				add = -15
+
+				opinion = {
+					target = character:Segrellion_60
+					value >= 50
+				}
+			}
+
+
+			modifier = {
+				add = 35
+
+				opinion = {
+					target = character:Segrellion_60
+					value < 0
+				}
+			}
+
+
+			modifier = {
+				add = 45
+
+				opinion = {
+					target = character:Segrellion_60
+					value < -50
+				}
+			}
+
+
+			# =================================================
+			# PERSONAL RELATIONSHIP
+			# =================================================
+
+			modifier = {
+				add = 40
+				has_relation_soulmate = character:Segrellion_60
+			}
+
+
+			modifier = {
+				add = 20
+				has_relation_lover = character:Segrellion_60
+			}
+
+
+			# =================================================
+			# PERSONALITY
+			# =================================================
+
+			modifier = {
+				add = -20
+				has_trait = trusting
+			}
+
+			modifier = {
+				add = -15
+				has_trait = humble
+			}
+
+			modifier = {
+				add = -15
+				has_trait = content
+			}
+
+			modifier = {
+				add = -10
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -10
+				has_trait = forgiving
+			}
+
+
+			modifier = {
+				add = 40
+				has_trait = arrogant
+			}
+
+			modifier = {
+				add = 40
+				has_trait = ambitious
+			}
+
+			modifier = {
+				add = 35
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = 30
+				has_trait = paranoid
+			}
+
+			modifier = {
+				add = 25
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 20
+				has_trait = wrathful
+			}
+
+
+			# =================================================
+			# CULTURE / FAITH
+			# =================================================
+
+			modifier = {
+
+				add = -35
+
+				faith = {
+					has_doctrine = doctrine_polygamy
+				}
+			}
+
+
+			modifier = {
+
+				add = -25
+
+				culture = {
+					has_cultural_tradition = tradition_polygamous
+				}
+			}
+
+
+			modifier = {
+
+				add = -20
+
+				faith = {
+					has_doctrine = tenet_polyamory
+				}
+			}
+
+
+			# =================================================
+			# POLITICAL IMPORTANCE
+			# =================================================
+
+			modifier = {
+				add = 20
+				is_landed = yes
+			}
+
+
+			modifier = {
+				add = 20
+				highest_held_title_tier >= tier_duchy
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				father ?= {
+					highest_held_title_tier >= tier_kingdom
+				}
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				mother ?= {
+					highest_held_title_tier >= tier_kingdom
+				}
+			}
+
+
+			modifier = {
+
+				add = 25
+
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 7
+				}
+			}
+
+
+			# =================================================
+			# IMPORTANT NAMED WIVES
+			# =================================================
+
+			modifier = {
+				add = 75
+				this = character:Targaryen_9
+			}
+
+
+			modifier = {
+				add = 55
+				this = character:Martell_9
+			}
+
+
+			modifier = {
+				add = 55
+				this = character:Tyrell_14
+			}
+
+
+			modifier = {
+				add = -15
+				this = character:Baratheon_10
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0777 - TWO WIVES
+#
+# Current wife accepted.
+# =========================================================
+
+segrellion_black_unicorn.0777 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	title = segrellion_black_unicorn.0777.t
+	desc = segrellion_black_unicorn.0777.desc
+
+	theme = marriage
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
 		character = character:Black_Unicorn_1
 		animation = admiration
 	}
@@ -9028,23 +9785,24 @@ segrellion_black_unicorn.0780 = {
 
 	option = {
 
-		name = segrellion_black_unicorn.0780.a
-		custom_tooltip = segrellion_black_unicorn.ui.0780.a.tt
+		name = segrellion_black_unicorn.0777.a
 
 
 		hidden_effect = {
-
-			segrellion_black_unicorn_marry_visenya_exclusive_effect = yes
+			segrellion_black_unicorn_marry_visenya_dual_effect = yes
 		}
 	}
 }
 
 
 # =========================================================
-# 0781 - WIFE ACCEPTS, VISENYA REFUSES
+# 0778 - THE WIFE REFUSES
+#
+# Daemon decides whether Visenya is worth ending his
+# current marriage for.
 # =========================================================
 
-segrellion_black_unicorn.0781 = {
+segrellion_black_unicorn.0778 = {
 
 	type = character_event
 
@@ -9056,132 +9814,66 @@ segrellion_black_unicorn.0781 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
-	title = segrellion_black_unicorn.0781.t
-
-	desc = segrellion_black_unicorn.0781.desc
-
-	theme = marriage
-
-
-	right_portrait = {
-
-		character = character:Black_Unicorn_1
-		animation = anger
-	}
-
-
-	option = {
-
-		name = segrellion_black_unicorn.0781.a
-		custom_tooltip = segrellion_black_unicorn.ui.0781.a.tt
-
-
-		add_character_flag = segrellion_black_unicorn_dual_marriage_visenya_refused
-
-
-		hidden_effect = {
-
-			segrellion_black_unicorn_visenya_leave_beacon_effect = yes
-		}
-	}
-}
-
-
-# =========================================================
-# 0782 - VISENYA ACCEPTS, WIFE REFUSES
-# =========================================================
-
-segrellion_black_unicorn.0782 = {
-
-	type = character_event
-
-	override_background = {
-		reference = council_chamber
-	}
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	title = segrellion_black_unicorn.0782.t
-
-	desc = segrellion_black_unicorn.0782.desc
+	title = segrellion_black_unicorn.0778.t
+	desc = segrellion_black_unicorn.0778.desc
 
 	theme = marriage
 
 
-	left_portrait = root
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
 
 
 	right_portrait = {
-
-		character = character:Black_Unicorn_1
-		animation = personality_bold
-	}
-
-
-	option = {
-
-		name = segrellion_black_unicorn.0782.a
-		custom_tooltip = segrellion_black_unicorn.ui.0782.a.tt
-
-
-		add_character_flag = segrellion_black_unicorn_dual_marriage_wife_refused
-
-
-		hidden_effect = {
-
-			segrellion_black_unicorn_marry_visenya_exclusive_effect = yes
-		}
-	}
-}
-
-
-# =========================================================
-# 0783 - BOTH REFUSE
-# =========================================================
-
-segrellion_black_unicorn.0783 = {
-
-	type = character_event
-
-	override_background = {
-		reference = council_chamber
-	}
-
-	override_icon = {
-		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
-	}
-
-	title = segrellion_black_unicorn.0783.t
-
-	desc = segrellion_black_unicorn.0783.desc
-
-	theme = marriage
-
-
-	left_portrait = root
-
-
-	right_portrait = {
-
 		character = character:Black_Unicorn_1
 		animation = personality_suspicious
 	}
 
 
+	# =====================================================
+	# CHOOSE VISENYA
+	# =====================================================
+
 	option = {
 
-		name = segrellion_black_unicorn.0783.a
-		custom_tooltip = segrellion_black_unicorn.ui.0783.a.tt
+		name = segrellion_black_unicorn.0778.a
 
 
-		add_character_flag = segrellion_black_unicorn_dual_marriage_both_refused
+		add_character_flag = segrellion_black_unicorn_daemon_chose_visenya_after_wife_refusal
 
 
 		hidden_effect = {
+			segrellion_black_unicorn_marry_visenya_exclusive_effect = yes
+		}
 
+
+		ai_chance = {
+			base = 85
+		}
+	}
+
+
+	# =====================================================
+	# KEEP CURRENT WIFE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0778.b
+
+
+		add_character_flag = segrellion_black_unicorn_daemon_respected_wife_refusal
+
+
+		hidden_effect = {
 			segrellion_black_unicorn_visenya_leave_beacon_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 15
 		}
 	}
 }
@@ -9250,7 +9942,7 @@ segrellion_black_unicorn.0790 = {
 
 
 		ai_chance = {
-			base = 10
+			base = 5
 		}
 	}
 
@@ -9280,7 +9972,7 @@ segrellion_black_unicorn.0790 = {
 
 
 		ai_chance = {
-			base = 90
+			base = 95
 		}
 	}
 }
@@ -9435,7 +10127,7 @@ segrellion_black_unicorn.0793 = {
 
 
 		ai_chance = {
-			base = 95
+			base = 98
 		}
 	}
 
@@ -9461,7 +10153,7 @@ segrellion_black_unicorn.0793 = {
 
 
 		ai_chance = {
-			base = 5
+			base = 2
 		}
 	}
 }
@@ -9524,6 +10216,9 @@ segrellion_black_unicorn.0795 = {
 
 # =========================================================
 # 0800 - NO MORE GAMES
+#
+# PRIVATE REASON ROUTE
+# Marriage is now the natural resolution.
 # =========================================================
 
 segrellion_black_unicorn.0800 = {
@@ -9539,23 +10234,44 @@ segrellion_black_unicorn.0800 = {
 	}
 
 	title = segrellion_black_unicorn.0800.t
-
 	desc = segrellion_black_unicorn.0800.desc
 
 	theme = intrigue
 
 
 	left_portrait = {
-
 		character = root
 		animation = personality_rational
 	}
 
 
 	right_portrait = {
-
 		character = character:Black_Unicorn_1
 		animation = personality_suspicious
+	}
+
+
+	# =====================================================
+	# MARRIAGE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0800.a
+
+
+		add_character_flag = segrellion_black_unicorn_private_reason_marriage_route
+
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0770
+			days = 1
+		}
+
+
+		ai_chance = {
+			base = 75
+		}
 	}
 
 
@@ -9565,14 +10281,16 @@ segrellion_black_unicorn.0800 = {
 
 	option = {
 
-		name = segrellion_black_unicorn.0800.a
-
-		custom_tooltip = segrellion_black_unicorn.ui.0800.a.tt
+		name = segrellion_black_unicorn.0800.b
 
 
 		hidden_effect = {
-
 			segrellion_black_unicorn_political_alliance_effect = yes
+		}
+
+
+		ai_chance = {
+			base = 15
 		}
 	}
 
@@ -9583,16 +10301,17 @@ segrellion_black_unicorn.0800 = {
 
 	option = {
 
-		name = segrellion_black_unicorn.0800.b
-
-		custom_tooltip = segrellion_black_unicorn.ui.0800.b.tt
+		name = segrellion_black_unicorn.0800.c
 
 
 		trigger_event = {
-
 			id = segrellion_black_unicorn.0811
-
 			days = 1
+		}
+
+
+		ai_chance = {
+			base = 8
 		}
 	}
 
@@ -9603,17 +10322,19 @@ segrellion_black_unicorn.0800 = {
 
 	option = {
 
-		name = segrellion_black_unicorn.0800.c
-		custom_tooltip = segrellion_black_unicorn.ui.0800.c.tt
+		name = segrellion_black_unicorn.0800.d
 
 		add_internal_flag = dangerous
 
 
 		trigger_event = {
-
 			id = segrellion_black_unicorn.0820
-
 			days = 1
+		}
+
+
+		ai_chance = {
+			base = 2
 		}
 	}
 }
@@ -9849,7 +10570,36 @@ segrellion_black_unicorn.0880 = {
 	type = character_event
 
 	title = segrellion_black_unicorn.0880.t
-	desc = segrellion_black_unicorn.0880.desc
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					is_married = yes
+				}
+
+				desc = segrellion_black_unicorn.0880.desc_married
+			}
+
+
+			triggered_desc = {
+
+				trigger = {
+					exists = betrothed
+				}
+
+				desc = segrellion_black_unicorn.0880.desc_betrothed
+			}
+
+
+			desc = segrellion_black_unicorn.0880.desc
+		}
+	}
+
 
 	theme = marriage
 
@@ -9880,13 +10630,29 @@ segrellion_black_unicorn.0880 = {
 
 		name = segrellion_black_unicorn.0880.a
 
-
 		custom_tooltip = segrellion_black_unicorn.0880.a.tt
 
 
 		hidden_effect = {
 
-			segrellion_black_unicorn_marry_visenya_exclusive_effect = yes
+			if = {
+
+				limit = {
+					is_married = yes
+				}
+
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0775
+					days = 1
+				}
+			}
+
+
+			else = {
+
+				segrellion_black_unicorn_marry_visenya_exclusive_effect = yes
+			}
 		}
 	}
 }

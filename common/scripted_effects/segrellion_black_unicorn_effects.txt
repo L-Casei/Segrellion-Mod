@@ -2805,6 +2805,269 @@ segrellion_black_unicorn_political_alliance_effect = {
 }
 
 # =========================================================
+# VISENYA / DAEMON MARRIAGE BOND
+#
+# Private romance routes are already guaranteed Soulmates.
+#
+# Other successful marriage routes:
+# 85% Soulmates
+# 15% Lovers
+# =========================================================
+
+segrellion_black_unicorn_visenya_marriage_bond_effect = {
+
+	if = {
+
+		limit = {
+			is_spouse_of = character:Black_Unicorn_1
+		}
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_relation_soulmate = character:Black_Unicorn_1
+				}
+			}
+
+
+			random_list = {
+
+				# =================================================
+				# SOULMATES
+				# =================================================
+
+				85 = {
+
+					segrellion_black_unicorn_make_daemon_visenya_soulmates_effect = yes
+				}
+
+
+				# =================================================
+				# LOVERS, BUT NOT YET SOULMATES
+				# =================================================
+
+				15 = {
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								has_relation_lover = character:Black_Unicorn_1
+							}
+						}
+
+
+						set_relation_lover = character:Black_Unicorn_1
+					}
+
+
+					add_character_flag = segrellion_daemon_visenya_lovers_after_marriage
+
+
+					character:Black_Unicorn_1 = {
+						add_character_flag = segrellion_visenya_daemon_lovers_after_marriage
+					}
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# DUAL MARRIAGE TO VISENYA
+#
+# Existing wife remains married to Daemon.
+# Visenya becomes Daemon's PRIMARY SPOUSE.
+# =========================================================
+
+segrellion_black_unicorn_marry_visenya_dual_effect = {
+
+	# =====================================================
+	# PREPARE VISENYA
+	# =====================================================
+
+	segrellion_black_unicorn_visenya_join_daemon_effect = yes
+
+	segrellion_visenya_become_lady_of_flamelands_effect = yes
+
+	segrellion_black_unicorn_record_daemon_union_effect = yes
+
+
+	# =====================================================
+	# KEEP DAEMON'S EXISTING WIFE
+	#
+	# IMPORTANT:
+	# Do NOT call abandon_current_wife_effect here.
+	# Do NOT divorce every_spouse here.
+	# =====================================================
+
+
+	# =====================================================
+	# BREAK ANY BETROTHAL DAEMON MAY STILL HAVE
+	# =====================================================
+
+	if = {
+
+		limit = {
+			exists = betrothed
+		}
+
+		break_betrothal = betrothed
+	}
+
+
+	# =====================================================
+	# VISENYA CANNOT HAVE ANOTHER UNION
+	# =====================================================
+
+	character:Black_Unicorn_1 = {
+
+		every_spouse = {
+
+			limit = {
+				this != character:Segrellion_60
+			}
+
+			divorce = character:Black_Unicorn_1
+		}
+
+
+		if = {
+
+			limit = {
+				exists = betrothed
+			}
+
+			break_betrothal = betrothed
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_scripted_marriage_authorized
+
+
+		if = {
+
+			limit = {
+				has_trait = refusing_marriage
+			}
+
+			remove_trait = refusing_marriage
+		}
+	}
+
+
+	# =====================================================
+	# CREATE SECOND MARRIAGE
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				is_spouse_of = character:Black_Unicorn_1
+			}
+		}
+
+
+		marry = character:Black_Unicorn_1
+
+		segrellion_daemon_visenya_marriage_traits_effect = yes
+	}
+
+
+	# =====================================================
+	# VERIFY
+	# =====================================================
+
+	if = {
+
+		limit = {
+			is_spouse_of = character:Black_Unicorn_1
+		}
+
+
+		# =================================================
+		# VISENYA IS THE PRINCIPAL WIFE
+		# =================================================
+
+		set_primary_spouse = character:Black_Unicorn_1
+
+
+		add_character_flag = segrellion_black_unicorn_visenya_married_daemon
+
+		add_character_flag = segrellion_black_unicorn_dual_marriage_accepted
+
+		add_character_flag = segrellion_black_unicorn_visenya_primary_wife
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_married_daemon
+
+			add_character_flag = segrellion_black_unicorn_primary_wife_of_daemon
+		}
+
+
+		# =================================================
+		# MARK THE ORIGINAL WIFE AS HAVING ACCEPTED
+		# =================================================
+
+		var:segrellion_black_unicorn_current_wife ?= {
+
+			add_character_flag = segrellion_black_unicorn_secondary_wife_of_daemon
+
+			add_character_flag = segrellion_black_unicorn_accepted_dual_marriage
+		}
+
+
+		# =================================================
+		# RELATIONSHIP
+		# =================================================
+
+		segrellion_black_unicorn_visenya_marriage_bond_effect = yes
+
+
+		segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
+
+		segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
+
+
+		add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+		add_character_flag = segrellion_black_unicorn_part_iii_marriage_resolution
+
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0881
+			days = 1
+		}
+	}
+
+
+	else = {
+
+		add_character_flag = segrellion_black_unicorn_visenya_marriage_failed
+
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0889
+			days = 1
+		}
+	}
+
+
+	character:Black_Unicorn_1 = {
+		remove_character_flag = segrellion_black_unicorn_scripted_marriage_authorized
+	}
+}
+
+# =========================================================
 # EXCLUSIVE MARRIAGE TO VISENYA
 #
 # Used by:
@@ -2938,13 +3201,31 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 		}
 
 
+		# =================================================
+		# VISENYA IS ALWAYS THE PRIMARY WIFE
+		# =================================================
+
+		set_primary_spouse = character:Black_Unicorn_1
+
+
 		add_character_flag = segrellion_black_unicorn_visenya_married_daemon
+
+		add_character_flag = segrellion_black_unicorn_visenya_primary_wife
 
 
 		character:Black_Unicorn_1 = {
 
 			add_character_flag = segrellion_black_unicorn_married_daemon
+
+			add_character_flag = segrellion_black_unicorn_primary_wife_of_daemon
 		}
+
+
+		# =================================================
+		# MOST MARRIAGE ROUTES CREATE A DEEP BOND
+		# =================================================
+
+		segrellion_black_unicorn_visenya_marriage_bond_effect = yes
 
 
 		segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = yes
