@@ -11,6 +11,7 @@ monthly_global_pulse = {
 	on_actions = {
 		segrellion_tommen_peace_guard
 		segrellion_shireen_peace_guard
+		segrellion_daenerys_canon_pregnancy_guard
 		segrellion_stepstones_followup_existing_war_check
 		segrellion_daemon_young_griff_war_allegiance_progression
 		segrellion_daenerys_post_throne_progression
@@ -184,6 +185,12 @@ on_marriage = {
 		segrellion_arianne_marriage_guard
 		segrellion_young_griff_daemon_marriage_guard
 		segrellion_black_unicorn_visenya_marriage_guard
+	}
+}
+
+on_pregnancy_mother = {
+	on_actions = {
+		segrellion_daenerys_early_pregnancy_guard
 	}
 }
 
@@ -2072,6 +2079,121 @@ segrellion_daenerys_marriage_guard = {
 			add_character_modifier = {
 				modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
 				years = 8
+			}
+		}
+	}
+}
+
+# =========================================================
+# DAENERYS SEGRELLION
+# IMMEDIATE EARLY-PREGNANCY KILL SWITCH
+# =========================================================
+
+segrellion_daenerys_early_pregnancy_guard = {
+
+	trigger = {
+		this = character:Segrellion_3
+
+		is_alive = yes
+
+		current_date < 8113.1.1
+
+		any_spouse = {
+			this = character:Segrellion_1
+		}
+	}
+
+
+	effect = {
+
+		end_pregnancy = yes
+
+
+		if = {
+			limit = {
+				NOT = {
+					has_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+				}
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+			}
+		}
+	}
+}
+
+# =========================================================
+# DAENERYS SEGRELLION
+# CANON PREGNANCY HARD GUARD
+#
+# Daenerys must not be pregnant before 113 AC.
+# Maenar's canonical pregnancy becomes valid from 113 AC.
+# =========================================================
+
+segrellion_daenerys_canon_pregnancy_guard = {
+
+	effect = {
+
+		character:Segrellion_3 ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+					current_date < 8113.1.1
+
+					any_spouse = {
+						this = character:Segrellion_1
+					}
+				}
+
+
+				# =================================================
+				# KEEP THE FERTILITY LOCK ACTIVE
+				# =================================================
+
+				if = {
+					limit = {
+						NOT = {
+							has_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+						}
+					}
+
+					add_character_modifier = {
+						modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+					}
+				}
+
+
+				# =================================================
+				# DESTROY ANY NON-CANON EARLY PREGNANCY
+				#
+				# This protects against vanilla, AGOT or another
+				# scripted effect bypassing fertility entirely.
+				# =================================================
+
+				if = {
+					limit = {
+						has_trait = pregnant
+					}
+
+					end_pregnancy = yes
+				}
+			}
+
+
+			# =================================================
+			# RELEASE THE LOCK IN 113 AC
+			# =================================================
+
+			else_if = {
+				limit = {
+					current_date >= 8113.1.1
+
+					has_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+				}
+
+				remove_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
 			}
 		}
 	}

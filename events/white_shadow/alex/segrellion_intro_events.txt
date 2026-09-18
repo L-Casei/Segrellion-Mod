@@ -124,24 +124,28 @@ segrellion_intro.0009 = {
 
 			marry = character:Segrellion_3
 
-			if = {
-				limit = {
-					has_game_rule = segrellion_canon_children_enabled
-					agot_canon_children_enabled_trigger = yes
-				}
+			# =================================================
+			# DAENERYS CANON PREGNANCY LOCK
+			#
+			# Daenerys must not conceive before Maenar's
+			# canonical pregnancy window opens in 113 AC.
+			#
+			# This is independent from the Canon Children rule.
+			# =================================================
 
-				character:Segrellion_3 = {
+			character:Segrellion_3 = {
 
-					if = {
-						limit = {
-							NOT = {
-								has_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
-							}
+				if = {
+					limit = {
+						current_date < 8113.1.1
+
+						NOT = {
+							has_character_modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
 						}
+					}
 
-						add_character_modifier = {
-							modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
-						}
+					add_character_modifier = {
+						modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
 					}
 				}
 			}
