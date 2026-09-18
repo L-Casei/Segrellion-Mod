@@ -44,6 +44,11 @@ segrellion_black_unicorn_dungeon_reconciliation_effect = {
 	segrellion_black_unicorn_release_visenya_from_dungeon_effect = yes
 
 	remove_character_modifier = segrellion_black_unicorn_treacherous_host_modifier
+	remove_character_flag = segrellion_black_unicorn_daemon_betrayed_visenya
+
+	character:Black_Unicorn_1 = {
+		remove_character_flag = segrellion_black_unicorn_betrayed_by_daemon
+	}
 
 	add_character_flag = segrellion_black_unicorn_dungeon_reconciliation
 	add_character_flag = segrellion_black_unicorn_visenya_forgave_beacon_betrayal
@@ -74,14 +79,32 @@ segrellion_black_unicorn_recognize_visenya_as_niece_effect = {
 	segrellion_reveal_black_unicorn_identity_effect = yes
 
 	add_character_flag = segrellion_black_unicorn_recognized_visenya_as_niece
-	add_character_flag = segrellion_black_unicorn_visenya_temporary_heir
 
-	set_designated_heir_unsafe = character:Black_Unicorn_1
+	# Visenya only becomes the temporary designated heir if
+	# Daemon does not already have a living son.
+	if = {
+
+		limit = {
+
+			NOT = {
+				any_child = {
+					is_alive = yes
+					is_female = no
+				}
+			}
+		}
+
+		add_character_flag = segrellion_black_unicorn_visenya_temporary_heir
+		set_designated_heir_unsafe = character:Black_Unicorn_1
+
+		character:Black_Unicorn_1 = {
+			add_character_flag = segrellion_black_unicorn_temporary_heir_to_daemon
+		}
+	}
 
 	character:Black_Unicorn_1 = {
 
 		add_character_flag = segrellion_black_unicorn_recognized_niece_of_daemon
-		add_character_flag = segrellion_black_unicorn_temporary_heir_to_daemon
 
 		add_opinion = {
 			target = root
@@ -90,6 +113,11 @@ segrellion_black_unicorn_recognize_visenya_as_niece_effect = {
 	}
 
 	remove_character_modifier = segrellion_black_unicorn_treacherous_host_modifier
+	remove_character_flag = segrellion_black_unicorn_daemon_betrayed_visenya
+
+	character:Black_Unicorn_1 = {
+		remove_character_flag = segrellion_black_unicorn_betrayed_by_daemon
+	}
 }
 
 
