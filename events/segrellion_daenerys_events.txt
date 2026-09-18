@@ -2623,9 +2623,7 @@ segrellion_daenerys_invasion.0018 = {
 		# =================================================
 		# DRAGONSTONE
 		#
-		# Daenerys does not merely land on Dragonstone.
-		# She seizes the actual island and its political
-		# titles.
+		# Shared with the later Take Dragonstone decision.
 		# =================================================
 
 		if = {
@@ -2636,139 +2634,7 @@ segrellion_daenerys_invasion.0018 = {
 			}
 
 
-			# Save Stannis' household before the title
-			# transfer can potentially leave him landless.
-
-			segrellion_snapshot_stannis_retinue_effect = yes
-
-
-			# Prepare landless Daenerys to become landed.
-
-			ep3_become_landed_warning_effect = {
-
-				TITLE_RECEIVER = character:Targaryen_9
-
-				TITLE = title:k_dragonstone
-			}
-
-
-			create_title_and_vassal_change = {
-
-				type = conquest
-
-				save_scope_as = segrellion_daenerys_dragonstone_change
-
-				add_claim_on_loss = no
-			}
-
-
-			# =============================================
-			# KINGDOM OF DRAGONSTONE
-			# =============================================
-
-			title:k_dragonstone = {
-
-				change_title_holder = {
-
-					holder = character:Targaryen_9
-
-					change = scope:segrellion_daenerys_dragonstone_change
-
-					government_base = character:Baratheon_3
-				}
-			}
-
-
-			# =============================================
-			# DUCHY OF DRAGONSTONE
-			# =============================================
-
-			title:d_dragonstone = {
-
-				change_title_holder = {
-
-					holder = character:Targaryen_9
-
-					change = scope:segrellion_daenerys_dragonstone_change
-				}
-			}
-
-
-			# =============================================
-			# COUNTY OF DRAGONSTONE
-			# =============================================
-
-			title:c_dragonstone = {
-
-				change_title_holder = {
-
-					holder = character:Targaryen_9
-
-					change = scope:segrellion_daenerys_dragonstone_change
-				}
-			}
-
-			if = {
-
-				limit = {
-					segrellion_daenerys_shireen_dragonstone_scenario_trigger = yes
-				}
-
-				character:Baratheon_13 = {
-
-					imprison = {
-						target = this
-						imprisoner = character:Targaryen_9
-					}
-				}
-
-				character:Baratheon_13 = {
-
-					mother ?= {
-
-						if = {
-
-							limit = {
-								is_alive = yes
-							}
-
-							imprison = {
-								target = this
-								imprisoner = character:Targaryen_9
-							}
-						}
-					}
-				}
-
-				add_character_flag = segrellion_daenerys_captured_shireen
-
-				trigger_event = {
-					id = segrellion_daenerys_dragonstone.0001
-					days = 1
-				}
-			}
-
-			resolve_title_and_vassal_change = scope:segrellion_daenerys_dragonstone_change
-
-
-			ep3_become_landed_cleanup_effect = yes
-
-
-			set_primary_title_to = title:k_dragonstone
-
-			set_realm_capital = title:c_dragonstone
-
-
-			add_character_flag = segrellion_daenerys_seized_dragonstone
-
-
-			# If Dragonstone was Stannis' final possession,
-			# he now becomes landless.
-			#
-			# If Jon refused and Stannis still holds the
-			# North, this does nothing for now.
-
-			segrellion_stannis_try_become_landless_effect = yes
+			segrellion_daenerys_seize_dragonstone_effect = yes
 		}
 
 
@@ -2884,9 +2750,17 @@ segrellion_daenerys_invasion.0019 = {
 
 		is_alive = yes
 
-		has_character_flag = segrellion_daenerys_landing_dragonstone
+
+		OR = {
+
+			has_character_flag = segrellion_daenerys_landing_dragonstone
+
+			has_character_flag = segrellion_daenerys_seized_dragonstone
+		}
+
 
 		has_character_flag = segrellion_daenerys_landed_in_westeros
+
 
 		NOT = {
 			has_character_flag = segrellion_daenerys_dragonstone_reflection_seen
@@ -2912,11 +2786,42 @@ segrellion_daenerys_invasion.0019 = {
 
 		name = segrellion_daenerys_invasion.0019.a
 
-		trigger_event = {
 
-			id = segrellion_daenerys_invasion.0020
+		# =================================================
+		# ORIGINAL DRAGONSTONE LANDING
+		#
+		# Continue into The Dragon Lands.
+		# =================================================
 
-			days = 1
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_took_dragonstone_after_landing
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_invasion.0020
+
+				days = 1
+			}
+		}
+
+
+		# =================================================
+		# LATER DRAGONSTONE VISIT
+		#
+		# Daenerys already had her Westeros landing event.
+		# Do not fire The Dragon Lands a second time.
+		# =================================================
+
+		else = {
+
+			remove_character_flag = segrellion_daenerys_took_dragonstone_after_landing
 		}
 	}
 }

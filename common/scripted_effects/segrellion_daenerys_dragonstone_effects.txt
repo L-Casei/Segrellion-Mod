@@ -95,3 +95,251 @@ segrellion_prepare_davos_for_dragonstone_story_effect = {
 		}
 	}
 }
+
+# =========================================================
+# DAENERYS SEIZES DRAGONSTONE
+#
+# ROOT = Daenerys
+#
+# Shared between:
+#
+# - the original Dragonstone invasion landing
+# - the later Take Dragonstone decision
+#
+# This keeps the political settlement and Dragonstone
+# storyline identical regardless of how she reaches
+# the island.
+# =========================================================
+
+segrellion_daenerys_seize_dragonstone_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_seized_dragonstone
+			}
+		}
+
+
+		# =================================================
+		# STANNIS' HOUSEHOLD
+		# =================================================
+
+		segrellion_snapshot_stannis_retinue_effect = yes
+
+
+		# =================================================
+		# LANDING PREPARATION
+		#
+		# Only needed if Daenerys is still landless.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_landed = no
+			}
+
+
+			add_character_flag = segrellion_daenerys_dragonstone_becoming_landed
+
+
+			ep3_become_landed_warning_effect = {
+
+				TITLE_RECEIVER = character:Targaryen_9
+
+				TITLE = title:k_dragonstone
+			}
+		}
+
+
+		# =================================================
+		# DRAGONSTONE CONQUEST
+		# =================================================
+
+		create_title_and_vassal_change = {
+
+			type = conquest
+
+			save_scope_as = segrellion_daenerys_dragonstone_change
+
+			add_claim_on_loss = no
+		}
+
+
+		# =================================================
+		# KINGDOM OF DRAGONSTONE
+		# =================================================
+
+		title:k_dragonstone = {
+
+			change_title_holder = {
+
+				holder = character:Targaryen_9
+
+				change = scope:segrellion_daenerys_dragonstone_change
+
+				government_base = character:Baratheon_3
+			}
+		}
+
+
+		# =================================================
+		# DUCHY OF DRAGONSTONE
+		# =================================================
+
+		title:d_dragonstone = {
+
+			change_title_holder = {
+
+				holder = character:Targaryen_9
+
+				change = scope:segrellion_daenerys_dragonstone_change
+			}
+		}
+
+
+		# =================================================
+		# COUNTY OF DRAGONSTONE
+		# =================================================
+
+		title:c_dragonstone = {
+
+			change_title_holder = {
+
+				holder = character:Targaryen_9
+
+				change = scope:segrellion_daenerys_dragonstone_change
+			}
+		}
+
+
+		# =================================================
+		# SHIREEN
+		#
+		# Preserve the exact same Dragonstone storyline
+		# used by the original landing route.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				segrellion_daenerys_shireen_dragonstone_scenario_trigger = yes
+			}
+
+
+			character:Baratheon_13 = {
+
+				imprison = {
+
+					target = this
+
+					imprisoner = character:Targaryen_9
+				}
+			}
+
+
+			character:Baratheon_13 = {
+
+				mother ?= {
+
+					if = {
+
+						limit = {
+							is_alive = yes
+						}
+
+
+						imprison = {
+
+							target = this
+
+							imprisoner = character:Targaryen_9
+						}
+					}
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_captured_shireen
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_dragonstone.0001
+
+				days = 1
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_daenerys_dragonstone_change
+
+
+		# =================================================
+		# FINISH LANDING CONVERSION
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_dragonstone_becoming_landed
+			}
+
+
+			ep3_become_landed_cleanup_effect = yes
+
+
+			remove_character_flag = segrellion_daenerys_dragonstone_becoming_landed
+		}
+
+
+		# =================================================
+		# PRIMARY TITLE / CAPITAL
+		#
+		# Before taking the Iron Throne, Dragonstone becomes
+		# Daenerys' political seat.
+		#
+		# If she already rules the Iron Throne, do NOT turn
+		# Dragonstone into her new primary title.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_title = title:h_the_iron_throne
+				}
+			}
+
+
+			set_primary_title_to = title:k_dragonstone
+
+			set_realm_capital = title:c_dragonstone
+		}
+
+
+		# =================================================
+		# PERMANENT STATE
+		# =================================================
+
+		add_character_flag = segrellion_daenerys_seized_dragonstone
+
+
+		# =================================================
+		# STANNIS CLEANUP
+		# =================================================
+
+		segrellion_stannis_try_become_landless_effect = yes
+	}
+}

@@ -240,3 +240,114 @@ segrellion_daenerys_dragonstone.0010 = {
 		}
 	}
 }
+
+# =========================================================
+# 0090 - TAKE DRAGONSTONE ARRIVAL
+#
+# Hidden arrival router for the Take Dragonstone decision.
+#
+# Daenerys has ALREADY landed in Westeros.
+# Therefore we seize Dragonstone and redirect into the
+# existing Dragonstone arrival storyline without repeating
+# the generic Westeros landing sequence.
+# =========================================================
+
+segrellion_daenerys_dragonstone.0090 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_taking_dragonstone
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_taking_dragonstone
+
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+
+
+				segrellion_daenerys_dragonstone_landing_available_trigger = yes
+
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_seized_dragonstone
+				}
+			}
+
+
+			add_character_flag = segrellion_daenerys_took_dragonstone_after_landing
+
+
+			segrellion_daenerys_seize_dragonstone_effect = yes
+
+
+			# =================================================
+			# EXISTING DRAGONSTONE ARRIVAL EVENT
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_dragonstone_reflection_seen
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_daenerys_invasion.0019
+
+					days = 1
+				}
+			}
+
+
+			else = {
+
+				remove_character_flag = segrellion_daenerys_took_dragonstone_after_landing
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0091 - TAKE DRAGONSTONE TRAVEL CANCELLED
+#
+# Hidden cleanup.
+# Allows the decision to become available again.
+# =========================================================
+
+segrellion_daenerys_dragonstone.0091 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Targaryen_9
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_daenerys_taking_dragonstone
+
+		remove_character_flag = segrellion_daenerys_took_dragonstone_after_landing
+	}
+}

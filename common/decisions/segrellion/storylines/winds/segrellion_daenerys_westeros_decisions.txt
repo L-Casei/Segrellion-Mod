@@ -600,6 +600,170 @@ segrellion_daenerys_gather_support_decision = {
 	}
 }
 
+# =========================================================
+# TAKE DRAGONSTONE
+#
+# Daenerys has already landed elsewhere in Westeros.
+# Once Stannis is dead, she may return to the island of
+# her birth and claim Dragonstone for herself.
+# =========================================================
+
+segrellion_daenerys_take_dragonstone_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/event_scenes/segrellion_dragonstone_arrival.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_daenerys_take_dragonstone_decision_desc
+	selection_tooltip = segrellion_daenerys_take_dragonstone_decision_tooltip
+	confirm_text = segrellion_daenerys_take_dragonstone_decision_confirm
+
+
+	# =====================================================
+	# SHOWN
+	# =====================================================
+
+	is_shown = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_character_flag = segrellion_daenerys_landed_in_westeros
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_seized_dragonstone
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_taking_dragonstone
+		}
+
+
+		# Old-save / recovery protection.
+
+		NOT = {
+			has_title = title:k_dragonstone
+		}
+
+		NOT = {
+			has_title = title:d_dragonstone
+		}
+
+		NOT = {
+			has_title = title:c_dragonstone
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		# -------------------------------------------------
+		# STANNIS MUST BE DEAD
+		# -------------------------------------------------
+
+		custom_description = {
+
+			text = segrellion_daenerys_take_dragonstone_stannis_dead_requirement
+
+			segrellion_daenerys_dragonstone_landing_available_trigger = yes
+		}
+
+
+		# -------------------------------------------------
+		# DAENERYS CANNOT BE IMPRISONED
+		# -------------------------------------------------
+
+		custom_description = {
+
+			text = segrellion_daenerys_take_dragonstone_not_imprisoned_requirement
+
+			is_imprisoned = no
+		}
+
+
+		# -------------------------------------------------
+		# DAENERYS CANNOT ALREADY BE TRAVELLING
+		# -------------------------------------------------
+
+		custom_description = {
+
+			text = segrellion_daenerys_take_dragonstone_not_travelling_requirement
+
+			NOT = {
+				exists = current_travel_plan
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_daenerys_take_dragonstone_travel_tt
+		custom_tooltip = segrellion_daenerys_take_dragonstone_claim_tt
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_daenerys_taking_dragonstone
+
+
+			start_travel_plan = {
+
+				destination = title:c_dragonstone.title_province
+
+				players_use_planner = no
+
+				return_trip = no
+
+				travel_with_domicile = yes
+
+				on_arrival_event = segrellion_daenerys_dragonstone.0090
+
+				on_arrival_destinations = last
+
+				on_travel_planner_cancel_event = segrellion_daenerys_dragonstone.0091
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	#
+	# Daenerys should take Dragonstone almost immediately
+	# once Stannis is dead and the decision becomes valid.
+	# =====================================================
+
+	ai_check_interval = 1
+
+
+	ai_potential = {
+
+		this = character:Targaryen_9
+
+		is_ai = yes
+	}
+
+
+	ai_will_do = {
+
+		base = 1000
+	}
+}
+
 
 # =========================================================
 # DECLARE THE WAR FOR THE IRON THRONE
