@@ -1,0 +1,510 @@
+# =========================================================
+# JON SNOW - WAR FOR WINTERFELL
+# =========================================================
+
+segrellion_jon_winterfell_campaign_cb = {
+
+	icon = invasion
+
+	group = invasion
+
+
+	combine_into_one = yes
+
+	should_show_war_goal_subview = yes
+
+
+	mutually_exclusive_titles = {
+		always = yes
+	}
+
+
+	allow_hostages = no
+
+
+	allowed_for_character = {
+
+		has_character_flag = segrellion_canonical_current_jon
+
+		has_character_flag = segrellion_jon_winterfell_cb_authorized
+
+		has_title = title:k_the_wall
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = title:e_the_north.holder
+	}
+
+
+	target_titles = all
+
+	target_title_tier = empire
+
+	target_de_jure_regions_above = no
+
+
+	ignore_effect = change_title_holder
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:e_the_north
+		}
+	}
+
+
+	should_invalidate = {
+
+		OR = {
+
+			scope:attacker = {
+				is_alive = no
+			}
+
+			scope:defender = {
+
+				NOT = {
+					has_title = title:e_the_north
+				}
+			}
+		}
+	}
+
+
+	cost = {
+	}
+
+
+	# =====================================================
+	# WAR DECLARATION
+	# =====================================================
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_winterfell_cb_authorized
+
+			add_character_flag = segrellion_jon_winterfell_campaign_active
+
+			add_character_flag = segrellion_jon_broke_watch_neutrality
+
+
+			every_vassal_or_below = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_trait = nightswatch
+
+					this != scope:attacker
+				}
+
+
+				add_opinion = {
+
+					target = scope:attacker
+
+					modifier = segrellion_jon_broke_watch_neutrality_opinion
+				}
+			}
+
+
+			every_courtier = {
+
+				limit = {
+
+					is_alive = yes
+
+					has_trait = nightswatch
+
+					this != scope:attacker
+				}
+
+
+				add_opinion = {
+
+					target = scope:attacker
+
+					modifier = segrellion_jon_broke_watch_neutrality_opinion
+				}
+			}
+
+
+			set_variable = {
+
+				name = segrellion_jon_winterfell_war
+
+				value = scope:war
+			}
+
+
+			# =================================================
+			# JON'S RETURNED HOST
+			# =================================================
+
+			spawn_army = {
+
+				name = segrellion_jon_returned_host
+
+
+				men_at_arms = {
+
+					type = nw_rangers
+
+					men = 700
+				}
+
+
+				men_at_arms = {
+
+					type = sworn_brothers
+
+					men = 500
+				}
+
+
+				men_at_arms = {
+
+					type = wildling_raiders
+
+					men = 1000
+				}
+
+
+				men_at_arms = {
+
+					type = wildling_cavalry
+
+					men = 300
+				}
+
+
+				levies = 2500
+
+
+				inheritable = no
+
+				location = title:c_castle_black.title_province
+
+				origin = title:c_castle_black.title_province
+
+
+				war = scope:war
+
+				war_keep_on_attacker_victory = yes
+
+
+				save_scope_as = jon_winterfell_host
+			}
+		}
+
+
+		scope:jon_winterfell_host ?= {
+			assign_commander = scope:attacker
+		}
+
+
+		# =================================================
+		# THE NORTH RISES
+		#
+		# No AI vote.
+		# No opinion requirement.
+		#
+		# Whoever currently represents the great Northern
+		# houses abandons the Bolton regime and joins Jon.
+		#
+		# This remains true even if they previously lost
+		# alongside Stannis.
+		# =================================================
+
+		scope:defender = {
+
+			every_vassal = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_landed = yes
+
+					this != scope:attacker
+
+					this != scope:defender
+				}
+
+
+				save_temporary_scope_as = jon_northern_supporter
+
+
+				scope:war = {
+
+					if = {
+
+						limit = {
+							is_defender = scope:jon_northern_supporter
+						}
+
+						remove_participant = scope:jon_northern_supporter
+					}
+
+
+					if = {
+
+						limit = {
+
+							NOT = {
+								is_attacker = scope:jon_northern_supporter
+							}
+						}
+
+
+						add_attacker = scope:jon_northern_supporter
+					}
+				}
+
+
+				add_character_flag = segrellion_northern_lord_supported_returned_jon
+			}
+		}
+	}
+
+
+	# =====================================================
+	# VICTORY
+	# =====================================================
+
+	on_victory_desc = {
+		desc = segrellion_jon_winterfell_campaign_victory_desc
+	}
+
+
+	on_victory = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_winterfell_campaign_active
+
+			remove_variable = segrellion_jon_winterfell_war
+
+			add_character_flag = segrellion_jon_winterfell_campaign_victory
+
+			# Jon remained Lord Commander throughout the campaign.
+			# Only victory finally ends his command.
+
+			segrellion_jon_leave_watch_for_winterfell_effect = yes
+
+
+			ep3_become_landed_warning_effect = {
+
+				TITLE_RECEIVER = scope:attacker
+
+				TITLE = title:e_the_north
+			}
+
+
+			create_title_and_vassal_change = {
+
+				type = conquest
+
+				save_scope_as = jon_north_restoration_change
+
+				add_claim_on_loss = no
+			}
+
+
+			title:e_the_north = {
+
+				change_title_holder_include_vassals = {
+
+					holder = scope:attacker
+
+					change = scope:jon_north_restoration_change
+
+					government_base = scope:defender
+				}
+			}
+
+
+			title:k_winterfell = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:jon_north_restoration_change
+				}
+			}
+
+
+			title:d_winterfell = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:jon_north_restoration_change
+				}
+			}
+
+
+			title:c_winterfell = {
+
+				change_title_holder = {
+
+					holder = scope:attacker
+
+					change = scope:jon_north_restoration_change
+				}
+			}
+
+
+			resolve_title_and_vassal_change = scope:jon_north_restoration_change
+
+
+			set_primary_title_to = title:e_the_north
+
+			set_realm_capital = title:c_winterfell
+
+
+			ep3_become_landed_cleanup_effect = yes
+		}
+
+
+		# Ramsay / current enemy is captured.
+
+		if = {
+
+			limit = {
+
+				scope:defender = {
+
+					is_alive = yes
+
+					is_imprisoned = no
+				}
+			}
+
+
+			scope:attacker = {
+
+				imprison = {
+
+					target = scope:defender
+
+					type = dungeon
+				}
+			}
+		}
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	# =====================================================
+	# WHITE PEACE
+	# =====================================================
+
+	on_white_peace_desc = {
+		desc = segrellion_jon_winterfell_campaign_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_winterfell_campaign_active
+
+			remove_variable = segrellion_jon_winterfell_war
+
+			add_character_flag = segrellion_jon_winterfell_campaign_failed
+		}
+
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	# =====================================================
+	# DEFEAT
+	# =====================================================
+
+	on_defeat_desc = {
+		desc = segrellion_jon_winterfell_campaign_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_winterfell_campaign_active
+
+			remove_variable = segrellion_jon_winterfell_war
+
+			add_character_flag = segrellion_jon_winterfell_campaign_failed
+		}
+
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_invalidated = {
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_jon_winterfell_cb_authorized
+
+			remove_character_flag = segrellion_jon_winterfell_campaign_active
+
+			remove_variable = segrellion_jon_winterfell_war
+		}
+	}
+
+
+	transfer_behavior = transfer
+
+
+	on_primary_attacker_death = invalidate
+
+	on_primary_defender_death = inherit
+
+
+	attacker_allies_inherit = yes
+
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_jon_winterfell_campaign_war_name"
+
+	war_name_base = "segrellion_jon_winterfell_campaign_war_name_base"
+
+	cb_name = "segrellion_jon_winterfell_campaign_cb_name"
+
+
+	interface_priority = 100
+
+
+	use_de_jure_wargoal_only = yes
+
+
+	attacker_wargoal_percentage = 0.8
+
+
+	max_attacker_score_from_battles = 75
+
+	max_defender_score_from_occupation = 150
+
+	max_attacker_score_from_occupation = 150
+}
+
