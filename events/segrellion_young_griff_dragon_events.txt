@@ -1000,11 +1000,6 @@ segrellion_young_griff_dragon.0031 = {
 
 # =========================================================
 # 0032 - WHAT THE FIRE SPARED
-#
-# EXACT CHANCES:
-#
-# 10% egg
-# 90% nothing
 # =========================================================
 
 segrellion_young_griff_dragon.0032 = {
@@ -1435,11 +1430,24 @@ segrellion_young_griff_dragon.0100 = {
 # =========================================================
 # 0110 - BLOOD OF THE DRAGON
 #
-# EXACT CHANCES:
+# Young Griff has reached Rhaegal / Viserion.
 #
-# 40% death
-# 50% burned
-# 10% tame
+# The actual taming roll uses AGOT's native dragon taming
+# system instead of fixed Segrellion percentages.
+#
+# Success depends on:
+# - dragon temperament
+# - dragon taming chance
+# - shared personality traits
+# - dragonblood
+# - language
+# - dragonlore
+# - previous dragonrider status
+# - dragonpit circumstances
+# - other AGOT taming modifiers
+#
+# Failure consequences are also handled by AGOT:
+# death / burns / wounds / retreating dragon.
 # =========================================================
 
 segrellion_young_griff_dragon.0110 = {
@@ -1482,7 +1490,7 @@ segrellion_young_griff_dragon.0110 = {
 
 
 	# =====================================================
-	# APPROACH
+	# ATTEMPT TO TAME THE DRAGON
 	# =====================================================
 
 	option = {
@@ -1510,100 +1518,55 @@ segrellion_young_griff_dragon.0110 = {
 
 		hidden_effect = {
 
-			random_list = {
+			add_character_flag = segrellion_young_griff_attempted_daenerys_dragon
 
 
-				# =============================================
-				# 40% - DEATH
-				# =============================================
+			# =================================================
+			# AGOT NATIVE TAMING ATTEMPT
+			#
+			# Do NOT replace this with a random_list.
+			#
+			# AGOT calculates the actual success chance from
+			# Aegon + dragon compatibility and then handles
+			# the appropriate failure consequences.
+			# =================================================
 
-				40 = {
+			agot_try_tame_dragon_effect = {
 
-					death = {
+				TAMER = root
 
-						death_reason = death_dragon_ate_failed_tamed
+				DRAGON = var:segrellion_young_griff_target_dragon
+			}
 
-						killer = var:segrellion_young_griff_target_dragon
-					}
+
+			# =================================================
+			# AEGON SURVIVED THE ATTEMPT
+			# =================================================
+
+			if = {
+
+				limit = {
+					is_alive = yes
 				}
 
 
-				# =============================================
-				# 50% - BURNED
-				# =============================================
-
-				50 = {
-
-					if = {
-
-						limit = {
-
-							NOT = {
-								has_trait = burned
-							}
-						}
-
-						add_trait = burned
-					}
-
-
-					add_trait_xp = {
-
-						trait = burned
-
-						track = burned
-
-						value = 100
-					}
-
-
-					add_character_flag = segrellion_young_griff_burned_by_dragon
-
-					add_character_flag = segrellion_young_griff_dragon_route_resolved
-
-
-					character:Targaryen_9 ?= {
-
-						add_character_flag = segrellion_daenerys_caught_young_griff_dragon_theft
-
-
-						add_opinion = {
-
-							target = root
-
-							modifier = segrellion_daenerys_caught_dragon_thief_opinion
-						}
-					}
-
-
-					trigger_event = {
-
-						id = segrellion_young_griff_dragon.0120
-
-						days = 1
-					}
-				}
+				add_character_flag = segrellion_young_griff_dragon_route_resolved
 
 
 				# =============================================
-				# 10% - TAME
+				# SUCCESS
 				# =============================================
 
-				10 = {
+				if = {
 
-					agot_tame_dragon = {
-
-						TAMER = root
-
-						DRAGON = var:segrellion_young_griff_target_dragon
+					limit = {
+						is_current_dragonrider = yes
 					}
 
 
 					add_character_flag = segrellion_young_griff_tamed_daenerys_dragon
 
 					add_character_flag = segrellion_young_griff_stole_daenerys_dragon
-
-					add_character_flag = segrellion_young_griff_dragon_route_resolved
 
 
 					character:Targaryen_9 ?= {
@@ -1618,16 +1581,117 @@ segrellion_young_griff_dragon.0110 = {
 							modifier = segrellion_daenerys_dragon_stolen_opinion
 						}
 					}
+				}
 
 
-					trigger_event = {
+				# =============================================
+				# FAILURE
+				# =============================================
 
-						id = segrellion_young_griff_dragon.0120
+				else = {
 
-						days = 1
+					add_character_flag = segrellion_young_griff_failed_daenerys_dragon_taming
+
+
+					# -----------------------------------------
+					# BURNED
+					# -----------------------------------------
+
+					if = {
+
+						limit = {
+							has_trait = burned
+						}
+
+
+						add_character_flag = segrellion_young_griff_burned_by_dragon
+					}
+
+
+					# -----------------------------------------
+					# DAENERYS LEARNS OF THE ATTEMPT
+					# -----------------------------------------
+
+					character:Targaryen_9 ?= {
+
+						add_character_flag = segrellion_daenerys_caught_young_griff_dragon_theft
+
+
+						add_opinion = {
+
+							target = root
+
+							modifier = segrellion_daenerys_caught_dragon_thief_opinion
+						}
 					}
 				}
+
+
+				# =============================================
+				# RESULT EVENT
+				# =============================================
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragon.0120
+
+					days = 1
+				}
 			}
+		}
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+
+
+	# =====================================================
+	# TURN BACK
+	#
+	# Aegon has reached the dragon but has not yet made
+	# the taming attempt.
+	#
+	# This does NOT permanently resolve I Need a Dragon.
+	# He may later choose the egg route instead.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragon.0110.b
+
+
+		trigger = {
+
+			var:segrellion_young_griff_target_dragon ?= {
+
+				is_alive = yes
+
+				has_trait = dragon
+
+				NOT = {
+					exists = var:current_rider
+				}
+			}
+		}
+
+
+		custom_tooltip = segrellion_young_griff_dragon.0110.b.tt
+
+
+		add_character_flag = segrellion_young_griff_backed_away_from_daenerys_dragon
+
+
+		remove_character_flag = segrellion_young_griff_dragon_path_chosen
+
+		remove_character_flag = segrellion_young_griff_dragon_path_daenerys
+
+		remove_variable = segrellion_young_griff_target_dragon
+
+
+		ai_chance = {
+			base = 0
 		}
 	}
 
@@ -1638,7 +1702,7 @@ segrellion_young_griff_dragon.0110 = {
 
 	option = {
 
-		name = segrellion_young_griff_dragon.0110.b
+		name = segrellion_young_griff_dragon.0110.c
 
 
 		trigger = {
@@ -1663,15 +1727,17 @@ segrellion_young_griff_dragon.0110 = {
 
 			add_character_flag = segrellion_young_griff_dragon_target_lost
 
-			add_character_flag = segrellion_young_griff_dragon_route_resolved
+
+			remove_character_flag = segrellion_young_griff_dragon_path_chosen
+
+			remove_character_flag = segrellion_young_griff_dragon_path_daenerys
+
+			remove_variable = segrellion_young_griff_target_dragon
+		}
 
 
-			trigger_event = {
-
-				id = segrellion_young_griff_dragon.0120
-
-				days = 1
-			}
+		ai_chance = {
+			base = 100
 		}
 	}
 }
