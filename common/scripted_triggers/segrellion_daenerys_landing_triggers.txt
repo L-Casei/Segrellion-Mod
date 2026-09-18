@@ -10,8 +10,38 @@
 
 segrellion_daenerys_dragonstone_landing_available_trigger = {
 
+	# =====================================================
+	# STANNIS MUST BE DEAD
+	# =====================================================
+
 	character:Baratheon_3 = {
+
 		is_alive = no
+	}
+
+
+	# =====================================================
+	# AEGON MUST NOT CONTROL DRAGONSTONE
+	# =====================================================
+
+	NOT = {
+
+		title:c_dragonstone.holder = character:IAF_Young_Griff_1
+	}
+
+
+	# =====================================================
+	# AEGON MUST NOT ALREADY BE MARCHING FOR IT
+	#
+	# Prevents both storylines racing toward the same island.
+	# =====================================================
+
+	NOT = {
+
+		character:IAF_Young_Griff_1 ?= {
+
+			has_character_flag = segrellion_young_griff_taking_dragonstone
+		}
 	}
 }
 

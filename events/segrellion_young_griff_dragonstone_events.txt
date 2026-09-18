@@ -1,0 +1,986 @@
+namespace = segrellion_young_griff_dragonstone
+
+
+# =========================================================
+# 0001 - THE DRAGON'S DEMAND
+#
+# Root = Shireen
+# Sender = Aegon
+#
+# 10% surrender
+# 90% refusal
+# =========================================================
+
+segrellion_young_griff_dragonstone.0001 = {
+
+	type = letter_event
+
+	theme = diplomacy
+
+
+	sender = character:IAF_Young_Griff_1
+
+
+	opening = segrellion_young_griff_dragonstone.0001.opening
+
+	title = segrellion_young_griff_dragonstone.0001.t
+
+	desc = segrellion_young_griff_dragonstone.0001.desc
+
+
+	trigger = {
+
+		this = character:Baratheon_13
+
+		is_alive = yes
+
+
+		character:Baratheon_3 = {
+
+			is_alive = no
+		}
+
+
+		character:IAF_Young_Griff_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_young_griff_dragonstone_request_pending
+		}
+
+
+		title:c_dragonstone.holder = root
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = worry
+	}
+
+
+	# =====================================================
+	# SURRENDER
+	# 10%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0001.a
+
+
+		add_character_flag = segrellion_shireen_yielded_dragonstone_to_aegon
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_dragonstone_surrender_accepted
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragonstone.0010
+
+				days = { 3 7 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 10
+		}
+	}
+
+
+	# =====================================================
+	# REFUSE
+	# 90%
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0001.b
+
+
+		add_character_flag = segrellion_shireen_refused_aegon_dragonstone
+
+
+		character:IAF_Young_Griff_1 = {
+
+			add_character_flag = segrellion_young_griff_dragonstone_surrender_refused
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff_dragonstone.0020
+
+				days = { 3 7 }
+			}
+		}
+
+
+		ai_chance = {
+
+			base = 90
+		}
+	}
+}
+
+
+# =========================================================
+# 0010 - DRAGONSTONE YIELDS
+#
+# Peaceful surrender.
+# =========================================================
+
+segrellion_young_griff_dragonstone.0010 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragonstone.0010.t
+
+	desc = segrellion_young_griff_dragonstone.0010.desc
+
+	theme = realm
+
+
+	override_background = {
+
+		reference = segrellion_dragonstone_arrival
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+
+		has_character_flag = segrellion_young_griff_dragonstone_surrender_accepted
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_13
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0010.a
+
+
+		# =================================================
+		# SHIREEN AND SELYSE LEAVE FOR ESSOS
+		# =================================================
+
+		character:Baratheon_13 = {
+
+			set_location = title:c_pentos.title_province
+
+			add_character_flag = segrellion_exiled_to_essos
+
+			add_character_flag = segrellion_exiled_by_young_griff
+		}
+
+
+		character:Baratheon_13 = {
+
+			mother ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+					}
+
+
+					set_location = title:c_pentos.title_province
+
+					add_character_flag = segrellion_exiled_to_essos
+
+					add_character_flag = segrellion_exiled_by_young_griff
+				}
+			}
+		}
+
+
+		# =================================================
+		# AEGON TAKES DRAGONSTONE
+		# =================================================
+
+		segrellion_young_griff_seize_dragonstone_effect = yes
+
+
+		add_character_flag = segrellion_young_griff_dragonstone_peaceful_surrender
+
+		remove_character_flag = segrellion_young_griff_dragonstone_surrender_accepted
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0020 - THEY HAVE CHOSEN WAR
+#
+# Root = Aegon
+# =========================================================
+
+segrellion_young_griff_dragonstone.0020 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragonstone.0020.t
+
+	desc = segrellion_young_griff_dragonstone.0020.desc
+
+	theme = war
+
+
+	override_background = {
+
+		reference = segrellion_dragonstone_arrival
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_dragonstone_surrender_refused
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_shireen_refused_aegon_dragonstone
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = anger
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0020.a
+
+
+		remove_character_flag = segrellion_young_griff_dragonstone_request_pending
+
+		remove_character_flag = segrellion_young_griff_dragonstone_surrender_refused
+
+
+		add_character_flag = segrellion_young_griff_taking_dragonstone
+
+		add_character_flag = segrellion_young_griff_dragonstone_host_mobilized
+
+
+		# =================================================
+		# SIMULATED EXPEDITIONARY HOST
+		# =================================================
+
+		add_character_modifier = {
+
+			modifier = segrellion_young_griff_dragonstone_expedition_modifier
+
+			years = 1
+		}
+
+
+		# =================================================
+		# TRAVEL TO DRAGONSTONE
+		# =================================================
+
+		start_travel_plan = {
+
+			destination = title:c_dragonstone.title_province
+
+			players_use_planner = no
+
+			return_trip = no
+
+
+			on_arrival_event = segrellion_young_griff_dragonstone.0030
+
+			on_arrival_destinations = last
+
+
+			on_travel_planner_cancel_event = segrellion_young_griff_dragonstone.0090
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0030 - THE GATES OPEN
+#
+# Dragonstone's garrison decides that dying for a lost
+# Baratheon cause would achieve nothing.
+# =========================================================
+
+segrellion_young_griff_dragonstone.0030 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragonstone.0030.t
+
+	desc = segrellion_young_griff_dragonstone.0030.desc
+
+	theme = war
+
+
+	override_background = {
+
+		reference = segrellion_dragonstone_arrival
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_taking_dragonstone
+
+
+		location = title:c_dragonstone.title_province
+	}
+
+
+	immediate = {
+
+		# =================================================
+		# DRAGONSTONE FALLS WITHOUT A REAL SIEGE
+		# =================================================
+
+		segrellion_young_griff_seize_dragonstone_effect = yes
+
+
+		remove_character_flag = segrellion_young_griff_dragonstone_host_mobilized
+
+
+		# =================================================
+		# SHIREEN AND SELYSE ARE HANDED OVER
+		# =================================================
+
+		character:Baratheon_13 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_imprisoned = no
+				}
+
+
+				imprison = {
+
+					target = this
+
+					imprisoner = character:IAF_Young_Griff_1
+				}
+			}
+
+
+			mother ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+
+						is_imprisoned = no
+					}
+
+
+					imprison = {
+
+						target = this
+
+						imprisoner = character:IAF_Young_Griff_1
+					}
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_captured_shireen
+
+		add_character_flag = segrellion_young_griff_captured_selyse
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = personality_bold
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_13
+
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0030.a
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragonstone.0040
+
+			days = { 2 4 }
+		}
+
+
+		ai_chance = {
+
+			base = 100
+		}
+	}
+}
+
+
+# =========================================================
+# 0040 - THE LAST BARATHEONS
+#
+# Varys argues for mercy if he still supports Aegon.
+# =========================================================
+
+segrellion_young_griff_dragonstone.0040 = {
+
+	type = character_event
+
+	title = segrellion_young_griff_dragonstone.0040.t
+
+
+	desc = {
+
+		first_valid = {
+
+
+			triggered_desc = {
+
+				trigger = {
+
+					character:Eunuch_1 ?= {
+
+						is_alive = yes
+
+
+						NOT = {
+							has_character_flag = segrellion_varys_abandoned_young_griff
+						}
+					}
+
+
+					NOT = {
+						has_character_flag = segrellion_young_griff_lost_varys_support
+					}
+				}
+
+
+				desc = segrellion_young_griff_dragonstone.0040.desc_varys
+			}
+
+
+			desc = segrellion_young_griff_dragonstone.0040.desc_no_varys
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	override_header_background = {
+
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_captured_shireen
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragonstone_prisoners_resolved
+		}
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+
+			is_imprisoned = yes
+
+			imprisoner = root
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Baratheon_13
+
+		animation = worry
+	}
+
+
+	# =====================================================
+	# EXILE THEM
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0040.a
+
+		custom_tooltip = segrellion_young_griff_dragonstone.0040.a.tt
+
+
+		character:Baratheon_13 = {
+
+			release_from_prison = yes
+
+			set_location = title:c_pentos.title_province
+
+			add_character_flag = segrellion_exiled_to_essos
+
+			add_character_flag = segrellion_exiled_by_young_griff
+
+
+			mother ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+					}
+
+
+					if = {
+
+						limit = {
+
+							is_imprisoned = yes
+
+							imprisoner = character:IAF_Young_Griff_1
+						}
+
+
+						release_from_prison = yes
+					}
+
+
+					set_location = title:c_pentos.title_province
+
+					add_character_flag = segrellion_exiled_to_essos
+
+					add_character_flag = segrellion_exiled_by_young_griff
+				}
+			}
+		}
+
+
+		# =================================================
+		# VARYS APPROVES
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Eunuch_1 ?= {
+
+					is_alive = yes
+
+
+					NOT = {
+						has_character_flag = segrellion_varys_abandoned_young_griff
+					}
+				}
+			}
+
+
+			character:Eunuch_1 = {
+
+				add_opinion = {
+
+					target = root
+
+					modifier = segrellion_varys_shireen_spared_opinion
+				}
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_spared_shireen
+
+		add_character_flag = segrellion_young_griff_dragonstone_prisoners_resolved
+
+
+		remove_character_flag = segrellion_young_griff_captured_shireen
+
+		remove_character_flag = segrellion_young_griff_captured_selyse
+
+
+		ai_chance = {
+
+			base = 20
+
+
+			modifier = {
+
+				add = 50
+
+				has_trait = compassionate
+			}
+
+
+			modifier = {
+
+				add = 35
+
+				has_trait = forgiving
+			}
+
+
+			modifier = {
+
+				add = 35
+
+				has_trait = just
+			}
+
+
+			modifier = {
+
+				factor = 0.50
+
+				has_trait = callous
+			}
+
+
+			modifier = {
+
+				factor = 0.25
+
+				has_trait = sadistic
+			}
+		}
+	}
+
+
+	# =====================================================
+	# EXECUTE THEM
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0040.b
+
+		custom_tooltip = segrellion_young_griff_dragonstone.0040.b.tt
+
+
+		# =================================================
+		# SELYSE
+		# =================================================
+
+		character:Baratheon_13 = {
+
+			mother ?= {
+
+				if = {
+
+					limit = {
+
+						is_alive = yes
+					}
+
+
+					death = {
+
+						death_reason = death_execution
+
+						killer = character:IAF_Young_Griff_1
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# SHIREEN
+		# =================================================
+
+		character:Baratheon_13 = {
+
+			death = {
+
+				death_reason = death_execution
+
+				killer = character:IAF_Young_Griff_1
+			}
+		}
+
+
+		# =================================================
+		# REPUTATION
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_young_griff_child_killer_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_young_griff_child_killer_modifier
+			}
+		}
+
+
+		add_character_flag = segrellion_young_griff_executed_shireen
+
+		add_character_flag = segrellion_young_griff_executed_selyse
+
+		add_character_flag = segrellion_young_griff_dragonstone_prisoners_resolved
+
+
+		remove_character_flag = segrellion_young_griff_captured_shireen
+
+		remove_character_flag = segrellion_young_griff_captured_selyse
+
+
+		# =================================================
+		# VARYS LEAVES
+		# =================================================
+
+		segrellion_young_griff_varys_abandons_over_shireen_effect = yes
+
+
+		ai_chance = {
+
+			base = 80
+
+
+			modifier = {
+
+				add = 50
+
+				has_trait = callous
+			}
+
+
+			modifier = {
+
+				add = 75
+
+				has_trait = sadistic
+			}
+
+
+			modifier = {
+
+				add = 35
+
+				has_trait = vengeful
+			}
+
+
+			modifier = {
+
+				add = 20
+
+				has_trait = ambitious
+			}
+
+
+			modifier = {
+
+				factor = 0.50
+
+				has_trait = just
+			}
+
+
+			modifier = {
+
+				factor = 0.35
+
+				has_trait = forgiving
+			}
+
+
+			modifier = {
+
+				factor = 0.20
+
+				has_trait = compassionate
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0060 - THE SPIDER LEAVES
+# =========================================================
+
+segrellion_young_griff_dragonstone.0060 = {
+
+	type = letter_event
+
+	theme = intrigue
+
+
+	sender = character:Eunuch_1
+
+
+	opening = segrellion_young_griff_dragonstone.0060.opening
+
+	title = segrellion_young_griff_dragonstone.0060.t
+
+	desc = segrellion_young_griff_dragonstone.0060.desc
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_executed_shireen
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_varys_shireen_departure_seen
+		}
+
+
+		character:Eunuch_1 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_varys_abandoned_young_griff
+		}
+	}
+
+
+	immediate = {
+
+		add_character_flag = segrellion_young_griff_varys_shireen_departure_seen
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff_dragonstone.0060.a
+	}
+}
+
+
+# =========================================================
+# 0090 - TRAVEL CANCELLED
+# =========================================================
+
+segrellion_young_griff_dragonstone.0090 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_taking_dragonstone
+
+		remove_character_flag = segrellion_young_griff_dragonstone_host_mobilized
+
+
+		if = {
+
+			limit = {
+
+				has_character_modifier = segrellion_young_griff_dragonstone_expedition_modifier
+			}
+
+
+			remove_character_modifier = segrellion_young_griff_dragonstone_expedition_modifier
+		}
+	}
+}

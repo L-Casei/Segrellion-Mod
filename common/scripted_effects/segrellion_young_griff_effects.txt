@@ -2901,30 +2901,71 @@ segrellion_young_griff_choose_dragon_egg_route_effect = {
 
 
 	# =====================================================
-	# COST
-	# =====================================================
-
-	add_gold = -100
-
-	add_prestige = -150
-
-
-	# =====================================================
-	# DIRECTLY OPEN THE THREE POSSIBLE SEARCH ROUTES
+	# RETURNING TO A PREVIOUSLY DEFERRED SEARCH
 	#
-	# No researcher is required anymore.
+	# The research has already been paid for and the Three
+	# Embers are already known.
 	# =====================================================
 
-	trigger_event = {
+	if = {
 
-		id = segrellion_young_griff_dragon.0010
+		limit = {
 
-		days = { 30 45 }
+			has_character_flag = segrellion_young_griff_dragon_search_deferred
+
+			has_character_flag = segrellion_young_griff_three_embers_discovered
+		}
+
+
+		remove_character_flag = segrellion_young_griff_dragon_search_deferred
+
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragon.0010
+
+			days = 1
+		}
+	}
+
+
+	# =====================================================
+	# FIRST SEARCH
+	# =====================================================
+
+	else = {
+
+		# =================================================
+		# COST
+		# =================================================
+
+		add_gold = -100
+
+		add_prestige = -150
+
+
+		# =================================================
+		# RESEARCH
+		# =================================================
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragon.0010
+
+			days = { 30 45 }
+		}
 	}
 }
 
 
 segrellion_young_griff_choose_daenerys_dragon_route_effect = {
+
+	# If Aegon abandoned the egg search after discovering
+	# the Three Embers, choosing a living dragon instead
+	# permanently closes that deferred investigation.
+
+	remove_character_flag = segrellion_young_griff_dragon_search_deferred
+
 
 	add_character_flag = segrellion_young_griff_dragon_path_daenerys
 
@@ -6067,5 +6108,291 @@ segrellion_aegon_daemon_duel_daemon_wins_effect = {
 		remove_character_flag = segrellion_aegon_daemon_submission_war_active
 
 		remove_character_flag = segrellion_aegon_daemon_submission_duel_started
+	}
+}
+
+# =========================================================
+# YOUNG GRIFF - SEIZE DRAGONSTONE
+#
+# ROOT = Aegon
+# =========================================================
+
+segrellion_young_griff_seize_dragonstone_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+			is_alive = yes
+
+
+			NOT = {
+				has_title = title:c_dragonstone
+			}
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = conquest
+
+			save_scope_as = segrellion_young_griff_dragonstone_change
+
+			add_claim_on_loss = no
+		}
+
+
+		# =================================================
+		# KINGDOM
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:k_dragonstone ?= {
+
+					exists = holder
+				}
+			}
+
+
+			title:k_dragonstone = {
+
+				change_title_holder = {
+
+					holder = root
+
+					change = scope:segrellion_young_griff_dragonstone_change
+				}
+			}
+		}
+
+
+		# =================================================
+		# DUCHY
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				title:d_dragonstone ?= {
+
+					exists = holder
+				}
+			}
+
+
+			title:d_dragonstone = {
+
+				change_title_holder = {
+
+					holder = root
+
+					change = scope:segrellion_young_griff_dragonstone_change
+				}
+			}
+		}
+
+
+		# =================================================
+		# COUNTY + BARONIES
+		# =================================================
+
+		title:c_dragonstone = {
+
+			change_title_holder = {
+
+				holder = root
+
+				change = scope:segrellion_young_griff_dragonstone_change
+
+				take_baronies = yes
+			}
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_young_griff_dragonstone_change
+
+
+		# =================================================
+		# STORY STATE
+		# =================================================
+
+		add_character_flag = segrellion_young_griff_took_dragonstone
+
+
+		remove_character_flag = segrellion_young_griff_taking_dragonstone
+
+		remove_character_flag = segrellion_young_griff_dragonstone_request_pending
+
+
+		if = {
+
+			limit = {
+
+				has_character_modifier = segrellion_young_griff_dragonstone_expedition_modifier
+			}
+
+
+			remove_character_modifier = segrellion_young_griff_dragonstone_expedition_modifier
+		}
+	}
+}
+
+# =========================================================
+# VARYS ABANDONS AEGON OVER SHIREEN
+#
+# ROOT = Aegon
+# =========================================================
+
+segrellion_young_griff_varys_abandons_over_shireen_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:IAF_Young_Griff_1
+
+
+			character:Eunuch_1 ?= {
+
+				is_alive = yes
+
+
+				NOT = {
+					has_character_flag = segrellion_varys_abandoned_young_griff
+				}
+			}
+		}
+
+
+		# =================================================
+		# VARYS TURNS AGAINST AEGON
+		# =================================================
+
+		character:Eunuch_1 = {
+
+			add_opinion = {
+
+				target = root
+
+				modifier = segrellion_varys_shireen_executed_opinion
+			}
+
+
+			add_character_flag = segrellion_varys_abandoned_young_griff
+
+			add_character_flag = segrellion_varys_open_to_daenerys
+
+			add_character_flag = segrellion_varys_open_to_revealed_targaryen_daemon
+		}
+
+
+		# =================================================
+		# REMOVE VARYS' SUPPORT
+		# =================================================
+
+		remove_character_flag = segrellion_young_griff_varys_preparing_kings_landing
+
+		add_character_flag = segrellion_young_griff_lost_varys_support
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_young_griff_spiders_support_modifier
+			}
+
+			remove_character_modifier = segrellion_young_griff_spiders_support_modifier
+		}
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_young_griff_little_birds_modifier
+			}
+
+			remove_character_modifier = segrellion_young_griff_little_birds_modifier
+		}
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_young_griff_quiet_gold_modifier
+			}
+
+			remove_character_modifier = segrellion_young_griff_quiet_gold_modifier
+		}
+
+
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_young_griff_city_of_open_doors_modifier
+			}
+
+			remove_character_modifier = segrellion_young_griff_city_of_open_doors_modifier
+		}
+
+
+		# =================================================
+		# VARYS JOINS DAENERYS
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Targaryen_9 ?= {
+
+					is_alive = yes
+				}
+			}
+
+
+			character:Eunuch_1 = {
+
+				set_variable = {
+
+					name = target_employer
+
+					value = character:Targaryen_9
+				}
+
+
+				set_employer = character:Targaryen_9
+
+				return_to_court = yes
+
+				set_location = character:Targaryen_9.location
+
+
+				add_character_flag = segrellion_varys_serves_daenerys
+			}
+
+
+			character:Targaryen_9 = {
+
+				add_character_flag = segrellion_daenerys_has_varys
+			}
+		}
+
+
+		# =================================================
+		# FINAL LETTER
+		# =================================================
+
+		trigger_event = {
+
+			id = segrellion_young_griff_dragonstone.0060
+
+			days = 1
+		}
 	}
 }

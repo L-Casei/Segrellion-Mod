@@ -666,15 +666,47 @@ segrellion_daenerys_take_dragonstone_decision = {
 
 	is_valid = {
 
-		# -------------------------------------------------
+		# =================================================
 		# STANNIS MUST BE DEAD
-		# -------------------------------------------------
+		# =================================================
 
 		custom_description = {
 
 			text = segrellion_daenerys_take_dragonstone_stannis_dead_requirement
 
-			segrellion_daenerys_dragonstone_landing_available_trigger = yes
+
+			character:Baratheon_3 = {
+
+				is_alive = no
+			}
+		}
+
+
+		# =================================================
+		# AEGON MUST NOT CONTROL / BE TAKING DRAGONSTONE
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_daenerys_take_dragonstone_aegon_requirement
+
+
+			AND = {
+
+				NOT = {
+
+					title:c_dragonstone.holder = character:IAF_Young_Griff_1
+				}
+
+
+				NOT = {
+
+					character:IAF_Young_Griff_1 ?= {
+
+						has_character_flag = segrellion_young_griff_taking_dragonstone
+					}
+				}
+			}
 		}
 
 

@@ -436,3 +436,260 @@ segrellion_young_griff_need_dragon_decision = {
 		base = 33
 	}
 }
+
+# =========================================================
+# TAKE DRAGONSTONE
+#
+# Aegon demands Dragonstone from Shireen after Stannis dies.
+#
+# Uses the exact same decision artwork as Daenerys'
+# Take Dragonstone decision.
+# =========================================================
+
+segrellion_young_griff_take_dragonstone_decision = {
+
+	picture = {
+
+		reference = "gfx/interface/illustrations/event_scenes/segrellion_dragonstone_arrival.dds"
+	}
+
+
+	decision_group_type = ice_and_fire
+
+	sort_order = 176
+
+
+	desc = segrellion_young_griff_take_dragonstone_decision_desc
+
+	selection_tooltip = segrellion_young_griff_take_dragonstone_decision_tooltip
+
+	confirm_text = segrellion_young_griff_take_dragonstone_decision_confirm
+
+
+	# =====================================================
+	# SHOWN
+	# =====================================================
+
+	is_shown = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_varys_contacted
+
+
+		# Intended primarily for Aegon's pre-Iron-Throne phase.
+
+		NOT = {
+			has_title = title:h_the_iron_throne
+		}
+
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_took_dragonstone
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_taking_dragonstone
+		}
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_dragonstone_request_pending
+		}
+
+
+		NOT = {
+			has_title = title:k_dragonstone
+		}
+
+		NOT = {
+			has_title = title:d_dragonstone
+		}
+
+		NOT = {
+			has_title = title:c_dragonstone
+		}
+
+
+		character:Baratheon_13 ?= {
+
+			is_alive = yes
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		# =================================================
+		# STANNIS MUST BE DEAD
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_young_griff_take_dragonstone_stannis_dead_requirement
+
+
+			character:Baratheon_3 = {
+
+				is_alive = no
+			}
+		}
+
+
+		# =================================================
+		# SHIREEN MUST CONTROL DRAGONSTONE
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_young_griff_take_dragonstone_shireen_requirement
+
+
+			title:c_dragonstone.holder = character:Baratheon_13
+		}
+
+
+		# =================================================
+		# DAENERYS MUST NOT ALREADY HAVE DRAGONSTONE
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_young_griff_take_dragonstone_daenerys_requirement
+
+
+			OR = {
+
+				character:Targaryen_9 = {
+
+					is_alive = no
+				}
+
+
+				AND = {
+
+					NOT = {
+						title:c_dragonstone.holder = character:Targaryen_9
+					}
+
+
+					character:Targaryen_9 = {
+
+						NOT = {
+							location = title:c_dragonstone.title_province
+						}
+
+
+						NOR = {
+
+							has_character_flag = segrellion_daenerys_landing_dragonstone
+
+							has_character_flag = segrellion_daenerys_taking_dragonstone
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# AEGON AVAILABLE
+		# =================================================
+
+		custom_description = {
+
+			text = segrellion_young_griff_take_dragonstone_not_imprisoned_requirement
+
+			is_imprisoned = no
+		}
+
+
+		custom_description = {
+
+			text = segrellion_young_griff_take_dragonstone_not_travelling_requirement
+
+
+			NOT = {
+				exists = current_travel_plan
+			}
+		}
+
+
+		custom_description = {
+
+			text = segrellion_young_griff_take_dragonstone_not_at_war_requirement
+
+			is_at_war = no
+		}
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_young_griff_take_dragonstone_letter_tt
+
+
+		hidden_effect = {
+
+			add_character_flag = segrellion_young_griff_dragonstone_request_pending
+
+
+			character:Baratheon_13 = {
+
+				trigger_event = {
+
+					id = segrellion_young_griff_dragonstone.0001
+
+					days = { 3 7 }
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	# =====================================================
+
+	ai_check_interval = 30
+
+
+	ai_potential = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_ai = yes
+	}
+
+
+	ai_will_do = {
+
+		base = 300
+
+
+		# Especially attractive if Aegon still needs an egg.
+
+		modifier = {
+
+			add = 700
+
+
+			NOT = {
+
+				any_character_artifact = {
+
+					has_variable = dragon_egg
+				}
+			}
+		}
+	}
+}
