@@ -7306,10 +7306,7 @@ segrellion_young_griff.8260 = {
 
 
 		# =================================================
-		# CERSEI
-		#
-		# She accepts the second queen publicly,
-		# but still decides Aegon must die.
+		# CERSEI SPECIAL STATE
 		# =================================================
 
 		if = {
@@ -7326,18 +7323,15 @@ segrellion_young_griff.8260 = {
 		}
 
 
+		# =================================================
+		# DO NOT MARRY MARGAERY HERE.
+		#
+		# The wife has only accepted.
+		# First show Aegon the final "Two Queens for a Dragon"
+		# event with both women present.
+		# =================================================
+
 		character:IAF_Young_Griff_1 = {
-
-			segrellion_young_griff_complete_margaery_marriage_effect = yes
-
-
-			set_primary_spouse = root
-
-
-			add_character_flag = segrellion_young_griff_margaery_second_wife
-
-			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
-
 
 			trigger_event = {
 
@@ -7352,9 +7346,6 @@ segrellion_young_griff.8260 = {
 
 			base = 30
 
-			# =================================================
-			# GAME RULE OVERRIDES
-			# =================================================
 
 			modifier = {
 
@@ -7379,10 +7370,6 @@ segrellion_young_griff.8260 = {
 				}
 			}
 
-
-			# =================================================
-			# MORE LIKELY TO ACCEPT
-			# =================================================
 
 			modifier = {
 				factor = 1.75
@@ -7414,10 +7401,6 @@ segrellion_young_griff.8260 = {
 				has_trait = arbitrary
 			}
 
-
-			# =================================================
-			# LESS LIKELY TO ACCEPT
-			# =================================================
 
 			modifier = {
 				factor = 0.15
@@ -7738,9 +7721,15 @@ segrellion_young_griff.8260 = {
 }
 
 # =========================================================
-# 8270 - THE SECOND QUEEN
+# 8270 - TWO QUEENS FOR A DRAGON
 #
 # ROOT = Aegon
+#
+# ACCEPT:
+# The current wife accepted Margaery as second queen.
+#
+# REJECT:
+# The current wife left and Margaery replaced her.
 # =========================================================
 
 segrellion_young_griff.8270 = {
@@ -7762,9 +7751,11 @@ segrellion_young_griff.8270 = {
 
 
 					var:segrellion_young_griff_second_wife_responder = {
+
 						has_character_flag = segrellion_young_griff_wife_accepts_margaery
 					}
 				}
+
 
 				desc = segrellion_young_griff.8270.desc_accept
 			}
@@ -7778,9 +7769,11 @@ segrellion_young_griff.8270 = {
 
 
 					var:segrellion_young_griff_second_wife_responder = {
+
 						has_character_flag = segrellion_young_griff_wife_rejects_margaery
 					}
 				}
+
 
 				desc = segrellion_young_griff.8270.desc_reject
 			}
@@ -7791,8 +7784,11 @@ segrellion_young_griff.8270 = {
 	}
 
 
-	theme = diplomacy
+	theme = seduction
+
+
 	override_header_background = {
+
 		reference = "gfx/interface/window_event/event_header_blue.dds"
 	}
 
@@ -7803,7 +7799,6 @@ segrellion_young_griff.8270 = {
 
 		is_alive = yes
 
-
 		has_variable = segrellion_young_griff_second_wife_responder
 
 		has_variable = segrellion_young_griff_margaery
@@ -7812,31 +7807,85 @@ segrellion_young_griff.8270 = {
 		var:segrellion_young_griff_margaery = {
 
 			is_alive = yes
-
-			is_spouse_of = root
 		}
 	}
 
 
+	# =====================================================
+	# FIRST QUEEN
+	# =====================================================
+
 	left_portrait = {
-
-		character = root
-
-		animation = personality_bold
-	}
-
-
-	right_portrait = {
 
 		character = root.var:segrellion_young_griff_second_wife_responder
 
-		animation = thinking
+		animation = flirtation
 	}
 
+
+	# =====================================================
+	# MARGAERY
+	# =====================================================
+
+	right_portrait = {
+
+		character = root.var:segrellion_young_griff_margaery
+
+		animation = flirtation
+	}
+
+
+	# =====================================================
+	# ACCEPTANCE RESULT
+	#
+	# Only now does Margaery actually become second wife.
+	# =====================================================
 
 	option = {
 
 		name = segrellion_young_griff.8270.a
+
+		add_internal_flag = special
+
+
+		trigger = {
+
+			var:segrellion_young_griff_second_wife_responder = {
+
+				has_character_flag = segrellion_young_griff_wife_accepts_margaery
+			}
+		}
+
+
+		custom_tooltip = segrellion_young_griff.8270.a.tt
+
+
+		segrellion_young_griff_complete_margaery_marriage_effect = yes
+
+
+		remove_variable = segrellion_young_griff_second_wife_responder
+	}
+
+
+	# =====================================================
+	# REJECTION RESULT
+	#
+	# The reject branch already divorced the old wife and
+	# married Margaery before reaching this event.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_young_griff.8270.b
+
+
+		trigger = {
+
+			var:segrellion_young_griff_second_wife_responder = {
+
+				has_character_flag = segrellion_young_griff_wife_rejects_margaery
+			}
+		}
 
 
 		remove_variable = segrellion_young_griff_second_wife_responder
