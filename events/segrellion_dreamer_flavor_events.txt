@@ -2558,3 +2558,1482 @@ segrellion_dreamer.3021 = {
 		}
 	}
 }
+
+# =========================================================
+# TRUE DREAMER
+#
+# TIER IV / INTERNAL LEVEL 3
+# 50+ XP
+#
+# Forbidden knowledge.
+# These events intentionally DO NOT grant Dreamer XP.
+# =========================================================
+
+
+
+# =========================================================
+# 4001 - THE DREAM BEYOND DREAMS
+# =========================================================
+
+segrellion_dreamer.4001 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	title = segrellion_dreamer.4001.t
+	desc = segrellion_dreamer.4001.desc
+
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_dream_beyond_dreams_seen
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4001.a
+
+		custom_tooltip = segrellion_dreamer.4001.a.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+		add_character_modifier = segrellion_dreamer_seen_beyond_modifier
+
+
+		random_list = {
+
+			25 = {
+				trigger = {
+					has_trait = segrellion_icebringer_bearer_trait
+				}
+
+				add_character_flag = segrellion_true_dreamer_clue_icebringer
+			}
+
+			25 = {
+				trigger = {
+					OR = {
+						has_trait = segrellion_touched_by_darkness_trait
+						has_trait = segrellion_bearer_of_darkness_trait
+					}
+				}
+
+				add_character_flag = segrellion_true_dreamer_clue_darkness
+			}
+
+			25 = {
+				trigger = {
+					has_trait = segrellion_resurrected_trait
+				}
+
+				add_character_flag = segrellion_true_dreamer_clue_death
+			}
+
+			25 = {
+				add_character_flag = segrellion_true_dreamer_clue_black_moon
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4001.b
+
+		custom_tooltip = segrellion_dreamer.4001.b.tt
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4002 - SOMEONE IS DREAMING ME
+# =========================================================
+
+segrellion_dreamer.4002 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4002.t
+	desc = segrellion_dreamer.4002.desc
+
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_shared_dream_seen
+
+		save_scope_as = first_dreamer
+
+
+		random_living_character = {
+
+			limit = {
+
+				is_human = yes
+				is_adult = yes
+
+				this != root
+
+				has_trait = segrellion_dreamer_trait
+
+				has_trait_xp = {
+					trait = segrellion_dreamer_trait
+					value >= 25
+				}
+			}
+
+			save_scope_as = other_dreamer
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4002.a
+
+		custom_tooltip = segrellion_dreamer.4002.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_shared_dream_modifier
+			years = 5
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:other_dreamer
+			}
+
+			scope:other_dreamer = {
+
+				trigger_event = {
+					id = segrellion_dreamer.4102
+					days = { 1 3 }
+				}
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4002.b
+
+		custom_tooltip = segrellion_dreamer.4002.b.tt
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4102 - THE OTHER DREAMER ANSWERS
+# =========================================================
+
+segrellion_dreamer.4102 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4102.t
+	desc = segrellion_dreamer.4102.desc
+
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4102.a
+
+		ai_chance = {
+			base = 70
+		}
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_shared_dream_modifier
+			years = 5
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:first_dreamer
+			}
+
+			add_opinion = {
+				target = scope:first_dreamer
+				modifier = segrellion_shared_dream_opinion
+			}
+
+			scope:first_dreamer = {
+
+				add_opinion = {
+					target = root
+					modifier = segrellion_shared_dream_opinion
+				}
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4102.b
+
+		ai_chance = {
+			base = 30
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:first_dreamer
+			}
+
+			add_opinion = {
+				target = scope:first_dreamer
+				modifier = segrellion_dream_intrusion_opinion
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# 4003 - THE DEAD REMEMBER
+# =========================================================
+
+segrellion_dreamer.4003 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4003.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					exists = scope:dream_dead
+				}
+
+				desc = segrellion_dreamer.4003.desc_known
+			}
+
+			desc = segrellion_dreamer.4003.desc
+		}
+	}
+
+	theme = death
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	immediate = {
+
+		random_close_family_member = {
+
+			even_if_dead = yes
+
+			limit = {
+				is_alive = no
+			}
+
+			save_scope_as = dream_dead
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4003.a
+
+		custom_tooltip = segrellion_dreamer.4003.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_haunted_by_prophecy_modifier
+			years = 5
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4003.b
+
+		custom_tooltip = segrellion_dreamer.4003.b.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_haunted_by_prophecy_modifier
+			years = 10
+		}
+
+		add_character_flag = segrellion_dreamer_dead_spoke_of_future
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4003.c
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4004 - THE NIGHT THAT HAS ALREADY HAPPENED
+# =========================================================
+
+segrellion_dreamer.4004 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4004.t
+	desc = segrellion_dreamer.4004.desc
+
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_repeated_day_seen
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4004.a
+
+		custom_tooltip = segrellion_dreamer.4004.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_flag = segrellion_dreamer_trusted_repeated_day
+
+		trigger_event = {
+			id = segrellion_dreamer.4104
+			days = { 30 90 }
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4004.b
+
+		custom_tooltip = segrellion_dreamer.4004.b.tt
+
+		segrellion_true_dreamer_stress_40_effect = yes
+
+		trigger_event = {
+			id = segrellion_dreamer.4104
+			days = { 30 90 }
+		}
+	}
+}
+
+
+
+# =========================================================
+# 4104 - I HAVE SEEN THIS BEFORE
+# =========================================================
+
+segrellion_dreamer.4104 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4104.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_dreamer_trusted_repeated_day
+				}
+
+				desc = segrellion_dreamer.4104.desc_trusted
+			}
+
+			desc = segrellion_dreamer.4104.desc_ignored
+		}
+	}
+
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4104.a
+
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_dreamer_trusted_repeated_day
+			}
+
+			add_stress = -20
+			add_prestige = 100
+
+			add_character_modifier = {
+				modifier = segrellion_dreamer_lived_tomorrow_modifier
+				years = 5
+			}
+		}
+
+		else = {
+
+			add_stress = 40
+		}
+
+
+		remove_character_flag = segrellion_dreamer_trusted_repeated_day
+	}
+}
+
+
+
+# =========================================================
+# 4005 - THE LAST DOOR
+# =========================================================
+
+segrellion_dreamer.4005 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_darkness
+	}
+
+	title = segrellion_dreamer.4005.t
+	desc = segrellion_dreamer.4005.desc
+
+	theme = death
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_last_door_resolved
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4005.a
+
+		custom_tooltip = segrellion_dreamer.4005.a.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_trait = segrellion_touched_by_darkness_trait
+				}
+
+				NOT = {
+					has_trait = segrellion_bearer_of_darkness_trait
+				}
+			}
+
+			random_list = {
+
+				65 = {
+					add_trait = segrellion_touched_by_darkness_trait
+				}
+
+				35 = {
+					add_character_modifier = {
+						modifier = segrellion_dreamer_last_door_modifier
+						years = 10
+					}
+				}
+			}
+		}
+
+		else = {
+
+			add_character_modifier = {
+				modifier = segrellion_dreamer_last_door_modifier
+				years = 10
+			}
+		}
+
+
+		add_character_flag = segrellion_dreamer_opened_last_door
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4005.b
+
+		custom_tooltip = segrellion_dreamer.4005.b.tt
+
+		segrellion_true_dreamer_stress_40_effect = yes
+
+		add_character_flag = segrellion_dreamer_sealed_last_door
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4005.c
+
+		trigger = {
+
+			OR = {
+				has_trait = segrellion_touched_by_darkness_trait
+				has_trait = segrellion_bearer_of_darkness_trait
+			}
+		}
+
+		custom_tooltip = segrellion_dreamer.4005.c.tt
+
+		add_stress = 15
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_last_door_modifier
+			years = 15
+		}
+
+		add_character_flag = segrellion_dreamer_opened_last_door
+	}
+}
+
+
+
+# =========================================================
+# 4006 - THE SWORD DREAMS TOO
+# =========================================================
+
+segrellion_dreamer.4006 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_icebringer_event
+	}
+
+	title = segrellion_dreamer.4006.t
+	desc = segrellion_dreamer.4006.desc
+
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4006.a
+
+		custom_tooltip = segrellion_dreamer.4006.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_sword_dreams_modifier
+			years = 10
+		}
+
+		add_character_flag = segrellion_dreamer_knows_sword_dreams
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4006.b
+
+		trigger = {
+
+			has_character_flag = segrellion_icebringer_stage5_entry_reached
+		}
+
+		custom_tooltip = segrellion_dreamer.4006.b.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_sword_dreams_modifier
+			years = 15
+		}
+
+		add_character_flag = segrellion_dreamer_icebringer_spoke_clearly
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4006.c
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4007 - THE WOLF WHO DIED
+# =========================================================
+
+segrellion_dreamer.4007 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4007.t
+	desc = segrellion_dreamer.4007.desc
+
+	theme = death
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_wolf_who_died_seen
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4007.a
+
+		custom_tooltip = segrellion_dreamer.4007.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_wolf_who_died_modifier
+			years = 10
+		}
+
+		add_character_flag = segrellion_dreamer_questioned_resurrection
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4007.b
+
+		segrellion_true_dreamer_stress_40_effect = yes
+
+		add_character_flag = segrellion_dreamer_accepts_second_life
+	}
+}
+
+
+
+# =========================================================
+# 4008 - THE CROWN HAS NO KING
+# =========================================================
+
+segrellion_dreamer.4008 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4008.t
+	desc = segrellion_dreamer.4008.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4008.a
+
+		custom_tooltip = segrellion_dreamer.4008.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_crown_without_king_modifier
+			years = 5
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4008.b
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4008.c
+
+		custom_tooltip = segrellion_dreamer.4008.c.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+		add_character_flag = segrellion_dreamer_touched_empty_throne
+	}
+}
+
+
+
+# =========================================================
+# 4009 - THE TRAITOR AT THE TABLE
+# =========================================================
+
+segrellion_dreamer.4009 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4009.t
+	desc = segrellion_dreamer.4009.desc
+
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_traitor_table_seen
+
+
+		if = {
+
+			limit = {
+
+				any_courtier = {
+					has_trait = segrellion_traitor
+				}
+			}
+
+			random_courtier = {
+
+				limit = {
+					has_trait = segrellion_traitor
+				}
+
+				save_scope_as = dream_traitor_suspect
+			}
+		}
+
+		else_if = {
+
+			limit = {
+
+				any_vassal = {
+					has_trait = segrellion_traitor
+				}
+			}
+
+			random_vassal = {
+
+				limit = {
+					has_trait = segrellion_traitor
+				}
+
+				save_scope_as = dream_traitor_suspect
+			}
+		}
+
+		else_if = {
+
+			limit = {
+
+				any_courtier = {
+					is_adult = yes
+				}
+			}
+
+			random_courtier = {
+
+				limit = {
+					is_adult = yes
+				}
+
+				save_scope_as = dream_traitor_suspect
+			}
+		}
+
+		else_if = {
+
+			limit = {
+
+				any_vassal = {
+					is_adult = yes
+				}
+			}
+
+			random_vassal = {
+
+				limit = {
+					is_adult = yes
+				}
+
+				save_scope_as = dream_traitor_suspect
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4009.a
+
+		custom_tooltip = segrellion_dreamer.4009.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_traitor_table_modifier
+			years = 3
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:dream_traitor_suspect
+			}
+
+			trigger_event = {
+				id = segrellion_dreamer.4109
+				days = { 60 180 }
+			}
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4009.b
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4109 - BLOOD ON THE HANDS
+# =========================================================
+
+segrellion_dreamer.4109 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4109.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+
+					exists = scope:dream_traitor_suspect
+
+					scope:dream_traitor_suspect = {
+						has_trait = segrellion_traitor
+					}
+				}
+
+				desc = segrellion_dreamer.4109.desc_true
+			}
+
+			desc = segrellion_dreamer.4109.desc_false
+		}
+	}
+
+	theme = intrigue
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4109.a
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:dream_traitor_suspect
+
+				scope:dream_traitor_suspect = {
+					has_trait = segrellion_traitor
+				}
+			}
+
+			add_stress = -20
+			add_prestige = 150
+		}
+
+		else = {
+
+			add_stress = 30
+
+
+			if = {
+
+				limit = {
+					exists = scope:dream_traitor_suspect
+				}
+
+				scope:dream_traitor_suspect = {
+
+					add_opinion = {
+						target = root
+						modifier = segrellion_false_prophetic_suspicion_opinion
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+# =========================================================
+# 4010 - THE WORLD WITHOUT YOU
+# =========================================================
+
+segrellion_dreamer.4010 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4010.t
+	desc = segrellion_dreamer.4010.desc
+
+	theme = death
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_world_without_you_seen
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4010.a
+
+		custom_tooltip = segrellion_dreamer.4010.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_world_without_you_modifier
+			years = 10
+		}
+
+		add_character_flag = segrellion_dreamer_succession_preparation_unlocked
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4010.b
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4010.c
+
+		custom_tooltip = segrellion_dreamer.4010.c.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+		add_character_flag = segrellion_dreamer_seen_own_aftermath
+	}
+}
+
+
+
+# =========================================================
+# 4011 - A CHILD NOT YET BORN
+# =========================================================
+
+segrellion_dreamer.4011 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4011.t
+	desc = segrellion_dreamer.4011.desc
+
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_future_child_seen
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4011.a
+
+		custom_tooltip = segrellion_dreamer.4011.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_flag = segrellion_dreamer_waiting_for_future_child
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_future_child_modifier
+			years = 10
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4011.b
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4111 - I KNOW THIS CHILD
+# =========================================================
+
+segrellion_dreamer.4111 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4111.t
+	desc = segrellion_dreamer.4111.desc
+
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = scope:dream_future_child
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4111.a
+
+		add_stress = 30
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_future_child_modifier
+			years = 15
+		}
+
+		add_character_flag = segrellion_dreamer_future_child_recognized
+	}
+}
+
+
+
+# =========================================================
+# 4012 - THE DOOM BEFORE THE DOOM
+# =========================================================
+
+segrellion_dreamer.4012 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_valyrian_doom
+	}
+
+	title = segrellion_dreamer.4012.t
+	desc = segrellion_dreamer.4012.desc
+
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_doom_before_doom_seen
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4012.a
+
+		custom_tooltip = segrellion_dreamer.4012.a.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_doom_before_doom_modifier
+			years = 10
+		}
+
+		add_character_flag = segrellion_dreamer_valyria_investigation_unlocked
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4012.b
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4013 - THE OTHER SIDE OF THE WALL
+# =========================================================
+
+segrellion_dreamer.4013 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_beyond_the_wall_blizzard
+	}
+
+	title = segrellion_dreamer.4013.t
+	desc = segrellion_dreamer.4013.desc
+
+	theme = death
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4013.a
+
+		custom_tooltip = segrellion_dreamer.4013.a.tt
+
+		segrellion_true_dreamer_stress_80_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_other_side_wall_modifier
+			years = 5
+		}
+
+		add_character_flag = segrellion_dreamer_watched_beyond_wall
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4013.b
+
+		custom_tooltip = segrellion_dreamer.4013.b.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_modifier = {
+			modifier = segrellion_dreamer_other_side_wall_modifier
+			years = 3
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4013.c
+
+		segrellion_true_dreamer_stress_40_effect = yes
+	}
+}
+
+
+
+# =========================================================
+# 4014 - CHOOSE ONE FUTURE
+# =========================================================
+
+segrellion_dreamer.4014 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4014.t
+	desc = segrellion_dreamer.4014.desc
+
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_dreamer_choose_future_seen
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4014.a
+
+		custom_tooltip = segrellion_dreamer.4014.a.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_flag = segrellion_dreamer_chose_future_war
+
+		trigger_event = {
+			id = segrellion_dreamer.4114
+			days = { 365 1095 }
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4014.b
+
+		custom_tooltip = segrellion_dreamer.4014.b.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_flag = segrellion_dreamer_chose_future_crown
+
+		trigger_event = {
+			id = segrellion_dreamer.4114
+			days = { 365 1095 }
+		}
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4014.c
+
+		custom_tooltip = segrellion_dreamer.4014.c.tt
+
+		segrellion_true_dreamer_stress_60_effect = yes
+
+		add_character_flag = segrellion_dreamer_chose_future_ashes
+
+		trigger_event = {
+			id = segrellion_dreamer.4114
+			days = { 365 1095 }
+		}
+	}
+}
+
+
+
+# =========================================================
+# 4114 - THE FUTURE REMEMBERS
+# =========================================================
+
+segrellion_dreamer.4114 = {
+
+	type = character_event
+
+	override_background = {
+		reference = segrellion_dreamer_tier_4_event_background
+	}
+
+	title = segrellion_dreamer.4114.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_dreamer_chose_future_war
+				}
+
+				desc = segrellion_dreamer.4114.desc_war
+			}
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_dreamer_chose_future_crown
+				}
+
+				desc = segrellion_dreamer.4114.desc_crown
+			}
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_dreamer_chose_future_ashes
+				}
+
+				desc = segrellion_dreamer.4114.desc_ashes
+			}
+
+			desc = segrellion_dreamer.4114.desc
+		}
+	}
+
+	theme = learning
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+
+		name = segrellion_dreamer.4114.a
+
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_dreamer_chose_future_war
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_dreamer_future_war_modifier
+				years = 10
+			}
+		}
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_dreamer_chose_future_crown
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_dreamer_future_crown_modifier
+				years = 10
+			}
+		}
+
+		else_if = {
+
+			limit = {
+				has_character_flag = segrellion_dreamer_chose_future_ashes
+			}
+
+			add_character_modifier = {
+				modifier = segrellion_dreamer_future_ashes_modifier
+				years = 10
+			}
+		}
+
+
+		remove_character_flag = segrellion_dreamer_chose_future_war
+		remove_character_flag = segrellion_dreamer_chose_future_crown
+		remove_character_flag = segrellion_dreamer_chose_future_ashes
+	}
+}

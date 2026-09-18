@@ -345,6 +345,241 @@ segrellion_dreamer_level_2_plus_flavor_pool_effect = {
 	}
 }
 
+# =========================================================
+# TRUE DREAMER
+# TIER IV / INTERNAL LEVEL 3
+# 50+ XP
+#
+# Forbidden knowledge.
+# These dreams DO NOT grant Dreamer XP.
+# =========================================================
+
+
+# =========================================================
+# TRUE DREAMER STRESS
+#
+# Certain characters can endure forbidden visions better.
+# =========================================================
+
+segrellion_true_dreamer_stress_40_effect = {
+
+	if = {
+		limit = {
+			OR = {
+				has_trait = segrellion_touched_by_darkness_trait
+				has_trait = segrellion_bearer_of_darkness_trait
+				has_trait = segrellion_resurrected_trait
+				has_trait = segrellion_icebringer_bearer_trait
+				has_trait = callous
+			}
+		}
+
+		add_stress = 20
+	}
+
+	else = {
+		add_stress = 40
+	}
+}
+
+
+segrellion_true_dreamer_stress_60_effect = {
+
+	if = {
+		limit = {
+			OR = {
+				has_trait = segrellion_touched_by_darkness_trait
+				has_trait = segrellion_bearer_of_darkness_trait
+				has_trait = segrellion_resurrected_trait
+				has_trait = segrellion_icebringer_bearer_trait
+				has_trait = callous
+			}
+		}
+
+		add_stress = 30
+	}
+
+	else = {
+		add_stress = 60
+	}
+}
+
+
+segrellion_true_dreamer_stress_80_effect = {
+
+	if = {
+		limit = {
+			OR = {
+				has_trait = segrellion_touched_by_darkness_trait
+				has_trait = segrellion_bearer_of_darkness_trait
+				has_trait = segrellion_resurrected_trait
+				has_trait = segrellion_icebringer_bearer_trait
+				has_trait = callous
+			}
+		}
+
+		add_stress = 40
+	}
+
+	else = {
+		add_stress = 80
+	}
+}
+
+
+# =========================================================
+# TRUE DREAMER FLAVOR POOL
+# =========================================================
+
+segrellion_dreamer_level_3_flavor_pool_effect = {
+
+	random_list = {
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_dream_beyond_dreams_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4001
+		}
+
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_shared_dream_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4002
+		}
+
+
+		8 = {
+			trigger_event = segrellion_dreamer.4003
+		}
+
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_repeated_day_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4004
+		}
+
+
+		10 = {
+			trigger = {
+				has_variable = segrellion_dreamer_impossible_door
+
+				NOT = {
+					has_character_flag = segrellion_dreamer_last_door_resolved
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4005
+		}
+
+
+		10 = {
+			trigger = {
+				has_trait = segrellion_icebringer_bearer_trait
+			}
+
+			trigger_event = segrellion_dreamer.4006
+		}
+
+
+		10 = {
+			trigger = {
+				has_trait = segrellion_resurrected_trait
+
+				NOT = {
+					has_character_flag = segrellion_dreamer_wolf_who_died_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4007
+		}
+
+
+		8 = {
+			trigger_event = segrellion_dreamer.4008
+		}
+
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_traitor_table_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4009
+		}
+
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_world_without_you_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4010
+		}
+
+
+		7 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_future_child_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4011
+		}
+
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_doom_before_doom_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4012
+		}
+
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_modifier = segrellion_dreamer_other_side_wall_modifier
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4013
+		}
+
+
+		8 = {
+			trigger = {
+				NOT = {
+					has_character_flag = segrellion_dreamer_choose_future_seen
+				}
+			}
+
+			trigger_event = segrellion_dreamer.4014
+		}
+	}
+}
+
 
 # =========================================================
 # DREAMER FLAVOR DISPATCHER
@@ -359,7 +594,30 @@ segrellion_dreamer_level_2_plus_flavor_pool_effect = {
 
 segrellion_dreamer_flavor_pool_effect = {
 
+	# =====================================================
+	# LEVEL 3 / TRUE DREAMER
+	# 50+ XP
+	# =====================================================
+
 	if = {
+		limit = {
+
+			has_trait_xp = {
+				trait = segrellion_dreamer_trait
+				value >= 50
+			}
+		}
+
+		segrellion_dreamer_level_3_flavor_pool_effect = yes
+	}
+
+
+	# =====================================================
+	# LEVEL 2
+	# 25 - 49 XP
+	# =====================================================
+
+	else_if = {
 		limit = {
 
 			has_trait_xp = {
@@ -370,6 +628,12 @@ segrellion_dreamer_flavor_pool_effect = {
 
 		segrellion_dreamer_level_2_plus_flavor_pool_effect = yes
 	}
+
+
+	# =====================================================
+	# LEVEL 1
+	# 10 - 24 XP
+	# =====================================================
 
 	else_if = {
 		limit = {
@@ -382,6 +646,12 @@ segrellion_dreamer_flavor_pool_effect = {
 
 		segrellion_dreamer_level_1_plus_flavor_pool_effect = yes
 	}
+
+
+	# =====================================================
+	# LEVEL 0
+	# 0 - 9 XP
+	# =====================================================
 
 	else = {
 
