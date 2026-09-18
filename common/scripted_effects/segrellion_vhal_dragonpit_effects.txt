@@ -1,9 +1,21 @@
+# =========================================================
+# VHAL DRAGONPIT
+# ACTIVATE THE DRAGONKEEPER ORDER
+#
+# ROOT = holder of c_blackmark / Vhalerion
+#
+# The physical dragonpit may continue to exist while the
+# Dragonkeeper Order itself is dormant.
+# =========================================================
+
 segrellion_activate_vhal_dragonpit_effect = {
 
-	# Only activate if Caverns II or higher actually exists
 	if = {
+
 		limit = {
+
 			title:c_blackmark = {
+
 				any_county_province = {
 					has_building_or_higher = segrellion_vhal_dragonpit_02
 				}
@@ -11,49 +23,84 @@ segrellion_activate_vhal_dragonpit_effect = {
 				NOT = {
 					has_variable = has_dragonkeeper_order
 				}
+
+
+				# After the historical extinction of the dragons,
+				# Vhal must remain dormant until somebody
+				# explicitly restores the order.
+
+				OR = {
+
+					NOT = {
+						has_variable = segrellion_vhal_dragonkeepers_historical_dormancy
+					}
+
+					has_variable = segrellion_vhal_dragonkeepers_restored
+				}
 			}
 		}
 
 
-		# AGOT's actual Head Dragonkeeper creation event
+		# =================================================
+		# AGOT HEAD DRAGONKEEPER
+		# =================================================
+
 		trigger_event = agot_dragonkeepers.0001
 
 
-		# Mark Vhal as having a Dragonkeeper Order
+		# =================================================
+		# ACTIVE DRAGONKEEPER ORDER
+		# =================================================
+
 		title:c_blackmark = {
+
 			set_variable = {
 				name = has_dragonkeeper_order
 			}
 		}
 
 
-		# Same default law used by AGOT generic dragonpits
+		# =================================================
+		# DEFAULT DRAGONPIT ACCESS LAW
+		# =================================================
+
 		if = {
+
 			limit = {
 				agot_has_any_dragonpit_access_law = no
 			}
+
 
 			add_realm_law = dragonpit_close_family_law
 		}
 
 
-		# Dragonpit amenities
-		# Dragonpit amenities
+		# =================================================
+		# DRAGONPIT AMENITIES
+		# =================================================
+
 		if = {
+
 			limit = {
 				has_ep1_dlc_trigger = yes
 			}
 
+
 			if = {
+
 				limit = {
+
 					title:c_blackmark = {
+
 						any_county_province = {
 							has_building_or_higher = segrellion_vhal_dragonpit_03
 						}
 					}
 				}
 
+
 				hidden_effect = {
+
 					set_amenity_level = {
 						type = agot_dragonpit_amenities
 						value = 4
@@ -61,8 +108,11 @@ segrellion_activate_vhal_dragonpit_effect = {
 				}
 			}
 
+
 			else = {
+
 				hidden_effect = {
+
 					set_amenity_level = {
 						type = agot_dragonpit_amenities
 						value = 3
@@ -70,5 +120,238 @@ segrellion_activate_vhal_dragonpit_effect = {
 				}
 			}
 		}
+	}
+}
+
+
+# =========================================================
+# VHAL DRAGONPIT
+# DEACTIVATE THE HISTORICAL ORDER
+#
+# ROOT = holder of c_blackmark / Vhalerion
+#
+# The Great Pit remains physically intact.
+# Only its AGOT dragonpit functionality and keeper order
+# become dormant.
+# =========================================================
+
+segrellion_deactivate_vhal_dragonpit_effect = {
+
+	# =====================================================
+	# CLOSE VHAL AS AN ACTIVE DRAGONPIT
+	# =====================================================
+
+	title:c_blackmark = {
+
+		if = {
+
+			limit = {
+				has_variable = has_dragonkeeper_order
+			}
+
+
+			remove_variable = has_dragonkeeper_order
+		}
+
+
+		set_variable = {
+			name = segrellion_vhal_dragonkeepers_historical_dormancy
+		}
+	}
+
+
+	# =====================================================
+	# ONLY DISMISS THE HEAD DRAGONKEEPER IF THIS RULER
+	# HAS NO OTHER ACTIVE DRAGONPIT
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+
+				any_held_title = {
+					agot_title_is_an_active_dragonpit = yes
+				}
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				employs_court_position = head_dragonkeeper_court_position
+			}
+
+
+			court_position:head_dragonkeeper_court_position = {
+				save_scope_as = segrellion_vhal_old_head_dragonkeeper
+			}
+
+
+			revoke_court_position = {
+
+				recipient = scope:segrellion_vhal_old_head_dragonkeeper
+
+				court_position = head_dragonkeeper_court_position
+			}
+		}
+
+
+		# =================================================
+		# REMOVE THE DRAGONPIT ACCESS LAW ONLY IF THERE
+		# ARE NO OTHER ACTIVE DRAGONPITS
+		# =================================================
+
+		if = {
+
+			limit = {
+				has_realm_law = dragonpit_close_family_law
+			}
+
+			remove_realm_law = dragonpit_close_family_law
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_realm_law = dragonpit_house_law
+			}
+
+			remove_realm_law = dragonpit_house_law
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_realm_law = dragonpit_dynasty_law
+			}
+
+			remove_realm_law = dragonpit_dynasty_law
+		}
+
+
+		else_if = {
+
+			limit = {
+				has_realm_law = dragonpit_everyone_law
+			}
+
+			remove_realm_law = dragonpit_everyone_law
+		}
+	}
+}
+
+
+# =========================================================
+# VHAL DRAGONPIT
+# BOOKMARK / GAME START STATE
+#
+# Before the historical extinction:
+#   active normally.
+#
+# After the historical extinction:
+#   physical dragonpit survives,
+#   Dragonkeeper Order begins dormant.
+# =========================================================
+
+segrellion_vhal_dragonpit_startup_state_effect = {
+
+	if = {
+
+		limit = {
+			game_start_date < 8153.1.1
+		}
+
+
+		segrellion_activate_vhal_dragonpit_effect = yes
+	}
+
+
+	else_if = {
+
+		limit = {
+
+			title:c_blackmark = {
+
+				NOT = {
+					has_variable = segrellion_vhal_dragonkeepers_restored
+				}
+			}
+		}
+
+
+		segrellion_deactivate_vhal_dragonpit_effect = yes
+	}
+
+
+	else = {
+
+		segrellion_activate_vhal_dragonpit_effect = yes
+	}
+}
+
+
+# =========================================================
+# VHAL DRAGONPIT
+# HISTORICAL EXTINCTION PROGRESSION
+#
+# This also makes campaigns begun in an earlier bookmark
+# correctly lose the active order when dragons truly die out.
+#
+# It additionally repairs older 174/300 AC saves from
+# versions where Vhal was incorrectly auto-activated.
+# =========================================================
+
+segrellion_vhal_dragonpit_extinction_progression_effect = {
+
+	if = {
+
+		limit = {
+
+			title:c_blackmark = {
+
+				has_variable = has_dragonkeeper_order
+
+				NOT = {
+					has_variable = segrellion_vhal_dragonkeepers_restored
+				}
+			}
+
+
+			OR = {
+
+				# -----------------------------------------
+				# Campaign started after the historical
+				# extinction.
+				#
+				# Vhal must already be dormant regardless
+				# of dragons that may have since returned.
+				# -----------------------------------------
+
+				game_start_date >= 8153.1.1
+
+
+				# -----------------------------------------
+				# Campaign actually began before the
+				# extinction and has continued naturally.
+				# -----------------------------------------
+
+				AND = {
+
+					game_start_date < 8153.1.1
+
+					current_date >= 8153.1.1
+
+					agot_dragon_population_alive = no
+				}
+			}
+		}
+
+
+		segrellion_deactivate_vhal_dragonpit_effect = yes
 	}
 }

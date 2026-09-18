@@ -57,3 +57,211 @@ segrellion_keep_the_dragon_egg_close_decision = {
 	ai_will_do = { base = 0 }
 }
 
+# =========================================================
+# RESTORE THE VHAL DRAGONKEEPERS
+#
+# The Great Pit survives the extinction of the dragons,
+# but the Dragonkeeper Order does not.
+#
+# From 205 AC onward, the ruler who actually holds Vhalerion
+# may restore the order and reactivate the dragonpit.
+# =========================================================
+
+segrellion_restore_vhal_dragonkeepers_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+
+	decision_group_type = major
+
+	ai_goal = yes
+
+
+	desc = segrellion_restore_vhal_dragonkeepers_decision_desc
+
+	selection_tooltip = segrellion_restore_vhal_dragonkeepers_decision_tooltip
+
+	confirm_text = segrellion_restore_vhal_dragonkeepers_decision_confirm
+
+
+	# =====================================================
+	# SAME PRESTIGE COST AS THE DRAGONSTONE RESTORATION
+	# =====================================================
+
+	cost = {
+
+		prestige = 250
+	}
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		current_date >= 8205.1.1
+
+		is_landed = yes
+
+
+		# The decision belongs to whoever actually controls
+		# Vhalerion, not specifically House Segrellion.
+
+		has_title = title:c_blackmark
+
+
+		# The physical dragonpit must still exist at
+		# Warded Caverns level or higher.
+
+		title:c_blackmark = {
+
+			any_county_province = {
+
+				has_building_or_higher = segrellion_vhal_dragonpit_02
+			}
+
+
+			NOT = {
+				has_variable = has_dragonkeeper_order
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+
+		is_imprisoned = no
+
+
+		# Use AGOT's own requirements for maintaining
+		# a true dragonpit.
+
+		agot_has_dragonpit_requirements_trigger = yes
+	}
+
+
+	# =====================================================
+	# RESTORE THE ORDER
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_restore_vhal_dragonkeepers_effect_tt
+
+
+		hidden_effect = {
+
+			title:c_blackmark = {
+
+				set_variable = {
+					name = segrellion_vhal_dragonkeepers_restored
+				}
+
+
+				if = {
+
+					limit = {
+						has_variable = segrellion_vhal_dragonkeepers_historical_dormancy
+					}
+
+					remove_variable = segrellion_vhal_dragonkeepers_historical_dormancy
+				}
+			}
+
+
+			segrellion_activate_vhal_dragonpit_effect = yes
+		}
+	}
+
+
+	# =====================================================
+	# AI
+	#
+	# Same general logic as AGOT's restoration:
+	# dragons, riders and eggs make restoration desirable.
+	# =====================================================
+
+	ai_potential = {
+
+		always = yes
+	}
+
+
+	ai_will_do = {
+
+		base = 0
+
+
+		modifier = {
+
+			add = 500
+
+			any_living_dragon = {
+				count > 0
+			}
+		}
+
+
+		modifier = {
+
+			add = 500
+
+
+			OR = {
+
+				any_relation = {
+					type = agot_dragon
+				}
+
+
+				AND = {
+
+					any_character_artifact = {
+						has_variable = dragon_egg
+					}
+
+					has_trait = ambitious
+
+
+					culture = {
+						has_cultural_pillar = heritage_valyrian
+					}
+				}
+			}
+		}
+
+
+		modifier = {
+
+			add = 500
+
+			any_courtier_or_guest = {
+				has_trait = dragon
+			}
+		}
+
+
+		modifier = {
+
+			add = 500
+
+			any_close_or_extended_family_member = {
+
+				any_relation = {
+					type = agot_dragon
+				}
+
+				is_courtier_of = root
+			}
+		}
+	}
+}
+
