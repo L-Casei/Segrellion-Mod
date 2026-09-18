@@ -141,6 +141,181 @@ segrellion_set_historical_splendor_effect = {
 }
 
 # =========================================================
+# 300 AC - HOUSE VLADWYN
+#
+# Historical dynasty state at the Winds of Winter bookmark.
+#
+# - Well-known Level of Splendor
+# - Vladwyn Legacy I-V completed
+# - 0 spendable Renown
+#
+# The setup is performed only once so loading a save later
+# does not erase Renown earned during gameplay.
+# =========================================================
+
+vladwyn_setup_300_dynasty_effect = {
+
+	dynasty:dynn_Vladwyn = {
+
+		if = {
+			limit = {
+
+				game_start_date = 8300.8.20
+
+				NOT = {
+					has_variable = vladwyn_300_dynasty_setup_done
+				}
+			}
+
+
+			# =================================================
+			# VLADWYN LEGACY I
+			# Oaths Written in Blood
+			# =================================================
+
+			if = {
+				limit = {
+					NOT = {
+						has_dynasty_perk = vladwyn_legacy_1
+					}
+				}
+
+				add_dynasty_perk = vladwyn_legacy_1
+			}
+
+
+			# =================================================
+			# VLADWYN LEGACY II
+			# Eyes Behind the Shield
+			# =================================================
+
+			if = {
+				limit = {
+					NOT = {
+						has_dynasty_perk = vladwyn_legacy_2
+					}
+				}
+
+				add_dynasty_perk = vladwyn_legacy_2
+			}
+
+
+			# =================================================
+			# VLADWYN LEGACY III
+			# The Household Blade
+			# =================================================
+
+			if = {
+				limit = {
+					NOT = {
+						has_dynasty_perk = vladwyn_legacy_3
+					}
+				}
+
+				add_dynasty_perk = vladwyn_legacy_3
+			}
+
+
+			# =================================================
+			# VLADWYN LEGACY IV
+			# Hold Until Death
+			# =================================================
+
+			if = {
+				limit = {
+					NOT = {
+						has_dynasty_perk = vladwyn_legacy_4
+					}
+				}
+
+				add_dynasty_perk = vladwyn_legacy_4
+			}
+
+
+			# =================================================
+			# VLADWYN LEGACY V
+			# The Black Sentinels
+			# =================================================
+
+			if = {
+				limit = {
+					NOT = {
+						has_dynasty_perk = vladwyn_legacy_5
+					}
+				}
+
+				add_dynasty_perk = vladwyn_legacy_5
+			}
+
+
+			# =================================================
+			# SPENDABLE RENOWN
+			#
+			# Legacy history can otherwise leave the dynasty
+			# with a positive or negative Renown balance.
+			# Historical starting balance must be exactly 0.
+			# =================================================
+
+			if = {
+				limit = {
+					dynasty_prestige > 0
+				}
+
+				add_dynasty_prestige = {
+					value = dynasty_prestige
+					multiply = -1
+				}
+			}
+
+			else_if = {
+				limit = {
+					dynasty_prestige < 0
+				}
+
+				add_dynasty_prestige = {
+					value = dynasty_prestige
+					multiply = -1
+				}
+			}
+
+
+			# =================================================
+			# LEVEL OF SPLENDOR
+			#
+			# Internal level 5 = Well-known.
+			#
+			# Do this AFTER correcting Renown so any Renown
+			# correction cannot accidentally alter the desired
+			# historical Splendor level.
+			# =================================================
+
+			while = {
+				limit = {
+					dynasty_prestige_level < 5
+				}
+
+				add_dynasty_prestige_level = 1
+			}
+
+			while = {
+				limit = {
+					dynasty_prestige_level > 5
+				}
+
+				add_dynasty_prestige_level = -1
+			}
+
+
+			# Prevent future save loads from resetting Renown.
+			set_variable = {
+				name = vladwyn_300_dynasty_setup_done
+				value = yes
+			}
+		}
+	}
+}
+
+# =========================================================
 # HISTORICAL SEGRELLION DYNASTY LEGACIES
 #
 # Historical legacy purchases are reconciled once at startup.
