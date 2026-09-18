@@ -1926,13 +1926,35 @@ segrellion_on_game_start = {
 				add_character_flag = segrellion_alysanne_custom_clothes
 			}
 		}
+		
 		character:Segrellion_3 ?= {
 			if = {
 				limit = { is_alive = yes }
+
 				add_character_flag = has_scripted_appearance
 				add_character_flag = hair_trait_female_hair_custom_14
 				add_character_flag = beard_trait_no_beard
 				add_character_flag = segrellion_daenerys_custom_clothes
+
+				if = {
+					limit = {
+						current_date < 8113.1.1
+						any_spouse = { this = character:Segrellion_1 }
+					}
+
+					add_character_modifier = {
+						modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
+						years = 8
+					}
+				}
+			}
+		}
+
+
+		character:Targaryen_9 ?= {
+			if = {
+				limit = { is_alive = yes }
+
 				if = {
 					limit = {
 						NOT = {
@@ -1942,18 +1964,9 @@ segrellion_on_game_start = {
 
 					add_trait = segrellion_dreamer_trait
 				}
-				if = {
-					limit = {
-						current_date < 8113.1.1
-						any_spouse = { this = character:Segrellion_1 }
-					}
-					add_character_modifier = {
-						modifier = segrellion_daenerys_canon_pregnancy_waiting_modifier
-						years = 8
-					}
-				}
 			}
 		}
+
 		character:Segrellion_12 ?= {
 			if = {
 				limit = { is_alive = yes }
