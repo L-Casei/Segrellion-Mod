@@ -769,6 +769,50 @@ segrellion_setup_stannis_northern_campaign_effect = {
 segrellion_stannis_northern_story_watchdog_effect = {
 
 	# =====================================================
+	# RECOVER RAMSAY'S SAVED BOOKKEEPING
+	#
+	# Safe old-save repair only. If the actual current holder
+	# of the North already carries our Ramsay takeover flag,
+	# restore the two global variables without replaying
+	# Roose's death or touching succession again.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_global_variable = segrellion_ramsay_takeover_completed
+			}
+
+
+			title:e_the_north.holder ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_ramsay_northern_takeover
+			}
+		}
+
+
+		set_global_variable = {
+
+			name = segrellion_ramsay_bolton
+
+			value = title:e_the_north.holder
+		}
+
+
+		set_global_variable = {
+
+			name = segrellion_ramsay_takeover_completed
+
+			value = yes
+		}
+	}
+
+
+	# =====================================================
 	# RECOVER THE BASIC STANNIS SETUP
 	#
 	# If Ramsay's takeover completed but the second half of
