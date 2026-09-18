@@ -2968,6 +2968,40 @@ segrellion_young_griff.5010 = {
 		remove_character_flag = segrellion_young_griff_force_blackfyre_reveal
 
 		# =================================================
+		# SHADOWS GATHER
+		#
+		# Several days after the Blackfyre revelation,
+		# Aegon is warned that something far more dangerous
+		# than public ridicule is beginning to move against
+		# him.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_shadow_warning_scheduled
+				}
+
+				NOT = {
+					has_character_flag = segrellion_young_griff_shadow_warning_seen
+				}
+			}
+
+
+			add_character_flag = segrellion_young_griff_shadow_warning_scheduled
+
+
+			trigger_event = {
+
+				id = segrellion_young_griff.5020
+
+				days = { 5 12 }
+			}
+		}
+
+		# =================================================
 		# THE TRUTH SPREADS THROUGH WESTEROS
 		#
 		# Every landed ruler whose capital lies within the
@@ -3099,6 +3133,330 @@ segrellion_young_griff.5011 = {
 	option = {
 
 		name = segrellion_young_griff.5011.a
+
+
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+# =========================================================
+# 5020 - A SHADOW OVER THE DRAGON
+#
+# Root = Young Griff
+#
+# Fired shortly after Aegon's Blackfyre identity becomes
+# public.
+#
+# Informant priority:
+#
+# 1. Varys, if still serving Aegon
+# 2. Aegon's Spymaster
+# 3. Aegon's primary spouse
+# 4. A trusted adult courtier
+# 5. No visible informant fallback
+#
+# The event introduces the permanent assassination
+# vulnerability caused by the Blackfyre revelation.
+# =========================================================
+
+segrellion_young_griff.5020 = {
+
+	type = character_event
+
+	title = segrellion_young_griff.5020.t
+
+	desc = {
+
+		first_valid = {
+
+
+			# =================================================
+			# VARYS
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_shadow_warning_varys
+				}
+
+				desc = segrellion_young_griff.5020.desc.varys
+			}
+
+
+			# =================================================
+			# SPYMASTER
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_shadow_warning_spymaster
+				}
+
+				desc = segrellion_young_griff.5020.desc.spymaster
+			}
+
+
+			# =================================================
+			# CLOSE COMPANION
+			# =================================================
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_young_griff_shadow_warning_close
+				}
+
+				desc = segrellion_young_griff.5020.desc.close
+			}
+
+
+			# =================================================
+			# FALLBACK
+			# =================================================
+
+			desc = segrellion_young_griff.5020.desc.alone
+		}
+	}
+
+
+	theme = intrigue
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:IAF_Young_Griff_1
+
+		is_alive = yes
+
+		has_character_flag = segrellion_young_griff_blackfyre_revealed
+
+		NOT = {
+			has_character_flag = segrellion_young_griff_shadow_warning_seen
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_young_griff_shadow_warning_scheduled
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_young_griff_shadow_warning_scheduled
+
+		add_character_flag = segrellion_young_griff_shadow_warning_seen
+
+
+		# =================================================
+		# CLEAR TEMPORARY INFORMANT STATE
+		# =================================================
+
+		remove_character_flag = segrellion_young_griff_shadow_warning_varys
+
+		remove_character_flag = segrellion_young_griff_shadow_warning_spymaster
+
+		remove_character_flag = segrellion_young_griff_shadow_warning_close
+
+
+		# =================================================
+		# 1. VARYS
+		#
+		# Varys only warns Aegon if he is actually still
+		# serving in Aegon's court.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Eunuch_1 ?= {
+
+					is_alive = yes
+
+					OR = {
+
+						employer = root
+
+						is_courtier_of = root
+					}
+				}
+			}
+
+
+			character:Eunuch_1 = {
+
+				save_scope_as = segrellion_aegon_shadow_informant
+			}
+
+
+			add_character_flag = segrellion_young_griff_shadow_warning_varys
+		}
+
+
+		# =================================================
+		# 2. SPYMASTER
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				exists = cp:councillor_spymaster
+
+				cp:councillor_spymaster = {
+
+					is_alive = yes
+
+					is_adult = yes
+				}
+			}
+
+
+			cp:councillor_spymaster = {
+
+				save_scope_as = segrellion_aegon_shadow_informant
+			}
+
+
+			add_character_flag = segrellion_young_griff_shadow_warning_spymaster
+		}
+
+
+		# =================================================
+		# 3. PRIMARY SPOUSE
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				exists = primary_spouse
+
+				primary_spouse = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+				}
+			}
+
+
+			primary_spouse = {
+
+				save_scope_as = segrellion_aegon_shadow_informant
+			}
+
+
+			add_character_flag = segrellion_young_griff_shadow_warning_close
+		}
+
+
+		# =================================================
+		# 4. TRUSTED COURTIER
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				any_courtier = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+
+					this != root
+				}
+			}
+
+
+			random_courtier = {
+
+				limit = {
+
+					is_alive = yes
+
+					is_adult = yes
+
+					is_imprisoned = no
+
+					this != root
+				}
+
+
+				save_scope_as = segrellion_aegon_shadow_informant
+			}
+
+
+			add_character_flag = segrellion_young_griff_shadow_warning_close
+		}
+
+
+		# =================================================
+		# PERMANENT VULNERABILITY
+		#
+		# Also repaired every month by the existing
+		# assassination-pressure progression.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_modifier = segrellion_knives_around_iron_throne_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_knives_around_iron_throne_modifier
+			}
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = shock
+	}
+
+
+	right_portrait = {
+
+		character = scope:segrellion_aegon_shadow_informant
+
+		trigger = {
+			exists = scope:segrellion_aegon_shadow_informant
+		}
+
+		animation = personality_rational
+	}
+
+
+	option = {
+
+		name = segrellion_young_griff.5020.a
+
+		custom_tooltip = segrellion_young_griff.5020.a.tt
 
 
 		ai_chance = {
