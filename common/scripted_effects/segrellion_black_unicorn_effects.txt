@@ -3788,76 +3788,56 @@ segrellion_black_unicorn_capture_visenya_effect = {
 	# =====================================================
 	# EXISTING NAMED SKAGOSI COMPANIONS
 	#
-	# If they were already generated, they die resisting.
-	# If not, the generic assault party is simply treated
-	# as neutralized by narrative/state flag.
+	# They are captured with Visenya rather than killed
+	# immediately. If Daemon later chooses execution, the
+	# post-capture resolution kills them then.
 	# =====================================================
 
 	global_var:segrellion_visenya_skagosi_warrior_1 ?= {
-
 		if = {
-
-			limit = {
-				is_alive = yes
+			limit = { is_alive = yes }
+			set_location = title:b_castle_farring.title_province
+			root = {
+				add_courtier = global_var:segrellion_visenya_skagosi_warrior_1
 			}
-
-			death = {
-				death_reason = death_battle
-				killer = root
-			}
+			add_character_flag = segrellion_black_unicorn_follower_captured_with_visenya
 		}
 	}
-
 
 	global_var:segrellion_visenya_skagosi_warrior_2 ?= {
-
 		if = {
-
-			limit = {
-				is_alive = yes
+			limit = { is_alive = yes }
+			set_location = title:b_castle_farring.title_province
+			root = {
+				add_courtier = global_var:segrellion_visenya_skagosi_warrior_2
 			}
-
-			death = {
-				death_reason = death_battle
-				killer = root
-			}
+			add_character_flag = segrellion_black_unicorn_follower_captured_with_visenya
 		}
 	}
-
 
 	global_var:segrellion_visenya_skagosi_warrior_3 ?= {
-
 		if = {
-
-			limit = {
-				is_alive = yes
+			limit = { is_alive = yes }
+			set_location = title:b_castle_farring.title_province
+			root = {
+				add_courtier = global_var:segrellion_visenya_skagosi_warrior_3
 			}
-
-			death = {
-				death_reason = death_battle
-				killer = root
-			}
+			add_character_flag = segrellion_black_unicorn_follower_captured_with_visenya
 		}
 	}
-
 
 	global_var:segrellion_visenya_skagosi_warrior_4 ?= {
-
 		if = {
-
-			limit = {
-				is_alive = yes
+			limit = { is_alive = yes }
+			set_location = title:b_castle_farring.title_province
+			root = {
+				add_courtier = global_var:segrellion_visenya_skagosi_warrior_4
 			}
-
-			death = {
-				death_reason = death_battle
-				killer = root
-			}
+			add_character_flag = segrellion_black_unicorn_follower_captured_with_visenya
 		}
 	}
 
-
-	add_character_flag = segrellion_black_unicorn_skagosi_followers_neutralized
+	add_character_flag = segrellion_black_unicorn_skagosi_followers_captured
 
 
 	# =====================================================
@@ -3926,6 +3906,13 @@ segrellion_black_unicorn_capture_visenya_effect = {
 	segrellion_black_unicorn_clear_post_beacon_route_flags_effect = yes
 
 	add_character_flag = segrellion_black_unicorn_post_beacon_resolved
+
+	# Continue the dungeon aftermath after the first anger has
+	# had time to cool.
+	trigger_event = {
+		id = segrellion_black_unicorn.0920
+		days = { 14 35 }
+	}
 }
 
 # =========================================================
