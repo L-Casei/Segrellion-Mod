@@ -293,6 +293,227 @@ segrellion_remove_stannis_pre_winterfell_modifiers_effect = {
 
 		remove_character_modifier = segrellion_stannis_kings_resolve_modifier
 	}
+
+	if = {
+
+		limit = {
+			has_character_modifier = segrellion_stannis_northern_campaign_push_modifier
+		}
+
+		remove_character_modifier = segrellion_stannis_northern_campaign_push_modifier
+	}
+}
+
+# =========================================================
+# STANNIS - NORTHERN CAMPAIGN TIMELINE
+#
+# Monthly watchdog for the scripted Bolton war.
+#
+# Desired timeline:
+#
+# 300 AC:
+#   Campaign begins normally.
+#
+# Early 301 AC:
+#   Strong Northern progress is allowed to resolve the war.
+#
+# Spring 301 AC:
+#   A campaign already substantially won is automatically
+#   converted into victory.
+#
+# 301.6.1:
+#   Absolute story deadline.
+#   Ramsay is captured and Stannis wins the Northern war.
+#
+# This guarantees that the wider 301-302 story remains
+# synchronized even if CK3's military AI becomes stuck.
+# =========================================================
+
+segrellion_stannis_northern_campaign_progression_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Baratheon_3
+
+			is_alive = yes
+
+			game_start_date = 8300.8.20
+
+			has_character_flag = segrellion_stannis_northern_campaign_active
+
+			has_variable = segrellion_stannis_northern_war
+		}
+
+
+		# =================================================
+		# KEEP THE CAMPAIGN MOVING
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				is_ai = yes
+
+				NOT = {
+					has_character_modifier = segrellion_stannis_northern_campaign_push_modifier
+				}
+			}
+
+
+			add_character_modifier = {
+
+				modifier = segrellion_stannis_northern_campaign_push_modifier
+			}
+		}
+
+
+		# =================================================
+		# EARLY 301 AC
+		#
+		# If Stannis is already clearly winning there is no
+		# reason for the AI to spend another year walking
+		# around the North.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				current_date >= 8301.3.1
+
+				var:segrellion_stannis_northern_war ?= {
+
+					attacker_war_score >= 75
+				}
+			}
+
+
+			add_character_flag = segrellion_stannis_northern_campaign_timeline_victory
+
+
+			var:segrellion_stannis_northern_war ?= {
+
+				end_war = attacker
+			}
+		}
+
+
+		# =================================================
+		# LATE SPRING 301 AC
+		#
+		# Even a moderately successful Stannis should now
+		# finish the campaign instead of becoming stuck on
+		# secondary occupations.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				current_date >= 8301.5.1
+
+				var:segrellion_stannis_northern_war ?= {
+
+					attacker_war_score >= 50
+				}
+			}
+
+
+			add_character_flag = segrellion_stannis_northern_campaign_timeline_victory
+
+
+			var:segrellion_stannis_northern_war ?= {
+
+				end_war = attacker
+			}
+		}
+
+
+		# =================================================
+		# HARD STORY DEADLINE
+		# 1 JUNE 301 AC
+		#
+		# The Bolton campaign cannot survive beyond this
+		# point. Ramsay is captured and the war is resolved.
+		#
+		# on_victory of the CB then performs the normal:
+		#
+		# - Northern transfer
+		# - Winterfell transfer
+		# - independence
+		# - Jon offer
+		#
+		# Nothing here duplicates that settlement.
+		# =================================================
+
+		else_if = {
+
+			limit = {
+
+				current_date >= 8301.6.1
+			}
+
+
+			add_character_flag = segrellion_stannis_northern_campaign_timeline_forced
+
+
+			# ---------------------------------------------
+			# RAMSAY FALLS
+			# ---------------------------------------------
+
+			if = {
+
+				limit = {
+
+					has_global_variable = segrellion_ramsay_bolton
+
+
+					global_var:segrellion_ramsay_bolton ?= {
+
+						is_alive = yes
+
+						is_imprisoned = no
+					}
+				}
+
+
+				global_var:segrellion_ramsay_bolton = {
+
+					save_scope_as = segrellion_stannis_timeline_ramsay
+				}
+
+
+				imprison = {
+
+					target = scope:segrellion_stannis_timeline_ramsay
+
+					type = dungeon
+				}
+
+
+				scope:segrellion_stannis_timeline_ramsay = {
+
+					add_character_flag = segrellion_ramsay_captured_by_stannis_campaign
+				}
+			}
+
+
+			# ---------------------------------------------
+			# FINISH THE ACTUAL SAVED NORTHERN WAR
+			#
+			# If Ramsay's imprisonment already caused CK3
+			# to resolve it, ?= safely does nothing.
+			# ---------------------------------------------
+
+			var:segrellion_stannis_northern_war ?= {
+
+				end_war = attacker
+			}
+		}
+	}
 }
 
 

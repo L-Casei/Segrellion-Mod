@@ -62,6 +62,8 @@ monthly_global_pulse = {
 		segrellion_daenerys_aurane_land_promise_progression
 		segrellion_daenerys_ai_invasion_failsafe
 		segrellion_daenerys_pentos_gerio_progression
+		segrellion_stannis_opening_recovery
+		segrellion_stannis_northern_campaign_progression
 		segrellion_stannis_renly_truth_progression
 	}
 }
@@ -2563,7 +2565,70 @@ segrellion_stannis_opening_recovery = {
 	}
 }
 
+# =========================================================
+# STANNIS - NORTHERN CAMPAIGN WATCHDOG
+#
+# Runs every month.
+#
+# 1. Repairs the campaign if an Iron Throne realm rebuild
+#    invalidated it.
+#
+# 2. Keeps the campaign moving.
+#
+# 3. Enforces the 301 AC narrative deadline.
+# =========================================================
 
+segrellion_stannis_northern_campaign_progression = {
+
+	trigger = {
+
+		game_start_date = 8300.8.20
+
+
+		character:Baratheon_3 ?= {
+
+			is_alive = yes
+
+
+			NOT = {
+				has_character_flag = segrellion_stannis_northern_campaign_victory
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_stannis_northern_campaign_failed
+			}
+
+
+			OR = {
+
+				has_character_flag = segrellion_stannis_northern_campaign_active
+
+				has_character_flag = segrellion_stannis_northern_campaign_started
+			}
+		}
+	}
+
+
+	effect = {
+
+		# =================================================
+		# REPAIR AFTER IRON THRONE REALM RECONSTRUCTION
+		# =================================================
+
+		segrellion_repair_stannis_campaign_after_aegon_throne_transfer_effect = yes
+
+
+		# =================================================
+		# NORMAL CAMPAIGN TIMELINE
+		# =================================================
+
+		character:Baratheon_3 ?= {
+
+			segrellion_stannis_northern_campaign_progression_effect = yes
+		}
+	}
+}
 
 
 
