@@ -1,0 +1,927 @@
+namespace = segrellion_black_unicorn
+
+# =========================================================
+# BLACK UNICORN - PATH III VARIANT ROUTER
+#
+# Routes unresolved / non-hostile earlier outcomes into a
+# softer Beacon confrontation instead of forcing the old
+# violent "Steel in the Dark" opening.
+# =========================================================
+
+segrellion_black_unicorn.0900 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+
+		segrellion_black_unicorn_part_iii_ready_trigger = yes
+	}
+
+	immediate = {
+
+		remove_character_flag = segrellion_black_unicorn_post_beacon_queued
+
+		# =====================================================
+		# THE TRAIL WENT COLD
+		#
+		# Daemon receives one last set of rumours before
+		# Visenya eventually reaches the Beacon herself.
+		# =====================================================
+
+		if = {
+
+			limit = {
+				has_character_flag = segrellion_black_unicorn_future_post_war_return
+			}
+
+			add_character_flag = segrellion_black_unicorn_path_iii_variant_started
+			add_character_flag = segrellion_black_unicorn_post_beacon_started
+			add_character_flag = segrellion_black_unicorn_path_iii_cold_trail_entry
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0901
+				days = 1
+			}
+		}
+
+		# =====================================================
+		# UNFINISHED / AMBIGUOUS SKAGOS ENCOUNTER
+		# =====================================================
+
+		else_if = {
+
+			limit = {
+				segrellion_black_unicorn_part_iii_soft_entry_trigger = yes
+			}
+
+			add_character_flag = segrellion_black_unicorn_path_iii_variant_started
+			add_character_flag = segrellion_black_unicorn_post_beacon_started
+			add_character_flag = segrellion_black_unicorn_path_iii_unfinished_business_entry
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0910
+				days = 1
+			}
+		}
+
+		# =====================================================
+		# OLD HOSTILE PATH III
+		#
+		# Truly hostile / destiny routes keep Steel in the Dark.
+		# =====================================================
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0600
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0901 - WHISPERS IN THE VALE
+#
+# Daemon never found Visenya. The first sign that the Black
+# Unicorn still moves comes only as second-hand rumours.
+# =========================================================
+
+segrellion_black_unicorn.0901 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0901.t
+	desc = segrellion_black_unicorn.0901.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_path_iii_cold_trail_entry
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_black_unicorn_vale_rumours_received
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0901.a
+		custom_tooltip = segrellion_black_unicorn.0901.a.tt
+
+		add_character_flag = segrellion_black_unicorn_vale_rumours_investigated
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0902
+			days = { 30 60 }
+		}
+
+		ai_chance = {
+			base = 65
+		}
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0901.b
+		custom_tooltip = segrellion_black_unicorn.0901.b.tt
+
+		add_character_flag = segrellion_black_unicorn_vale_rumours_ignored
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0910
+			days = { 90 180 }
+		}
+
+		ai_chance = {
+			base = 35
+		}
+	}
+}
+
+
+# =========================================================
+# 0902 - A TRAIL WITH NO RIDER
+#
+# Investigation produces signs, not Visenya herself.
+# =========================================================
+
+segrellion_black_unicorn.0902 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0902.t
+	desc = segrellion_black_unicorn.0902.desc
+
+	theme = travel
+
+	override_background = {
+		reference = wilderness
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_vale_rumours_investigated
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+		}
+	}
+
+	immediate = {
+
+		add_character_flag = segrellion_black_unicorn_vale_trail_found
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_suspicious
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0902.a
+		custom_tooltip = segrellion_black_unicorn.0902.a.tt
+
+		add_character_flag = segrellion_black_unicorn_vale_search_ended_without_visenya
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0910
+			days = { 60 120 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0910 - THE UNICORN AT MIDNIGHT
+#
+# Peaceful / tense Path III opening.
+# Visenya enters by surprise, but not to spill blood.
+# =========================================================
+
+segrellion_black_unicorn.0910 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0910.t
+
+	desc = {
+
+		first_valid = {
+
+			# -------------------------------------------------
+			# THEY HAVE ALREADY BEEN INTIMATE
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+						has_character_flag = segrellion_black_unicorn_shared_night
+						has_character_flag = segrellion_black_unicorn_daemon_slept_with_visenya
+					}
+				}
+
+				desc = segrellion_black_unicorn.0910.desc_warm
+			}
+
+			# -------------------------------------------------
+			# DAEMON WALKED AWAY WITHOUT AN ANSWER
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+						has_character_flag = segrellion_black_unicorn_future_beacon_ambush
+						has_character_flag = segrellion_black_unicorn_left_without_truth
+						has_character_flag = segrellion_black_unicorn_left_skagos_without_visenya
+					}
+				}
+
+				desc = segrellion_black_unicorn.0910.desc_tense
+			}
+
+			# -------------------------------------------------
+			# DAEMON INVESTIGATED THE VALE RUMOURS
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_black_unicorn_vale_rumours_investigated
+				}
+
+				desc = segrellion_black_unicorn.0910.desc_investigated
+			}
+
+			# -------------------------------------------------
+			# DAEMON IGNORED THEM
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_black_unicorn_vale_rumours_ignored
+				}
+
+				desc = segrellion_black_unicorn.0910.desc_ignored
+			}
+
+			# -------------------------------------------------
+			# TRUST EXISTS, BUT THEY NEVER SETTLED THE FUTURE
+			# -------------------------------------------------
+
+			triggered_desc = {
+
+				trigger = {
+
+					OR = {
+						has_character_flag = segrellion_black_unicorn_visenya_trust_earned
+						has_character_flag = segrellion_black_unicorn_daemon_knows_visenya_identity
+					}
+				}
+
+				desc = segrellion_black_unicorn.0910.desc_trusting
+			}
+
+			desc = segrellion_black_unicorn.0910.desc
+		}
+	}
+
+	theme = intrigue
+
+	override_background = {
+		reference = bedchamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Segrellion_60
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_path_iii_variant_started
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_post_beacon_resolved
+		}
+
+		character:Black_Unicorn_1 ?= {
+			is_alive = yes
+			is_imprisoned = no
+		}
+	}
+
+	immediate = {
+
+		# -----------------------------------------------------
+		# DAEMON IS AT THE BEACON
+		# -----------------------------------------------------
+
+		current_travel_plan ?= {
+			abort_travel_plan = yes
+		}
+
+		every_army = {
+
+			if = {
+
+				limit = {
+
+					army_commander ?= {
+						this = root
+					}
+				}
+
+				remove_commander = yes
+			}
+		}
+
+		set_location = title:b_castle_farring.title_province
+
+		remove_character_flag = segrellion_black_unicorn_beacon_spouse_present
+
+		primary_spouse ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+					location = title:b_castle_farring.title_province
+				}
+
+				save_scope_as = segrellion_daemon_beacon_spouse
+
+				root = {
+					add_character_flag = segrellion_black_unicorn_beacon_spouse_present
+				}
+			}
+		}
+
+		# -----------------------------------------------------
+		# RICKON AND OSHA REMAIN WITH VISENYA
+		# -----------------------------------------------------
+
+		segrellion_black_unicorn_rickon_osha_join_visenya_effect = yes
+
+		# -----------------------------------------------------
+		# VISENYA ENTERS THE BEACON PEACEFULLY
+		# -----------------------------------------------------
+
+		character:Black_Unicorn_1 = {
+
+			remove_character_flag = segrellion_black_unicorn_lock_camp_skagos
+
+			current_travel_plan ?= {
+				abort_travel_plan = yes
+			}
+
+			set_location = title:b_castle_farring.title_province
+
+			add_character_flag = segrellion_black_unicorn_infiltrated_beacon
+			add_character_flag = segrellion_black_unicorn_peaceful_beacon_arrival
+		}
+
+		character:Stark_Dummy_11 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+					is_courtier_of = character:Black_Unicorn_1
+				}
+
+				set_location = title:b_castle_farring.title_province
+				add_character_flag = segrellion_rickon_at_beacon_with_visenya
+			}
+		}
+
+		character:Stark_hh_13 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+					is_courtier_of = character:Black_Unicorn_1
+				}
+
+				set_location = title:b_castle_farring.title_province
+				add_character_flag = segrellion_osha_at_beacon_with_visenya
+			}
+		}
+
+		# -----------------------------------------------------
+		# REMEMBER THE TONE OF THE MEETING
+		# -----------------------------------------------------
+
+		if = {
+
+			limit = {
+
+				OR = {
+					has_character_flag = segrellion_black_unicorn_shared_night
+					has_character_flag = segrellion_black_unicorn_daemon_slept_with_visenya
+					has_character_flag = segrellion_black_unicorn_visenya_trust_earned
+				}
+			}
+
+			add_character_flag = segrellion_black_unicorn_path_iii_tone_warm
+		}
+
+		else_if = {
+
+			limit = {
+
+				OR = {
+					has_character_flag = segrellion_black_unicorn_future_beacon_ambush
+					has_character_flag = segrellion_black_unicorn_left_without_truth
+					has_character_flag = segrellion_black_unicorn_left_skagos_without_visenya
+				}
+			}
+
+			add_character_flag = segrellion_black_unicorn_path_iii_tone_tense
+		}
+
+		else = {
+			add_character_flag = segrellion_black_unicorn_path_iii_tone_guarded
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0910.a
+		custom_tooltip = segrellion_black_unicorn.0910.a.tt
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0911
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0911 - NO MORE MASKS
+# =========================================================
+
+segrellion_black_unicorn.0911 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0911.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_black_unicorn_daemon_knows_visenya_identity
+				}
+
+				desc = segrellion_black_unicorn.0911.desc_known
+			}
+
+			desc = segrellion_black_unicorn.0911.desc_reveal
+		}
+	}
+
+	theme = dynasty
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	immediate = {
+
+		segrellion_reveal_black_unicorn_identity_effect = yes
+
+		add_character_flag = segrellion_black_unicorn_visenya_revealed_at_beacon
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_rational
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0911.a
+		custom_tooltip = segrellion_black_unicorn.0911.a.tt
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0912
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0912 - HER PLACE BESIDE ME
+#
+# Visenya states her actual goal:
+# - remain with Daemon
+# - be Lady of the Flamelands beside him
+# - accept another wife, but never as Daemon's second wife
+# =========================================================
+
+segrellion_black_unicorn.0912 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0912.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					is_married = yes
+				}
+
+				desc = segrellion_black_unicorn.0912.desc_married
+			}
+
+			desc = segrellion_black_unicorn.0912.desc_unmarried
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+	}
+
+	# =====================================================
+	# ACCEPT HER TERMS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0912.a
+		custom_tooltip = segrellion_black_unicorn.0912.a.tt
+
+		add_character_flag = segrellion_black_unicorn_visenya_equal_rule_promised
+		add_character_flag = segrellion_black_unicorn_visenya_primary_wife_promised
+
+		character:Black_Unicorn_1 = {
+			add_character_flag = segrellion_black_unicorn_equal_lady_terms
+		}
+
+		if = {
+
+			limit = {
+				is_married = yes
+			}
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0775
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0771
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# =====================================================
+	# NEGOTIATE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0912.b
+		custom_tooltip = segrellion_black_unicorn.0912.b.tt
+
+		add_character_flag = segrellion_black_unicorn_daemon_countered_equal_terms
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0913
+			days = 1
+		}
+
+		ai_chance = {
+			base = 25
+		}
+	}
+
+	# =====================================================
+	# REFUSE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0912.c
+		custom_tooltip = segrellion_black_unicorn.0912.c.tt
+
+		add_character_flag = segrellion_black_unicorn_daemon_rejected_equal_terms
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0914
+			days = 1
+		}
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+
+# =========================================================
+# 0913 - FIRST AMONG WIVES
+#
+# Tension without violence. Visenya will compromise on the
+# existence of another wife, but not on her own position.
+# =========================================================
+
+segrellion_black_unicorn.0913 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0913.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					is_married = yes
+				}
+
+				desc = segrellion_black_unicorn.0913.desc_married
+			}
+
+			desc = segrellion_black_unicorn.0913.desc_unmarried
+		}
+	}
+
+	theme = marriage
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_suspicious
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0913.a
+		custom_tooltip = segrellion_black_unicorn.0913.a.tt
+
+		add_character_flag = segrellion_black_unicorn_visenya_equal_rule_promised
+		add_character_flag = segrellion_black_unicorn_visenya_primary_wife_promised
+
+		character:Black_Unicorn_1 = {
+			add_character_flag = segrellion_black_unicorn_equal_lady_terms
+		}
+
+		if = {
+
+			limit = {
+				is_married = yes
+			}
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0775
+				days = 1
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0771
+				days = 1
+			}
+		}
+
+		ai_chance = {
+			base = 90
+		}
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0913.b_married
+		custom_tooltip = segrellion_black_unicorn.0913.b.tt
+
+		trigger = {
+			is_married = yes
+		}
+
+		add_character_flag = segrellion_black_unicorn_daemon_rejected_visenya_primacy
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0914
+			days = 1
+		}
+
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0913.b_unmarried
+		custom_tooltip = segrellion_black_unicorn.0913.b.tt
+
+		trigger = {
+			is_married = no
+		}
+
+		add_character_flag = segrellion_black_unicorn_daemon_rejected_visenya_equal_rule
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0914
+			days = 1
+		}
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+
+# =========================================================
+# 0914 - A QUIET PARTING
+#
+# The peaceful Path III can fail, but it does not become a
+# duel or assassination route.
+# =========================================================
+
+segrellion_black_unicorn.0914 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0914.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_black_unicorn_path_iii_tone_warm
+				}
+
+				desc = segrellion_black_unicorn.0914.desc_warm
+			}
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_black_unicorn_path_iii_tone_tense
+				}
+
+				desc = segrellion_black_unicorn.0914.desc_tense
+			}
+
+			desc = segrellion_black_unicorn.0914.desc
+		}
+	}
+
+	theme = dynasty
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = disappointment
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0914.a
+		custom_tooltip = segrellion_black_unicorn.0914.a.tt
+
+		add_character_flag = segrellion_black_unicorn_peaceful_path_iii_failed
+
+		hidden_effect = {
+			segrellion_black_unicorn_visenya_leave_beacon_effect = yes
+		}
+	}
+}
