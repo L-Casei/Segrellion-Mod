@@ -831,10 +831,12 @@ segrellion_winterfell_council_select_candidate_effect = {
 		}
 	}
 
-
 	# =====================================================
 	# DYNAMIC
-	# Highest actual support wins.
+	#
+	# Actual Council support decides the winner,
+	# but ONLY Jon or members of the Stark dynasty
+	# are valid candidates for King in the North.
 	# =====================================================
 
 	else = {
@@ -851,19 +853,26 @@ segrellion_winterfell_council_select_candidate_effect = {
 						has_trait = incapable
 					}
 
+
+					# =============================================
+					# HARD CANDIDATE RULE
+					#
+					# The Council may vote differently from canon,
+					# but it may NEVER invent a non-Stark king.
+					# Jon remains explicitly valid regardless of
+					# his current dynasty/name.
+					# =============================================
+
 					OR = {
 
-						is_adult = yes
+						segrellion_is_current_jon_trigger = yes
 
 						dynasty = character:Stark_Dummy_8.dynasty
 					}
 
-					OR = {
 
-						is_landed = yes
-
-						dynasty = character:Stark_Dummy_8.dynasty
-					}
+					# Normal Night's Watch members cannot be crowned.
+					# Jon is explicitly exempt.
 
 					OR = {
 
@@ -873,6 +882,7 @@ segrellion_winterfell_council_select_candidate_effect = {
 
 						segrellion_is_current_jon_trigger = yes
 					}
+
 
 					exists = var:segrellion_council_king_total_support
 
@@ -886,8 +896,11 @@ segrellion_winterfell_council_select_candidate_effect = {
 
 					add = var:segrellion_council_king_total_support
 
-					# Small tie-break in favor of the host.
+
+					# Small tie-break in favor of Jon if tied.
+
 					if = {
+
 						limit = {
 							this = scope:host
 						}
@@ -1142,7 +1155,15 @@ segrellion_winterfell_council_crown_other_candidate_effect = {
 			exists = scope:segrellion_council_new_king
 
 			scope:segrellion_council_new_king = {
+
 				is_alive = yes
+
+				OR = {
+
+					segrellion_is_current_jon_trigger = yes
+
+					dynasty = character:Stark_Dummy_8.dynasty
+				}
 			}
 
 			NOT = {
