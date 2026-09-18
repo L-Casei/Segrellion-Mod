@@ -294,7 +294,21 @@ segrellion_banner_refuse_liege_effect = {
 			}
 		}
 
-		remove_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+
+		# If the vassal is already an oathbreaker from an earlier
+		# refusal, silently remove the old instance so its duration
+		# can be refreshed without displaying "You lose Oathbreaker".
+		if = {
+
+			limit = {
+				has_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+			}
+
+			hidden_effect = {
+				remove_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+			}
+		}
+
 
 		add_character_modifier = {
 			modifier = segrellion_banner_oathbreaker_minor_modifier
