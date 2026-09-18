@@ -3362,9 +3362,28 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 		add_character_flag = segrellion_black_unicorn_part_iii_marriage_resolution
 
 
-		trigger_event = {
-			id = segrellion_black_unicorn.0881
-			days = 1
+		# The original wife now gets her own reaction scene.
+		if = {
+
+			limit = {
+				has_variable = segrellion_black_unicorn_current_wife
+			}
+
+			var:segrellion_black_unicorn_current_wife = {
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0940
+					days = 1
+				}
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_black_unicorn.0881
+				days = 1
+			}
 		}
 	}
 
@@ -3587,11 +3606,35 @@ segrellion_black_unicorn_marry_visenya_exclusive_effect = {
 		add_character_flag = segrellion_black_unicorn_part_iii_marriage_resolution
 
 
-		trigger_event = {
+		# If Daemon ignored his wife's refusal and chose Visenya
+		# anyway, the abandoned wife receives the negative
+		# reaction branch before the normal resolution event.
+		if = {
 
-			id = segrellion_black_unicorn.0881
+			limit = {
 
-			days = 1
+				has_character_flag = segrellion_black_unicorn_daemon_chose_visenya_after_wife_refusal
+
+				has_variable = segrellion_visenya_abandoned_wife
+			}
+
+			var:segrellion_visenya_abandoned_wife = {
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0950
+					days = 1
+				}
+			}
+		}
+
+		else = {
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0881
+
+				days = 1
+			}
 		}
 	}
 
