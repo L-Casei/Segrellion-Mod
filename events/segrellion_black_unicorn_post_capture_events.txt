@@ -1,0 +1,405 @@
+namespace = segrellion_black_unicorn
+
+# =========================================================
+# 0920 - THE PRISONER ASKS FOR YOU
+# =========================================================
+
+segrellion_black_unicorn.0920 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0920.t
+	desc = segrellion_black_unicorn.0920.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = dungeon
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+		this = character:Segrellion_60
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_imprisoned_visenya_story_pending
+
+		character:Black_Unicorn_1 ?= {
+			is_alive = yes
+			is_imprisoned_by = root
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = personality_bold
+		override_imprisonment_visuals = yes
+	}
+
+	option = {
+
+		name = segrellion_black_unicorn.0920.a
+		custom_tooltip = segrellion_black_unicorn.0920.a.tt
+
+		trigger_event = {
+			id = segrellion_black_unicorn.0921
+			days = 1
+		}
+	}
+}
+
+
+# =========================================================
+# 0921 - BETWEEN IRON AND BLOOD
+#
+# Visenya attempts to pull Daemon back toward the bond
+# neither of them has ever quite managed to break.
+# =========================================================
+
+segrellion_black_unicorn.0921 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0921.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+				trigger = {
+					is_married = yes
+				}
+				desc = segrellion_black_unicorn.0921.desc_married
+			}
+
+			desc = segrellion_black_unicorn.0921.desc
+		}
+	}
+
+	theme = romance
+
+	override_background = {
+		reference = dungeon
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Black_Unicorn_1
+		animation = seduction
+		override_imprisonment_visuals = yes
+	}
+
+	# =====================================================
+	# 1 - RECONCILE
+	#
+	# Around 40% for AI in the ordinary case.
+	# Existing marriage sharply lowers the chance because
+	# this may require the double-wife solution.
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0921.a
+		custom_tooltip = segrellion_black_unicorn.0921.a.tt
+
+		hidden_effect = {
+
+			segrellion_black_unicorn_dungeon_reconciliation_effect = yes
+
+			if = {
+
+				limit = {
+					is_married = yes
+				}
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0775
+					days = 1
+				}
+			}
+
+			else = {
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0771
+					days = 1
+				}
+			}
+		}
+
+		ai_chance = {
+
+			base = 40
+
+			modifier = {
+				add = -20
+				is_married = yes
+			}
+
+			modifier = {
+				add = 20
+				has_trait = lustful
+			}
+
+			modifier = {
+				add = 15
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 15
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -15
+				has_trait = stubborn
+			}
+
+			modifier = {
+				add = -15
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = 30
+				has_relation_soulmate = character:Black_Unicorn_1
+			}
+
+			modifier = {
+				add = 20
+				has_relation_lover = character:Black_Unicorn_1
+			}
+		}
+	}
+
+	# =====================================================
+	# 2 - FREE HER AS FAMILY
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0921.b
+		custom_tooltip = segrellion_black_unicorn.0921.b.tt
+
+		hidden_effect = {
+
+			segrellion_black_unicorn_recognize_visenya_as_niece_effect = yes
+
+			character:Black_Unicorn_1 = {
+
+				trigger_event = {
+					id = segrellion_black_unicorn.0922
+					days = 1
+				}
+			}
+		}
+
+		ai_chance = {
+
+			base = 55
+
+			modifier = {
+				add = 15
+				has_trait = just
+			}
+
+			modifier = {
+				add = 15
+				has_trait = forgiving
+			}
+
+			modifier = {
+				add = 10
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -15
+				has_trait = callous
+			}
+		}
+	}
+
+	# =====================================================
+	# 3 - EXECUTE HER AND HER SKAGOSI
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0921.c
+		custom_tooltip = segrellion_black_unicorn.0921.c.tt
+
+		add_internal_flag = dangerous
+
+		hidden_effect = {
+			segrellion_black_unicorn_execute_visenya_and_followers_effect = yes
+		}
+
+		ai_chance = {
+
+			base = 5
+
+			modifier = {
+				add = 10
+				has_trait = sadistic
+			}
+
+			modifier = {
+				add = 8
+				has_trait = callous
+			}
+
+			modifier = {
+				add = 5
+				has_trait = vengeful
+			}
+
+			modifier = {
+				add = -5
+				has_trait = compassionate
+			}
+
+			modifier = {
+				add = -5
+				has_trait = forgiving
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0922 - A NAME, NOT A CHAIN
+#
+# ROOT = VISENYA
+#
+# Daemon has released and recognized her. Visenya chooses
+# whether to remain at the Beacon or return north.
+# =========================================================
+
+segrellion_black_unicorn.0922 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0922.t
+	desc = segrellion_black_unicorn.0922.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+
+		this = character:Black_Unicorn_1
+		is_alive = yes
+
+		has_character_flag = segrellion_black_unicorn_recognized_niece_of_daemon
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	right_portrait = {
+		character = character:Segrellion_60
+		animation = personality_rational
+	}
+
+	# =====================================================
+	# STAY AT THE BEACON
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0922.a
+		custom_tooltip = segrellion_black_unicorn.0922.a.tt
+
+		add_character_flag = segrellion_black_unicorn_visenya_stayed_as_family
+
+		character:Segrellion_60 = {
+
+			add_courtier = root
+
+			add_character_flag = segrellion_black_unicorn_dungeon_arc_resolved
+
+			segrellion_black_unicorn_try_rickon_beacon_introduction_effect = yes
+		}
+
+		set_location = title:b_castle_farring.title_province
+
+		ai_chance = {
+			base = 70
+		}
+	}
+
+	# =====================================================
+	# RETURN NORTH
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0922.b
+		custom_tooltip = segrellion_black_unicorn.0922.b.tt
+
+		add_character_flag = segrellion_black_unicorn_visenya_returned_north_as_family
+
+		set_location = title:b_cold_peaks.title_province
+
+		character:Stark_Dummy_11 ?= {
+
+			if = {
+				limit = { is_alive = yes }
+
+				set_location = title:b_cold_peaks.title_province
+				add_character_flag = segrellion_rickon_returned_north_with_visenya
+			}
+		}
+
+		character:Stark_hh_13 ?= {
+
+			if = {
+				limit = { is_alive = yes }
+
+				set_location = title:b_cold_peaks.title_province
+				add_character_flag = segrellion_osha_returned_north_with_visenya
+			}
+		}
+
+		character:Segrellion_60 = {
+			add_character_flag = segrellion_black_unicorn_dungeon_arc_resolved
+		}
+
+		ai_chance = {
+			base = 30
+		}
+	}
+}
