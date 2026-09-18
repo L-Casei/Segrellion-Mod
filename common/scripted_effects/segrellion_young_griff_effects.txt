@@ -5382,141 +5382,219 @@ segrellion_young_griff_complete_margaery_marriage_effect = {
 
 
 		# =====================================================
-		# DRAGON WIVES / STORY MARRIAGE WINDOW
+		# AUTHORIZE THE EXCEPTIONAL SECOND MARRIAGE
+		# =====================================================
+
+		add_character_flag = segrellion_two_wives_authorized
+
+
+		# =====================================================
+		# OPEN YOUNG GRIFF'S STORY MARRIAGE WINDOW
 		#
-		# This is the existing hook already used by the mod
-		# specifically to allow the exceptional marriage.
+		# IMPORTANT:
+		# Keep this open until BOTH marriage attempts are done
+		# so the hard marriage guard recognises Margaery.
 		# =====================================================
 
 		segrellion_young_griff_open_story_marriage_window_effect = yes
 
 
 		# =====================================================
-		# ACTUAL SECOND MARRIAGE
+		# NORMAL MARRIAGE ATTEMPT
 		# =====================================================
 
 		marry = var:segrellion_young_griff_margaery
 
 
-		segrellion_young_griff_close_story_marriage_window_effect = yes
-
-
 		# =====================================================
-		# KEEP THE ORIGINAL QUEEN AS PRIMARY
+		# LOW-LEVEL FALLBACK
+		#
+		# If CK3 rejected "marry" because Aegon already has
+		# a wife, directly create the spouse relationship.
 		# =====================================================
 
 		if = {
 
 			limit = {
 
-				has_variable = segrellion_young_griff_second_wife_responder
+				var:segrellion_young_griff_margaery = {
+
+					NOT = {
+						is_spouse_of = root
+					}
+				}
+			}
 
 
-				var:segrellion_young_griff_second_wife_responder = {
+			add_spouse = var:segrellion_young_griff_margaery
+		}
 
-					is_alive = yes
+
+		# =====================================================
+		# CLOSE STORY WINDOW
+		#
+		# This also marks current spouses as legitimate story
+		# spouses before Young Griff's hard marriage guard runs.
+		# =====================================================
+
+		segrellion_young_griff_close_story_marriage_window_effect = yes
+
+
+		# =====================================================
+		# VERIFY THAT TWO REAL SPOUSES NOW EXIST
+		# =====================================================
+
+		if = {
+
+			limit = {
+
+				number_of_spouses >= 2
+
+
+				var:segrellion_young_griff_margaery = {
 
 					is_spouse_of = root
 				}
 			}
 
 
-			set_primary_spouse = var:segrellion_young_griff_second_wife_responder
-		}
+			# =================================================
+			# TWO-WIVES UI
+			# =================================================
+
+			add_character_flag = segrellion_two_wives_active
 
 
-		# =====================================================
-		# STORY FLAGS
-		# =====================================================
+			# =================================================
+			# KEEP THE ORIGINAL QUEEN AS PRIMARY
+			# =================================================
 
-		add_character_flag = segrellion_young_griff_married_margaery
+			if = {
 
-		add_character_flag = segrellion_young_griff_margaery_second_wife
+				limit = {
 
-		add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
-
-		add_character_flag = segrellion_young_griff_margaery_story_resolved
-
-		add_character_flag = segrellion_young_griff_second_wife_question_resolved
+					has_variable = segrellion_young_griff_second_wife_responder
 
 
-		# =====================================================
-		# PRESTIGE
-		# =====================================================
+					var:segrellion_young_griff_second_wife_responder = {
 
-		add_prestige = 1500
+						is_alive = yes
 
-
-		# =====================================================
-		# MARGAERY OPINION
-		# =====================================================
-
-		var:segrellion_young_griff_margaery = {
-
-			add_opinion = {
-
-				target = root
-
-				modifier = segrellion_two_queens_margaery_ecstatic_opinion
-			}
-		}
-
-
-		# =====================================================
-		# FIRST QUEEN OPINION
-		# =====================================================
-
-		if = {
-
-			limit = {
-
-				has_variable = segrellion_young_griff_second_wife_responder
-
-
-				var:segrellion_young_griff_second_wife_responder = {
-
-					is_alive = yes
+						is_spouse_of = root
+					}
 				}
+
+
+				set_primary_spouse = var:segrellion_young_griff_second_wife_responder
 			}
 
 
-			var:segrellion_young_griff_second_wife_responder = {
+			# =================================================
+			# STORY FLAGS
+			# =================================================
+
+			add_character_flag = segrellion_young_griff_married_margaery
+
+			add_character_flag = segrellion_young_griff_margaery_second_wife
+
+			add_character_flag = segrellion_young_griff_married_margaery_as_second_wife
+
+			add_character_flag = segrellion_young_griff_margaery_story_resolved
+
+			add_character_flag = segrellion_young_griff_second_wife_question_resolved
+
+
+			# =================================================
+			# PRESTIGE
+			# =================================================
+
+			add_prestige = 1500
+
+
+			# =================================================
+			# MARGAERY OPINION
+			# =================================================
+
+			var:segrellion_young_griff_margaery = {
 
 				add_opinion = {
 
 					target = root
 
-					modifier = segrellion_two_queens_first_wife_accepts_opinion
+					modifier = segrellion_two_queens_margaery_ecstatic_opinion
+				}
+			}
+
+
+			# =================================================
+			# FIRST QUEEN OPINION
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					has_variable = segrellion_young_griff_second_wife_responder
+
+
+					var:segrellion_young_griff_second_wife_responder = {
+
+						is_alive = yes
+					}
+				}
+
+
+				var:segrellion_young_griff_second_wife_responder = {
+
+					add_opinion = {
+
+						target = root
+
+						modifier = segrellion_two_queens_first_wife_accepts_opinion
+					}
+				}
+			}
+
+
+			# =================================================
+			# HIGH SEPTON
+			# =================================================
+
+			faith = {
+
+				head_of_faith ?= {
+
+					if = {
+
+						limit = {
+							is_alive = yes
+						}
+
+
+						add_opinion = {
+
+							target = root
+
+							modifier = segrellion_two_queens_blasphemer_opinion
+						}
+					}
 				}
 			}
 		}
 
 
 		# =====================================================
-		# HIGH SEPTON
+		# TOTAL FAILURE
 		#
-		# His own spiritual head condemns the precedent.
+		# Neither normal marry nor add_spouse succeeded.
+		# Do not grant rewards or resolve the marriage state.
 		# =====================================================
 
-		faith = {
+		else = {
 
-			head_of_faith ?= {
+			remove_character_flag = segrellion_two_wives_active
 
-				if = {
-
-					limit = {
-						is_alive = yes
-					}
-
-
-					add_opinion = {
-
-						target = root
-
-						modifier = segrellion_two_queens_blasphemer_opinion
-					}
-				}
-			}
+			add_character_flag = segrellion_young_griff_margaery_marriage_failed
 		}
 	}
 }

@@ -2964,9 +2964,10 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 	# =====================================================
 	# CREATE SECOND MARRIAGE
 	#
-	# Daemon may already have a wife here.
-	# Use the same temporary story-marriage window used by
-	# the other scripted Daemon / Visenya wedding.
+	# First attempt the normal scripted marriage.
+	#
+	# If CK3 refuses because Daemon is already married,
+	# use add_spouse as the low-level fallback.
 	# =====================================================
 
 	if = {
@@ -2979,15 +2980,64 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 		}
 
 
+		add_character_flag = segrellion_two_wives_authorized
+
+
+		# =================================================
+		# OPEN DAEMON STORY MARRIAGE WINDOW
+		# =================================================
+
 		segrellion_daemon_open_story_marriage_window_effect = yes
 
 
+		# =================================================
+		# NORMAL ATTEMPT
+		# =================================================
+
 		marry = character:Black_Unicorn_1
 
-		segrellion_daemon_visenya_marriage_traits_effect = yes
 
+		# =================================================
+		# FALLBACK
+		#
+		# Directly establish the spouse relationship if the
+		# normal marriage was rejected by spouse limits.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					is_spouse_of = character:Black_Unicorn_1
+				}
+			}
+
+
+			add_spouse = character:Black_Unicorn_1
+		}
+
+
+		# =================================================
+		# CLOSE STORY WINDOW
+		# =================================================
 
 		segrellion_daemon_close_story_marriage_window_effect = yes
+
+
+		# =================================================
+		# APPLY VISENYA MARRIAGE CHARACTER CHANGES
+		# =================================================
+
+		if = {
+
+			limit = {
+				is_spouse_of = character:Black_Unicorn_1
+			}
+
+
+			segrellion_daemon_visenya_marriage_traits_effect = yes
+		}
 	}
 
 
@@ -2998,8 +3048,14 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 	if = {
 
 		limit = {
+
 			is_spouse_of = character:Black_Unicorn_1
+
+			number_of_spouses >= 2
 		}
+
+
+		add_character_flag = segrellion_two_wives_active
 
 
 		# =================================================
