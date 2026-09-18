@@ -749,6 +749,367 @@ segrellion_setup_stannis_northern_campaign_effect = {
 	}
 }
 
+
+# =========================================================
+# STANNIS - NORTHERN STORY WATCHDOG
+#
+# Save/load-safe recovery for every stage between the
+# bookmark setup and the fall of Winterfell.
+#
+# This is deliberately idempotent:
+#
+# - if the real Northern Campaign war already exists, save
+#   it again instead of creating a duplicate;
+# - if the war disappeared after having started, recreate it;
+# - if a delayed pre-war event was lost on load, resume from
+#   the last durable story flag;
+# - never overwrite a completed victory or defeat.
+# =========================================================
+
+segrellion_stannis_northern_story_watchdog_effect = {
+
+	# =====================================================
+	# RECOVER RAMSAY'S SAVED BOOKKEEPING
+	#
+	# Safe old-save repair only. If the actual current holder
+	# of the North already carries our Ramsay takeover flag,
+	# restore the two global variables without replaying
+	# Roose's death or touching succession again.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			NOT = {
+				has_global_variable = segrellion_ramsay_takeover_completed
+			}
+
+
+			title:e_the_north.holder ?= {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_ramsay_northern_takeover
+			}
+		}
+
+
+		set_global_variable = {
+
+			name = segrellion_ramsay_bolton
+
+			value = title:e_the_north.holder
+		}
+
+
+		set_global_variable = {
+
+			name = segrellion_ramsay_takeover_completed
+
+			value = yes
+		}
+	}
+
+
+	# =====================================================
+	# RECOVER THE BASIC STANNIS SETUP
+	#
+	# If Ramsay's takeover completed but the second half of
+	# the zero-tick setup was lost, rebuild only Stannis'
+	# campaign state. We do NOT rerun Ramsay's murder/takeover
+	# here because doing that in an old save could target the
+	# wrong current Northern ruler.
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			game_start_date = 8300.8.20
+
+			has_global_variable = segrellion_ramsay_takeover_completed
+
+
+			character:Baratheon_3 ?= {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_stannis_north_story_initialized
+				}
+			}
+		}
+
+
+		segrellion_setup_stannis_northern_campaign_effect = yes
+	}
+
+
+	character:Baratheon_3 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				has_character_flag = segrellion_stannis_north_story_initialized
+
+
+				NOT = {
+					has_character_flag = segrellion_stannis_northern_campaign_victory
+				}
+
+
+				NOT = {
+					has_character_flag = segrellion_stannis_northern_campaign_failed
+				}
+			}
+
+
+			save_scope_as = segrellion_stannis_story_watchdog
+
+
+			# =================================================
+			# FIND AN EXISTING NORTHERN CAMPAIGN
+			#
+			# A save/load or realm reconstruction can leave the
+			# durable flags intact while the saved war variable
+			# is missing. Never start a second war before trying
+			# to rediscover the real one.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					any_character_war = {
+
+						using_cb = segrellion_stannis_northern_campaign_cb
+
+						primary_attacker = scope:segrellion_stannis_story_watchdog
+					}
+				}
+
+
+				random_character_war = {
+
+					limit = {
+
+						using_cb = segrellion_stannis_northern_campaign_cb
+
+						primary_attacker = scope:segrellion_stannis_story_watchdog
+					}
+
+
+					save_scope_as = segrellion_stannis_recovered_northern_war
+				}
+
+
+				set_variable = {
+
+					name = segrellion_stannis_northern_war
+
+					value = scope:segrellion_stannis_recovered_northern_war
+				}
+
+
+				add_character_flag = segrellion_stannis_northern_campaign_started
+				add_character_flag = segrellion_stannis_northern_campaign_active
+
+				remove_character_flag = segrellion_stannis_preparing_northern_campaign
+				remove_character_flag = segrellion_stannis_northern_cb_authorized
+			}
+
+
+			# =================================================
+			# THE WAR STARTED, BUT NO SUCH WAR EXISTS ANYMORE
+			#
+			# This is the catastrophic deadlock seen when an
+			# external realm rebuild, a load edge-case or an old
+			# save removes the war without completing our CB.
+			#
+			# Restart against whoever ACTUALLY holds the North.
+			# =================================================
+
+			else_if = {
+
+				limit = {
+
+					has_character_flag = segrellion_stannis_northern_campaign_started
+
+
+					NOT = {
+
+						any_character_war = {
+
+							using_cb = segrellion_stannis_northern_campaign_cb
+
+							primary_attacker = scope:segrellion_stannis_story_watchdog
+						}
+					}
+
+
+					title:e_the_north.holder ?= {
+
+						is_alive = yes
+
+						this != scope:segrellion_stannis_story_watchdog
+
+						NOT = {
+							segrellion_is_current_jon_trigger = yes
+						}
+					}
+				}
+
+
+				remove_variable = segrellion_stannis_northern_war
+				remove_character_flag = segrellion_stannis_northern_campaign_active
+
+				add_character_flag = segrellion_stannis_northern_cb_authorized
+
+
+				title:e_the_north.holder = {
+
+					save_scope_as = segrellion_stannis_recovery_northern_enemy
+				}
+
+
+				start_war = {
+
+					cb = segrellion_stannis_northern_campaign_cb
+
+					target = scope:segrellion_stannis_recovery_northern_enemy
+
+					target_title = title:e_the_north
+				}
+			}
+
+
+			# =================================================
+			# PRE-WAR EVENT CHAIN RECOVERY
+			#
+			# These branches only fast-forward AI Stannis after
+			# an entire monthly pulse has passed without the next
+			# expected durable flag. In normal play the scheduled
+			# events fire days earlier and none of this runs.
+			# =================================================
+
+			if = {
+
+				limit = {
+
+					is_ai = yes
+
+					NOT = {
+						has_character_flag = segrellion_stannis_northern_campaign_started
+					}
+				}
+
+
+				if = {
+
+					limit = {
+
+						NOT = {
+							has_character_flag = segrellion_stannis_opening_seen
+						}
+					}
+
+
+					segrellion_schedule_stannis_opening_effect = yes
+				}
+
+
+				else_if = {
+
+					limit = {
+
+						has_character_flag = segrellion_stannis_opening_seen
+
+						NOT = {
+							has_character_flag = segrellion_stannis_northern_campaign_committed
+						}
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_stannis.0001
+
+						days = 1
+					}
+				}
+
+
+				else_if = {
+
+					limit = {
+
+						has_character_flag = segrellion_stannis_northern_campaign_committed
+
+						NOT = {
+							has_character_flag = segrellion_stannis_northern_cb_authorized
+						}
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_stannis.0010
+
+						days = 1
+					}
+				}
+
+
+				else_if = {
+
+					limit = {
+
+						has_character_flag = segrellion_stannis_northern_cb_authorized
+
+						NOT = {
+							has_character_flag = segrellion_stannis_reached_deepwood
+						}
+					}
+
+
+					# Recovery skips only the lost flavor interludes.
+					# The normal 0015 -> 0017 -> 0018 route still
+					# happens long before this monthly watchdog.
+
+					trigger_event = {
+
+						id = segrellion_stannis.0018
+
+						days = 1
+					}
+				}
+
+
+				else_if = {
+
+					limit = {
+
+						has_character_flag = segrellion_stannis_northern_cb_authorized
+						has_character_flag = segrellion_stannis_reached_deepwood
+					}
+
+
+					trigger_event = {
+
+						id = segrellion_stannis.0020
+
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
 # =========================================================
 # JON ACCEPTS STANNIS' OFFER
 #
