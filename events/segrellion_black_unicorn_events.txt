@@ -10737,6 +10737,271 @@ segrellion_black_unicorn.0889 = {
 	}
 }
 
+# =========================================================
+# 0890 - THE WOLF AT THE BEACON
+#
+# ROOT = DAEMON
+#
+# Visenya formally places Rickon Stark under Daemon's
+# protection and asks him to return the boy to the North
+# once the Boltons are gone.
+# =========================================================
+
+segrellion_black_unicorn.0890 = {
+
+	type = character_event
+
+	title = segrellion_black_unicorn.0890.t
+
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					has_character_flag = segrellion_daemon_promised_restore_rickon_north
+				}
+
+				desc = segrellion_black_unicorn.0890.desc_promised
+			}
+
+
+			desc = segrellion_black_unicorn.0890.desc
+		}
+	}
+
+
+	theme = diplomacy
+
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	trigger = {
+
+		this = character:Segrellion_60
+
+		is_alive = yes
+
+		is_imprisoned = no
+
+
+		NOT = {
+			has_character_flag = segrellion_black_unicorn_rickon_beacon_intro_completed
+		}
+
+
+		character:Black_Unicorn_1 ?= {
+
+			is_alive = yes
+
+			is_imprisoned = no
+
+			has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+		}
+
+
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_black_unicorn_rickon_beacon_intro_queued
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_black_unicorn_rickon_beacon_intro_queued
+
+		add_character_flag = segrellion_black_unicorn_rickon_beacon_intro_completed
+
+
+		# =================================================
+		# FAILSAFE: RICKON + OSHA MUST BE IN DAEMON'S COURT
+		# WHILE VISENYA HERSELF LIVES THERE.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:Stark_Dummy_11 = {
+
+					is_alive = yes
+
+					NOT = {
+						is_courtier_of = root
+					}
+				}
+			}
+
+
+			add_courtier = character:Stark_Dummy_11
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Stark_hh_13 ?= {
+
+					is_alive = yes
+
+					NOT = {
+						is_courtier_of = root
+					}
+				}
+			}
+
+
+			add_courtier = character:Stark_hh_13
+		}
+
+
+		character:Stark_Dummy_11 = {
+
+			set_location = title:b_castle_farring.title_province
+
+			add_character_flag = segrellion_rickon_under_visenya_protection
+
+			add_character_flag = segrellion_rickon_black_unicorn_route
+		}
+
+
+		character:Stark_hh_13 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				set_location = title:b_castle_farring.title_province
+
+				add_character_flag = segrellion_osha_under_visenya_protection
+
+				add_character_flag = segrellion_osha_protects_rickon
+			}
+		}
+
+
+		character:Black_Unicorn_1 = {
+
+			add_character_flag = segrellion_black_unicorn_presented_rickon_to_daemon
+		}
+	}
+
+
+	left_portrait = {
+
+		character = root
+
+		animation = thinking
+	}
+
+
+	right_portrait = {
+
+		character = character:Stark_Dummy_11
+
+		animation = child_personality_bold
+	}
+
+
+	# =====================================================
+	# FIRST PROMISE
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0890.a
+
+
+		trigger = {
+
+			NOT = {
+				has_character_flag = segrellion_daemon_promised_restore_rickon_north
+			}
+		}
+
+
+		add_character_flag = segrellion_daemon_promised_restore_rickon_north
+
+
+		character:Stark_Dummy_11 = {
+
+			add_character_flag = segrellion_rickon_under_daemon_protection
+		}
+
+
+		character:Stark_hh_13 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_character_flag = segrellion_osha_under_daemon_protection
+			}
+		}
+	}
+
+
+	# =====================================================
+	# DAEMON ALREADY PROMISED THIS ON SKAGOS
+	# =====================================================
+
+	option = {
+
+		name = segrellion_black_unicorn.0890.b
+
+
+		trigger = {
+			has_character_flag = segrellion_daemon_promised_restore_rickon_north
+		}
+
+
+		character:Stark_Dummy_11 = {
+
+			add_character_flag = segrellion_rickon_under_daemon_protection
+		}
+
+
+		character:Stark_hh_13 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+				add_character_flag = segrellion_osha_under_daemon_protection
+			}
+		}
+	}
+}
+
 
 segrellion_hugh_black_unicorn.0010 = {
     type = character_event

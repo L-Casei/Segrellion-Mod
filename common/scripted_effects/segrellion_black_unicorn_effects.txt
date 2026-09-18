@@ -1252,6 +1252,15 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 		}
 
 		# =================================================
+		# RICKON + OSHA MUST ALREADY BELONG TO VISENYA
+		#
+		# This guarantees that both characters are included
+		# when Visenya's adventurer court is transferred.
+		# =================================================
+
+		segrellion_black_unicorn_rickon_osha_join_visenya_effect = yes
+
+		# =================================================
 		# PRESERVE VISENYA'S ENTIRE COURT
 		#
 		# The camp title must be destroyed before Visenya can
@@ -1321,9 +1330,14 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 			}
 
 
-			set_employer = root
+			save_scope_as = segrellion_black_unicorn_visenya_follower_transfer
 
-			return_to_court = yes
+
+			root = {
+
+				add_courtier = scope:segrellion_black_unicorn_visenya_follower_transfer
+			}
+
 
 			set_location = root.location
 
@@ -1336,11 +1350,13 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 		# VISENYA BECOMES DAEMON'S COURTIER
 		# =================================================
 
+		root = {
+
+			add_courtier = character:Black_Unicorn_1
+		}
+
+
 		character:Black_Unicorn_1 = {
-
-			set_employer = root
-
-			return_to_court = yes
 
 			set_location = root.location
 
@@ -1357,6 +1373,19 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 		# storyline systems already use it.
 
 		add_character_flag = segrellion_black_unicorn_visenya_returned_with_daemon
+
+		if = {
+
+			limit = {
+
+				character:Black_Unicorn_1 = {
+					has_character_flag = segrellion_black_unicorn_rickon_osha_with_visenya
+				}
+			}
+
+
+			add_character_flag = segrellion_black_unicorn_rickon_osha_joined_daemon
+		}
 
 
 		# =================================================
@@ -1401,6 +1430,8 @@ segrellion_black_unicorn_visenya_join_daemon_effect = {
 
 
 		add_character_flag = segrellion_black_unicorn_visenya_join_package_completed
+
+		segrellion_black_unicorn_try_rickon_beacon_introduction_effect = yes
 	}
 }
 
@@ -1426,21 +1457,22 @@ segrellion_black_unicorn_rickon_osha_join_daemon_effect = {
 		# RICKON STARK
 		# =================================================
 
-		character:Stark_Dummy_11 ?= {
+		if = {
 
-			if = {
+			limit = {
 
-				limit = {
+				character:Stark_Dummy_11 ?= {
 					is_alive = yes
 				}
+			}
 
 
-				set_employer = root
+			add_courtier = character:Stark_Dummy_11
 
-				return_to_court = yes
+
+			character:Stark_Dummy_11 = {
 
 				set_location = root.location
-
 
 				add_character_flag = segrellion_rickon_under_daemon_protection
 
@@ -1453,21 +1485,22 @@ segrellion_black_unicorn_rickon_osha_join_daemon_effect = {
 		# OSHA
 		# =================================================
 
-		character:Stark_hh_13 ?= {
+		if = {
 
-			if = {
+			limit = {
 
-				limit = {
+				character:Stark_hh_13 ?= {
 					is_alive = yes
 				}
+			}
 
 
-				set_employer = root
+			add_courtier = character:Stark_hh_13
 
-				return_to_court = yes
+
+			character:Stark_hh_13 = {
 
 				set_location = root.location
-
 
 				add_character_flag = segrellion_osha_under_daemon_protection
 			}
@@ -1489,6 +1522,45 @@ segrellion_black_unicorn_rickon_osha_join_daemon_effect = {
 
 segrellion_black_unicorn_rickon_osha_join_visenya_effect = {
 
+	character:Black_Unicorn_1 ?= {
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				character:Stark_Dummy_11 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			add_courtier = character:Stark_Dummy_11
+		}
+
+
+		if = {
+
+			limit = {
+
+				is_alive = yes
+
+				character:Stark_hh_13 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			add_courtier = character:Stark_hh_13
+		}
+	}
+
+
+	# =====================================================
+	# RICKON
+	# =====================================================
+
 	character:Stark_Dummy_11 ?= {
 
 		if = {
@@ -1497,10 +1569,6 @@ segrellion_black_unicorn_rickon_osha_join_visenya_effect = {
 				is_alive = yes
 			}
 
-
-			set_employer = character:Black_Unicorn_1
-
-			return_to_court = yes
 
 			set_location = character:Black_Unicorn_1.location
 
@@ -1514,6 +1582,10 @@ segrellion_black_unicorn_rickon_osha_join_visenya_effect = {
 	}
 
 
+	# =====================================================
+	# OSHA
+	# =====================================================
+
 	character:Stark_hh_13 ?= {
 
 		if = {
@@ -1522,10 +1594,6 @@ segrellion_black_unicorn_rickon_osha_join_visenya_effect = {
 				is_alive = yes
 			}
 
-
-			set_employer = character:Black_Unicorn_1
-
-			return_to_court = yes
 
 			set_location = character:Black_Unicorn_1.location
 
@@ -1539,6 +1607,10 @@ segrellion_black_unicorn_rickon_osha_join_visenya_effect = {
 	}
 
 
+	# =====================================================
+	# VISENYA STORY STATE
+	# =====================================================
+
 	character:Black_Unicorn_1 ?= {
 
 		add_character_flag = segrellion_black_unicorn_rickon_osha_with_visenya
@@ -1546,6 +1618,68 @@ segrellion_black_unicorn_rickon_osha_join_visenya_effect = {
 		add_character_flag = segrellion_black_unicorn_protecting_rickon
 
 		remove_character_flag = segrellion_black_unicorn_rickon_osha_transfer_queued
+	}
+}
+
+# =========================================================
+# RICKON STARK - BEACON INTRODUCTION
+#
+# ROOT = DAEMON
+#
+# Fires whenever Visenya permanently remains with Daemon
+# after he controls the Beacon.
+# =========================================================
+
+segrellion_black_unicorn_try_rickon_beacon_introduction_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Segrellion_60
+
+			is_alive = yes
+
+			is_imprisoned = no
+
+			has_title = title:c_farring_cross
+
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_rickon_beacon_intro_queued
+			}
+
+
+			NOT = {
+				has_character_flag = segrellion_black_unicorn_rickon_beacon_intro_completed
+			}
+
+
+			character:Black_Unicorn_1 ?= {
+
+				is_alive = yes
+
+				is_imprisoned = no
+
+				has_character_flag = segrellion_black_unicorn_visenya_joined_daemon
+			}
+
+
+			character:Stark_Dummy_11 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		add_character_flag = segrellion_black_unicorn_rickon_beacon_intro_queued
+
+
+		trigger_event = {
+
+			id = segrellion_black_unicorn.0890
+
+			days = 3
+		}
 	}
 }
 
@@ -2108,6 +2242,75 @@ segrellion_black_unicorn_visenya_take_flamelands_effect = {
 		}
 	}
 
+	# =====================================================
+	# RICKON + OSHA REMAIN WITH VISENYA
+	#
+	# Visenya is now landed, so they become members of her
+	# normal court instead of camp followers.
+	# =====================================================
+
+	character:Black_Unicorn_1 = {
+
+		if = {
+
+			limit = {
+
+				character:Stark_Dummy_11 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			add_courtier = character:Stark_Dummy_11
+		}
+
+
+		if = {
+
+			limit = {
+
+				character:Stark_hh_13 ?= {
+					is_alive = yes
+				}
+			}
+
+
+			add_courtier = character:Stark_hh_13
+		}
+	}
+
+
+	character:Stark_Dummy_11 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			set_location = title:b_castle_farring.title_province
+
+			add_character_flag = segrellion_rickon_under_visenya_protection
+		}
+	}
+
+
+	character:Stark_hh_13 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			set_location = title:b_castle_farring.title_province
+
+			add_character_flag = segrellion_osha_under_visenya_protection
+
+			add_character_flag = segrellion_osha_protects_rickon
+		}
+	}
+
 
 	# =====================================================
 	# STORY STATE
@@ -2202,11 +2405,43 @@ segrellion_black_unicorn_keep_rhaegon_with_visenya_effect = {
 
 segrellion_black_unicorn_visenya_leave_beacon_effect = {
 
+	# Make absolutely certain Rickon and Osha belong to
+	# Visenya's camp before she leaves.
+
+	segrellion_black_unicorn_rickon_osha_join_visenya_effect = yes
+
+
 	character:Black_Unicorn_1 = {
 
 		set_location = title:b_cold_peaks.title_province
 
 		add_character_flag = segrellion_black_unicorn_left_beacon_without_agreement
+	}
+
+
+	character:Stark_Dummy_11 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			set_location = title:b_cold_peaks.title_province
+		}
+	}
+
+
+	character:Stark_hh_13 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+			set_location = title:b_cold_peaks.title_province
+		}
 	}
 
 
@@ -3427,6 +3662,11 @@ segrellion_black_unicorn_make_daemon_visenya_soulmates_effect = {
 # =========================================================
 
 segrellion_black_unicorn_capture_visenya_effect = {
+	# =====================================================
+	# PRESERVE RICKON + OSHA BEFORE DESTROYING THE CAMP
+	# =====================================================
+
+	segrellion_black_unicorn_rickon_osha_join_visenya_effect = yes
 
 	# She cannot remain a landless ruler while imprisoned
 	# in Daemon's court.
@@ -3457,6 +3697,55 @@ segrellion_black_unicorn_capture_visenya_effect = {
 		add_character_flag = segrellion_black_unicorn_imprisoned_by_daemon
 
 		add_character_flag = segrellion_black_unicorn_imprisoned_visenya_story_pending
+	}
+
+	# =====================================================
+	# RICKON + OSHA REMAIN PHYSICALLY WITH VISENYA
+	# =====================================================
+
+	if = {
+
+		limit = {
+
+			character:Stark_Dummy_11 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		add_courtier = character:Stark_Dummy_11
+
+
+		character:Stark_Dummy_11 = {
+
+			set_location = title:b_castle_farring.title_province
+
+			add_character_flag = segrellion_rickon_under_visenya_protection
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
+			character:Stark_hh_13 ?= {
+				is_alive = yes
+			}
+		}
+
+
+		add_courtier = character:Stark_hh_13
+
+
+		character:Stark_hh_13 = {
+
+			set_location = title:b_castle_farring.title_province
+
+			add_character_flag = segrellion_osha_under_visenya_protection
+
+			add_character_flag = segrellion_osha_protects_rickon
+		}
 	}
 
 
