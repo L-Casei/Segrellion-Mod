@@ -28,6 +28,15 @@ segrellion_vhal_investigation.0100 = {
 
 			5 = {
 
+				# Daemon's first cavern search: 855 / (70 + 25 + 855) = 90%.
+				modifier = {
+					factor = 171
+					this = character:Segrellion_60
+					NOT = {
+						has_character_flag = segrellion_daemon_first_dragonpit_search_done
+					}
+				}
+
 				trigger = {
 
 					NOT = {
@@ -39,6 +48,14 @@ segrellion_vhal_investigation.0100 = {
 					id = segrellion_vhal_investigation.0130
 				}
 			}
+		}
+
+		# Consume the first attempt even if Daemon finds no egg.
+		if = {
+			limit = {
+				this = character:Segrellion_60
+			}
+			add_character_flag = segrellion_daemon_first_dragonpit_search_done
 		}
 	}
 }
