@@ -6,8 +6,11 @@
 # =========================================================
 # PETITION THE HIGH SEPTON
 #
-# Expands the Doctrine of Exceptionalism for this character
-# personally, allowing one additional wife.
+# Seven-only personal expansion of Exceptionalism.
+#
+# IMPORTANT:
+# This interaction auto-resolves immediately. We do NOT
+# depend on CK3's delayed AI interaction reply pipeline.
 # =========================================================
 
 segrellion_petition_high_septon_second_wife_interaction = {
@@ -23,11 +26,7 @@ segrellion_petition_high_septon_second_wife_interaction = {
 	greeting = neutral
 	notification_text = segrellion_petition_high_septon_second_wife_notification
 
-	ai_maybe = yes
-	can_send_despite_rejection = yes
-
-	ai_min_reply_days = 2
-	ai_max_reply_days = 5
+	auto_accept = yes
 
 	send_options_exclusive = no
 
@@ -57,8 +56,6 @@ segrellion_petition_high_septon_second_wife_interaction = {
 			is_married = yes
 
 			number_of_spouses = 1
-
-			religion = religion:the_seven_religion
 
 			segrellion_can_seek_second_wife_trigger = yes
 
@@ -152,6 +149,7 @@ segrellion_petition_high_septon_second_wife_interaction = {
 			value = 0
 
 			if = {
+
 				limit = {
 					scope:bribe = yes
 				}
@@ -162,16 +160,23 @@ segrellion_petition_high_septon_second_wife_interaction = {
 	}
 
 
+	# -----------------------------------------------------
+	# SEND
+	# -----------------------------------------------------
+
 	on_send = {
 
 		scope:actor = {
+
 			add_character_flag = {
 				flag = segrellion_second_wife_petition_pending
 				days = 30
 			}
 		}
 
+
 		if = {
+
 			limit = {
 				scope:bribe = yes
 			}
@@ -181,109 +186,181 @@ segrellion_petition_high_septon_second_wife_interaction = {
 			}
 		}
 
+
 		if = {
+
 			limit = {
 				scope:hook = yes
 			}
 
 			scope:actor = {
-				use_hook = scope:recipient
+
+				if = {
+
+					limit = {
+						has_usable_hook = scope:recipient
+					}
+
+					use_hook = scope:recipient
+				}
 			}
 		}
 	}
 
+
+	# -----------------------------------------------------
+	# IMMEDIATE RESOLUTION
+	# -----------------------------------------------------
 
 	on_accept = {
 
 		scope:actor = {
+			remove_character_flag = segrellion_second_wife_petition_roll_success
+		}
 
-			remove_character_flag = segrellion_second_wife_petition_pending
 
-			add_character_flag = segrellion_two_wives_authorized
+		# The score is used directly as the acceptance percentage,
+		# clamped between 5% and 95%.
 
-			send_interface_toast = {
-				title = segrellion_second_wife_high_septon_accept_toast
-				left_icon = scope:recipient
+		random = {
+
+			chance = segrellion_second_wife_high_septon_acceptance_chance_value
+
+			scope:actor = {
+				add_character_flag = segrellion_second_wife_petition_roll_success
 			}
 		}
 
-		scope:recipient = {
-			add_opinion = {
-				target = scope:actor
-				modifier = pleased_opinion
-				opinion = 10
+
+		# =================================================
+		# ACCEPTED
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				scope:actor = {
+					has_character_flag = segrellion_second_wife_petition_roll_success
+				}
+			}
+
+
+			scope:actor = {
+
+				remove_character_flag = segrellion_second_wife_petition_roll_success
+				remove_character_flag = segrellion_second_wife_petition_pending
+
+				add_character_flag = segrellion_two_wives_authorized
+
+
+				send_interface_toast = {
+
+					type = event_toast_effect_good
+
+					title = segrellion_second_wife_high_septon_accept_toast
+
+					left_icon = scope:recipient
+				}
+			}
+
+
+			scope:recipient = {
+
+				add_opinion = {
+
+					target = scope:actor
+
+					modifier = pleased_opinion
+
+					opinion = 10
+				}
+			}
+		}
+
+
+		# =================================================
+		# REJECTED: FAITH UPRISING
+		# =================================================
+
+		else = {
+
+			scope:actor = {
+
+				remove_character_flag = segrellion_second_wife_petition_pending
+
+				add_character_flag = {
+					flag = segrellion_second_wife_uprising_defender
+					days = 30
+				}
+
+
+				send_interface_toast = {
+
+					type = event_toast_effect_bad
+
+					title = segrellion_second_wife_high_septon_reject_toast
+
+					left_icon = scope:recipient
+				}
+			}
+
+
+			scope:recipient = {
+
+				add_character_flag = {
+					flag = segrellion_second_wife_uprising_attacker
+					days = 30
+				}
+
+
+				set_variable = {
+
+					name = segrellion_second_wife_uprising_troops
+
+					value = segrellion_second_wife_faith_uprising_troops_value
+				}
+
+
+				start_war = {
+
+					casus_belli = segrellion_second_wife_faith_uprising_cb
+
+					target = scope:actor
+				}
+
+
+				spawn_army = {
+
+					name = segrellion_second_wife_faith_uprising_army
+
+					levies = var:segrellion_second_wife_uprising_troops
+
+					location = scope:recipient.location
+
+					inheritable = no
+					uses_supply = no
+				}
+
+
+				remove_variable = segrellion_second_wife_uprising_troops
 			}
 		}
 	}
 
 
-	on_decline = {
-
-		scope:actor = {
-
-			remove_character_flag = segrellion_second_wife_petition_pending
-
-			add_character_flag = {
-				flag = segrellion_second_wife_uprising_defender
-				days = 30
-			}
-
-			send_interface_toast = {
-				title = segrellion_second_wife_high_septon_reject_toast
-				left_icon = scope:recipient
-			}
-		}
-
-		scope:recipient = {
-
-			add_character_flag = {
-				flag = segrellion_second_wife_uprising_attacker
-				days = 30
-			}
-
-			# Resolve the dynamic troop count before spawning the army.
-			# spawn_army safely accepts a variable here.
-			set_variable = {
-				name = segrellion_second_wife_uprising_troops
-				value = segrellion_second_wife_faith_uprising_troops_value
-			}
-
-			start_war = {
-				casus_belli = segrellion_second_wife_faith_uprising_cb
-				target = scope:actor
-			}
-
-			spawn_army = {
-				name = segrellion_second_wife_faith_uprising_army
-				levies = var:segrellion_second_wife_uprising_troops
-				location = scope:recipient.location
-				inheritable = no
-				uses_supply = no
-			}
-
-			remove_variable = segrellion_second_wife_uprising_troops
-		}
-	}
-
-
-	# =====================================================
-	# HIGH SEPTON ACCEPTANCE
-	#
-	# Base:                         -200
-	# Dragonrider:                 +100
-	# 1,000 gold:                  +100
-	# Hook:                        +100
-	# Opinion:                     -50 to +50
-	# Military strength:           up to +75
-	# =====================================================
+	# This is retained for UI/debug readability.
+	# The actual outcome is resolved by the random roll above.
 
 	ai_accept = {
 
-		base = -200
+		base = -150
 
 
 		modifier = {
+
 			add = 100
+
 			desc = segrellion_second_wife_dragonrider_reason
 
 			scope:actor = {
@@ -293,7 +370,9 @@ segrellion_petition_high_septon_second_wife_interaction = {
 
 
 		modifier = {
+
 			add = 100
+
 			desc = segrellion_second_wife_bribe_reason
 
 			scope:bribe = yes
@@ -301,22 +380,44 @@ segrellion_petition_high_septon_second_wife_interaction = {
 
 
 		modifier = {
+
 			add = 100
+
 			desc = segrellion_second_wife_hook_reason
 
 			scope:hook = yes
 		}
 
 
+		modifier = {
+
+			add = {
+
+				value = scope:actor.piety_level
+
+				multiply = 15
+			}
+
+			desc = segrellion_second_wife_piety_reason
+
+			scope:actor = {
+				religion = religion:the_seven_religion
+			}
+		}
+
+
 		opinion_modifier = {
+
 			opinion_target = scope:actor
+
 			who = scope:recipient
+
 			multiplier = 0.50
 		}
 
 
-		# 10,000 - 24,999
 		modifier = {
+
 			add = 15
 			desc = segrellion_second_wife_military_reason
 
@@ -325,8 +426,8 @@ segrellion_petition_high_septon_second_wife_interaction = {
 		}
 
 
-		# 25,000 - 49,999
 		modifier = {
+
 			add = 30
 			desc = segrellion_second_wife_military_reason
 
@@ -335,8 +436,8 @@ segrellion_petition_high_septon_second_wife_interaction = {
 		}
 
 
-		# 50,000 - 99,999
 		modifier = {
+
 			add = 50
 			desc = segrellion_second_wife_military_reason
 
@@ -345,8 +446,8 @@ segrellion_petition_high_septon_second_wife_interaction = {
 		}
 
 
-		# 100,000+
 		modifier = {
+
 			add = 75
 			desc = segrellion_second_wife_military_reason
 
@@ -362,9 +463,8 @@ segrellion_petition_high_septon_second_wife_interaction = {
 # =========================================================
 # TAKE HER AS A SECOND WIFE
 #
-# Available after the decision has activated the search.
-# This deliberately bypasses the faith spouse-cap while
-# preserving the existing first wife as primary spouse.
+# This interaction is available ONLY after the High Septon
+# has authorised the personal expansion of Exceptionalism.
 # =========================================================
 
 segrellion_take_as_second_wife_interaction = {
@@ -426,14 +526,17 @@ segrellion_take_as_second_wife_interaction = {
 			is_incapable = no
 		}
 
+
 		scope:recipient = {
 
 			is_imprisoned = no
 			can_marry_trigger = yes
 
+
 			custom_description = {
 
 				text = segrellion_second_wife_incest_requirement
+
 
 				OR = {
 
@@ -441,11 +544,14 @@ segrellion_take_as_second_wife_interaction = {
 						is_close_family_of = scope:actor
 					}
 
+
 					scope:actor = {
+
 						faith = {
 							has_doctrine = doctrine_consanguinity_siblings
 						}
 					}
+
 
 					AND = {
 
@@ -467,11 +573,14 @@ segrellion_take_as_second_wife_interaction = {
 			save_scope_as = segrellion_first_wife
 		}
 
+
 		scope:actor = {
 
 			add_spouse = scope:recipient
 
+
 			if = {
+
 				limit = {
 					exists = scope:segrellion_first_wife
 				}
@@ -479,11 +588,18 @@ segrellion_take_as_second_wife_interaction = {
 				set_primary_spouse = scope:segrellion_first_wife
 			}
 
+
 			add_character_flag = segrellion_two_wives_active
+
 			remove_character_flag = segrellion_seeking_second_wife
 
+
 			send_interface_toast = {
+
+				type = event_toast_effect_good
+
 				title = segrellion_second_wife_marriage_complete_toast
+
 				left_icon = scope:recipient
 			}
 		}
@@ -493,8 +609,13 @@ segrellion_take_as_second_wife_interaction = {
 	on_decline = {
 
 		scope:actor = {
+
 			send_interface_toast = {
+
+				type = event_toast_effect_bad
+
 				title = segrellion_second_wife_candidate_declined_toast
+
 				left_icon = scope:recipient
 			}
 		}
@@ -505,28 +626,41 @@ segrellion_take_as_second_wife_interaction = {
 
 		base = -20
 
+
 		opinion_modifier = {
+
 			opinion_target = scope:actor
+
 			who = scope:recipient
+
 			multiplier = 0.50
 		}
 
+
 		modifier = {
+
 			add = 75
+
 			scope:recipient = {
 				has_relation_lover = scope:actor
 			}
 		}
 
+
 		modifier = {
+
 			add = 150
+
 			scope:recipient = {
 				has_relation_soulmate = scope:actor
 			}
 		}
 
+
 		modifier = {
+
 			add = -1000
+
 			scope:recipient = {
 				has_trait = refusing_marriage
 			}

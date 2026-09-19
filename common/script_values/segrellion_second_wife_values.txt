@@ -2,14 +2,152 @@
 # SEGRELLION - SECOND WIFE VALUES
 # =========================================================
 
+
+# =========================================================
+# HIGH SEPTON ACCEPTANCE SCORE
+#
+# Base refusal:                  -150
+# Dragonrider:                   +100
+# 1,000 gold donation:           +100
+# Hook:                          +100
+# High Septon opinion:           -50 to +50
+# Devotion level:                +15 per level
+# Military strength:             up to +75
+# =========================================================
+
+segrellion_second_wife_high_septon_acceptance_score_value = {
+
+	value = -150
+
+
+	if = {
+
+		limit = {
+			scope:actor = {
+				is_current_dragonrider = yes
+			}
+		}
+
+		add = 100
+	}
+
+
+	if = {
+
+		limit = {
+			scope:bribe = yes
+		}
+
+		add = 100
+	}
+
+
+	if = {
+
+		limit = {
+			scope:hook = yes
+		}
+
+		add = 100
+	}
+
+
+	# High Septon opinion ranges from -100 to +100.
+	# Half of that gives the requested -50 to +50 contribution.
+
+	add = {
+
+		value = "scope:recipient.opinion(scope:actor)"
+
+		multiply = 0.50
+	}
+
+
+	# Only relevant to this Seven-only interaction.
+	# Piety level normally ranges from 0 to 5.
+
+	add = {
+
+		value = scope:actor.piety_level
+
+		multiply = 15
+	}
+
+
+	if = {
+
+		limit = {
+			scope:actor.current_military_strength >= 10000
+			scope:actor.current_military_strength < 25000
+		}
+
+		add = 15
+	}
+
+
+	else_if = {
+
+		limit = {
+			scope:actor.current_military_strength >= 25000
+			scope:actor.current_military_strength < 50000
+		}
+
+		add = 30
+	}
+
+
+	else_if = {
+
+		limit = {
+			scope:actor.current_military_strength >= 50000
+			scope:actor.current_military_strength < 100000
+		}
+
+		add = 50
+	}
+
+
+	else_if = {
+
+		limit = {
+			scope:actor.current_military_strength >= 100000
+		}
+
+		add = 75
+	}
+}
+
+
+# The score itself becomes the acceptance percentage.
+# Extreme results are clamped so there is always a small
+# possibility of either outcome.
+
+segrellion_second_wife_high_septon_acceptance_chance_value = {
+
+	value = segrellion_second_wife_high_septon_acceptance_score_value
+
+	min = 5
+	max = 95
+	round = yes
+}
+
+
+# =========================================================
+# FAITH UPRISING TROOPS
+# =========================================================
+
 # The Faith uprising always fields at least 60,000 men.
 # Against very strong petitioners it scales to 125% of
 # their current military strength, capped at 150,000.
 
 segrellion_second_wife_faith_uprising_troops_value = {
+
 	value = scope:actor.current_military_strength
+
 	multiply = 1.25
+
 	min = 60000
 	max = 150000
+
 	round = yes
 }

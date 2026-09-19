@@ -2,40 +2,44 @@
 # SEGRELLION - SECOND WIFE / EXPANDED EXCEPTIONALISM
 # =========================================================
 
-# The special mechanic is reserved for dragonriders,
-# characters of Valyrian cultural heritage, or adherents
-# of a faith belonging to the Fourteen Flames religion.
+# This custom mechanic exists ONLY for adherents of a faith
+# belonging to the Faith of the Seven religion.
+#
+# Other religions use their own native marriage doctrines.
+#
+# Within the Seven, the petitioner must either:
+# - be a dragonrider, or
+# - have Valyrian cultural heritage.
 
 segrellion_can_seek_second_wife_trigger = {
+
+	religion = religion:the_seven_religion
+
 	OR = {
+
 		is_current_dragonrider = yes
 
 		culture = {
 			has_cultural_pillar = heritage_valyrian
 		}
-
-		religion = religion:the_flames_religion
 	}
 }
 
 
-# The custom mechanic has two supported religious routes:
-# - Faith of the Seven: personal permission from the High Septon.
-# - Fourteen Flames: polygamous religious tradition, no permission needed.
+# Kept as a separate trigger because the decision references it.
 
 segrellion_has_second_wife_religious_path_trigger = {
-	OR = {
-		religion = religion:the_seven_religion
-		religion = religion:the_flames_religion
-	}
+
+	religion = religion:the_seven_religion
 }
 
 
-# Permission to actually activate the second-wife search.
+# The custom second-wife interaction requires explicit approval
+# from the High Septon.
 
 segrellion_has_second_wife_permission_trigger = {
-	OR = {
-		religion = religion:the_flames_religion
-		has_character_flag = segrellion_two_wives_authorized
-	}
+
+	religion = religion:the_seven_religion
+
+	has_character_flag = segrellion_two_wives_authorized
 }
