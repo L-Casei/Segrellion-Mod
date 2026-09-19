@@ -241,6 +241,13 @@ segrellion_petition_high_septon_second_wife_interaction = {
 				days = 30
 			}
 
+			# Resolve the dynamic troop count before spawning the army.
+			# spawn_army safely accepts a variable here.
+			set_variable = {
+				name = segrellion_second_wife_uprising_troops
+				value = segrellion_second_wife_faith_uprising_troops_value
+			}
+
 			start_war = {
 				casus_belli = segrellion_second_wife_faith_uprising_cb
 				target = scope:actor
@@ -248,11 +255,13 @@ segrellion_petition_high_septon_second_wife_interaction = {
 
 			spawn_army = {
 				name = segrellion_second_wife_faith_uprising_army
-				levies = segrellion_second_wife_faith_uprising_troops_value
+				levies = var:segrellion_second_wife_uprising_troops
 				location = scope:recipient.location
 				inheritable = no
 				uses_supply = no
 			}
+
+			remove_variable = segrellion_second_wife_uprising_troops
 		}
 	}
 
