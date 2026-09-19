@@ -1,0 +1,529 @@
+# =========================================================
+# SEGRELLION - SECOND WIFE INTERACTIONS
+# =========================================================
+
+
+# =========================================================
+# PETITION THE HIGH SEPTON
+#
+# Expands the Doctrine of Exceptionalism for this character
+# personally, allowing one additional wife.
+# =========================================================
+
+segrellion_petition_high_septon_second_wife_interaction = {
+
+	category = interaction_category_religion
+	icon = icon_marriage
+
+	common_interaction = yes
+	interface_priority = 90
+	use_diplomatic_range = no
+
+	desc = segrellion_petition_high_septon_second_wife_interaction_desc
+	greeting = neutral
+	notification_text = segrellion_petition_high_septon_second_wife_notification
+
+	ai_maybe = yes
+	can_send_despite_rejection = yes
+
+	ai_min_reply_days = 2
+	ai_max_reply_days = 5
+
+	send_options_exclusive = no
+
+
+	should_use_extra_icon = {
+		scope:actor = {
+			has_usable_hook = scope:recipient
+		}
+	}
+
+	extra_icon = "gfx/interface/icons/character_interactions/hook_icon.dds"
+
+
+	is_shown = {
+
+		scope:actor != scope:recipient
+
+		scope:recipient = {
+			has_title = title:k_the_most_devout
+		}
+
+		scope:actor = {
+
+			is_alive = yes
+			is_male = yes
+			is_adult = yes
+			is_married = yes
+
+			number_of_spouses = 1
+
+			religion = religion:the_seven_religion
+
+			segrellion_can_seek_second_wife_trigger = yes
+
+			NOT = {
+				has_character_flag = segrellion_two_wives_authorized
+			}
+
+			NOT = {
+				has_character_flag = segrellion_second_wife_petition_pending
+			}
+		}
+	}
+
+
+	is_valid_showing_failures_only = {
+
+		scope:actor = {
+			is_imprisoned = no
+			is_incapable = no
+		}
+
+		scope:recipient = {
+			is_alive = yes
+			is_imprisoned = no
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# OFFER 1,000 GOLD
+	# -----------------------------------------------------
+
+	send_option = {
+
+		is_shown = {
+			always = yes
+		}
+
+		is_valid = {
+			scope:actor = {
+				gold >= 1000
+			}
+		}
+
+		flag = bribe
+
+		localization = segrellion_second_wife_offer_1000_gold
+		current_description = segrellion_second_wife_offer_1000_gold_desc
+
+		starts_enabled = {
+			always = no
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# SPEND A HOOK
+	# -----------------------------------------------------
+
+	send_option = {
+
+		is_shown = {
+			always = yes
+		}
+
+		is_valid = {
+			scope:actor = {
+				has_usable_hook = scope:recipient
+			}
+		}
+
+		flag = hook
+
+		localization = segrellion_second_wife_use_hook
+		current_description = segrellion_second_wife_use_hook_desc
+
+		starts_enabled = {
+			always = no
+		}
+	}
+
+
+	# -----------------------------------------------------
+	# COST
+	# -----------------------------------------------------
+
+	cost = {
+
+		gold = {
+
+			value = 0
+
+			if = {
+				limit = {
+					scope:bribe = yes
+				}
+
+				add = 1000
+			}
+		}
+	}
+
+
+	on_send = {
+
+		scope:actor = {
+			add_character_flag = {
+				flag = segrellion_second_wife_petition_pending
+				days = 30
+			}
+		}
+
+		if = {
+			limit = {
+				scope:bribe = yes
+			}
+
+			scope:recipient = {
+				add_gold = 1000
+			}
+		}
+
+		if = {
+			limit = {
+				scope:hook = yes
+			}
+
+			scope:actor = {
+				use_hook = scope:recipient
+			}
+		}
+	}
+
+
+	on_accept = {
+
+		scope:actor = {
+
+			remove_character_flag = segrellion_second_wife_petition_pending
+
+			add_character_flag = segrellion_two_wives_authorized
+
+			send_interface_toast = {
+				title = segrellion_second_wife_high_septon_accept_toast
+				left_icon = scope:recipient
+			}
+		}
+
+		scope:recipient = {
+			add_opinion = {
+				target = scope:actor
+				modifier = pleased_opinion
+				opinion = 10
+			}
+		}
+	}
+
+
+	on_decline = {
+
+		scope:actor = {
+
+			remove_character_flag = segrellion_second_wife_petition_pending
+
+			add_character_flag = {
+				flag = segrellion_second_wife_uprising_defender
+				days = 30
+			}
+
+			send_interface_toast = {
+				title = segrellion_second_wife_high_septon_reject_toast
+				left_icon = scope:recipient
+			}
+		}
+
+		scope:recipient = {
+
+			add_character_flag = {
+				flag = segrellion_second_wife_uprising_attacker
+				days = 30
+			}
+
+			start_war = {
+				casus_belli = segrellion_second_wife_faith_uprising_cb
+				target = scope:actor
+			}
+
+			spawn_army = {
+				name = segrellion_second_wife_faith_uprising_army
+				levies = segrellion_second_wife_faith_uprising_troops_value
+				location = scope:recipient.location
+				inheritable = no
+				uses_supply = no
+			}
+		}
+	}
+
+
+	# =====================================================
+	# HIGH SEPTON ACCEPTANCE
+	#
+	# Base:                         -200
+	# Dragonrider:                 +100
+	# 1,000 gold:                  +100
+	# Hook:                        +100
+	# Opinion:                     -50 to +50
+	# Military strength:           up to +75
+	# =====================================================
+
+	ai_accept = {
+
+		base = -200
+
+
+		modifier = {
+			add = 100
+			desc = segrellion_second_wife_dragonrider_reason
+
+			scope:actor = {
+				is_current_dragonrider = yes
+			}
+		}
+
+
+		modifier = {
+			add = 100
+			desc = segrellion_second_wife_bribe_reason
+
+			scope:bribe = yes
+		}
+
+
+		modifier = {
+			add = 100
+			desc = segrellion_second_wife_hook_reason
+
+			scope:hook = yes
+		}
+
+
+		opinion_modifier = {
+			opinion_target = scope:actor
+			who = scope:recipient
+			multiplier = 0.50
+		}
+
+
+		# 10,000 - 24,999
+		modifier = {
+			add = 15
+			desc = segrellion_second_wife_military_reason
+
+			scope:actor.current_military_strength >= 10000
+			scope:actor.current_military_strength < 25000
+		}
+
+
+		# 25,000 - 49,999
+		modifier = {
+			add = 30
+			desc = segrellion_second_wife_military_reason
+
+			scope:actor.current_military_strength >= 25000
+			scope:actor.current_military_strength < 50000
+		}
+
+
+		# 50,000 - 99,999
+		modifier = {
+			add = 50
+			desc = segrellion_second_wife_military_reason
+
+			scope:actor.current_military_strength >= 50000
+			scope:actor.current_military_strength < 100000
+		}
+
+
+		# 100,000+
+		modifier = {
+			add = 75
+			desc = segrellion_second_wife_military_reason
+
+			scope:actor.current_military_strength >= 100000
+		}
+	}
+
+
+	ai_frequency = 0
+}
+
+
+# =========================================================
+# TAKE HER AS A SECOND WIFE
+#
+# Available after the decision has activated the search.
+# This deliberately bypasses the faith spouse-cap while
+# preserving the existing first wife as primary spouse.
+# =========================================================
+
+segrellion_take_as_second_wife_interaction = {
+
+	category = interaction_category_diplomacy
+	icon = icon_marriage
+
+	common_interaction = yes
+	interface_priority = 85
+	use_diplomatic_range = yes
+
+	desc = segrellion_take_as_second_wife_interaction_desc
+	greeting = positive
+	notification_text = segrellion_take_as_second_wife_notification
+
+	ai_maybe = yes
+	can_send_despite_rejection = yes
+
+	ai_min_reply_days = 2
+	ai_max_reply_days = 5
+
+
+	is_shown = {
+
+		scope:actor != scope:recipient
+
+		scope:actor = {
+
+			is_alive = yes
+			is_male = yes
+			is_adult = yes
+			is_married = yes
+
+			number_of_spouses = 1
+
+			has_character_flag = segrellion_seeking_second_wife
+
+			segrellion_can_seek_second_wife_trigger = yes
+			segrellion_has_second_wife_permission_trigger = yes
+		}
+
+
+		scope:recipient = {
+
+			is_alive = yes
+			is_female = yes
+			is_adult = yes
+
+			is_married = no
+			is_betrothed = no
+		}
+	}
+
+
+	is_valid_showing_failures_only = {
+
+		scope:actor = {
+			is_imprisoned = no
+			is_incapable = no
+		}
+
+		scope:recipient = {
+
+			is_imprisoned = no
+			can_marry_trigger = yes
+
+			custom_description = {
+
+				text = segrellion_second_wife_incest_requirement
+
+				OR = {
+
+					NOT = {
+						is_close_family_of = scope:actor
+					}
+
+					scope:actor = {
+						faith = {
+							has_doctrine = doctrine_consanguinity_siblings
+						}
+					}
+
+					AND = {
+
+						scope:actor = {
+							agot_exceptionalism_incest_allowed = yes
+						}
+
+						agot_exceptionalism_incest_allowed = yes
+					}
+				}
+			}
+		}
+	}
+
+
+	on_accept = {
+
+		scope:actor.primary_spouse = {
+			save_scope_as = segrellion_first_wife
+		}
+
+		scope:actor = {
+
+			add_spouse = scope:recipient
+
+			if = {
+				limit = {
+					exists = scope:segrellion_first_wife
+				}
+
+				set_primary_spouse = scope:segrellion_first_wife
+			}
+
+			add_character_flag = segrellion_two_wives_active
+			remove_character_flag = segrellion_seeking_second_wife
+
+			send_interface_toast = {
+				title = segrellion_second_wife_marriage_complete_toast
+				left_icon = scope:recipient
+			}
+		}
+	}
+
+
+	on_decline = {
+
+		scope:actor = {
+			send_interface_toast = {
+				title = segrellion_second_wife_candidate_declined_toast
+				left_icon = scope:recipient
+			}
+		}
+	}
+
+
+	ai_accept = {
+
+		base = -20
+
+		opinion_modifier = {
+			opinion_target = scope:actor
+			who = scope:recipient
+			multiplier = 0.50
+		}
+
+		modifier = {
+			add = 75
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+		}
+
+		modifier = {
+			add = 150
+			scope:recipient = {
+				has_relation_soulmate = scope:actor
+			}
+		}
+
+		modifier = {
+			add = -1000
+			scope:recipient = {
+				has_trait = refusing_marriage
+			}
+		}
+	}
+
+
+	ai_frequency = 0
+}

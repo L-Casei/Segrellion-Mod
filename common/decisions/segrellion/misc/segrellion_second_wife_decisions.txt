@@ -1,0 +1,65 @@
+# =========================================================
+# SEGRELLION - TAKE A SECOND WIFE
+# =========================================================
+
+segrellion_take_second_wife_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_major_religion.dds"
+	}
+
+	decision_group_type = major
+
+	desc = segrellion_take_second_wife_decision_desc
+	selection_tooltip = segrellion_take_second_wife_decision_tooltip
+	confirm_text = segrellion_take_second_wife_decision_confirm
+
+
+	is_shown = {
+
+		is_male = yes
+		is_adult = yes
+		is_married = yes
+
+		number_of_spouses = 1
+
+		segrellion_can_seek_second_wife_trigger = yes
+		segrellion_has_second_wife_religious_path_trigger = yes
+
+		NOT = {
+			has_character_flag = segrellion_seeking_second_wife
+		}
+	}
+
+
+	is_valid = {
+
+		is_alive = yes
+		is_imprisoned = no
+		is_incapable = no
+
+		custom_description = {
+			text = segrellion_second_wife_permission_requirement
+			segrellion_has_second_wife_permission_trigger = yes
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_seeking_second_wife
+
+		custom_tooltip = segrellion_take_second_wife_effect_tt
+	}
+
+
+	ai_check_interval = 0
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
