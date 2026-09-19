@@ -1,0 +1,135 @@
+###########################################################
+############ SEGRELLION CHARACTER WINDOW #################
+###########################################################
+
+types CharacterWindow
+{
+
+	type segrellion_second_wife_relationship_row = vbox_character_row_item
+	{
+
+		name = "segrellion_second_wife"
+
+		visible = "[GetScriptedGui('segrellion_two_wives_secondary_spouses_shown').IsShown(GuiScope.SetRoot(CharacterWindow.GetCharacter.MakeScope).End)]"
+
+		layoutpolicy_vertical = expanding
+
+
+		# Keep this row compact so it occupies the free space
+		# immediately to the right of Grandparents.
+		blockoverride "minimum_width"
+		{
+			min_width = 110
+		}
+
+
+		blockoverride "header_text"
+		{
+			text = "segrellion_second_wife_row_label"
+			max_width = 105
+		}
+
+
+		blockoverride "expand_button" {}
+
+
+		# =================================================
+		# ACTUAL SECOND WIFE
+		# =================================================
+
+		blockoverride "gridbox"
+		{
+
+			fixedgridbox = {
+
+				flipdirection = yes
+				addcolumn = 85
+				addrow = 90
+
+				maxverticalslots = 1
+				maxhorizontalslots = 1
+
+				datamodel = "[CharacterWindow.GetSecondarySpouses]"
+
+
+				item = {
+
+					portrait_head_small = {
+
+						blockoverride "portrait_button"
+						{
+							using = tooltip_ne
+						}
+
+						blockoverride "glow_visible"
+						{
+							visible = no
+						}
+					}
+				}
+			}
+		}
+
+
+		# =================================================
+		# EMPTY EXCEPTIONAL SECOND-WIFE SLOT
+		# =================================================
+
+		blockoverride "find_partner"
+		{
+
+			fixedgridbox = {
+
+				name = "segrellion_find_second_wife"
+
+				# Always create exactly ONE custom empty portrait
+				# when the scripted GUI says the slot is available.
+				# This deliberately ignores the vanilla max-spouse
+				# calculation.
+				datamodel = "[GetNullCharacterDataModel( '(int32)1' )]"
+
+				visible = "[And( CharacterWindow.GetCharacter.IsLocalPlayer, GetScriptedGui('segrellion_two_wives_empty_slot_shown').IsShown(GuiScope.SetRoot(CharacterWindow.GetCharacter.MakeScope).End) )]"
+
+				flipdirection = yes
+				addcolumn = 85
+				addrow = 90
+
+				maxverticalslots = 1
+				maxhorizontalslots = 1
+
+
+				item = {
+
+					container = {
+
+						portrait_head_small = {
+
+							blockoverride "portrait_button_template_onclick"
+							{
+
+								onclick = "[CharacterWindow.GetCharacter.OpenPlayerInteraction( 'segrellion_take_as_second_wife_interaction' )]"
+
+								button_icon = {
+
+									parentanchor = center
+									alwaystransparent = yes
+
+									size = { 26 26 }
+									position = { -2 -4 }
+
+									texture = "gfx/interface/icons/flat_icons/plus.dds"
+								}
+							}
+
+
+							blockoverride "portrait_button_template_tooltip"
+							{
+								tooltip = "segrellion_second_wife_empty_slot_tt"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

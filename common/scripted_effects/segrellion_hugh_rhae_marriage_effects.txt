@@ -10,7 +10,7 @@
 # - remove refusing_marriage
 # - clear incompatible existing marriages
 # - marry Hugh and Rhae
-# - increase Hugh's current and target weight by +15
+# - increase Hugh's current and target weight by +20
 #
 # The weight increase is applied only once.
 # =========================================================
@@ -29,10 +29,6 @@ segrellion_hugh_rhae_marriage_effect = {
 
 				is_alive = yes
 				is_adult = yes
-
-				NOT = {
-					has_character_flag = segrellion_hugh_rhae_marriage_resolved
-				}
 			}
 
 
@@ -149,7 +145,9 @@ segrellion_hugh_rhae_marriage_effect = {
 				}
 
 
-				marry = character:Velaryon_82
+				# Canon relationship: bypass marriage-AI and eligibility
+				# checks that can silently block historical setup.
+				add_spouse = character:Velaryon_82
 			}
 		}
 
@@ -173,14 +171,11 @@ segrellion_hugh_rhae_marriage_effect = {
 
 
 				# =========================================
-				# HUGH GAINS +15 WEIGHT AFTER MARRIAGE
+				# HUGH CANON WEIGHT
 				#
-				# Current weight:
-				# immediate visual/body change.
-				#
-				# Target weight:
-				# stops CK3 gradually returning Hugh to
-				# his previous body weight.
+				# New games receive +20 total.
+				# Saves which already received the old +15 setup
+				# only receive the missing +5.
 				# =========================================
 
 				if = {
@@ -188,17 +183,33 @@ segrellion_hugh_rhae_marriage_effect = {
 					limit = {
 
 						NOT = {
-							has_character_flag = segrellion_hugh_rhae_weight_applied
+							has_character_flag = segrellion_hugh_rhae_weight_v2_applied
 						}
 					}
 
 
-					change_current_weight = 15
+					if = {
 
-					change_target_weight = 15
+						limit = {
+							has_character_flag = segrellion_hugh_rhae_weight_applied
+						}
 
 
-					add_character_flag = segrellion_hugh_rhae_weight_applied
+						change_current_weight = 5
+						change_target_weight = 5
+					}
+
+
+					else = {
+
+						change_current_weight = 20
+						change_target_weight = 20
+
+						add_character_flag = segrellion_hugh_rhae_weight_applied
+					}
+
+
+					add_character_flag = segrellion_hugh_rhae_weight_v2_applied
 				}
 			}
 		}

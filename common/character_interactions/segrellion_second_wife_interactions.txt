@@ -235,6 +235,15 @@ segrellion_petition_high_septon_second_wife_interaction = {
 					opinion = 10
 				}
 			}
+
+
+			scope:actor = {
+
+				trigger_event = {
+					id = segrellion_second_wife.0001
+					days = 1
+				}
+			}
 		}
 
 
@@ -254,6 +263,12 @@ segrellion_petition_high_septon_second_wife_interaction = {
 					title = segrellion_second_wife_high_septon_reject_toast
 
 					left_icon = scope:recipient
+				}
+
+
+				trigger_event = {
+					id = segrellion_second_wife.0002
+					days = 1
 				}
 			}
 		}
@@ -586,55 +601,55 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 			add = 20
-			desc = segrellion_second_wife_personality_reason
+			desc = segrellion_second_wife_lustful_reason
 			scope:recipient = { has_trait = lustful }
 		}
 
 		modifier = {
 			add = 15
-			desc = segrellion_second_wife_personality_reason
+			desc = segrellion_second_wife_ambitious_reason
 			scope:recipient = { has_trait = ambitious }
 		}
 
 		modifier = {
 			add = 15
-			desc = segrellion_second_wife_personality_reason
+			desc = segrellion_second_wife_cynical_reason
 			scope:recipient = { has_trait = cynical }
 		}
 
 		modifier = {
 			add = 10
-			desc = segrellion_second_wife_personality_reason
+			desc = segrellion_second_wife_trusting_reason
 			scope:recipient = { has_trait = trusting }
 		}
 
 		modifier = {
 			add = 10
-			desc = segrellion_second_wife_personality_reason
+			desc = segrellion_second_wife_content_reason
 			scope:recipient = { has_trait = content }
 		}
 
 		modifier = {
 			add = -25
-			desc = segrellion_second_wife_personality_negative_reason
+			desc = segrellion_second_wife_chaste_reason
 			scope:recipient = { has_trait = chaste }
 		}
 
 		modifier = {
 			add = -35
-			desc = segrellion_second_wife_personality_negative_reason
+			desc = segrellion_second_wife_zealous_reason
 			scope:recipient = { has_trait = zealous }
 		}
 
 		modifier = {
 			add = -20
-			desc = segrellion_second_wife_personality_negative_reason
+			desc = segrellion_second_wife_arrogant_reason
 			scope:recipient = { has_trait = arrogant }
 		}
 
 		modifier = {
 			add = -15
-			desc = segrellion_second_wife_personality_negative_reason
+			desc = segrellion_second_wife_stubborn_reason
 			scope:recipient = { has_trait = stubborn }
 		}
 
@@ -663,6 +678,54 @@ segrellion_take_as_second_wife_interaction = {
 
 
 		# Noblewomen are more reluctant, especially landed ladies.
+		# A famous dynasty also makes the proposal politically harder.
+		modifier = {
+
+			add = -10
+			desc = segrellion_second_wife_notable_dynasty_reason
+
+			scope:recipient = {
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 2
+					dynasty_prestige_level < 4
+				}
+			}
+		}
+
+
+		modifier = {
+
+			add = -25
+			desc = segrellion_second_wife_powerful_dynasty_reason
+
+			scope:recipient = {
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 4
+					dynasty_prestige_level < 7
+				}
+			}
+		}
+
+
+		modifier = {
+
+			add = -45
+			desc = segrellion_second_wife_great_dynasty_reason
+
+			scope:recipient = {
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 7
+				}
+			}
+		}
+
+
 		modifier = {
 
 			add = -15
@@ -677,7 +740,7 @@ segrellion_take_as_second_wife_interaction = {
 		modifier = {
 
 			add = -20
-			desc = segrellion_second_wife_rank_reason
+			desc = segrellion_second_wife_countess_reason
 
 			scope:recipient = {
 				highest_held_title_tier = tier_county
@@ -687,7 +750,7 @@ segrellion_take_as_second_wife_interaction = {
 		modifier = {
 
 			add = -40
-			desc = segrellion_second_wife_rank_reason
+			desc = segrellion_second_wife_duchess_reason
 
 			scope:recipient = {
 				highest_held_title_tier = tier_duchy
@@ -697,7 +760,7 @@ segrellion_take_as_second_wife_interaction = {
 		modifier = {
 
 			add = -70
-			desc = segrellion_second_wife_rank_reason
+			desc = segrellion_second_wife_queen_reason
 
 			scope:recipient = {
 				highest_held_title_tier = tier_kingdom
@@ -707,7 +770,7 @@ segrellion_take_as_second_wife_interaction = {
 		modifier = {
 
 			add = -100
-			desc = segrellion_second_wife_rank_reason
+			desc = segrellion_second_wife_empress_reason
 
 			scope:recipient = {
 				highest_held_title_tier >= tier_empire
