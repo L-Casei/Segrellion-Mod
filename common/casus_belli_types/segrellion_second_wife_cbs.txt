@@ -1,0 +1,141 @@
+# =========================================================
+# SEGRELLION - FAITH UPRISING OVER EXPANDED EXCEPTIONALISM
+# =========================================================
+
+segrellion_second_wife_faith_uprising_cb = {
+
+	icon = peasant_war
+
+	group = event
+
+	combine_into_one = yes
+	should_show_war_goal_subview = no
+	allow_hostages = no
+
+	target_titles = none
+
+
+	allowed_for_character = {
+
+		has_title = title:k_the_most_devout
+		has_character_flag = segrellion_second_wife_uprising_attacker
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = {
+			is_alive = yes
+			has_character_flag = segrellion_second_wife_uprising_defender
+		}
+	}
+
+
+	valid_to_start = {
+
+		scope:attacker = {
+			is_alive = yes
+			this != scope:defender
+		}
+
+		scope:defender = {
+			is_alive = yes
+		}
+	}
+
+
+	should_invalidate = {
+		always = no
+	}
+
+
+	cost = {
+	}
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+		scope:attacker = {
+			remove_character_flag = segrellion_second_wife_uprising_attacker
+		}
+
+		scope:defender = {
+			remove_character_flag = segrellion_second_wife_uprising_defender
+		}
+	}
+
+
+	# The Faith wins. The petitioner is forced to abandon the claim.
+
+	on_victory_desc = {
+		desc = segrellion_second_wife_faith_uprising_victory_desc
+	}
+
+	on_victory = {
+
+		scope:defender = {
+
+			remove_character_flag = segrellion_two_wives_authorized
+			remove_character_flag = segrellion_seeking_second_wife
+
+			add_piety = -1000
+			add_prestige = -500
+		}
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	# White peace grants no exceptional right.
+
+	on_white_peace_desc = {
+		desc = segrellion_second_wife_faith_uprising_white_peace_desc
+	}
+
+	on_white_peace = {
+
+		scope:defender = {
+			remove_character_flag = segrellion_seeking_second_wife
+		}
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	# The petitioner defeats the uprising. The High Septon is
+	# forced to recognise the expanded exceptional privilege.
+
+	on_defeat_desc = {
+		desc = segrellion_second_wife_faith_uprising_defeat_desc
+	}
+
+	on_defeat = {
+
+		scope:defender = {
+
+			add_character_flag = segrellion_two_wives_authorized
+
+			add_prestige = 500
+		}
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = inherit
+	on_primary_defender_death = inherit
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_second_wife_faith_uprising_war_name"
+	war_name_base = "segrellion_second_wife_faith_uprising_war_name_base"
+	cb_name = "segrellion_second_wife_faith_uprising_cb_name"
+
+	interface_priority = 200
+}
