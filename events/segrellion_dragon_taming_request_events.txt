@@ -1,0 +1,438 @@
+# =========================================================
+# SEGRELLION - ASK TO TAME A DRAGON
+# Permission response, travel and dragon selection
+# =========================================================
+
+namespace = segrellion_dragon_request
+
+
+# ---------------------------------------------------------
+# ACCEPTED
+# ---------------------------------------------------------
+
+segrellion_dragon_request.0001 = {
+
+	type = character_event
+
+	title = segrellion_dragon_request.0001.t
+	desc = segrellion_dragon_request.0001.desc
+
+	theme = dragon
+	override_background = { reference = agot_dragonpit }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:dragon_host
+		animation = personality_rational
+	}
+
+
+	trigger = {
+		has_variable = segrellion_dragon_request_host
+	}
+
+
+	immediate = {
+
+		var:segrellion_dragon_request_host = {
+			save_scope_as = dragon_host
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_dragon_request.0001.a
+
+		trigger = {
+			scope:dragon_host = {
+				is_alive = yes
+			}
+		}
+
+		if = {
+
+			limit = {
+				location = scope:dragon_host.location
+			}
+
+			trigger_event = {
+				id = segrellion_dragon_request.0010
+				days = 1
+			}
+		}
+
+		else = {
+
+			start_travel_plan = {
+				destination = scope:dragon_host.location
+				return_trip = yes
+
+				on_arrival_event = segrellion_dragon_request.0010
+				on_arrival_destinations = first
+
+				on_travel_planner_cancel_event = segrellion_dragon_request.0004
+			}
+		}
+
+		ai_chance = { base = 100 }
+	}
+
+
+	option = {
+
+		name = segrellion_dragon_request.0001.b
+
+		segrellion_clear_dragon_taming_request_runtime_effect = yes
+
+		ai_chance = { base = 0 }
+	}
+}
+
+
+# ---------------------------------------------------------
+# REJECTED
+# ---------------------------------------------------------
+
+segrellion_dragon_request.0002 = {
+
+	type = character_event
+
+	title = segrellion_dragon_request.0002.t
+	desc = segrellion_dragon_request.0002.desc
+
+	theme = dragon
+	override_background = { reference = agot_dragonpit }
+
+	left_portrait = {
+		character = root
+		animation = disapproval
+	}
+
+	right_portrait = {
+		character = scope:dragon_host
+		animation = personality_rational
+	}
+
+
+	trigger = {
+		has_variable = segrellion_dragon_request_host
+	}
+
+
+	immediate = {
+
+		var:segrellion_dragon_request_host = {
+			save_scope_as = dragon_host
+		}
+	}
+
+
+	option = {
+
+		name = segrellion_dragon_request.0002.a
+
+		segrellion_clear_dragon_taming_request_runtime_effect = yes
+	}
+}
+
+
+# ---------------------------------------------------------
+# TRAVEL PLANNER CANCELLED
+# ---------------------------------------------------------
+
+segrellion_dragon_request.0004 = {
+
+	type = character_event
+
+	title = segrellion_dragon_request.0004.t
+	desc = segrellion_dragon_request.0004.desc
+
+	theme = dragon
+
+	left_portrait = {
+		character = root
+		animation = disapproval
+	}
+
+
+	option = {
+
+		name = segrellion_dragon_request.0004.a
+
+		segrellion_clear_dragon_taming_request_runtime_effect = yes
+	}
+}
+
+
+# ---------------------------------------------------------
+# ARRIVAL / CHOOSE THE DRAGON
+# ---------------------------------------------------------
+
+segrellion_dragon_request.0010 = {
+
+	type = character_event
+	window = agot_dragon_character_event
+
+	title = segrellion_dragon_request.0010.t
+
+	desc = {
+
+		first_valid = {
+
+			triggered_desc = {
+
+				trigger = {
+					exists = scope:dragon_host
+					location = scope:dragon_host.location
+					has_variable_list = possible_characters
+				}
+
+				desc = segrellion_dragon_request.0010.desc
+			}
+
+			triggered_desc = {
+
+				trigger = {
+					exists = scope:dragon_host
+					NOT = { location = scope:dragon_host.location }
+				}
+
+				desc = segrellion_dragon_request.0010.host_moved_desc
+			}
+
+			desc = segrellion_dragon_request.0010.no_dragons_desc
+		}
+	}
+
+	theme = dragon
+	override_background = { reference = agot_dragonpit }
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = scope:dragon_host
+		animation = personality_rational
+	}
+
+
+	widget = {
+
+		is_shown = {
+			is_ai = no
+			has_variable_list = possible_characters
+		}
+
+		gui = "agot_character_selection_two_options"
+		container = "custom_widgets_container"
+	}
+
+
+	trigger = {
+		has_variable = segrellion_dragon_request_host
+	}
+
+
+	immediate = {
+
+		# Defensive cleanup in case another selection screen left these behind.
+		if = {
+			limit = { has_variable = possible_characters }
+			clear_variable_list = possible_characters
+		}
+
+		if = {
+			limit = { has_variable = si_selected_character }
+			remove_variable = si_selected_character
+		}
+
+
+		var:segrellion_dragon_request_host = {
+			save_scope_as = dragon_host
+		}
+
+
+		# The permission was to meet this specific holder in person.
+		# If the holder moved while we travelled, the appointment is missed.
+		if = {
+
+			limit = {
+
+				scope:dragon_host = {
+					is_alive = yes
+					location = root.location
+				}
+
+				root = {
+					segrellion_dragon_request_actor_eligible_trigger = yes
+				}
+			}
+
+
+			# Owned dragons in the holder's court which are NOT already being
+			# supplied by the dragonpit lists below.
+			scope:dragon_host = {
+
+				every_courtier_or_guest = {
+
+					limit = {
+
+						NOT = { has_character_flag = in_dragonpit }
+
+						segrellion_dragon_request_dragon_available_trigger = {
+							HOST = scope:dragon_host
+						}
+					}
+
+					root = {
+
+						add_to_variable_list = {
+							name = possible_characters
+							target = prev
+						}
+					}
+				}
+
+
+				# Dragons actually housed in dragonpits held by this character.
+				every_held_title = {
+
+					limit = {
+						tier = tier_county
+						has_variable_list = dragons_in_pit
+					}
+
+					every_in_list = {
+
+						variable = dragons_in_pit
+
+						limit = {
+
+							segrellion_dragon_request_dragon_available_trigger = {
+								HOST = scope:dragon_host
+							}
+						}
+
+						root = {
+
+							add_to_variable_list = {
+								name = possible_characters
+								target = prev
+							}
+						}
+					}
+				}
+			}
+
+
+			# The normal AGOT selector expects one character to be preselected.
+			if = {
+
+				limit = {
+					has_variable_list = possible_characters
+				}
+
+				ordered_in_list = {
+					variable = possible_characters
+					order_by = age
+
+					root = {
+						set_variable = {
+							name = si_selected_character
+							value = prev
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	# Attempt to tame the selected dragon.
+	option = {
+
+		name = segrellion_dragon_request.0010.a
+
+		trigger = {
+
+			exists = scope:dragon_host
+			location = scope:dragon_host.location
+
+			has_variable = si_selected_character
+
+			var:si_selected_character = {
+
+				segrellion_dragon_request_dragon_available_trigger = {
+					HOST = scope:dragon_host
+				}
+			}
+
+			segrellion_dragon_request_actor_eligible_trigger = yes
+		}
+
+
+		var:si_selected_character = {
+			save_scope_as = chosen_dragon
+		}
+
+		save_scope_as = tamer
+
+		scope:chosen_dragon = {
+			save_scope_as = dragon
+		}
+
+
+		# IMPORTANT:
+		# From this point onward the attempt is 100% AGOT.
+		# dragon_taming_events.0100 ultimately uses AGOT's own
+		# dragon_taming_attempt_chance and all normal failure consequences.
+		trigger_event = {
+			id = dragon_taming_events.0100
+		}
+
+
+		segrellion_clear_dragon_taming_request_runtime_effect = yes
+
+		ai_chance = { base = 100 }
+	}
+
+
+	# Nothing valid remained, or the holder moved before our arrival.
+	option = {
+
+		name = segrellion_dragon_request.0010.b
+
+		trigger = {
+			NOT = {
+				has_variable = si_selected_character
+			}
+		}
+
+		segrellion_clear_dragon_taming_request_runtime_effect = yes
+
+		ai_chance = { base = 100 }
+	}
+
+
+	# Player may still change their mind after arriving.
+	option = {
+
+		name = segrellion_dragon_request.0010.c
+
+		trigger = {
+			has_variable = si_selected_character
+			is_ai = no
+		}
+
+		segrellion_clear_dragon_taming_request_runtime_effect = yes
+
+		ai_chance = { base = 0 }
+	}
+}

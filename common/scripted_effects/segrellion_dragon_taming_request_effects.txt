@@ -1,0 +1,94 @@
+# =========================================================
+# SEGRELLION - ASK TO TAME A DRAGON
+# Runtime bookkeeping
+# =========================================================
+
+
+# Records how many previous requests the same character has made to the
+# same dragon-holder. The lists deliberately stack:
+#
+# request 2 -> tier 1 penalty
+# request 3 -> tier 1 + tier 2 penalties
+# request 4+ -> tier 1 + tier 2 + tier 3 penalties
+#
+# Immediate family, soulmates and best friends are exempted from the
+# repeat-request acceptance penalties in the interaction itself.
+
+segrellion_record_dragon_taming_request_effect = {
+
+	$HOST$ = {
+
+		if = {
+
+			limit = {
+
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_2
+					target = $REQUESTER$
+				}
+			}
+
+			if = {
+
+				limit = {
+
+					NOT = {
+
+						is_target_in_variable_list = {
+							name = segrellion_dragon_requesters_tier_3
+							target = $REQUESTER$
+						}
+					}
+				}
+
+				add_to_variable_list = {
+					name = segrellion_dragon_requesters_tier_3
+					target = $REQUESTER$
+				}
+			}
+		}
+
+		else_if = {
+
+			limit = {
+
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_1
+					target = $REQUESTER$
+				}
+			}
+
+			add_to_variable_list = {
+				name = segrellion_dragon_requesters_tier_2
+				target = $REQUESTER$
+			}
+		}
+
+		else = {
+
+			add_to_variable_list = {
+				name = segrellion_dragon_requesters_tier_1
+				target = $REQUESTER$
+			}
+		}
+	}
+}
+
+
+segrellion_clear_dragon_taming_request_runtime_effect = {
+
+	if = {
+		limit = { has_variable = possible_characters }
+		clear_variable_list = possible_characters
+	}
+
+	if = {
+		limit = { has_variable = si_selected_character }
+		remove_variable = si_selected_character
+	}
+
+	if = {
+		limit = { has_variable = segrellion_dragon_request_host }
+		remove_variable = segrellion_dragon_request_host
+	}
+}

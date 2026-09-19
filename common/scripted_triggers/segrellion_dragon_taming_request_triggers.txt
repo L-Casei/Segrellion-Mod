@@ -1,0 +1,217 @@
+# =========================================================
+# SEGRELLION - ASK TO TAME A DRAGON
+# Shared eligibility, relationship and canon-pair triggers
+# =========================================================
+
+segrellion_dragon_request_actor_eligible_trigger = {
+
+	is_alive = yes
+	is_human = yes
+	age >= 10
+
+	NOT = { has_trait = dragon }
+
+	is_imprisoned = no
+	is_incapable = no
+	is_travelling = no
+
+	NOR = {
+		has_trait = dragonrider
+		has_trait_with_flag = can_not_bond_dragon
+		has_character_modifier = agot_dragon_disinterest
+		government_has_flag = government_is_nw
+
+		any_relation = {
+			type = agot_dragon
+		}
+
+		any_scheme = {
+			scheme_type = bond_with_dragon_scheme
+		}
+	}
+}
+
+
+# A dragon is available through this system only when it is genuinely
+# under the requested character's control:
+#   - an owned, untamed dragon in that character's court; OR
+#   - an untamed dragon confined in a dragonpit held by that character.
+#
+# Wild / roaming dragons merely passing through the same province do not count.
+
+segrellion_dragon_request_dragon_available_trigger = {
+
+	is_alive = yes
+	has_trait = dragon
+
+	dragon_size >= dragon_taming_minimum_size
+
+	NOR = {
+		has_variable = current_rider
+
+		any_relation = {
+			type = agot_dragon
+		}
+
+		has_character_flag = in_dragon_combat
+	}
+
+	OR = {
+
+		AND = {
+			has_character_flag = owned_dragon
+			is_courtier_of = $HOST$
+		}
+
+		AND = {
+			has_character_flag = in_dragonpit
+			has_variable = pitted_dragon_location
+
+			var:pitted_dragon_location = {
+				holder = $HOST$
+			}
+		}
+	}
+}
+
+
+segrellion_dragon_request_recipient_has_available_dragon_trigger = {
+
+	is_alive = yes
+	is_human = yes
+
+	NOT = { has_trait = dragon }
+
+	is_imprisoned = no
+	is_incapable = no
+	is_travelling = no
+
+	OR = {
+
+		any_courtier_or_guest = {
+			segrellion_dragon_request_dragon_available_trigger = {
+				HOST = $HOST$
+			}
+		}
+
+		any_held_title = {
+
+			tier = tier_county
+			has_variable_list = dragons_in_pit
+
+			any_in_list = {
+				variable = dragons_in_pit
+
+				segrellion_dragon_request_dragon_available_trigger = {
+					HOST = $HOST$
+				}
+			}
+		}
+	}
+}
+
+
+# Spouse, parent, child or sibling.
+segrellion_dragon_request_immediate_family_trigger = {
+
+	OR = {
+		is_spouse_of = $TARGET$
+		is_parent_of = $TARGET$
+		is_child_of = $TARGET$
+		is_sibling_of = $TARGET$
+	}
+}
+
+
+# Grandparents, grandchildren, cousins, uncles/aunts, nephews/nieces,
+# and the rest of CK3's extended-family group, excluding the tier above.
+segrellion_dragon_request_extended_family_trigger = {
+
+	OR = {
+		is_extended_family_of = $TARGET$
+		is_grandparent_of = $TARGET$
+		is_grandchild_of = $TARGET$
+	}
+
+	NOT = {
+		segrellion_dragon_request_immediate_family_trigger = {
+			TARGET = $TARGET$
+		}
+	}
+}
+
+
+segrellion_dragon_request_houses_feuding_trigger = {
+
+	exists = house
+	$TARGET$ = { exists = house }
+
+	house = {
+
+		any_house_relation = {
+
+			has_house_relation_level = feud
+
+			any_relation_house = {
+				this = $TARGET$.house
+			}
+		}
+	}
+}
+
+
+segrellion_dragon_request_houses_rivals_trigger = {
+
+	exists = house
+	$TARGET$ = { exists = house }
+
+	house = {
+
+		any_house_relation = {
+
+			has_house_relation_level = rivalry
+
+			any_relation_house = {
+				this = $TARGET$.house
+			}
+		}
+	}
+}
+
+
+# These two pairings are intentionally invisible to the player-facing UI.
+# They are destiny/canon hooks used only by the taming probability override.
+#
+# - The runtime resurrected Jon Snow -> Viserion
+# - Daemon Segrellion -> Rhaegal
+
+segrellion_hidden_canon_dragon_pair_trigger = {
+
+	$RIDER$ = { save_temporary_scope_as = segrellion_canon_rider }
+	$DRAGON$ = { save_temporary_scope_as = segrellion_canon_dragon }
+
+	OR = {
+
+		AND = {
+
+			scope:segrellion_canon_rider = {
+				has_character_flag = segrellion_resurrected_jon
+			}
+
+			scope:segrellion_canon_dragon = {
+				is_character_dragon_viserion = yes
+			}
+		}
+
+		AND = {
+
+			scope:segrellion_canon_rider = {
+				this = character:Segrellion_60
+			}
+
+			scope:segrellion_canon_dragon = {
+				is_character_dragon_rhaegal = yes
+			}
+		}
+	}
+}
