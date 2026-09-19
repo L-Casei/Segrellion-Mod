@@ -1,0 +1,215 @@
+# =========================================================
+# SEGRELLION - RICKON STARK PUBLIC REVEAL
+# =========================================================
+
+
+# =========================================================
+# REVEAL RICKON'S TRUE IDENTITY
+#
+# ROOT can be Daemon or any story controller.
+#
+# This is not merely narrative. It restores Rickon's real
+# parents and House in the character database at runtime.
+# =========================================================
+
+segrellion_black_unicorn_reveal_rickon_identity_effect = {
+
+	character:Stark_Dummy_11 ?= {
+
+		if = {
+
+			limit = {
+				is_alive = yes
+			}
+
+
+			set_father = character:Stark_3
+			set_mother = character:Tully_4
+
+			set_house = dynasty:dynn_Stark.dynasty_founder.house
+
+
+			add_character_flag = segrellion_rickon_identity_publicly_revealed
+		}
+	}
+}
+
+
+# =========================================================
+# SEND THE APPROPRIATE LETTER
+#
+# ROOT = RECIPIENT
+# =========================================================
+
+segrellion_black_unicorn_send_rickon_reveal_letter_effect = {
+
+	if = {
+
+		limit = {
+
+			is_alive = yes
+
+			NOT = {
+				has_character_flag = segrellion_rickon_reveal_letter_received
+			}
+
+			character:Stark_Dummy_11 ?= {
+				is_alive = yes
+				has_character_flag = segrellion_rickon_identity_publicly_revealed
+			}
+		}
+
+
+		add_character_flag = segrellion_rickon_reveal_letter_received
+
+
+		if = {
+
+			limit = {
+
+				character:Stark_Dummy_11 = {
+					has_character_flag = segrellion_rickon_publicly_with_daemon
+				}
+			}
+
+
+			trigger_event = {
+				id = segrellion_rickon_reveal.0001
+				days = { 1 4 }
+			}
+		}
+
+
+		else = {
+
+			trigger_event = {
+				id = segrellion_rickon_reveal.0002
+				days = { 1 4 }
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# ANNOUNCE RICKON'S SURVIVAL
+#
+# ROOT = DAEMON
+#
+# Recipients:
+# - Ramsay, if alive
+# - Jon Snow, if alive
+# - current ruler of the North, if another person
+# - every landed lord whose capital lies in the North
+# =========================================================
+
+segrellion_black_unicorn_announce_rickon_survival_effect = {
+
+	if = {
+
+		limit = {
+
+		this = character:Segrellion_60
+
+		has_character_flag = segrellion_black_unicorn_rickon_revealed
+
+		character:Stark_Dummy_11 ?= {
+
+			is_alive = yes
+
+			has_character_flag = segrellion_rickon_identity_publicly_revealed
+
+			NOT = {
+				has_character_flag = segrellion_rickon_survival_announced
+			}
+		}
+	}
+
+
+		character:Stark_Dummy_11 = {
+			add_character_flag = segrellion_rickon_survival_announced
+		}
+
+
+		# ---------------------------------------------
+		# THE LORDS OF THE NORTH
+		# ---------------------------------------------
+
+		every_ruler = {
+
+			limit = {
+
+				is_alive = yes
+
+				highest_held_title_tier >= tier_county
+
+				this != character:Segrellion_60
+				this != character:Black_Unicorn_1
+				this != character:Stark_Dummy_11
+
+				exists = capital_province
+
+				capital_province = {
+					geographical_region = world_westeros_the_north
+				}
+			}
+
+
+			segrellion_black_unicorn_send_rickon_reveal_letter_effect = yes
+		}
+
+
+		# ---------------------------------------------
+		# RAMSAY BOLTON / SNOW
+		# ---------------------------------------------
+
+		character:Bolton_5 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				segrellion_black_unicorn_send_rickon_reveal_letter_effect = yes
+			}
+		}
+
+
+		# ---------------------------------------------
+		# JON SNOW
+		# ---------------------------------------------
+
+		character:Stark_7 ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				segrellion_black_unicorn_send_rickon_reveal_letter_effect = yes
+			}
+		}
+
+
+		# ---------------------------------------------
+		# CURRENT RULER OF THE NORTH
+		# ---------------------------------------------
+
+		title:e_the_north.holder ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+				}
+
+
+				segrellion_black_unicorn_send_rickon_reveal_letter_effect = yes
+			}
+		}
+	}
+}
