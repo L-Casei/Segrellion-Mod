@@ -2119,8 +2119,8 @@ window = {
 								{
 									fixedgridbox = {
 										name = "potential"
-										datamodel = "[GetNullCharacterDataModel( Character.CalcUnusedSecondarySpouseSlots )]"
-										visible = "[Character.IsPlayerInteractionShown('marry_off_interaction')]"
+										datamodel = "[GetNullCharacterDataModel( Add_int32( Character.CalcUnusedSecondarySpouseSlots, Select_int32( GetScriptedGui('segrellion_two_wives_empty_slot_shown').IsShown(GuiScope.SetRoot(CharacterWindow.GetCharacter.MakeScope).End), '(int32)1', '(int32)0' ) ) )]"
+										visible = "[Or( Character.IsPlayerInteractionShown('marry_off_interaction'), GetScriptedGui('segrellion_two_wives_empty_slot_shown').IsShown(GuiScope.SetRoot(CharacterWindow.GetCharacter.MakeScope).End) )]"
 
 										flipdirection = yes
 										addcolumn = 85
@@ -2154,7 +2154,7 @@ window = {
 												}
 
 												portrait_head_small = {
-													visible = "[ObjectsEqual( GetPlayer, CharacterWindow.GetCharacter )]"
+													visible = "[And( ObjectsEqual( GetPlayer, CharacterWindow.GetCharacter ), Not( GetScriptedGui('segrellion_two_wives_empty_slot_shown').IsShown(GuiScope.SetRoot(CharacterWindow.GetCharacter.MakeScope).End) ) )]"
 													blockoverride "portrait_button_template_onclick"
 													{
 														onclick = "[CharacterWindow.GetCharacter.OpenPlayerInteraction('marry_off_interaction')]"
@@ -2167,6 +2167,29 @@ window = {
 													{
 														onclick = "[CharacterWindow.GetCharacter.OpenPlayerInteraction('marry_off_interaction')]"
 
+														button_icon = {
+															parentanchor = center
+															alwaystransparent = yes
+															size = { 26 26 }
+															position = {-5 0}
+															texture = "gfx/interface/icons/flat_icons/plus.dds"
+														}
+													}
+												}
+
+												# SEGRELLION: exceptional second-wife slot.
+												portrait_head_small = {
+													visible = "[And( ObjectsEqual( GetPlayer, CharacterWindow.GetCharacter ), GetScriptedGui('segrellion_two_wives_empty_slot_shown').IsShown(GuiScope.SetRoot(CharacterWindow.GetCharacter.MakeScope).End) )]"
+
+													blockoverride "portrait_button_template_onclick" {}
+
+													blockoverride "portrait_button_template_tooltip"
+													{
+														tooltip = "segrellion_second_wife_empty_slot_tt"
+													}
+
+													blockoverride "onclick"
+													{
 														button_icon = {
 															parentanchor = center
 															alwaystransparent = yes

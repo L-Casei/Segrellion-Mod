@@ -3234,31 +3234,13 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 
 
 		# =================================================
-		# NORMAL ATTEMPT
-		# =================================================
-
-		marry = character:Black_Unicorn_1
-
-
-		# =================================================
-		# FALLBACK
+		# STORY MARRIAGE
 		#
-		# Directly establish the spouse relationship if the
-		# normal marriage was rejected by spouse limits.
+		# Both women already accepted the arrangement.
+		# Never ask CK3's monogamous marriage system again.
 		# =================================================
 
-		if = {
-
-			limit = {
-
-				NOT = {
-					is_spouse_of = character:Black_Unicorn_1
-				}
-			}
-
-
-			add_spouse = character:Black_Unicorn_1
-		}
+		add_spouse = character:Black_Unicorn_1
 
 
 		# =================================================
@@ -3299,6 +3281,12 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 
 
 		add_character_flag = segrellion_two_wives_active
+
+		# The temporary flag only existed to let the storyline pass
+		# our marriage guards. This union was NOT approved by the Faith.
+		remove_character_flag = segrellion_two_wives_authorized
+
+		segrellion_second_wife_public_illegal_union_censure_effect = yes
 
 
 		# =================================================
@@ -3395,17 +3383,6 @@ segrellion_black_unicorn_marry_visenya_dual_effect = {
 		}
 	}
 
-
-	else = {
-
-		add_character_flag = segrellion_black_unicorn_visenya_marriage_failed
-
-
-		trigger_event = {
-			id = segrellion_black_unicorn.0889
-			days = 1
-		}
-	}
 
 
 	character:Black_Unicorn_1 = {

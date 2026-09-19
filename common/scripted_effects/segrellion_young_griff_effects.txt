@@ -5400,34 +5400,13 @@ segrellion_young_griff_complete_margaery_marriage_effect = {
 
 
 		# =====================================================
-		# NORMAL MARRIAGE ATTEMPT
-		# =====================================================
-
-		marry = var:segrellion_young_griff_margaery
-
-
-		# =====================================================
-		# LOW-LEVEL FALLBACK
+		# STORY MARRIAGE
 		#
-		# If CK3 rejected "marry" because Aegon already has
-		# a wife, directly create the spouse relationship.
+		# The current queen and Margaery already accepted.
+		# Bypass the monogamous marriage cap directly.
 		# =====================================================
 
-		if = {
-
-			limit = {
-
-				var:segrellion_young_griff_margaery = {
-
-					NOT = {
-						is_spouse_of = root
-					}
-				}
-			}
-
-
-			add_spouse = var:segrellion_young_griff_margaery
-		}
+		add_spouse = var:segrellion_young_griff_margaery
 
 
 		# =====================================================
@@ -5463,6 +5442,12 @@ segrellion_young_griff_complete_margaery_marriage_effect = {
 			# =================================================
 
 			add_character_flag = segrellion_two_wives_active
+
+			# This was only a temporary technical bypass for the
+			# storyline. The Faith did not grant permission.
+			remove_character_flag = segrellion_two_wives_authorized
+
+			segrellion_second_wife_public_illegal_union_censure_effect = yes
 
 
 			# =================================================
@@ -5582,20 +5567,6 @@ segrellion_young_griff_complete_margaery_marriage_effect = {
 			}
 		}
 
-
-		# =====================================================
-		# TOTAL FAILURE
-		#
-		# Neither normal marry nor add_spouse succeeded.
-		# Do not grant rewards or resolve the marriage state.
-		# =====================================================
-
-		else = {
-
-			remove_character_flag = segrellion_two_wives_active
-
-			add_character_flag = segrellion_young_griff_margaery_marriage_failed
-		}
 	}
 }
 

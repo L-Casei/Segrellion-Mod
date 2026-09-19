@@ -1,0 +1,77 @@
+# =========================================================
+# SEGRELLION - SECOND WIFE RELIGIOUS CONSEQUENCES
+# =========================================================
+
+
+# The High Septon rejected a formal imperial petition.
+# No war. The petitioner is excommunicated and suffers a
+# realm-wide reputational penalty.
+
+segrellion_second_wife_rejected_petition_censure_effect = {
+
+	if = {
+
+		limit = {
+			religion = religion:the_seven_religion
+		}
+
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_trait = excommunicated
+				}
+			}
+
+			add_excommunication_actual_effect = yes
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_rejected_exceptionalism_petition_modifier
+
+			years = 5
+		}
+	}
+}
+
+
+# A storyline marriage may deliberately ignore the Faith.
+# Once two wives become public, the High Septon responds.
+
+segrellion_second_wife_public_illegal_union_censure_effect = {
+
+	if = {
+
+		limit = {
+
+			religion = religion:the_seven_religion
+
+			NOT = {
+				has_character_flag = segrellion_two_wives_authorized
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_trait = excommunicated
+				}
+			}
+
+			add_excommunication_actual_effect = yes
+		}
+
+
+		add_character_modifier = {
+
+			modifier = segrellion_public_second_wife_scandal_modifier
+
+			years = 15
+		}
+	}
+}

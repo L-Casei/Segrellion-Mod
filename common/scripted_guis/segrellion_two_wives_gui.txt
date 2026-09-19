@@ -1,21 +1,40 @@
 # =========================================================
 # SEGRELLION - SPECIAL TWO-WIVES UI
-#
-# Any character using the native Segrellion second-wife
-# system can display the secondary spouse row.
-#
-# The row is only shown once a real second spouse exists.
 # =========================================================
+
+
+# Show the Secondary Spouses row either when an actual
+# exceptional second wife exists, or when an approved empty
+# slot has been unlocked.
 
 segrellion_two_wives_secondary_spouses_shown = {
 
 	scope = character
 
+	is_shown = {
+
+		OR = {
+
+			has_character_flag = segrellion_two_wives_active
+
+			has_character_flag = segrellion_second_wife_slot_unlocked
+		}
+	}
+}
+
+
+# Used by window_character.gui to add ONE custom empty slot.
+# This does not depend on Character.GetMaxSpouses.
+
+segrellion_two_wives_empty_slot_shown = {
+
+	scope = character
 
 	is_shown = {
 
-		has_character_flag = segrellion_two_wives_active
+		has_character_flag = segrellion_second_wife_slot_unlocked
+		has_character_flag = segrellion_two_wives_authorized
 
-		number_of_spouses >= 2
+		number_of_spouses = 1
 	}
 }
