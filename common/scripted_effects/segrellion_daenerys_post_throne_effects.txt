@@ -25,19 +25,28 @@ segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
 
 
 		# =================================================
-		# CLEAN ANY GENERIC MEGA WAR PUNISHMENT STATE
-		# ALREADY PREPARED DIRECTLY ON DAENERYS
+		# HARD-CLEAR AGOT'S PUNISHMENT STATE ON DAENERYS
+		#
+		# AGOT's "The War's Aftermath" (0600/0601) is fed
+		# by these character-side lists / variables.
 		# =================================================
 
 		clear_variable_list = mw_traitors_list
+		clear_variable_list = mw_punishers_list
+		clear_variable_list = mw_post_war_rebels
 
 		remove_variable = mw_punishment_window
+		remove_variable = lords_to_be_punished
 
 
 		# =================================================
-		# INVALIDATE AGOT'S EXTERNAL CLAIM AFTERMATH
+		# INVALIDATE ONLY DAENERYS' THRONE-WAR MW STORIES
 		#
-		# Same working pattern used by Young Griff.
+		# IMPORTANT:
+		# The direct Daenerys war uses
+		# segrellion_daenerys_fire_and_blood_cb, NOT claim_cb.
+		# Keep claim_cb for old saves created before the
+		# dedicated CB existed.
 		# =================================================
 
 		every_owned_story = {
@@ -48,9 +57,15 @@ segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
 
 				var:mw_source = flag:mw_external
 
-				var:mw_war_cb = flag:claim_cb
+				OR = {
+					var:mw_war_cb = flag:segrellion_daenerys_fire_and_blood_cb
+					var:mw_war_cb = flag:segrellion_daenerys_iron_throne_cb
+					var:mw_war_cb = flag:claim_cb
+				}
 			}
 
+
+			remove_variable = lords_to_be_punished
 
 			clear_variable_list = mw_punishers_list
 
@@ -60,6 +75,51 @@ segrellion_daenerys_cancel_agot_wars_aftermath_effect = {
 				name = mw_outcome
 
 				value = flag:invalidated
+			}
+		}
+
+
+		# =================================================
+		# DAEMON-BACKED THRONE WAR
+		#
+		# In this route Daemon is the primary attacker and
+		# can own AGOT's rebel-side Mega War story even though
+		# Daenerys receives the Iron Throne.
+		# =================================================
+
+		character:Segrellion_60 ?= {
+
+			clear_variable_list = mw_traitors_list
+			clear_variable_list = mw_punishers_list
+			clear_variable_list = mw_post_war_rebels
+
+			remove_variable = mw_punishment_window
+			remove_variable = lords_to_be_punished
+
+
+			every_owned_story = {
+
+				limit = {
+
+					story_type = story_agot_mw_rebel
+
+					var:mw_source = flag:mw_external
+
+					var:mw_war_cb = flag:segrellion_daenerys_iron_throne_cb
+				}
+
+
+				remove_variable = lords_to_be_punished
+
+				clear_variable_list = mw_punishers_list
+
+
+				set_variable = {
+
+					name = mw_outcome
+
+					value = flag:invalidated
+				}
 			}
 		}
 
