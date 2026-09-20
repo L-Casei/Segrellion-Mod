@@ -91,6 +91,86 @@ segrellion_rickon_unlock_agot_random_personality_effect = {
 
 
 # =========================================================
+# FORCE DAEMON AS RICKON'S STORY GUARDIAN
+#
+# Used when the Path III Beacon handoff is reached.
+# Rickon may already have a vanilla/AGOT guardian (Sara or
+# somebody else). That relation must never block this chain.
+# =========================================================
+
+segrellion_rickon_force_daemon_guardian_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Stark_Dummy_11
+			is_alive = yes
+			is_adult = no
+
+			character:Segrellion_60 = {
+				is_alive = yes
+				is_adult = yes
+				is_imprisoned = no
+				is_incapable = no
+			}
+		}
+
+
+		# Remove whatever guardian Rickon already has, unless it
+		# is already Daemon.
+
+		if = {
+
+			limit = {
+
+				any_relation = {
+					type = guardian
+					always = yes
+				}
+			}
+
+			random_relation = {
+				type = guardian
+				save_scope_as = segrellion_rickon_old_guardian
+			}
+		}
+
+
+		if = {
+
+			limit = {
+
+				exists = scope:segrellion_rickon_old_guardian
+				scope:segrellion_rickon_old_guardian != character:Segrellion_60
+			}
+
+			remove_relation_guardian = scope:segrellion_rickon_old_guardian
+		}
+
+
+		if = {
+
+			limit = {
+				NOT = { has_relation_guardian = character:Segrellion_60 }
+			}
+
+			set_relation_guardian = character:Segrellion_60
+		}
+
+
+		add_character_flag = segrellion_rickon_under_daemon_protection
+		add_character_flag = segrellion_rickon_tutor_daemon
+		remove_character_flag = segrellion_rickon_tutor_visenya
+
+
+		# Queue the introduction/education chain immediately.
+		segrellion_rickon_ensure_education_watch_effect = yes
+	}
+}
+
+
+# =========================================================
 # TRY TO START THE STORY EDUCATION NOW
 #
 # This is deliberately separate from the repeating watchdog.
