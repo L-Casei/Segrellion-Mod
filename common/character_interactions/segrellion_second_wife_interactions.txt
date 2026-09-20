@@ -453,6 +453,24 @@ segrellion_take_as_second_wife_interaction = {
 
 	on_accept = {
 
+		# Visenya's story lock is deliberately bypassed for Daemon.
+		# Once she accepts, clear the temporary refusal trait so the
+		# resulting spouse state is internally consistent.
+		scope:recipient = {
+
+			if = {
+
+				limit = {
+					this = character:Black_Unicorn_1
+					scope:actor = character:Segrellion_60
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+
+
 		scope:actor.primary_spouse = {
 			save_scope_as = segrellion_first_wife
 		}
@@ -876,6 +894,24 @@ segrellion_find_second_wife_interaction = {
 
 
 	on_accept = {
+
+		# Visenya's story lock is deliberately bypassed for Daemon.
+		# Once she accepts, clear the temporary refusal trait so the
+		# resulting spouse state is internally consistent.
+		scope:recipient = {
+
+			if = {
+
+				limit = {
+					this = character:Black_Unicorn_1
+					scope:actor = character:Segrellion_60
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+		}
+
 
 		scope:actor.primary_spouse = {
 			save_scope_as = segrellion_first_wife
