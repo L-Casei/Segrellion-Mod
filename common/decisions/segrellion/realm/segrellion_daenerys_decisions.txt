@@ -223,18 +223,120 @@ segrellion_daenerys_sail_for_westeros_decision = {
 	# =====================================================
 	# AI
 	#
-	# AI departure is controlled exclusively by the
-	# Daenerys invasion scheduler.
+	# Do NOT disable the decision for AI. The scheduler is a
+	# recovery layer, not the only way Daenerys is allowed to sail.
+	# This gives the normal decision system a second independent
+	# route to launch the invasion when the story state is valid.
 	# =====================================================
 
-	ai_check_interval = 30
+	ai_check_interval = 14
 
 	ai_potential = {
-		always = no
+		this = character:Targaryen_9
+		is_ai = yes
+
+		NOT = {
+			has_game_rule = segrellion_daenerys_destiny_free_cities
+		}
+
+		NOT = {
+			has_character_flag = segrellion_daenerys_young_griff_throne_pact
+		}
 	}
 
 	ai_will_do = {
 		base = 0
+
+		# Absolute emergency. If the decision is valid this late,
+		# there is no reason for AI Daenerys to keep waiting.
+		modifier = {
+			add = 20000
+			current_date >= 8306.1.1
+		}
+
+		# SUPER AGGRESSIVE: may sail as soon as ~40% readiness.
+		modifier = {
+			add = 1500
+			OR = {
+				has_game_rule = segrellion_daenerys_aggression_super_aggressive
+				has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+				has_character_flag = segrellion_daenerys_random_super_aggressive
+			}
+			exists = var:segrellion_daenerys_fleet_readiness
+			var:segrellion_daenerys_fleet_readiness >= 40
+		}
+
+		# AGGRESSIVE: sail readily from 303 AC at ~50% readiness.
+		modifier = {
+			add = 1500
+			OR = {
+				has_game_rule = segrellion_daenerys_aggression_aggressive
+				has_character_flag = segrellion_daenerys_invasion_profile_aggressive
+				has_character_flag = segrellion_daenerys_random_aggressive
+			}
+			current_date >= 8303.1.1
+			exists = var:segrellion_daenerys_fleet_readiness
+			var:segrellion_daenerys_fleet_readiness >= 50
+		}
+
+		# DEFAULT: 75% is the intended threshold. Start trying in
+		# 303, become very eager through 304, and make 305 decisive.
+		modifier = {
+			add = 300
+			OR = {
+				has_game_rule = segrellion_daenerys_aggression_default
+				has_character_flag = segrellion_daenerys_invasion_profile_default
+				has_character_flag = segrellion_daenerys_random_default
+			}
+			current_date >= 8303.1.1
+			exists = var:segrellion_daenerys_fleet_readiness
+			var:segrellion_daenerys_fleet_readiness >= 75
+		}
+
+		modifier = {
+			add = 1200
+			OR = {
+				has_game_rule = segrellion_daenerys_aggression_default
+				has_character_flag = segrellion_daenerys_invasion_profile_default
+				has_character_flag = segrellion_daenerys_random_default
+			}
+			current_date >= 8304.1.1
+			exists = var:segrellion_daenerys_fleet_readiness
+			var:segrellion_daenerys_fleet_readiness >= 75
+		}
+
+		modifier = {
+			add = 15000
+			OR = {
+				has_game_rule = segrellion_daenerys_aggression_default
+				has_character_flag = segrellion_daenerys_invasion_profile_default
+				has_character_flag = segrellion_daenerys_random_default
+			}
+			current_date >= 8305.1.1
+		}
+
+		# PASSIVE: waits for 90% in 305, but 306 is absolute.
+		modifier = {
+			add = 1200
+			OR = {
+				has_game_rule = segrellion_daenerys_aggression_passive
+				has_character_flag = segrellion_daenerys_invasion_profile_passive
+				has_character_flag = segrellion_daenerys_random_passive
+			}
+			current_date >= 8305.1.1
+			exists = var:segrellion_daenerys_fleet_readiness
+			var:segrellion_daenerys_fleet_readiness >= 90
+		}
+
+		modifier = {
+			add = 15000
+			OR = {
+				has_game_rule = segrellion_daenerys_aggression_passive
+				has_character_flag = segrellion_daenerys_invasion_profile_passive
+				has_character_flag = segrellion_daenerys_random_passive
+			}
+			current_date >= 8306.1.1
+		}
 	}
 
 
