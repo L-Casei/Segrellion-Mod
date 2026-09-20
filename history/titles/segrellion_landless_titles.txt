@@ -40,3 +40,170 @@ d_segrellion_bold_unicorns = {
 		}
 	}
 }
+
+# =========================================================
+# THE TRUE SENTINELS
+#
+# Canon succession:
+# Hugh Vladwyn -> Addam Vladwyn -> Baenior Vladwyn
+# -> Joffrey Vladwyn.
+#
+# From their founding until the 300 AC campaign they operate
+# from Myr. In 300 AC they move to Storm's End to serve in
+# Aegon's Westerosi campaign.
+# =========================================================
+
+d_laamp_true_sentinels = {
+
+	8217.1.1 = {
+
+		liege = 0
+		holder = Vladwyn_21 # Hugh, founder of the True Sentinels
+		government = landless_adventurer_government
+
+		succession_laws = {
+			landless_adventurer_succession_law
+		}
+
+		effect = {
+
+			holder ?= {
+
+				if = {
+					limit = {
+						NOT = {
+							has_realm_law = camp_purpose_mercenaries
+						}
+					}
+
+					add_realm_law_skip_effects = camp_purpose_mercenaries
+				}
+
+
+				# A real professional company, smaller than the Golden
+				# Company but dangerous enough to matter in any war.
+				create_maa_regiment = {
+					type = black_sentinels
+					check_can_recruit = no
+					size = 24
+				}
+
+				create_maa_regiment = {
+					type = armored_footmen
+					check_can_recruit = no
+					size = 12
+				}
+
+				create_maa_regiment = {
+					type = crossbowmen
+					check_can_recruit = no
+					size = 8
+				}
+
+				create_maa_regiment = {
+					type = armored_horsemen
+					check_can_recruit = no
+					size = 6
+				}
+
+				create_maa_regiment = {
+					type = trebuchet
+					check_can_recruit = no
+					size = 4
+				}
+
+
+				add_gold = 300
+				add_prestige = 500
+
+				# Historical mercenary companies should not receive the
+				# generic Roads to Power opening sequence.
+				add_character_flag = block_laamp_starting_event
+			}
+
+
+			create_landless_adventurer_title_history_effect = yes
+
+			set_variable = {
+				name = adventurer_creation_reason
+				value = flag:historical
+			}
+
+			if = {
+				limit = {
+					NOT = {
+						has_dlc_feature = roads_to_power
+					}
+				}
+
+				holder ?= {
+					destroy_title = prev
+				}
+			}
+
+
+			agot_safe_move_laamp_history_effect = {
+				CASTLE = title:b_myr
+			}
+		}
+	}
+
+
+	# Hugh dies in battle. His elder son Addam inherits the company.
+	8250.1.2 = {
+
+		holder = Vladwyn_22
+
+		effect = {
+			agot_safe_move_laamp_history_effect = {
+				CASTLE = title:b_myr
+			}
+		}
+	}
+
+
+	# Addam's death leaves Baenior as commander for the last
+	# two months of his life.
+	8295.6.2 = {
+
+		holder = Vladwyn_23
+
+		effect = {
+			agot_safe_move_laamp_history_effect = {
+				CASTLE = title:b_myr
+			}
+		}
+	}
+
+
+	# Joffrey succeeds his uncle and inherits the same company,
+	# not a newly-created replacement.
+	8295.8.2 = {
+
+		holder = Vladwyn_5
+
+		effect = {
+			agot_safe_move_laamp_history_effect = {
+				CASTLE = title:b_myr
+			}
+		}
+	}
+
+
+	# 300 AC is the explicit exception: Joffrey brings the
+	# True Sentinels west to Aegon's position at Storm's End.
+	8300.1.1 = {
+
+		effect = {
+
+			agot_safe_move_laamp_history_effect = {
+				CASTLE = title:b_storms_end
+			}
+
+			destroy_landless_title_no_dlc_effect = {
+				DATE = 8300.1.1
+			}
+		}
+	}
+}
+
