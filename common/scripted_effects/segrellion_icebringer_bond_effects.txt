@@ -15,3 +15,101 @@ segrellion_gain_icebringer_bond_xp_effect = {
 		}
 	}
 }
+
+# =========================================================
+# ICEBRINGER BOND - OWNERSHIP MAINTENANCE
+#
+# The Bond with Icebringer trait is permanent once earned,
+# but its gameplay effects are only active while the
+# character actually owns Icebringer.
+# =========================================================
+
+segrellion_icebringer_bond_maintenance_effect = {
+
+	if = {
+
+		limit = {
+
+			any_character_artifact = {
+				has_variable = segrellion_icebringer_artifact
+			}
+		}
+
+
+		# Existing bearers immediately regain the active bond
+		# when Icebringer returns to their possession.
+
+		if = {
+
+			limit = {
+				has_trait = segrellion_icebringer_bearer_trait
+			}
+
+
+			make_trait_active = segrellion_icebringer_bearer_trait
+		}
+
+
+		# First ownership: queue one of the visible bond events.
+
+		else_if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_icebringer_bond_event_queued
+				}
+			}
+
+
+			add_character_flag = segrellion_icebringer_bond_event_queued
+
+
+			trigger_event = {
+
+				id = segrellion_icebringer_bond.0000
+
+				days = { 3 10 }
+			}
+		}
+
+
+		# Keep a light 30-day watcher attached to the current
+		# owner so transfers are noticed quickly.
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_icebringer_bond_watch_running
+				}
+			}
+
+
+			add_character_flag = segrellion_icebringer_bond_watch_running
+
+
+			trigger_event = {
+
+				id = segrellion_icebringer_bond.0099
+
+				days = 30
+			}
+		}
+	}
+
+
+	# The trait stays visible forever, but becomes inactive
+	# the moment the character no longer owns Icebringer.
+
+	else_if = {
+
+		limit = {
+			has_trait = segrellion_icebringer_bearer_trait
+		}
+
+
+		make_trait_inactive = segrellion_icebringer_bearer_trait
+	}
+}
