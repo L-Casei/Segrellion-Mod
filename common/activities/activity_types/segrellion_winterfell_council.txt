@@ -205,19 +205,27 @@ activity_segrellion_winterfell_council = {
 
 	max_guests = 100
 
+	# Keep room for the scripted AI invitation pass below.
+	# These slots are specifically intended for characters added
+	# by effects/events after the planner creates the activity.
+	reserved_guest_slots = 40
+
 	# Do not let a temporary lack of valid invitees prevent the
 	# story-critical Council from being created.
 	allow_zero_guest_invites = yes
 
 	guest_invite_rules = {
 
+		# Optional rules shown in the planner.
+		# Do NOT duplicate rules that are already in defaults:
+		# CK3 appends defaults to the available rule list itself.
 		rules = {
-			2 = activity_invite_rule_segrellion_northern_counts
-			2 = activity_invite_rule_close_family
 			2 = activity_invite_rule_friends
 			3 = activity_invite_rule_segrellion_nights_watch
 		}
 
+		# Player defaults. AI attendance is enforced separately in
+		# on_start so Jon can never host an empty Winterfell Council.
 		defaults = {
 			1 = activity_invite_rule_segrellion_northern_great_lords
 			1 = activity_invite_rule_segrellion_northern_counts
@@ -244,6 +252,35 @@ activity_segrellion_winterfell_council = {
 
 	guest_join_chance = {
 		base = 100
+	}
+
+
+	# =====================================================
+	# AI GUEST GUARANTEE
+	#
+	# The normal planner may choose the activity correctly but
+	# still leave an AI host with zero selected guest rules.
+	# Once the activity object exists, force the political
+	# invitations through CK3's real invite/accept pipeline.
+	# =====================================================
+
+	on_start = {
+
+		scope:host = {
+
+			if = {
+
+				limit = {
+
+					is_ai = yes
+
+					segrellion_is_current_jon_trigger = yes
+				}
+
+
+				segrellion_winterfell_council_ensure_attendees_effect = yes
+			}
+		}
 	}
 
 
