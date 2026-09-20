@@ -51,7 +51,19 @@ segrellion_second_wife_candidate_trigger = {
 	is_married = no
 	is_betrothed = no
 	is_imprisoned = no
-	can_marry_trigger = yes
+
+	# Do not call can_marry_trigger here. AGOT story locks expose raw
+	# NOT_story_type_trigger text and incorrectly exclude Visenya.
+	custom_description = {
+		text = segrellion_second_wife_refusing_marriage_requirement
+		OR = {
+			NOT = { has_trait = refusing_marriage }
+			AND = {
+				this = character:Black_Unicorn_1
+				scope:actor = character:Segrellion_60
+			}
+		}
+	}
 
 
 	custom_description = {

@@ -389,8 +389,9 @@ segrellion_petition_high_septon_second_wife_interaction = {
 # =========================================================
 # TAKE HER AS A SECOND WIFE
 #
-# The High Septon must first approve, then the decision must
-# unlock the custom secondary-wife slot.
+# Direct character interaction. This MUST stay separate from
+# the portrait-slot finder so right-clicking a woman opens the
+# normal proposal window instead of the concubine picker.
 # =========================================================
 
 segrellion_take_as_second_wife_interaction = {
@@ -403,35 +404,9 @@ segrellion_take_as_second_wife_interaction = {
 	use_diplomatic_range = yes
 
 	desc = segrellion_take_as_second_wife_interaction_desc
+	send_name = segrellion_take_as_second_wife_interaction
 	greeting = positive
 	notification_text = segrellion_take_as_second_wife_notification
-
-	# Same recipient picker contract as AGOT's find_concubine interaction.
-	interface = concubine_list
-	needs_recipient_to_open = no
-
-	redirect = {
-		scope:actor = { save_scope_as = secondary_actor }
-		if = {
-			limit = { scope:actor != scope:recipient }
-			scope:recipient = { save_scope_as = secondary_recipient }
-		}
-	}
-
-	populate_recipient_list = {
-		every_living_character = {
-			limit = {
-				segrellion_second_wife_candidate_trigger = yes
-				in_diplomatic_range = scope:actor
-			}
-			add_to_list = characters
-		}
-	}
-
-	can_be_picked = {
-		segrellion_second_wife_candidate_trigger = yes
-		in_diplomatic_range = scope:actor
-	}
 
 	ai_maybe = yes
 	can_send_despite_rejection = yes
@@ -442,29 +417,23 @@ segrellion_take_as_second_wife_interaction = {
 
 	is_shown = {
 
-		scope:actor = {
+		scope:actor != scope:recipient
 
+		scope:actor = {
 			is_alive = yes
 			is_male = yes
 			is_adult = yes
 			is_married = yes
-
 			number_of_spouses = 1
-
 			segrellion_has_second_wife_slot_trigger = yes
 		}
 
-
-		# Opening from the empty portrait initially targets the actor.
-		trigger_if = {
-			limit = { scope:actor != scope:recipient }
-			scope:recipient = {
-				is_alive = yes
-				is_female = yes
-				is_adult = yes
-				is_married = no
-				is_betrothed = no
-			}
+		scope:recipient = {
+			is_alive = yes
+			is_female = yes
+			is_adult = yes
+			is_married = no
+			is_betrothed = no
 		}
 	}
 
@@ -476,12 +445,8 @@ segrellion_take_as_second_wife_interaction = {
 			is_incapable = no
 		}
 
-
-		trigger_if = {
-			limit = { scope:actor != scope:recipient }
-			scope:recipient = {
-				segrellion_second_wife_candidate_trigger = yes
-			}
+		scope:recipient = {
+			segrellion_second_wife_candidate_trigger = yes
 		}
 	}
 
@@ -546,10 +511,10 @@ segrellion_take_as_second_wife_interaction = {
 		base = -35
 
 
-		# Visenya accepting Daemon through this interaction is guaranteed.
+		# Visenya and Daemon receive a strong story-specific exception.
 		modifier = {
 
-			add = 1000
+			add = 300
 			desc = segrellion_second_wife_visenya_daemon_reason
 
 			scope:actor = character:Segrellion_60
@@ -779,15 +744,430 @@ segrellion_take_as_second_wife_interaction = {
 		}
 
 
-		modifier = {
+	}
 
-			add = -1000
-			desc = segrellion_second_wife_refusing_marriage_reason
+
+	ai_frequency = 0
+}
+
+
+# =========================================================
+# FIND A SECOND WIFE
+#
+# Used ONLY by the custom empty portrait in the character
+# window. This follows the native find_concubine redirect
+# contract so actor / recipient scopes do not get scrambled.
+# =========================================================
+
+segrellion_find_second_wife_interaction = {
+
+	category = interaction_category_diplomacy
+	icon = icon_marriage
+
+	interface_priority = 89
+	use_diplomatic_range = yes
+
+	desc = segrellion_find_second_wife_interaction_desc
+	send_name = segrellion_take_as_second_wife_interaction
+	greeting = positive
+	notification_text = segrellion_take_as_second_wife_notification
+
+	interface = concubine_list
+	needs_recipient_to_open = no
+
+	redirect = {
+
+		scope:actor = {
+			save_scope_as = secondary_actor
+		}
+
+		if = {
+
+			limit = {
+				scope:actor != scope:recipient
+			}
 
 			scope:recipient = {
-				has_trait = refusing_marriage
+				save_scope_as = secondary_recipient
 			}
 		}
+	}
+
+	populate_recipient_list = {
+
+		scope:actor = {
+
+			every_living_character = {
+
+				limit = {
+					segrellion_second_wife_candidate_trigger = yes
+					in_diplomatic_range = scope:actor
+				}
+
+				add_to_list = characters
+			}
+		}
+	}
+
+	can_be_picked = {
+		segrellion_second_wife_candidate_trigger = yes
+		in_diplomatic_range = scope:actor
+	}
+
+	ai_maybe = yes
+	can_send_despite_rejection = yes
+
+	ai_min_reply_days = 1
+	ai_max_reply_days = 3
+
+
+	is_shown = {
+
+		scope:actor = {
+
+			is_alive = yes
+			is_male = yes
+			is_adult = yes
+			is_married = yes
+			number_of_spouses = 1
+			segrellion_has_second_wife_slot_trigger = yes
+
+			# Native finder contract: before a candidate is selected,
+			# the UI opens with the player as both actor and recipient.
+			trigger_if = {
+				limit = {
+					NOT = { exists = scope:secondary_recipient }
+				}
+				scope:actor = scope:recipient
+			}
+		}
+
+		trigger_if = {
+
+			limit = {
+				scope:actor != scope:recipient
+			}
+
+			scope:recipient = {
+				segrellion_second_wife_candidate_trigger = yes
+			}
+		}
+	}
+
+
+	is_valid_showing_failures_only = {
+
+		scope:actor = {
+			is_imprisoned = no
+			is_incapable = no
+		}
+
+		trigger_if = {
+
+			limit = {
+				scope:actor != scope:recipient
+			}
+
+			scope:recipient = {
+				segrellion_second_wife_candidate_trigger = yes
+			}
+		}
+	}
+
+
+	on_accept = {
+
+		scope:actor.primary_spouse = {
+			save_scope_as = segrellion_first_wife
+		}
+
+
+		scope:actor = {
+
+			# Low-level spouse effect deliberately bypasses the
+			# monogamous faith cap.
+			add_spouse = scope:recipient
+
+
+			if = {
+
+				limit = {
+					exists = scope:segrellion_first_wife
+				}
+
+				set_primary_spouse = scope:segrellion_first_wife
+			}
+
+
+			add_character_flag = segrellion_two_wives_active
+
+
+			send_interface_toast = {
+
+				type = event_toast_effect_good
+
+				title = segrellion_second_wife_marriage_complete_toast
+
+				left_icon = scope:recipient
+			}
+		}
+	}
+
+
+	on_decline = {
+
+		scope:actor = {
+
+			send_interface_toast = {
+
+				type = event_toast_effect_bad
+
+				title = segrellion_second_wife_candidate_declined_toast
+
+				left_icon = scope:recipient
+			}
+		}
+	}
+
+
+	ai_accept = {
+
+		base = -35
+
+
+		# Visenya and Daemon receive a strong story-specific exception.
+		modifier = {
+
+			add = 300
+			desc = segrellion_second_wife_visenya_daemon_reason
+
+			scope:actor = character:Segrellion_60
+			scope:recipient = character:Black_Unicorn_1
+		}
+
+
+		# A woman already living in the petitioner's court is much
+		# more likely to consider the arrangement.
+		modifier = {
+
+			add = 60
+			desc = segrellion_second_wife_courtier_reason
+
+			scope:recipient = {
+				is_courtier_of = scope:actor
+			}
+		}
+
+
+		opinion_modifier = {
+
+			opinion_target = scope:actor
+			who = scope:recipient
+			multiplier = 0.50
+		}
+
+
+		modifier = {
+
+			add = 80
+			desc = segrellion_second_wife_lover_reason
+
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+		}
+
+
+		modifier = {
+
+			add = 160
+			desc = segrellion_second_wife_soulmate_reason
+
+			scope:recipient = {
+				has_relation_soulmate = scope:actor
+			}
+		}
+
+
+		modifier = {
+			add = 20
+			desc = segrellion_second_wife_lustful_reason
+			scope:recipient = { has_trait = lustful }
+		}
+
+		modifier = {
+			add = 15
+			desc = segrellion_second_wife_ambitious_reason
+			scope:recipient = { has_trait = ambitious }
+		}
+
+		modifier = {
+			add = 15
+			desc = segrellion_second_wife_cynical_reason
+			scope:recipient = { has_trait = cynical }
+		}
+
+		modifier = {
+			add = 10
+			desc = segrellion_second_wife_trusting_reason
+			scope:recipient = { has_trait = trusting }
+		}
+
+		modifier = {
+			add = 10
+			desc = segrellion_second_wife_content_reason
+			scope:recipient = { has_trait = content }
+		}
+
+		modifier = {
+			add = -25
+			desc = segrellion_second_wife_chaste_reason
+			scope:recipient = { has_trait = chaste }
+		}
+
+		modifier = {
+			add = -35
+			desc = segrellion_second_wife_zealous_reason
+			scope:recipient = { has_trait = zealous }
+		}
+
+		modifier = {
+			add = -20
+			desc = segrellion_second_wife_arrogant_reason
+			scope:recipient = { has_trait = arrogant }
+		}
+
+		modifier = {
+			add = -15
+			desc = segrellion_second_wife_stubborn_reason
+			scope:recipient = { has_trait = stubborn }
+		}
+
+
+		# Same faith helps. A different faith makes a second-wife
+		# arrangement substantially harder.
+		modifier = {
+
+			add = 15
+			desc = segrellion_second_wife_same_faith_reason
+
+			scope:recipient = {
+				faith = scope:actor.faith
+			}
+		}
+
+		modifier = {
+
+			add = -30
+			desc = segrellion_second_wife_different_faith_reason
+
+			scope:recipient = {
+				faith != scope:actor.faith
+			}
+		}
+
+
+		# Noblewomen are more reluctant, especially landed ladies.
+		# A famous dynasty also makes the proposal politically harder.
+		modifier = {
+
+			add = -10
+			desc = segrellion_second_wife_notable_dynasty_reason
+
+			scope:recipient = {
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 2
+					dynasty_prestige_level < 4
+				}
+			}
+		}
+
+
+		modifier = {
+
+			add = -25
+			desc = segrellion_second_wife_powerful_dynasty_reason
+
+			scope:recipient = {
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 4
+					dynasty_prestige_level < 7
+				}
+			}
+		}
+
+
+		modifier = {
+
+			add = -45
+			desc = segrellion_second_wife_great_dynasty_reason
+
+			scope:recipient = {
+				exists = dynasty
+
+				dynasty = {
+					dynasty_prestige_level >= 7
+				}
+			}
+		}
+
+
+		modifier = {
+
+			add = -15
+			desc = segrellion_second_wife_noblewoman_reason
+
+			scope:recipient = {
+				is_lowborn = no
+			}
+		}
+
+
+		modifier = {
+
+			add = -20
+			desc = segrellion_second_wife_countess_reason
+
+			scope:recipient = {
+				highest_held_title_tier = tier_county
+			}
+		}
+
+		modifier = {
+
+			add = -40
+			desc = segrellion_second_wife_duchess_reason
+
+			scope:recipient = {
+				highest_held_title_tier = tier_duchy
+			}
+		}
+
+		modifier = {
+
+			add = -70
+			desc = segrellion_second_wife_queen_reason
+
+			scope:recipient = {
+				highest_held_title_tier = tier_kingdom
+			}
+		}
+
+		modifier = {
+
+			add = -100
+			desc = segrellion_second_wife_empress_reason
+
+			scope:recipient = {
+				highest_held_title_tier >= tier_empire
+			}
+		}
+
+
 	}
 
 
