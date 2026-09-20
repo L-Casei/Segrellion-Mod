@@ -29,6 +29,8 @@ segrellion_petition_high_septon_second_wife_interaction = {
 
 	auto_accept = yes
 	send_options_exclusive = no
+	# Actor-wide: replacing the High Septon must not allow another immediate roll.
+	cooldown = { years = 1 }
 
 
 	should_use_extra_icon = {
@@ -404,6 +406,33 @@ segrellion_take_as_second_wife_interaction = {
 	greeting = positive
 	notification_text = segrellion_take_as_second_wife_notification
 
+	# Same recipient picker contract as AGOT's find_concubine interaction.
+	interface = concubine_list
+	needs_recipient_to_open = no
+
+	redirect = {
+		scope:actor = { save_scope_as = secondary_actor }
+		if = {
+			limit = { scope:actor != scope:recipient }
+			scope:recipient = { save_scope_as = secondary_recipient }
+		}
+	}
+
+	populate_recipient_list = {
+		every_living_character = {
+			limit = {
+				segrellion_second_wife_candidate_trigger = yes
+				in_diplomatic_range = scope:actor
+			}
+			add_to_list = characters
+		}
+	}
+
+	can_be_picked = {
+		segrellion_second_wife_candidate_trigger = yes
+		in_diplomatic_range = scope:actor
+	}
+
 	ai_maybe = yes
 	can_send_despite_rejection = yes
 
@@ -412,8 +441,6 @@ segrellion_take_as_second_wife_interaction = {
 
 
 	is_shown = {
-
-		scope:actor != scope:recipient
 
 		scope:actor = {
 
@@ -428,14 +455,16 @@ segrellion_take_as_second_wife_interaction = {
 		}
 
 
-		scope:recipient = {
-
-			is_alive = yes
-			is_female = yes
-			is_adult = yes
-
-			is_married = no
-			is_betrothed = no
+		# Opening from the empty portrait initially targets the actor.
+		trigger_if = {
+			limit = { scope:actor != scope:recipient }
+			scope:recipient = {
+				is_alive = yes
+				is_female = yes
+				is_adult = yes
+				is_married = no
+				is_betrothed = no
+			}
 		}
 	}
 
@@ -448,38 +477,10 @@ segrellion_take_as_second_wife_interaction = {
 		}
 
 
-		scope:recipient = {
-
-			is_imprisoned = no
-			can_marry_trigger = yes
-
-
-			custom_description = {
-
-				text = segrellion_second_wife_incest_requirement
-
-				OR = {
-
-					NOT = {
-						is_close_family_of = scope:actor
-					}
-
-					scope:actor = {
-
-						faith = {
-							has_doctrine = doctrine_consanguinity_siblings
-						}
-					}
-
-					AND = {
-
-						scope:actor = {
-							agot_exceptionalism_incest_allowed = yes
-						}
-
-						agot_exceptionalism_incest_allowed = yes
-					}
-				}
+		trigger_if = {
+			limit = { scope:actor != scope:recipient }
+			scope:recipient = {
+				segrellion_second_wife_candidate_trigger = yes
 			}
 		}
 	}

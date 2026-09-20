@@ -40,3 +40,45 @@ segrellion_has_second_wife_slot_trigger = {
 	has_character_flag = segrellion_two_wives_authorized
 	has_character_flag = segrellion_second_wife_slot_unlocked
 }
+
+# Candidate scope; scope:actor is the prospective husband.
+# Shared by the picker and the direct interaction's validation.
+segrellion_second_wife_candidate_trigger = {
+	this != scope:actor
+	is_alive = yes
+	is_female = yes
+	is_adult = yes
+	is_married = no
+	is_betrothed = no
+	is_imprisoned = no
+	can_marry_trigger = yes
+
+
+	custom_description = {
+
+		text = segrellion_second_wife_incest_requirement
+
+		OR = {
+
+			NOT = {
+				is_close_family_of = scope:actor
+			}
+
+			scope:actor = {
+
+				faith = {
+					has_doctrine = doctrine_consanguinity_siblings
+				}
+			}
+
+			AND = {
+
+				scope:actor = {
+					agot_exceptionalism_incest_allowed = yes
+				}
+
+				agot_exceptionalism_incest_allowed = yes
+			}
+		}
+	}
+}
