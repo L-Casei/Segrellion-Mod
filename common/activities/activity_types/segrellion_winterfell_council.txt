@@ -33,9 +33,9 @@ activity_segrellion_winterfell_council = {
 		always = yes
 	}
 
-	can_plan = {
-		always = yes
-	}
+	# Modern activity planner gate.
+	# "can_plan" is obsolete in the current activity schema.
+	can_always_plan = yes
 
 	can_start = {
 		always = yes
@@ -68,7 +68,21 @@ activity_segrellion_winterfell_council = {
 
 	cost = {
 		prestige = {
-			value = 300
+
+			# Story-critical AI Jon must never fail to plan the
+			# Council because his prestige is low or negative.
+			if = {
+				limit = {
+					is_ai = yes
+					segrellion_is_current_jon_trigger = yes
+					has_character_flag = segrellion_jon_winterfell_council_called
+				}
+				value = 0
+			}
+
+			else = {
+				value = 300
+			}
 		}
 	}
 
@@ -103,6 +117,20 @@ activity_segrellion_winterfell_council = {
 			}
 
 			add = 1000
+		}
+	}
+
+	# Required by the current AI planner to actually select a
+	# valid location after choosing this activity type.
+	ai_will_select_province = {
+		value = 0
+
+		if = {
+			limit = {
+				this = title:c_winterfell.title_province
+			}
+
+			add = 10000
 		}
 	}
 
@@ -173,6 +201,10 @@ activity_segrellion_winterfell_council = {
 	# =====================================================
 
 	max_guests = 100
+
+	# Do not let a temporary lack of valid invitees prevent the
+	# story-critical Council from being created.
+	allow_zero_guest_invites = yes
 
 	guest_invite_rules = {
 
@@ -585,9 +617,19 @@ activity_segrellion_winterfell_council = {
 	# AI
 	# =====================================================
 
-	ai_check_interval = 1
+	# Check every month at every landed tier Jon can hold.
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 1
+		duchy = 1
+		kingdom = 1
+		empire = 1
+		hegemony = 1
+	}
 
+	# Far above the normal activity threshold. Once the Council
+	# is available, Jon should choose it over ordinary activities.
 	ai_will_do = {
-		value = 1000000
+		value = 1000
 	}
 }
