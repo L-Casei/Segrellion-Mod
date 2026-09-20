@@ -1,0 +1,246 @@
+# ============================================================
+# AGOT DRAGON EGG LAYING OVERRIDE
+#
+# Preserve AGOT's normal egg-laying behaviour, but reserve
+# Vhalyrax's first missing eggs for her scripted canon children.
+# ============================================================
+
+agot_spawn_laid_egg = {
+
+	$OWNER_SCOPE$ = {
+		set_variable = {
+			name = spawn_eggs
+			value = 0
+		}
+	}
+
+	$DRAGON_PARENT$ = {
+
+		save_scope_as = dragon_parent
+
+		if = {
+			limit = {
+				any_relation = {
+					type = soulmate
+					count > 0
+				}
+			}
+
+			random_relation = {
+				type = soulmate
+				save_scope_as = dragon_parent_other
+			}
+		}
+	}
+
+	while = {
+
+		limit = {
+			$OWNER_SCOPE$.var:spawn_eggs < $AMOUNT_OF_EGGS_TO_SPAWN$
+		}
+
+
+		# ====================================================
+		# VHALYRAX -> MAENOR
+		#
+		# The first still-missing canon egg is always Maenor's
+		# frost egg, regardless of when Vhalyrax lays it.
+		# ====================================================
+
+		if = {
+
+			limit = {
+
+				scope:dragon_parent = {
+
+					OR = {
+						this = character:dragon_vhalyrax
+						has_character_flag = segrellion_vhalyrax_dragon
+					}
+				}
+
+				NOT = {
+					exists = global_var:segrellion_historical_maenor
+				}
+
+				NOT = {
+					exists = global_var:segrellion_historical_maenor_egg
+				}
+			}
+
+			create_artifact_dragon_egg_frost_effect = {
+				OWNER = $OWNER_SCOPE$
+			}
+
+			scope:newly_created_artifact ?= {
+
+				set_variable = {
+					name = segrellion_maenor_egg
+					value = yes
+				}
+
+				set_variable = {
+					name = segrellion_vhalyrax_egg_parentage
+					value = yes
+				}
+
+				set_variable = {
+					name = agot_artifact_cannot_gift
+					value = yes
+				}
+
+				set_artifact_description = segrellion_maenor_egg_desc
+
+				set_global_variable = {
+					name = segrellion_historical_maenor_egg
+					value = this
+				}
+			}
+		}
+
+
+		# ====================================================
+		# VHALYRAX -> NIGHTDANCER
+		#
+		# Once Maenor's egg exists, the next still-missing canon
+		# egg becomes Nightdancer's lime egg.
+		# ====================================================
+
+		else_if = {
+
+			limit = {
+
+				scope:dragon_parent = {
+
+					OR = {
+						this = character:dragon_vhalyrax
+						has_character_flag = segrellion_vhalyrax_dragon
+					}
+				}
+
+				OR = {
+					exists = global_var:segrellion_historical_maenor
+					exists = global_var:segrellion_historical_maenor_egg
+				}
+
+				NOT = {
+					exists = global_var:segrellion_historical_nightdancer
+				}
+
+				NOT = {
+					exists = global_var:segrellion_historical_nightdancer_egg
+				}
+			}
+
+			create_artifact_dragon_egg_lime_effect = {
+				OWNER = $OWNER_SCOPE$
+			}
+
+			scope:newly_created_artifact ?= {
+
+				set_variable = {
+					name = segrellion_nightdancer_egg
+					value = yes
+				}
+
+				set_variable = {
+					name = segrellion_vhalyrax_egg_parentage
+					value = yes
+				}
+
+				set_variable = {
+					name = agot_artifact_cannot_gift
+					value = yes
+				}
+
+				set_artifact_description = segrellion_nightdancer_egg_desc
+
+				set_global_variable = {
+					name = segrellion_historical_nightdancer_egg
+					value = this
+				}
+			}
+		}
+
+
+		# ====================================================
+		# NORMAL AGOT EGG
+		# ====================================================
+
+		else = {
+
+			agot_create_weighted_dragon_egg_artifact = {
+				OWNER = $OWNER_SCOPE$
+			}
+
+			# Any later egg laid by Vhalyrax remains a genuine
+			# child of Vhalyrax, even when it is not a named canon
+			# dragon.
+			if = {
+
+				limit = {
+
+					scope:dragon_parent = {
+
+						OR = {
+							this = character:dragon_vhalyrax
+							has_character_flag = segrellion_vhalyrax_dragon
+						}
+					}
+				}
+
+				scope:newly_created_artifact ?= {
+
+					set_variable = {
+						name = segrellion_vhalyrax_egg_parentage
+						value = yes
+					}
+				}
+			}
+		}
+
+
+		$OWNER_SCOPE$ = {
+			change_variable = {
+				name = spawn_eggs
+				add = 1
+			}
+		}
+	}
+
+
+	# If a natural clutch produced both scripted eggs, the old
+	# dated fallback event no longer needs to create them again.
+	if = {
+
+		limit = {
+
+			scope:dragon_parent = {
+
+				OR = {
+					this = character:dragon_vhalyrax
+					has_character_flag = segrellion_vhalyrax_dragon
+				}
+			}
+
+			OR = {
+				exists = global_var:segrellion_historical_maenor
+				exists = global_var:segrellion_historical_maenor_egg
+			}
+
+			OR = {
+				exists = global_var:segrellion_historical_nightdancer
+				exists = global_var:segrellion_historical_nightdancer_egg
+			}
+		}
+
+		scope:dragon_parent = {
+			add_character_flag = segrellion_vhalyrax_first_clutch_laid
+		}
+	}
+
+
+	$OWNER_SCOPE$ = {
+		remove_variable = spawn_eggs
+	}
+}
