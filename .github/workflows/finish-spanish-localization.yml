@@ -133,11 +133,9 @@ jobs:
           print(f"Batches: {len(batches)}",flush=True)
 
           def one(i):
-            out=request(f'<div id="s{i:06d}">{prepared[i]}</div>')
-            pat=re.compile(r'<div\b(?=[^>]*\bid=["\']?s'+f'{i:06d}'+r'["\']?)[^>]*>(.*?)</div>',re.I|re.S)
-            m=pat.search(out)
-            if not m: raise RuntimeError(f"String wrapper lost s{i:06d}")
-            return restore(i,m.group(1))
+            # Google may strip an outer div when translating one string.
+            # Protected spans survive, so translate the inner HTML directly.
+            return restore(i,request(prepared[i]))
 
           def batch(indices):
             body="".join(f'<div id="s{i:06d}">{prepared[i]}</div>' for i in indices)
