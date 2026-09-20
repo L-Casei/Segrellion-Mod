@@ -9,7 +9,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 
 	common_interaction = yes
 	interface_priority = 91
-	use_diplomatic_range = yes
+	use_diplomatic_range = no
 
 	desc = segrellion_ask_to_tame_dragon_interaction_desc
 	greeting = neutral
@@ -46,6 +46,41 @@ segrellion_ask_to_tame_dragon_interaction = {
 
 
 	is_valid_showing_failures_only = {
+
+		# Vanilla diplomatic range checks do not behave correctly for
+		# landless adventurers. Use the EP3 camp-distance trigger whenever
+		# either side is a landless adventurer so landless -> landless works.
+		trigger_if = {
+			limit = {
+				scope:actor = {
+					government_has_flag = government_is_landless_adventurer
+				}
+			}
+
+			ep3_laamp_diplo_range_trigger = {
+				TARGET = scope:recipient
+				LAAMP = scope:actor
+			}
+		}
+		trigger_else_if = {
+			limit = {
+				scope:recipient = {
+					government_has_flag = government_is_landless_adventurer
+				}
+			}
+
+			ep3_laamp_diplo_range_trigger = {
+				TARGET = scope:actor
+				LAAMP = scope:recipient
+			}
+		}
+		trigger_else = {
+			scope:recipient = {
+				in_diplomatic_range_trigger = {
+					target = scope:actor
+				}
+			}
+		}
 
 		scope:actor = {
 
@@ -122,17 +157,20 @@ segrellion_ask_to_tame_dragon_interaction = {
 	#
 	# Default answer is "no". Relationship with the holder is
 	# much more important than raw opinion.
+	#
+	# Keep all visible factors on a human-readable scale. No
+	# individual reason should need four-digit acceptance values.
 	# ---------------------------------------------------------
 
 	ai_accept = {
 
-		base = -300
+		base = -40
 
 
 		# Immediate family is almost certain unless a serious hostile
 		# relationship or very bad opinion overwhelms the bonus.
 		modifier = {
-			add = 1000
+			add = 65
 			desc = segrellion_dragon_request_immediate_family_reason
 
 			scope:recipient = {
@@ -145,7 +183,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 
 		# Wider family is a large advantage, but not a guarantee.
 		modifier = {
-			add = 350
+			add = 30
 			desc = segrellion_dragon_request_extended_family_reason
 
 			scope:recipient = {
@@ -158,7 +196,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 
 		# House and dynasty.
 		modifier = {
-			add = 220
+			add = 20
 			desc = segrellion_dragon_request_same_house_reason
 
 			scope:actor = { exists = house }
@@ -170,7 +208,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = 100
+			add = 10
 			desc = segrellion_dragon_request_same_dynasty_reason
 
 			scope:actor = {
@@ -189,7 +227,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 
 		# Blood of the dragon.
 		modifier = {
-			add = 70
+			add = 10
 			desc = segrellion_dragon_request_dragonblood_reason
 
 			scope:actor = {
@@ -198,7 +236,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = 35
+			add = 5
 			desc = segrellion_dragon_request_dragonblood_family_reason
 
 			scope:actor = {
@@ -210,7 +248,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 
 		# Personal relationships.
 		modifier = {
-			add = 850
+			add = 60
 			desc = segrellion_dragon_request_soulmate_reason
 
 			scope:recipient = {
@@ -219,7 +257,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = 650
+			add = 45
 			desc = segrellion_dragon_request_best_friend_reason
 
 			scope:recipient = {
@@ -228,7 +266,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = 250
+			add = 25
 			desc = segrellion_dragon_request_lover_reason
 
 			scope:recipient = {
@@ -237,7 +275,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = 150
+			add = 15
 			desc = segrellion_dragon_request_friend_reason
 
 			scope:recipient = {
@@ -251,13 +289,13 @@ segrellion_ask_to_tame_dragon_interaction = {
 		opinion_modifier = {
 			opinion_target = scope:actor
 			who = scope:recipient
-			multiplier = 0.25
+			multiplier = 0.20
 		}
 
 
 		# Very bad opinion gets extra weight beyond the smooth opinion term.
 		modifier = {
-			add = -350
+			add = -15
 			desc = segrellion_dragon_request_bad_opinion_reason
 
 			scope:recipient = {
@@ -269,7 +307,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = -650
+			add = -25
 			desc = segrellion_dragon_request_terrible_opinion_reason
 
 			scope:recipient = {
@@ -283,7 +321,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 
 		# Rivalries and house hostility can override family blood.
 		modifier = {
-			add = -1800
+			add = -60
 			desc = segrellion_dragon_request_rival_reason
 
 			scope:recipient = {
@@ -292,7 +330,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = -2500
+			add = -90
 			desc = segrellion_dragon_request_nemesis_reason
 
 			scope:recipient = {
@@ -301,7 +339,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = -700
+			add = -25
 			desc = segrellion_dragon_request_house_rivalry_reason
 
 			scope:recipient = {
@@ -312,7 +350,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = -1500
+			add = -50
 			desc = segrellion_dragon_request_house_feud_reason
 
 			scope:recipient = {
@@ -326,56 +364,56 @@ segrellion_ask_to_tame_dragon_interaction = {
 		# Shared personality traits help a little. They are deliberately
 		# small compared with blood, family and personal relationships.
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_brave_reason
 			scope:actor = { has_trait = brave }
 			scope:recipient = { has_trait = brave }
 		}
 
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_ambitious_reason
 			scope:actor = { has_trait = ambitious }
 			scope:recipient = { has_trait = ambitious }
 		}
 
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_just_reason
 			scope:actor = { has_trait = just }
 			scope:recipient = { has_trait = just }
 		}
 
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_diligent_reason
 			scope:actor = { has_trait = diligent }
 			scope:recipient = { has_trait = diligent }
 		}
 
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_patient_reason
 			scope:actor = { has_trait = patient }
 			scope:recipient = { has_trait = patient }
 		}
 
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_compassionate_reason
 			scope:actor = { has_trait = compassionate }
 			scope:recipient = { has_trait = compassionate }
 		}
 
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_honest_reason
 			scope:actor = { has_trait = honest }
 			scope:recipient = { has_trait = honest }
 		}
 
 		modifier = {
-			add = 12
+			add = 3
 			desc = segrellion_dragon_request_shared_trusting_reason
 			scope:actor = { has_trait = trusting }
 			scope:recipient = { has_trait = trusting }
@@ -385,7 +423,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		# Repeated requests become increasingly unwelcome.
 		# Immediate family, soulmates and best friends ignore this escalation.
 		modifier = {
-			add = -100
+			add = -10
 			desc = segrellion_dragon_request_repeat_1_reason
 
 			scope:recipient = {
@@ -407,7 +445,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = -150
+			add = -15
 			desc = segrellion_dragon_request_repeat_2_reason
 
 			scope:recipient = {
@@ -429,7 +467,7 @@ segrellion_ask_to_tame_dragon_interaction = {
 		}
 
 		modifier = {
-			add = -250
+			add = -25
 			desc = segrellion_dragon_request_repeat_3_reason
 
 			scope:recipient = {
