@@ -1832,6 +1832,39 @@ segrellion_young_griff_grant_westerlands_effect = {
 	}
 
 
+	# =====================================================
+	# RECIPIENT SWEARS DIRECTLY TO AEGON
+	#
+	# This was missing here even though the Stormlands grant
+	# already did it. Without this, Joffrey (and any other
+	# Westerlands recipient) becomes independent.
+	# ROOT is Aegon/Young Griff in every caller of this effect.
+	# =====================================================
+
+	scope:segrellion_new_lannister_lord = {
+
+		if = {
+
+			limit = {
+
+				this != root
+
+				NOT = {
+					is_vassal_of = root
+				}
+			}
+
+
+			change_liege = {
+
+				liege = root
+
+				change = scope:segrellion_cersei_lannister_transfer
+			}
+		}
+	}
+
+
 	resolve_title_and_vassal_change = scope:segrellion_cersei_lannister_transfer
 }
 
