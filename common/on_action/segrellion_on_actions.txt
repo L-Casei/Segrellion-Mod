@@ -7332,6 +7332,26 @@ segrellion_daenerys_post_throne_fast_handoff = {
 			# the post-war state from our custom storyline.
 			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
 
+
+			# Existing-save / lost-event repair.
+			#
+			# A real queue attempt creates a 3-day retry guard.
+			# If that guard has expired but the opening still has
+			# not appeared, the old 30-day scheduled flags are stale.
+			if = {
+
+				limit = {
+
+					NOT = {
+						has_character_flag = segrellion_daenerys_post_throne_retry_guard
+					}
+				}
+
+				remove_character_flag = segrellion_daenerys_post_throne_opening_scheduled
+				remove_character_flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
+			}
+
+
 			# Idempotent. It schedules Fallen Crown first when a
 			# defeated monarch exists, otherwise The War Is Won.
 			segrellion_start_daenerys_post_throne_effect = yes
