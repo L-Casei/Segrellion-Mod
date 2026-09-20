@@ -2,6 +2,130 @@
 # SEGRELLION - SECOND WIFE RELIGIOUS CONSEQUENCES
 # =========================================================
 
+# =========================================================
+# CREATE A REAL SECOND MARRIAGE
+#
+# THIS = prospective husband
+# SECOND_WIFE = prospective second wife
+# =========================================================
+
+segrellion_create_second_wife_marriage_effect = {
+
+	$SECOND_WIFE$ = {
+		save_scope_as = segrellion_new_second_wife
+	}
+
+
+	primary_spouse ?= {
+		save_scope_as = segrellion_first_wife
+	}
+
+
+	# Daemon and Young Griff have hard story marriage guards.
+	# Open their scripted window for the exact tick in which
+	# CK3 creates the real spouse relation.
+
+	if = {
+
+		limit = {
+			this = character:Segrellion_60
+		}
+
+		segrellion_daemon_open_story_marriage_window_effect = yes
+	}
+
+
+	else_if = {
+
+		limit = {
+			this = character:IAF_Young_Griff_1
+		}
+
+		segrellion_young_griff_open_story_marriage_window_effect = yes
+	}
+
+
+	# Real CK3 runtime marriage effect.
+	marry = scope:segrellion_new_second_wife
+
+
+	if = {
+
+		limit = {
+			this = character:Segrellion_60
+		}
+
+		segrellion_daemon_close_story_marriage_window_effect = yes
+	}
+
+
+	else_if = {
+
+		limit = {
+			this = character:IAF_Young_Griff_1
+		}
+
+		segrellion_young_griff_close_story_marriage_window_effect = yes
+	}
+
+
+	# Never set success flags or show a success toast unless
+	# CK3 confirms that the second spouse relation really exists.
+
+	if = {
+
+		limit = {
+
+			is_spouse_of = scope:segrellion_new_second_wife
+			number_of_spouses >= 2
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_first_wife
+			}
+
+
+			hidden_effect = {
+
+				set_primary_spouse = scope:segrellion_first_wife
+			}
+		}
+
+
+		add_character_flag = segrellion_two_wives_active
+
+
+		send_interface_toast = {
+
+			type = event_toast_effect_good
+
+			title = segrellion_second_wife_marriage_complete_toast
+
+			left_icon = scope:segrellion_new_second_wife
+		}
+	}
+
+
+	else = {
+
+		remove_character_flag = segrellion_two_wives_active
+
+
+		send_interface_toast = {
+
+			type = event_toast_effect_bad
+
+			title = segrellion_second_wife_marriage_failed_toast
+
+			left_icon = scope:segrellion_new_second_wife
+		}
+	}
+}
+
+
 
 # The High Septon rejected a formal imperial petition.
 # No war. The petitioner is excommunicated and suffers a

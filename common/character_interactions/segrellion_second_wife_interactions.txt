@@ -453,9 +453,6 @@ segrellion_take_as_second_wife_interaction = {
 
 	on_accept = {
 
-		# Visenya's story lock is deliberately bypassed for Daemon.
-		# Once she accepts, clear the temporary refusal trait so the
-		# resulting spouse state is internally consistent.
 		scope:recipient = {
 
 			if = {
@@ -471,42 +468,13 @@ segrellion_take_as_second_wife_interaction = {
 		}
 
 
-		scope:actor.primary_spouse = {
-			save_scope_as = segrellion_first_wife
-		}
-
-
 		scope:actor = {
 
-			# Low-level spouse effect deliberately bypasses the
-			# monogamous faith cap.
-			add_spouse = scope:recipient
-
-
-			if = {
-
-				limit = {
-					exists = scope:segrellion_first_wife
-				}
-
-				set_primary_spouse = scope:segrellion_first_wife
-			}
-
-
-			add_character_flag = segrellion_two_wives_active
-
-
-			send_interface_toast = {
-
-				type = event_toast_effect_good
-
-				title = segrellion_second_wife_marriage_complete_toast
-
-				left_icon = scope:recipient
+			segrellion_create_second_wife_marriage_effect = {
+				SECOND_WIFE = scope:recipient
 			}
 		}
 	}
-
 
 	on_decline = {
 
@@ -790,8 +758,11 @@ segrellion_find_second_wife_interaction = {
 	greeting = positive
 	notification_text = segrellion_take_as_second_wife_notification
 
-	interface = concubine_list
+	# Marriage UI, not concubine UI. This gives the picker the
+	# real marriage-match Prestige Gain information and sorting.
+	interface = marriage
 	needs_recipient_to_open = no
+
 
 	redirect = {
 
@@ -799,17 +770,30 @@ segrellion_find_second_wife_interaction = {
 			save_scope_as = secondary_actor
 		}
 
+
 		if = {
 
 			limit = {
+
+				exists = scope:recipient
 				scope:actor != scope:recipient
 			}
+
 
 			scope:recipient = {
 				save_scope_as = secondary_recipient
 			}
+
+
+			scope:actor = {
+				save_scope_as = recipient
+			}
 		}
 	}
+
+
+	# The plus-slot only contains women whose REAL second-wife
+	# proposal passes the interaction acceptance test.
 
 	populate_recipient_list = {
 
@@ -818,25 +802,54 @@ segrellion_find_second_wife_interaction = {
 			every_living_character = {
 
 				limit = {
+
 					segrellion_second_wife_candidate_trigger = yes
 					in_diplomatic_range = scope:actor
+
+					save_temporary_scope_as = segrellion_second_wife_candidate
+
+
+					scope:actor = {
+
+						is_character_interaction_potentially_accepted = {
+
+							interaction = segrellion_take_as_second_wife_interaction
+
+							recipient = scope:segrellion_second_wife_candidate
+						}
+					}
 				}
+
 
 				add_to_list = characters
 			}
 		}
 	}
 
+
 	can_be_picked = {
+
 		segrellion_second_wife_candidate_trigger = yes
 		in_diplomatic_range = scope:actor
+
+		save_temporary_scope_as = segrellion_second_wife_candidate
+
+
+		scope:actor = {
+
+			is_character_interaction_potentially_accepted = {
+
+				interaction = segrellion_take_as_second_wife_interaction
+
+				recipient = scope:segrellion_second_wife_candidate
+			}
+		}
 	}
 
-	ai_maybe = yes
-	can_send_despite_rejection = yes
 
-	ai_min_reply_days = 1
-	ai_max_reply_days = 3
+	# If she is in this list, there is no second rejection roll.
+	auto_accept = yes
+	ai_instant_response = yes
 
 
 	is_shown = {
@@ -850,23 +863,27 @@ segrellion_find_second_wife_interaction = {
 			number_of_spouses = 1
 			segrellion_has_second_wife_slot_trigger = yes
 
-			# Native finder contract: before a candidate is selected,
-			# the UI opens with the player as both actor and recipient.
+
 			trigger_if = {
+
 				limit = {
 					NOT = { exists = scope:secondary_recipient }
 				}
+
 				scope:actor = scope:recipient
 			}
 		}
 
+
 		trigger_if = {
 
 			limit = {
-				scope:actor != scope:recipient
+				exists = scope:secondary_recipient
 			}
 
-			scope:recipient = {
+
+			scope:secondary_recipient = {
+
 				segrellion_second_wife_candidate_trigger = yes
 			}
 		}
@@ -880,25 +897,25 @@ segrellion_find_second_wife_interaction = {
 			is_incapable = no
 		}
 
+
 		trigger_if = {
 
 			limit = {
-				scope:actor != scope:recipient
+				exists = scope:secondary_recipient
 			}
 
-			scope:recipient = {
+
+			scope:secondary_recipient = {
+
 				segrellion_second_wife_candidate_trigger = yes
 			}
 		}
 	}
 
 
-	on_accept = {
+	on_auto_accept = {
 
-		# Visenya's story lock is deliberately bypassed for Daemon.
-		# Once she accepts, clear the temporary refusal trait so the
-		# resulting spouse state is internally consistent.
-		scope:recipient = {
+		scope:secondary_recipient = {
 
 			if = {
 
@@ -913,54 +930,10 @@ segrellion_find_second_wife_interaction = {
 		}
 
 
-		scope:actor.primary_spouse = {
-			save_scope_as = segrellion_first_wife
-		}
-
-
 		scope:actor = {
 
-			# Low-level spouse effect deliberately bypasses the
-			# monogamous faith cap.
-			add_spouse = scope:recipient
-
-
-			if = {
-
-				limit = {
-					exists = scope:segrellion_first_wife
-				}
-
-				set_primary_spouse = scope:segrellion_first_wife
-			}
-
-
-			add_character_flag = segrellion_two_wives_active
-
-
-			send_interface_toast = {
-
-				type = event_toast_effect_good
-
-				title = segrellion_second_wife_marriage_complete_toast
-
-				left_icon = scope:recipient
-			}
-		}
-	}
-
-
-	on_decline = {
-
-		scope:actor = {
-
-			send_interface_toast = {
-
-				type = event_toast_effect_bad
-
-				title = segrellion_second_wife_candidate_declined_toast
-
-				left_icon = scope:recipient
+			segrellion_create_second_wife_marriage_effect = {
+				SECOND_WIFE = scope:secondary_recipient
 			}
 		}
 	}
@@ -1205,6 +1178,7 @@ segrellion_find_second_wife_interaction = {
 
 
 	}
+
 
 
 	ai_frequency = 0
