@@ -1899,11 +1899,29 @@ segrellion_stannis.2001 = {
 				}
 
 
-				trigger_event = {
+				# If Stannis somehow gained the Iron Throne during
+				# the waiting year, the delayed war is no longer needed.
+				if = {
 
-					id = segrellion_stannis.2001
+					limit = {
 
-					days = 30
+						title:h_the_iron_throne.holder ?= {
+							this = character:Baratheon_3
+						}
+					}
+
+					remove_character_flag = segrellion_stannis_iron_throne_path_delayed
+				}
+
+
+				else = {
+
+					trigger_event = {
+
+						id = segrellion_stannis.2001
+
+						days = 30
+					}
 				}
 			}
 		}
