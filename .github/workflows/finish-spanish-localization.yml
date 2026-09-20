@@ -21,220 +21,170 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import concurrent.futures
-          import json
-          import re
-          import time
-          import urllib.parse
-          import urllib.request
+          import concurrent.futures, json, re, time, urllib.parse, urllib.request
 
-          ROOT = Path("localization")
-          EN = ROOT / "english"
-          ES = ROOT / "spanish"
+          EN = Path("localization/english")
+          ES = Path("localization/spanish")
           ES.mkdir(parents=True, exist_ok=True)
 
-          TERM_MAP = [
-              ("Greater Flamelands", "Grandes Tierras de la Llama"),
-              ("the Greater Flamelands", "las Grandes Tierras de la Llama"),
-              ("The Greater Flamelands", "Las Grandes Tierras de la Llama"),
-              ("the Flamelands", "las Tierras de la Llama"),
-              ("The Flamelands", "Las Tierras de la Llama"),
-              ("Flamelands", "Tierras de la Llama"),
-              ("the Beacon", "el Faro"),
-              ("The Beacon", "El Faro"),
-              ("White Hall", "Salón Blanco"),
-              ("Unicorn Riders", "Jinetes de Unicornio"),
-              ("Black Sentinels", "Centinelas Negros"),
-              ("True Sentinels", "Verdaderos Centinelas"),
-              ("Lord Paramount", "Señor Supremo"),
-              ("Paramountcy", "Señorío Supremo"),
-              ("Iron Throne", "Trono de Hierro"),
-              ("King's Landing", "Desembarco del Rey"),
-              ("Dragonstone", "Rocadragón"),
-              ("Stormlands", "Tierras de la Tormenta"),
-              ("Riverlands", "Tierras de los Ríos"),
-              ("Westerlands", "Tierras del Oeste"),
-              ("the Reach", "el Dominio"),
-              ("The Reach", "El Dominio"),
-              ("Crownlands", "Tierras de la Corona"),
-              ("Night's Watch", "Guardia de la Noche"),
-              ("Kingsguard", "Guardia Real"),
-              ("Old Valyria", "Antigua Valyria"),
-              ("Freehold", "Feudo Franco"),
-              ("High Valyrian", "Alto Valyrio"),
-              ("Black Moon", "Luna Negra"),
-              ("Long Night", "Larga Noche"),
-              ("Stepstones", "Peldaños de Piedra"),
-              ("Winterfell", "Invernalia"),
-              ("Castle Black", "Castillo Negro"),
-              ("White Harbor", "Puerto Blanco"),
-              ("Casterly Rock", "Roca Casterly"),
-              ("Highgarden", "Altojardín"),
-              ("Riverrun", "Aguasdulces"),
-              ("Storm's End", "Bastión de Tormentas"),
-              ("Moat Cailin", "Foso Cailin"),
-              ("Bloody Gate", "Puerta de la Sangre"),
-              ("Gulltown", "Puerto Gaviota"),
-              ("Duskendale", "Valle Oscuro"),
-              ("Tumbleton", "Ladera"),
-              ("Shadow Tower", "Torre Sombría"),
-              ("Nightfort", "Fuerte de la Noche"),
-              ("Red Wedding", "Boda Roja"),
-              ("Free Folk", "Pueblo Libre"),
-              ("Narrow Sea", "Mar Angosto"),
-              ("Seven Kingdoms", "Siete Reinos"),
-              ("King in the North", "Rey en el Norte"),
+          TERMS = [
+              ("Greater Flamelands","Grandes Tierras de la Llama"),("Flamelands","Tierras de la Llama"),
+              ("The Beacon","El Faro"),("the Beacon","el Faro"),("White Hall","Salón Blanco"),
+              ("Unicorn Riders","Jinetes de Unicornio"),("Black Sentinels","Centinelas Negros"),
+              ("True Sentinels","Verdaderos Centinelas"),("Lord Paramount","Señor Supremo"),
+              ("Paramountcy","Señorío Supremo"),("Iron Throne","Trono de Hierro"),
+              ("King's Landing","Desembarco del Rey"),("Dragonstone","Rocadragón"),
+              ("Stormlands","Tierras de la Tormenta"),("Riverlands","Tierras de los Ríos"),
+              ("Westerlands","Tierras del Oeste"),("The Reach","El Dominio"),("the Reach","el Dominio"),
+              ("Crownlands","Tierras de la Corona"),("Night's Watch","Guardia de la Noche"),
+              ("Kingsguard","Guardia Real"),("Old Valyria","Antigua Valyria"),("Freehold","Feudo Franco"),
+              ("High Valyrian","Alto Valyrio"),("Black Moon","Luna Negra"),("Long Night","Larga Noche"),
+              ("Stepstones","Peldaños de Piedra"),("Winterfell","Invernalia"),("Castle Black","Castillo Negro"),
+              ("White Harbor","Puerto Blanco"),("Casterly Rock","Roca Casterly"),("Highgarden","Altojardín"),
+              ("Riverrun","Aguasdulces"),("Storm's End","Bastión de Tormentas"),("Moat Cailin","Foso Cailin"),
+              ("Bloody Gate","Puerta de la Sangre"),("Gulltown","Puerto Gaviota"),("Duskendale","Valle Oscuro"),
+              ("Tumbleton","Ladera"),("Shadow Tower","Torre Sombría"),("Nightfort","Fuerte de la Noche"),
+              ("Red Wedding","Boda Roja"),("Free Folk","Pueblo Libre"),("Narrow Sea","Mar Angosto"),
+              ("Seven Kingdoms","Siete Reinos"),("King in the North","Rey en el Norte")
           ]
+          TOKEN_RE = re.compile(r'(\\n|\$[^$]+\$|\[[^\]]+\]|@[A-Za-z0-9_]+!|#!|#[A-Za-z0-9_]+)')
+          SEP = "XQZSPLITMARKER987654321ZQX"
 
-          TOKEN_RE = re.compile(
-              r'(\\n|\$[^$]+\$|\[[^\]]+\]|@[A-Za-z0-9_]+!|#!|#[A-Za-z0-9_]+)'
-          )
+          def target_for(src):
+              rel=src.relative_to(EN)
+              name=re.sub(r'_l_english_?\.yml$','_l_spanish.yml',rel.name)
+              return ES/rel.parent/name
 
-          def target_for(src: Path) -> Path:
-              rel = src.relative_to(EN)
-              name = re.sub(r'_l_english_?\.yml$', '_l_spanish.yml', rel.name)
-              return ES / rel.parent / name
+          sources=sorted(EN.rglob("*.yml"))
+          missing=[(s,target_for(s)) for s in sources if not target_for(s).exists()]
+          print("Missing:",len(missing),flush=True)
 
-          sources = sorted(EN.rglob("*.yml"))
-          missing = [(src, target_for(src)) for src in sources if not target_for(src).exists()]
-          print(f"Missing Spanish files: {len(missing)}")
+          raw_files={}
+          unique=[]
+          seen=set()
+          for src,dst in missing:
+              lines=src.read_text(encoding="utf-8-sig").splitlines(keepends=True)
+              raw_files[src]=(dst,lines)
+              for line in lines:
+                  if line.lstrip().startswith("#"): continue
+                  a,b=line.find('"'),line.rfind('"')
+                  if a!=-1 and b>a:
+                      v=line[a+1:b]
+                      if v and re.search(r'[A-Za-z]',v) and v not in seen:
+                          seen.add(v); unique.append(v)
 
-          def prepare(text):
-              restored = {}
-              counter = 0
-
-              def reserve(value):
-                  nonlocal counter
-                  key = f"XQZPH{counter:04d}ZQX"
-                  counter += 1
-                  restored[key] = value
+          counter=0
+          def prepare(v):
+              global counter
+              restored={}
+              text=v
+              def hold(x):
+                  global counter
+                  key=f"XQZPH{counter:08d}ZQX"; counter+=1
+                  restored[key]=x
                   return key
+              for en,es in sorted(TERMS,key=lambda x:len(x[0]),reverse=True):
+                  if en in text:
+                      ph=hold(es); text=text.replace(en,ph)
+              text=TOKEN_RE.sub(lambda m:hold(m.group(0)),text)
+              return text,restored
 
-              # Lock project terminology first.
-              for english, spanish in sorted(TERM_MAP, key=lambda x: len(x[0]), reverse=True):
-                  if english in text:
-                      ph = reserve(spanish)
-                      text = text.replace(english, ph)
+          prepared=[]
+          restore_maps=[]
+          for v in unique:
+              p,m=prepare(v); prepared.append(p); restore_maps.append(m)
 
-              # Lock CK3 syntax.
-              def token_sub(m):
-                  return reserve(m.group(0))
-              text = TOKEN_RE.sub(token_sub, text)
-              return text, restored
+          batches=[]
+          cur=[]; cur_len=0
+          for i,p in enumerate(prepared):
+              add=len(p)+len(SEP)+2
+              if cur and cur_len+add>9000:
+                  batches.append(cur); cur=[]; cur_len=0
+              cur.append(i); cur_len+=add
+          if cur: batches.append(cur)
+          print("Strings:",len(unique),"Batches:",len(batches),flush=True)
 
-          def google_translate(text):
-              if not re.search(r'[A-Za-z]', text):
-                  return text
-
-              prepared, restored = prepare(text)
-              params = {
-                  "client": "gtx",
-                  "sl": "en",
-                  "tl": "es",
-                  "dt": "t",
-                  "q": prepared,
-              }
-              data = urllib.parse.urlencode(params).encode("utf-8")
-              url = "https://translate.googleapis.com/translate_a/single"
-              last = None
-              for attempt in range(8):
+          def request(text):
+              data=urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"es","dt":"t","q":text}).encode()
+              url="https://translate.googleapis.com/translate_a/single"
+              last=None
+              for n in range(7):
                   try:
-                      req = urllib.request.Request(
-                          url,
-                          data=data,
-                          headers={"User-Agent": "Mozilla/5.0"},
-                          method="POST",
-                      )
-                      with urllib.request.urlopen(req, timeout=45) as resp:
-                          payload = json.loads(resp.read().decode("utf-8"))
-                      translated = "".join(part[0] for part in payload[0] if part and part[0])
-                      # Every placeholder must survive byte-for-byte.
-                      if not all(ph in translated for ph in restored):
-                          raise RuntimeError("placeholder changed by translator")
-                      for ph, original in restored.items():
-                          translated = translated.replace(ph, original)
-                      return translated
-                  except Exception as exc:
-                      last = exc
-                      time.sleep(min(1.5 * (attempt + 1), 8))
-              raise RuntimeError(f"Translation failed after retries: {last}")
+                      req=urllib.request.Request(url,data=data,headers={"User-Agent":"Mozilla/5.0"},method="POST")
+                      with urllib.request.urlopen(req,timeout=60) as resp:
+                          payload=json.loads(resp.read().decode())
+                      return "".join(x[0] for x in payload[0] if x and x[0])
+                  except Exception as e:
+                      last=e; time.sleep(min(1+n,6))
+              raise RuntimeError(last)
 
-          # Extract every unique player-facing string from missing files.
-          entries = {}
-          file_lines = {}
-          for src, dst in missing:
-              raw = src.read_text(encoding="utf-8-sig")
-              lines = raw.splitlines(keepends=True)
-              file_lines[src] = (dst, lines)
+          def translate_batch(indices):
+              joined=("\n"+SEP+"\n").join(prepared[i] for i in indices)
+              out=request(joined)
+              parts=out.split(SEP)
+              if len(parts)!=len(indices):
+                  # Rare fallback, still bounded to one batch.
+                  parts=[request(prepared[i]) for i in indices]
+              result={}
+              for i,t in zip(indices,parts):
+                  t=t.strip("\n ")
+                  for ph,orig in restore_maps[i].items():
+                      if ph not in t:
+                          raise RuntimeError(f"Lost placeholder {ph}")
+                      t=t.replace(ph,orig)
+                  result[i]=t
+              return result
+
+          translations={}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+              futs=[ex.submit(translate_batch,b) for b in batches]
+              for n,f in enumerate(concurrent.futures.as_completed(futs),1):
+                  translations.update(f.result())
+                  print(f"Batch {n}/{len(batches)}",flush=True)
+
+          by_value={unique[i]:translations[i] for i in range(len(unique))}
+          for src,(dst,lines) in raw_files.items():
+              out=[]
               for line in lines:
+                  if line.strip()=="l_english:":
+                      out.append(line.replace("l_english:","l_spanish:")); continue
                   if line.lstrip().startswith("#"):
-                      continue
-                  q1 = line.find('"')
-                  q2 = line.rfind('"')
-                  if q1 != -1 and q2 > q1:
-                      value = line[q1 + 1:q2]
-                      if value and re.search(r'[A-Za-z]', value):
-                          entries.setdefault(value, None)
-
-          print(f"Unique strings to translate: {len(entries)}")
-
-          values = list(entries)
-          translations = {}
-          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-              future_map = {pool.submit(google_translate, value): value for value in values}
-              done = 0
-              for fut in concurrent.futures.as_completed(future_map):
-                  value = future_map[fut]
-                  translations[value] = fut.result()
-                  done += 1
-                  if done % 100 == 0:
-                      print(f"Translated {done}/{len(values)} strings")
-
-          for src, (dst, lines) in file_lines.items():
-              out = []
-              for line in lines:
-                  if line.strip() == "l_english:":
-                      out.append(line.replace("l_english:", "l_spanish:"))
-                      continue
-                  if line.lstrip().startswith("#"):
-                      out.append(line)
-                      continue
-                  q1 = line.find('"')
-                  q2 = line.rfind('"')
-                  if q1 != -1 and q2 > q1:
-                      value = line[q1 + 1:q2]
-                      if value in translations:
-                          line = line[:q1 + 1] + translations[value].replace('"', r'\"') + line[q2:]
+                      out.append(line); continue
+                  a,b=line.find('"'),line.rfind('"')
+                  if a!=-1 and b>a and line[a+1:b] in by_value:
+                      tr=by_value[line[a+1:b]].replace('"',r'\"')
+                      line=line[:a+1]+tr+line[b:]
                   out.append(line)
-              dst.parent.mkdir(parents=True, exist_ok=True)
-              dst.write_text("".join(out), encoding="utf-8-sig")
-              print(f"Wrote {dst}")
+              dst.parent.mkdir(parents=True,exist_ok=True)
+              dst.write_text("".join(out),encoding="utf-8-sig")
+              print("Wrote",dst,flush=True)
 
-          # Structural verification.
-          spanish = list(ES.rglob("*.yml"))
-          if len(sources) != len(spanish):
-              raise SystemExit(f"Count mismatch: English={len(sources)} Spanish={len(spanish)}")
-
+          # Strong structure validation for every mirrored file.
+          spanish=list(ES.rglob("*.yml"))
+          if len(spanish)!=len(sources):
+              raise SystemExit(f"Count mismatch {len(spanish)}/{len(sources)}")
+          key_re=re.compile(r'^\s*([^#\s][^:]*):')
           for src in sources:
-              dst = target_for(src)
-              if not dst.exists():
-                  raise SystemExit(f"Missing target: {dst}")
-              s = dst.read_text(encoding="utf-8-sig")
-              if not s.startswith("l_spanish:"):
-                  raise SystemExit(f"Bad header: {dst}")
-
-          print(f"Verified complete localization set: {len(spanish)}/{len(sources)}")
+              dst=target_for(src)
+              if not dst.exists(): raise SystemExit(f"Missing {dst}")
+              a=src.read_text(encoding="utf-8-sig")
+              b=dst.read_text(encoding="utf-8-sig")
+              if not b.startswith("l_spanish:"): raise SystemExit(f"Bad header {dst}")
+              ka=[m.group(1).strip() for m in map(key_re.match,a.splitlines()) if m]
+              kb=[m.group(1).strip() for m in map(key_re.match,b.splitlines()) if m]
+              if ka[1:]!=kb[1:]: raise SystemExit(f"Key mismatch {dst}")
+          print(f"VERIFIED {len(spanish)}/{len(sources)}",flush=True)
           PY
 
       - name: Commit translations
         shell: bash
         run: |
-          if git diff --quiet -- localization/spanish && [ -z "$(git status --porcelain localization/spanish)" ]; then
-            echo "No localization changes to commit."
-            exit 0
-          fi
           git config user.name "Segrellion Localization"
           git config user.email "actions@users.noreply.github.com"
           git add localization/spanish
+          if git diff --cached --quiet; then
+            echo "No localization changes."
+            exit 0
+          fi
           git commit -m "feat(localization): complete Spanish localization"
           git push origin HEAD:main
