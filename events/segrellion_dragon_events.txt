@@ -297,77 +297,126 @@ segrellion_dragon.0100 = {
 	}
 
 	immediate = {
+
 		scope:vhalyrax = {
-			add_character_flag = segrellion_vhalyrax_first_clutch_laid
 			save_scope_as = dragon_parent
 		}
 
-		create_artifact_dragon_egg_frost_effect = {
-			OWNER = root
+
+		# ====================================================
+		# MAENOR
+		#
+		# Only create this egg if a natural Vhalyrax clutch has
+		# not already produced it.
+		# ====================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = global_var:segrellion_historical_maenor
+				}
+
+				NOT = {
+					exists = global_var:segrellion_historical_maenor_egg
+				}
+			}
+
+			create_artifact_dragon_egg_frost_effect = {
+				OWNER = root
+			}
+
+			scope:newly_created_artifact = {
+
+				set_variable = {
+					name = segrellion_maenor_egg
+					value = yes
+				}
+
+				set_variable = {
+					name = dragon_parent
+					value = scope:vhalyrax
+				}
+
+				set_variable = {
+					name = segrellion_vhalyrax_egg_parentage
+					value = yes
+				}
+
+				set_variable = {
+					name = agot_artifact_cannot_gift
+					value = yes
+				}
+
+				set_global_variable = {
+					name = segrellion_historical_maenor_egg
+					value = this
+				}
+
+				set_artifact_description = segrellion_maenor_egg_desc
+			}
 		}
 
-		scope:newly_created_artifact = {
-			set_variable = {
-				name = segrellion_maenor_egg
-				value = yes
+
+		# ====================================================
+		# NIGHTDANCER
+		#
+		# Same rule: never duplicate an egg that Vhalyrax
+		# already laid naturally.
+		# ====================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					exists = global_var:segrellion_historical_nightdancer
+				}
+
+				NOT = {
+					exists = global_var:segrellion_historical_nightdancer_egg
+				}
 			}
 
-			# Explicit AGOT parentage. This egg is Vhalyrax's.
-			set_variable = {
-				name = dragon_parent
-				value = scope:vhalyrax
+			create_artifact_dragon_egg_lime_effect = {
+				OWNER = root
 			}
 
-			set_variable = {
-				name = segrellion_vhalyrax_egg_parentage
-				value = yes
-			}
+			scope:newly_created_artifact = {
 
-			set_variable = {
-				name = agot_artifact_cannot_gift
-				value = yes
-			}
+				set_variable = {
+					name = segrellion_nightdancer_egg
+					value = yes
+				}
 
-			set_global_variable = {
-				name = segrellion_historical_maenor_egg
-				value = this
-			}
+				set_variable = {
+					name = dragon_parent
+					value = scope:vhalyrax
+				}
 
-			set_artifact_description = segrellion_maenor_egg_desc
+				set_variable = {
+					name = segrellion_vhalyrax_egg_parentage
+					value = yes
+				}
+
+				set_variable = {
+					name = agot_artifact_cannot_gift
+					value = yes
+				}
+
+				set_global_variable = {
+					name = segrellion_historical_nightdancer_egg
+					value = this
+				}
+
+				set_artifact_description = segrellion_nightdancer_egg_desc
+			}
 		}
 
-		create_artifact_dragon_egg_lime_effect = {
-			OWNER = root
-		}
 
-		scope:newly_created_artifact = {
-			set_variable = {
-				name = segrellion_nightdancer_egg
-				value = yes
-			}
-
-			# Explicit AGOT parentage. This egg is Vhalyrax's.
-			set_variable = {
-				name = dragon_parent
-				value = scope:vhalyrax
-			}
-
-			set_variable = {
-				name = segrellion_vhalyrax_egg_parentage
-				value = yes
-			}
-
-			set_variable = {
-				name = agot_artifact_cannot_gift
-				value = yes
-			}
-
-			set_global_variable = {
-				name = segrellion_historical_nightdancer_egg
-				value = this
-			}
-
-			set_artifact_description = segrellion_nightdancer_egg_desc
+		scope:vhalyrax = {
+			add_character_flag = segrellion_vhalyrax_first_clutch_laid
 		}
 	}
 
