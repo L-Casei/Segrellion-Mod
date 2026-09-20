@@ -51,6 +51,7 @@ monthly_global_pulse = {
 		segrellion_jon_resurrection_progression
 		segrellion_jon_stannis_death_news_progression
 		segrellion_jon_winterfell_council_ai_failsafe
+		segrellion_jon_winterfell_council_guest_recovery
 		segrellion_jon_canon_north_recovery
 		segrellion_daenerys_jon_parley_recovery
 		segrellion_jon_nights_watch_status_guard
@@ -7132,6 +7133,43 @@ segrellion_jon_winterfell_council_ai_failsafe = {
 		title:e_the_north.holder = {
 
 			segrellion_jon_try_start_winterfell_council_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# JON SNOW - WINTERFELL COUNCIL GUEST RECOVERY
+#
+# Repairs an already-created AI Council whose guest list was
+# left empty by an older version or by the activity planner.
+# =========================================================
+
+segrellion_jon_winterfell_council_guest_recovery = {
+
+	trigger = {
+
+		title:e_the_north.holder ?= {
+
+			is_alive = yes
+			is_ai = yes
+
+			segrellion_is_current_jon_trigger = yes
+
+			in_activity_type = activity_segrellion_winterfell_council
+
+			NOT = {
+				has_character_flag = segrellion_jon_winterfell_council_completed
+			}
+		}
+	}
+
+
+	effect = {
+
+		title:e_the_north.holder = {
+
+			segrellion_winterfell_council_ensure_attendees_effect = yes
 		}
 	}
 }
