@@ -116,3 +116,33 @@ segrellion_second_wife_high_septon_acceptance_chance_value = {
 	max = 95
 	round = yes
 }
+
+
+# =========================================================
+# SECOND-WIFE FINDER: MARRIAGE PRESTIGE GAIN
+#
+# CK3 marriage prestige follows the candidate dynasty's
+# Splendor level. This reproduces the vanilla scale:
+# lowborn/no dynasty = -100, then +100 per Splendor level.
+# =========================================================
+
+segrellion_second_wife_marriage_prestige_gain_value = {
+
+	value = -100
+
+
+	if = {
+
+		limit = {
+			exists = dynasty
+		}
+
+
+		add = {
+
+			value = dynasty.dynasty_prestige_level
+
+			multiply = 100
+		}
+	}
+}
