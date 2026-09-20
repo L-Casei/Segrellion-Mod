@@ -3,11 +3,44 @@
 # =========================================================
 
 # =========================================================
-# ENGINE BRIDGE - ALLOW EXACTLY TWO SPOUSES FOR THIS MARRIAGE
+# EXPAND EXCEPTIONALISM - ENGINE SUPPORT
 #
-# number_of_spouses is an engine culture/faith parameter.
-# This hidden tradition is added only for the instant in which
-# CK3 creates the second spouse relation, then removed again.
+# IMPORTANT:
+# CK3 re-validates marriages after the marry effect. If the
+# culture immediately drops back to one spouse, the new wife
+# is invalidated on the next tick.
+#
+# Therefore this hidden cultural parameter MUST PERSIST once
+# the exceptional second-wife right has been opened.
+# =========================================================
+
+segrellion_enable_expanded_exceptionalism_polygamy_effect = {
+
+	culture = {
+
+		if = {
+
+			limit = {
+				NOT = {
+					has_cultural_tradition = tradition_segrellion_temporary_two_spouses
+				}
+			}
+
+			add_culture_tradition = tradition_segrellion_temporary_two_spouses
+
+			# Scripted engine support must not place the culture on the
+			# normal tradition-reform cooldown.
+			remove_variable = tradition_cooldown
+		}
+	}
+}
+
+
+# =========================================================
+# CREATE THE ENGINE-VALID SECOND MARRIAGE
+#
+# THIS = prospective husband
+# SECOND_WIFE = prospective second wife
 # =========================================================
 
 segrellion_force_second_wife_engine_marriage_effect = {
@@ -17,39 +50,12 @@ segrellion_force_second_wife_engine_marriage_effect = {
 	}
 
 
-	culture = {
-
-		# Clean up a stale bridge from an interrupted old execution.
-		if = {
-
-			limit = {
-				has_cultural_tradition = tradition_segrellion_temporary_two_spouses
-			}
-
-			remove_culture_tradition = tradition_segrellion_temporary_two_spouses
-		}
+	# Keep the two-spouse cultural parameter active permanently.
+	# The personal permission flags still decide WHO may use it.
+	segrellion_enable_expanded_exceptionalism_polygamy_effect = yes
 
 
-		add_culture_tradition = tradition_segrellion_temporary_two_spouses
-	}
-
-
-	# The hard engine spouse cap is now 2.
 	marry = scope:segrellion_engine_second_wife
-
-
-	# Existing marriages survive a later return to the normal cap.
-	culture = {
-
-		if = {
-
-			limit = {
-				has_cultural_tradition = tradition_segrellion_temporary_two_spouses
-			}
-
-			remove_culture_tradition = tradition_segrellion_temporary_two_spouses
-		}
-	}
 }
 
 
