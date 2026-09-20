@@ -15,6 +15,8 @@ segrellion_rickon_education.0000 = {
 		}
 		else_if = {
 			limit = { has_character_flag = segrellion_rickon_education_chain_active }
+
+			segrellion_rickon_lock_agot_random_personality_effect = yes
 			segrellion_rickon_clean_unapproved_personality_traits_effect = yes
 
 			if = {
@@ -39,7 +41,18 @@ segrellion_rickon_education.0000 = {
 
 					remove_character_flag = segrellion_rickon_tutor_daemon
 					add_character_flag = segrellion_rickon_tutor_visenya
-					set_relation_guardian = character:Black_Unicorn_1
+
+					if = {
+						limit = { has_relation_guardian = character:Segrellion_60 }
+						remove_relation_guardian = character:Segrellion_60
+					}
+
+					if = {
+						limit = {
+							NOT = { has_relation_guardian = character:Black_Unicorn_1 }
+						}
+						set_relation_guardian = character:Black_Unicorn_1
+					}
 
 					character:Black_Unicorn_1 = {
 						trigger_event = {
@@ -75,25 +88,9 @@ segrellion_rickon_education.0000 = {
 			}
 		}
 		else = {
-			if = {
-				limit = {
-					has_character_flag = segrellion_rickon_under_daemon_protection
-					NOT = { has_character_flag = segrellion_rickon_education_start_queued }
-					character:Segrellion_60 = { is_alive = yes is_adult = yes is_imprisoned = no is_incapable = no }
-				}
-				add_character_flag = segrellion_rickon_education_start_queued
-				character:Segrellion_60 = { trigger_event = { id = segrellion_rickon_education.0001 days = 1 } }
-			}
-			else_if = {
-				limit = {
-					has_character_flag = segrellion_rickon_under_visenya_protection
-					NOT = { has_character_flag = segrellion_rickon_education_start_queued }
-					OR = { NOT = { exists = character:Segrellion_60 } character:Segrellion_60 = { is_alive = no } }
-					character:Black_Unicorn_1 = { is_alive = yes is_adult = yes is_imprisoned = no is_incapable = no }
-				}
-				add_character_flag = segrellion_rickon_education_start_queued
-				character:Black_Unicorn_1 = { trigger_event = { id = segrellion_rickon_education.0001 days = 1 } }
-			}
+
+			segrellion_rickon_try_start_story_education_effect = yes
+
 			if = {
 				limit = {
 					is_adult = no
@@ -146,11 +143,43 @@ segrellion_rickon_education.0001 = {
 				add_character_flag = segrellion_rickon_tutor_visenya
 				remove_character_flag = segrellion_rickon_tutor_daemon
 			}
-			set_relation_guardian = root
+			# Replace any previous guardian cleanly. A stale vanilla/AGOT
+			# guardian relation must never block Daemon or Visenya.
+			if = {
+				limit = {
+					any_relation = {
+						type = guardian
+						always = yes
+					}
+				}
 
-			# Once the custom education starts, only traits explicitly
-			# awarded by this storyline are protected. Any random
-			# childhood personality trait is removed by the guard.
+				random_relation = {
+					type = guardian
+					save_scope_as = segrellion_rickon_old_guardian
+				}
+			}
+
+			if = {
+				limit = {
+					exists = scope:segrellion_rickon_old_guardian
+					scope:segrellion_rickon_old_guardian != root
+				}
+
+				remove_relation_guardian = scope:segrellion_rickon_old_guardian
+			}
+
+			if = {
+				limit = {
+					NOT = { has_relation_guardian = root }
+				}
+
+				set_relation_guardian = root
+			}
+
+
+			# Block AGOT's normal child-personality pool for the whole
+			# custom chain, then purge anything random already present.
+			segrellion_rickon_lock_agot_random_personality_effect = yes
 			segrellion_rickon_clean_unapproved_personality_traits_effect = yes
 			segrellion_rickon_queue_first_lesson_effect = yes
 			trigger_event = { id = segrellion_rickon_education.0000 days = 45 }

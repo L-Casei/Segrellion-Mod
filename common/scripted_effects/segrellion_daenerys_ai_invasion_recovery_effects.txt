@@ -18,6 +18,314 @@
 
 
 # =========================================================
+# HARD AI INVASION DEADLINE
+#
+# ROOT = Daenerys
+#
+# This is intentionally independent from all historical
+# story flags. The old failsafe still required
+# segrellion_daenerys_invasion_committed before entering its
+# crossing phase, which meant a broken/opening event could
+# strand AI Daenerys forever even after the advertised
+# game-rule deadline.
+#
+# Once the deadline for the selected aggression profile is
+# reached, repair the Westeros route and force the crossing.
+#
+# Deadlines:
+#   Super Aggressive = 303 AC
+#   Aggressive       = 304 AC
+#   Default          = 305 AC
+#   Passive          = 306 AC
+#
+# Random uses the profile rolled at campaign start.
+# Broken/old saves with no usable profile fall back to
+# Default (305 AC).
+# =========================================================
+
+segrellion_daenerys_ai_enforce_invasion_deadline_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+			is_alive = yes
+			is_ai = yes
+
+			NOT = {
+				has_game_rule = segrellion_daenerys_destiny_free_cities
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_young_griff_throne_pact
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+			}
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landing_chosen
+			}
+
+			OR = {
+
+				# -----------------------------------------
+				# SUPER AGGRESSIVE
+				# -----------------------------------------
+
+				AND = {
+
+					OR = {
+						has_game_rule = segrellion_daenerys_aggression_super_aggressive
+						has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+						has_character_flag = segrellion_daenerys_random_super_aggressive
+					}
+
+					current_date >= 8303.1.1
+				}
+
+
+				# -----------------------------------------
+				# AGGRESSIVE
+				# -----------------------------------------
+
+				AND = {
+
+					OR = {
+						has_game_rule = segrellion_daenerys_aggression_aggressive
+						has_character_flag = segrellion_daenerys_invasion_profile_aggressive
+						has_character_flag = segrellion_daenerys_random_aggressive
+					}
+
+					current_date >= 8304.1.1
+				}
+
+
+				# -----------------------------------------
+				# PASSIVE
+				# -----------------------------------------
+
+				AND = {
+
+					OR = {
+						has_game_rule = segrellion_daenerys_aggression_passive
+						has_character_flag = segrellion_daenerys_invasion_profile_passive
+						has_character_flag = segrellion_daenerys_random_passive
+					}
+
+					current_date >= 8306.1.1
+				}
+
+
+				# -----------------------------------------
+				# DEFAULT
+				# -----------------------------------------
+
+				AND = {
+
+					OR = {
+						has_game_rule = segrellion_daenerys_aggression_default
+						has_character_flag = segrellion_daenerys_invasion_profile_default
+						has_character_flag = segrellion_daenerys_random_default
+					}
+
+					current_date >= 8305.1.1
+				}
+
+
+				# -----------------------------------------
+				# OLD / BROKEN SAVE FALLBACK
+				#
+				# If none of the known profiles exists,
+				# treat the campaign as Default.
+				# -----------------------------------------
+
+				AND = {
+
+					current_date >= 8305.1.1
+
+					NOR = {
+						has_game_rule = segrellion_daenerys_aggression_super_aggressive
+						has_game_rule = segrellion_daenerys_aggression_aggressive
+						has_game_rule = segrellion_daenerys_aggression_passive
+						has_game_rule = segrellion_daenerys_aggression_default
+
+						has_character_flag = segrellion_daenerys_invasion_profile_super_aggressive
+						has_character_flag = segrellion_daenerys_invasion_profile_aggressive
+						has_character_flag = segrellion_daenerys_invasion_profile_passive
+						has_character_flag = segrellion_daenerys_invasion_profile_default
+
+						has_character_flag = segrellion_daenerys_random_super_aggressive
+						has_character_flag = segrellion_daenerys_random_aggressive
+						has_character_flag = segrellion_daenerys_random_passive
+						has_character_flag = segrellion_daenerys_random_default
+					}
+				}
+			}
+		}
+
+
+		# First deadline tick gets a short grace period so the
+		# normal landing-choice event can still choose Dragonstone,
+		# Dorne, Massey's Hook or the Beacon.
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_ai_forced_invasion_deadline
+				}
+			}
+
+
+			add_character_flag = {
+				flag = segrellion_daenerys_ai_deadline_landing_grace
+				days = 30
+			}
+		}
+
+
+		segrellion_daenerys_ai_repair_westeros_route_effect = yes
+
+		segrellion_daenerys_ai_force_westeros_crossing_effect = yes
+	}
+}
+
+
+# =========================================================
+# HARD DEADLINE LANDING FALLBACK
+#
+# ROOT = Daenerys
+#
+# If the crossing was forced by the aggression deadline but
+# the normal landing event still failed to produce a real
+# journey within 30 days, stop waiting and sail to Dorne.
+#
+# This is only an emergency rail. Before the deadline the
+# normal landing logic remains completely untouched.
+# =========================================================
+
+segrellion_daenerys_ai_deadline_landing_fallback_effect = {
+
+	if = {
+
+		limit = {
+
+			this = character:Targaryen_9
+			is_alive = yes
+			is_ai = yes
+
+			has_character_flag = segrellion_daenerys_ai_forced_invasion_deadline
+			has_character_flag = segrellion_daenerys_crossing_committed
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_ai_deadline_landing_grace
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landing_chosen
+			}
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_landed_in_westeros
+			}
+
+			NOT = {
+				has_title = title:h_the_iron_throne
+			}
+		}
+
+
+		# Kill any stale negotiation/travel state that could keep
+		# the emergency route from actually leaving Pentos.
+
+		remove_character_flag = segrellion_daenerys_beacon_negotiation_started
+		remove_character_flag = segrellion_daenerys_massey_landing_request_pending
+		remove_character_flag = segrellion_daenerys_massey_landing_request_recently_sent
+
+
+		current_travel_plan ?= {
+			abort_travel_plan = yes
+		}
+
+
+		set_location = title:c_pentos.title_province
+
+
+		domicile ?= {
+			move_domicile = title:c_pentos.title_province
+			change_provisions = 10000
+		}
+
+
+		every_army = {
+
+			limit = {
+				army_owner = root
+			}
+
+			add_supply = 10000
+		}
+
+
+		add_character_flag = segrellion_daenerys_landing_chosen
+		add_character_flag = segrellion_daenerys_landing_dorne
+
+		add_character_modifier = {
+			modifier = segrellion_daenerys_invasion_provisions_modifier
+		}
+
+
+		if = {
+
+			limit = {
+				has_domicile = yes
+			}
+
+
+			start_travel_plan = {
+
+				destination = title:c_sunspear.title_province
+
+				players_use_planner = no
+
+				return_trip = no
+
+				travel_with_domicile = yes
+
+				on_arrival_event = segrellion_daenerys_invasion.0018
+
+				on_arrival_destinations = last
+
+				on_travel_planner_cancel_event = segrellion_daenerys_invasion.0091
+			}
+		}
+
+
+		else = {
+
+			# Extremely defensive fallback for a broken save where
+			# Daenerys somehow lost her adventurer domicile.
+
+			set_location = title:c_sunspear.title_province
+
+			trigger_event = {
+				id = segrellion_daenerys_invasion.0018
+				days = 1
+			}
+		}
+	}
+}
+
+
+# =========================================================
 # REPAIR THE WESTEROS STORY ROUTE
 #
 # ROOT = Daenerys
