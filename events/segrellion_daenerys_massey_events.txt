@@ -194,6 +194,65 @@ segrellion_daenerys_massey.0030 = {
 
 
 # =========================================================
+# 0035 - STANNIS IS DEAD
+# =========================================================
+
+segrellion_daenerys_massey.0035 = {
+
+	type = character_event
+
+	title = segrellion_daenerys_massey.0035.t
+	desc = segrellion_daenerys_massey.0035.desc
+
+	theme = war
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+
+	immediate = {
+
+		title:d_masseys_hook.holder ?= {
+			save_scope_as = maric_massey
+		}
+
+
+		if = {
+
+			limit = {
+				NOT = {
+					exists = scope:maric_massey
+				}
+			}
+
+
+			title:c_stonedance.holder ?= {
+				save_scope_as = maric_massey
+			}
+		}
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	right_portrait = {
+		character = scope:maric_massey
+		animation = personality_honorable
+	}
+
+
+	option = {
+		name = segrellion_daenerys_massey.0035.a
+	}
+}
+
+
+# =========================================================
 # 0040 - JON IN THE NORTH
 # =========================================================
 
@@ -231,10 +290,56 @@ segrellion_daenerys_massey.0040 = {
 		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
 	}
 
+
+	immediate = {
+
+		if = {
+
+			limit = {
+
+				has_global_variable = segrellion_resurrected_jon
+
+				global_var:segrellion_resurrected_jon ?= {
+					is_alive = yes
+				}
+			}
+
+
+			global_var:segrellion_resurrected_jon = {
+				save_scope_as = segrellion_daenerys_news_jon
+			}
+		}
+
+
+		else_if = {
+
+			limit = {
+
+				character:Stark_7 ?= {
+					is_alive = yes
+					segrellion_is_current_jon_trigger = yes
+				}
+			}
+
+
+			character:Stark_7 = {
+				save_scope_as = segrellion_daenerys_news_jon
+			}
+		}
+	}
+
+
 	left_portrait = {
 		character = root
 		animation = thinking
 	}
+
+
+	right_portrait = {
+		character = scope:segrellion_daenerys_news_jon
+		animation = personality_bold
+	}
+
 
 	option = {
 		name = segrellion_daenerys_massey.0040.a

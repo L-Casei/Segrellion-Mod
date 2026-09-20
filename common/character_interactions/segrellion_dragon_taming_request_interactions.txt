@@ -1,0 +1,612 @@
+# =========================================================
+# SEGRELLION - ASK TO TAME A DRAGON
+# =========================================================
+
+segrellion_ask_to_tame_dragon_interaction = {
+
+	icon = icon_scheme_dragon
+	category = interaction_category_diplomacy
+
+	common_interaction = yes
+	interface_priority = 91
+	use_diplomatic_range = yes
+
+	desc = segrellion_ask_to_tame_dragon_interaction_desc
+	greeting = neutral
+	notification_text = segrellion_ask_to_tame_dragon_notification
+
+	ai_maybe = yes
+	ai_min_reply_days = 5
+	ai_max_reply_days = 12
+
+	can_send_despite_rejection = yes
+	popup_on_receive = yes
+
+	# A petitioner cannot make another hosted taming request for at least one year.
+	# The recipient-specific cooldown is kept as an explicit safeguard as well.
+	cooldown = { years = 1 }
+	cooldown_against_recipient = { years = 1 }
+
+
+	is_shown = {
+
+		scope:actor != scope:recipient
+
+		scope:actor = {
+			segrellion_dragon_request_actor_eligible_trigger = yes
+		}
+
+		scope:recipient = {
+
+			segrellion_dragon_request_recipient_has_available_dragon_trigger = {
+				HOST = scope:recipient
+			}
+		}
+	}
+
+
+	is_valid_showing_failures_only = {
+
+		scope:actor = {
+
+			custom_description = {
+				text = segrellion_dragon_request_not_at_war_requirement
+
+				NOT = {
+					is_at_war_with = scope:recipient
+				}
+			}
+		}
+
+		scope:recipient = {
+
+			custom_description = {
+				text = segrellion_dragon_request_recipient_still_has_dragon_requirement
+
+				segrellion_dragon_request_recipient_has_available_dragon_trigger = {
+					HOST = scope:recipient
+				}
+			}
+		}
+	}
+
+
+	on_accept = {
+
+		scope:actor = {
+
+			set_variable = {
+				name = segrellion_dragon_request_host
+				value = scope:recipient
+				years = 2
+			}
+
+			segrellion_record_dragon_taming_request_effect = {
+				HOST = scope:recipient
+				REQUESTER = scope:actor
+			}
+
+			trigger_event = {
+				id = segrellion_dragon_request.0001
+				days = 1
+			}
+		}
+	}
+
+
+	on_decline = {
+
+		scope:actor = {
+
+			set_variable = {
+				name = segrellion_dragon_request_host
+				value = scope:recipient
+				days = 30
+			}
+
+			segrellion_record_dragon_taming_request_effect = {
+				HOST = scope:recipient
+				REQUESTER = scope:actor
+			}
+
+			trigger_event = {
+				id = segrellion_dragon_request.0002
+				days = 1
+			}
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# ACCEPTANCE
+	#
+	# Default answer is "no". Relationship with the holder is
+	# much more important than raw opinion.
+	# ---------------------------------------------------------
+
+	ai_accept = {
+
+		base = -300
+
+
+		# Immediate family is almost certain unless a serious hostile
+		# relationship or very bad opinion overwhelms the bonus.
+		modifier = {
+			add = 1000
+			desc = segrellion_dragon_request_immediate_family_reason
+
+			scope:recipient = {
+				segrellion_dragon_request_immediate_family_trigger = {
+					TARGET = scope:actor
+				}
+			}
+		}
+
+
+		# Wider family is a large advantage, but not a guarantee.
+		modifier = {
+			add = 350
+			desc = segrellion_dragon_request_extended_family_reason
+
+			scope:recipient = {
+				segrellion_dragon_request_extended_family_trigger = {
+					TARGET = scope:actor
+				}
+			}
+		}
+
+
+		# House and dynasty.
+		modifier = {
+			add = 220
+			desc = segrellion_dragon_request_same_house_reason
+
+			scope:actor = { exists = house }
+
+			scope:recipient = {
+				exists = house
+				house ?= scope:actor.house
+			}
+		}
+
+		modifier = {
+			add = 100
+			desc = segrellion_dragon_request_same_dynasty_reason
+
+			scope:actor = {
+				exists = dynasty
+				exists = house
+			}
+
+			scope:recipient = {
+				exists = dynasty
+				exists = house
+				dynasty ?= scope:actor.dynasty
+				NOT = { house ?= scope:actor.house }
+			}
+		}
+
+
+		# Blood of the dragon.
+		modifier = {
+			add = 70
+			desc = segrellion_dragon_request_dragonblood_reason
+
+			scope:actor = {
+				agot_is_dragonblood_character = yes
+			}
+		}
+
+		modifier = {
+			add = 35
+			desc = segrellion_dragon_request_dragonblood_family_reason
+
+			scope:actor = {
+				agot_has_dragonblood_heritage = yes
+				NOT = { agot_is_dragonblood_character = yes }
+			}
+		}
+
+
+		# Personal relationships.
+		modifier = {
+			add = 850
+			desc = segrellion_dragon_request_soulmate_reason
+
+			scope:recipient = {
+				has_relation_soulmate = scope:actor
+			}
+		}
+
+		modifier = {
+			add = 650
+			desc = segrellion_dragon_request_best_friend_reason
+
+			scope:recipient = {
+				has_relation_best_friend = scope:actor
+			}
+		}
+
+		modifier = {
+			add = 250
+			desc = segrellion_dragon_request_lover_reason
+
+			scope:recipient = {
+				has_relation_lover = scope:actor
+			}
+		}
+
+		modifier = {
+			add = 150
+			desc = segrellion_dragon_request_friend_reason
+
+			scope:recipient = {
+				has_relation_friend = scope:actor
+			}
+		}
+
+
+		# Opinion matters, but it cannot turn a random petitioner into
+		# an obvious yes on its own.
+		opinion_modifier = {
+			opinion_target = scope:actor
+			who = scope:recipient
+			multiplier = 0.25
+		}
+
+
+		# Very bad opinion gets extra weight beyond the smooth opinion term.
+		modifier = {
+			add = -350
+			desc = segrellion_dragon_request_bad_opinion_reason
+
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value <= -50
+				}
+			}
+		}
+
+		modifier = {
+			add = -650
+			desc = segrellion_dragon_request_terrible_opinion_reason
+
+			scope:recipient = {
+				opinion = {
+					target = scope:actor
+					value <= -80
+				}
+			}
+		}
+
+
+		# Rivalries and house hostility can override family blood.
+		modifier = {
+			add = -1800
+			desc = segrellion_dragon_request_rival_reason
+
+			scope:recipient = {
+				has_relation_rival = scope:actor
+			}
+		}
+
+		modifier = {
+			add = -2500
+			desc = segrellion_dragon_request_nemesis_reason
+
+			scope:recipient = {
+				has_relation_nemesis = scope:actor
+			}
+		}
+
+		modifier = {
+			add = -700
+			desc = segrellion_dragon_request_house_rivalry_reason
+
+			scope:recipient = {
+				segrellion_dragon_request_houses_rivals_trigger = {
+					TARGET = scope:actor
+				}
+			}
+		}
+
+		modifier = {
+			add = -1500
+			desc = segrellion_dragon_request_house_feud_reason
+
+			scope:recipient = {
+				segrellion_dragon_request_houses_feuding_trigger = {
+					TARGET = scope:actor
+				}
+			}
+		}
+
+
+		# Shared personality traits help a little. They are deliberately
+		# small compared with blood, family and personal relationships.
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_brave_reason
+			scope:actor = { has_trait = brave }
+			scope:recipient = { has_trait = brave }
+		}
+
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_ambitious_reason
+			scope:actor = { has_trait = ambitious }
+			scope:recipient = { has_trait = ambitious }
+		}
+
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_just_reason
+			scope:actor = { has_trait = just }
+			scope:recipient = { has_trait = just }
+		}
+
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_diligent_reason
+			scope:actor = { has_trait = diligent }
+			scope:recipient = { has_trait = diligent }
+		}
+
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_patient_reason
+			scope:actor = { has_trait = patient }
+			scope:recipient = { has_trait = patient }
+		}
+
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_compassionate_reason
+			scope:actor = { has_trait = compassionate }
+			scope:recipient = { has_trait = compassionate }
+		}
+
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_honest_reason
+			scope:actor = { has_trait = honest }
+			scope:recipient = { has_trait = honest }
+		}
+
+		modifier = {
+			add = 12
+			desc = segrellion_dragon_request_shared_trusting_reason
+			scope:actor = { has_trait = trusting }
+			scope:recipient = { has_trait = trusting }
+		}
+
+
+		# Repeated requests become increasingly unwelcome.
+		# Immediate family, soulmates and best friends ignore this escalation.
+		modifier = {
+			add = -100
+			desc = segrellion_dragon_request_repeat_1_reason
+
+			scope:recipient = {
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_1
+					target = scope:actor
+				}
+			}
+
+			NOR = {
+				scope:recipient = {
+					segrellion_dragon_request_immediate_family_trigger = {
+						TARGET = scope:actor
+					}
+				}
+				scope:recipient = { has_relation_soulmate = scope:actor }
+				scope:recipient = { has_relation_best_friend = scope:actor }
+			}
+		}
+
+		modifier = {
+			add = -150
+			desc = segrellion_dragon_request_repeat_2_reason
+
+			scope:recipient = {
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_2
+					target = scope:actor
+				}
+			}
+
+			NOR = {
+				scope:recipient = {
+					segrellion_dragon_request_immediate_family_trigger = {
+						TARGET = scope:actor
+					}
+				}
+				scope:recipient = { has_relation_soulmate = scope:actor }
+				scope:recipient = { has_relation_best_friend = scope:actor }
+			}
+		}
+
+		modifier = {
+			add = -250
+			desc = segrellion_dragon_request_repeat_3_reason
+
+			scope:recipient = {
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_3
+					target = scope:actor
+				}
+			}
+
+			NOR = {
+				scope:recipient = {
+					segrellion_dragon_request_immediate_family_trigger = {
+						TARGET = scope:actor
+					}
+				}
+				scope:recipient = { has_relation_soulmate = scope:actor }
+				scope:recipient = { has_relation_best_friend = scope:actor }
+			}
+		}
+	}
+
+
+	# ---------------------------------------------------------
+	# AI REQUESTING
+	#
+	# AI petitioners must have dragonblood heritage. Targets are
+	# intentionally narrow and evaluated only every two years.
+	# This prevents every minor lord from pestering dragonlords.
+	# ---------------------------------------------------------
+
+	ai_potential = {
+
+		is_ai = yes
+
+		segrellion_dragon_request_actor_eligible_trigger = yes
+
+		agot_has_dragonblood_heritage = yes
+	}
+
+
+	ai_targets = {
+		ai_recipients = family
+		max = 20
+	}
+
+	ai_targets = {
+		ai_recipients = dynasty
+		max = 20
+	}
+
+	ai_targets = {
+		ai_recipients = scripted_relations
+		max = 20
+	}
+
+	ai_targets = {
+		ai_recipients = liege
+	}
+
+	# A dragonseed may very occasionally approach a nearby dragonlord
+	# even without a pre-existing scripted relationship.
+	ai_targets = {
+		ai_recipients = neighboring_rulers
+		max = 3
+		chance = 0.10
+	}
+
+	ai_frequency = 24
+
+
+	ai_will_do = {
+
+		base = 0
+
+		modifier = {
+			add = 70
+			scope:actor = {
+				segrellion_dragon_request_immediate_family_trigger = {
+					TARGET = scope:recipient
+				}
+			}
+		}
+
+		modifier = {
+			add = 45
+			scope:actor = {
+				segrellion_dragon_request_extended_family_trigger = {
+					TARGET = scope:recipient
+				}
+			}
+		}
+
+		modifier = {
+			add = 35
+			scope:actor = { exists = house }
+			scope:recipient = {
+				exists = house
+				house ?= scope:actor.house
+			}
+		}
+
+		modifier = {
+			add = 20
+			scope:actor = { exists = dynasty }
+			scope:recipient = {
+				exists = dynasty
+				dynasty ?= scope:actor.dynasty
+			}
+		}
+
+		modifier = {
+			add = 60
+			OR = {
+				scope:actor = { has_relation_soulmate = scope:recipient }
+				scope:actor = { has_relation_best_friend = scope:recipient }
+			}
+		}
+
+		modifier = {
+			add = 30
+			OR = {
+				scope:actor = { has_relation_lover = scope:recipient }
+				scope:actor = { has_relation_friend = scope:recipient }
+			}
+		}
+
+		modifier = {
+			add = 20
+			scope:actor = {
+				agot_is_dragonblood_character = yes
+			}
+		}
+
+		modifier = {
+			add = 8
+			scope:actor = { has_trait = ambitious }
+		}
+
+		modifier = {
+			add = 8
+			scope:actor = { has_trait = brave }
+		}
+
+		modifier = {
+			add = 8
+			scope:actor = { ai_boldness >= 75 }
+		}
+
+
+		modifier = {
+			add = -25
+			scope:recipient = {
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_1
+					target = scope:actor
+				}
+			}
+		}
+
+		modifier = {
+			add = -40
+			scope:recipient = {
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_2
+					target = scope:actor
+				}
+			}
+		}
+
+		modifier = {
+			add = -60
+			scope:recipient = {
+				is_target_in_variable_list = {
+					name = segrellion_dragon_requesters_tier_3
+					target = scope:actor
+				}
+			}
+		}
+	}
+}

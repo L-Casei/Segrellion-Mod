@@ -24,6 +24,8 @@ segrellion_jon_try_start_winterfell_council_effect = {
 			is_alive = yes
 			is_ai = yes
 
+			has_title = title:e_the_north
+
 			character:Baratheon_3 ?= {
 				is_alive = no
 			}
@@ -41,6 +43,25 @@ segrellion_jon_try_start_winterfell_council_effect = {
 			NOT = {
 				in_activity_type = activity_segrellion_winterfell_council
 			}
+		}
+
+
+		# The activity costs 300 Prestige. Story-critical AI
+		# must not fail simply because newly-restored Jon is poor
+		# in prestige on the exact month Stannis dies.
+		if = {
+
+			limit = {
+
+				NOT = {
+					has_character_flag = segrellion_jon_winterfell_council_ai_prestige_seeded
+				}
+			}
+
+
+			add_prestige = 300
+
+			add_character_flag = segrellion_jon_winterfell_council_ai_prestige_seeded
 		}
 
 
@@ -81,7 +102,7 @@ segrellion_jon_try_start_winterfell_council_effect = {
 
 		add_character_flag = {
 			flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
-			days = 30
+			days = 3
 		}
 
 

@@ -2193,6 +2193,220 @@ segrellion_young_griff_iron_throne_cb = {
 }
 
 # =========================================================
+# DAENERYS - FIRE AND BLOOD
+#
+# Her own war for the Iron Throne.
+# Uses claim settlement mechanics, but has a dedicated
+# narrative identity instead of vanilla "Dragonstone Claim".
+# =========================================================
+
+segrellion_daenerys_fire_and_blood_cb = {
+
+	icon = claim_cb
+
+	group = claim
+
+	combine_into_one = no
+
+	should_show_war_goal_subview = yes
+
+
+	allowed_for_character = {
+
+		this = character:Targaryen_9
+
+		has_character_flag = segrellion_daenerys_iron_throne_cb_authorized
+	}
+
+
+	allowed_against_character = {
+
+		scope:defender = title:h_the_iron_throne.holder
+	}
+
+
+	target_titles = all
+
+	target_de_jure_regions_above = no
+
+
+	valid_to_start = {
+
+		scope:target = {
+			this = title:h_the_iron_throne
+		}
+	}
+
+
+	cost = {
+	}
+
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_daenerys_iron_throne_cb_authorized
+
+			add_character_flag = segrellion_daenerys_iron_throne_war_started
+		}
+	}
+
+
+	on_victory_desc = {
+
+		desc = segrellion_daenerys_fire_and_blood_cb_victory_desc
+	}
+
+
+	on_victory = {
+
+		# Preserve the monarch Daenerys actually defeated
+		# before the title changes hands.
+
+		scope:attacker = {
+
+			set_variable = {
+				name = segrellion_daenerys_defeated_throne_holder
+				value = scope:defender
+			}
+
+			add_character_flag = segrellion_daenerys_defeated_throne_holder_fate_pending
+
+			remove_character_flag = segrellion_daenerys_defeated_throne_holder_fate_resolved
+
+			remove_character_flag = segrellion_daenerys_defeated_throne_holder_event_scheduled
+		}
+
+
+		create_title_and_vassal_change = {
+
+			type = conquest_claim
+
+			save_scope_as = segrellion_daenerys_fire_and_blood_change
+
+			add_claim_on_loss = yes
+		}
+
+
+		setup_claim_cb = {
+
+			titles = target_titles
+
+			attacker = scope:attacker
+
+			defender = scope:defender
+
+			claimant = scope:claimant
+
+			change = scope:segrellion_daenerys_fire_and_blood_change
+		}
+
+
+		resolve_title_and_vassal_change = scope:segrellion_daenerys_fire_and_blood_change
+
+
+		scope:attacker = {
+
+			remove_character_flag = segrellion_daenerys_iron_throne_cb_authorized
+
+			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+
+			segrellion_start_daenerys_post_throne_effect = yes
+		}
+
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	on_white_peace_desc = {
+
+		desc = segrellion_daenerys_fire_and_blood_cb_white_peace_desc
+	}
+
+
+	on_white_peace = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_daenerys_iron_throne_cb_authorized
+		}
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	on_defeat_desc = {
+
+		desc = segrellion_daenerys_fire_and_blood_cb_defeat_desc
+	}
+
+
+	on_defeat = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_daenerys_iron_throne_cb_authorized
+		}
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_invalidated = {
+
+		scope:attacker ?= {
+			remove_character_flag = segrellion_daenerys_iron_throne_cb_authorized
+		}
+	}
+
+
+	on_primary_attacker_death = inherit
+
+	on_primary_defender_death = inherit
+
+	transfer_behavior = transfer
+
+	attacker_allies_inherit = yes
+
+	defender_allies_inherit = yes
+
+
+	war_name = "segrellion_daenerys_fire_and_blood_war_name"
+
+	my_war_name = "segrellion_daenerys_fire_and_blood_war_name"
+
+	war_name_base = "segrellion_daenerys_fire_and_blood_war_name_base"
+
+	my_war_name_base = "segrellion_daenerys_fire_and_blood_war_name_base"
+
+	cb_name = "segrellion_daenerys_fire_and_blood_cb_name"
+
+
+	interface_priority = 110
+
+	use_de_jure_wargoal_only = yes
+
+
+	attacker_ticking_warscore_delay = {
+		days = 30
+	}
+
+	attacker_ticking_warscore = 0.15
+
+	attacker_wargoal_percentage = 0.60
+
+	max_attacker_score_from_battles = 75
+
+	max_defender_score_from_occupation = 150
+
+	max_attacker_score_from_occupation = 150
+}
+
+
+# =========================================================
 # DAENERYS - THE IRON THRONE
 #
 # Daemon promised to win the Iron Throne for Daenerys
