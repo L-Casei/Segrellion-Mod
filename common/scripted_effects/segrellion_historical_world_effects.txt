@@ -153,166 +153,201 @@ segrellion_set_historical_splendor_effect = {
 # does not erase Renown earned during gameplay.
 # =========================================================
 
-vladwyn_setup_300_dynasty_effect = {
+# =========================================================
+# HOUSE VLADWYN - HISTORICAL DYNASTY PROGRESSION
+#
+# 106 AC: Obscure
+# 129 AC: Insignificant - Tristan's Black Sentinel era
+# 174 AC: Noteworthy - the landed senior line is established
+# 196 AC: Reputable - Arlan the Black / First Blackfyre War
+# 250 AC: Well-known - the True Sentinels survive Hugh
+#
+# Legacy track:
+# 129 / 174 / 196 / 217 / 250 AC
+#
+# Joffrey era:
+# Well-known, Vladwyn I-V complete, 700 spendable Renown
+# on a fresh historical start.
+# =========================================================
+
+vladwyn_historical_dynasty_progression_effect = {
 
 	dynasty:dynn_Vladwyn = {
 
+		# ---------------------------------------------
+		# LEVEL OF SPLENDOR
+		# ---------------------------------------------
+
 		if = {
-			limit = {
-
-				game_start_date = 8300.8.20
-
-				NOT = {
-					has_variable = vladwyn_300_dynasty_setup_done
-				}
-			}
-
-
-			# =================================================
-			# VLADWYN LEGACY I
-			# Oaths Written in Blood
-			# =================================================
-
-			if = {
-				limit = {
-					NOT = {
-						has_dynasty_perk = vladwyn_legacy_1
-					}
-				}
-
-				add_dynasty_perk = vladwyn_legacy_1
-			}
-
-
-			# =================================================
-			# VLADWYN LEGACY II
-			# Eyes Behind the Shield
-			# =================================================
-
-			if = {
-				limit = {
-					NOT = {
-						has_dynasty_perk = vladwyn_legacy_2
-					}
-				}
-
-				add_dynasty_perk = vladwyn_legacy_2
-			}
-
-
-			# =================================================
-			# VLADWYN LEGACY III
-			# The Household Blade
-			# =================================================
-
-			if = {
-				limit = {
-					NOT = {
-						has_dynasty_perk = vladwyn_legacy_3
-					}
-				}
-
-				add_dynasty_perk = vladwyn_legacy_3
-			}
-
-
-			# =================================================
-			# VLADWYN LEGACY IV
-			# Hold Until Death
-			# =================================================
-
-			if = {
-				limit = {
-					NOT = {
-						has_dynasty_perk = vladwyn_legacy_4
-					}
-				}
-
-				add_dynasty_perk = vladwyn_legacy_4
-			}
-
-
-			# =================================================
-			# VLADWYN LEGACY V
-			# The Black Sentinels
-			# =================================================
-
-			if = {
-				limit = {
-					NOT = {
-						has_dynasty_perk = vladwyn_legacy_5
-					}
-				}
-
-				add_dynasty_perk = vladwyn_legacy_5
-			}
-
-
-			# =================================================
-			# SPENDABLE RENOWN
-			#
-			# Legacy history can otherwise leave the dynasty
-			# with a positive or negative Renown balance.
-			# Historical starting balance must be exactly 0.
-			# =================================================
-
-			if = {
-				limit = {
-					dynasty_prestige > 0
-				}
-
-				add_dynasty_prestige = {
-					value = dynasty_prestige
-					multiply = -1
-				}
-			}
-
-			else_if = {
-				limit = {
-					dynasty_prestige < 0
-				}
-
-				add_dynasty_prestige = {
-					value = dynasty_prestige
-					multiply = -1
-				}
-			}
-
-
-			# =================================================
-			# LEVEL OF SPLENDOR
-			#
-			# Internal level 5 = Well-known.
-			#
-			# Do this AFTER correcting Renown so any Renown
-			# correction cannot accidentally alter the desired
-			# historical Splendor level.
-			# =================================================
+			limit = { current_date >= 8250.1.1 }
 
 			while = {
-				limit = {
-					dynasty_prestige_level < 5
-				}
-
+				limit = { dynasty_prestige_level < 5 }
 				add_dynasty_prestige_level = 1
 			}
+		}
+		else_if = {
+			limit = { current_date >= 8196.8.1 }
 
 			while = {
-				limit = {
-					dynasty_prestige_level > 5
-				}
+				limit = { dynasty_prestige_level < 4 }
+				add_dynasty_prestige_level = 1
+			}
+		}
+		else_if = {
+			limit = { current_date >= 8174.1.2 }
 
-				add_dynasty_prestige_level = -1
+			while = {
+				limit = { dynasty_prestige_level < 3 }
+				add_dynasty_prestige_level = 1
+			}
+		}
+		else_if = {
+			limit = { current_date >= 8129.1.1 }
+
+			while = {
+				limit = { dynasty_prestige_level < 2 }
+				add_dynasty_prestige_level = 1
+			}
+		}
+		else_if = {
+			limit = { current_date >= 8106.1.1 }
+
+			while = {
+				limit = { dynasty_prestige_level < 1 }
+				add_dynasty_prestige_level = 1
+			}
+		}
+
+
+		# ---------------------------------------------
+		# VLADWYN LEGACY I - Oaths Written in Blood
+		# Tristan's Black Sentinel reputation.
+		# ---------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8129.1.1
+				NOT = { has_dynasty_perk = vladwyn_legacy_1 }
+			}
+			add_dynasty_perk = vladwyn_legacy_1
+		}
+
+
+		# ---------------------------------------------
+		# VLADWYN LEGACY II - Eyes Behind the Shield
+		# Eldric's generation leaves a landed tradition.
+		# ---------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8174.1.2
+				NOT = { has_dynasty_perk = vladwyn_legacy_2 }
+			}
+			add_dynasty_perk = vladwyn_legacy_2
+		}
+
+
+		# ---------------------------------------------
+		# VLADWYN LEGACY III - The Household Blade
+		# Arlan the Black and the martial Proudrack line.
+		# ---------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8196.8.1
+				NOT = { has_dynasty_perk = vladwyn_legacy_3 }
+			}
+			add_dynasty_perk = vladwyn_legacy_3
+		}
+
+
+		# ---------------------------------------------
+		# VLADWYN LEGACY IV - Hold Until Death
+		# Hugh founds the True Sentinels.
+		# ---------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8217.1.1
+				NOT = { has_dynasty_perk = vladwyn_legacy_4 }
+			}
+			add_dynasty_perk = vladwyn_legacy_4
+		}
+
+
+		# ---------------------------------------------
+		# VLADWYN LEGACY V - The Last Man Standing
+		# Hugh dies, but the company and the line survive.
+		# ---------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8250.1.1
+				NOT = { has_dynasty_perk = vladwyn_legacy_5 }
+			}
+			add_dynasty_perk = vladwyn_legacy_5
+		}
+
+
+		# ---------------------------------------------
+		# JOFFREY ERA RENOWN
+		#
+		# A fresh late historical start is normalized to
+		# exactly 700 spendable Renown. An ongoing campaign
+		# is never reduced: it is only topped up to 700.
+		# ---------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8295.8.2
+				NOT = { has_variable = vladwyn_joffrey_renown_granted }
 			}
 
+			if = {
+				limit = { game_start_date >= 8295.8.2 }
 
-			# Prevent future save loads from resetting Renown.
+				if = {
+					limit = { dynasty_prestige != 0 }
+					add_dynasty_prestige = {
+						value = dynasty_prestige
+						multiply = -1
+					}
+				}
+
+				add_dynasty_prestige = 700
+
+				# Fresh Joffrey-era starts must display exactly Well-known.
+				while = {
+					limit = { dynasty_prestige_level < 5 }
+					add_dynasty_prestige_level = 1
+				}
+				while = {
+					limit = { dynasty_prestige_level > 5 }
+					add_dynasty_prestige_level = -1
+				}
+			}
+			else_if = {
+				limit = { dynasty_prestige < 700 }
+
+				add_dynasty_prestige = {
+					value = 700
+					subtract = dynasty_prestige
+				}
+			}
+
 			set_variable = {
-				name = vladwyn_300_dynasty_setup_done
+				name = vladwyn_joffrey_renown_granted
 				value = yes
 			}
 		}
 	}
+}
+
+
+# Backwards-compatible wrapper for any existing startup call.
+vladwyn_setup_300_dynasty_effect = {
+	vladwyn_historical_dynasty_progression_effect = yes
 }
 
 # =========================================================
@@ -586,4 +621,78 @@ segrellion_repair_historical_renown_effect = {
             }
         }
     }
+}
+
+# =========================================================
+# CEREI VLADWYN - LIVE HISTORICAL PROGRESSION
+# =========================================================
+
+vladwyn_cerei_historical_progression_effect = {
+
+	dynasty:dynn_Vladwyn = {
+
+		every_dynasty_member = {
+			limit = {
+				is_alive = yes
+				iaf_is_canon_identity_trigger = { ID = Vladwyn_29 }
+			}
+
+			if = {
+				limit = {
+					current_date >= 8207.1.1
+					NOT = { has_trait = devoted }
+				}
+
+				add_trait = devoted
+				add_character_flag = vladwyn_cerei_became_septa
+			}
+
+			if = {
+				limit = {
+					current_date >= 8257.1.1
+					is_alive = yes
+				}
+
+				death = {
+					death_reason = death_natural_causes
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# LAST SEGRELLION CHILDREN - BLACK MOON LIVE PROGRESSION
+#
+# Historical files handle bookmarks after 284 AC.
+# This catches campaigns begun earlier where Canon Children
+# created these identities dynamically.
+# =========================================================
+
+segrellion_black_moon_children_historical_progression_effect = {
+
+	if = {
+		limit = { current_date >= 8284.1.8 }
+
+		dynasty:dynn_Segrellion = {
+
+			every_dynasty_member = {
+				limit = {
+					is_alive = yes
+					OR = {
+						iaf_is_canon_identity_trigger = { ID = Segrellion_61 }
+						iaf_is_canon_identity_trigger = { ID = Segrellion_62 }
+						iaf_is_canon_identity_trigger = { ID = Segrellion_63 }
+						iaf_is_canon_identity_trigger = { ID = Segrellion_64 }
+						iaf_is_canon_identity_trigger = { ID = Segrellion_65 }
+					}
+				}
+
+				death = {
+					death_reason = death_segrellion_black_moon
+				}
+			}
+		}
+	}
 }
