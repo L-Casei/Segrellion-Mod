@@ -494,7 +494,136 @@ segrellion_take_as_second_wife_interaction = {
 
 	ai_accept = {
 
-		base = -35
+		base = -20
+
+
+		# Unlanded women have much less to lose politically and are
+		# substantially more open to an exceptional second marriage.
+		modifier = {
+
+			add = 40
+			desc = segrellion_second_wife_unlanded_reason
+
+			scope:recipient = {
+				is_landed = no
+			}
+		}
+
+
+		modifier = {
+
+			add = 20
+			desc = segrellion_second_wife_lowborn_reason
+
+			scope:recipient = {
+				is_lowborn = yes
+			}
+		}
+
+
+		# The petitioner's station matters. A woman may refuse an
+		# obscure lord while accepting the same arrangement from a king
+		# or emperor whose marriage materially changes her future.
+		modifier = {
+			add = 15
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier = tier_county }
+		}
+
+		modifier = {
+			add = 30
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier = tier_duchy }
+		}
+
+		modifier = {
+			add = 50
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier = tier_kingdom }
+		}
+
+		modifier = {
+			add = 70
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier >= tier_empire }
+		}
+
+
+		# Personal fame is attractive in its own right.
+		modifier = {
+
+			add = {
+				value = scope:actor.prestige_level
+				multiply = 8
+			}
+
+			desc = segrellion_second_wife_actor_fame_reason
+		}
+
+
+		# The prestige of the petitioner's own dynasty offsets some of
+		# the reluctance of women from important houses.
+		modifier = {
+
+			add = 10
+			desc = segrellion_second_wife_actor_dynasty_reason
+
+			scope:actor = {
+				exists = dynasty
+				dynasty = {
+					dynasty_prestige_level >= 2
+					dynasty_prestige_level < 4
+				}
+			}
+		}
+
+		modifier = {
+
+			add = 20
+			desc = segrellion_second_wife_actor_dynasty_reason
+
+			scope:actor = {
+				exists = dynasty
+				dynasty = {
+					dynasty_prestige_level >= 4
+					dynasty_prestige_level < 7
+				}
+			}
+		}
+
+		modifier = {
+
+			add = 35
+			desc = segrellion_second_wife_actor_dynasty_reason
+
+			scope:actor = {
+				exists = dynasty
+				dynasty = {
+					dynasty_prestige_level >= 7
+				}
+			}
+		}
+
+
+		# Attraction matters too. Daemon's Handsome trait therefore
+		# meaningfully improves his chances instead of being ignored.
+		modifier = {
+			add = 10
+			desc = segrellion_second_wife_actor_attractive_reason
+			scope:actor = { has_trait = beauty_good_1 }
+		}
+
+		modifier = {
+			add = 20
+			desc = segrellion_second_wife_actor_attractive_reason
+			scope:actor = { has_trait = beauty_good_2 }
+		}
+
+		modifier = {
+			add = 30
+			desc = segrellion_second_wife_actor_attractive_reason
+			scope:actor = { has_trait = beauty_good_3 }
+		}
 
 
 		# Visenya and Daemon receive a strong story-specific exception.
@@ -633,7 +762,7 @@ segrellion_take_as_second_wife_interaction = {
 		# A famous dynasty also makes the proposal politically harder.
 		modifier = {
 
-			add = -10
+			add = -5
 			desc = segrellion_second_wife_notable_dynasty_reason
 
 			scope:recipient = {
@@ -649,7 +778,7 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 
-			add = -25
+			add = -15
 			desc = segrellion_second_wife_powerful_dynasty_reason
 
 			scope:recipient = {
@@ -665,7 +794,7 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 
-			add = -45
+			add = -25
 			desc = segrellion_second_wife_great_dynasty_reason
 
 			scope:recipient = {
@@ -680,7 +809,7 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 
-			add = -15
+			add = -5
 			desc = segrellion_second_wife_noblewoman_reason
 
 			scope:recipient = {
@@ -691,7 +820,7 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 
-			add = -20
+			add = -15
 			desc = segrellion_second_wife_countess_reason
 
 			scope:recipient = {
@@ -701,7 +830,7 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 
-			add = -40
+			add = -30
 			desc = segrellion_second_wife_duchess_reason
 
 			scope:recipient = {
@@ -711,7 +840,7 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 
-			add = -70
+			add = -55
 			desc = segrellion_second_wife_queen_reason
 
 			scope:recipient = {
@@ -721,7 +850,7 @@ segrellion_take_as_second_wife_interaction = {
 
 		modifier = {
 
-			add = -100
+			add = -80
 			desc = segrellion_second_wife_empress_reason
 
 			scope:recipient = {
@@ -948,7 +1077,136 @@ segrellion_find_second_wife_interaction = {
 
 	ai_accept = {
 
-		base = -35
+		base = -20
+
+
+		# Unlanded women have much less to lose politically and are
+		# substantially more open to an exceptional second marriage.
+		modifier = {
+
+			add = 40
+			desc = segrellion_second_wife_unlanded_reason
+
+			scope:recipient = {
+				is_landed = no
+			}
+		}
+
+
+		modifier = {
+
+			add = 20
+			desc = segrellion_second_wife_lowborn_reason
+
+			scope:recipient = {
+				is_lowborn = yes
+			}
+		}
+
+
+		# The petitioner's station matters. A woman may refuse an
+		# obscure lord while accepting the same arrangement from a king
+		# or emperor whose marriage materially changes her future.
+		modifier = {
+			add = 15
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier = tier_county }
+		}
+
+		modifier = {
+			add = 30
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier = tier_duchy }
+		}
+
+		modifier = {
+			add = 50
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier = tier_kingdom }
+		}
+
+		modifier = {
+			add = 70
+			desc = segrellion_second_wife_actor_rank_reason
+			scope:actor = { highest_held_title_tier >= tier_empire }
+		}
+
+
+		# Personal fame is attractive in its own right.
+		modifier = {
+
+			add = {
+				value = scope:actor.prestige_level
+				multiply = 8
+			}
+
+			desc = segrellion_second_wife_actor_fame_reason
+		}
+
+
+		# The prestige of the petitioner's own dynasty offsets some of
+		# the reluctance of women from important houses.
+		modifier = {
+
+			add = 10
+			desc = segrellion_second_wife_actor_dynasty_reason
+
+			scope:actor = {
+				exists = dynasty
+				dynasty = {
+					dynasty_prestige_level >= 2
+					dynasty_prestige_level < 4
+				}
+			}
+		}
+
+		modifier = {
+
+			add = 20
+			desc = segrellion_second_wife_actor_dynasty_reason
+
+			scope:actor = {
+				exists = dynasty
+				dynasty = {
+					dynasty_prestige_level >= 4
+					dynasty_prestige_level < 7
+				}
+			}
+		}
+
+		modifier = {
+
+			add = 35
+			desc = segrellion_second_wife_actor_dynasty_reason
+
+			scope:actor = {
+				exists = dynasty
+				dynasty = {
+					dynasty_prestige_level >= 7
+				}
+			}
+		}
+
+
+		# Attraction matters too. Daemon's Handsome trait therefore
+		# meaningfully improves his chances instead of being ignored.
+		modifier = {
+			add = 10
+			desc = segrellion_second_wife_actor_attractive_reason
+			scope:actor = { has_trait = beauty_good_1 }
+		}
+
+		modifier = {
+			add = 20
+			desc = segrellion_second_wife_actor_attractive_reason
+			scope:actor = { has_trait = beauty_good_2 }
+		}
+
+		modifier = {
+			add = 30
+			desc = segrellion_second_wife_actor_attractive_reason
+			scope:actor = { has_trait = beauty_good_3 }
+		}
 
 
 		# Visenya and Daemon receive a strong story-specific exception.
@@ -1087,7 +1345,7 @@ segrellion_find_second_wife_interaction = {
 		# A famous dynasty also makes the proposal politically harder.
 		modifier = {
 
-			add = -10
+			add = -5
 			desc = segrellion_second_wife_notable_dynasty_reason
 
 			scope:recipient = {
@@ -1103,7 +1361,7 @@ segrellion_find_second_wife_interaction = {
 
 		modifier = {
 
-			add = -25
+			add = -15
 			desc = segrellion_second_wife_powerful_dynasty_reason
 
 			scope:recipient = {
@@ -1119,7 +1377,7 @@ segrellion_find_second_wife_interaction = {
 
 		modifier = {
 
-			add = -45
+			add = -25
 			desc = segrellion_second_wife_great_dynasty_reason
 
 			scope:recipient = {
@@ -1134,7 +1392,7 @@ segrellion_find_second_wife_interaction = {
 
 		modifier = {
 
-			add = -15
+			add = -5
 			desc = segrellion_second_wife_noblewoman_reason
 
 			scope:recipient = {
@@ -1145,7 +1403,7 @@ segrellion_find_second_wife_interaction = {
 
 		modifier = {
 
-			add = -20
+			add = -15
 			desc = segrellion_second_wife_countess_reason
 
 			scope:recipient = {
@@ -1155,7 +1413,7 @@ segrellion_find_second_wife_interaction = {
 
 		modifier = {
 
-			add = -40
+			add = -30
 			desc = segrellion_second_wife_duchess_reason
 
 			scope:recipient = {
@@ -1165,7 +1423,7 @@ segrellion_find_second_wife_interaction = {
 
 		modifier = {
 
-			add = -70
+			add = -55
 			desc = segrellion_second_wife_queen_reason
 
 			scope:recipient = {
@@ -1175,7 +1433,7 @@ segrellion_find_second_wife_interaction = {
 
 		modifier = {
 
-			add = -100
+			add = -80
 			desc = segrellion_second_wife_empress_reason
 
 			scope:recipient = {
