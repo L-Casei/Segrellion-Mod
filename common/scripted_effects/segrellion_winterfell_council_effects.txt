@@ -16,7 +16,37 @@
 
 segrellion_winterfell_council_ensure_attendees_effect = {
 
+	# =====================================================
+	# GET THE ACTIVITY RELIABLY
+	#
+	# on_start already supplies scope:activity, while the
+	# monthly/save-repair route reaches it through the host's
+	# involved_activity. Support both so there is no one-tick
+	# race during activity creation.
+	# =====================================================
+
+	save_scope_as = segrellion_winterfell_council_runtime_host
+
+
 	if = {
+
+		limit = {
+
+			exists = scope:activity
+
+			scope:activity = {
+				has_activity_type = activity_segrellion_winterfell_council
+			}
+		}
+
+
+		scope:activity = {
+			save_scope_as = segrellion_winterfell_council_runtime_activity
+		}
+	}
+
+
+	else_if = {
 
 		limit = {
 
@@ -26,20 +56,25 @@ segrellion_winterfell_council_ensure_attendees_effect = {
 		}
 
 
-		save_scope_as = segrellion_winterfell_council_runtime_host
-
 		involved_activity = {
 			save_scope_as = segrellion_winterfell_council_runtime_activity
+		}
+	}
+
+
+	if = {
+
+		limit = {
+
+			exists = scope:segrellion_winterfell_council_runtime_activity
 		}
 
 
 		# =================================================
 		# LANDED NORTHERN LORDS
 		#
-		# Do not restrict this to current vassals. The whole
-		# point of the Council is to gather the political North,
-		# including de-jure Northern rulers whose liege situation
-		# may still be settling after the wars.
+		# Invite the political North, not merely whoever happens
+		# to be a direct vassal at this exact post-war moment.
 		# =================================================
 
 		every_ruler = {
@@ -65,12 +100,8 @@ segrellion_winterfell_council_ensure_attendees_effect = {
 			}
 
 
-			# Use the actual activity invitation system rather than
-			# silently injecting the character as a participant.
 			invite_to_activity = scope:segrellion_winterfell_council_runtime_activity
 
-			# This is a story-critical political summons. AI invitees
-			# accept immediately so the Council cannot begin at 0 guests.
 			accept_activity_invite_without_travel = scope:segrellion_winterfell_council_runtime_activity
 		}
 
