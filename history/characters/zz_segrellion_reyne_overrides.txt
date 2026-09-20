@@ -69,8 +69,22 @@ Reyne_45 = {
 		}
 	}
 
-	# In Segrellion canon, Roger never married Lysa Farman.
-	# Alysanne marries him just after turning sixteen.
+	# AGOT base history marries Roger to Lysa Farman on 229.1.1.
+	# Cancel that relation on the SAME historical date so there is no
+	# period in Segrellion canon where Lysa is Roger's wife.
+	8229.1.1 = {
+		effect = {
+			if = {
+				limit = {
+					is_spouse_of = character:Farman_58
+				}
+
+				divorce = character:Farman_58
+			}
+		}
+	}
+
+	# Alysanne marries Roger just after turning sixteen.
 	8229.6.18 = {
 		add_spouse = Segrellion_31
 	}
@@ -117,13 +131,18 @@ Reyne_55 = {
 	culture = westerman_main
 
 	father = Reyne_45
-	mother = Segrellion_31
 
 	trait = ambitious
 	trait = wrathful
 
 	8230.1.1 = {
 		birth = yes
+
+		# Replace AGOT's original Farman maternity instead of adding a
+		# second parent relation. This prevents duplicate child portraits.
+		effect = {
+			set_mother = character:Segrellion_31
+		}
 		make_trait_inactive = red_hair
 		make_trait_inactive = scripted_appearance
 	}
@@ -148,10 +167,15 @@ Reyne_56 = {
 	culture = westerman_main
 
 	father = Reyne_45
-	mother = Segrellion_31
 
 	8231.1.1 = {
 		birth = yes
+
+		# Replace AGOT's original Farman maternity instead of adding a
+		# second parent relation. This prevents duplicate child portraits.
+		effect = {
+			set_mother = character:Segrellion_31
+		}
 		make_trait_inactive = red_hair
 		make_trait_inactive = scripted_appearance
 	}
@@ -173,12 +197,17 @@ Reyne_57 = {
 	culture = westerman_main
 
 	father = Reyne_45
-	mother = Segrellion_31
 
 	trait = ambitious
 
 	8234.1.1 = {
 		birth = yes
+
+		# Replace AGOT's original Farman maternity instead of adding a
+		# second parent relation. This prevents duplicate child portraits.
+		effect = {
+			set_mother = character:Segrellion_31
+		}
 		make_trait_inactive = red_hair
 		make_trait_inactive = scripted_appearance
 	}
@@ -191,30 +220,5 @@ Reyne_57 = {
 	}
 }
 
-
-# Lysa Farman remains a historical Farman, but she never
-# married Roger Reyne in Segrellion canon.
-Farman_58 = {
-	name = Lysa
-	dynasty = dynn_Farman
-	female = yes
-
-	dna = Farman_58
-
-	religion = fots_seven
-	culture = westerman_main
-
-	father = Farman_57
-	mother = Clifton_61
-
-	8212.1.1 = {
-		birth = yes
-		make_trait_inactive = scripted_appearance
-	}
-	8261.11.1 = {
-		death = {
-			death_reason = death_execution # Destruction of House Reyne
-			killer = Lannister_1 # Tywin Lannister
-		}
-	}
-}
+# Lysa Farman remains defined by AGOT's base history.
+# Segrellion canon deliberately adds no replacement definition for her.
