@@ -3,6 +3,57 @@
 # =========================================================
 
 # =========================================================
+# ENGINE BRIDGE - ALLOW EXACTLY TWO SPOUSES FOR THIS MARRIAGE
+#
+# number_of_spouses is an engine culture/faith parameter.
+# This hidden tradition is added only for the instant in which
+# CK3 creates the second spouse relation, then removed again.
+# =========================================================
+
+segrellion_force_second_wife_engine_marriage_effect = {
+
+	$SECOND_WIFE$ = {
+		save_scope_as = segrellion_engine_second_wife
+	}
+
+
+	culture = {
+
+		# Clean up a stale bridge from an interrupted old execution.
+		if = {
+
+			limit = {
+				has_cultural_tradition = tradition_segrellion_temporary_two_spouses
+			}
+
+			remove_culture_tradition = tradition_segrellion_temporary_two_spouses
+		}
+
+
+		add_culture_tradition = tradition_segrellion_temporary_two_spouses
+	}
+
+
+	# The hard engine spouse cap is now 2.
+	marry = scope:segrellion_engine_second_wife
+
+
+	# Existing marriages survive a later return to the normal cap.
+	culture = {
+
+		if = {
+
+			limit = {
+				has_cultural_tradition = tradition_segrellion_temporary_two_spouses
+			}
+
+			remove_culture_tradition = tradition_segrellion_temporary_two_spouses
+		}
+	}
+}
+
+
+# =========================================================
 # CREATE A REAL SECOND MARRIAGE
 #
 # THIS = prospective husband
@@ -48,8 +99,10 @@ segrellion_create_second_wife_marriage_effect = {
 	}
 
 
-	# Real CK3 runtime marriage effect.
-	marry = scope:segrellion_new_second_wife
+	# Create the actual second-spouse relation with the engine cap opened.
+	segrellion_force_second_wife_engine_marriage_effect = {
+		SECOND_WIFE = scope:segrellion_new_second_wife
+	}
 
 
 	if = {
