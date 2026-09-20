@@ -20,6 +20,7 @@ on_game_start_after_lobby = {
 segrellion_flamelander_culture_progression = {
 	effect = {
 		segrellion_flamelander_culture_progression_effect = yes
+		segrellion_sync_flamelander_valyrian_name_lists_effect = yes
 	}
 }
 
@@ -27,58 +28,5 @@ segrellion_flamelander_culture_startup = {
 	effect = {
 		segrellion_flamelander_culture_progression_effect = yes
 		segrellion_sync_flamelander_valyrian_name_lists_effect = yes
-	}
-}
-
-
-# =========================================================
-# VALYRIAN NAME LIST SYNCHRONIZATION
-#
-# AGOT changes High Valyrian's active name list at game start
-# depending on the bookmark date. Flamelander and High
-# Flamelander must follow the exact same Targaryen-influence
-# / Targaryen-dominance split instead of remaining on the
-# static base High Valyrian list.
-# =========================================================
-
-segrellion_sync_flamelander_valyrian_name_lists_effect = {
-
-	if = {
-		limit = {
-			game_start_date >= 8131.1.14
-		}
-
-		culture:flamelander = {
-			set_name_list = name_list_high_valyrian_targ_dominance
-		}
-
-		culture:high_flamelander = {
-			set_name_list = name_list_high_valyrian_targ_dominance
-		}
-	}
-
-	else_if = {
-		limit = {
-			game_start_date >= 8010.1.1
-		}
-
-		culture:flamelander = {
-			set_name_list = name_list_high_valyrian_targ_influence
-		}
-
-		culture:high_flamelander = {
-			set_name_list = name_list_high_valyrian_targ_influence
-		}
-	}
-
-	else = {
-
-		culture:flamelander = {
-			set_name_list = name_list_high_valyrian
-		}
-
-		culture:high_flamelander = {
-			set_name_list = name_list_high_valyrian
-		}
 	}
 }
