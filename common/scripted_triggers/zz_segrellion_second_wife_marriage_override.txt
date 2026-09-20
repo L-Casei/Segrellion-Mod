@@ -1,0 +1,59 @@
+# =========================================================
+# SEGRELLION - MARRIAGE CAP ACCESS OVERRIDE
+#
+# The persistent hidden culture parameter keeps a legal second
+# spouse from being invalidated by CK3. This override prevents
+# that engine allowance from becoming a free second-wife right
+# for every member of the culture.
+#
+# Based on AGOT 1.19 can_marry_trigger, with one Segrellion gate.
+# =========================================================
+
+can_marry_trigger = {
+
+	can_marry_common_trigger = yes
+
+	allowed_more_spouses = yes
+
+
+	# If this culture has received the expanded Exceptionalism engine
+	# allowance and the character already has one spouse, only a
+	# personally authorised character may use that second slot through
+	# normal marriage interactions.
+	#
+	# Native polygamous faiths/cultures are deliberately exempt.
+	trigger_if = {
+
+		limit = {
+
+			number_of_spouses >= 1
+
+			religion = religion:the_seven_religion
+
+			culture = {
+				has_cultural_tradition = tradition_segrellion_temporary_two_spouses
+			}
+
+			NOR = {
+
+				faith = {
+					has_doctrine = doctrine_polygamy
+				}
+
+				culture = {
+					has_cultural_tradition = tradition_polygamous
+				}
+			}
+		}
+
+
+		segrellion_has_second_wife_slot_trigger = yes
+	}
+
+
+	# AGOT Added; RV
+	NAND = {
+		is_ai = yes
+		has_variable = rv_block_ai_marriage
+	}
+}
