@@ -174,6 +174,12 @@ segrellion_daenerys_ai_enforce_invasion_deadline_effect = {
 		# First deadline tick gets a short grace period so the
 		# normal landing-choice event can still choose Dragonstone,
 		# Dorne, Massey's Hook or the Beacon.
+		#
+		# IMPORTANT: mark the deadline HERE, independently of
+		# force_westeros_crossing. Previously an already-set
+		# crossing_committed flag made that effect no-op, so the
+		# deadline marker was never created and the fallback could
+		# never recover the broken crossing.
 
 		if = {
 
@@ -187,10 +193,12 @@ segrellion_daenerys_ai_enforce_invasion_deadline_effect = {
 
 			add_character_flag = {
 				flag = segrellion_daenerys_ai_deadline_landing_grace
-				days = 30
+				days = 7
 			}
 		}
 
+
+		add_character_flag = segrellion_daenerys_ai_forced_invasion_deadline
 
 		segrellion_daenerys_ai_repair_westeros_route_effect = yes
 
@@ -206,7 +214,7 @@ segrellion_daenerys_ai_enforce_invasion_deadline_effect = {
 #
 # If the crossing was forced by the aggression deadline but
 # the normal landing event still failed to produce a real
-# journey within 30 days, stop waiting and sail to Dorne.
+# journey within the short grace period, stop waiting and sail to Dorne.
 #
 # This is only an emergency rail. Before the deadline the
 # normal landing logic remains completely untouched.
@@ -230,10 +238,6 @@ segrellion_daenerys_ai_deadline_landing_fallback_effect = {
 			}
 
 			NOT = {
-				has_character_flag = segrellion_daenerys_landing_chosen
-			}
-
-			NOT = {
 				has_character_flag = segrellion_daenerys_landed_in_westeros
 			}
 
@@ -249,6 +253,17 @@ segrellion_daenerys_ai_deadline_landing_fallback_effect = {
 		remove_character_flag = segrellion_daenerys_beacon_negotiation_started
 		remove_character_flag = segrellion_daenerys_massey_landing_request_pending
 		remove_character_flag = segrellion_daenerys_massey_landing_request_recently_sent
+
+		# Clear a stale landing selection before forcing the emergency
+		# Dorne route. A dead travel plan used to leave landing_chosen
+		# behind forever and block every later deadline recovery.
+		remove_character_flag = segrellion_daenerys_landing_chosen
+		remove_character_flag = segrellion_daenerys_landing_choice_pending
+		remove_character_flag = segrellion_daenerys_landing_dragonstone
+		remove_character_flag = segrellion_daenerys_landing_dorne
+		remove_character_flag = segrellion_daenerys_landing_flamelands
+		remove_character_flag = segrellion_daenerys_landing_masseys_hook
+		remove_character_flag = segrellion_daenerys_landing_beacon
 
 
 		current_travel_plan ?= {
