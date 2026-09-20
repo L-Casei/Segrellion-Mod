@@ -1948,6 +1948,11 @@ segrellion_daenerys_invasion.0010 = {
 
 			add_character_flag = segrellion_daenerys_massey_landing_request_pending
 
+			add_character_flag = {
+				flag = segrellion_daenerys_massey_landing_request_recently_sent
+				days = 30
+			}
+
 
 			title:d_masseys_hook.holder = {
 
@@ -2833,6 +2838,35 @@ segrellion_daenerys_invasion.0019 = {
 
 
 		# =================================================
+		# SHIREEN STORY
+		#
+		# The exterior/reflection event must always be seen
+		# first. Only after Daenerys has contemplated
+		# Dragonstone do we move inside to the throne room.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				has_character_flag = segrellion_daenerys_captured_shireen
+
+				NOT = {
+					has_character_flag = segrellion_daenerys_dragonstone_shireen_arrival_seen
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_daenerys_dragonstone.0001
+
+				days = 1
+			}
+		}
+
+
+		# =================================================
 		# ORIGINAL DRAGONSTONE LANDING
 		#
 		# Continue into The Dragon Lands.
@@ -2852,7 +2886,7 @@ segrellion_daenerys_invasion.0019 = {
 
 				id = segrellion_daenerys_invasion.0020
 
-				days = 1
+				days = 2
 			}
 		}
 
