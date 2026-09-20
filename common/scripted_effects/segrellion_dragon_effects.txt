@@ -692,12 +692,324 @@ segrellion_historical_dragons_zero_tick_setup_effect = {
 
 
 # ============================================================
+# FORCE CANON DRAGON RIDER
+#
+# Guarantees a scripted dragon/rider pair instead of rolling
+# AGOT's normal taming chance. If either side is currently
+# paired with someone/something else, the incorrect bond is
+# cleanly removed first.
+# ============================================================
+
+segrellion_force_canon_dragon_rider_effect = {
+
+	$RIDER$ = {
+		save_scope_as = segrellion_canon_rider
+	}
+
+	$DRAGON$ = {
+		save_scope_as = segrellion_canon_rider_dragon
+	}
+
+	if = {
+
+		limit = {
+
+			scope:segrellion_canon_rider = {
+				is_alive = yes
+			}
+
+			scope:segrellion_canon_rider_dragon = {
+				is_alive = yes
+				has_trait = dragon
+			}
+
+			OR = {
+
+				scope:segrellion_canon_rider = {
+					NOT = {
+						has_variable = current_dragon
+					}
+				}
+
+				scope:segrellion_canon_rider = {
+					NOT = {
+						var:current_dragon ?= scope:segrellion_canon_rider_dragon
+					}
+				}
+
+				scope:segrellion_canon_rider_dragon = {
+					NOT = {
+						has_variable = current_rider
+					}
+				}
+
+				scope:segrellion_canon_rider_dragon = {
+					NOT = {
+						var:current_rider ?= scope:segrellion_canon_rider
+					}
+				}
+			}
+		}
+
+		# Remove any non-canon rider already using this dragon.
+		scope:segrellion_canon_rider_dragon = {
+
+			if = {
+
+				limit = {
+
+					has_variable = current_rider
+
+					NOT = {
+						var:current_rider ?= scope:segrellion_canon_rider
+					}
+				}
+
+				var:current_rider = {
+					save_scope_as = segrellion_wrong_dragon_rider
+				}
+			}
+		}
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_wrong_dragon_rider
+			}
+
+			agot_untame_dragon = {
+				OWNER = scope:segrellion_wrong_dragon_rider
+				DRAGON = scope:segrellion_canon_rider_dragon
+			}
+		}
+
+		# Remove any different dragon currently ridden by the
+		# canonical rider.
+		scope:segrellion_canon_rider = {
+
+			if = {
+
+				limit = {
+
+					has_variable = current_dragon
+
+					NOT = {
+						var:current_dragon ?= scope:segrellion_canon_rider_dragon
+					}
+				}
+
+				var:current_dragon = {
+					save_scope_as = segrellion_wrong_canon_dragon
+				}
+			}
+		}
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_wrong_canon_dragon
+			}
+
+			agot_untame_dragon = {
+				OWNER = scope:segrellion_canon_rider
+				DRAGON = scope:segrellion_wrong_canon_dragon
+			}
+		}
+
+		# No probability roll. The canonical pairing simply happens.
+		agot_tame_dragon = {
+			TAMER = scope:segrellion_canon_rider
+			DRAGON = scope:segrellion_canon_rider_dragon
+		}
+	}
+}
+
+
+# ============================================================
+# CANON RIDER PROGRESSION
+#
+# Monthly repair/controller. This makes the historical pairing
+# deterministic in both new games and older saves.
+# ============================================================
+
+segrellion_canon_dragon_riders_progression_effect = {
+
+	# Alex Segrellion -> Vhalyrax
+	if = {
+
+		limit = {
+			current_date >= 8122.1.1
+			current_date < 8170.1.1
+
+			character:Segrellion_1 ?= {
+				is_alive = yes
+			}
+
+			exists = global_var:segrellion_historical_vhalyrax
+
+			global_var:segrellion_historical_vhalyrax = {
+				is_alive = yes
+			}
+		}
+
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_1
+			DRAGON = global_var:segrellion_historical_vhalyrax
+		}
+	}
+
+
+	# Aeryn Segrellion -> Maenor
+	if = {
+
+		limit = {
+			current_date >= 8142.4.27
+			current_date < 8178.11.1
+
+			character:Segrellion_12 ?= {
+				is_alive = yes
+			}
+
+			exists = global_var:segrellion_historical_maenor
+
+			global_var:segrellion_historical_maenor = {
+				is_alive = yes
+			}
+		}
+
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_12
+			DRAGON = global_var:segrellion_historical_maenor
+		}
+	}
+
+
+	# Aegon Dragonspear -> Azuron
+	if = {
+
+		limit = {
+			current_date >= 8167.1.1
+			current_date < 8205.1.24
+
+			character:Segrellion_21 ?= {
+				is_alive = yes
+			}
+
+			character:dragon_azuron ?= {
+				is_alive = yes
+			}
+		}
+
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_21
+			DRAGON = character:dragon_azuron
+		}
+	}
+
+
+	# Daena Targaryen -> Rhaenyx
+	if = {
+
+		limit = {
+			current_date >= 8159.1.1
+			current_date < 8178.11.1
+
+			character:Targaryen_83 ?= {
+				is_alive = yes
+			}
+
+			character:dragon_rhaenyx ?= {
+				is_alive = yes
+			}
+		}
+
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Targaryen_83
+			DRAGON = character:dragon_rhaenyx
+		}
+	}
+
+
+	# Valerion Segrellion -> Valor
+	if = {
+
+		limit = {
+			current_date >= 8159.6.9
+			current_date < 8174.9.17
+
+			character:Segrellion_19 ?= {
+				is_alive = yes
+			}
+
+			character:dragon_valor ?= {
+				is_alive = yes
+			}
+		}
+
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_19
+			DRAGON = character:dragon_valor
+		}
+	}
+
+
+	# Targaryen_81 -> Aerox
+	if = {
+
+		limit = {
+			current_date >= 8157.1.13
+			current_date < 8161.6.9
+
+			character:Targaryen_81 ?= {
+				is_alive = yes
+			}
+
+			character:dragon_aerox ?= {
+				is_alive = yes
+			}
+		}
+
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Targaryen_81
+			DRAGON = character:dragon_aerox
+		}
+	}
+
+
+	# Rhaenys Segrellion -> Silverwing
+	if = {
+
+		limit = {
+			current_date >= 8146.1.1
+			current_date < 8173.1.1
+
+			character:Segrellion_17 ?= {
+				is_alive = yes
+			}
+
+			character:dragon_silverwing ?= {
+				is_alive = yes
+			}
+		}
+
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_17
+			DRAGON = character:dragon_silverwing
+		}
+	}
+}
+
+
+# ============================================================
 # ALL HISTORICAL / CANON DRAGON PROGRESSION
 #
 # ONE central controller.
 # ============================================================
 
 segrellion_historical_dragons_progression_effect = {
+
+	# Canon rider pairs are deterministic, never chance-based.
+	segrellion_canon_dragon_riders_progression_effect = yes
 
 	# ========================================================
 	# EXISTING-SAVE REPAIRS
