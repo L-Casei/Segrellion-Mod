@@ -17,6 +17,15 @@ segrellion_rickon_return.0000 = {
 	immediate = {
 		remove_character_flag = segrellion_rickon_return_watch_queued
 
+		title:e_flamelands.holder ?= {
+			if = {
+				limit = {
+					segrellion_rickon_return_flamelands_protector_trigger = yes
+				}
+				save_scope_as = segrellion_rickon_current_flamelands_protector
+			}
+		}
+
 		# -------------------------------------------------
 		# SANSA CURRENTLY SHELTERS RICKON
 		# -------------------------------------------------
@@ -88,14 +97,11 @@ segrellion_rickon_return.0000 = {
 					is_adult = yes
 				}
 
-				title:e_flamelands.holder ?= {
-					segrellion_rickon_return_flamelands_protector_trigger = yes
-					root = {
-						OR = {
-							is_courtier_of = prev
-							location = title:b_castle_farring.title_province
-						}
-					}
+				exists = scope:segrellion_rickon_current_flamelands_protector
+
+				OR = {
+					is_courtier_of = scope:segrellion_rickon_current_flamelands_protector
+					location = title:b_castle_farring.title_province
 				}
 
 				OR = {
@@ -103,7 +109,7 @@ segrellion_rickon_return.0000 = {
 						segrellion_rickon_return_jon_king_trigger = yes
 					}
 					AND = {
-						title:e_flamelands.holder = character:Segrellion_60
+						scope:segrellion_rickon_current_flamelands_protector = character:Segrellion_60
 						character:Segrellion_60 = {
 							segrellion_rickon_sansa_beacon_option_trigger = yes
 						}
@@ -116,7 +122,7 @@ segrellion_rickon_return.0000 = {
 				days = 30
 			}
 
-			title:e_flamelands.holder = {
+			scope:segrellion_rickon_current_flamelands_protector = {
 				trigger_event = {
 					id = segrellion_rickon_return.0010
 					days = 1
