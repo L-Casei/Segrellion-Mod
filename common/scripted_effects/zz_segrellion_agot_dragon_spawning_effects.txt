@@ -6,139 +6,156 @@ agot_spawn_owned_hatchling_from_egg_effect = {
 		save_scope_as = egg
 	}
 
+	# ========================================================
+	# SEGRELLION CANON EGGS
+	#
+	# Identity belongs to the egg itself, not to whoever happens
+	# to hatch it. A Maenor egg always hatches Maenor and a
+	# Nightdancer egg always hatches Nightdancer.
+	# ========================================================
+
 	if = {
 		limit = {
-			exists = scope:cradlemate
 			scope:egg = {
 				has_variable = segrellion_maenor_egg
 			}
-			scope:cradlemate = {
-				iaf_is_aeryn_segrellion_trigger = yes
+
+			NOT = {
+				exists = global_var:segrellion_historical_maenor
 			}
 		}
 
-		segrellion_spawn_maenor_from_egg_effect = yes
-		agot_bond_dragon_relation_effect = {
-			ACTOR = scope:cradlemate
-			DRAGON = scope:dragon
+		segrellion_spawn_maenor_from_egg_effect = {
+			OWNER = scope:owner
+			EGG = scope:egg
 		}
 
-		scope:dragon = {
-			add_character_flag = {
-				flag = agot_no_silly_name
-				months = 1
+		scope:owner = {
+			send_interface_message = {
+				type = event_generic_good_text
+				title = agot_spawn_dragon_effect.interface.t
+				desc = agot_spawn_dragon_effect.interface.desc
+				left_icon = scope:dragon
 			}
 		}
 	}
+
 	else_if = {
 		limit = {
-			exists = scope:cradlemate
 			scope:egg = {
 				has_variable = segrellion_nightdancer_egg
 			}
-			scope:cradlemate = {
-				iaf_is_rhaenyra_segrellion_trigger = yes
+
+			NOT = {
+				exists = global_var:segrellion_historical_nightdancer
 			}
 		}
 
-		segrellion_spawn_nightdancer_from_egg_effect = yes
-		agot_bond_dragon_relation_effect = {
-			ACTOR = scope:cradlemate
-			DRAGON = scope:dragon
+		segrellion_spawn_nightdancer_from_egg_effect = {
+			OWNER = scope:owner
+			EGG = scope:egg
 		}
 
-		scope:dragon = {
-			add_character_flag = {
-				flag = agot_no_silly_name
-				months = 1
+		scope:owner = {
+			send_interface_message = {
+				type = event_generic_good_text
+				title = agot_spawn_dragon_effect.interface.t
+				desc = agot_spawn_dragon_effect.interface.desc
+				left_icon = scope:dragon
 			}
 		}
 	}
-	else_if = {
-		limit = {
-			agot_canon_dragons_enabled = yes
-			exists = scope:cradlemate
-			scope:cradlemate ?= {
-				agot_has_canon_cradle_egg = yes
-				NOT = {
-					has_character_flag = hatched_canon_dragon
+
+	else = {
+
+		if = {
+			limit = {
+				agot_canon_dragons_enabled = yes
+				exists = scope:cradlemate
+				scope:cradlemate ?= {
+					agot_has_canon_cradle_egg = yes
+					NOT = {
+						has_character_flag = hatched_canon_dragon
+					}
+				}
+			}
+
+			scope:cradlemate = {
+				add_character_flag = hatched_canon_dragon
+			}
+
+			agot_spawn_canon_cradle_dragon_effect = {
+				CRADLEMATE = scope:cradlemate
+			}
+
+			scope:dragon = {
+				add_character_flag = {
+					flag = agot_no_silly_name
+					months = 1
 				}
 			}
 		}
 
-		scope:cradlemate = {
-			add_character_flag = hatched_canon_dragon
-		}
-
-		agot_spawn_canon_cradle_dragon_effect = {
-			CRADLEMATE = scope:cradlemate
-		}
-
-		scope:dragon = {
-			add_character_flag = {
-				flag = agot_no_silly_name
-				months = 1
+		else_if = {
+			limit = {
+				agot_canon_dragons_enabled = yes
+				agot_is_valid_unpaired_canon_dragon_birth = {
+					EGG = scope:egg
+				}
 			}
-		}
-	}
-	else_if = {
-		limit = {
-			agot_canon_dragons_enabled = yes
-			agot_is_valid_unpaired_canon_dragon_birth = {
+
+			agot_spawn_unpaired_canon_dragon = {
 				EGG = scope:egg
 			}
-		}
 
-		agot_spawn_unpaired_canon_dragon = {
-			EGG = scope:egg
-		}
-
-		scope:dragon = {
-			add_character_flag = {
-				flag = agot_no_silly_name
-				months = 1
+			scope:dragon = {
+				add_character_flag = {
+					flag = agot_no_silly_name
+					months = 1
+				}
 			}
 		}
-	}
-	else = {
-		create_character = {
-			location = $OWNER$.location
-			template = agot_dragon_hatchling_template
-			random_traits = no
-			save_scope_as = dragon
-		}
-	}
 
-	hidden_effect = {
-		agot_set_as_owned_dragon = {
-			OWNER = scope:owner
+		else = {
+			create_character = {
+				location = $OWNER$.location
+				template = agot_dragon_hatchling_template
+				random_traits = no
+				save_scope_as = dragon
+			}
+		}
+
+		hidden_effect = {
+			agot_set_as_owned_dragon = {
+				OWNER = scope:owner
+				DRAGON = scope:dragon
+			}
+		}
+
+		$OWNER$ = {
+			send_interface_message = {
+				type = event_generic_good_text
+				title = agot_spawn_dragon_effect.interface.t
+				desc = agot_spawn_dragon_effect.interface.desc
+
+				left_icon = scope:dragon
+			}
+		}
+
+		agot_set_dragon_parents = {
+			EGG = scope:egg
+		}
+
+		agot_dragon_tree_creation_effect = {
 			DRAGON = scope:dragon
 		}
-	}
 
-	$OWNER$ = {
-		send_interface_message = {
-			type = event_generic_good_text
-			title = agot_spawn_dragon_effect.interface.t
-			desc = agot_spawn_dragon_effect.interface.desc
+		custom_tooltip = {
+			text = agot_dragon_hatched_from_egg_effect_tt
 
-			left_icon = scope:dragon
-		}
-	}
-
-	agot_set_dragon_parents = {
-		EGG = scope:egg
-	}
-
-	agot_dragon_tree_creation_effect = {
-		DRAGON = scope:dragon
-	}
-
-	custom_tooltip = {
-		text = agot_dragon_hatched_from_egg_effect_tt
-
-		agot_remove_dragon_egg = {
-			EGG = scope:egg
+			agot_remove_dragon_egg = {
+				EGG = scope:egg
+			}
 		}
 	}
 }
