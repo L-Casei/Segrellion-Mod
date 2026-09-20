@@ -548,25 +548,34 @@ segrellion_settle_sansa_riverlands_effect = {
 			if = {
 
 				limit = {
-
 					has_character_flag = segrellion_sansa_strong_hook_price_for_vale_war
+					NOT = { has_character_flag = segrellion_sansa_strong_hook_price_paid }
+				}
 
 
-					can_add_hook = {
+				# This is a negotiated war price, not a probabilistic reward.
+				# If Daemon already has a weaker hook on Sansa, replace it
+				# so the promised Strong Hook cannot be blocked by can_add_hook.
 
+				if = {
+
+					limit = {
+						has_hook = character:Stark_Dummy_8
+					}
+
+					remove_hook = {
 						target = character:Stark_Dummy_8
-
-						type = strong_favor_hook
 					}
 				}
 
 
 				add_hook = {
-
 					type = strong_favor_hook
-
 					target = character:Stark_Dummy_8
 				}
+
+				add_character_flag = segrellion_sansa_strong_hook_price_paid
+				remove_character_flag = segrellion_sansa_strong_hook_price_for_vale_war
 			}
 
 
