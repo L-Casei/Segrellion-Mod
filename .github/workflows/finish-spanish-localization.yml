@@ -94,45 +94,77 @@ jobs:
             out.append(html.escape(value[pos:],quote=False))
             return "".join(out),mapping
 
+          prepared=[]
+          maps=[]
+          for v in unique:
+            p,m=protect(v); prepared.append(p); maps.append(m)
+
           def request(text):
-            data=urllib.parse.urlencode({
-              "client":"gtx","sl":"en","tl":"es","dt":"t","format":"html","q":text
-            }).encode("utf-8")
+            data=urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"es","dt":"t","format":"html","q":text}).encode("utf-8")
             url="https://translate.googleapis.com/translate_a/single"
             last=None
-            for n in range(9):
+            for n in range(8):
               try:
                 req=urllib.request.Request(url,data=data,headers={"User-Agent":"Mozilla/5.0"},method="POST")
-                with urllib.request.urlopen(req,timeout=45) as resp:
+                with urllib.request.urlopen(req,timeout=60) as resp:
                   payload=json.loads(resp.read().decode("utf-8"))
                 return "".join(x[0] for x in payload[0] if x and x[0])
               except Exception as e:
-                last=e
-                time.sleep(min(0.6*(n+1),5))
+                last=e; time.sleep(min(.7*(n+1),5))
             raise RuntimeError(last)
 
-          def translate(value):
-            protected,mapping=protect(value)
-            translated=request(protected)
-            for ident,original in mapping.items():
+          def restore(i,text):
+            for ident,original in maps[i].items():
               pat=re.compile(r'<span\b(?=[^>]*\bid=["\']?'+re.escape(ident)+r'["\']?)[^>]*>.*?</span>',re.I|re.S)
-              translated,n=pat.subn(lambda _:html.escape(original,quote=False),translated,count=1)
-              if n!=1:
-                raise RuntimeError(f"Protected token lost: {ident}")
-            translated=re.sub(r'</?span\b[^>]*>','',translated,flags=re.I)
-            return html.unescape(translated)
+              text,n=pat.subn(lambda _:html.escape(original,quote=False),text,count=1)
+              if n!=1: raise RuntimeError(f"Protected token lost {ident}")
+            text=re.sub(r'</?span\b[^>]*>','',text,flags=re.I)
+            return html.unescape(text).strip()
+
+          # Pack many strings in HTML divs. If a batch is changed structurally,
+          # fall back to safe one-string calls for only that batch.
+          batches=[]; cur=[]; size=0
+          for i,p in enumerate(prepared):
+            wrapped=f'<div id="s{i:06d}">{p}</div>'
+            if cur and size+len(wrapped)>8500:
+              batches.append(cur); cur=[]; size=0
+            cur.append(i); size+=len(wrapped)
+          if cur: batches.append(cur)
+          print(f"Batches: {len(batches)}",flush=True)
+
+          def one(i):
+            out=request(f'<div id="s{i:06d}">{prepared[i]}</div>')
+            pat=re.compile(r'<div\b(?=[^>]*\bid=["\']?s'+f'{i:06d}'+r'["\']?)[^>]*>(.*?)</div>',re.I|re.S)
+            m=pat.search(out)
+            if not m: raise RuntimeError(f"String wrapper lost s{i:06d}")
+            return restore(i,m.group(1))
+
+          def batch(indices):
+            body="".join(f'<div id="s{i:06d}">{prepared[i]}</div>' for i in indices)
+            out=request(body)
+            result={}
+            ok=True
+            for i in indices:
+              pat=re.compile(r'<div\b(?=[^>]*\bid=["\']?s'+f'{i:06d}'+r'["\']?)[^>]*>(.*?)</div>',re.I|re.S)
+              m=pat.search(out)
+              if not m:
+                ok=False; break
+              try: result[i]=restore(i,m.group(1))
+              except Exception:
+                ok=False; break
+            if ok and len(result)==len(indices):
+              return result
+            return {i:one(i) for i in indices}
 
           translated={}
-          with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
-            futs={ex.submit(translate,v):v for v in unique}
-            done=0
-            for f in concurrent.futures.as_completed(futs):
-              v=futs[f]
-              translated[v]=f.result()
-              done+=1
-              if done%200==0:
-                print(f"Translated {done}/{len(unique)}",flush=True)
+          with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
+            futs=[ex.submit(batch,b) for b in batches]
+            for n,f in enumerate(concurrent.futures.as_completed(futs),1):
+              translated.update(f.result())
+              if n%10==0 or n==len(batches):
+                print(f"Batch {n}/{len(batches)}",flush=True)
 
+          by_value={unique[i]:translated[i] for i in range(len(unique))}
           for src,(dst,lines) in raw.items():
             out=[]
             for line in lines:
@@ -141,35 +173,31 @@ jobs:
               if line.lstrip().startswith("#"):
                 out.append(line); continue
               a,b=line.find('"'),line.rfind('"')
-              if a!=-1 and b>a and line[a+1:b] in translated:
-                tr=translated[line[a+1:b]].replace('"',r'\"')
+              if a!=-1 and b>a and line[a+1:b] in by_value:
+                tr=by_value[line[a+1:b]].replace('"',r'\"')
                 line=line[:a+1]+tr+line[b:]
               out.append(line)
             dst.parent.mkdir(parents=True,exist_ok=True)
             dst.write_text("".join(out),encoding="utf-8-sig")
             print("Wrote",dst,flush=True)
 
-          # Structural validation against English.
           spanish=list(ES.rglob("*.yml"))
-          if len(spanish)!=len(sources):
-            raise SystemExit(f"Count mismatch {len(spanish)}/{len(sources)}")
+          if len(spanish)!=len(sources): raise SystemExit(f"Count mismatch {len(spanish)}/{len(sources)}")
           key_re=re.compile(r'^\s*([^#\s][^:]*):')
           token_check=re.compile(r'(\\n|\$[^$]+\$|\[[^\]]+\]|@[A-Za-z0-9_]+!|#!|#[A-Za-z0-9_]+)')
           for src in sources:
             dst=target_for(src)
             if not dst.exists(): raise SystemExit(f"Missing {dst}")
-            aa=src.read_text(encoding="utf-8-sig")
-            bb=dst.read_text(encoding="utf-8-sig")
+            aa=src.read_text(encoding="utf-8-sig"); bb=dst.read_text(encoding="utf-8-sig")
             if not bb.startswith("l_spanish:"): raise SystemExit(f"Bad header {dst}")
             ka=[m.group(1).strip() for m in map(key_re.match,aa.splitlines()) if m][1:]
             kb=[m.group(1).strip() for m in map(key_re.match,bb.splitlines()) if m][1:]
             if ka!=kb: raise SystemExit(f"Key mismatch {dst}")
-            # Player strings must retain the same CK3 syntax tokens.
             al=aa.splitlines(); bl=bb.splitlines()
             if len(al)!=len(bl): raise SystemExit(f"Line mismatch {dst}")
             for n,(x,y) in enumerate(zip(al,bl),1):
-              ax=sorted(token_check.findall(x)); by=sorted(token_check.findall(y))
-              if ax!=by: raise SystemExit(f"Token mismatch {dst}:{n} {ax} != {by}")
+              if sorted(token_check.findall(x))!=sorted(token_check.findall(y)):
+                raise SystemExit(f"Token mismatch {dst}:{n}")
           print(f"VERIFIED {len(spanish)}/{len(sources)}",flush=True)
           PY
 
@@ -179,9 +207,6 @@ jobs:
           git config user.name "Segrellion Localization"
           git config user.email "actions@users.noreply.github.com"
           git add localization/spanish
-          if git diff --cached --quiet; then
-            echo "No localization changes."
-            exit 0
-          fi
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m "feat(localization): complete Spanish localization"
           git push origin HEAD:main
