@@ -1,0 +1,76 @@
+# Leo: AI surrender probability, with complementary refusal weight.
+# Exponential saturation sampled at each whole warscore point:
+# P(w) = 2 + 96 * (1 - exp(-0.025*w)) / (1 - exp(-1.5)).
+# Clamp at 98% for w >= 60; 2% when Daemon is not winning.
+# Explicit thresholds use only standard CK3 script-value operations.
+segrellion_leo_beacon_surrender_chance_value = {
+	value = 2
+	if = {
+		limit = { exists = character:Segrellion_60.var:segrellion_unicorn_returns_war }
+		if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 60 } } value = 98 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 59 } } value = 97.302 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 58 } } value = 96.586 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 57 } } value = 95.853 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 56 } } value = 95.1 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 55 } } value = 94.329 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 54 } } value = 93.538 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 53 } } value = 92.727 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 52 } } value = 91.895 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 51 } } value = 91.043 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 50 } } value = 90.169 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 49 } } value = 89.272 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 48 } } value = 88.353 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 47 } } value = 87.411 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 46 } } value = 86.445 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 45 } } value = 85.455 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 44 } } value = 84.439 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 43 } } value = 83.398 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 42 } } value = 82.33 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 41 } } value = 81.235 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 40 } } value = 80.113 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 39 } } value = 78.962 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 38 } } value = 77.782 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 37 } } value = 76.572 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 36 } } value = 75.332 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 35 } } value = 74.06 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 34 } } value = 72.756 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 33 } } value = 71.419 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 32 } } value = 70.048 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 31 } } value = 68.642 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 30 } } value = 67.201 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 29 } } value = 65.723 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 28 } } value = 64.208 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 27 } } value = 62.655 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 26 } } value = 61.062 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 25 } } value = 59.429 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 24 } } value = 57.755 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 23 } } value = 56.038 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 22 } } value = 54.278 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 21 } } value = 52.473 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 20 } } value = 50.622 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 19 } } value = 48.725 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 18 } } value = 46.779 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 17 } } value = 44.785 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 16 } } value = 42.739 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 15 } } value = 40.643 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 14 } } value = 38.493 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 13 } } value = 36.288 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 12 } } value = 34.028 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 11 } } value = 31.71 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 10 } } value = 29.334 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 9 } } value = 26.898 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 8 } } value = 24.4 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 7 } } value = 21.839 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 6 } } value = 19.213 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 5 } } value = 16.52 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 4 } } value = 13.76 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 3 } } value = 10.929 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 2 } } value = 8.027 }
+		else_if = { limit = { character:Segrellion_60.var:segrellion_unicorn_returns_war = { attacker_war_score >= 1 } } value = 5.051 }
+	}
+}
+
+segrellion_leo_beacon_refusal_chance_value = {
+	value = 100
+	subtract = segrellion_leo_beacon_surrender_chance_value
+}
