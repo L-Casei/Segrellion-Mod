@@ -11029,6 +11029,8 @@ segrellion_black_unicorn.0890 = {
 		character:Stark_Dummy_11 = {
 
 			add_character_flag = segrellion_rickon_under_daemon_protection
+
+			segrellion_rickon_ensure_education_watch_effect = yes
 		}
 
 
@@ -11063,6 +11065,8 @@ segrellion_black_unicorn.0890 = {
 		character:Stark_Dummy_11 = {
 
 			add_character_flag = segrellion_rickon_under_daemon_protection
+
+			segrellion_rickon_ensure_education_watch_effect = yes
 		}
 
 
@@ -11159,4 +11163,53 @@ segrellion_hugh_black_unicorn.0011 = {
 
         set_character_flag = segrellion_daemon_acknowledged_hugh_plate
     }
+}
+
+# =========================================================
+# 0998 - VISENYA MARRIAGE LOCK WATCHDOG
+#
+# Hidden. While the Black Unicorn storyline is unresolved,
+# Visenya cannot drift into a vanilla marriage/betrothal.
+# =========================================================
+
+segrellion_black_unicorn.0998 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		this = character:Black_Unicorn_1
+
+		is_alive = yes
+	}
+
+
+	immediate = {
+
+		segrellion_visenya_pre_daemon_marriage_guard_effect = yes
+
+
+		if = {
+
+			limit = {
+
+				segrellion_visenya_marriage_story_locked_trigger = yes
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_black_unicorn.0998
+
+				days = 30
+			}
+		}
+
+
+		else = {
+
+			remove_character_flag = segrellion_visenya_marriage_guard_watch_running
+		}
+	}
 }
