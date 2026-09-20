@@ -1,0 +1,1028 @@
+namespace = segrellion_rickon_return
+
+# =========================================================
+# 0000 - HIDDEN ROUTER / WATCHDOG
+# ROOT = RICKON
+# =========================================================
+
+segrellion_rickon_return.0000 = {
+	hidden = yes
+
+	trigger = {
+		this = character:Stark_Dummy_11
+		is_alive = yes
+		NOT = { has_character_flag = segrellion_rickon_north_return_resolved }
+	}
+
+	immediate = {
+		remove_character_flag = segrellion_rickon_return_watch_queued
+
+		# -------------------------------------------------
+		# SANSA CURRENTLY SHELTERS RICKON
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_rickon_with_sansa_riverlands
+				character:Stark_Dummy_8 ?= {
+					is_alive = yes
+					NOT = { segrellion_rickon_sansa_holds_riverlands_trigger = yes }
+				}
+				title:e_flamelands.holder ?= {
+					segrellion_rickon_return_flamelands_protector_trigger = yes
+				}
+				NOT = { has_character_flag = segrellion_rickon_return_to_beacon_queued }
+			}
+
+			add_character_flag = {
+				flag = segrellion_rickon_return_to_beacon_queued
+				days = 60
+			}
+
+			title:e_flamelands.holder = {
+				trigger_event = {
+					id = segrellion_rickon_return.0090
+					days = 1
+				}
+			}
+		}
+
+		# -------------------------------------------------
+		# SANSA HAS WON THE RIVERLANDS
+		# -------------------------------------------------
+
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_rickon_sheltered_with_sansa_at_beacon
+				NOT = { has_character_flag = segrellion_rickon_with_sansa_riverlands }
+				NOT = { has_character_flag = segrellion_rickon_travelling_to_sansa }
+				character:Stark_Dummy_8 ?= {
+					segrellion_rickon_sansa_holds_riverlands_trigger = yes
+				}
+			}
+
+			character:Stark_Dummy_8 = {
+				trigger_event = {
+					id = segrellion_rickon_return.0080
+					days = 1
+				}
+			}
+		}
+
+		# -------------------------------------------------
+		# NORMAL BEACON -> NORTH ROUTE
+		# -------------------------------------------------
+
+		else_if = {
+			limit = {
+				NOR = {
+					has_character_flag = segrellion_rickon_travelling_north
+					has_character_flag = segrellion_rickon_waiting_white_harbor
+					has_character_flag = segrellion_rickon_return_request_pending
+					has_character_flag = segrellion_rickon_travelling_to_sansa
+					has_character_flag = segrellion_rickon_returning_to_beacon
+				}
+
+				OR = {
+					NOT = { has_character_flag = segrellion_rickon_kept_as_beacon_ward }
+					is_adult = yes
+				}
+
+				title:e_flamelands.holder ?= {
+					segrellion_rickon_return_flamelands_protector_trigger = yes
+					root = {
+						OR = {
+							is_courtier_of = prev
+							location = title:b_castle_farring.title_province
+						}
+					}
+				}
+
+				OR = {
+					title:e_the_north.holder ?= {
+						segrellion_rickon_return_jon_king_trigger = yes
+					}
+					AND = {
+						title:e_flamelands.holder = character:Segrellion_60
+						character:Segrellion_60 = {
+							segrellion_rickon_sansa_beacon_option_trigger = yes
+						}
+					}
+				}
+			}
+
+			add_character_flag = {
+				flag = segrellion_rickon_return_prompt_queued
+				days = 30
+			}
+
+			title:e_flamelands.holder = {
+				trigger_event = {
+					id = segrellion_rickon_return.0010
+					days = 1
+				}
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0010 - A WOLF UNDER OUR ROOF
+# ROOT = DAEMON OR VISENYA, LORD OF THE FLAMELANDS
+# =========================================================
+
+segrellion_rickon_return.0010 = {
+	type = character_event
+
+	title = segrellion_rickon_return.0010.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					character:Stark_Dummy_11 = {
+						is_adult = yes
+						has_character_flag = segrellion_rickon_kept_as_beacon_ward
+					}
+				}
+				desc = segrellion_rickon_return.0010.desc_adult
+			}
+
+			triggered_desc = {
+				trigger = {
+					this = character:Segrellion_60
+					segrellion_rickon_sansa_beacon_option_trigger = yes
+				}
+				desc = segrellion_rickon_return.0010.desc_sansa
+			}
+
+			triggered_desc = {
+				trigger = { this = character:Black_Unicorn_1 }
+				desc = segrellion_rickon_return.0010.desc_visenya
+			}
+
+			desc = segrellion_rickon_return.0010.desc_daemon
+		}
+	}
+
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_the_beacon_throne_room
+	}
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_icon = {
+		reference = "gfx/interface/icons/event_types/segrellion_ice_and_fire_event_icon.dds"
+	}
+
+	trigger = {
+		segrellion_rickon_return_flamelands_protector_trigger = yes
+
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_return_prompt_queued
+		}
+	}
+
+	on_trigger_fail = {
+		character:Stark_Dummy_11 ?= {
+			remove_character_flag = segrellion_rickon_return_prompt_queued
+		}
+	}
+
+	immediate = {
+		character:Stark_Dummy_11 = {
+			remove_character_flag = segrellion_rickon_return_prompt_queued
+		}
+
+		if = {
+			limit = { exists = cp:councillor_castellan }
+			cp:councillor_castellan = {
+				save_scope_as = segrellion_rickon_return_castellan
+			}
+		}
+		else = {
+			save_scope_as = segrellion_rickon_return_castellan
+		}
+	}
+
+	left_portrait = {
+		character = scope:segrellion_rickon_return_castellan
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Stark_Dummy_11
+		animation = child_personality_bold
+	}
+
+	# SEND RICKON TO JON
+	option = {
+		name = segrellion_rickon_return.0010.a
+		custom_tooltip = segrellion_rickon_return.0010.a.tt
+
+		trigger = {
+			title:e_the_north.holder ?= {
+				segrellion_rickon_return_jon_king_trigger = yes
+			}
+		}
+
+		character:Stark_Dummy_11 = {
+			add_character_flag = segrellion_rickon_return_request_pending
+			remove_character_flag = segrellion_rickon_kept_as_beacon_ward
+		}
+
+		if = {
+			limit = { this = character:Segrellion_60 }
+			add_character_flag = segrellion_daemon_sent_rickon_offer_to_jon
+			title:e_the_north.holder = {
+				trigger_event = {
+					id = segrellion_rickon_return.0020
+					days = { 14 30 }
+				}
+			}
+		}
+		else = {
+			add_character_flag = segrellion_visenya_sent_rickon_offer_to_jon
+			title:e_the_north.holder = {
+				trigger_event = {
+					id = segrellion_rickon_return.0021
+					days = { 14 30 }
+				}
+			}
+		}
+
+		ai_chance = {
+			base = 75
+		}
+	}
+
+	# KEEP RICKON AS A WARD UNTIL ADULTHOOD
+	option = {
+		name = segrellion_rickon_return.0010.b
+		custom_tooltip = segrellion_rickon_return.0010.b.tt
+
+		trigger = {
+			character:Stark_Dummy_11 = {
+				is_adult = no
+			}
+		}
+
+		character:Stark_Dummy_11 = {
+			add_character_flag = segrellion_rickon_kept_as_beacon_ward
+			remove_character_flag = segrellion_rickon_return_request_pending
+			remove_character_flag = segrellion_rickon_education_chain_ended
+			remove_character_flag = segrellion_rickon_education_paused_by_departure
+
+			if = {
+				limit = { root = character:Segrellion_60 }
+				add_character_flag = segrellion_rickon_under_daemon_protection
+				remove_character_flag = segrellion_rickon_tutor_visenya
+			}
+			else = {
+				add_character_flag = segrellion_rickon_under_visenya_protection
+				remove_character_flag = segrellion_rickon_tutor_daemon
+			}
+
+			set_relation_guardian = root
+			segrellion_rickon_ensure_education_watch_effect = yes
+		}
+
+		ai_chance = {
+			base = 20
+		}
+	}
+
+	# KEEP BOTH STARK CHILDREN AT THE BEACON
+	option = {
+		name = segrellion_rickon_return.0010.c
+		custom_tooltip = segrellion_rickon_return.0010.c.tt
+
+		trigger = {
+			this = character:Segrellion_60
+			segrellion_rickon_sansa_beacon_option_trigger = yes
+		}
+
+		character:Stark_Dummy_11 = {
+			add_character_flag = segrellion_rickon_sheltered_with_sansa_at_beacon
+			remove_character_flag = segrellion_rickon_return_request_pending
+			add_character_flag = segrellion_rickon_under_daemon_protection
+			remove_character_flag = segrellion_rickon_education_chain_ended
+			remove_character_flag = segrellion_rickon_education_paused_by_departure
+			set_relation_guardian = character:Segrellion_60
+			segrellion_rickon_ensure_education_watch_effect = yes
+		}
+
+		character:Stark_Dummy_8 = {
+			add_character_flag = segrellion_sansa_sheltered_with_rickon_at_beacon
+			if = {
+				limit = { is_ruler = no }
+				set_employer = character:Segrellion_60
+			}
+			set_location = title:b_castle_farring.title_province
+		}
+
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+# =========================================================
+# 0020 - DAEMON'S LETTER TO JON
+# ROOT = JON
+# =========================================================
+
+segrellion_rickon_return.0020 = {
+	type = letter_event
+	theme = diplomacy
+
+	sender = character:Segrellion_60
+	opening = segrellion_rickon_return.0020.opening
+	title = segrellion_rickon_return.0020.t
+	desc = segrellion_rickon_return.0020.desc
+
+	trigger = {
+		segrellion_rickon_return_jon_king_trigger = yes
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_title = title:e_flamelands
+		}
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_return_request_pending
+		}
+	}
+
+	on_trigger_fail = {
+		character:Stark_Dummy_11 ?= {
+			remove_character_flag = segrellion_rickon_return_request_pending
+		}
+	}
+
+	option = {
+		name = segrellion_rickon_return.0020.a
+		custom_tooltip = segrellion_rickon_return.0020.a.tt
+
+		remove_short_term_gold = 75
+		add_character_flag = segrellion_jon_paid_for_rickon_return
+
+		character:Stark_Dummy_11 = {
+			remove_character_flag = segrellion_rickon_return_request_pending
+			segrellion_rickon_begin_north_journey_effect = {
+				SENDER = character:Segrellion_60
+			}
+		}
+
+		ai_chance = { base = 100 }
+	}
+}
+
+# =========================================================
+# 0021 - VISENYA'S LETTER TO JON
+# ROOT = JON
+# =========================================================
+
+segrellion_rickon_return.0021 = {
+	type = letter_event
+	theme = diplomacy
+
+	sender = character:Black_Unicorn_1
+	opening = segrellion_rickon_return.0021.opening
+	title = segrellion_rickon_return.0021.t
+	desc = segrellion_rickon_return.0021.desc
+
+	trigger = {
+		segrellion_rickon_return_jon_king_trigger = yes
+		character:Black_Unicorn_1 ?= {
+			is_alive = yes
+			has_title = title:e_flamelands
+		}
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_return_request_pending
+		}
+	}
+
+	on_trigger_fail = {
+		character:Stark_Dummy_11 ?= {
+			remove_character_flag = segrellion_rickon_return_request_pending
+		}
+	}
+
+	option = {
+		name = segrellion_rickon_return.0021.a
+		custom_tooltip = segrellion_rickon_return.0021.a.tt
+
+		remove_short_term_gold = 75
+		add_character_flag = segrellion_jon_paid_for_rickon_return
+
+		character:Stark_Dummy_11 = {
+			remove_character_flag = segrellion_rickon_return_request_pending
+			segrellion_rickon_begin_north_journey_effect = {
+				SENDER = character:Black_Unicorn_1
+			}
+		}
+
+		ai_chance = { base = 100 }
+	}
+}
+
+# =========================================================
+# 0040 - ARRIVAL AT WHITE HARBOR
+# ROOT = RICKON
+# =========================================================
+
+segrellion_rickon_return.0040 = {
+	hidden = yes
+
+	trigger = {
+		this = character:Stark_Dummy_11
+		is_alive = yes
+		has_character_flag = segrellion_rickon_travelling_north
+	}
+
+	immediate = {
+		segrellion_rickon_arrive_white_harbor_effect = yes
+
+		title:c_white_harbor.holder ?= {
+			if = {
+				limit = { is_alive = yes }
+				trigger_event = {
+					id = segrellion_rickon_return.0041
+					days = 1
+				}
+			}
+		}
+
+		title:e_the_north.holder ?= {
+			if = {
+				limit = {
+					segrellion_rickon_return_jon_king_trigger = yes
+				}
+				trigger_event = {
+					id = segrellion_rickon_return.0042
+					days = { 2 5 }
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_rickon_sent_north_by_daemon
+				character:Segrellion_60 ?= { is_alive = yes }
+			}
+			character:Segrellion_60 = {
+				trigger_event = {
+					id = segrellion_rickon_return.0043
+					days = { 5 12 }
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_character_flag = segrellion_rickon_sent_north_by_visenya
+				character:Black_Unicorn_1 ?= { is_alive = yes }
+			}
+			character:Black_Unicorn_1 = {
+				trigger_event = {
+					id = segrellion_rickon_return.0044
+					days = { 5 12 }
+				}
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_rickon_return.0050
+			days = { 20 35 }
+		}
+	}
+}
+
+# =========================================================
+# 0041 - LORD OF WHITE HARBOR RECEIVES RICKON
+# =========================================================
+
+segrellion_rickon_return.0041 = {
+	type = character_event
+
+	title = segrellion_rickon_return.0041.t
+	desc = segrellion_rickon_return.0041.desc
+	theme = diplomacy
+
+	override_background = {
+		reference = council_chamber
+	}
+
+	trigger = {
+		this = title:c_white_harbor.holder
+		is_alive = yes
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_waiting_white_harbor
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Stark_Dummy_11
+		animation = child_personality_bold
+	}
+
+	option = {
+		name = segrellion_rickon_return.0041.a
+		add_character_flag = segrellion_manderly_received_rickon
+	}
+}
+
+# =========================================================
+# 0042 - JON HEARS RICKON HAS REACHED WHITE HARBOR
+# =========================================================
+
+segrellion_rickon_return.0042 = {
+	type = character_event
+
+	title = segrellion_rickon_return.0042.t
+	desc = segrellion_rickon_return.0042.desc
+	theme = family
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	trigger = {
+		segrellion_rickon_return_jon_king_trigger = yes
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_waiting_white_harbor
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { exists = cp:councillor_castellan }
+			cp:councillor_castellan = {
+				save_scope_as = segrellion_rickon_jon_castellan
+			}
+		}
+		else = {
+			save_scope_as = segrellion_rickon_jon_castellan
+		}
+	}
+
+	left_portrait = {
+		character = scope:segrellion_rickon_jon_castellan
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Stark_Dummy_11
+		animation = child_personality_bold
+	}
+
+	option = {
+		name = segrellion_rickon_return.0042.a
+		add_character_flag = segrellion_jon_knows_rickon_at_white_harbor
+	}
+}
+
+# =========================================================
+# 0043 / 0044 - FLAMELANDS RECEIVE WHITE HARBOR NEWS
+# =========================================================
+
+segrellion_rickon_return.0043 = {
+	type = character_event
+	title = segrellion_rickon_return.0043.t
+	desc = segrellion_rickon_return.0043.desc_daemon
+	theme = diplomacy
+
+	trigger = {
+		this = character:Segrellion_60
+		is_alive = yes
+		character:Stark_Dummy_11 ?= {
+			has_character_flag = segrellion_rickon_waiting_white_harbor
+		}
+	}
+
+	option = {
+		name = segrellion_rickon_return.0043.a
+	}
+}
+
+segrellion_rickon_return.0044 = {
+	type = character_event
+	title = segrellion_rickon_return.0043.t
+	desc = segrellion_rickon_return.0043.desc_visenya
+	theme = diplomacy
+
+	trigger = {
+		this = character:Black_Unicorn_1
+		is_alive = yes
+		character:Stark_Dummy_11 ?= {
+			has_character_flag = segrellion_rickon_waiting_white_harbor
+		}
+	}
+
+	option = {
+		name = segrellion_rickon_return.0043.a
+	}
+}
+
+# =========================================================
+# 0050 - WHITE HARBOR -> WINTERFELL
+# ROOT = RICKON
+# =========================================================
+
+segrellion_rickon_return.0050 = {
+	hidden = yes
+
+	trigger = {
+		this = character:Stark_Dummy_11
+		is_alive = yes
+		has_character_flag = segrellion_rickon_waiting_white_harbor
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				title:e_the_north.holder ?= {
+					segrellion_rickon_return_jon_king_trigger = yes
+				}
+			}
+
+			title:c_white_harbor.holder ?= {
+				if = {
+					limit = { is_alive = yes }
+					trigger_event = {
+						id = segrellion_rickon_return.0051
+						days = 1
+					}
+				}
+			}
+
+			segrellion_rickon_arrive_winterfell_effect = yes
+
+			title:e_the_north.holder = {
+				trigger_event = {
+					id = segrellion_rickon_return.0060
+					days = 1
+				}
+			}
+		}
+		else = {
+			# Jon ceased to be King in the North while Rickon was
+			# already travelling. Manderly keeps the boy safe and
+			# the route waits rather than teleporting him elsewhere.
+			trigger_event = {
+				id = segrellion_rickon_return.0050
+				days = 60
+			}
+		}
+	}
+}
+
+# =========================================================
+# 0051 - MANDERLY SENDS RICKON ON TO WINTERFELL
+# =========================================================
+
+segrellion_rickon_return.0051 = {
+	type = character_event
+
+	title = segrellion_rickon_return.0051.t
+	desc = segrellion_rickon_return.0051.desc
+	theme = family
+
+	trigger = {
+		this = title:c_white_harbor.holder
+		is_alive = yes
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_arrived_winterfell
+		}
+	}
+
+	option = {
+		name = segrellion_rickon_return.0051.a
+		add_character_flag = segrellion_manderly_sent_rickon_to_winterfell
+	}
+}
+
+# =========================================================
+# 0060 - THE WOLVES MEET AGAIN
+# ROOT = JON
+# =========================================================
+
+segrellion_rickon_return.0060 = {
+	type = character_event
+
+	title = segrellion_rickon_return.0060.t
+	desc = segrellion_rickon_return.0060.desc
+	theme = family
+
+	override_background = {
+		reference = segrellion_winterfell_great_hall
+	}
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	trigger = {
+		segrellion_rickon_return_jon_king_trigger = yes
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_arrived_winterfell
+			NOT = { has_character_flag = segrellion_rickon_reunion_with_jon_seen }
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = admiration
+	}
+
+	right_portrait = {
+		character = character:Stark_Dummy_11
+		animation = child_personality_bold
+	}
+
+	option = {
+		name = segrellion_rickon_return.0060.a
+		custom_tooltip = segrellion_rickon_return.0060.a.tt
+
+		character:Stark_Dummy_11 = {
+			add_character_flag = segrellion_rickon_reunion_with_jon_seen
+		}
+
+		if = {
+			limit = {
+				character:Stark_Dummy_11 = {
+					has_character_flag = segrellion_rickon_sent_north_by_daemon
+				}
+				character:Segrellion_60 ?= { is_alive = yes }
+			}
+
+			add_opinion = {
+				target = character:Segrellion_60
+				modifier = segrellion_jon_grateful_rickon_return_opinion
+			}
+
+			character:Segrellion_60 = {
+				if = {
+					limit = {
+						can_add_hook = {
+							target = root
+							type = favor_hook
+						}
+					}
+					add_hook = {
+						type = favor_hook
+						target = root
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_rickon_return.0062
+					days = { 10 20 }
+				}
+			}
+		}
+
+		else_if = {
+			limit = {
+				character:Stark_Dummy_11 = {
+					has_character_flag = segrellion_rickon_sent_north_by_visenya
+				}
+				character:Black_Unicorn_1 ?= { is_alive = yes }
+			}
+
+			add_opinion = {
+				target = character:Black_Unicorn_1
+				modifier = segrellion_jon_grateful_rickon_return_opinion
+			}
+
+			character:Black_Unicorn_1 = {
+				if = {
+					limit = {
+						can_add_hook = {
+							target = root
+							type = favor_hook
+						}
+					}
+					add_hook = {
+						type = favor_hook
+						target = root
+					}
+				}
+
+				trigger_event = {
+					id = segrellion_rickon_return.0063
+					days = { 10 20 }
+				}
+			}
+		}
+
+		add_character_flag = segrellion_jon_reunited_with_rickon
+	}
+}
+
+# =========================================================
+# 0062 / 0063 - JON CONFIRMS RICKON'S ARRIVAL
+# =========================================================
+
+segrellion_rickon_return.0062 = {
+	type = character_event
+	title = segrellion_rickon_return.0062.t
+	desc = segrellion_rickon_return.0062.desc_daemon
+	theme = diplomacy
+
+	trigger = {
+		this = character:Segrellion_60
+		is_alive = yes
+		character:Stark_Dummy_11 ?= {
+			has_character_flag = segrellion_rickon_reunion_with_jon_seen
+		}
+		title:e_the_north.holder ?= {
+			segrellion_rickon_return_jon_king_trigger = yes
+		}
+	}
+
+	right_portrait = {
+		character = title:e_the_north.holder
+		animation = personality_honorable
+	}
+
+	option = {
+		name = segrellion_rickon_return.0062.a
+		add_character_flag = segrellion_daemon_received_rickon_arrival_confirmation
+	}
+}
+
+segrellion_rickon_return.0063 = {
+	type = character_event
+	title = segrellion_rickon_return.0062.t
+	desc = segrellion_rickon_return.0062.desc_visenya
+	theme = diplomacy
+
+	trigger = {
+		this = character:Black_Unicorn_1
+		is_alive = yes
+		character:Stark_Dummy_11 ?= {
+			has_character_flag = segrellion_rickon_reunion_with_jon_seen
+		}
+		title:e_the_north.holder ?= {
+			segrellion_rickon_return_jon_king_trigger = yes
+		}
+	}
+
+	right_portrait = {
+		character = title:e_the_north.holder
+		animation = personality_honorable
+	}
+
+	option = {
+		name = segrellion_rickon_return.0062.a
+		add_character_flag = segrellion_visenya_received_rickon_arrival_confirmation
+	}
+}
+
+# =========================================================
+# 0080 - SANSA SENDS FOR RICKON
+# ROOT = SANSA
+# =========================================================
+
+segrellion_rickon_return.0080 = {
+	type = character_event
+
+	title = segrellion_rickon_return.0080.t
+	desc = segrellion_rickon_return.0080.desc
+	theme = family
+
+	trigger = {
+		this = character:Stark_Dummy_8
+		segrellion_rickon_sansa_holds_riverlands_trigger = yes
+
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_sheltered_with_sansa_at_beacon
+			NOT = { has_character_flag = segrellion_rickon_travelling_to_sansa }
+		}
+	}
+
+	option = {
+		name = segrellion_rickon_return.0080.a
+		custom_tooltip = segrellion_rickon_return.0080.a.tt
+
+		character:Stark_Dummy_11 = {
+			segrellion_rickon_pause_story_education_effect = yes
+			add_character_flag = segrellion_rickon_travelling_to_sansa
+			trigger_event = {
+				id = segrellion_rickon_return.0081
+				days = { 20 40 }
+			}
+		}
+
+		ai_chance = { base = 100 }
+	}
+}
+
+segrellion_rickon_return.0081 = {
+	hidden = yes
+
+	trigger = {
+		this = character:Stark_Dummy_11
+		is_alive = yes
+		has_character_flag = segrellion_rickon_travelling_to_sansa
+		character:Stark_Dummy_8 ?= {
+			segrellion_rickon_sansa_holds_riverlands_trigger = yes
+		}
+	}
+
+	on_trigger_fail = {
+		remove_character_flag = segrellion_rickon_travelling_to_sansa
+	}
+
+	immediate = {
+		remove_character_flag = segrellion_rickon_travelling_to_sansa
+		segrellion_rickon_join_sansa_riverlands_effect = yes
+	}
+}
+
+# =========================================================
+# 0090 - SANSA HAS LOST THE RIVERLANDS
+# ROOT = CURRENT FLAMELANDS LORD
+# =========================================================
+
+segrellion_rickon_return.0090 = {
+	type = character_event
+
+	title = segrellion_rickon_return.0090.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { this = character:Black_Unicorn_1 }
+				desc = segrellion_rickon_return.0090.desc_visenya
+			}
+			desc = segrellion_rickon_return.0090.desc_daemon
+		}
+	}
+	theme = family
+
+	trigger = {
+		segrellion_rickon_return_flamelands_protector_trigger = yes
+		character:Stark_Dummy_11 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_rickon_with_sansa_riverlands
+			NOT = { has_character_flag = segrellion_rickon_returning_to_beacon }
+		}
+		character:Stark_Dummy_8 ?= {
+			is_alive = yes
+			NOT = { segrellion_rickon_sansa_holds_riverlands_trigger = yes }
+		}
+	}
+
+	option = {
+		name = segrellion_rickon_return.0090.a
+		custom_tooltip = segrellion_rickon_return.0090.a.tt
+
+		character:Stark_Dummy_11 = {
+			remove_character_flag = segrellion_rickon_return_to_beacon_queued
+			add_character_flag = segrellion_rickon_returning_to_beacon
+			trigger_event = {
+				id = segrellion_rickon_return.0091
+				days = { 20 40 }
+			}
+		}
+
+		ai_chance = { base = 100 }
+	}
+}
+
+segrellion_rickon_return.0091 = {
+	hidden = yes
+
+	trigger = {
+		this = character:Stark_Dummy_11
+		is_alive = yes
+		has_character_flag = segrellion_rickon_returning_to_beacon
+		title:e_flamelands.holder ?= {
+			segrellion_rickon_return_flamelands_protector_trigger = yes
+		}
+	}
+
+	on_trigger_fail = {
+		remove_character_flag = segrellion_rickon_returning_to_beacon
+	}
+
+	immediate = {
+		remove_character_flag = segrellion_rickon_returning_to_beacon
+		segrellion_rickon_return_to_beacon_from_sansa_effect = yes
+	}
+}
