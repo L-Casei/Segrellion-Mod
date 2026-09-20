@@ -1,0 +1,104 @@
+# =========================================================
+# ICEBRINGER BOND - ON ACTIONS
+# =========================================================
+
+
+# Existing saves and bookmark starts:
+# immediately inspect the historical/current owner.
+
+on_game_start_after_lobby = {
+
+	on_actions = {
+
+		segrellion_icebringer_bond_startup
+	}
+}
+
+
+# Normal rulers get a frequent recovery check.
+
+quarterly_playable_pulse = {
+
+	on_actions = {
+
+		segrellion_icebringer_bond_playable_maintenance
+	}
+}
+
+
+# Rare fallback for an unlanded/courtier holder.
+
+random_yearly_everyone_pulse = {
+
+	on_actions = {
+
+		segrellion_icebringer_bond_everyone_recovery
+	}
+}
+
+
+segrellion_icebringer_bond_startup = {
+
+	effect = {
+
+		if = {
+
+			limit = {
+				exists = global_var:segrellion_icebringer
+			}
+
+
+			global_var:segrellion_icebringer = {
+
+				artifact_owner ?= {
+
+					segrellion_icebringer_bond_maintenance_effect = yes
+				}
+			}
+		}
+	}
+}
+
+
+segrellion_icebringer_bond_playable_maintenance = {
+
+	trigger = {
+
+		OR = {
+
+			has_trait = segrellion_icebringer_bearer_trait
+
+			any_character_artifact = {
+				has_variable = segrellion_icebringer_artifact
+			}
+		}
+	}
+
+
+	effect = {
+
+		segrellion_icebringer_bond_maintenance_effect = yes
+	}
+}
+
+
+segrellion_icebringer_bond_everyone_recovery = {
+
+	trigger = {
+
+		OR = {
+
+			has_trait = segrellion_icebringer_bearer_trait
+
+			any_character_artifact = {
+				has_variable = segrellion_icebringer_artifact
+			}
+		}
+	}
+
+
+	effect = {
+
+		segrellion_icebringer_bond_maintenance_effect = yes
+	}
+}
