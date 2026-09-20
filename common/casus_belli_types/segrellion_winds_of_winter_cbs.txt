@@ -2264,6 +2264,13 @@ segrellion_daenerys_fire_and_blood_cb = {
 
 	on_victory = {
 
+		# Kill AGOT's generic Mega War aftermath before its
+		# war-resolution callbacks can queue The War's Aftermath.
+		scope:attacker = {
+			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+		}
+
+
 		# Preserve the monarch Daenerys actually defeated
 		# before the title changes hands.
 
@@ -2549,6 +2556,14 @@ segrellion_daenerys_iron_throne_cb = {
 	# =====================================================
 
 	on_victory = {
+
+		# Daemon owns the attacking Mega War story in this route.
+		# Run Daenerys' cleanup now; it explicitly invalidates
+		# Daemon's segrellion_daenerys_iron_throne_cb MW story.
+		character:Targaryen_9 = {
+			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+		}
+
 
 
 		scope:attacker = {
