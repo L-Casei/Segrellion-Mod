@@ -22,6 +22,11 @@ segrellion_spawn_vhalyrax_from_egg_effect = {
 
 		change_first_name = Vhalyrax
 
+		# Keep dynamic hatches visually identical to historical
+		# Vhalyrax, including the white/light-blue body and
+		# sapphire eyes.
+		copy_inheritable_appearance_from = character:dragon_vhalyrax
+
 		# Vhalyrax is fully scripted. Remove whatever congenital
 		# traits the generic AGOT hatchling template rolled.
 		agot_clear_dragon_genetic_traits_effect = yes
@@ -528,6 +533,26 @@ segrellion_initialize_historical_dragon_effect = {
 				agot_dead_dragon_effect = yes
 			}
 		}
+
+		# IMPORTANT:
+		# AGOT may already have created dragon storage before our
+		# setup runs. Vhalyrax previously stayed black because the
+		# custom transfer lived only inside the "storage missing"
+		# branch above. Reapply his canonical DNA unconditionally.
+		if = {
+
+			limit = {
+				this = character:dragon_vhalyrax
+				has_trait = dragon
+			}
+
+			segrellion_transfer_vhalyrax_runtime_dna_effect = {
+				DRAGON = this
+				DRAGON_AGE = character:dragon_vhalyrax.age
+			}
+
+			add_character_flag = segrellion_vhalyrax_runtime_dna_repaired
+		}
 	}
 }
 
@@ -662,6 +687,42 @@ segrellion_historical_dragons_zero_tick_setup_effect = {
 # ============================================================
 
 segrellion_historical_dragons_progression_effect = {
+
+	# ========================================================
+	# EXISTING-SAVE REPAIRS
+	# ========================================================
+
+	# Vhalyrax: overwrite any old/default black AGOT storage
+	# once in saves created before the persistent DNA fix.
+	character:dragon_vhalyrax ?= {
+
+		if = {
+
+			limit = {
+
+				has_trait = dragon
+
+				NOT = {
+					has_character_flag = segrellion_vhalyrax_runtime_dna_repaired
+				}
+			}
+
+			segrellion_transfer_vhalyrax_runtime_dna_effect = {
+				DRAGON = this
+				DRAGON_AGE = character:dragon_vhalyrax.age
+			}
+
+			add_character_flag = segrellion_vhalyrax_runtime_dna_repaired
+		}
+	}
+
+	# The unique egg from Vhal may already exist in old saves.
+	segrellion_repair_vhalyrax_lost_egg_parentage_effect = yes
+
+	# Rhaegon may already exist in old saves without Cannibal
+	# recorded as his father.
+	segrellion_black_unicorn_repair_rhaegon_cannibal_parent_effect = yes
+
 
 	# ========================================================
 	# INITIALIZE CUSTOM HISTORICAL DRAGONS
