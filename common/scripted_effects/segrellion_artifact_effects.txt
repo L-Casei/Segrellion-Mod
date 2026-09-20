@@ -3321,6 +3321,100 @@ segrellion_find_sword_of_the_sentinel_effect = {
 
 
 # ---------------------------------------------------------
+# VHALYRAX EGG PARENTAGE
+#
+# Any custom egg explicitly descended from Vhalyrax must
+# carry AGOT's native dragon_parent variable. The vanilla
+# hatch effect reads this and assigns Vhalyrax as mother.
+#
+# Uses the runtime Vhalyrax in early divergent campaigns,
+# otherwise the static historical dragon.
+# ---------------------------------------------------------
+
+segrellion_set_vhalyrax_egg_parent_effect = {
+
+	$EGG$ = {
+		save_scope_as = segrellion_vhalyrax_parentage_egg
+	}
+
+	if = {
+
+		limit = {
+
+			exists = global_var:segrellion_historical_vhalyrax
+
+			global_var:segrellion_historical_vhalyrax = {
+				has_trait = dragon
+			}
+		}
+
+		scope:segrellion_vhalyrax_parentage_egg = {
+
+			set_variable = {
+				name = dragon_parent
+				value = global_var:segrellion_historical_vhalyrax
+			}
+
+			set_variable = {
+				name = segrellion_vhalyrax_egg_parentage
+				value = yes
+			}
+		}
+	}
+
+	else_if = {
+
+		limit = {
+
+			character:dragon_vhalyrax ?= {
+				has_trait = dragon
+			}
+		}
+
+		scope:segrellion_vhalyrax_parentage_egg = {
+
+			set_variable = {
+				name = dragon_parent
+				value = character:dragon_vhalyrax
+			}
+
+			set_variable = {
+				name = segrellion_vhalyrax_egg_parentage
+				value = yes
+			}
+		}
+	}
+}
+
+
+# Existing-save repair for the unique egg recovered from Vhal.
+segrellion_repair_vhalyrax_lost_egg_parentage_effect = {
+
+	if = {
+
+		limit = {
+
+			exists = global_var:segrellion_vhalyrax_lost_egg
+
+			global_var:segrellion_vhalyrax_lost_egg = {
+				NOT = {
+					has_variable = segrellion_vhalyrax_egg_parentage
+				}
+			}
+		}
+
+		global_var:segrellion_vhalyrax_lost_egg = {
+			save_scope_as = segrellion_vhalyrax_lost_egg_to_repair
+		}
+
+		segrellion_set_vhalyrax_egg_parent_effect = {
+			EGG = scope:segrellion_vhalyrax_lost_egg_to_repair
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
 # VHALYRAX'S LOST EGG
 # Shared by the Vhal travel event and the investigation.
 # ---------------------------------------------------------
@@ -3364,6 +3458,12 @@ segrellion_create_vhalyrax_lost_egg_effect = {
 				name = segrellion_vhalyrax_lost_egg
 				value = this
 			}
+
+			save_scope_as = segrellion_vhalyrax_lost_egg_created
+		}
+
+		segrellion_set_vhalyrax_egg_parent_effect = {
+			EGG = scope:segrellion_vhalyrax_lost_egg_created
 		}
 	}
 }
