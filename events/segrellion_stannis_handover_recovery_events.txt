@@ -1,0 +1,41 @@
+namespace = segrellion_stannis_handover
+
+# Re-enter the existing story; do not grant titles from a global pulse ROOT.
+segrellion_stannis_handover.0001 = {
+	hidden = yes
+	trigger = {
+		this = character:Baratheon_3
+		is_alive = yes
+		has_title = title:e_the_north
+		has_character_flag = segrellion_stannis_holds_north_in_trust
+		has_character_flag = segrellion_stannis_northern_campaign_victory
+	}
+	immediate = {
+		segrellion_resolve_stannis_jon_effect = yes
+		scope:stannis_jon ?= {
+			if = {
+				limit = {
+					has_character_flag = segrellion_jon_accepted_stannis_north_offer
+					NOT = { has_character_flag = segrellion_jon_north_handover_completed }
+				}
+				# Accepted offers need the mechanical handover, not another letter.
+				trigger_event = { id = segrellion_stannis.1012 days = 1 }
+			}
+			else_if = {
+				limit = {
+					character:Baratheon_3 = { is_ai = yes }
+					is_available = yes
+					NOR = {
+						has_character_flag = segrellion_jon_stannis_north_offer_seen
+						has_character_flag = segrellion_jon_stannis_north_offer_scheduled
+						has_character_flag = segrellion_jon_stannis_result_resolved
+						has_character_flag = segrellion_jon_north_handover_completed
+					}
+				}
+				# A temporarily unavailable Jon could lose the original delayed event.
+				add_character_flag = { flag = segrellion_jon_stannis_north_offer_scheduled days = 7 }
+				trigger_event = { id = segrellion_stannis.1010 days = 1 }
+			}
+		}
+	}
+}

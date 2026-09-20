@@ -1,0 +1,37 @@
+# One-time migration for Rickon revealed by the old blanket-claims effect.
+on_game_start_after_lobby = {
+	on_actions = { segrellion_rickon_repair_northern_claims }
+}
+
+segrellion_rickon_repair_northern_claims = {
+	effect = {
+		character:Stark_Dummy_11 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					has_character_flag = segrellion_rickon_identity_publicly_revealed
+					NOT = { has_character_flag = segrellion_rickon_claims_winterfell_only }
+				}
+				title:e_the_north = {
+					every_in_de_jure_hierarchy = {
+						limit = {
+							OR = { tier = tier_kingdom tier = tier_duchy tier = tier_county }
+							NOR = {
+								this = title:k_winterfell
+								this = title:d_winterfell
+								this = title:c_winterfell
+							}
+						}
+						save_scope_as = segrellion_rickon_excess_claim
+						character:Stark_Dummy_11 = { remove_claim = scope:segrellion_rickon_excess_claim }
+					}
+				}
+				add_pressed_claim = title:e_the_north
+				add_pressed_claim = title:k_winterfell
+				add_pressed_claim = title:d_winterfell
+				add_pressed_claim = title:c_winterfell
+				add_character_flag = segrellion_rickon_claims_winterfell_only
+			}
+		}
+	}
+}

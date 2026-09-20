@@ -1,0 +1,28 @@
+# Recovery is seeded only by Stannis, not by every northern ruler.
+quarterly_playable_pulse = {
+	on_actions = { segrellion_stannis_north_handover_recovery }
+}
+
+on_game_start_after_lobby = {
+	on_actions = { segrellion_stannis_north_handover_load_recovery }
+}
+
+segrellion_stannis_north_handover_load_recovery = {
+	effect = {
+		character:Baratheon_3 ?= {
+			trigger_event = { id = segrellion_stannis_handover.0001 days = 1 }
+		}
+	}
+}
+
+segrellion_stannis_north_handover_recovery = {
+	trigger = {
+		this = character:Baratheon_3
+		is_alive = yes
+		has_title = title:e_the_north
+		has_character_flag = segrellion_stannis_holds_north_in_trust
+	}
+	effect = {
+		trigger_event = { id = segrellion_stannis_handover.0001 days = 1 }
+	}
+}
