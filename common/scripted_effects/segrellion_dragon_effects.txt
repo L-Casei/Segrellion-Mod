@@ -23,9 +23,20 @@ segrellion_spawn_vhalyrax_from_egg_effect = {
 		change_first_name = Vhalyrax
 
 		# Keep dynamic hatches visually identical to historical
-		# Vhalyrax, including the white/light-blue body and
-		# sapphire eyes.
-		copy_inheritable_appearance_from = character:dragon_vhalyrax
+		# Vhalyrax when the static history character is available.
+		# Early campaigns still receive the same appearance from
+		# segrellion_transfer_vhalyrax_runtime_dna_effect below.
+		if = {
+
+			limit = {
+
+				character:dragon_vhalyrax ?= {
+					has_trait = dragon
+				}
+			}
+
+			copy_inheritable_appearance_from = character:dragon_vhalyrax
+		}
 
 		# Vhalyrax is fully scripted. Remove whatever congenital
 		# traits the generic AGOT hatchling template rolled.
