@@ -7820,20 +7820,43 @@ segrellion_young_griff.8260 = {
 
 
 		# =================================================
-		# DO NOT MARRY MARGAERY HERE.
+		# IMMEDIATE SECOND MARRIAGE
 		#
-		# The wife has only accepted.
-		# First show Aegon the final "Two Queens for a Dragon"
-		# event with both women present.
+		# Exactly like Daemon / Visenya:
+		# once the first queen accepts, the spouse state is
+		# created immediately. The next event only narrates
+		# the result and never performs the marriage itself.
 		# =================================================
 
 		character:IAF_Young_Griff_1 = {
 
-			trigger_event = {
+			segrellion_young_griff_complete_margaery_marriage_effect = yes
 
-				id = segrellion_young_griff.8270
 
-				days = 1
+			if = {
+
+				limit = {
+
+					number_of_spouses >= 2
+
+					var:segrellion_young_griff_margaery = {
+						is_spouse_of = root
+					}
+				}
+
+
+				trigger_event = {
+
+					id = segrellion_young_griff.8270
+
+					days = 1
+				}
+			}
+
+
+			else = {
+
+				add_character_flag = segrellion_young_griff_margaery_second_marriage_failed
 			}
 		}
 
@@ -8330,7 +8353,8 @@ segrellion_young_griff.8270 = {
 	# =====================================================
 	# ACCEPTANCE RESULT
 	#
-	# Only now does Margaery actually become second wife.
+	# The marriage already happened in 8260 the instant the
+	# first queen accepted. This event is narrative only.
 	# =====================================================
 
 	option = {
@@ -8352,9 +8376,7 @@ segrellion_young_griff.8270 = {
 		custom_tooltip = segrellion_young_griff.8270.a.tt
 
 
-		segrellion_young_griff_complete_margaery_marriage_effect = yes
-
-
+		# Marriage already exists. Do not run add_spouse a second time.
 		remove_variable = segrellion_young_griff_second_wife_responder
 	}
 
