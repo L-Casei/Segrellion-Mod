@@ -11,6 +11,9 @@
 
 segrellion_create_second_wife_marriage_effect = {
 
+	# Stable scope used by the backlash effects below.
+	save_scope_as = segrellion_second_wife_husband
+
 	$SECOND_WIFE$ = {
 		save_scope_as = segrellion_new_second_wife
 	}
@@ -96,6 +99,79 @@ segrellion_create_second_wife_marriage_effect = {
 
 
 		add_character_flag = segrellion_two_wives_active
+
+
+		# -------------------------------------------------
+		# SOCIAL / RELIGIOUS BACKLASH
+		#
+		# Permission makes the marriage legal for this
+		# mechanic; it does not make the arrangement popular.
+		# Both families resent it, the first wife is displeased,
+		# and the High Septon still dislikes seeing the exception
+		# actually used.
+		# -------------------------------------------------
+
+		scope:segrellion_new_second_wife = {
+
+			every_close_family_member = {
+
+				limit = {
+					is_alive = yes
+					this != scope:segrellion_second_wife_husband
+				}
+
+				add_opinion = {
+					target = scope:segrellion_second_wife_husband
+					modifier = segrellion_second_wife_family_offended_opinion
+				}
+			}
+		}
+
+
+		if = {
+
+			limit = {
+				exists = scope:segrellion_first_wife
+			}
+
+			scope:segrellion_first_wife = {
+
+				add_opinion = {
+					target = scope:segrellion_second_wife_husband
+					modifier = segrellion_second_wife_first_wife_displeased_opinion
+				}
+
+				every_close_family_member = {
+
+					limit = {
+						is_alive = yes
+						this != scope:segrellion_second_wife_husband
+					}
+
+					add_opinion = {
+						target = scope:segrellion_second_wife_husband
+						modifier = segrellion_second_wife_family_offended_opinion
+					}
+				}
+			}
+		}
+
+
+		title:k_the_most_devout.holder ?= {
+
+			if = {
+
+				limit = {
+					is_alive = yes
+					this != scope:segrellion_second_wife_husband
+				}
+
+				add_opinion = {
+					target = scope:segrellion_second_wife_husband
+					modifier = segrellion_second_wife_high_septon_disapproval_opinion
+				}
+			}
+		}
 
 
 		send_interface_toast = {
