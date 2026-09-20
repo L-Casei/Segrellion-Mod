@@ -144,6 +144,7 @@ daily_global_pulse = {
 
 		segrellion_aegon_daemon_submission_duel_progression
 		segrellion_daenerys_beacon_anchor_progression
+		segrellion_daenerys_post_throne_fast_handoff
 	}
 }
 
@@ -7293,6 +7294,48 @@ segrellion_daenerys_post_throne_progression = {
 	effect = {
 
 		segrellion_daenerys_post_throne_recovery_effect = yes
+	}
+}
+
+
+# =========================================================
+# DAENERYS - FAST POST-THRONE HANDOFF
+#
+# Daily emergency bridge between receiving the Iron Throne
+# and successfully opening the first custom post-throne event.
+#
+# Once 0001 has appeared, this becomes a no-op.
+# =========================================================
+
+segrellion_daenerys_post_throne_fast_handoff = {
+
+	trigger = {
+
+		character:Targaryen_9 ?= {
+
+			is_alive = yes
+
+			has_title = title:h_the_iron_throne
+
+			NOT = {
+				has_character_flag = segrellion_daenerys_post_throne_opening_seen
+			}
+		}
+	}
+
+
+	effect = {
+
+		character:Targaryen_9 = {
+
+			# Kill AGOT's generic judgment before it can steal
+			# the post-war state from our custom storyline.
+			segrellion_daenerys_cancel_agot_wars_aftermath_effect = yes
+
+			# Idempotent. It schedules Fallen Crown first when a
+			# defeated monarch exists, otherwise The War Is Won.
+			segrellion_start_daenerys_post_throne_effect = yes
+		}
 	}
 }
 
