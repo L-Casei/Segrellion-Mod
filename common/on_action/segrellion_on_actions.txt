@@ -211,6 +211,7 @@ on_title_gain = {
 		segrellion_young_griff_daenerys_pact_title_gain
 		segrellion_young_griff_crownlands_guard_progression
 		segrellion_north_story_title_gain_cleanup
+		segrellion_jon_winterfell_council_title_gain
 		segrellion_second_war_throne_settlement
 		segrellion_deadly_triarchy_title_gain
 		segrellion_black_unicorn_post_beacon_title_gain
@@ -7147,6 +7148,59 @@ segrellion_jon_canon_north_recovery = {
 		}
 	}
 }
+
+# =========================================================
+# JON - WINTERFELL COUNCIL ON NORTH TITLE GAIN
+#
+# If Jon becomes ruler of the North after Stannis has died
+# and the news is already known, do not wait for a pulse.
+# =========================================================
+
+segrellion_jon_winterfell_council_title_gain = {
+
+	trigger = {
+
+		is_ai = yes
+
+		segrellion_is_current_jon_trigger = yes
+
+		scope:title ?= {
+			this = title:e_the_north
+		}
+
+		character:Baratheon_3 ?= {
+			is_alive = no
+		}
+
+		NOT = {
+			has_character_flag = segrellion_jon_winterfell_council_completed
+		}
+
+		OR = {
+			has_character_flag = segrellion_jon_stannis_death_news_received
+			has_character_flag = segrellion_jon_winterfell_council_called
+			has_character_flag = segrellion_jon_king_in_the_north
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_jon_winterfell_council_called
+
+		remove_character_flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
+
+		segrellion_jon_try_start_winterfell_council_effect = yes
+
+
+		trigger_event = {
+
+			id = segrellion_jon_frey.0011
+			days = 3
+		}
+	}
+}
+
 
 # =========================================================
 # DAENERYS - POST THRONE STORY

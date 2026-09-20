@@ -433,12 +433,36 @@ segrellion_daenerys_kings_landing.0030 = {
 
 		is_alive = yes
 
-		has_title = title:h_the_iron_throne
+		has_character_flag = segrellion_daenerys_kings_landing_victory_handoff_active
 	}
 
 
 	immediate = {
 
-		segrellion_start_daenerys_post_throne_effect = yes
+		if = {
+
+			limit = {
+				has_title = title:h_the_iron_throne
+			}
+
+
+			remove_character_flag = segrellion_daenerys_kings_landing_victory_handoff_active
+
+			segrellion_start_daenerys_post_throne_effect = yes
+		}
+
+
+		else = {
+
+			# War settlement can take more than one tick.
+			# Retry briefly instead of silently losing the
+			# entire post-throne storyline.
+
+			trigger_event = {
+
+				id = segrellion_daenerys_kings_landing.0030
+				days = 1
+			}
+		}
 	}
 }

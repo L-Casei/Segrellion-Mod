@@ -13,6 +13,85 @@ monthly_playable_pulse = {
 	on_actions = {
 
 		segrellion_aegon_daemon_monthly_recovery
+
+		segrellion_jon_winterfell_council_monthly_recovery
+
+		segrellion_daenerys_post_throne_monthly_recovery
+	}
+}
+
+
+segrellion_jon_winterfell_council_monthly_recovery = {
+
+	trigger = {
+
+		is_ai = yes
+
+		segrellion_is_current_jon_trigger = yes
+
+		has_title = title:e_the_north
+
+		character:Baratheon_3 ?= {
+			is_alive = no
+		}
+
+		NOT = {
+			has_character_flag = segrellion_jon_winterfell_council_completed
+		}
+
+		OR = {
+			has_character_flag = segrellion_jon_stannis_death_news_received
+			has_character_flag = segrellion_jon_winterfell_council_called
+			has_character_flag = segrellion_jon_king_in_the_north
+		}
+	}
+
+
+	effect = {
+
+		add_character_flag = segrellion_jon_winterfell_council_called
+
+		remove_character_flag = segrellion_jon_winterfell_council_ai_spawn_cooldown
+
+		segrellion_jon_try_start_winterfell_council_effect = yes
+
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					in_activity_type = activity_segrellion_winterfell_council
+				}
+			}
+
+
+			trigger_event = {
+
+				id = segrellion_jon_frey.0011
+
+				days = 3
+			}
+		}
+	}
+}
+
+
+segrellion_daenerys_post_throne_monthly_recovery = {
+
+	trigger = {
+
+		this = character:Targaryen_9
+
+		is_alive = yes
+
+		has_title = title:h_the_iron_throne
+	}
+
+
+	effect = {
+
+		segrellion_daenerys_post_throne_recovery_effect = yes
 	}
 }
 
