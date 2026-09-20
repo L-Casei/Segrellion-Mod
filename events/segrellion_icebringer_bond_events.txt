@@ -1,0 +1,305 @@
+namespace = segrellion_icebringer_bond
+
+
+# =========================================================
+# 0000 - BOND AWAKENING DISPATCHER
+# =========================================================
+
+segrellion_icebringer_bond.0000 = {
+
+	hidden = yes
+
+
+	trigger = {
+
+		is_alive = yes
+
+		NOT = {
+			has_trait = segrellion_icebringer_bearer_trait
+		}
+
+		any_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_icebringer_bond_event_queued
+	}
+
+
+	immediate = {
+
+		random_list = {
+
+			34 = {
+				trigger_event = segrellion_icebringer_bond.0001
+			}
+
+			33 = {
+				trigger_event = segrellion_icebringer_bond.0002
+			}
+
+			33 = {
+				trigger_event = segrellion_icebringer_bond.0003
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# 0001 - THE COLD IN THE HILT
+# =========================================================
+
+segrellion_icebringer_bond.0001 = {
+
+	type = character_event
+
+	title = segrellion_icebringer_bond.0001.t
+	desc = segrellion_icebringer_bond.0001.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = segrellion_icebringer_event
+	}
+
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/traits/segrellion_icebringer_bearer_trait.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		NOT = {
+			has_trait = segrellion_icebringer_bearer_trait
+		}
+
+		any_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_icebringer_bond_event_queued
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+
+	option = {
+
+		name = segrellion_icebringer_bond.0001.a
+
+		remove_character_flag = segrellion_icebringer_bond_event_queued
+
+		add_trait_force_tooltip = segrellion_icebringer_bearer_trait
+
+		segrellion_icebringer_bond_maintenance_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0002 - A BLADE THAT KNOWS THE HAND
+# =========================================================
+
+segrellion_icebringer_bond.0002 = {
+
+	type = character_event
+
+	title = segrellion_icebringer_bond.0002.t
+	desc = segrellion_icebringer_bond.0002.desc
+
+	theme = war
+
+
+	override_background = {
+		reference = segrellion_icebringer_event
+	}
+
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/traits/segrellion_icebringer_bearer_trait.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		NOT = {
+			has_trait = segrellion_icebringer_bearer_trait
+		}
+
+		any_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_icebringer_bond_event_queued
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+
+	option = {
+
+		name = segrellion_icebringer_bond.0002.a
+
+		remove_character_flag = segrellion_icebringer_bond_event_queued
+
+		add_trait_force_tooltip = segrellion_icebringer_bearer_trait
+
+		segrellion_icebringer_bond_maintenance_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0003 - THE WHITE EDGE
+# =========================================================
+
+segrellion_icebringer_bond.0003 = {
+
+	type = character_event
+
+	title = segrellion_icebringer_bond.0003.t
+	desc = segrellion_icebringer_bond.0003.desc
+
+	theme = intrigue
+
+
+	override_background = {
+		reference = segrellion_icebringer_event
+	}
+
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+
+	override_icon = {
+		reference = "gfx/interface/icons/traits/segrellion_icebringer_bearer_trait.dds"
+	}
+
+
+	trigger = {
+
+		is_alive = yes
+
+		NOT = {
+			has_trait = segrellion_icebringer_bearer_trait
+		}
+
+		any_character_artifact = {
+			has_variable = segrellion_icebringer_artifact
+		}
+	}
+
+
+	on_trigger_fail = {
+
+		remove_character_flag = segrellion_icebringer_bond_event_queued
+	}
+
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+
+	option = {
+
+		name = segrellion_icebringer_bond.0003.a
+
+		remove_character_flag = segrellion_icebringer_bond_event_queued
+
+		add_trait_force_tooltip = segrellion_icebringer_bearer_trait
+
+		segrellion_icebringer_bond_maintenance_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0099 - OWNERSHIP WATCHDOG
+#
+# Follows Icebringer from holder to holder every 30 days.
+# Quarterly/yearly on-actions below remain as recovery in
+# case succession or death interrupts this event chain.
+# =========================================================
+
+segrellion_icebringer_bond.0099 = {
+
+	hidden = yes
+
+
+	trigger = {
+		is_alive = yes
+	}
+
+
+	immediate = {
+
+		remove_character_flag = segrellion_icebringer_bond_watch_running
+
+
+		# First update the old/current root. If Icebringer has
+		# moved away, their permanent trait becomes inactive.
+
+		segrellion_icebringer_bond_maintenance_effect = yes
+
+
+		# Then find the actual current owner and move the
+		# watcher to them.
+
+		if = {
+
+			limit = {
+				exists = global_var:segrellion_icebringer
+			}
+
+
+			global_var:segrellion_icebringer = {
+
+				artifact_owner ?= {
+
+					segrellion_icebringer_bond_maintenance_effect = yes
+				}
+			}
+		}
+	}
+}
