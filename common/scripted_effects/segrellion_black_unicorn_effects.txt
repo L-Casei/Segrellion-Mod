@@ -609,6 +609,32 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 
 		# =================================================
+		# PARENTAGE - SON OF CANNIBAL
+		#
+		# Cannibal is historical and may already be dead.
+		# That is fine: CK3 parentage can still point to him,
+		# and AGOT's dragon tree will display the relation.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				character:dragon_cannibal ?= {
+					has_trait = dragon
+				}
+			}
+
+			scope:rhaegon = {
+
+				set_father = character:dragon_cannibal
+
+				add_character_flag = segrellion_rhaegon_son_of_cannibal
+			}
+		}
+
+
+		# =================================================
 		# AGOT DRAGON SYSTEM
 		# =================================================
 
@@ -642,6 +668,53 @@ segrellion_black_unicorn_create_rhaegon_effect = {
 
 
 		add_character_flag = segrellion_black_unicorn_rhaegon_created
+	}
+}
+
+
+# =========================================================
+# RHAEGON - CANNIBAL PARENTAGE REPAIR
+#
+# Used for saves where Rhaegon already existed before his
+# father was scripted. Idempotent through a character flag.
+# =========================================================
+
+segrellion_black_unicorn_repair_rhaegon_cannibal_parent_effect = {
+
+	if = {
+
+		limit = {
+
+			exists = global_var:segrellion_historical_rhaegon
+
+			character:dragon_cannibal ?= {
+				has_trait = dragon
+			}
+
+			global_var:segrellion_historical_rhaegon = {
+
+				is_alive = yes
+
+				NOT = {
+					has_character_flag = segrellion_rhaegon_son_of_cannibal
+				}
+			}
+		}
+
+		global_var:segrellion_historical_rhaegon = {
+
+			set_father = character:dragon_cannibal
+
+			add_character_flag = segrellion_rhaegon_son_of_cannibal
+
+			save_scope_as = segrellion_rhaegon_parentage_repair_target
+		}
+
+		# Rebuild the visible dragon family tree after changing
+		# parentage on an already-existing dragon.
+		agot_dragon_tree_creation_effect = {
+			DRAGON = scope:segrellion_rhaegon_parentage_repair_target
+		}
 	}
 }
 
