@@ -20,14 +20,49 @@ segrellion_rickon_education.0000 = {
 			if = {
 				limit = {
 					has_character_flag = segrellion_rickon_tutor_daemon
-					NOT = { has_relation_guardian = character:Segrellion_60 }
 					character:Segrellion_60 = { is_alive = no }
-					character:Black_Unicorn_1 = { is_alive = yes is_adult = yes is_imprisoned = no is_incapable = no }
 				}
-				remove_character_flag = segrellion_rickon_tutor_daemon
-				add_character_flag = segrellion_rickon_tutor_visenya
-				set_relation_guardian = character:Black_Unicorn_1
-				character:Black_Unicorn_1 = { trigger_event = { id = segrellion_rickon_education.0002 days = 1 } }
+
+				# Daemon is dead. Visenya inherits the lessons if she
+				# is still available. We deliberately do not require
+				# the old guardian relation to have disappeared first.
+
+				if = {
+					limit = {
+						character:Black_Unicorn_1 = {
+							is_alive = yes
+							is_adult = yes
+							is_imprisoned = no
+							is_incapable = no
+						}
+					}
+
+					remove_character_flag = segrellion_rickon_tutor_daemon
+					add_character_flag = segrellion_rickon_tutor_visenya
+					set_relation_guardian = character:Black_Unicorn_1
+
+					character:Black_Unicorn_1 = {
+						trigger_event = {
+							id = segrellion_rickon_education.0002
+							days = 1
+						}
+					}
+				}
+
+				# If Visenya is alive but temporarily unavailable,
+				# keep the chain alive and let the watchdog retry.
+				else_if = {
+					limit = {
+						character:Black_Unicorn_1 ?= {
+							is_alive = yes
+							is_adult = yes
+						}
+					}
+				}
+
+				else = {
+					segrellion_rickon_end_education_chain_effect = yes
+				}
 			}
 			else_if = {
 				limit = { NOT = { segrellion_rickon_story_guardian_valid_trigger = yes } }
@@ -112,7 +147,10 @@ segrellion_rickon_education.0001 = {
 				remove_character_flag = segrellion_rickon_tutor_daemon
 			}
 			set_relation_guardian = root
-			segrellion_rickon_seed_existing_story_traits_effect = yes
+
+			# Once the custom education starts, only traits explicitly
+			# awarded by this storyline are protected. Any random
+			# childhood personality trait is removed by the guard.
 			segrellion_rickon_clean_unapproved_personality_traits_effect = yes
 			segrellion_rickon_queue_first_lesson_effect = yes
 			trigger_event = { id = segrellion_rickon_education.0000 days = 45 }
