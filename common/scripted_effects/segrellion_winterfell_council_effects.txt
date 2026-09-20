@@ -5,6 +5,102 @@
 
 
 # =========================================================
+# ENSURE WINTERFELL COUNCIL ATTENDEES
+#
+# ROOT = Council host
+#
+# Used both immediately after AI spawn and by recovery
+# pulses. This means an already-running empty Council in an
+# existing save repairs itself the next time Jon is checked.
+# =========================================================
+
+segrellion_winterfell_council_ensure_attendees_effect = {
+
+	if = {
+
+		limit = {
+
+			exists = involved_activity
+
+			in_activity_type = activity_segrellion_winterfell_council
+		}
+
+
+		save_scope_as = segrellion_winterfell_council_runtime_host
+
+
+		# Landed Northern lords are the political core of the Council.
+
+		every_vassal_or_below = {
+
+			limit = {
+
+				this != scope:segrellion_winterfell_council_runtime_host
+
+				is_alive = yes
+				is_adult = yes
+
+				highest_held_title_tier >= tier_county
+
+				segrellion_is_northern_lord_for_council_trigger = yes
+
+				can_join_activity = scope:segrellion_winterfell_council_runtime_host.involved_activity
+			}
+
+
+			add_to_activity_without_travel = scope:segrellion_winterfell_council_runtime_host.involved_activity
+		}
+
+
+		# Stark family are always welcome, including the younger Starks
+		# allowed by the activity's own guest rules.
+
+		every_close_family_member = {
+
+			limit = {
+
+				this != scope:segrellion_winterfell_council_runtime_host
+
+				is_alive = yes
+
+				OR = {
+					is_adult = yes
+					dynasty = character:Stark_Dummy_8.dynasty
+				}
+
+				can_join_activity = scope:segrellion_winterfell_council_runtime_host.involved_activity
+			}
+
+
+			add_to_activity_without_travel = scope:segrellion_winterfell_council_runtime_host.involved_activity
+		}
+
+
+		# The Lord Commander is a special political guest when available.
+
+		title:k_the_wall.holder ?= {
+
+			if = {
+
+				limit = {
+
+					this != scope:segrellion_winterfell_council_runtime_host
+
+					is_alive = yes
+					is_adult = yes
+
+					can_join_activity = scope:segrellion_winterfell_council_runtime_host.involved_activity
+				}
+
+
+				add_to_activity_without_travel = scope:segrellion_winterfell_council_runtime_host.involved_activity
+			}
+		}
+	}
+}
+
+
+# =========================================================
 # JON SNOW - START THE WINTERFELL COUNCIL
 #
 # ROOT = current Jon
@@ -14,6 +110,24 @@
 # =========================================================
 
 segrellion_jon_try_start_winterfell_council_effect = {
+
+	# Save-upgrade / recovery path: if the Council already exists,
+	# make sure it cannot remain an empty hall.
+	if = {
+
+		limit = {
+
+			segrellion_is_current_jon_trigger = yes
+
+			is_alive = yes
+
+			in_activity_type = activity_segrellion_winterfell_council
+		}
+
+
+		segrellion_winterfell_council_ensure_attendees_effect = yes
+	}
+
 
 	if = {
 
@@ -101,6 +215,13 @@ segrellion_jon_try_start_winterfell_council_effect = {
 
 				days = 365
 			}
+		}
+
+
+		# spawn_activity bypasses the normal planner path, so attach
+		# the political attendees immediately.
+		scope:segrellion_winterfell_council_ai_host = {
+			segrellion_winterfell_council_ensure_attendees_effect = yes
 		}
 	}
 }

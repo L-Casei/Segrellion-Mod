@@ -6,6 +6,10 @@
 # House Segrellion and the de jure nobility adopt the regional identity.
 segrellion_apply_flamelander_culture_effect = {
 
+	# Keep both Flamelander cultures on the exact High Valyrian
+	# naming pool used by AGOT for this bookmark date.
+	segrellion_sync_flamelander_valyrian_name_lists_effect = yes
+
 	# The new culture begins with the technological knowledge of the two
 	# principal Westerosi cultures from which the region developed.
 	culture:flamelander = {
@@ -344,3 +348,56 @@ segrellion_apply_flamelander_nobility_effect = {
 		value = yes
 	}
 }
+
+# =========================================================
+# VALYRIAN NAME LIST SYNCHRONIZATION
+#
+# AGOT changes High Valyrian's active name list at game
+# start depending on the bookmark date. Flamelander and
+# High Flamelander deliberately mirror that exact naming
+# pool so generated characters receive the same Valyrian
+# names as contemporary High Valyrians.
+# =========================================================
+
+segrellion_sync_flamelander_valyrian_name_lists_effect = {
+
+	if = {
+		limit = {
+			game_start_date >= 8131.1.14
+		}
+
+		culture:flamelander = {
+			set_name_list = name_list_high_valyrian_targ_dominance
+		}
+
+		culture:high_flamelander = {
+			set_name_list = name_list_high_valyrian_targ_dominance
+		}
+	}
+
+	else_if = {
+		limit = {
+			game_start_date >= 8010.1.1
+		}
+
+		culture:flamelander = {
+			set_name_list = name_list_high_valyrian_targ_influence
+		}
+
+		culture:high_flamelander = {
+			set_name_list = name_list_high_valyrian_targ_influence
+		}
+	}
+
+	else = {
+
+		culture:flamelander = {
+			set_name_list = name_list_high_valyrian
+		}
+
+		culture:high_flamelander = {
+			set_name_list = name_list_high_valyrian
+		}
+	}
+}
+
