@@ -48,6 +48,11 @@ iaf_init_Segrellion_25 = { iaf_canon_children_add_identity_effect = { ID = Segre
 iaf_init_IAF_Baratheon_Tyana_1 = { iaf_canon_children_add_identity_effect = { ID = IAF_Baratheon_Tyana_1 } }
 iaf_init_Stormflame_1 = { iaf_canon_children_add_identity_effect = { ID = Stormflame_1 } }
 iaf_init_Segrellion_27 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_27 } }
+iaf_init_Segrellion_61 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_61 } }
+iaf_init_Segrellion_62 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_62 } }
+iaf_init_Segrellion_63 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_63 } }
+iaf_init_Segrellion_64 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_64 } }
+iaf_init_Segrellion_65 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_65 } }
 
 iaf_init_later_historical_canon_identities_effect = {
 	character:Segrellion_17 ?= { iaf_init_Segrellion_17 = yes }
@@ -62,6 +67,11 @@ iaf_init_later_historical_canon_identities_effect = {
 	character:IAF_Baratheon_7 ?= { iaf_init_IAF_Baratheon_Tyana_1 = yes }
 	character:Stormflame_1 ?= { iaf_init_Stormflame_1 = yes }
 	character:Segrellion_27 ?= { iaf_init_Segrellion_27 = yes }
+	character:Segrellion_61 ?= { iaf_init_Segrellion_61 = yes }
+	character:Segrellion_62 ?= { iaf_init_Segrellion_62 = yes }
+	character:Segrellion_63 ?= { iaf_init_Segrellion_63 = yes }
+	character:Segrellion_64 ?= { iaf_init_Segrellion_64 = yes }
+	character:Segrellion_65 ?= { iaf_init_Segrellion_65 = yes }
 }
 
 # Preserve the hairstyle and beard selections shipped with the four supplied DNAs.
@@ -158,6 +168,30 @@ iaf_try_start_later_segrellion_canon_story_effect = {
 			add_character_flag = iaf_later_canon_story_started
 			create_story = { type = story_iaf_canon_children_Segrellion_21 }
 		}
+		else_if = {
+			limit = {
+				OR = {
+					iaf_is_canon_identity_trigger = { ID = Segrellion_55 }
+					this = character:Segrellion_55
+				}
+				current_date < 8282.3.4
+				iaf_later_canon_identity_exists_trigger = { ID = Segrellion_56 }
+			}
+			add_character_flag = iaf_later_canon_story_started
+			create_story = { type = story_iaf_canon_children_Segrellion_55 }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					iaf_is_canon_identity_trigger = { ID = Segrellion_57 }
+					this = character:Segrellion_57
+				}
+				current_date < 8283.8.17
+				iaf_later_canon_identity_exists_trigger = { ID = Segrellion_59 }
+			}
+			add_character_flag = iaf_later_canon_story_started
+			create_story = { type = story_iaf_canon_children_Segrellion_57 }
+		}
 	}
 }
 
@@ -174,6 +208,11 @@ iaf_init_later_canon_children_setup = {
 	character:Dummy_Stormflame_1 ?= { make_unprunable = yes }
 	character:Dummy_Segrellion_27 ?= { make_unprunable = yes }
 	character:IAF_Baratheon_Tyana_1 ?= { make_unprunable = yes }
+	character:Dummy_Segrellion_61 ?= { make_unprunable = yes }
+	character:Dummy_Segrellion_62 ?= { make_unprunable = yes }
+	character:Dummy_Segrellion_63 ?= { make_unprunable = yes }
+	character:Dummy_Segrellion_64 ?= { make_unprunable = yes }
+	character:Dummy_Segrellion_65 ?= { make_unprunable = yes }
 
 	iaf_init_later_historical_canon_identities_effect = yes
 	segrellion_try_force_later_canon_marriages_effect = yes
@@ -182,6 +221,8 @@ iaf_init_later_canon_children_setup = {
 	character:Segrellion_12 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
 	character:Segrellion_19 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
 	character:Segrellion_21 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
+	character:Segrellion_55 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
+	character:Segrellion_57 ?= { iaf_try_start_later_segrellion_canon_story_effect = yes }
 }
 
 segrellion_try_force_later_canon_marriages_effect = {
@@ -755,6 +796,94 @@ iaf_canon_children_Segrellion_21_start_valid_pregnancy_effect = {
 	}
 }
 
+
+iaf_canon_children_Segrellion_55_start_valid_pregnancy_effect = {
+	story_owner = {
+		save_scope_as = canon_father
+		every_in_list = {
+			variable = canon_mothers
+			save_scope_as = canon_mother
+
+			if = {
+				limit = {
+					iaf_is_canon_identity_trigger = { ID = Segrellion_56 }
+					agot_canon_children_start_pregnancy_basic_trigger = {
+						FATHER = scope:canon_father
+						MOTHER = scope:canon_mother
+					}
+				}
+
+				if = {
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_61 BIRTH_YEAR = 8279 BIRTH_YEAR_MIN = 8278 } }
+					agot_canon_children_start_pregnancy_effect = {
+						CHILD_ID = Segrellion_61
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+				else_if = {
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_62 BIRTH_YEAR = 8279 BIRTH_YEAR_MIN = 8279 } }
+					agot_canon_children_start_pregnancy_effect = {
+						CHILD_ID = Segrellion_62
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+				else_if = {
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_63 BIRTH_YEAR = 8282 BIRTH_YEAR_MIN = 8281 } }
+					agot_canon_children_start_pregnancy_effect = {
+						CHILD_ID = Segrellion_63
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+
+				agot_canon_children_life_cycle_effect = {
+					MOTHER = scope:canon_mother
+					FINAL_CHILD_ID = Segrellion_63
+				}
+			}
+		}
+	}
+}
+
+iaf_canon_children_Segrellion_57_start_valid_pregnancy_effect = {
+	story_owner = {
+		save_scope_as = canon_father
+		every_in_list = {
+			variable = canon_mothers
+			save_scope_as = canon_mother
+
+			if = {
+				limit = {
+					iaf_is_canon_identity_trigger = { ID = Segrellion_59 }
+					agot_canon_children_start_pregnancy_basic_trigger = {
+						FATHER = scope:canon_father
+						MOTHER = scope:canon_mother
+					}
+				}
+
+				if = {
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_64 BIRTH_YEAR = 8282 BIRTH_YEAR_MIN = 8281 } }
+					agot_canon_children_start_pregnancy_effect = {
+						CHILD_ID = Segrellion_64
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+				else_if = {
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_65 BIRTH_YEAR = 8283 BIRTH_YEAR_MIN = 8282 } }
+					agot_canon_children_start_pregnancy_effect = {
+						CHILD_ID = Segrellion_65
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+
+				agot_canon_children_life_cycle_effect = {
+					MOTHER = scope:canon_mother
+					FINAL_CHILD_ID = Segrellion_65
+				}
+			}
+		}
+	}
+}
+
 iaf_canon_children_Segrellion_17_birth_effect = {
 	agot_canon_children_generic_birth_effect = { ID = Segrellion_17 }
 	add_character_flag = canon_status_canon
@@ -851,6 +980,50 @@ iaf_canon_children_Segrellion_27_birth_effect = {
 	add_character_flag = canon_status_canon
 	iaf_init_Segrellion_27 = yes
 
+}
+
+
+iaf_canon_children_Segrellion_61_birth_effect = {
+	agot_canon_children_generic_birth_effect = { ID = Segrellion_61 }
+	add_character_flag = canon_status_canon
+	iaf_init_Segrellion_61 = yes
+	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aeryn_black_moon_modifier }
+	add_trait = twin
+	add_trait = physique_good_1
+}
+
+iaf_canon_children_Segrellion_62_birth_effect = {
+	agot_canon_children_generic_birth_effect = { ID = Segrellion_62 }
+	add_character_flag = canon_status_canon
+	iaf_init_Segrellion_62 = yes
+	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aegor_black_moon_modifier }
+	add_trait = twin
+	add_trait = physique_good_1
+}
+
+iaf_canon_children_Segrellion_63_birth_effect = {
+	agot_canon_children_generic_birth_effect = { ID = Segrellion_63 }
+	add_character_flag = canon_status_canon
+	iaf_init_Segrellion_63 = yes
+	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_valerion_black_moon_modifier }
+}
+
+iaf_canon_children_Segrellion_64_birth_effect = {
+	agot_canon_children_generic_birth_effect = { ID = Segrellion_64 }
+	add_character_flag = canon_status_canon
+	add_character_flag = segrellion_disputed_paternity_aegon_reborn_rumor
+	iaf_init_Segrellion_64 = yes
+	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_tristan_black_moon_modifier }
+	add_trait = beauty_good_1
+}
+
+iaf_canon_children_Segrellion_65_birth_effect = {
+	agot_canon_children_generic_birth_effect = { ID = Segrellion_65 }
+	add_character_flag = canon_status_canon
+	add_character_flag = segrellion_disputed_paternity_aegon_reborn_rumor
+	iaf_init_Segrellion_65 = yes
+	segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_tyana_black_moon_modifier }
+	add_trait = beauty_good_1
 }
 
 segrellion_assign_later_canon_child_personality_effect = {
@@ -980,6 +1153,11 @@ segrellion_assign_later_historical_canon_traits_effect = {
 		character:Segrellion_58 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_rhaegar_late_modifier } }
 		character:Segrellion_59 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_rhae_late_modifier } }
 		character:Segrellion_60 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_daemon_bastard_unicorn_modifier } }
+		character:Segrellion_61 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aeryn_black_moon_modifier } }
+		character:Segrellion_62 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aegor_black_moon_modifier } }
+		character:Segrellion_63 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_valerion_black_moon_modifier } }
+		character:Segrellion_64 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_tristan_black_moon_modifier } }
+		character:Segrellion_65 ?= { segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_tyana_black_moon_modifier } }
 	}
 	else = {
 		character:Segrellion_17 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_rhaenys_modifier } }
@@ -1009,6 +1187,11 @@ segrellion_assign_later_historical_canon_traits_effect = {
 		character:Segrellion_58 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_rhaegar_late_modifier } }
 		character:Segrellion_59 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_rhae_late_modifier } }
 		character:Segrellion_60 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_daemon_bastard_unicorn_modifier } }
+		character:Segrellion_61 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_aeryn_black_moon_modifier } }
+		character:Segrellion_62 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_aegor_black_moon_modifier } }
+		character:Segrellion_63 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_valerion_black_moon_modifier } }
+		character:Segrellion_64 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_tristan_black_moon_modifier } }
+		character:Segrellion_65 ?= { segrellion_remove_canon_modifier_effect = { MODIFIER = segrellion_canon_tyana_black_moon_modifier } }
 	}
 }
 
@@ -1052,5 +1235,25 @@ segrellion_assign_later_canon_trait_from_identity_effect = {
 	else_if = {
 		limit = { OR = { has_character_flag = is_Stormflame_1 has_inactive_trait = is_Stormflame_1 } }
 		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_elys_modifier }
+	}
+	else_if = {
+		limit = { OR = { has_character_flag = is_Segrellion_61 has_inactive_trait = is_Segrellion_61 } }
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aeryn_black_moon_modifier }
+	}
+	else_if = {
+		limit = { OR = { has_character_flag = is_Segrellion_62 has_inactive_trait = is_Segrellion_62 } }
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_aegor_black_moon_modifier }
+	}
+	else_if = {
+		limit = { OR = { has_character_flag = is_Segrellion_63 has_inactive_trait = is_Segrellion_63 } }
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_valerion_black_moon_modifier }
+	}
+	else_if = {
+		limit = { OR = { has_character_flag = is_Segrellion_64 has_inactive_trait = is_Segrellion_64 } }
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_tristan_black_moon_modifier }
+	}
+	else_if = {
+		limit = { OR = { has_character_flag = is_Segrellion_65 has_inactive_trait = is_Segrellion_65 } }
+		segrellion_add_canon_modifier_effect = { MODIFIER = segrellion_canon_tyana_black_moon_modifier }
 	}
 }
