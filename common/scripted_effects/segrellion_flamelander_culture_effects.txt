@@ -117,6 +117,30 @@ segrellion_flamelander_culture_progression_effect = {
     }
 
 	# =====================================================
+	# HIGH FLAMELANDER DYNASTY INTEGRITY
+	#
+	# From Aeryn's foundation onward, living members of the
+	# Segrellion dynasty and its cadet houses should never drift
+	# back to ordinary Flamelander. This also repairs old saves.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8144.1.28
+		}
+
+		dynasty:dynn_Segrellion = {
+			every_dynasty_member = {
+				limit = {
+					is_alive = yes
+					culture = culture:flamelander
+				}
+				set_culture = culture:high_flamelander
+			}
+		}
+	}
+
+	# =====================================================
 	# HIGH FLAMELANDER SAVE UPGRADE
 	#
 	# Old saves may already have completed the original
