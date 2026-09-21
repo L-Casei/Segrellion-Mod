@@ -31,7 +31,7 @@ agot_dragonpit_amenities_gui = {
 						has_building = agot_dragonmont_01
 
 						# Caverns of Vhal
-						has_building_or_higher = segrellion_vhal_dragonpit_02
+						segrellion_vhal_dragonpit_building_active_trigger = yes
 					}
 				}
 			}
@@ -58,11 +58,139 @@ agot_view_dragons_in_dragonpit = {
 			has_building = agot_dragonmont_01
 
 			# Caverns of Vhal
-			has_building_or_higher = segrellion_vhal_dragonpit_02
+			segrellion_vhal_dragonpit_building_active_trigger = yes
 		}
 	}
 
 	effect = {
 		trigger_event = agot_dragon_pits.0999
+	}
+}
+
+# ============================================================
+# SEND OWNED DRAGON TO DRAGONPIT
+#
+# Direct Vhal fallback. This does not depend solely on AGOT's
+# generic active-pit trigger, so another trigger overwrite cannot
+# hide the button for the Caverns of Vhal.
+# ============================================================
+
+send_to_dragonpit = {
+	scope = character
+
+	is_shown = {
+		scope:owner ?= {
+			OR = {
+				agot_has_an_active_dragonpit = yes
+				segrellion_has_active_vhal_dragonpit = yes
+			}
+		}
+		has_trait = dragon
+		exists = employer
+		employer = scope:owner
+		has_character_flag = owned_dragon
+		NOT = { has_character_flag = in_dragonpit }
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = CANT_SENT_TO_DRAGONPIT_TT
+			NOT = {
+				owns_story_of_type = story_dragon_at_war
+			}
+		}
+		custom_tooltip = {
+			text = CANT_SENT_TO_DRAGONPIT_TRAVELING_TT
+			trigger_if = {
+				limit = {
+					exists = var:current_rider
+					exists = var:current_rider.current_travel_plan
+				}
+				var:current_rider.current_travel_plan = {
+					NOT = { has_travel_option = dragon_flight_option }
+				}
+			}
+			NOT = { exists = current_travel_plan }
+		}
+	}
+
+	ai_is_valid = {
+		scope:owner ?= {
+			OR = {
+				agot_has_an_active_dragonpit = yes
+				segrellion_has_active_vhal_dragonpit = yes
+			}
+		}
+		has_trait = dragon
+		exists = employer
+		has_character_flag = owned_dragon
+		NOT = { has_character_flag = in_dragonpit }
+	}
+
+	effect = {
+		agot_change_dragonpit_status = yes
+	}
+}
+
+
+# ============================================================
+# CAPTURE WILD DRAGON INTO DRAGONPIT
+# Same direct Vhal fallback as send_to_dragonpit.
+# ============================================================
+
+capture_wild_dragon = {
+	scope = character
+
+	is_shown = {
+		scope:owner ?= {
+			OR = {
+				agot_has_an_active_dragonpit = yes
+				segrellion_has_active_vhal_dragonpit = yes
+			}
+		}
+		has_trait = dragon
+		is_alive = yes
+		OR = {
+			any_liege_or_above = { this = scope:owner }
+			location.county = {
+				holder = {
+					OR = {
+						any_liege_or_above = { this = scope:owner }
+						this = scope:owner
+					}
+				}
+				agot_title_is_an_active_dragonpit = yes
+			}
+		}
+		NOT = { has_character_flag = owned_dragon }
+		NOT = { has_character_flag = in_dragonpit }
+	}
+
+	is_valid = {
+		scope:owner = {
+			custom_tooltip = {
+				text = agot_capture_dragon_cd_gui_tt
+				NOT = {
+					has_variable = capture_cd
+				}
+			}
+		}
+	}
+
+	ai_is_valid = {
+		scope:owner ?= {
+			OR = {
+				agot_has_an_active_dragonpit = yes
+				segrellion_has_active_vhal_dragonpit = yes
+			}
+		}
+		has_trait = dragon
+		exists = employer
+		NOT = { has_character_flag = owned_dragon }
+		NOT = { has_character_flag = in_dragonpit }
+	}
+
+	effect = {
+		agot_change_dragonpit_status = yes
 	}
 }
