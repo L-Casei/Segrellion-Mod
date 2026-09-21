@@ -1,0 +1,67 @@
+# Check every province entered, independently of the random travel-event pool.
+on_travel_plan_movement = {
+	on_actions = {
+		segrellion_stormflame_travel_check
+	}
+}
+
+segrellion_stormflame_travel_check = {
+	trigger = {
+		exists = current_travel_plan
+		OR = {
+			character:Segrellion_60 ?= {
+				is_alive = yes
+				is_imprisoned = no
+				current_travel_plan ?= root.current_travel_plan
+			}
+			character:Segrellion_43 ?= {
+				is_alive = yes
+				is_imprisoned = no
+				current_travel_plan ?= root.current_travel_plan
+			}
+		}
+	}
+	effect = {
+		# Resolve both travelers before imprisonment can end their shared plan.
+		character:Segrellion_60 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					is_imprisoned = no
+					current_travel_plan ?= root.current_travel_plan
+				}
+				save_scope_as = stormflame_travel_daemon
+			}
+		}
+		character:Segrellion_43 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					is_imprisoned = no
+					current_travel_plan ?= root.current_travel_plan
+				}
+				save_scope_as = stormflame_travel_hugh
+			}
+		}
+		current_travel_plan.current_location = {
+			# Includes the Beacon and White Hall while held by Stormflames.
+			if = {
+				limit = {
+					province_owner ?= { dynasty_house = house:house_Stormflame }
+				}
+				province_owner = { save_scope_as = stormflame_travel_captor }
+			}
+			else_if = {
+				limit = {
+					county.holder ?= { dynasty_house = house:house_Stormflame }
+				}
+				county.holder = { save_scope_as = stormflame_travel_captor }
+			}
+		}
+		if = {
+			limit = { exists = scope:stormflame_travel_captor }
+			scope:stormflame_travel_daemon ?= { segrellion_stormflame_capture_traveler_effect = yes }
+			scope:stormflame_travel_hugh ?= { segrellion_stormflame_capture_traveler_effect = yes }
+		}
+	}
+}

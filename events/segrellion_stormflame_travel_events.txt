@@ -1,0 +1,21 @@
+namespace = segrellion_stormflame_travel
+
+# A release, escape or change of jailer cancels the scheduled execution.
+segrellion_stormflame_travel.0001 = {
+	type = character_event
+	hidden = yes
+	trigger = {
+		is_alive = yes
+		scope:stormflame_travel_captor ?= { is_alive = yes }
+		is_imprisoned_by = scope:stormflame_travel_captor
+	}
+	immediate = {
+		random = {
+			chance = 80
+			death = {
+				death_reason = death_execution
+				killer = scope:stormflame_travel_captor
+			}
+		}
+	}
+}
