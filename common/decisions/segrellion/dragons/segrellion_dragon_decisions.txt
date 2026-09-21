@@ -58,6 +58,74 @@ segrellion_keep_the_dragon_egg_close_decision = {
 }
 
 # =========================================================
+# APPOINT A HEAD DRAGONKEEPER AT VHAL
+#
+# Native AGOT normally exposes its own appointment decision.
+# This Vhal-specific fallback keeps the custom duchy building
+# usable even if another submod overwrites AGOT's generic
+# dragonpit-recognition trigger.
+# =========================================================
+
+segrellion_appoint_vhal_head_dragonkeeper_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+
+	decision_group_type = major
+	ai_goal = yes
+
+	desc = segrellion_appoint_vhal_head_dragonkeeper_decision_desc
+	selection_tooltip = segrellion_appoint_vhal_head_dragonkeeper_decision_tooltip
+	confirm_text = segrellion_appoint_vhal_head_dragonkeeper_decision_confirm
+
+
+	is_shown = {
+
+		is_landed = yes
+
+		segrellion_has_active_vhal_dragonpit = yes
+
+		NOT = {
+			employs_court_position = head_dragonkeeper_court_position
+		}
+	}
+
+
+	is_valid = {
+
+		is_adult = yes
+		is_imprisoned = no
+
+		has_title = title:c_blackmark
+	}
+
+
+	effect = {
+
+		custom_tooltip = segrellion_appoint_vhal_head_dragonkeeper_decision_effect_tt
+
+		# AGOT's native event directly creates and appoints the
+		# Head Dragonkeeper. It does not depend on a generic pit
+		# being selected first.
+		trigger_event = {
+			id = agot_dragonkeepers.0001
+			days = 1
+		}
+	}
+
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 500
+	}
+}
+
+
+# =========================================================
 # RESTORE THE VHAL DRAGONKEEPERS
 #
 # The Great Pit survives the extinction of the dragons,
@@ -119,7 +187,7 @@ segrellion_restore_vhal_dragonkeepers_decision = {
 
 			any_county_province = {
 
-				has_building_or_higher = segrellion_vhal_dragonpit_02
+				segrellion_vhal_dragonpit_building_active_trigger = yes
 			}
 
 
