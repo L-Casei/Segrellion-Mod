@@ -3365,11 +3365,30 @@ segrellion_support.6020 = {
 		}
 
 		# Robin gains a STRONG FAVOR on Daemon.
+		#
+		# Do the grant immediately, then run a one-day repair event
+		# with Robin as ROOT. The second pass avoids saved-scope /
+		# event-context failures and upgrades any pre-existing weaker
+		# hook if necessary.
 		scope:support_robin = {
 
-			add_hook = {
-				type = strong_favor_hook
-				target = root
+			if = {
+				limit = {
+					can_add_hook = {
+						type = strong_favor_hook
+						target = root
+					}
+				}
+
+				add_hook = {
+					type = strong_favor_hook
+					target = root
+				}
+			}
+
+			trigger_event = {
+				id = segrellion_support.6021
+				days = 1
 			}
 		}
 
@@ -3420,6 +3439,110 @@ segrellion_support.6020 = {
 		add_character_flag = segrellion_vale_support_route_closed
 
 		segrellion_clear_troop_negotiation_effect = yes
+	}
+}
+
+
+# =========================================================
+# 6021 - VALE STRONG HOOK REPAIR
+#
+# ROOT = the Vale creditor (normally Robin Arryn)
+#
+# The 6020 bargain promises a Strong Hook. This event runs
+# with the creditor as ROOT so the hook cannot be lost due
+# to the parent event's saved-scope context.
+# =========================================================
+
+segrellion_support.6021 = {
+
+	type = character_event
+	hidden = yes
+
+	trigger = {
+
+		is_alive = yes
+
+		character:Segrellion_60 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_vale_debt_active
+			has_character_flag = segrellion_vale_debt_pact
+		}
+	}
+
+	immediate = {
+
+		# Already correct: only record that the bargain was fulfilled.
+		if = {
+
+			limit = {
+
+				has_hook_of_type = {
+					type = strong_favor_hook
+					target = character:Segrellion_60
+				}
+			}
+
+			character:Segrellion_60 = {
+				add_character_flag = segrellion_vale_debt_hook_granted
+			}
+		}
+
+
+		# No hook exists yet. Grant the promised Strong Hook normally.
+		else_if = {
+
+			limit = {
+
+				NOT = {
+					has_hook = character:Segrellion_60
+				}
+
+				can_add_hook = {
+					type = strong_favor_hook
+					target = character:Segrellion_60
+				}
+			}
+
+			add_hook = {
+				type = strong_favor_hook
+				target = character:Segrellion_60
+			}
+
+			character:Segrellion_60 = {
+				add_character_flag = segrellion_vale_debt_hook_granted
+			}
+		}
+
+
+		# A different/weaker hook is blocking the promised one.
+		# Replace it rather than silently failing the bargain.
+		else_if = {
+
+			limit = {
+
+				has_hook = character:Segrellion_60
+
+				NOT = {
+					has_hook_of_type = {
+						type = strong_favor_hook
+						target = character:Segrellion_60
+					}
+				}
+			}
+
+			remove_hook = {
+				target = character:Segrellion_60
+			}
+
+			add_hook = {
+				type = strong_favor_hook
+				target = character:Segrellion_60
+			}
+
+			character:Segrellion_60 = {
+				add_character_flag = segrellion_vale_debt_hook_granted
+			}
+		}
 	}
 }
 

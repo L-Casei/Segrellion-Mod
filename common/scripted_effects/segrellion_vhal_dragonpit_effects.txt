@@ -17,17 +17,12 @@ segrellion_activate_vhal_dragonpit_effect = {
 			title:c_blackmark = {
 
 				any_county_province = {
-					has_building_or_higher = segrellion_vhal_dragonpit_02
-				}
-
-				NOT = {
-					has_variable = has_dragonkeeper_order
+					segrellion_vhal_dragonpit_building_active_trigger = yes
 				}
 
 
 				# After the historical extinction of the dragons,
-				# Vhal must remain dormant until somebody
-				# explicitly restores the order.
+				# Vhal remains dormant until the order is restored.
 
 				OR = {
 
@@ -42,20 +37,26 @@ segrellion_activate_vhal_dragonpit_effect = {
 
 
 		# =================================================
-		# AGOT HEAD DRAGONKEEPER
-		# =================================================
-
-		trigger_event = agot_dragonkeepers.0001
-
-
-		# =================================================
 		# ACTIVE DRAGONKEEPER ORDER
+		#
+		# Set this FIRST. AGOT's court-position visibility,
+		# dragon interactions and keeper events all inspect
+		# the county variable.
 		# =================================================
 
 		title:c_blackmark = {
 
-			set_variable = {
-				name = has_dragonkeeper_order
+			if = {
+
+				limit = {
+					NOT = {
+						has_variable = has_dragonkeeper_order
+					}
+				}
+
+				set_variable = {
+					name = has_dragonkeeper_order
+				}
 			}
 		}
 
@@ -70,8 +71,7 @@ segrellion_activate_vhal_dragonpit_effect = {
 				agot_has_any_dragonpit_access_law = no
 			}
 
-
-			add_realm_law = dragonpit_close_family_law
+			agot_dragonpit_access_law_close_family_effect = yes
 		}
 
 
@@ -93,7 +93,7 @@ segrellion_activate_vhal_dragonpit_effect = {
 					title:c_blackmark = {
 
 						any_county_province = {
-							has_building_or_higher = segrellion_vhal_dragonpit_03
+							has_building = segrellion_vhal_dragonpit_03
 						}
 					}
 				}
@@ -118,6 +118,42 @@ segrellion_activate_vhal_dragonpit_effect = {
 						value = 3
 					}
 				}
+			}
+		}
+
+
+		# =================================================
+		# HEAD DRAGONKEEPER REPAIR
+		#
+		# Older/broken saves can have has_dragonkeeper_order
+		# set while no Head Dragonkeeper actually exists.
+		# In that state the old effect became a permanent
+		# no-op. Re-fire AGOT's native creation event.
+		# =================================================
+
+		if = {
+
+			limit = {
+
+				NOT = {
+					employs_court_position = head_dragonkeeper_court_position
+				}
+
+				NOT = {
+					has_character_flag = segrellion_vhal_head_dragonkeeper_event_pending
+				}
+			}
+
+
+			add_character_flag = {
+				flag = segrellion_vhal_head_dragonkeeper_event_pending
+				days = 14
+			}
+
+
+			trigger_event = {
+				id = agot_dragonkeepers.0001
+				days = 1
 			}
 		}
 	}
