@@ -34,6 +34,7 @@ monthly_global_pulse = {
 		segrellion_daemon_parentage_progression
 		segrellion_deathwish_historical_progression
 		segrellion_winds_300_aftermath_check
+		segrellion_vale_debt_hook_repair_progression
 		segrellion_exceptionalism_progression
 		segrellion_unicorn_returns_leo_beacon_lock
 		segrellion_arianne_marriage_lock_progression
@@ -2327,6 +2328,65 @@ segrellion_on_game_start = {
 		}
 	}
 }
+
+# =========================================================
+# VALE DEBT - STRONG HOOK SAVE REPAIR
+#
+# Old saves from before the fix may already have Robin's
+# 1,500-gold debt pact active without the promised hook.
+# Retry only until the hook has successfully been granted.
+# Once the hook is later spent, the granted flag prevents
+# it from being recreated.
+# =========================================================
+
+segrellion_vale_debt_hook_repair_progression = {
+
+	effect = {
+
+		character:Segrellion_60 ?= {
+
+			if = {
+
+				limit = {
+
+					is_alive = yes
+					has_character_flag = segrellion_vale_debt_active
+					has_character_flag = segrellion_vale_debt_pact
+
+					NOT = {
+						has_character_flag = segrellion_vale_debt_hook_granted
+					}
+
+					NOT = {
+						has_character_flag = segrellion_vale_debt_hook_repair_pending
+					}
+
+					has_variable = segrellion_vale_creditor
+
+					var:segrellion_vale_creditor = {
+						is_alive = yes
+					}
+				}
+
+
+				add_character_flag = {
+					flag = segrellion_vale_debt_hook_repair_pending
+					days = 45
+				}
+
+
+				var:segrellion_vale_creditor = {
+
+					trigger_event = {
+						id = segrellion_support.6021
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+
 
 # =========================================================
 # TRUEFLAME HISTORICAL RECOVERY
