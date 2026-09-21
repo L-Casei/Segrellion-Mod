@@ -3,6 +3,28 @@
 # Makes Caverns II+ count as a native AGOT dragonpit
 # ============================================================
 
+# Explicit level checks are deliberate. They avoid relying only on
+# has_building_or_higher for a custom duchy-capital upgrade chain.
+segrellion_vhal_dragonpit_building_active_trigger = {
+	OR = {
+		has_building = segrellion_vhal_dragonpit_02
+		has_building = segrellion_vhal_dragonpit_03
+		has_building_or_higher = segrellion_vhal_dragonpit_02
+	}
+}
+
+# Character-scope fallback used by our own GUI/decisions even if another
+# submod later overwrites one of AGOT's generic dragonpit triggers.
+segrellion_has_active_vhal_dragonpit = {
+	any_held_county = {
+		this = title:c_blackmark
+		any_county_province = {
+			segrellion_vhal_dragonpit_building_active_trigger = yes
+		}
+		has_variable = has_dragonkeeper_order
+	}
+}
+
 
 agot_can_use_dragonpit_amenities = {
 	any_held_county = {
@@ -19,7 +41,7 @@ agot_can_use_dragonpit_amenities = {
 					has_building = agot_dragonmont_01
 
 					# Caverns of Vhal
-					has_building_or_higher = segrellion_vhal_dragonpit_02
+					segrellion_vhal_dragonpit_building_active_trigger = yes
 				}
 			}
 		}
@@ -44,7 +66,7 @@ agot_has_an_active_dragonpit = {
 					has_building = agot_dragonmont_01
 
 					# Caverns of Vhal
-					has_building_or_higher = segrellion_vhal_dragonpit_02
+					segrellion_vhal_dragonpit_building_active_trigger = yes
 				}
 			}
 		}
@@ -69,7 +91,7 @@ agot_has_multiple_active_dragonpits = {
 					has_building = agot_dragonmont_01
 
 					# Caverns of Vhal
-					has_building_or_higher = segrellion_vhal_dragonpit_02
+					segrellion_vhal_dragonpit_building_active_trigger = yes
 				}
 			}
 		}
@@ -96,7 +118,7 @@ agot_title_is_an_active_dragonpit = {
 				has_building = agot_dragonmont_01
 
 				# Caverns of Vhal
-				has_building_or_higher = segrellion_vhal_dragonpit_02
+				segrellion_vhal_dragonpit_building_active_trigger = yes
 			}
 		}
 	}
@@ -113,6 +135,6 @@ has_any_dragonpits = {
 		has_building = agot_dragonmont_01
 
 		# Caverns of Vhal
-		has_building_or_higher = segrellion_vhal_dragonpit_02
+		segrellion_vhal_dragonpit_building_active_trigger = yes
 	}
 }
