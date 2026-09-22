@@ -1092,11 +1092,22 @@ segrellion_jon_leave_watch_for_winterfell_effect = {
 		# JON'S VOWS ENDED WITH HIS FIRST DEATH
 		# =================================================
 
+		# Remove the actual Night's Watch trait package when Jon
+		# leaves for Winterfell. Transferring k_the_wall alone
+		# does not clear AGOT's Night's Watch character traits.
+		agot_remove_nightswatch_traits_effect = yes
+
+		# Safety cleanup for saves / external scripts that left
+		# AGOT's generic marriage refusal trait behind.
+		if = {
+			limit = {
+				has_trait = refusing_marriage
+			}
+			remove_trait = refusing_marriage
+		}
 
 		add_character_flag = segrellion_jon_watch_ended_in_death
-
 		add_character_flag = segrellion_jon_left_nights_watch
-
 
 
 		if = {
