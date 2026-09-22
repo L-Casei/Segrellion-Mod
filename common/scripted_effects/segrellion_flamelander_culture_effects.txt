@@ -6,8 +6,8 @@
 # House Segrellion and the de jure nobility adopt the regional identity.
 segrellion_apply_flamelander_culture_effect = {
 
-	# Keep both Flamelander cultures on the exact High Valyrian
-	# naming pool used by AGOT for this bookmark date.
+	# Only High Flamelander mirrors AGOT's contemporary High Valyrian
+	# naming pool. Ordinary Flamelanders remain Westerosi-Andal.
 	segrellion_sync_flamelander_valyrian_name_lists_effect = yes
 
 	# The new culture begins with the technological knowledge of the two
@@ -21,10 +21,12 @@ segrellion_apply_flamelander_culture_effect = {
 		get_all_innovations_from = culture:flamelander
 	}
 
-	# Vhalerion
+	# Vhalerion is the dynastic heartland of House Segrellion.
+	# Like Dragonstone for the Targaryens, the island retains the
+	# elite Valyrian-derived High Flamelander culture.
 	title:d_vhalerion = {
 		every_de_jure_county = {
-			set_county_culture = culture:flamelander
+			set_county_culture = culture:high_flamelander
 		}
 	}
 
@@ -113,6 +115,30 @@ segrellion_flamelander_culture_progression_effect = {
         }
         segrellion_apply_flamelander_nobility_effect = yes
     }
+
+	# =====================================================
+	# HIGH FLAMELANDER DYNASTY INTEGRITY
+	#
+	# From Aeryn's foundation onward, living members of the
+	# Segrellion dynasty and its cadet houses should never drift
+	# back to ordinary Flamelander. This also repairs old saves.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8144.1.28
+		}
+
+		dynasty:dynn_Segrellion = {
+			every_dynasty_member = {
+				limit = {
+					is_alive = yes
+					culture = culture:flamelander
+				}
+				set_culture = culture:high_flamelander
+			}
+		}
+	}
 
 	# =====================================================
 	# HIGH FLAMELANDER SAVE UPGRADE
@@ -244,30 +270,64 @@ segrellion_convert_flamelander_lord_effect = {
 
 segrellion_apply_high_flamelander_segrellion_effect = {
 
-	# Technologically, High Flamelander begins from the
-	# regional Flamelander culture rather than gaining
-	# additional free technologies.
+	# Technologically, High Flamelander is a synthesis of the
+	# regional Flamelander realm and House Segrellion's older
+	# High Valyrian tradition.
 
 	culture:high_flamelander = {
 
 		get_all_innovations_from = culture:flamelander
+		get_all_innovations_from = culture:high_valyrian
 	}
 
 
 	# =====================================================
-	# HOUSE SEGRELLION
+	# AERYN'S GENERATION
+	#
+	# Aeryn is the first historical Segrellion to adopt the
+	# High Flamelander identity. Rhaenys and their already-born
+	# son Rhaegar form the founding household. Later children
+	# inherit the culture naturally.
 	# =====================================================
 
-	dynasty:dynn_Segrellion = {
+	character:Segrellion_12 ?= {
+		set_culture = culture:high_flamelander
 
-		every_dynasty_member = {
-
-			limit = {
-				is_alive = yes
-			}
-
-
+		every_child = {
+			limit = { is_alive = yes }
 			set_culture = culture:high_flamelander
+		}
+	}
+
+	character:Segrellion_17 ?= {
+		set_culture = culture:high_flamelander
+	}
+
+
+	# =====================================================
+	# SAVE UPGRADE
+	#
+	# Existing saves made before this rework may contain later
+	# Segrellion descendants as ordinary Flamelanders. From the
+	# historical formation date onward, living members of the
+	# dynasty are upgraded so old campaigns converge on the new
+	# cultural setup. Historical character files preserve the
+	# exact Aeryn-and-descendants lineage for new games.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8144.1.28
+		}
+
+		dynasty:dynn_Segrellion = {
+			every_dynasty_member = {
+				limit = {
+					is_alive = yes
+					culture = culture:flamelander
+				}
+				set_culture = culture:high_flamelander
+			}
 		}
 	}
 
@@ -361,13 +421,13 @@ segrellion_apply_flamelander_nobility_effect = {
 
 segrellion_sync_flamelander_valyrian_name_lists_effect = {
 
+	# High Flamelander follows the same changing Valyrian naming
+	# pools that AGOT applies to High Valyrian. Ordinary Flamelander
+	# deliberately keeps its Westerosi/Crownlander name list.
+
 	if = {
 		limit = {
 			game_start_date >= 8131.1.14
-		}
-
-		culture:flamelander = {
-			set_name_list = name_list_high_valyrian_targ_dominance
 		}
 
 		culture:high_flamelander = {
@@ -380,20 +440,12 @@ segrellion_sync_flamelander_valyrian_name_lists_effect = {
 			game_start_date >= 8010.1.1
 		}
 
-		culture:flamelander = {
-			set_name_list = name_list_high_valyrian_targ_influence
-		}
-
 		culture:high_flamelander = {
 			set_name_list = name_list_high_valyrian_targ_influence
 		}
 	}
 
 	else = {
-
-		culture:flamelander = {
-			set_name_list = name_list_high_valyrian
-		}
 
 		culture:high_flamelander = {
 			set_name_list = name_list_high_valyrian
