@@ -74,3 +74,114 @@ segrellion_jon_choose_revealed_identity_decision = {
 		base = 1000
 	}
 }
+
+
+# =========================================================
+# JON SNOW - LAY ASIDE THE BLACK VOW
+#
+# Fallback for old saves or external scripts where Jon has
+# already left the Night's Watch but refusing_marriage
+# remained stuck on the character.
+# =========================================================
+
+segrellion_jon_lay_aside_black_vow_decision = {
+
+	decision_group_type = ice_and_fire
+
+	sort_order = 40
+
+	desc = segrellion_jon_lay_aside_black_vow_decision_desc
+
+	selection_tooltip = segrellion_jon_lay_aside_black_vow_decision_tooltip
+
+	confirm_text = segrellion_jon_lay_aside_black_vow_decision_confirm
+
+
+	# =====================================================
+	# VISIBILITY
+	# =====================================================
+
+	is_shown = {
+
+		segrellion_is_current_jon_trigger = yes
+
+		is_alive = yes
+
+		has_trait = refusing_marriage
+
+		# Never let Jon discard the restriction while he is
+		# still legitimately serving as Lord Commander.
+		OR = {
+
+			has_character_flag = segrellion_jon_left_nights_watch
+
+			AND = {
+
+				NOT = {
+					has_trait = nightswatch
+				}
+
+				NOT = {
+					has_title = title:k_the_wall
+				}
+			}
+		}
+	}
+
+
+	# =====================================================
+	# REQUIREMENTS
+	# =====================================================
+
+	is_valid = {
+
+		is_adult = yes
+
+		is_imprisoned = no
+	}
+
+
+	# =====================================================
+	# EFFECT
+	# =====================================================
+
+	effect = {
+
+		custom_tooltip = segrellion_jon_lay_aside_black_vow_decision_effect_tt
+
+		hidden_effect = {
+
+			# If this is an older save where Jon left the Watch
+			# but the Night's Watch trait package survived,
+			# repair that state at the same time.
+			if = {
+
+				limit = {
+					has_character_flag = segrellion_jon_left_nights_watch
+				}
+
+				agot_remove_nightswatch_traits_effect = yes
+			}
+
+			if = {
+
+				limit = {
+					has_trait = refusing_marriage
+				}
+
+				remove_trait = refusing_marriage
+			}
+
+			add_character_flag = segrellion_jon_black_vow_marriage_lock_cleared
+		}
+	}
+
+
+	# Player-facing safeguard. Normal AI progression is repaired
+	# automatically by the leave-the-Watch effect above.
+	ai_check_interval = 12
+
+	ai_will_do = {
+		base = 0
+	}
+}
