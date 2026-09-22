@@ -1,0 +1,35 @@
+# Summerhall retains its original 10%; Red Lake is now a viable lead too.
+# Dragonstone already guarantees an egg and does not use these weights.
+segrellion_young_griff_egg_success_chance = {
+	value = 10
+	if = {
+		limit = { has_game_rule = segrellion_young_griff_eggs_increased }
+		value = 35
+	}
+	else_if = {
+		limit = { has_game_rule = segrellion_young_griff_eggs_high }
+		value = 65
+	}
+	else_if = {
+		limit = { has_game_rule = segrellion_young_griff_eggs_guaranteed }
+		value = 100
+	}
+}
+
+segrellion_young_griff_egg_failure_chance = {
+	value = 100
+	subtract = segrellion_young_griff_egg_success_chance
+}
+
+segrellion_young_griff_taming_bonus_weight = {
+	value = 25
+	if = {
+		limit = { has_game_rule = segrellion_young_griff_taming_high }
+		value = 50
+	}
+}
+
+segrellion_young_griff_taming_native_weight = {
+	value = 100
+	subtract = segrellion_young_griff_taming_bonus_weight
+}

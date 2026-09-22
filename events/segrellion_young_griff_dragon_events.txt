@@ -875,9 +875,9 @@ segrellion_young_griff_dragon.0020 = {
 
 
 # =========================================================
-# 0021 - NOTHING AT RED LAKE
+# 0021 - THE RED LAKE SEARCH RESULT
 #
-# Red Lake is always a dead end.
+# Uses the same configurable odds as Summerhall.
 # =========================================================
 
 segrellion_young_griff_dragon.0021 = {
@@ -886,7 +886,15 @@ segrellion_young_griff_dragon.0021 = {
 
 	title = segrellion_young_griff_dragon.0021.t
 
-	desc = segrellion_young_griff_dragon.0021.desc
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_character_flag = segrellion_young_griff_found_red_lake_egg }
+				desc = segrellion_young_griff_dragon.0021.desc_found
+			}
+			desc = segrellion_young_griff_dragon.0021.desc
+		}
+	}
 
 	theme = intrigue
 
@@ -905,6 +913,29 @@ segrellion_young_griff_dragon.0021 = {
 	}
 
 
+	immediate = {
+		random_list = {
+			segrellion_young_griff_egg_success_chance = {
+				add_character_flag = segrellion_young_griff_found_dragon_egg
+				add_character_flag = segrellion_young_griff_found_red_lake_egg
+				create_artifact_dragon_egg_white_effect = { OWNER = root }
+				scope:newly_created_artifact = {
+					set_variable = { name = dragon_parent value = character:dragon_silverwing }
+					set_variable = { name = segrellion_red_lake_dragon_egg value = yes }
+					set_artifact_name = segrellion_red_lake_dragon_egg_name
+					set_artifact_description = segrellion_red_lake_dragon_egg_description
+				}
+			}
+			segrellion_young_griff_egg_failure_chance = {
+				add_character_flag = segrellion_young_griff_dragon_egg_search_failed
+			}
+		}
+		add_character_flag = segrellion_young_griff_dragon_route_resolved
+		remove_character_flag = segrellion_young_griff_dragon_search_red_lake
+		remove_character_flag = segrellion_young_griff_dragon_route_event_started
+		remove_variable = segrellion_young_griff_dragon_researcher
+	}
+
 	left_portrait = {
 
 		character = root
@@ -921,18 +952,6 @@ segrellion_young_griff_dragon.0021 = {
 			resume_travel_plan = yes
 		}
 
-		hidden_effect = {
-
-			add_character_flag = segrellion_young_griff_dragon_egg_search_failed
-
-			add_character_flag = segrellion_young_griff_dragon_route_resolved
-
-			remove_character_flag = segrellion_young_griff_dragon_search_red_lake
-
-			remove_variable = segrellion_young_griff_dragon_researcher
-
-			remove_character_flag = segrellion_young_griff_dragon_route_event_started
-		}
 	}
 }
 
@@ -1113,10 +1132,10 @@ segrellion_young_griff_dragon.0032 = {
 
 
 			# =================================================
-			# 10% - THE EGG SURVIVED
+			# CONFIGURED SUCCESS CHANCE - THE EGG SURVIVED
 			# =================================================
 
-			10 = {
+			segrellion_young_griff_egg_success_chance = {
 
 				add_character_flag = segrellion_young_griff_found_dragon_egg
 
@@ -1150,10 +1169,10 @@ segrellion_young_griff_dragon.0032 = {
 
 
 			# =================================================
-			# 90% - NOTHING
+			# REMAINING CHANCE - NOTHING
 			# =================================================
 
-			90 = {
+			segrellion_young_griff_egg_failure_chance = {
 
 				add_character_flag = segrellion_young_griff_dragon_egg_search_failed
 
@@ -1492,7 +1511,7 @@ segrellion_young_griff_dragon.0100 = {
 # Young Griff has reached Rhaegal / Viserion.
 #
 # The actual taming roll uses AGOT's native dragon taming
-# system instead of fixed Segrellion percentages.
+# system by default; the storyline game rule can improve or guarantee it.
 #
 # Success depends on:
 # - dragon temperament
@@ -1559,7 +1578,8 @@ segrellion_young_griff_dragon.0110 = {
 
 		trigger = {
 
-			var:segrellion_young_griff_target_dragon ?= {
+			exists = var:segrellion_young_griff_target_dragon
+			var:segrellion_young_griff_target_dragon = {
 
 				is_alive = yes
 
@@ -1572,7 +1592,13 @@ segrellion_young_griff_dragon.0110 = {
 		}
 
 
-		custom_tooltip = segrellion_young_griff_dragon.0110.a.tt
+		if = {
+			limit = { has_game_rule = segrellion_young_griff_taming_guaranteed }
+			custom_tooltip = segrellion_young_griff_dragon.0110.a.guaranteed.tt
+		}
+		else = {
+			custom_tooltip = segrellion_young_griff_dragon.0110.a.tt
+		}
 
 
 		hidden_effect = {
@@ -1583,14 +1609,11 @@ segrellion_young_griff_dragon.0110 = {
 			# =================================================
 			# AGOT NATIVE TAMING ATTEMPT
 			#
-			# Do NOT replace this with a random_list.
-			#
-			# AGOT calculates the actual success chance from
-			# Aegon + dragon compatibility and then handles
-			# the appropriate failure consequences.
+			# Apply this storyline's rule before the native AGOT attempt.
+			# AGOT still handles rider setup and all failure consequences.
 			# =================================================
 
-			agot_try_tame_dragon_effect = {
+			segrellion_young_griff_try_tame_dragon_effect = {
 
 				TAMER = root
 

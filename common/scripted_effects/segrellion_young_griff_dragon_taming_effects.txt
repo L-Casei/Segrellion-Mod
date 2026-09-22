@@ -1,0 +1,30 @@
+# Called only by Young Griff's I Need a Dragon taming option.
+# Resolve the bonus BEFORE the native attempt: a failed native attempt may kill
+# the tamer. Never retry it or undo its consequences.
+# For native success probability p and bonus b, success is b + (1-b)*p.
+segrellion_young_griff_try_tame_dragon_effect = {
+	if = {
+		limit = { has_game_rule = segrellion_young_griff_taming_guaranteed }
+		agot_tame_dragon = { TAMER = $TAMER$ DRAGON = $DRAGON$ }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_game_rule = segrellion_young_griff_taming_increased
+				has_game_rule = segrellion_young_griff_taming_high
+			}
+		}
+		random_list = {
+			segrellion_young_griff_taming_bonus_weight = {
+				agot_tame_dragon = { TAMER = $TAMER$ DRAGON = $DRAGON$ }
+			}
+			segrellion_young_griff_taming_native_weight = {
+				agot_try_tame_dragon_effect = { TAMER = $TAMER$ DRAGON = $DRAGON$ }
+			}
+		}
+	}
+	else = {
+		# Preserve the original attempt, including its random draw, by default.
+		agot_try_tame_dragon_effect = { TAMER = $TAMER$ DRAGON = $DRAGON$ }
+	}
+}
