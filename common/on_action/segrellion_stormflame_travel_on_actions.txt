@@ -8,16 +8,30 @@ on_travel_plan_movement = {
 segrellion_stormflame_travel_check = {
 	trigger = {
 		exists = current_travel_plan
-		OR = {
-			character:Segrellion_60 ?= {
-				is_alive = yes
-				is_imprisoned = no
-				current_travel_plan ?= root.current_travel_plan
+		# The personal Black Unicorn expedition must reach Skagos and return
+		# without the generic Stormflame border capture ending the story.
+		# Both flags are set before departure; storyline_active is cleared
+		# on return (.0190) or cancellation (.0090). Protect this party only.
+		NOT = {
+			character:Segrellion_60 = {
+				has_character_flag = segrellion_black_unicorn_storyline_active
+				has_character_flag = segrellion_black_unicorn_daemon_personal_route
+				exists = current_travel_plan
+				current_travel_plan = root.current_travel_plan
 			}
-			character:Segrellion_43 ?= {
+		}
+		OR = {
+			character:Segrellion_60 = {
 				is_alive = yes
 				is_imprisoned = no
-				current_travel_plan ?= root.current_travel_plan
+				exists = current_travel_plan
+				current_travel_plan = root.current_travel_plan
+			}
+			character:Segrellion_43 = {
+				is_alive = yes
+				is_imprisoned = no
+				exists = current_travel_plan
+				current_travel_plan = root.current_travel_plan
 			}
 		}
 	}
@@ -28,7 +42,8 @@ segrellion_stormflame_travel_check = {
 				limit = {
 					is_alive = yes
 					is_imprisoned = no
-					current_travel_plan ?= root.current_travel_plan
+					exists = current_travel_plan
+					current_travel_plan = root.current_travel_plan
 				}
 				save_scope_as = stormflame_travel_daemon
 			}
@@ -38,22 +53,26 @@ segrellion_stormflame_travel_check = {
 				limit = {
 					is_alive = yes
 					is_imprisoned = no
-					current_travel_plan ?= root.current_travel_plan
+					exists = current_travel_plan
+					current_travel_plan = root.current_travel_plan
 				}
 				save_scope_as = stormflame_travel_hugh
 			}
 		}
 		current_travel_plan.current_location = {
 			# Includes the Beacon and White Hall while held by Stormflames.
+			# Missing owners (e.g. at sea) must fail, not pass via ?=.
 			if = {
 				limit = {
-					province_owner ?= { dynasty_house = house:house_Stormflame }
+					exists = province_owner
+					province_owner = { dynasty_house = house:house_Stormflame }
 				}
 				province_owner = { save_scope_as = stormflame_travel_captor }
 			}
 			else_if = {
 				limit = {
-					county.holder ?= { dynasty_house = house:house_Stormflame }
+					exists = county.holder
+					county.holder = { dynasty_house = house:house_Stormflame }
 				}
 				county.holder = { save_scope_as = stormflame_travel_captor }
 			}
