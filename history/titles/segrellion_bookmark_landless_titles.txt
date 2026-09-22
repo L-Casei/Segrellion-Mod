@@ -210,11 +210,24 @@ d_laamp_daemon_segrellion = {
 		}
 
 		effect = {
+			holder ?= {
+				# Daemon has a fully scripted opening and historical followers.
+				# Never run AGOT's generic LAAMP opening on top of it.
+				add_character_flag = block_laamp_starting_event
+			}
+
 			create_landless_adventurer_title_history_effect = yes
 
 			set_variable = {
 				name = adventurer_creation_reason
 				value = flag:historical
+			}
+
+			# Do not leave a historical adventurer without an explicit domicile.
+			# Without this, the engine can resolve the camp from stale/random
+			# character location data on some setups.
+			agot_safe_move_laamp_history_effect = {
+				CASTLE = title:b_storms_end
 			}
 		}
 	}
@@ -262,6 +275,9 @@ d_laamp_daenerys_targaryen = {
 
             holder ?= {
 
+                # Daenerys has her own scripted 300 AC opening.
+                add_character_flag = block_laamp_starting_event
+
                 if = {
                     limit = {
                         NOT = {
@@ -278,6 +294,12 @@ d_laamp_daenerys_targaryen = {
             set_variable = {
                 name = adventurer_creation_reason
                 value = flag:historical
+            }
+
+            # Anchor the historical host at Ghoyan Drohe instead of
+            # allowing an unresolved character location to place it.
+            agot_safe_move_laamp_history_effect = {
+                CASTLE = title:b_ghoyan_drohe
             }
         }
     }
