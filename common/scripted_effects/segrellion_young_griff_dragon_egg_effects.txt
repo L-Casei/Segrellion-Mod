@@ -1,0 +1,44 @@
+# Character scope: Young Griff. Shared rewards for guaranteed and random success.
+
+segrellion_young_griff_grant_red_lake_egg_effect = {
+	add_character_flag = segrellion_young_griff_found_dragon_egg
+	add_character_flag = segrellion_young_griff_found_red_lake_egg
+	create_artifact_dragon_egg_white_effect = { OWNER = root }
+	scope:newly_created_artifact = {
+		set_variable = { name = dragon_parent value = character:dragon_silverwing }
+		set_variable = { name = segrellion_red_lake_dragon_egg value = yes }
+		set_artifact_name = segrellion_red_lake_dragon_egg_name
+		set_artifact_description = segrellion_red_lake_dragon_egg_description
+	}
+}
+
+segrellion_young_griff_grant_summerhall_egg_effect = {
+	add_character_flag = segrellion_young_griff_found_dragon_egg
+
+	add_character_flag = segrellion_young_griff_found_summerhall_egg
+
+
+	agot_create_weighted_dragon_egg_artifact = {
+
+		OWNER = root
+	}
+
+
+	# Preserve the fact that this specific egg
+	# came from Summerhall.
+
+	scope:newly_created_artifact ?= {
+
+		set_variable = {
+
+			name = segrellion_summerhall_dragon_egg
+
+			value = yes
+		}
+
+
+		set_artifact_name = segrellion_summerhall_dragon_egg_name
+
+		set_artifact_description = segrellion_summerhall_dragon_egg_description
+	}
+}

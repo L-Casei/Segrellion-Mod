@@ -914,20 +914,20 @@ segrellion_young_griff_dragon.0021 = {
 
 
 	immediate = {
-		random_list = {
-			segrellion_young_griff_egg_success_chance = {
-				add_character_flag = segrellion_young_griff_found_dragon_egg
-				add_character_flag = segrellion_young_griff_found_red_lake_egg
-				create_artifact_dragon_egg_white_effect = { OWNER = root }
-				scope:newly_created_artifact = {
-					set_variable = { name = dragon_parent value = character:dragon_silverwing }
-					set_variable = { name = segrellion_red_lake_dragon_egg value = yes }
-					set_artifact_name = segrellion_red_lake_dragon_egg_name
-					set_artifact_description = segrellion_red_lake_dragon_egg_description
+		if = {
+			limit = { has_game_rule = segrellion_young_griff_eggs_guaranteed }
+			segrellion_young_griff_grant_red_lake_egg_effect = yes
+		}
+		else = {
+			random_list = {
+				0 = {
+					modifier = { add = segrellion_young_griff_egg_success_chance }
+					segrellion_young_griff_grant_red_lake_egg_effect = yes
 				}
-			}
-			segrellion_young_griff_egg_failure_chance = {
-				add_character_flag = segrellion_young_griff_dragon_egg_search_failed
+				0 = {
+					modifier = { add = segrellion_young_griff_egg_failure_chance }
+					add_character_flag = segrellion_young_griff_dragon_egg_search_failed
+				}
 			}
 		}
 		add_character_flag = segrellion_young_griff_dragon_route_resolved
@@ -1128,55 +1128,22 @@ segrellion_young_griff_dragon.0032 = {
 
 	immediate = {
 
-		random_list = {
-
-
-			# =================================================
-			# CONFIGURED SUCCESS CHANCE - THE EGG SURVIVED
-			# =================================================
-
-			segrellion_young_griff_egg_success_chance = {
-
-				add_character_flag = segrellion_young_griff_found_dragon_egg
-
-				add_character_flag = segrellion_young_griff_found_summerhall_egg
-
-
-				agot_create_weighted_dragon_egg_artifact = {
-
-					OWNER = root
+		if = {
+			limit = { has_game_rule = segrellion_young_griff_eggs_guaranteed }
+			segrellion_young_griff_grant_summerhall_egg_effect = yes
+		}
+		else = {
+			random_list = {
+				0 = {
+					modifier = { add = segrellion_young_griff_egg_success_chance }
+					segrellion_young_griff_grant_summerhall_egg_effect = yes
 				}
+				0 = {
+					modifier = { add = segrellion_young_griff_egg_failure_chance }
+					add_character_flag = segrellion_young_griff_dragon_egg_search_failed
 
-
-				# Preserve the fact that this specific egg
-				# came from Summerhall.
-
-				scope:newly_created_artifact ?= {
-
-					set_variable = {
-
-						name = segrellion_summerhall_dragon_egg
-
-						value = yes
-					}
-
-
-					set_artifact_name = segrellion_summerhall_dragon_egg_name
-
-					set_artifact_description = segrellion_summerhall_dragon_egg_description
+					add_character_flag = segrellion_young_griff_summerhall_search_failed
 				}
-			}
-
-
-			# =================================================
-			# REMAINING CHANCE - NOTHING
-			# =================================================
-
-			segrellion_young_griff_egg_failure_chance = {
-
-				add_character_flag = segrellion_young_griff_dragon_egg_search_failed
-
-				add_character_flag = segrellion_young_griff_summerhall_search_failed
 			}
 		}
 
