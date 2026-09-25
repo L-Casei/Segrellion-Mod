@@ -1,17 +1,32 @@
 # Character scope: captured traveler. Captor is resolved from the travel province.
 segrellion_stormflame_capture_traveler_effect = {
-	save_scope_as = stormflame_captured_traveler
-	scope:stormflame_travel_captor = {
-		imprison = {
-			target = scope:stormflame_captured_traveler
-			type = dungeon
-		}
-	}
 	if = {
-		limit = { is_imprisoned_by = scope:stormflame_travel_captor }
-		trigger_event = {
-			id = segrellion_stormflame_travel.0001
-			days = 7
+		limit = {
+			is_alive = yes
+			is_imprisoned = no
+			OR = {
+				this = character:Segrellion_60
+				this = character:Segrellion_43
+			}
+			exists = scope:stormflame_travel_captor
+			scope:stormflame_travel_captor = {
+				is_alive = yes
+				house = house:house_Stormflame
+			}
+		}
+		save_scope_as = stormflame_captured_traveler
+		scope:stormflame_travel_captor = {
+			imprison = {
+				target = scope:stormflame_captured_traveler
+				type = dungeon
+			}
+		}
+		if = {
+			limit = { is_imprisoned_by = scope:stormflame_travel_captor }
+			trigger_event = {
+				id = segrellion_stormflame_travel.0001
+				days = 7
+			}
 		}
 	}
 }

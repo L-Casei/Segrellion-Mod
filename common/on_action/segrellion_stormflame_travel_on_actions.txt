@@ -8,6 +8,19 @@ on_travel_plan_movement = {
 segrellion_stormflame_travel_check = {
 	trigger = {
 		exists = current_travel_plan
+		current_travel_plan.current_location = {
+			is_sea_province = no
+			OR = {
+				province_owner = {
+					is_alive = yes
+					house = house:house_Stormflame
+				}
+				county.holder = {
+					is_alive = yes
+					house = house:house_Stormflame
+				}
+			}
+		}
 		# The personal Black Unicorn expedition must reach Skagos and return
 		# without the generic Stormflame border capture ending the story.
 		# Both flags are set before departure; storyline_active is cleared
@@ -65,20 +78,33 @@ segrellion_stormflame_travel_check = {
 			if = {
 				limit = {
 					exists = province_owner
-					province_owner = { dynasty_house = house:house_Stormflame }
+					province_owner = { is_alive = yes house = house:house_Stormflame }
 				}
 				province_owner = { save_scope_as = stormflame_travel_captor }
 			}
 			else_if = {
 				limit = {
 					exists = county.holder
-					county.holder = { dynasty_house = house:house_Stormflame }
+					county.holder = { is_alive = yes house = house:house_Stormflame }
 				}
 				county.holder = { save_scope_as = stormflame_travel_captor }
 			}
 		}
 		if = {
-			limit = { exists = scope:stormflame_travel_captor }
+			limit = {
+				exists = scope:stormflame_travel_captor
+				scope:stormflame_travel_captor = {
+					is_alive = yes
+					house = house:house_Stormflame
+				}
+				# Reject a captor scope inherited from an earlier event/location.
+				current_travel_plan.current_location = {
+					OR = {
+						province_owner = scope:stormflame_travel_captor
+						county.holder = scope:stormflame_travel_captor
+					}
+				}
+			}
 			scope:stormflame_travel_daemon ?= { segrellion_stormflame_capture_traveler_effect = yes }
 			scope:stormflame_travel_hugh ?= { segrellion_stormflame_capture_traveler_effect = yes }
 		}

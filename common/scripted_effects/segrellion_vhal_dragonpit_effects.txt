@@ -8,6 +8,21 @@
 # Dragonkeeper Order itself is dormant.
 # =========================================================
 
+# Province scope, called only by actual level II/III construction.
+# A newly funded pit establishes its order even in post-extinction starts.
+# Historical prebuilt dormant pits still require the restoration decision.
+segrellion_complete_vhal_dragonpit_effect = {
+	county = {
+		set_variable = { name = segrellion_vhal_dragonkeepers_restored }
+		remove_variable = segrellion_vhal_dragonkeepers_historical_dormancy
+		holder = {
+			segrellion_activate_vhal_dragonpit_effect = yes
+			# Recheck after construction has committed the new building level.
+			trigger_event = { id = segrellion_vhal_dragonpit.0001 days = 1 }
+		}
+	}
+}
+
 segrellion_activate_vhal_dragonpit_effect = {
 
 	if = {
