@@ -294,90 +294,69 @@ segrellion_try_force_later_canon_marriages_effect = {
 			}
 			scope:segrellion_canon_maenar = { add_spouse = scope:segrellion_canon_alyssa }
 		}
+		# =====================================================
+		# AERYN SEGRELLION / RHAENYS SEGRELLION
+		#
+		# Resolve both characters by canon identity so this works
+		# for historical starts and for runtime Canon Children.
+		# =====================================================
 		if = {
 			limit = {
-				# From this date onward the historical relationship is loaded from
-				# history/characters. Re-adding it through Canon Children creates a
-				# second family edge and makes every child appear twice in the UI.
-				current_date < 8142.1.1
+				iaf_later_canon_identity_exists_trigger = { ID = Segrellion_12 }
 				iaf_later_canon_identity_exists_trigger = { ID = Segrellion_17 }
-				character:Segrellion_12 ?= {
-					is_alive = yes
-					is_married = no
-				}
 			}
+
+			agot_canon_children_get_character_scope_effect = {
+				TARGET = character:Segrellion_12
+				ID = Segrellion_12
+				SCOPE = segrellion_canon_aeryn
+			}
+
+			agot_canon_children_get_character_scope_effect = {
+				TARGET = character:Segrellion_17
+				ID = Segrellion_17
+				SCOPE = segrellion_canon_rhaenys
+			}
+
+			# Betroth them while either is still underage.
 			if = {
 				limit = {
-					character:Segrellion_17 ?= {
+					scope:segrellion_canon_aeryn ?= {
 						is_alive = yes
 						is_married = no
 						is_betrothed = no
 					}
-					character:Segrellion_12 = {
+					scope:segrellion_canon_rhaenys ?= {
+						is_alive = yes
 						is_married = no
 						is_betrothed = no
 					}
 					OR = {
-						character:Segrellion_12 = { is_adult = no }
-						character:Segrellion_17 = { is_adult = no }
+						scope:segrellion_canon_aeryn = { is_adult = no }
+						scope:segrellion_canon_rhaenys = { is_adult = no }
 					}
 				}
-				character:Segrellion_12 = { create_betrothal = character:Segrellion_17 }
-			}
-			else = {
-				agot_canon_children_get_canon_child_scope_effect = {
-					ID = Segrellion_17
-					SCOPE = segrellion_canon_rhaenys
-				}
-				if = {
-					limit = {
-						scope:segrellion_canon_rhaenys ?= {
-							is_alive = yes
-							is_married = no
-							is_betrothed = no
-						}
-						character:Segrellion_12 = {
-							is_married = no
-							is_betrothed = no
-						}
-						OR = {
-							character:Segrellion_12 = { is_adult = no }
-							scope:segrellion_canon_rhaenys = { is_adult = no }
-						}
-					}
-					character:Segrellion_12 = { create_betrothal = scope:segrellion_canon_rhaenys }
+				scope:segrellion_canon_aeryn = {
+					create_betrothal = scope:segrellion_canon_rhaenys
 				}
 			}
+
+			# If both are already adults, marry them immediately.
 			if = {
 				limit = {
-					character:Segrellion_12 = {
+					scope:segrellion_canon_aeryn ?= {
+						is_alive = yes
 						is_adult = yes
+						is_married = no
 					}
-					character:Segrellion_17 ?= {
+					scope:segrellion_canon_rhaenys ?= {
 						is_alive = yes
 						is_adult = yes
 						is_married = no
 					}
 				}
-				character:Segrellion_12 = { add_spouse = character:Segrellion_17 }
-			}
-			else = {
-				agot_canon_children_get_canon_child_scope_effect = {
-					ID = Segrellion_17
-					SCOPE = segrellion_canon_rhaenys
-				}
-				if = {
-					limit = {
-						character:Segrellion_12 = {
-							is_adult = yes
-						}
-						scope:segrellion_canon_rhaenys ?= {
-							is_alive = yes
-							is_adult = yes
-							is_married = no
-						}
-					}
-					character:Segrellion_12 = { add_spouse = scope:segrellion_canon_rhaenys }
+				scope:segrellion_canon_aeryn = {
+					add_spouse = scope:segrellion_canon_rhaenys
 				}
 			}
 		}
