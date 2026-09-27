@@ -15,67 +15,78 @@ segrellion_repair_alex_children_parentage_effect = {
 	# =====================================================
 	# ALISON HIGHTOWER
 	#
-	# Born 115 AC.
-	# Hidden biological father: Alex Segrellion.
-	# Publicly revealed by Argella in 141 AC.
+	# Biological parents: Alex Segrellion + Lynett Hightower.
+	# She is NEVER a Segrellion dynastically.
+	# From 128 AC onward she is a legitimized Hightower bastard.
+	# Alex's paternity becomes public in 141 AC.
 	# =====================================================
 
 	if = {
 		limit = {
 			current_date >= 8115.1.1
-
 			character:Segrellion_Alison_Hightower ?= { }
 			character:Segrellion_1 ?= { }
+			character:Hightower_95 ?= { }
 		}
 
 		character:Segrellion_Alison_Hightower = {
-
 			set_real_father = character:Segrellion_1
+			set_real_mother = character:Hightower_95
+			set_house = character:Hightower_95.house
 
 			if = {
-				limit = {
-					current_date >= 8141.1.1
-				}
+				limit = { current_date >= 8128.1.1 }
+				remove_trait = bastard
+				add_trait = legitimized_bastard
+				agot_remove_bastard_nickname_effect = yes
+			}
 
+			if = {
+				limit = { current_date >= 8141.1.1 }
 				set_father = character:Segrellion_1
+				set_house = character:Hightower_95.house
 			}
 		}
 	}
 
-
 	# =====================================================
-	# BENJEN STARK
+	# BENJEN SNOW / STARK
 	#
 	# Born 131 AC.
-	# Public father before Highwind: Cregan Stark.
-	# Biological parents: Alex Segrellion + Sara Snow/Stark.
-	# Parentage publicly recognized in 158 AC.
-	#
-	# Benjen keeps House Stark after recognition.
+	# Public father until age sixteen: Cregan Stark.
+	# Biological parents from birth: Alex Segrellion + Sara Stark.
+	# True parentage is revealed in 147 AC.
+	# He NEVER becomes Segrellion.
 	# =====================================================
 
 	if = {
 		limit = {
 			current_date >= 8131.1.1
-
 			character:Segrellion_Benjen_Snow ?= { }
 			character:Segrellion_1 ?= { }
+			character:Stark_86 ?= { }
 			character:Stark_88 ?= { }
 		}
 
 		character:Segrellion_Benjen_Snow = {
-
 			set_real_father = character:Segrellion_1
 			set_real_mother = character:Stark_88
+			set_house = character:Stark_86.house
 
 			if = {
-				limit = {
-					current_date >= 8158.1.1
-				}
-
+				limit = { current_date < 8147.1.1 }
+				set_father = character:Stark_86
+				set_house = character:Stark_86.house
+			}
+			else = {
 				set_father = character:Segrellion_1
 				set_mother = character:Stark_88
+				set_house = character:Stark_86.house
+				remove_trait = bastard
+				add_trait = legitimized_bastard
+				agot_remove_bastard_nickname_effect = yes
 			}
 		}
 	}
+
 }
