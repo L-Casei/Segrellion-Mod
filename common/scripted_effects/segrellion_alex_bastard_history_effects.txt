@@ -1,92 +1,328 @@
 # =========================================================
-# ALEX SEGRELLION - POST-HISTORY CHILD PARENTAGE REPAIR
+# ALEX SEGRELLION - CANON CHILDREN OUTSIDE HIS MARRIAGE
 #
-# CK3 does not reliably execute character-history effect blocks
-# for characters who are already dead at the selected bookmark.
+# Character history only exists when a bookmark is loaded. It does
+# not create future historical characters in a campaign that began
+# earlier, so a 106 AC run needs runtime versions of Alison and Benjen.
 #
-# Alison and Benjen therefore need their hidden/revealed parentage
-# re-applied after history has finished loading.
-#
-# The effect is idempotent and safe to run on startup and monthly.
+# Historical bookmarks still use the fixed character IDs. Runtime
+# versions are stored in AGOT's born-canon-child scope list with their
+# own identity flags so both paths can share the same repair logic.
+# =========================================================
+
+
+# =========================================================
+# RUNTIME BIRTHS FOR A 106 AC CAMPAIGN
+# =========================================================
+
+segrellion_ensure_runtime_alex_children_effect = {
+
+	# -----------------------------------------------------
+	# Alison Hightower
+	# Biological parents: Alex Segrellion + Lynett Hightower.
+	# Public father remains hidden until 141 AC.
+	# -----------------------------------------------------
+	if = {
+		limit = {
+			has_game_rule = segrellion_canon_children_enabled
+			current_date >= 8115.1.1
+			current_date < 8158.3.1
+
+			character:Segrellion_1 ?= { is_alive = yes }
+			character:Hightower_95 ?= { is_alive = yes }
+
+			NOT = { character:Segrellion_Alison_Hightower ?= { exists = yes } }
+			NOT = {
+				any_in_global_list = {
+					variable = agot_born_canon_children_scopes
+					has_character_flag = is_Segrellion_Alison_Hightower
+				}
+			}
+		}
+
+		character:Segrellion_1 = { save_scope_as = segrellion_alison_real_father }
+		character:Hightower_95 = { save_scope_as = segrellion_alison_mother }
+
+		create_character = {
+			first_name = Alison
+			age = 0
+			random_traits = no
+			mother = scope:segrellion_alison_mother
+			real_father = scope:segrellion_alison_real_father
+			location = scope:segrellion_alison_mother.location
+			gender_female_chance = 100
+			faith = scope:segrellion_alison_mother.faith
+			culture = scope:segrellion_alison_mother.culture
+			dynasty = none
+			save_scope_as = segrellion_runtime_alison
+		}
+
+		scope:segrellion_runtime_alison = {
+			set_house = scope:segrellion_alison_mother.house
+			set_real_father = scope:segrellion_alison_real_father
+			set_real_mother = scope:segrellion_alison_mother
+
+			add_trait = bastard
+			add_trait = beauty_good_3
+			add_trait = intellect_good_3
+
+			make_trait_inactive = surname_flowers
+			make_trait_inactive = cool_silver_hair
+			make_trait_inactive = purple_eyes_13
+
+			add_character_flag = canon_status_canon
+			add_character_flag = is_Segrellion_Alison_Hightower
+			add_to_global_variable_list = {
+				name = agot_born_canon_children_scopes
+				target = this
+			}
+			make_unprunable = yes
+		}
+	}
+
+	# -----------------------------------------------------
+	# Benjen Snow
+	# Public father until 147 AC: Cregan Stark.
+	# Biological parents: Alex Segrellion + Sara Stark/Snow.
+	# -----------------------------------------------------
+	if = {
+		limit = {
+			has_game_rule = segrellion_canon_children_enabled
+			current_date >= 8131.1.1
+			current_date < 8170.1.1
+
+			character:Segrellion_1 ?= { is_alive = yes }
+			character:Stark_86 ?= { exists = yes }
+			character:Stark_88 ?= { exists = yes }
+
+			NOT = { character:Segrellion_Benjen_Snow ?= { exists = yes } }
+			NOT = {
+				any_in_global_list = {
+					variable = agot_born_canon_children_scopes
+					has_character_flag = is_Segrellion_Benjen_Snow
+				}
+			}
+		}
+
+		character:Segrellion_1 = { save_scope_as = segrellion_benjen_real_father }
+		character:Stark_86 = { save_scope_as = segrellion_benjen_public_father }
+		character:Stark_88 = { save_scope_as = segrellion_benjen_real_mother }
+
+		create_character = {
+			first_name = Benjen
+			age = 0
+			random_traits = no
+			real_father = scope:segrellion_benjen_real_father
+			location = scope:segrellion_benjen_real_mother.location
+			gender_female_chance = 0
+			faith = scope:segrellion_benjen_real_mother.faith
+			culture = scope:segrellion_benjen_real_mother.culture
+			dynasty = none
+			save_scope_as = segrellion_runtime_benjen
+		}
+
+		scope:segrellion_runtime_benjen = {
+			# Set the legal/public father first, then restore the hidden
+			# biological parentage so Cregan never becomes the real father.
+			set_father = scope:segrellion_benjen_public_father
+			set_real_father = scope:segrellion_benjen_real_father
+			set_real_mother = scope:segrellion_benjen_real_mother
+			set_house = scope:segrellion_benjen_public_father.house
+
+			add_trait = bastard
+			make_trait_inactive = surname_snow
+
+			add_character_flag = canon_status_canon
+			add_character_flag = is_Segrellion_Benjen_Snow
+			add_to_global_variable_list = {
+				name = agot_born_canon_children_scopes
+				target = this
+			}
+			make_unprunable = yes
+		}
+	}
+}
+
+
+# =========================================================
+# SHARED HISTORY / PARENTAGE APPLICATION
+# =========================================================
+
+segrellion_apply_alison_canon_history_effect = {
+	set_real_father = character:Segrellion_1
+	set_real_mother = character:Hightower_95
+	set_house = character:Hightower_95.house
+
+	if = {
+		limit = {
+			current_date >= 8123.1.1
+			NOT = { has_trait = curious }
+			current_date < 8131.1.1
+		}
+		add_trait = curious
+	}
+
+	if = {
+		limit = { current_date >= 8127.1.1 }
+		if = { limit = { NOT = { has_trait = ambitious } } add_trait = ambitious }
+		if = { limit = { NOT = { has_trait = deceitful } } add_trait = deceitful }
+	}
+
+	if = {
+		limit = { current_date >= 8128.1.1 }
+		if = { limit = { has_trait = bastard } remove_trait = bastard }
+		if = { limit = { NOT = { has_trait = legitimized_bastard } } add_trait = legitimized_bastard }
+		agot_remove_bastard_nickname_effect = yes
+	}
+
+	if = {
+		limit = { current_date >= 8131.1.1 }
+		if = { limit = { has_trait = curious } remove_trait = curious }
+		if = { limit = { NOT = { has_trait = education_intrigue_4 } } add_trait = education_intrigue_4 }
+	}
+
+	if = {
+		limit = {
+			current_date >= 8133.1.1
+			NOT = { has_character_flag = segrellion_alison_133_progression_done }
+		}
+		add_character_flag = segrellion_alison_133_progression_done
+		give_nickname = nick_segrellion_the_silvertower
+		if = { limit = { NOT = { has_trait = lustful } } add_trait = lustful }
+		agot_safe_buy_seducer_perk_history_effect = yes
+		if = { limit = { NOT = { has_trait = seducer } } add_trait = seducer }
+		if = { limit = { NOT = { has_trait = witch } } add_trait = witch }
+		if = { limit = { NOT = { has_trait = lifestyle_mystic } } add_trait = lifestyle_mystic }
+		add_trait_xp = {
+			trait = lifestyle_mystic
+			value = trait_second_level
+		}
+	}
+
+	if = {
+		limit = { current_date >= 8141.1.1 }
+		set_father = character:Segrellion_1
+		set_house = character:Hightower_95.house
+	}
+}
+
+
+segrellion_apply_benjen_canon_history_effect = {
+
+	# Until the reveal, Cregan is the legal/public father while Alex and
+	# Sara remain the biological parents.
+	if = {
+		limit = { current_date < 8147.1.1 }
+		set_father = character:Stark_86
+		set_real_father = character:Segrellion_1
+		set_real_mother = character:Stark_88
+		set_house = character:Stark_86.house
+	}
+	else = {
+		set_father = character:Segrellion_1
+		set_mother = character:Stark_88
+		set_real_father = character:Segrellion_1
+		set_real_mother = character:Stark_88
+		set_house = character:Stark_86.house
+		if = { limit = { has_trait = bastard } remove_trait = bastard }
+		if = { limit = { NOT = { has_trait = legitimized_bastard } } add_trait = legitimized_bastard }
+		agot_remove_bastard_nickname_effect = yes
+	}
+
+	if = {
+		limit = {
+			current_date >= 8139.1.1
+			NOT = { has_trait = humble }
+		}
+		add_trait = humble
+	}
+
+	if = {
+		limit = { current_date >= 8143.1.1 }
+		if = { limit = { NOT = { has_trait = calm } } add_trait = calm }
+		if = { limit = { NOT = { has_trait = brave } } add_trait = brave }
+	}
+
+	if = {
+		limit = { current_date >= 8145.1.1 }
+		if = { limit = { NOT = { has_trait = knight } } add_trait = knight }
+
+		agot_canon_children_get_character_scope_effect = {
+			TARGET = character:Segrellion_12
+			ID = Segrellion_12
+			SCOPE = segrellion_benjen_aeryn
+		}
+
+		scope:segrellion_benjen_aeryn ?= {
+			if = {
+				limit = {
+					NOT = {
+						any_courtier = { this = prev }
+					}
+				}
+				add_courtier = prev
+			}
+			set_relation_friend = prev
+		}
+	}
+
+	if = {
+		limit = { current_date >= 8147.1.1 }
+		if = { limit = { NOT = { has_trait = education_martial_4 } } add_trait = education_martial_4 }
+		if = { limit = { NOT = { has_trait = education_martial_prowess_4 } } add_trait = education_martial_prowess_4 }
+		if = { limit = { NOT = { has_trait = chaste } } add_trait = chaste }
+		if = { limit = { NOT = { has_trait = logistician } } add_trait = logistician }
+		if = { limit = { NOT = { has_trait = unyielding_defender } } add_trait = unyielding_defender }
+	}
+}
+
+
+# =========================================================
+# POST-HISTORY / SAVE-COMPATIBILITY REPAIR
 # =========================================================
 
 segrellion_repair_alex_children_parentage_effect = {
 
-	# =====================================================
-	# ALISON HIGHTOWER
-	#
-	# Biological parents: Alex Segrellion + Lynett Hightower.
-	# She is NEVER a Segrellion dynastically.
-	# From 128 AC onward she is a legitimized Hightower bastard.
-	# Alex's paternity becomes public in 141 AC.
-	# =====================================================
-
 	if = {
 		limit = {
 			current_date >= 8115.1.1
-			character:Segrellion_Alison_Hightower ?= { }
 			character:Segrellion_1 ?= { }
 			character:Hightower_95 ?= { }
+			character:Segrellion_Alison_Hightower ?= { }
 		}
-
 		character:Segrellion_Alison_Hightower = {
-			set_real_father = character:Segrellion_1
-			set_real_mother = character:Hightower_95
-			set_house = character:Hightower_95.house
-
-			if = {
-				limit = { current_date >= 8128.1.1 }
-				remove_trait = bastard
-				add_trait = legitimized_bastard
-				agot_remove_bastard_nickname_effect = yes
-			}
-
-			if = {
-				limit = { current_date >= 8141.1.1 }
-				set_father = character:Segrellion_1
-				set_house = character:Hightower_95.house
-			}
+			segrellion_apply_alison_canon_history_effect = yes
 		}
 	}
 
-	# =====================================================
-	# BENJEN SNOW / STARK
-	#
-	# Born 131 AC.
-	# Public father until age sixteen: Cregan Stark.
-	# Biological parents from birth: Alex Segrellion + Sara Stark.
-	# True parentage is revealed in 147 AC.
-	# He NEVER becomes Segrellion.
-	# =====================================================
+	random_in_global_list = {
+		variable = agot_born_canon_children_scopes
+		limit = {
+			has_character_flag = is_Segrellion_Alison_Hightower
+			is_alive = yes
+		}
+		segrellion_apply_alison_canon_history_effect = yes
+	}
 
 	if = {
 		limit = {
 			current_date >= 8131.1.1
-			character:Segrellion_Benjen_Snow ?= { }
 			character:Segrellion_1 ?= { }
 			character:Stark_86 ?= { }
 			character:Stark_88 ?= { }
+			character:Segrellion_Benjen_Snow ?= { }
 		}
-
 		character:Segrellion_Benjen_Snow = {
-			set_real_father = character:Segrellion_1
-			set_real_mother = character:Stark_88
-			set_house = character:Stark_86.house
-
-			if = {
-				limit = { current_date < 8147.1.1 }
-				set_father = character:Stark_86
-				set_house = character:Stark_86.house
-			}
-			else = {
-				set_father = character:Segrellion_1
-				set_mother = character:Stark_88
-				set_house = character:Stark_86.house
-				remove_trait = bastard
-				add_trait = legitimized_bastard
-				agot_remove_bastard_nickname_effect = yes
-			}
+			segrellion_apply_benjen_canon_history_effect = yes
 		}
 	}
 
+	random_in_global_list = {
+		variable = agot_born_canon_children_scopes
+		limit = {
+			has_character_flag = is_Segrellion_Benjen_Snow
+			is_alive = yes
+		}
+		segrellion_apply_benjen_canon_history_effect = yes
+	}
 }
