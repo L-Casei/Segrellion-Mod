@@ -1,0 +1,293 @@
+# =========================================================
+# VHAL - HISTORICAL BUILDING PROGRESSION
+#
+# History/province dates make later bookmarks load correctly.
+# This one-shot progression mirrors those same milestones for
+# campaigns actually played forward from an earlier start.
+#
+# Each milestone sets a county variable after applying once, so
+# player demolition or later customization is not endlessly undone.
+# =========================================================
+
+segrellion_vhal_historical_buildings_progression_effect = {
+
+	title:c_blackmark ?= {
+
+		# -------------------------------------------------
+		# 110 AC - BLACKMARK SHOREGUARD I
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8110.5.10
+				NOT = {
+					has_variable = segrellion_vhal_shoreguard_01_history_applied
+				}
+			}
+
+			title_province = {
+				if = {
+					limit = {
+						NOT = {
+							has_building_or_higher = segrellion_blackmark_shoreguard_01
+						}
+					}
+
+					add_building = segrellion_blackmark_shoreguard_01
+				}
+			}
+
+			set_variable = {
+				name = segrellion_vhal_shoreguard_01_history_applied
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 121 AC - VHALYRAX HATCHES / GREAT PIT I
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8121.1.1
+				NOT = {
+					has_variable = segrellion_vhal_dragonpit_01_history_applied
+				}
+			}
+
+			title_province = {
+				if = {
+					limit = {
+						NOR = {
+							has_building = segrellion_vhal_dragonpit_01
+							has_building = segrellion_vhal_dragonpit_02
+							has_building = segrellion_vhal_dragonpit_03
+						}
+					}
+
+					add_building = segrellion_vhal_dragonpit_01
+				}
+			}
+
+			set_variable = {
+				name = segrellion_vhal_dragonpit_01_history_applied
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 124 AC - GREAT PIT II / DRAGONKEEPER ORDER
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8124.1.1
+				NOT = {
+					has_variable = segrellion_vhal_dragonpit_02_history_applied
+				}
+			}
+
+			title_province = {
+
+				if = {
+					limit = {
+						has_building = segrellion_vhal_dragonpit_01
+					}
+
+					remove_building = segrellion_vhal_dragonpit_01
+				}
+
+				if = {
+					limit = {
+						NOR = {
+							has_building = segrellion_vhal_dragonpit_02
+							has_building = segrellion_vhal_dragonpit_03
+						}
+					}
+
+					add_building = segrellion_vhal_dragonpit_02
+				}
+			}
+
+			holder ?= {
+				segrellion_activate_vhal_dragonpit_effect = yes
+			}
+
+			set_variable = {
+				name = segrellion_vhal_dragonpit_02_history_applied
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 139 AC - BLACKMARK SHOREGUARD II
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8139.4.18
+				NOT = {
+					has_variable = segrellion_vhal_shoreguard_02_history_applied
+				}
+			}
+
+			title_province = {
+
+				if = {
+					limit = {
+						has_building = segrellion_blackmark_shoreguard_01
+					}
+					remove_building = segrellion_blackmark_shoreguard_01
+				}
+
+				if = {
+					limit = {
+						NOT = {
+							has_building_or_higher = segrellion_blackmark_shoreguard_02
+						}
+					}
+					add_building = segrellion_blackmark_shoreguard_02
+				}
+			}
+
+			set_variable = {
+				name = segrellion_vhal_shoreguard_02_history_applied
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 174 AC - GREAT PIT III + SHOREGUARD III
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8174.9.17
+				NOT = {
+					has_variable = segrellion_vhal_dragonpit_03_history_applied
+				}
+			}
+
+			title_province = {
+				if = {
+					limit = {
+						has_building = segrellion_vhal_dragonpit_02
+					}
+					remove_building = segrellion_vhal_dragonpit_02
+				}
+				if = {
+					limit = {
+						NOT = {
+							has_building = segrellion_vhal_dragonpit_03
+						}
+					}
+					add_building = segrellion_vhal_dragonpit_03
+				}
+			}
+
+			set_variable = {
+				name = segrellion_vhal_dragonpit_03_history_applied
+			}
+		}
+
+		if = {
+			limit = {
+				current_date >= 8174.9.17
+				NOT = {
+					has_variable = segrellion_vhal_shoreguard_03_history_applied
+				}
+			}
+
+			title_province = {
+				if = {
+					limit = {
+						has_building = segrellion_blackmark_shoreguard_02
+					}
+					remove_building = segrellion_blackmark_shoreguard_02
+				}
+				if = {
+					limit = {
+						NOT = {
+							has_building_or_higher = segrellion_blackmark_shoreguard_03
+						}
+					}
+					add_building = segrellion_blackmark_shoreguard_03
+				}
+			}
+
+			set_variable = {
+				name = segrellion_vhal_shoreguard_03_history_applied
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 231 AC - BLACKMARK SHOREGUARD IV
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8231.5.2
+				NOT = {
+					has_variable = segrellion_vhal_shoreguard_04_history_applied
+				}
+			}
+
+			title_province = {
+				if = {
+					limit = {
+						has_building = segrellion_blackmark_shoreguard_03
+					}
+					remove_building = segrellion_blackmark_shoreguard_03
+				}
+				if = {
+					limit = {
+						NOT = {
+							has_building_or_higher = segrellion_blackmark_shoreguard_04
+						}
+					}
+					add_building = segrellion_blackmark_shoreguard_04
+				}
+			}
+
+			set_variable = {
+				name = segrellion_vhal_shoreguard_04_history_applied
+			}
+		}
+
+
+		# -------------------------------------------------
+		# 283 AC - BLACKMARK SHOREGUARD V
+		# -------------------------------------------------
+
+		if = {
+			limit = {
+				current_date >= 8283.1.1
+				NOT = {
+					has_variable = segrellion_vhal_shoreguard_05_history_applied
+				}
+			}
+
+			title_province = {
+				if = {
+					limit = {
+						has_building = segrellion_blackmark_shoreguard_04
+					}
+					remove_building = segrellion_blackmark_shoreguard_04
+				}
+				if = {
+					limit = {
+						NOT = {
+							has_building = segrellion_blackmark_shoreguard_05
+						}
+					}
+					add_building = segrellion_blackmark_shoreguard_05
+				}
+			}
+
+			set_variable = {
+				name = segrellion_vhal_shoreguard_05_history_applied
+			}
+		}
+	}
+}
