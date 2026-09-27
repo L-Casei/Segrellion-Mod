@@ -174,36 +174,15 @@ segrellion_refresh_icebringer_affinity_effect = {
 
 
             # -------------------------------------------------
-            # REJECTION PENALTY ONLY WHILE EQUIPPED
+            # UNCHOSEN-BEARER PENALTY
+            #
+            # This now lives exclusively in the artifact template's
+            # fallback block. Remove the obsolete standalone rejection
+            # modifier so old saves do not stack a second health/prowess
+            # penalty on top of the intended fallback.
             # -------------------------------------------------
 
-            if = {
-                limit = {
-
-                    has_character_flag = segrellion_icebringer_state_rejected
-
-                    any_equipped_character_artifact = {
-                        has_variable = segrellion_icebringer_artifact
-                    }
-                }
-
-                if = {
-                    limit = {
-
-                        NOT = {
-                            has_character_modifier = segrellion_icebringer_rejection_modifier
-                        }
-                    }
-
-                    add_character_modifier = {
-                        modifier = segrellion_icebringer_rejection_modifier
-                    }
-                }
-            }
-
-            else = {
-                remove_character_modifier = segrellion_icebringer_rejection_modifier
-            }
+            remove_character_modifier = segrellion_icebringer_rejection_modifier
         }
     }
 }
