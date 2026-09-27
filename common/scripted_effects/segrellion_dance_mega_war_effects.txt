@@ -1,0 +1,746 @@
+# =========================================================
+# THE DANCE OF THE DRAGONS - MEGA WAR SUPPORT
+# Adapted directly from AGOT's agot_mw_scenario_rebel_setup.
+# =========================================================
+
+segrellion_dance_mw_scenario_rebel_setup = {
+	$HELD_TITLE$.holder = {
+		create_story = {
+			type = story_agot_mw_rebel
+			save_scope_as = mw_rebel_story
+		}
+
+		random_character_war = {
+			limit = { using_cb = $CASUS_BELLI$ }
+			save_scope_as = current_war
+		}
+
+		agot_set_mw_pwl_variables = {
+			SET_SCOPE = this
+			REF_SCOPE = $PRE_WAR_LIEGE$
+		}
+
+		scope:mw_rebel_story = {
+			set_variable = { name = mw_status value = flag:on_going }
+			set_variable = { name = mw_source value = $SOURCE$ }
+			set_variable = { name = mw_mode value = $MODE$ }
+			set_variable = { name = mw_realm_break_up value = $REALM_BREAK_UP$ }
+			set_variable = { name = mw_rebel_may_vassalize value = $REBEL_MAY_VASSALIZE$ }
+			set_variable = { name = mw_target value = $MW_TARGET$ }
+			add_to_variable_list = {
+				name = mw_wars
+				target = scope:current_war
+			}
+		}
+
+		add_to_list = mw_rebel_leaders_temp_list
+
+		scope:current_war = {
+			switch = {
+				trigger = using_cb
+
+				segrellion_dance_of_the_dragons_war = {
+					scope:mw_rebel_story = {
+						set_variable = {
+							name = mw_war_cb
+							value = flag:claim_cb
+						}
+					}
+				}
+
+				claim_cb = {
+					scope:mw_rebel_story = {
+						set_variable = {
+							name = mw_war_cb
+							value = flag:claim_cb
+						}
+					}
+				}
+			}
+
+			add_to_list = mw_wars_temp_list
+		}
+	}
+}
+
+
+# =========================================================
+# 128 AC - THE DANCE OF THE DRAGONS
+#
+# Historical allegiance map is copied from AGOT's official
+# 8129 Dance of the Dragons scenario setup.
+# =========================================================
+
+segrellion_8128_dance_of_the_dragons_war_setup_effect = {
+	if = {
+		limit = {
+			character:Targaryen_63 ?= {
+				is_alive = yes
+				has_title = title:k_dragonstone
+				NOT = { is_at_war_with = character:Targaryen_65 }
+			}
+			character:Targaryen_65 ?= {
+				is_alive = yes
+				has_title = title:h_the_iron_throne
+			}
+		}
+
+		character:Targaryen_63 = {
+			start_war = {
+				cb = segrellion_dance_of_the_dragons_war
+				target = character:Targaryen_65
+				target_title = title:h_the_iron_throne
+				target_title = title:e_the_crownlands
+				target_title = title:k_the_blackwater
+				target_title = title:d_kings_landing
+				target_title = title:c_kings_landing
+			}
+
+			random_character_war = {
+				limit = { using_cb = segrellion_dance_of_the_dragons_war }
+
+				add_attacker = title:e_the_vale.holder
+				add_attacker = title:e_the_north.holder
+				add_attacker = title:e_the_iron_islands.holder
+
+				add_attacker = title:d_tridents_mouth.holder
+				add_attacker = title:d_the_crossing.holder
+				add_attacker = title:d_willow_wood.holder
+				add_attacker = title:d_cape_of_eagles.holder
+				add_attacker = title:d_blackwood_vale.holder
+				add_attacker = title:d_pinkmaiden.holder
+				add_attacker = title:d_wayfarers_rest.holder
+				add_attacker = title:d_lakeleaf_highlands.holder
+				add_attacker = title:d_eastern_eye.holder
+				add_attacker = title:d_maidenpool.holder
+				add_attacker = title:c_branstone.holder
+				add_attacker = title:c_lancewood.holder
+
+				add_attacker = title:d_ridgeview.holder
+				add_attacker = title:d_honeylands.holder
+				add_attacker = title:d_whisper_point.holder
+				add_attacker = title:d_the_westmarch.holder
+				add_attacker = title:d_goldengrove.holder
+				add_attacker = title:d_shield_islands.holder
+				add_attacker = title:d_the_ocean_road.holder
+				add_attacker = title:d_bitterbridge.holder
+				add_attacker = title:d_fullharvest.holder
+				add_attacker = title:d_tumbleton.holder
+
+				add_attacker = title:d_kingswood.holder
+				add_attacker = title:c_bronzegate.holder
+
+				add_attacker = title:d_stokeworth.holder
+				add_attacker = title:d_rosby.holder
+				add_attacker = title:d_duskendale.holder
+				add_attacker = title:d_deerfield.holder
+				add_attacker = title:d_hayford.holder
+				add_attacker = title:d_rooks_rest.holder
+				add_attacker = title:d_masseys_hook.holder
+				add_attacker = title:d_wendwater_forest.holder
+				add_attacker = title:c_pikemouth.holder
+				add_attacker = title:c_middleton.holder
+				add_attacker = title:c_great_fork.holder
+				add_attacker = title:c_longgrass.holder
+				add_attacker = title:c_briarcrest.holder
+				add_attacker = title:c_rollingford.holder
+				add_attacker = title:c_strongbox.holder
+				add_attacker = title:c_needlewater.holder
+				add_attacker = title:c_bronzeholm.holder
+				add_attacker = title:c_dyre_den.holder
+				add_attacker = title:c_brownhollow.holder
+				add_attacker = title:c_hazewood.holder
+				add_attacker = title:c_pointside.holder
+				add_attacker = title:c_strongcliffs.holder
+			}
+		}
+
+		character:Targaryen_65 = {
+			add_character_flag = {
+				flag = mw_init_event_blocker
+				days = 2
+			}
+
+			random_character_war = {
+				limit = { using_cb = segrellion_dance_of_the_dragons_war }
+
+				add_defender = title:e_the_westerlands.holder
+				add_defender = title:e_the_stormlands.holder
+				add_defender = title:k_the_gods_eye.holder
+				add_defender = title:d_atranta.holder
+				add_defender = title:d_southstone.holder
+				add_defender = title:k_oldtown.holder
+				add_defender = title:k_the_arbor.holder
+				add_defender = title:d_oldhills.holder
+				add_defender = title:d_palemarch.holder
+				add_defender = title:d_orchard_way.holder
+				add_defender = title:d_red_front.holder
+				add_defender = title:d_goldenfields.holder
+				add_defender = title:c_risley_glade.holder
+				add_defender = title:d_blueburn.holder
+				add_defender = title:d_the_rainwood.holder
+			}
+		}
+	}
+
+	title:h_the_iron_throne.holder = {
+		save_scope_as = historical_setup
+	}
+
+### SET UP REBEL LEADERS
+	title:k_dragonstone.holder = {
+		save_scope_as = mw_rebel_leader_rhaenyra
+		segrellion_dance_mw_scenario_rebel_setup = {
+			SOURCE = flag:mw_internal
+			MODE = flag:mw_regular
+			REALM_BREAK_UP = flag:yes
+			REBEL_MAY_VASSALIZE = flag:no
+			HELD_TITLE = title:k_dragonstone
+			CASUS_BELLI = segrellion_dance_of_the_dragons_war
+			PRE_WAR_LIEGE = title:h_the_iron_throne.holder
+			MW_TARGET = title:h_the_iron_throne.holder
+		}
+		# ADD REBEL SUPPORTERS #
+		# Add vassal rebels
+		every_vassal_or_below = {
+			limit = {
+				primary_title.tier > tier_barony
+				NOR = {
+					agot_is_high_septon = yes
+					primary_title = title:d_kingsguard
+				}
+			}
+
+			scope:mw_rebel_story = {
+				add_to_variable_list = {
+					name = mw_rebel_supporter_list
+					target = prev
+				}
+			}
+		}
+		# Add independent rebels
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:e_the_vale.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:e_the_north.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:e_the_iron_islands.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_tridents_mouth.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_the_crossing.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_willow_wood.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_cape_of_eagles.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_blackwood_vale.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_pinkmaiden.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_wayfarers_rest.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_lakeleaf_highlands.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_maidenpool.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_maidenpool.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_branstone.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:k_the_gods_eye.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_lancewood.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:k_the_gods_eye.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_eastern_eye.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:k_the_gods_eye.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_ridgeview.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:k_oldtown.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_honeylands.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:k_oldtown.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_whisper_point.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:k_oldtown.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_the_westmarch.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_goldengrove.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_shield_islands.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_the_ocean_road.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_bitterbridge.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_fullharvest.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_tumbleton.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_kingswood.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_stormlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_bronzegate.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:e_the_stormlands.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_stokeworth.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_rosby.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_duskendale.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_deerfield.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_hayford.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_rooks_rest.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_masseys_hook.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:d_wendwater_forest.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_pikemouth.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_middleton.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_great_fork.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_longgrass.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_briarcrest.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_rollingford.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_strongbox.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_needlewater.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_bronzeholm.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_dyre_den.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_brownhollow.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_hazewood.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_pointside.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = title:c_strongcliffs.holder
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+		}
+	}
+	######
+
+	### SET UP CROWN
+	agot_mw_scenario_crown_setup = {
+		MODE = flag:mw_regular
+		REALM_BREAK_UP = flag:yes
+		HELD_TITLE = title:h_the_iron_throne
+	}
+
+	### ADD LOYALISTS ###
+	title:h_the_iron_throne.holder = {
+		# Add vassal loyalists
+		every_vassal_or_below = {
+			limit = {
+				primary_title.tier > tier_barony
+				agot_is_high_septon = no
+			}
+
+			scope:mw_crown_story = {
+				add_to_variable_list = {
+					name = mw_loyalist_list
+					target = prev
+				}
+			}
+		}
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:e_the_westerlands.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:e_the_stormlands.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:k_the_gods_eye.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_atranta.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_southstone.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_riverlands.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:k_oldtown.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:k_the_arbor.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_oldhills.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_palemarch.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_orchard_way.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_red_front.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_goldenfields.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:c_risley_glade.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_blueburn.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_reach.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:d_the_rainwood.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_loyalist_list
+		PRE_WAR_LIEGE_SCOPE = title:e_the_stormlands.holder
+	}
+	######
+
+	### ADD NEUTRALS ###
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:e_the_reach.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_neutral_list
+		PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+	}
+	agot_mw_add_character_to_mw_list = {
+		CHARACTER_SCOPE = title:e_the_riverlands.holder
+		STORY_SCOPE = scope:mw_crown_story
+		LIST = mw_neutral_list
+		PRE_WAR_LIEGE_SCOPE = title:h_the_iron_throne.holder
+	}
+	######
+
+
+	# =====================================================
+	# HOUSE SEGRELLION - RESOLVED PLAYER ROUTE
+	# =====================================================
+
+	# Vhalerion is de jure/de facto under Dragonstone in 128,
+	# so the official setup initially inherits Alex as a Black.
+	# Remove that automatic assignment before applying his route.
+	scope:mw_rebel_story ?= {
+		remove_list_variable = {
+			name = mw_rebel_supporter_list
+			target = character:Segrellion_1
+		}
+	}
+
+	scope:mw_crown_story ?= {
+		remove_list_variable = {
+			name = mw_loyalist_list
+			target = character:Segrellion_1
+		}
+		remove_list_variable = {
+			name = mw_neutral_list
+			target = character:Segrellion_1
+		}
+	}
+
+	if = {
+		limit = {
+			character:Segrellion_1 = {
+				has_character_flag = segrellion_dance_final_black
+			}
+		}
+
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = character:Segrellion_1
+			STORY_SCOPE = scope:mw_rebel_story
+			LIST = mw_rebel_supporter_list
+			PRE_WAR_LIEGE_SCOPE = title:k_dragonstone.holder
+		}
+
+		character:Targaryen_63 = {
+			random_character_war = {
+				limit = { using_cb = segrellion_dance_of_the_dragons_war }
+				add_attacker = character:Segrellion_1
+			}
+		}
+	}
+
+	else_if = {
+		limit = {
+			character:Segrellion_1 = {
+				has_character_flag = segrellion_dance_final_green
+			}
+		}
+
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = character:Segrellion_1
+			STORY_SCOPE = scope:mw_crown_story
+			LIST = mw_loyalist_list
+			PRE_WAR_LIEGE_SCOPE = title:k_dragonstone.holder
+		}
+
+		character:Targaryen_65 = {
+			random_character_war = {
+				limit = { using_cb = segrellion_dance_of_the_dragons_war }
+				add_defender = character:Segrellion_1
+			}
+		}
+	}
+
+	else_if = {
+		limit = {
+			character:Segrellion_1 = {
+				has_character_flag = segrellion_dance_final_independent
+			}
+		}
+
+		agot_mw_add_character_to_mw_list = {
+			CHARACTER_SCOPE = character:Segrellion_1
+			STORY_SCOPE = scope:mw_crown_story
+			LIST = mw_neutral_list
+			PRE_WAR_LIEGE_SCOPE = title:k_dragonstone.holder
+		}
+	}
+
+
+	### SET OPINIONS ###
+	agot_mw_set_opinions_up = { REBEL_STORY_OWNER_SCOPE = scope:mw_rebel_leader_rhaenyra }
+	######
+
+}
