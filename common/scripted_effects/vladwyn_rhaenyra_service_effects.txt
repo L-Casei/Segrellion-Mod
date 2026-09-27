@@ -1,0 +1,226 @@
+# =========================================================
+# TRISTAN VLADWYN - RHAENYRA'S HOUSEHOLD
+#
+# Canon service from 123 AC until Tristan enters Aegon III's
+# Kingsguard in 131 AC.
+#
+# Tristan simultaneously serves as:
+#   - Master at Arms
+#   - Captain of the Household Guard
+#   - Personal Champion
+#
+# The old councillor_marshal workaround is deliberately removed:
+# Household Guard is a full-time court job and AGOT considers
+# councillors invalid for that position.
+# =========================================================
+
+vladwyn_assign_rhaenyra_court_positions_effect = {
+
+	character:Vladwyn_1 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+			}
+
+			set_employer = character:Targaryen_63
+
+			add_character_flag = vladwyn_rhaenyra_sworn_sword
+			add_character_flag = vladwyn_rhaenyra_master_at_arms
+			add_character_flag = vladwyn_rhaenyra_household_captain
+			add_character_flag = vladwyn_rhaenyra_personal_champion
+
+			if = {
+				limit = {
+					NOT = {
+						has_character_modifier = vladwyn_rhaenyra_household_captain_modifier
+					}
+				}
+
+				add_character_modifier = {
+					modifier = vladwyn_rhaenyra_household_captain_modifier
+				}
+			}
+		}
+	}
+
+
+	character:Targaryen_63 ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+
+				character:Vladwyn_1 ?= {
+					is_alive = yes
+				}
+			}
+
+			# -------------------------------------------------
+			# REMOVE THE OLD MARSHAL WORKAROUND
+			# -------------------------------------------------
+
+			if = {
+				limit = {
+					character:Vladwyn_1 = {
+						is_councillor = yes
+						has_council_position = councillor_marshal
+					}
+				}
+
+				fire_councillor = character:Vladwyn_1
+			}
+
+
+			# -------------------------------------------------
+			# MASTER AT ARMS
+			# -------------------------------------------------
+
+			if = {
+				limit = {
+					employs_court_position = master_at_arms_court_position
+
+					NOT = {
+						any_court_position_holder = {
+							type = master_at_arms_court_position
+							this = character:Vladwyn_1
+						}
+					}
+				}
+
+				every_court_position_holder = {
+					limit = {
+						type = master_at_arms_court_position
+					}
+
+					save_temporary_scope_as = vladwyn_old_master_at_arms
+
+					character:Targaryen_63 = {
+						replace_court_position = {
+							recipient = character:Vladwyn_1
+							holder = scope:vladwyn_old_master_at_arms
+							court_position = master_at_arms_court_position
+						}
+					}
+				}
+			}
+
+			else_if = {
+				limit = {
+					NOT = {
+						employs_court_position = master_at_arms_court_position
+					}
+
+					can_employ_court_position_type = master_at_arms_court_position
+				}
+
+				appoint_court_position = {
+					recipient = character:Vladwyn_1
+					court_position = master_at_arms_court_position
+				}
+			}
+
+
+			# -------------------------------------------------
+			# PERSONAL CHAMPION
+			# -------------------------------------------------
+
+			if = {
+				limit = {
+					employs_court_position = champion_court_position
+
+					NOT = {
+						any_court_position_holder = {
+							type = champion_court_position
+							this = character:Vladwyn_1
+						}
+					}
+				}
+
+				every_court_position_holder = {
+					limit = {
+						type = champion_court_position
+					}
+
+					save_temporary_scope_as = vladwyn_old_personal_champion
+
+					character:Targaryen_63 = {
+						replace_court_position = {
+							recipient = character:Vladwyn_1
+							holder = scope:vladwyn_old_personal_champion
+							court_position = champion_court_position
+						}
+					}
+				}
+			}
+
+			else_if = {
+				limit = {
+					NOT = {
+						employs_court_position = champion_court_position
+					}
+
+					can_employ_court_position_type = champion_court_position
+				}
+
+				appoint_court_position = {
+					recipient = character:Vladwyn_1
+					court_position = champion_court_position
+				}
+			}
+
+
+			# -------------------------------------------------
+			# CAPTAIN OF THE HOUSEHOLD GUARD
+			#
+			# Do this last, after Tristan has been removed from
+			# the council, because AGOT treats this as a full-time
+			# job and rejects councillors.
+			# -------------------------------------------------
+
+			if = {
+				limit = {
+					employs_court_position = household_guard_court_position
+
+					NOT = {
+						any_court_position_holder = {
+							type = household_guard_court_position
+							this = character:Vladwyn_1
+						}
+					}
+				}
+
+				every_court_position_holder = {
+					limit = {
+						type = household_guard_court_position
+					}
+
+					save_temporary_scope_as = vladwyn_old_household_guard
+
+					character:Targaryen_63 = {
+						replace_court_position = {
+							recipient = character:Vladwyn_1
+							holder = scope:vladwyn_old_household_guard
+							court_position = household_guard_court_position
+						}
+					}
+				}
+			}
+
+			else_if = {
+				limit = {
+					NOT = {
+						employs_court_position = household_guard_court_position
+					}
+
+					can_employ_court_position_type = household_guard_court_position
+				}
+
+				appoint_court_position = {
+					recipient = character:Vladwyn_1
+					court_position = household_guard_court_position
+				}
+			}
+		}
+	}
+}
