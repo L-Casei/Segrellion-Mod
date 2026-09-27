@@ -117,22 +117,30 @@ segrellion_spawn_vhalyrax_from_egg_effect = {
 }
 
 segrellion_vhalyrax_growth_effect = {
-	# Vhalyrax has deliberately accelerated juvenile growth.
+	# Vhalyrax grows faster than an ordinary juvenile dragon, but her
+	# displayed size is deliberately capped around 70 by 128 AC.
 	#
-	# With the canonical hatchling size of 8 and AGOT's normal +3/year
-	# juvenile growth, this produces the intended curve:
-	#   124 AC (age 3) = 47
-	#   127 AC (age 6) = 86
-	#   128 AC (age 7) = 100
+	# Vhalyrax has dragon_physique_good_3, so AGOT displays dragon_size
+	# at 1.30 x the stored base size. Combined with AGOT's normal +3 base
+	# growth per juvenile birthday, the intended displayed curve is:
 	#
-	# After age 7 the custom boost ends and ordinary dragon growth resumes.
+	#   121 AC (age 0) ~ 10
+	#   122 AC (age 1) ~ 19
+	#   123 AC (age 2) ~ 27
+	#   124 AC (age 3) ~ 36
+	#   125 AC (age 4) ~ 44
+	#   126 AC (age 5) ~ 53
+	#   127 AC (age 6) ~ 61
+	#   128 AC (age 7) ~ 70
+	#
+	# After age 7 the special juvenile boost ends.
 	if = {
 		limit = {
 			has_character_flag = segrellion_vhalyrax_dragon
 			is_alive = yes
 			age <= 6
 		}
-		change_dragon_size = { VALUE = 10 }
+		change_dragon_size = { VALUE = 3.5 }
 		add_prowess_skill = 5
 	}
 	else_if = {
@@ -141,7 +149,7 @@ segrellion_vhalyrax_growth_effect = {
 			is_alive = yes
 			age = 7
 		}
-		change_dragon_size = { VALUE = 11 }
+		change_dragon_size = { VALUE = 3.85 }
 		add_prowess_skill = 5
 	}
 }
@@ -170,41 +178,42 @@ segrellion_apply_vhalyrax_historical_growth_bonus_effect = {
 			}
 		}
 
-		# Age 7+ keeps a permanent +79 head start:
-		# initial 8 + (6 * 10) + 11.
+		# AGOT historical setup already supplies ordinary juvenile growth.
+		# These are ONLY Vhalyrax's hatchling base + custom extra growth.
+		# With dragon_physique_good_3 (x1.30), age 7 lands at ~70 size.
 		if = {
 			limit = { age >= 7 }
-			change_dragon_size = { VALUE = 79 }
+			change_dragon_size = { VALUE = 32.85 }
 			add_prowess_skill = 45
 		}
 		else_if = {
 			limit = { age = 6 }
-			change_dragon_size = { VALUE = 68 }
+			change_dragon_size = { VALUE = 29 }
 			add_prowess_skill = 40
 		}
 		else_if = {
 			limit = { age = 5 }
-			change_dragon_size = { VALUE = 58 }
+			change_dragon_size = { VALUE = 25.5 }
 			add_prowess_skill = 35
 		}
 		else_if = {
 			limit = { age = 4 }
-			change_dragon_size = { VALUE = 48 }
+			change_dragon_size = { VALUE = 22 }
 			add_prowess_skill = 30
 		}
 		else_if = {
 			limit = { age = 3 }
-			change_dragon_size = { VALUE = 38 }
+			change_dragon_size = { VALUE = 18.5 }
 			add_prowess_skill = 25
 		}
 		else_if = {
 			limit = { age = 2 }
-			change_dragon_size = { VALUE = 28 }
+			change_dragon_size = { VALUE = 15 }
 			add_prowess_skill = 20
 		}
 		else_if = {
 			limit = { age = 1 }
-			change_dragon_size = { VALUE = 18 }
+			change_dragon_size = { VALUE = 11.5 }
 			add_prowess_skill = 15
 		}
 		else = {
