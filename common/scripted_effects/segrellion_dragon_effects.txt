@@ -113,14 +113,102 @@ segrellion_spawn_vhalyrax_from_egg_effect = {
 }
 
 segrellion_vhalyrax_growth_effect = {
+	# Vhalyrax has deliberately accelerated juvenile growth.
+	#
+	# With the canonical hatchling size of 8 and AGOT's normal +3/year
+	# juvenile growth, this produces the intended curve:
+	#   124 AC (age 3) = 47
+	#   127 AC (age 6) = 86
+	#   128 AC (age 7) = 100
+	#
+	# After age 7 the custom boost ends and ordinary dragon growth resumes.
 	if = {
 		limit = {
 			has_character_flag = segrellion_vhalyrax_dragon
 			is_alive = yes
-			age <= 5
+			age <= 6
 		}
 		change_dragon_size = { VALUE = 10 }
 		add_prowess_skill = 5
+	}
+	else_if = {
+		limit = {
+			has_character_flag = segrellion_vhalyrax_dragon
+			is_alive = yes
+			age = 7
+		}
+		change_dragon_size = { VALUE = 11 }
+		add_prowess_skill = 5
+	}
+}
+
+
+# ============================================================
+# VHALYRAX - STATIC BOOKMARK GROWTH CATCH-UP
+#
+# Birthday growth only runs in a campaign that actually plays through
+# those birthdays. A bookmark loaded directly in 124/127/128 therefore
+# needs the equivalent early-life bonus back-applied once.
+#
+# AGOT's historical dragon setup already supplies the ordinary growth.
+# These values add only Vhalyrax's custom component plus her initial
+# hatchling size of 8.
+# ============================================================
+
+segrellion_apply_vhalyrax_historical_growth_bonus_effect = {
+
+	if = {
+		limit = {
+			this = character:dragon_vhalyrax
+			has_trait = dragon
+			NOT = {
+				has_character_flag = segrellion_vhalyrax_historical_growth_bonus_applied
+			}
+		}
+
+		# Age 7+ keeps a permanent +79 head start:
+		# initial 8 + (6 * 10) + 11.
+		if = {
+			limit = { age >= 7 }
+			change_dragon_size = { VALUE = 79 }
+			add_prowess_skill = 45
+		}
+		else_if = {
+			limit = { age = 6 }
+			change_dragon_size = { VALUE = 68 }
+			add_prowess_skill = 40
+		}
+		else_if = {
+			limit = { age = 5 }
+			change_dragon_size = { VALUE = 58 }
+			add_prowess_skill = 35
+		}
+		else_if = {
+			limit = { age = 4 }
+			change_dragon_size = { VALUE = 48 }
+			add_prowess_skill = 30
+		}
+		else_if = {
+			limit = { age = 3 }
+			change_dragon_size = { VALUE = 38 }
+			add_prowess_skill = 25
+		}
+		else_if = {
+			limit = { age = 2 }
+			change_dragon_size = { VALUE = 28 }
+			add_prowess_skill = 20
+		}
+		else_if = {
+			limit = { age = 1 }
+			change_dragon_size = { VALUE = 18 }
+			add_prowess_skill = 15
+		}
+		else = {
+			change_dragon_size = { VALUE = 8 }
+			add_prowess_skill = 10
+		}
+
+		add_character_flag = segrellion_vhalyrax_historical_growth_bonus_applied
 	}
 }
 
@@ -561,6 +649,10 @@ segrellion_initialize_historical_dragon_effect = {
 				DRAGON = this
 				DRAGON_AGE = character:dragon_vhalyrax.age
 			}
+
+			# Static bookmarks must receive the same accelerated juvenile growth
+			# that a dynamically hatched Vhalyrax gets from birthday on-actions.
+			segrellion_apply_vhalyrax_historical_growth_bonus_effect = yes
 
 			add_character_flag = segrellion_vhalyrax_runtime_dna_repaired
 		}
