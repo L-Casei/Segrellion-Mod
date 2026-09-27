@@ -1164,5 +1164,536 @@ segrellion_dance.0310 = {
 		add_character_flag = segrellion_dance_succession_crisis_phase_complete
 		add_character_flag = segrellion_dance_dragonstone_arrival_complete
 		remove_character_flag = segrellion_dance_green_coup_active
+
+		trigger_event = {
+			id = segrellion_dance.0400
+			days = 3
+		}
+	}
+}
+
+
+# =========================================================
+# RHAENYRA'S CORONATION
+# =========================================================
+
+segrellion_dance.0400 = {
+	type = character_event
+	title = segrellion_dance.0400.t
+	desc = segrellion_dance.0400.desc
+	theme = realm
+
+	override_background = {
+		reference = agot_dragonstone_throneroom
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Targaryen_63
+		animation = personality_bold
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		character:Targaryen_63 ?= { is_alive = yes }
+		NOT = { has_character_flag = segrellion_dance_rhaenyra_coronation_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_rhaenyra_coronation_seen
+
+		character:Targaryen_63 = {
+			add_character_flag = segrellion_dance_rhaenyra_crowned
+			add_prestige = 500
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0400.a
+		ai_chance = { base = 100 }
+
+		add_prestige = 75
+
+		trigger_event = {
+			id = segrellion_dance.0410
+			days = 2
+		}
+	}
+}
+
+# =========================================================
+# THE OATH - FINAL SEGRELLION ROUTE
+# =========================================================
+
+segrellion_dance.0410 = {
+	type = character_event
+	title = segrellion_dance.0410.t
+	desc = segrellion_dance.0410.desc
+	theme = diplomacy
+
+	override_background = {
+		reference = agot_dragonstone_throneroom
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Targaryen_63
+		animation = personality_bold
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		character:Targaryen_63 ?= {
+			has_character_flag = segrellion_dance_rhaenyra_crowned
+		}
+		NOT = { has_character_flag = segrellion_dance_final_route_chosen }
+	}
+
+	option = {
+		name = segrellion_dance.0410.a
+		ai_chance = { base = 100 }
+
+		add_character_flag = segrellion_dance_final_route_chosen
+		add_character_flag = segrellion_dance_final_black
+		remove_character_flag = segrellion_dance_green_leaning
+		remove_character_flag = segrellion_dance_independent_leaning
+
+		add_prestige = 300
+
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = segrellion_dance_oath_reaffirmed
+					has_character_flag = segrellion_dance_last_promise_to_viserys
+				}
+			}
+			add_prestige = 200
+		}
+
+		character:Targaryen_63 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenyra_final_black_opinion
+			}
+		}
+
+		character:Targaryen_61 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_daemon_final_black_opinion
+			}
+		}
+
+		character:Velaryon_31 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_corlys_final_black_opinion
+			}
+		}
+
+		character:Targaryen_59 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenys_final_black_opinion
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0420
+			days = 2
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0410.b
+		ai_chance = { base = 0 }
+
+		add_character_flag = segrellion_dance_final_route_chosen
+		add_character_flag = segrellion_dance_final_green
+		remove_character_flag = segrellion_dance_black_leaning
+		remove_character_flag = segrellion_dance_independent_leaning
+
+		add_prestige = -400
+		add_dread = 10
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_dance_last_promise_to_viserys
+			}
+			add_prestige = -400
+		}
+
+		if = {
+			limit = {
+				has_character_flag = segrellion_dance_oath_reaffirmed
+			}
+			add_prestige = -300
+		}
+
+		character:Targaryen_63 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenyra_final_green_opinion
+			}
+		}
+
+		character:Targaryen_61 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_daemon_final_green_opinion
+			}
+		}
+
+		character:Velaryon_31 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_corlys_final_green_opinion
+			}
+		}
+
+		character:Targaryen_59 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenys_final_green_opinion
+			}
+		}
+
+		character:Targaryen_65 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_aegon_final_green_opinion
+			}
+		}
+
+		character:Hightower_90 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_otto_final_green_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_green_betrayal_tt
+
+		trigger_event = {
+			id = segrellion_dance.0420
+			days = 2
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0410.c
+		ai_chance = { base = 0 }
+
+		add_character_flag = segrellion_dance_final_route_chosen
+		add_character_flag = segrellion_dance_final_independent
+		remove_character_flag = segrellion_dance_black_leaning
+		remove_character_flag = segrellion_dance_green_leaning
+
+		add_prestige = 150
+		add_dread = 15
+
+		character:Targaryen_63 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenyra_final_independent_opinion
+			}
+		}
+
+		character:Targaryen_61 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_daemon_final_independent_opinion
+			}
+		}
+
+		character:Targaryen_65 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_aegon_final_independent_opinion
+			}
+		}
+
+		character:Hightower_90 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_otto_final_independent_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_independent_route_tt
+
+		trigger_event = {
+			id = segrellion_dance.0420
+			days = 2
+		}
+	}
+}
+
+# =========================================================
+# TRISTAN VLADWYN REACTS
+# =========================================================
+
+segrellion_dance.0420 = {
+	type = character_event
+	title = segrellion_dance.0420.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_character_flag = segrellion_dance_final_black }
+				desc = segrellion_dance.0420.desc.black
+			}
+			triggered_desc = {
+				trigger = { has_character_flag = segrellion_dance_final_green }
+				desc = segrellion_dance.0420.desc.green
+			}
+			desc = segrellion_dance.0420.desc.independent
+		}
+	}
+	theme = family
+
+	override_background = {
+		reference = agot_dragonstone_throneroom
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Vladwyn_1
+		animation = personality_bold
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		has_character_flag = segrellion_dance_final_route_chosen
+		NOT = { has_character_flag = segrellion_dance_tristan_route_resolved }
+	}
+
+	option = {
+		name = segrellion_dance.0420.a
+		trigger = { has_character_flag = segrellion_dance_final_black }
+		ai_chance = { base = 100 }
+
+		add_character_flag = segrellion_dance_tristan_route_resolved
+		add_character_flag = segrellion_dance_tristan_black
+
+		character:Vladwyn_1 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_tristan_black_brotherhood_opinion
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0430
+			days = 2
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0420.b
+		trigger = { has_character_flag = segrellion_dance_final_independent }
+		ai_chance = { base = 100 }
+
+		add_character_flag = segrellion_dance_tristan_route_resolved
+		add_character_flag = segrellion_dance_tristan_independent
+
+		character:Vladwyn_1 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_tristan_independent_opinion
+			}
+		}
+
+		add_courtier = character:Vladwyn_1
+
+		trigger_event = {
+			id = segrellion_dance.0430
+			days = 2
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0420.c
+		trigger = { has_character_flag = segrellion_dance_final_green }
+		ai_chance = { base = 0 }
+
+		add_character_flag = segrellion_dance_tristan_green_choice_requested
+
+		random_list = {
+			70 = {
+				trigger_event = {
+					id = segrellion_dance.0421
+					days = 1
+				}
+			}
+			30 = {
+				trigger_event = {
+					id = segrellion_dance.0422
+					days = 1
+				}
+			}
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0420.d
+		trigger = { has_character_flag = segrellion_dance_final_green }
+		ai_chance = { base = 0 }
+
+		add_character_flag = segrellion_dance_tristan_route_resolved
+		add_character_flag = segrellion_dance_tristan_stayed_black
+
+		character:Vladwyn_1 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_tristan_released_from_oath_opinion
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0430
+			days = 2
+		}
+	}
+}
+
+segrellion_dance.0421 = {
+	type = character_event
+	title = segrellion_dance.0421.t
+	desc = segrellion_dance.0421.desc
+	theme = family
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Vladwyn_1
+		animation = sadness
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_tristan_route_resolved
+		add_character_flag = segrellion_dance_tristan_followed_green
+
+		character:Vladwyn_1 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_tristan_followed_green_opinion
+			}
+		}
+
+		add_courtier = character:Vladwyn_1
+	}
+
+	option = {
+		name = segrellion_dance.0421.a
+
+		trigger_event = {
+			id = segrellion_dance.0430
+			days = 2
+		}
+	}
+}
+
+segrellion_dance.0422 = {
+	type = character_event
+	title = segrellion_dance.0422.t
+	desc = segrellion_dance.0422.desc
+	theme = family
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	right_portrait = {
+		character = character:Vladwyn_1
+		animation = personality_honorable
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_tristan_route_resolved
+		add_character_flag = segrellion_dance_tristan_stayed_black
+
+		character:Vladwyn_1 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_tristan_refused_green_opinion
+			}
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0422.a
+
+		trigger_event = {
+			id = segrellion_dance.0430
+			days = 2
+		}
+	}
+}
+
+# =========================================================
+# THE DANCE OF THE DRAGONS BEGINS
+# =========================================================
+
+segrellion_dance.0430 = {
+	type = character_event
+	title = segrellion_dance.0430.t
+	desc = segrellion_dance.0430.desc
+	theme = martial
+
+	override_background = {
+		reference = agot_dragonstone_throneroom
+	}
+
+	left_portrait = {
+		character = character:Targaryen_63
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:Targaryen_65
+		animation = personality_bold
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		has_character_flag = segrellion_dance_final_route_chosen
+
+		character:Targaryen_63 ?= {
+			is_alive = yes
+			has_character_flag = segrellion_dance_rhaenyra_crowned
+		}
+
+		character:Targaryen_65 ?= {
+			is_alive = yes
+			has_title = title:h_the_iron_throne
+		}
+
+		NOT = { has_character_flag = segrellion_dance_main_war_started }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_main_war_started
+		segrellion_8128_dance_of_the_dragons_war_setup_effect = yes
+	}
+
+	option = {
+		name = segrellion_dance.0430.a
+		add_prestige = 100
 	}
 }
