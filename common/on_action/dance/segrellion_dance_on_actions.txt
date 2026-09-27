@@ -1,0 +1,75 @@
+# =========================================================
+# THE DANCE OF THE DRAGONS - 128 AC
+# Opening handoff for Alex Segrellion.
+# =========================================================
+
+segrellion_dance_128_startup = {
+	effect = {
+		if = {
+			limit = {
+				game_start_date = 8128.11.12
+			}
+
+			character:Segrellion_1 ?= {
+				if = {
+					limit = {
+						is_alive = yes
+						NOT = { has_character_flag = segrellion_dance_128_intro_seen }
+						NOT = { has_character_flag = segrellion_dance_128_intro_queued }
+					}
+
+					add_character_flag = segrellion_dance_128_intro_queued
+
+					trigger_event = {
+						id = segrellion_dance.0001
+						days = 3
+					}
+				}
+			}
+		}
+	}
+}
+
+segrellion_dance_on_player_select_destiny_confirmed = {
+	effect = {
+		if = {
+			limit = {
+				this = character:Segrellion_1
+				game_start_date = 8128.11.12
+				NOT = { has_character_flag = segrellion_dance_128_intro_seen }
+				NOT = { has_character_flag = segrellion_dance_128_intro_queued }
+			}
+
+			add_character_flag = segrellion_dance_128_intro_queued
+
+			trigger_event = {
+				id = segrellion_dance.0001
+				days = 3
+			}
+		}
+	}
+}
+
+# Save-compatible fallback if another startup sequence swallows
+# the first scheduled event. Idempotent because of queued/seen flags.
+segrellion_dance_128_opening_fallback = {
+	effect = {
+		character:Segrellion_1 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					game_start_date = 8128.11.12
+					NOT = { has_character_flag = segrellion_dance_128_intro_seen }
+					NOT = { has_character_flag = segrellion_dance_128_intro_queued }
+				}
+
+				add_character_flag = segrellion_dance_128_intro_queued
+
+				trigger_event = {
+					id = segrellion_dance.0001
+					days = 2
+				}
+			}
+		}
+	}
+}
