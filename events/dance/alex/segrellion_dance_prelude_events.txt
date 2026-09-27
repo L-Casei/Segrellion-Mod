@@ -1,0 +1,790 @@
+namespace = segrellion_dance
+
+# =========================================================
+# 128 AC - THE DANCE OF THE DRAGONS
+# ALEX SEGRELLION PRELUDE
+#
+# This first block deliberately stops before Viserys dies.
+# It establishes Alex's history, relationships and political
+# posture so the succession crisis can react to player choices.
+# =========================================================
+
+segrellion_dance.0001 = {
+	type = character_event
+	title = segrellion_dance.0001.t
+	desc = segrellion_dance.0001.desc
+	theme = realm
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		game_start_date = 8128.11.12
+		NOT = { has_character_flag = segrellion_dance_128_intro_seen }
+	}
+
+	immediate = {
+		remove_character_flag = segrellion_dance_128_intro_queued
+		add_character_flag = segrellion_dance_128_intro_seen
+		add_character_flag = segrellion_dance_prelude_active
+	}
+
+	option = {
+		name = segrellion_dance.0001.a
+		ai_chance = { base = 60 }
+
+		add_character_flag = segrellion_dance_house_focus_stewardship
+		add_prestige = 100
+		add_stewardship_lifestyle_xp = 125
+
+		title:c_blackmark = {
+			add_county_modifier = {
+				modifier = segrellion_dance_vhalerion_ready_modifier
+				years = 5
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0010
+			days = 3
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0001.b
+		ai_chance = { base = 30 }
+
+		add_character_flag = segrellion_dance_house_focus_martial
+		add_prestige = 150
+		add_martial_lifestyle_xp = 125
+		add_dread = 5
+
+		title:c_blackmark = {
+			add_county_modifier = {
+				modifier = segrellion_dance_vhalerion_war_foundations_modifier
+				years = 5
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0010
+			days = 3
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0001.c
+		ai_chance = { base = 10 }
+
+		add_character_flag = segrellion_dance_house_focus_legacy
+		add_learning_lifestyle_xp = 150
+		add_piety = 50
+
+		add_character_modifier = {
+			modifier = segrellion_dance_legacy_focus_modifier
+			years = 5
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0010
+			days = 3
+		}
+	}
+}
+
+# =========================================================
+# THE OATH OF 122 AC
+# =========================================================
+
+segrellion_dance.0010 = {
+	type = character_event
+	title = segrellion_dance.0010.t
+	desc = segrellion_dance.0010.desc
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_background = {
+		reference = agot_dragonstone_throneroom
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Targaryen_63
+		animation = personality_bold
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		has_character_flag = segrellion_dance_128_intro_seen
+		NOT = { has_character_flag = segrellion_dance_oath_memory_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_oath_memory_seen
+	}
+
+	option = {
+		name = segrellion_dance.0010.a
+		ai_chance = { base = 90 }
+
+		add_character_flag = segrellion_dance_oath_reaffirmed
+		add_character_flag = segrellion_dance_black_leaning
+		add_prestige = 150
+
+		character:Targaryen_63 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_reaffirmed_oath_opinion
+			}
+		}
+
+		character:Velaryon_31 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_corlys_respects_oath_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_oath_reaffirmed_tt
+
+		trigger_event = {
+			id = segrellion_dance.0020
+			days = 3
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0010.b
+		ai_chance = { base = 10 }
+
+		add_character_flag = segrellion_dance_oath_with_guarantees
+		add_character_flag = segrellion_dance_black_leaning
+		add_prestige = 75
+		add_diplomacy_lifestyle_xp = 100
+
+		character:Targaryen_63 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_pragmatic_oath_opinion
+			}
+		}
+
+		if = {
+			limit = {
+				can_add_hook = {
+					target = character:Targaryen_63
+					type = favor_hook
+				}
+			}
+
+			add_hook = {
+				type = favor_hook
+				target = character:Targaryen_63
+			}
+		}
+
+		custom_tooltip = segrellion_dance_rhaenyra_favor_tt
+
+		trigger_event = {
+			id = segrellion_dance.0020
+			days = 3
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0010.c
+		ai_chance = { base = 0 }
+
+		add_character_flag = segrellion_dance_oath_personal_only
+		add_character_flag = segrellion_dance_independent_leaning
+		add_diplomacy_lifestyle_xp = 150
+		add_prestige = 50
+
+		character:Targaryen_63 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_guarded_oath_opinion
+			}
+		}
+
+		character:Targaryen_61 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_daemon_dislikes_hedging_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_independent_seed_tt
+
+		trigger_event = {
+			id = segrellion_dance.0020
+			days = 3
+		}
+	}
+}
+
+# =========================================================
+# ALYSSA'S DEATH / MAENAR'S COMA
+# =========================================================
+
+segrellion_dance.0020 = {
+	type = character_event
+	title = segrellion_dance.0020.t
+	desc = segrellion_dance.0020.desc
+	theme = family
+
+	override_background = {
+		reference = segrellion_vhalerion_bedchamber
+	}
+
+	left_portrait = {
+		character = root
+		animation = sadness
+	}
+
+	right_portrait = {
+		character = character:Segrellion_10
+		animation = worry
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		character:Segrellion_10 ?= { is_alive = yes }
+		NOT = { has_character_flag = segrellion_dance_maenar_memory_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_maenar_memory_seen
+	}
+
+	option = {
+		name = segrellion_dance.0020.a
+		ai_chance = { base = 65 }
+
+		trigger = { gold >= 100 }
+
+		remove_short_term_gold = 100
+		add_learning_lifestyle_xp = 100
+		add_stress = 10
+		add_character_flag = segrellion_dance_maenar_all_treatments
+
+		character:Segrellion_2 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_alysanne_grateful_maenar_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_maenar_treatment_tt
+
+		trigger_event = {
+			id = segrellion_dance.0030
+			days = 3
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0020.b
+		ai_chance = { base = 25 }
+
+		add_martial_lifestyle_xp = 100
+		add_character_flag = segrellion_dance_maenar_guarded
+
+		title:c_blackmark = {
+			change_county_control = 5
+		}
+
+		custom_tooltip = segrellion_dance_maenar_guarded_tt
+
+		trigger_event = {
+			id = segrellion_dance.0030
+			days = 3
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0020.c
+		ai_chance = { base = 10 }
+
+		add_learning_lifestyle_xp = 175
+		add_character_flag = segrellion_dance_maenar_mystery_pursued
+
+		if = {
+			limit = {
+				OR = {
+					has_trait = dragon_dreams
+					has_trait = segrellion_dreamer
+				}
+			}
+			add_stress = -10
+		}
+		else = {
+			add_stress = 5
+		}
+
+		custom_tooltip = segrellion_dance_maenar_mystery_tt
+
+		trigger_event = {
+			id = segrellion_dance.0030
+			days = 3
+		}
+	}
+}
+
+# =========================================================
+# VISERYS' TRUST
+# =========================================================
+
+segrellion_dance.0030 = {
+	type = character_event
+	title = segrellion_dance.0030.t
+	desc = segrellion_dance.0030.desc
+	theme = diplomacy
+
+	override_header_background = {
+		reference = "gfx/interface/window_event/event_header_blue.dds"
+	}
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Targaryen_60
+		animation = steward
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		character:Targaryen_60 ?= { is_alive = yes }
+		NOT = { has_character_flag = segrellion_dance_viserys_memory_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_viserys_memory_seen
+	}
+
+	option = {
+		name = segrellion_dance.0030.a
+		ai_chance = { base = 70 }
+
+		add_character_flag = segrellion_dance_viserys_loyal_memory
+		add_prestige = 100
+
+		add_character_modifier = {
+			modifier = segrellion_dance_viserys_confidence_modifier
+			years = 5
+		}
+
+		character:Targaryen_60 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_viserys_trusted_alex_opinion
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0040
+			days = 4
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0030.b
+		ai_chance = { base = 20 }
+
+		add_character_flag = segrellion_dance_viserys_archives_remembered
+		add_learning_lifestyle_xp = 200
+
+		trigger_event = {
+			id = segrellion_dance.0040
+			days = 4
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0030.c
+		ai_chance = { base = 10 }
+
+		add_character_flag = segrellion_dance_viserys_cautious_memory
+		add_intrigue_lifestyle_xp = 150
+		add_dread = 3
+
+		trigger_event = {
+			id = segrellion_dance.0040
+			days = 4
+		}
+	}
+}
+
+# =========================================================
+# RHAENYRA ASKS FOR READINESS
+# =========================================================
+
+segrellion_dance.0040 = {
+	type = character_event
+	title = segrellion_dance.0040.t
+	desc = segrellion_dance.0040.desc
+	theme = diplomacy
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_honorable
+	}
+
+	right_portrait = {
+		character = character:Targaryen_63
+		animation = personality_bold
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		character:Targaryen_63 ?= { is_alive = yes }
+		NOT = { has_character_flag = segrellion_dance_rhaenyra_readiness_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_rhaenyra_readiness_seen
+	}
+
+	option = {
+		name = segrellion_dance.0040.a
+		ai_chance = { base = 85 }
+
+		trigger = { gold >= 75 }
+
+		remove_short_term_gold = 75
+		add_prestige = 100
+		add_character_flag = segrellion_dance_full_fleet_prepared
+		add_character_flag = segrellion_dance_black_leaning
+
+		title:c_blackmark = {
+			add_county_modifier = {
+				modifier = segrellion_dance_blackwater_preparations_modifier
+				years = 3
+			}
+		}
+
+		character:Targaryen_63 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenyra_fleet_ready_opinion
+			}
+		}
+
+		character:Velaryon_31 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_corlys_fleet_ready_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_full_fleet_ready_tt
+
+		trigger_event = {
+			id = segrellion_dance.0050
+			days = 4
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0040.b
+		ai_chance = { base = 15 }
+
+		trigger = { gold >= 25 }
+
+		remove_short_term_gold = 25
+		add_stewardship_lifestyle_xp = 100
+		add_character_flag = segrellion_dance_quiet_fleet_prepared
+
+		title:c_blackmark = {
+			add_county_modifier = {
+				modifier = segrellion_dance_quiet_preparations_modifier
+				years = 2
+			}
+		}
+
+		character:Targaryen_63 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenyra_quiet_support_opinion
+			}
+		}
+
+		character:Velaryon_31 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_corlys_quiet_support_opinion
+			}
+		}
+
+		trigger_event = {
+			id = segrellion_dance.0050
+			days = 4
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0040.c
+		ai_chance = { base = 0 }
+
+		add_stewardship_lifestyle_xp = 125
+		add_character_flag = segrellion_dance_refused_early_mobilization
+		add_character_flag = segrellion_dance_independent_leaning
+
+		character:Targaryen_63 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_rhaenyra_refused_readiness_opinion
+			}
+		}
+
+		character:Velaryon_31 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_corlys_refused_readiness_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_refused_readiness_tt
+
+		trigger_event = {
+			id = segrellion_dance.0050
+			days = 4
+		}
+	}
+}
+
+# =========================================================
+# THE GREEN OVERTURE
+# =========================================================
+
+segrellion_dance.0050 = {
+	type = character_event
+	title = segrellion_dance.0050.t
+	desc = segrellion_dance.0050.desc
+	theme = intrigue
+
+	override_background = {
+		reference = segrellion_vhalerion_throne_room
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = character:Hightower_97
+		animation = personality_cynical
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		character:Hightower_97 ?= { is_alive = yes }
+		NOT = { has_character_flag = segrellion_dance_green_overture_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_green_overture_seen
+	}
+
+	option = {
+		name = segrellion_dance.0050.a
+		ai_chance = { base = 90 }
+
+		add_character_flag = segrellion_dance_green_overture_rejected
+		add_prestige = 50
+
+		character:Hightower_97 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_alicent_rebuffed_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_green_rejected_tt
+
+		trigger_event = {
+			id = segrellion_dance.0060
+			days = 4
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0050.b
+		ai_chance = { base = 10 }
+
+		add_character_flag = segrellion_dance_green_channel_open
+		add_diplomacy_lifestyle_xp = 150
+
+		character:Hightower_97 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_alicent_open_channel_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_green_channel_tt
+
+		trigger_event = {
+			id = segrellion_dance.0060
+			days = 4
+		}
+	}
+
+	option = {
+		name = segrellion_dance.0050.c
+		ai_chance = { base = 0 }
+
+		add_character_flag = segrellion_dance_green_channel_open
+		add_character_flag = segrellion_dance_green_debt
+		add_gold = 100
+		add_prestige = -25
+
+		character:Hightower_97 = {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_alicent_bought_goodwill_opinion
+			}
+
+			if = {
+				limit = {
+					can_add_hook = {
+						target = root
+						type = favor_hook
+					}
+				}
+
+				add_hook = {
+					type = favor_hook
+					target = root
+				}
+			}
+		}
+
+		custom_tooltip = segrellion_dance_green_debt_tt
+
+		trigger_event = {
+			id = segrellion_dance.0060
+			days = 4
+		}
+	}
+}
+
+# =========================================================
+# VHALYRAX FEELS THE STORM
+# =========================================================
+
+segrellion_dance.0060 = {
+	type = character_event
+	title = segrellion_dance.0060.t
+	desc = segrellion_dance.0060.desc
+	theme = realm
+
+	override_background = {
+		reference = segrellion_vhal_island
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	right_portrait = {
+		character = character:dragon_vhalyrax
+	}
+
+	trigger = {
+		this = character:Segrellion_1
+		character:dragon_vhalyrax ?= { is_alive = yes }
+		NOT = { has_character_flag = segrellion_dance_vhalyrax_omen_seen }
+	}
+
+	immediate = {
+		add_character_flag = segrellion_dance_vhalyrax_omen_seen
+	}
+
+	option = {
+		name = segrellion_dance.0060.a
+		ai_chance = { base = 70 }
+
+		add_character_flag = segrellion_dance_vhalyrax_omen_embraced
+		add_martial_lifestyle_xp = 150
+		add_prestige = 100
+		add_stress = -10
+
+		add_character_modifier = {
+			modifier = segrellion_dance_white_shadow_rider_modifier
+			years = 2
+		}
+
+		custom_tooltip = segrellion_dance_omen_embraced_tt
+	}
+
+	option = {
+		name = segrellion_dance.0060.b
+		ai_chance = { base = 20 }
+
+		add_character_flag = segrellion_dance_vhalyrax_omen_interpreted
+		add_learning_lifestyle_xp = 175
+
+		character:Segrellion_2 ?= {
+			add_opinion = {
+				target = root
+				modifier = segrellion_dance_alysanne_shared_omen_opinion
+			}
+		}
+
+		custom_tooltip = segrellion_dance_omen_interpreted_tt
+	}
+
+	option = {
+		name = segrellion_dance.0060.c
+		ai_chance = { base = 10 }
+
+		trigger = { gold >= 50 }
+
+		remove_short_term_gold = 50
+		add_character_flag = segrellion_dance_vhal_watch_strengthened
+		add_dread = 5
+
+		title:c_blackmark = {
+			change_county_control = 10
+			add_county_modifier = {
+				modifier = segrellion_dance_night_watch_modifier
+				years = 2
+			}
+		}
+
+		custom_tooltip = segrellion_dance_watch_strengthened_tt
+	}
+
+	after = {
+		add_character_flag = segrellion_dance_prelude_complete
+		remove_character_flag = segrellion_dance_prelude_active
+	}
+}
