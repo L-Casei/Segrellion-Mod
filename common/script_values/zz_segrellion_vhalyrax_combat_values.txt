@@ -1,0 +1,234 @@
+# =========================================================
+# VHALYRAX - COMBAT EFFECTIVENESS OVERRIDE
+#
+# Mirrors AGOT's 1.19 dragon combat formulas and adds one
+# narrowly-scoped multiplier for canonical Vhalyrax.
+#
+# Healthy Vhalyrax in 128 AC:
+#   size ~70
+#   calculating x1.10
+#   Vhalyrax combat factor x1.75
+#   = ~134.75 combat effectiveness
+#
+# Her unique combat factor replaces rider-training scaling so
+# the displayed target remains stable instead of jumping far
+# above 140 merely because Alex's training track changes.
+# Every other dragon keeps AGOT's normal formula.
+# =========================================================
+
+dragon_combat_effectiveness = {
+	value = dragon_size
+
+	# Personality
+	if = {
+		limit = { has_trait = dragon_aggressive }
+		multiply = 1.1
+	}
+	if = {
+		limit = { has_trait = dragon_friendly }
+		multiply = 0.95
+	}
+	if = {
+		limit = { has_trait = dragon_impulsive }
+		multiply = 1.02
+	}
+	if = {
+		limit = { has_trait = dragon_calculating }
+		multiply = 1.1
+	}
+	if = {
+		limit = { has_trait = dragon_bloodthirsty }
+		multiply = 1.1
+	}
+	if = {
+		limit = { has_trait = dragon_skittish }
+		multiply = 0.85
+	}
+
+	# Vhalyrax's exceptional battle ability is deliberately independent
+	# from her physical size.
+	if = {
+		limit = {
+			has_character_flag = segrellion_vhalyrax_dragon
+		}
+		multiply = 1.75
+	}
+
+	# Wounds
+	if = {
+		limit = { has_trait = dragon_wounded_1 }
+		multiply = 0.95
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_2 }
+		multiply = 0.9
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_3 }
+		multiply = 0.8
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_4 }
+		multiply = 0.7
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_5 }
+		multiply = 0.5
+	}
+
+	if = {
+		limit = { has_trait = dragon_ill }
+		multiply = 0.7
+	}
+
+	# Congenital traits
+	if = {
+		limit = { has_trait = dragon_swift }
+		multiply = 1.15
+	}
+	else_if = {
+		limit = { has_trait = dragon_slow }
+		multiply = 0.85
+	}
+	if = {
+		limit = { has_trait = dragon_spindly }
+		multiply = 1.15
+	}
+	if = {
+		limit = { has_trait = dragon_blind }
+		multiply = 0.25
+	}
+
+	# Normal AGOT rider-experience scaling for every dragon except
+	# Vhalyrax, whose intrinsic x1.75 factor already represents her
+	# established exceptional combat performance.
+	if = {
+		limit = {
+			NOT = {
+				has_character_flag = segrellion_vhalyrax_dragon
+			}
+			exists = var:current_rider
+		}
+
+		if = {
+			limit = {
+				var:current_rider = {
+					has_trait_xp = {
+						trait = dragonrider
+						track = dragon_training
+						value > 30
+					}
+				}
+			}
+			multiply = 1.1
+		}
+		if = {
+			limit = {
+				var:current_rider = {
+					has_trait_xp = {
+						trait = dragonrider
+						track = dragon_training
+						value > 65
+					}
+				}
+			}
+			multiply = 1.1
+		}
+		if = {
+			limit = {
+				var:current_rider = {
+					has_trait_xp = {
+						trait = dragonrider
+						track = dragon_training
+						value = 100
+					}
+				}
+			}
+			multiply = 1.1
+		}
+	}
+}
+
+
+# Dragon-vs-character / duel combat uses the same intrinsic Vhalyrax
+# multiplier so her battle performance does not collapse just because
+# her canonical body size was reduced.
+
+ds_combat_effectiveness = {
+	value = dragon_size
+
+	if = {
+		limit = { has_trait = dragon_aggressive }
+		multiply = 1.1
+	}
+	if = {
+		limit = { has_trait = dragon_friendly }
+		multiply = 0.95
+	}
+	if = {
+		limit = { has_trait = dragon_impulsive }
+		multiply = 1.02
+	}
+	if = {
+		limit = { has_trait = dragon_calculating }
+		multiply = 1.1
+	}
+	if = {
+		limit = { has_trait = dragon_bloodthirsty }
+		multiply = 1.1
+	}
+	if = {
+		limit = { has_trait = dragon_skittish }
+		multiply = 0.85
+	}
+
+	if = {
+		limit = {
+			has_character_flag = segrellion_vhalyrax_dragon
+		}
+		multiply = 1.75
+	}
+
+	if = {
+		limit = { has_trait = dragon_wounded_1 }
+		multiply = 0.95
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_2 }
+		multiply = 0.9
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_3 }
+		multiply = 0.8
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_4 }
+		multiply = 0.7
+	}
+	else_if = {
+		limit = { has_trait = dragon_wounded_5 }
+		multiply = 0.5
+	}
+
+	if = {
+		limit = { has_trait = dragon_ill }
+		multiply = 0.7
+	}
+
+	if = {
+		limit = { has_trait = dragon_swift }
+		multiply = 1.15
+	}
+	else_if = {
+		limit = { has_trait = dragon_slow }
+		multiply = 0.85
+	}
+	if = {
+		limit = { has_trait = dragon_spindly }
+		multiply = 1.15
+	}
+	if = {
+		limit = { has_trait = dragon_blind }
+		multiply = 0.25
+	}
+}
