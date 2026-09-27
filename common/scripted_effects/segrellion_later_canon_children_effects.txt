@@ -48,6 +48,7 @@ iaf_init_Segrellion_25 = { iaf_canon_children_add_identity_effect = { ID = Segre
 iaf_init_IAF_Baratheon_Tyana_1 = { iaf_canon_children_add_identity_effect = { ID = IAF_Baratheon_Tyana_1 } }
 iaf_init_Stormflame_1 = { iaf_canon_children_add_identity_effect = { ID = Stormflame_1 } }
 iaf_init_Segrellion_27 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_27 } }
+iaf_init_Segrellion_28 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_28 } }
 iaf_init_Segrellion_61 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_61 } }
 iaf_init_Segrellion_62 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_62 } }
 iaf_init_Segrellion_63 = { iaf_canon_children_add_identity_effect = { ID = Segrellion_63 } }
@@ -67,6 +68,7 @@ iaf_init_later_historical_canon_identities_effect = {
 	character:IAF_Baratheon_7 ?= { iaf_init_IAF_Baratheon_Tyana_1 = yes }
 	character:Stormflame_1 ?= { iaf_init_Stormflame_1 = yes }
 	character:Segrellion_27 ?= { iaf_init_Segrellion_27 = yes }
+	character:Segrellion_28 ?= { iaf_init_Segrellion_28 = yes }
 	character:Segrellion_61 ?= { iaf_init_Segrellion_61 = yes }
 	character:Segrellion_62 ?= { iaf_init_Segrellion_62 = yes }
 	character:Segrellion_63 ?= { iaf_init_Segrellion_63 = yes }
@@ -194,7 +196,9 @@ iaf_init_later_canon_children_setup = {
 	character:Dummy_Segrellion_25 ?= { make_unprunable = yes }
 	character:Dummy_Stormflame_1 ?= { make_unprunable = yes }
 	character:Dummy_Segrellion_27 ?= { make_unprunable = yes }
-	character:IAF_Baratheon_Tyana_1 ?= { make_unprunable = yes }
+	character:Dummy_Segrellion_28 ?= { make_unprunable = yes }
+	character:Dummy_IAF_Baratheon_Tyana_1 ?= { make_unprunable = yes }
+	character:IAF_Baratheon_7 ?= { make_unprunable = yes }
 	character:Dummy_Segrellion_61 ?= { make_unprunable = yes }
 	character:Dummy_Segrellion_62 ?= { make_unprunable = yes }
 	character:Dummy_Segrellion_63 ?= { make_unprunable = yes }
@@ -550,45 +554,171 @@ segrellion_try_force_later_canon_marriages_effect = {
 				}
 			}
 		}
+		# =====================================================
+		# AEGON DRAGONSPEAR / TYANA BARATHEON
+		#
+		# Tyana's historical character ID is IAF_Baratheon_7,
+		# while her Canon Children identity is
+		# IAF_Baratheon_Tyana_1. Resolve both historical and
+		# runtime versions explicitly and register her as a late
+		# canon mother on Aegon's already-running story.
+		# =====================================================
 		if = {
 			limit = {
 				current_date < 8196.1.1
 				iaf_later_canon_identity_exists_trigger = { ID = Segrellion_21 }
-				character:IAF_Baratheon_Tyana_1 ?= {
-					is_alive = yes
-					is_adult = yes
-					is_married = no
+			}
+
+			agot_canon_children_get_character_scope_effect = {
+				TARGET = character:Segrellion_21
+				ID = Segrellion_21
+				SCOPE = segrellion_canon_aegon_dragonspear
+			}
+
+			agot_canon_children_get_character_scope_effect = {
+				TARGET = character:IAF_Baratheon_7
+				ID = IAF_Baratheon_Tyana_1
+				SCOPE = segrellion_canon_tyana_baratheon
+			}
+
+			scope:segrellion_canon_tyana_baratheon ?= {
+				agot_add_mother_to_canon_father_story = {
+					FATHER_ID = Segrellion_21
 				}
 			}
+
+			# Once Samantha is gone, preserve the canonical second
+			# marriage even if Tyana is still underage.
 			if = {
 				limit = {
-					character:Segrellion_21 ?= {
+					scope:segrellion_canon_aegon_dragonspear ?= {
+						is_alive = yes
+						is_married = no
+						is_betrothed = no
+					}
+					scope:segrellion_canon_tyana_baratheon ?= {
+						is_alive = yes
+						is_married = no
+						is_betrothed = no
+					}
+					OR = {
+						scope:segrellion_canon_aegon_dragonspear = { is_adult = no }
+						scope:segrellion_canon_tyana_baratheon = { is_adult = no }
+					}
+				}
+				scope:segrellion_canon_aegon_dragonspear = {
+					create_betrothal = scope:segrellion_canon_tyana_baratheon
+				}
+			}
+
+			if = {
+				limit = {
+					scope:segrellion_canon_aegon_dragonspear ?= {
+						is_alive = yes
+						is_adult = yes
+						is_married = no
+					}
+					scope:segrellion_canon_tyana_baratheon ?= {
 						is_alive = yes
 						is_adult = yes
 						is_married = no
 					}
 				}
-				character:Segrellion_21 = { add_spouse = character:IAF_Baratheon_Tyana_1 }
-			}
-			else = {
-				agot_canon_children_get_canon_child_scope_effect = {
-					ID = Segrellion_21
-					SCOPE = segrellion_canon_aegon_dragonspear
-				}
-				if = {
-					limit = {
-						scope:segrellion_canon_aegon_dragonspear ?= {
-							is_alive = yes
-							is_adult = yes
-							is_married = no
-						}
-					}
-					scope:segrellion_canon_aegon_dragonspear = { add_spouse = character:IAF_Baratheon_Tyana_1 }
+				scope:segrellion_canon_aegon_dragonspear = {
+					add_spouse = scope:segrellion_canon_tyana_baratheon
 				}
 			}
 		}
 	}
 }
+
+# =========================================================
+# TYANA BARATHEON - RUNTIME CONTINUITY FOR 106 AC CAMPAIGNS
+#
+# Character history does not spawn future historical people into
+# an already-running save. Create Tyana at her canonical birth
+# window so Aegon Dragonspear's second family can exist from a
+# White Shadow start. Later bookmarks continue using IAF_Baratheon_7.
+# =========================================================
+segrellion_ensure_runtime_tyana_baratheon_effect = {
+	if = {
+		limit = {
+			has_game_rule = segrellion_canon_children_enabled
+			current_date >= 8178.3.5
+			current_date < 8200.1.1
+			NOT = {
+				character:IAF_Baratheon_7 ?= {
+					exists = yes
+					is_alive = yes
+				}
+			}
+			NOT = {
+				any_in_global_list = {
+					variable = agot_born_canon_children_scopes
+					has_character_flag = is_IAF_Baratheon_Tyana_1
+					is_alive = yes
+				}
+			}
+		}
+
+		create_character = {
+			first_name = Tyana
+			age = 0
+			random_traits = no
+			gender_female_chance = 100
+			faith = faith:fots_seven
+			culture = culture:stormlander_main
+			dynasty = dynasty:dynn_Baratheon
+			save_scope_as = segrellion_runtime_tyana
+		}
+
+		scope:segrellion_runtime_tyana = {
+			copy_inheritable_appearance_from = character:Dummy_IAF_Baratheon_Tyana_1
+			make_trait_inactive = scripted_appearance
+			add_character_flag = has_scripted_appearance
+			add_character_flag = canon_status_canon
+			iaf_init_IAF_Baratheon_Tyana_1 = yes
+			add_to_global_variable_list = {
+				name = agot_born_canon_children_scopes
+				target = this
+			}
+			make_unprunable = yes
+
+			add_trait = ambitious
+			add_trait = gregarious
+			add_trait = stubborn
+			add_trait = wrathful
+			add_trait = beauty_good_2
+
+			segrellion_try_force_later_canon_marriages_effect = yes
+		}
+	}
+
+	# Keep runtime Tyana's later historical progression aligned too.
+	agot_canon_children_get_character_scope_effect = {
+		TARGET = character:IAF_Baratheon_7
+		ID = IAF_Baratheon_Tyana_1
+		SCOPE = segrellion_canon_tyana_progress
+	}
+
+	scope:segrellion_canon_tyana_progress ?= {
+		if = {
+			limit = {
+				current_date >= 8194.3.9
+				NOT = { has_trait = education_diplomacy_2 }
+			}
+			add_trait = education_diplomacy_2
+		}
+		if = {
+			limit = {
+				current_date >= 8195.6.2
+				NOT = { has_trait = fashionable }
+			}
+			add_trait = fashionable
+		}
+	}
+}
+
 
 iaf_canon_children_Segrellion_10_start_valid_pregnancy_effect = {
 	story_owner = {
@@ -725,10 +855,10 @@ iaf_canon_children_Segrellion_21_start_valid_pregnancy_effect = {
 					}
 				}
 				else_if = {
-					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_25 BIRTH_YEAR = 8190 BIRTH_YEAR_MIN = 8189 } }
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_25 BIRTH_YEAR = 8188 BIRTH_YEAR_MIN = 8187 } }
 					agot_canon_children_start_pregnancy_effect = {
 						CHILD_ID = Segrellion_25
-						BIRTH_FLAG = birth_will_go_smoothly
+						BIRTH_FLAG = agot_birth_mother_will_die
 					}
 				}
 				agot_canon_children_life_cycle_effect = { MOTHER = scope:canon_mother FINAL_CHILD_ID = Segrellion_25 }
@@ -750,12 +880,13 @@ iaf_canon_children_Segrellion_21_start_valid_pregnancy_effect = {
 				}
 				else_if = {
 					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Segrellion_27 BIRTH_YEAR = 8198 BIRTH_YEAR_MIN = 8197 } }
-					agot_canon_children_start_pregnancy_effect = {
-						CHILD_ID = Segrellion_27
+					agot_canon_children_start_pregnancy_twins_effect = {
+						TWIN_ONE_ID = Segrellion_27
+						TWIN_TWO_ID = Segrellion_28
 						BIRTH_FLAG = birth_will_go_smoothly
 					}
 				}
-				agot_canon_children_life_cycle_effect = { MOTHER = scope:canon_mother FINAL_CHILD_ID = Segrellion_27 }
+				agot_canon_children_life_cycle_effect = { MOTHER = scope:canon_mother FINAL_CHILD_ID = Segrellion_28 }
 			}
 		}
 	}
@@ -944,7 +1075,22 @@ iaf_canon_children_Segrellion_27_birth_effect = {
 	agot_canon_children_generic_birth_effect = { ID = Segrellion_27 }
 	add_character_flag = canon_status_canon
 	iaf_init_Segrellion_27 = yes
+}
 
+iaf_canon_children_Segrellion_28_birth_effect = {
+	agot_canon_children_generic_birth_effect = { ID = Segrellion_28 }
+	add_character_flag = canon_status_canon
+	iaf_init_Segrellion_28 = yes
+}
+
+# AGOT's native twin helper dynamically calls effects with the
+# agot_canon_children_<ID>_birth_effect naming convention.
+agot_canon_children_Segrellion_27_birth_effect = {
+	iaf_canon_children_Segrellion_27_birth_effect = yes
+}
+
+agot_canon_children_Segrellion_28_birth_effect = {
+	iaf_canon_children_Segrellion_28_birth_effect = yes
 }
 
 
