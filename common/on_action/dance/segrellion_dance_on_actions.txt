@@ -73,3 +73,27 @@ segrellion_dance_128_opening_fallback = {
 		}
 	}
 }
+
+
+# If the direct handoff from the Vhalyrax omen is ever swallowed,
+# restore the succession chain without duplicating it.
+segrellion_dance_128_succession_fallback = {
+	effect = {
+		character:Segrellion_1 ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					game_start_date = 8128.11.12
+					has_character_flag = segrellion_dance_prelude_complete
+					NOT = { has_character_flag = segrellion_dance_dying_king_seen }
+					character:Targaryen_60 ?= { is_alive = yes }
+				}
+
+				trigger_event = {
+					id = segrellion_dance.0100
+					days = 2
+				}
+			}
+		}
+	}
+}
