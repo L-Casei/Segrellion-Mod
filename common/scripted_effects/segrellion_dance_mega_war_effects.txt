@@ -85,6 +85,13 @@ segrellion_8128_dance_of_the_dragons_war_setup_effect = {
 			}
 		}
 
+		character:Targaryen_65 = {
+			add_character_flag = {
+				flag = mw_init_event_blocker
+				days = 2
+			}
+		}
+
 		character:Targaryen_63 = {
 			start_war = {
 				cb = segrellion_dance_of_the_dragons_war
@@ -156,11 +163,6 @@ segrellion_8128_dance_of_the_dragons_war_setup_effect = {
 		}
 
 		character:Targaryen_65 = {
-			add_character_flag = {
-				flag = mw_init_event_blocker
-				days = 2
-			}
-
 			random_character_war = {
 				limit = { using_cb = segrellion_dance_of_the_dragons_war }
 
@@ -656,28 +658,10 @@ segrellion_8128_dance_of_the_dragons_war_setup_effect = {
 
 	# =====================================================
 	# HOUSE SEGRELLION - RESOLVED PLAYER ROUTE
+	#
+	# Use AGOT's own Mega War stance effects so temporary
+	# vassalage/independence and story lists stay native.
 	# =====================================================
-
-	# Vhalerion is de jure/de facto under Dragonstone in 128,
-	# so the official setup initially inherits Alex as a Black.
-	# Remove that automatic assignment before applying his route.
-	scope:mw_rebel_story ?= {
-		remove_list_variable = {
-			name = mw_rebel_supporter_list
-			target = character:Segrellion_1
-		}
-	}
-
-	scope:mw_crown_story ?= {
-		remove_list_variable = {
-			name = mw_loyalist_list
-			target = character:Segrellion_1
-		}
-		remove_list_variable = {
-			name = mw_neutral_list
-			target = character:Segrellion_1
-		}
-	}
 
 	if = {
 		limit = {
@@ -686,17 +670,17 @@ segrellion_8128_dance_of_the_dragons_war_setup_effect = {
 			}
 		}
 
-		agot_mw_add_character_to_mw_list = {
-			CHARACTER_SCOPE = character:Segrellion_1
-			STORY_SCOPE = scope:mw_rebel_story
-			LIST = mw_rebel_supporter_list
-			PRE_WAR_LIEGE_SCOPE = title:k_dragonstone.holder
-		}
-
 		character:Targaryen_63 = {
 			random_character_war = {
 				limit = { using_cb = segrellion_dance_of_the_dragons_war }
 				add_attacker = character:Segrellion_1
+			}
+		}
+
+		character:Segrellion_1 = {
+			agot_mw_join_rebels_effect = {
+				RULER = this
+				REBEL_LEADER = character:Targaryen_63
 			}
 		}
 	}
@@ -708,17 +692,17 @@ segrellion_8128_dance_of_the_dragons_war_setup_effect = {
 			}
 		}
 
-		agot_mw_add_character_to_mw_list = {
-			CHARACTER_SCOPE = character:Segrellion_1
-			STORY_SCOPE = scope:mw_crown_story
-			LIST = mw_loyalist_list
-			PRE_WAR_LIEGE_SCOPE = title:k_dragonstone.holder
-		}
-
 		character:Targaryen_65 = {
 			random_character_war = {
 				limit = { using_cb = segrellion_dance_of_the_dragons_war }
 				add_defender = character:Segrellion_1
+			}
+		}
+
+		character:Segrellion_1 = {
+			agot_mw_join_loyalists_effect = {
+				RULER = this
+				CROWN = character:Targaryen_65
 			}
 		}
 	}
@@ -730,14 +714,13 @@ segrellion_8128_dance_of_the_dragons_war_setup_effect = {
 			}
 		}
 
-		agot_mw_add_character_to_mw_list = {
-			CHARACTER_SCOPE = character:Segrellion_1
-			STORY_SCOPE = scope:mw_crown_story
-			LIST = mw_neutral_list
-			PRE_WAR_LIEGE_SCOPE = title:k_dragonstone.holder
+		character:Segrellion_1 = {
+			agot_mw_stay_neutral_effect = {
+				RULER = this
+				CROWN = character:Targaryen_65
+			}
 		}
 	}
-
 
 	### SET OPINIONS ###
 	agot_mw_set_opinions_up = { REBEL_STORY_OWNER_SCOPE = scope:mw_rebel_leader_rhaenyra }
