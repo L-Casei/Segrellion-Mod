@@ -244,8 +244,13 @@ segrellion_apply_benjen_canon_history_effect = {
 	}
 
 	if = {
-		limit = { current_date >= 8145.1.1 }
+		limit = {
+			current_date >= 8145.1.1
+			NOT = { has_character_flag = segrellion_benjen_145_progression_done }
+		}
+		add_character_flag = segrellion_benjen_145_progression_done
 		if = { limit = { NOT = { has_trait = knight } } add_trait = knight }
+		save_scope_as = segrellion_benjen_runtime_scope
 
 		agot_canon_children_get_character_scope_effect = {
 			TARGET = character:Segrellion_12
@@ -254,15 +259,8 @@ segrellion_apply_benjen_canon_history_effect = {
 		}
 
 		scope:segrellion_benjen_aeryn ?= {
-			if = {
-				limit = {
-					NOT = {
-						any_courtier = { this = prev }
-					}
-				}
-				add_courtier = prev
-			}
-			set_relation_friend = prev
+			add_courtier = scope:segrellion_benjen_runtime_scope
+			set_relation_friend = scope:segrellion_benjen_runtime_scope
 		}
 	}
 
