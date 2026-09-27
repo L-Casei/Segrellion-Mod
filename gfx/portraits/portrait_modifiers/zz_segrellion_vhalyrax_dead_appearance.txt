@@ -1,49 +1,24 @@
 # ============================================================
-# SEGRELLION - VHALYRAX POST-MORTEM APPEARANCE
+# SEGRELLION - VHALYRAX CANON APPEARANCE
 #
-# Vhalyrax uses AGOT's runtime dragon-variable storage while
-# alive. Dead dragon portraits can lose that runtime source and
-# fall back to the character's underlying portrait DNA.
+# Vhalyrax's exported DNA is the visual source of truth.
+# AGOT's runtime dragon storage can otherwise replace parts of the
+# historical/dynamic portrait, which was causing a mostly-black body,
+# wrong eyes and altered morphology.
 #
-# This modifier pins the exported Vhalyrax DNA directly onto
-# her DEAD portrait, so both the historical and dynamically
-# hatched versions keep the same white / pale-blue appearance.
+# This modifier pins ONLY appearance genes for every Vhalyrax, alive
+# or dead. Size, camera zoom and aging are intentionally NOT pinned,
+# so her accelerated growth remains fully dynamic.
 # ============================================================
 
-segrellion_vhalyrax_dead_appearance = {
+segrellion_vhalyrax_canon_appearance = {
 	usage = game
 	selection_behavior = max
 	priority = 999
 
-	segrellion_vhalyrax_dead_dna = {
+	segrellion_vhalyrax_canon_dna = {
 
 		dna_modifiers = {
-
-			# ====================================================
-			# SIZE / AGE PRESENTATION FROM THE EXPORTED DNA
-			# ====================================================
-
-			morph = {
-				mode = replace
-				gene = gene_camera_zoom
-				template = dragon_size_portrait_camera
-				value = 0.372549
-			}
-
-			morph = {
-				mode = replace
-				gene = gene_dragon_size
-				template = dragon_size
-				value = 0.372549
-			}
-
-			morph = {
-				mode = replace
-				gene = gene_dragon_aging
-				template = dragon_aging
-				value = 0.690196
-			}
-
 
 			# ====================================================
 			# WHITE / PALE-BLUE PALETTE
@@ -402,7 +377,6 @@ segrellion_vhalyrax_dead_appearance = {
 				add = 100000
 				has_trait = dragon
 				has_character_flag = segrellion_vhalyrax_dragon
-				is_alive = no
 			}
 		}
 	}
