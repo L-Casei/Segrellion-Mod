@@ -21,6 +21,7 @@ monthly_global_pulse = {
 		segrellion_protect_hugh_vhal_from_stormflames
 		segrellion_hugh_rhae_marriage_progression
 		vladwyn_canon_story_progression
+		vladwyn_rhaenyra_court_positions_progression
 		segrellion_alex_children_parentage_progression
 		segrellion_early_friendship_history_progression
 		vladwyn_historical_dynasty_progression
@@ -7573,5 +7574,35 @@ segrellion_alex_children_parentage_progression = {
 	effect = {
 
 		segrellion_repair_alex_children_parentage_effect = yes
+	}
+}
+
+
+# =========================================================
+# TRISTAN VLADWYN - RHAENYRA COURT POSTS
+#
+# Save-compatible guard for 123-131 AC. Keeps Tristan in the
+# three canon positions even if AI court management attempts
+# to reshuffle them.
+# =========================================================
+
+vladwyn_rhaenyra_court_positions_progression = {
+
+	trigger = {
+		current_date >= 8123.1.1
+		current_date < 8131.1.28
+
+		character:Vladwyn_1 ?= {
+			is_alive = yes
+			has_character_flag = vladwyn_rhaenyra_household_captain
+		}
+
+		character:Targaryen_63 ?= {
+			is_alive = yes
+		}
+	}
+
+	effect = {
+		vladwyn_assign_rhaenyra_court_positions_effect = yes
 	}
 }
