@@ -19,6 +19,17 @@ iaf_canon_children_on_birth_mother = {
 					has_game_rule = segrellion_canon_children_enabled
 					has_character_flag = agot_is_pregnant
 					has_variable = agot_pregnancy_child
+
+					# Aenys/Aemma use AGOT's native twin birth pipeline. That
+					# pipeline dispatches both babies itself through the alias
+					# effects below, so do not run our single-child dispatcher
+					# on either twin as well.
+					NOT = {
+						AND = {
+							has_character_flag = iaf_segrellion_27_28_twin_pregnancy
+							var:agot_pregnancy_child = flag:is_Segrellion_27
+						}
+					}
 				}
 				scope:child = { iaf_canon_children_birth_effect = yes }
 			}
