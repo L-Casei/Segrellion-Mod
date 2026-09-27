@@ -21,6 +21,7 @@ monthly_global_pulse = {
 		segrellion_protect_hugh_vhal_from_stormflames
 		segrellion_hugh_rhae_marriage_progression
 		vladwyn_canon_story_progression
+		segrellion_early_friendship_history_progression
 		vladwyn_historical_dynasty_progression
 		vladwyn_cerei_historical_progression
 		segrellion_black_moon_children_historical_progression
@@ -7480,5 +7481,77 @@ vladwyn_cerei_historical_progression = {
 segrellion_black_moon_children_historical_progression = {
 	effect = {
 		segrellion_black_moon_children_historical_progression_effect = yes
+	}
+}
+
+
+# =========================================================
+# EARLY SEGRELLION FRIENDSHIP HISTORY
+#
+# These relationships are fixed pieces of the early canon.
+# History entries make later bookmarks correct immediately;
+# this monthly guard also preserves them in campaigns played
+# forward from an earlier start.
+# =========================================================
+
+segrellion_early_friendship_history_progression = {
+
+	effect = {
+
+		# Alex + Tristan: best friends from 96 AC for the rest of
+		# their shared lives.
+		if = {
+			limit = {
+				current_date >= 8096.1.1
+
+				character:Segrellion_1 ?= {
+					is_alive = yes
+				}
+
+				character:Vladwyn_1 ?= {
+					is_alive = yes
+					NOT = {
+						has_relation_best_friend = character:Segrellion_1
+					}
+				}
+			}
+
+			character:Vladwyn_1 = {
+				set_relation_best_friend = {
+					target = character:Segrellion_1
+					reason = best_friend_childhood_oath
+					copy_reason = friend
+				}
+			}
+		}
+
+		# Garlan Tower + Alex: friends from 105 AC.
+		if = {
+			limit = {
+				current_date >= 8105.1.1
+
+				character:Segrellion_1 ?= {
+					is_alive = yes
+				}
+
+				character:IAF_Tower_1 ?= {
+					is_alive = yes
+
+					NOT = {
+						OR = {
+							has_relation_friend = character:Segrellion_1
+							has_relation_best_friend = character:Segrellion_1
+						}
+					}
+				}
+			}
+
+			character:IAF_Tower_1 = {
+				set_relation_friend = {
+					target = character:Segrellion_1
+					reason = friend_shared_interests
+				}
+			}
+		}
 	}
 }
