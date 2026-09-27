@@ -1,0 +1,81 @@
+# =========================================================
+# ALEX SEGRELLION - POST-HISTORY CHILD PARENTAGE REPAIR
+#
+# CK3 does not reliably execute character-history effect blocks
+# for characters who are already dead at the selected bookmark.
+#
+# Alison and Benjen therefore need their hidden/revealed parentage
+# re-applied after history has finished loading.
+#
+# The effect is idempotent and safe to run on startup and monthly.
+# =========================================================
+
+segrellion_repair_alex_children_parentage_effect = {
+
+	# =====================================================
+	# ALISON HIGHTOWER
+	#
+	# Born 115 AC.
+	# Hidden biological father: Alex Segrellion.
+	# Publicly revealed by Argella in 141 AC.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8115.1.1
+
+			character:Segrellion_Alison_Hightower ?= { }
+			character:Segrellion_1 ?= { }
+		}
+
+		character:Segrellion_Alison_Hightower = {
+
+			set_real_father = character:Segrellion_1
+
+			if = {
+				limit = {
+					current_date >= 8141.1.1
+				}
+
+				set_father = character:Segrellion_1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# BENJEN STARK
+	#
+	# Born 131 AC.
+	# Public father before Highwind: Cregan Stark.
+	# Biological parents: Alex Segrellion + Sara Snow/Stark.
+	# Parentage publicly recognized in 158 AC.
+	#
+	# Benjen keeps House Stark after recognition.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8131.1.1
+
+			character:Segrellion_Benjen_Snow ?= { }
+			character:Segrellion_1 ?= { }
+			character:Stark_88 ?= { }
+		}
+
+		character:Segrellion_Benjen_Snow = {
+
+			set_real_father = character:Segrellion_1
+			set_real_mother = character:Stark_88
+
+			if = {
+				limit = {
+					current_date >= 8158.1.1
+				}
+
+				set_father = character:Segrellion_1
+				set_mother = character:Stark_88
+			}
+		}
+	}
+}
