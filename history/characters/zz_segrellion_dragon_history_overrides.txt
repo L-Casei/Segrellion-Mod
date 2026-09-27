@@ -162,3 +162,64 @@ dragon_silverwing = {
 	# Before dying versus cannibal
 	
 }
+
+# Sheepstealer survives until the duel with Silverwing, one day before Argella.
+dragon_sheepstealer = {
+	name = Sheepstealer # Canon
+
+	religion = valyrian_pan_freehold
+	culture = dragon_culture
+
+	mother = dragon_dreamfyre
+
+	trait = dragon
+	trait = education_dragon_1
+	trait = dragon_physique_bad_1
+	trait = dragon_ugly
+	trait = dragon_voracious
+	trait = dragon_defiant
+	trait = dragon_aggressive
+
+	disallow_random_traits = yes
+
+	8056.1.1 = {
+		birth = yes
+		add_character_flag = canon_status_canon
+		effect = {
+			agot_set_lair_history_effect = { CASTLE = title:b_blackglass_port }
+			set_variable = {
+				name = primary_color_grading
+				value = flag:darkest
+			}
+			set_variable = {
+				name = primary_color
+				value = flag:orange
+			}
+		}
+	}
+	8129.12.6 = {
+		effect = {
+			agot_tame_dragon = {
+				TAMER = character:Farseed_1 # Nettles
+				DRAGON = ROOT
+			}
+		}
+	}
+	# Nettles remains the first rider. After her disappearance in 130 AC,
+	# Sheepstealer lives wild until Alison claims him in 157 AC.
+	8157.1.1 = {
+		effect = {
+			agot_tame_dragon = {
+				TAMER = character:Segrellion_Alison_Hightower
+				DRAGON = ROOT
+			}
+		}
+	}
+	# In Segrellion history, survives the Dance and dies with Alison.
+	8158.3.1 = {
+		death = {
+			death_reason = death_segrellion_dragon_duel
+			killer = dragon_silverwing
+		}
+	}
+}
