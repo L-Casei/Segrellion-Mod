@@ -75,3 +75,177 @@ vladwyn_surrender_titles_to_heir_effect = {
 
 	resolve_title_and_vassal_change = scope:vladwyn_kingsguard_title_change
 }
+
+# =========================================================
+# TRISTAN VLADWYN - RHAENYRA'S ACTUAL COURT OFFICES
+#
+# Tristan is not merely tagged as Master-at-Arms / Household
+# Captain. From 123 AC until he joins Aegon III's Kingsguard
+# he visibly holds:
+#   - Personal Champion
+#   - Master-at-Arms
+#   - Captain of the Household Guard
+#
+# Household Guard is a full-time AGOT job and cannot coexist
+# with a council seat, so the obsolete marshal assignment is
+# removed before the court positions are granted.
+# =========================================================
+
+vladwyn_assign_rhaenyra_court_positions_effect = {
+
+	character:Vladwyn_1 ?= {
+		if = {
+			limit = {
+				is_alive = yes
+				character:Targaryen_63 ?= { is_alive = yes }
+			}
+			set_employer = character:Targaryen_63
+		}
+	}
+
+	character:Targaryen_63 ?= {
+		if = {
+			limit = {
+				is_alive = yes
+				character:Vladwyn_1 ?= {
+					is_alive = yes
+					is_councillor = yes
+				}
+			}
+			fire_councillor = character:Vladwyn_1
+		}
+
+		# Clear any previous Personal Champion so Tristan gets the canon office.
+		court_position:champion_court_position ?= {
+			if = {
+				limit = { this != character:Vladwyn_1 }
+				save_scope_as = vladwyn_old_personal_champion
+			}
+		}
+		if = {
+			limit = { exists = scope:vladwyn_old_personal_champion }
+			revoke_court_position = {
+				recipient = scope:vladwyn_old_personal_champion
+				court_position = champion_court_position
+			}
+		}
+
+		# Clear any previous Master-at-Arms.
+		court_position:master_at_arms_court_position ?= {
+			if = {
+				limit = { this != character:Vladwyn_1 }
+				save_scope_as = vladwyn_old_master_at_arms
+			}
+		}
+		if = {
+			limit = { exists = scope:vladwyn_old_master_at_arms }
+			revoke_court_position = {
+				recipient = scope:vladwyn_old_master_at_arms
+				court_position = master_at_arms_court_position
+			}
+		}
+
+		# Clear any previous Captain of the Household Guard.
+		court_position:household_guard_court_position ?= {
+			if = {
+				limit = { this != character:Vladwyn_1 }
+				save_scope_as = vladwyn_old_household_guard
+			}
+		}
+		if = {
+			limit = { exists = scope:vladwyn_old_household_guard }
+			revoke_court_position = {
+				recipient = scope:vladwyn_old_household_guard
+				court_position = household_guard_court_position
+			}
+		}
+
+		# Champion first. It does not count as a full-time job.
+		if = {
+			limit = {
+				NOT = { employs_court_position = champion_court_position }
+				can_employ_court_position_type = champion_court_position
+				character:Vladwyn_1 = {
+					can_be_employed_as = champion_court_position
+				}
+			}
+			appoint_court_position = {
+				court_position = champion_court_position
+				recipient = character:Vladwyn_1
+			}
+		}
+
+		# Master-at-Arms is compatible with the Household Guard office.
+		if = {
+			limit = {
+				NOT = { employs_court_position = master_at_arms_court_position }
+				can_employ_court_position_type = master_at_arms_court_position
+				character:Vladwyn_1 = {
+					can_be_employed_as = master_at_arms_court_position
+				}
+			}
+			appoint_court_position = {
+				court_position = master_at_arms_court_position
+				recipient = character:Vladwyn_1
+			}
+		}
+
+		# Give the full-time Household Guard office last.
+		if = {
+			limit = {
+				NOT = { employs_court_position = household_guard_court_position }
+				can_employ_court_position_type = household_guard_court_position
+				character:Vladwyn_1 = {
+					can_be_employed_as = household_guard_court_position
+				}
+			}
+			appoint_court_position = {
+				court_position = household_guard_court_position
+				recipient = character:Vladwyn_1
+			}
+		}
+	}
+}
+
+
+vladwyn_release_rhaenyra_court_positions_effect = {
+
+	character:Targaryen_63 ?= {
+
+		if = {
+			limit = {
+				character:Vladwyn_1 ?= {
+					has_court_position = household_guard_court_position
+				}
+			}
+			revoke_court_position = {
+				recipient = character:Vladwyn_1
+				court_position = household_guard_court_position
+			}
+		}
+
+		if = {
+			limit = {
+				character:Vladwyn_1 ?= {
+					has_court_position = master_at_arms_court_position
+				}
+			}
+			revoke_court_position = {
+				recipient = character:Vladwyn_1
+				court_position = master_at_arms_court_position
+			}
+		}
+
+		if = {
+			limit = {
+				character:Vladwyn_1 ?= {
+					has_court_position = champion_court_position
+				}
+			}
+			revoke_court_position = {
+				recipient = character:Vladwyn_1
+				court_position = champion_court_position
+			}
+		}
+	}
+}

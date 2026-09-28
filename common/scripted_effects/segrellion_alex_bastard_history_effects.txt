@@ -60,7 +60,6 @@ segrellion_ensure_runtime_alex_children_effect = {
 		scope:segrellion_runtime_alison = {
 			set_house = scope:segrellion_alison_mother.house
 			set_real_father = scope:segrellion_alison_real_father
-			set_real_mother = scope:segrellion_alison_mother
 
 			add_trait = bastard
 			add_trait = beauty_good_3
@@ -150,7 +149,6 @@ segrellion_ensure_runtime_alex_children_effect = {
 
 segrellion_apply_alison_canon_history_effect = {
 	set_real_father = character:Segrellion_1
-	set_real_mother = character:Hightower_95
 	set_house = character:Hightower_95.house
 
 	if = {
@@ -170,8 +168,15 @@ segrellion_apply_alison_canon_history_effect = {
 		if = { limit = { NOT = { has_trait = gregarious } } add_trait = gregarious }
 	}
 
+	# Alison is Alex's bastard from birth. Ormund Hightower
+	# legitimizes her in 128 AC, so every earlier start must
+	# visibly retain the Bastard trait.
 	if = {
-		limit = { current_date >= 8128.1.1 }
+		limit = { current_date < 8128.1.1 }
+		if = { limit = { has_trait = legitimized_bastard } remove_trait = legitimized_bastard }
+		if = { limit = { NOT = { has_trait = bastard } } add_trait = bastard }
+	}
+	else = {
 		if = { limit = { has_trait = bastard } remove_trait = bastard }
 		if = { limit = { NOT = { has_trait = legitimized_bastard } } add_trait = legitimized_bastard }
 		agot_remove_bastard_nickname_effect = yes

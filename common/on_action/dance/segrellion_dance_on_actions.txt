@@ -1,4 +1,36 @@
 # =========================================================
+# VISERYS I - STORY PROTECTION
+#
+# Applied only to the 128 AC bookmark. It lasts long enough
+# for the prelude and succession chain, and 0120 removes it
+# immediately before Viserys' scripted death.
+# =========================================================
+
+segrellion_dance_128_viserys_protection = {
+	effect = {
+		if = {
+			limit = {
+				game_start_date = 8128.11.12
+
+				character:Targaryen_60 ?= {
+					is_alive = yes
+					NOT = { has_character_flag = segrellion_dance_viserys_death_processed }
+					NOT = { has_character_modifier = segrellion_dance_viserys_story_protection_modifier }
+				}
+			}
+
+			character:Targaryen_60 = {
+				add_character_modifier = {
+					modifier = segrellion_dance_viserys_story_protection_modifier
+					months = 12
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
 # THE DANCE OF THE DRAGONS - 128 AC
 # Opening handoff for Alex Segrellion.
 # =========================================================

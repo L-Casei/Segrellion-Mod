@@ -696,3 +696,93 @@ segrellion_black_moon_children_historical_progression_effect = {
 		}
 	}
 }
+
+
+# =========================================================
+# HOUSE REYNE / ALYSANNE SEGRELLION FAMILY REPAIR
+#
+# Always operate on AGOT's original Reyne IDs. We no longer
+# redeclare Roger, Kevan, Eleyna or Robert in history.
+#
+# This also repairs old saves where AGOT's base maternity
+# (Lysa Farman) was loaded before the Segrellion timeline.
+# Visible and biological maternity are both normalized to
+# Alysanne, preventing split/duplicate child branches.
+# =========================================================
+
+segrellion_repair_reyne_alysanne_family_effect = {
+
+	# Roger is never married to Lysa Farman in Segrellion canon.
+	if = {
+		limit = {
+			current_date >= 8229.1.1
+			character:Reyne_45 ?= { exists = yes }
+			character:Farman_58 ?= { exists = yes }
+		}
+
+		character:Reyne_45 = {
+			if = {
+				limit = { is_spouse_of = character:Farman_58 }
+				divorce = character:Farman_58
+			}
+		}
+	}
+
+	# Roger + Alysanne from immediately after her sixteenth birthday.
+	if = {
+		limit = {
+			current_date >= 8229.6.18
+			character:Reyne_45 ?= { exists = yes }
+			character:Segrellion_31 ?= { exists = yes }
+		}
+
+		character:Reyne_45 = {
+			if = {
+				limit = { NOT = { is_spouse_of = character:Segrellion_31 } }
+				add_spouse = character:Segrellion_31
+			}
+		}
+	}
+
+	# Kevan Reyne.
+	if = {
+		limit = {
+			current_date >= 8230.1.1
+			character:Reyne_55 ?= { exists = yes }
+			character:Segrellion_31 ?= { exists = yes }
+		}
+		character:Reyne_55 = {
+			set_father = character:Reyne_45
+			set_mother = character:Segrellion_31
+			set_real_mother = character:Segrellion_31
+		}
+	}
+
+	# Eleyna Reyne.
+	if = {
+		limit = {
+			current_date >= 8231.1.1
+			character:Reyne_56 ?= { exists = yes }
+			character:Segrellion_31 ?= { exists = yes }
+		}
+		character:Reyne_56 = {
+			set_father = character:Reyne_45
+			set_mother = character:Segrellion_31
+			set_real_mother = character:Segrellion_31
+		}
+	}
+
+	# Robert Reyne.
+	if = {
+		limit = {
+			current_date >= 8234.1.1
+			character:Reyne_57 ?= { exists = yes }
+			character:Segrellion_31 ?= { exists = yes }
+		}
+		character:Reyne_57 = {
+			set_father = character:Reyne_45
+			set_mother = character:Segrellion_31
+			set_real_mother = character:Segrellion_31
+		}
+	}
+}
