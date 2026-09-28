@@ -21,7 +21,9 @@ monthly_global_pulse = {
 		segrellion_protect_hugh_vhal_from_stormflames
 		segrellion_hugh_rhae_marriage_progression
 		vladwyn_canon_story_progression
+		vladwyn_rhaenyra_court_positions_progression
 		segrellion_alex_children_parentage_progression
+		segrellion_reyne_family_history_progression
 		segrellion_runtime_tyana_baratheon_progression
 		segrellion_early_friendship_history_progression
 		segrellion_early_canon_milestones_progression
@@ -96,7 +98,10 @@ on_game_start_after_lobby = {
 		segrellion_daenerys_dragons_delayed_startup
 		segrellion_stannis_opening_after_lobby
 		segrellion_intro_106_startup
+		segrellion_dance_128_viserys_protection
 		segrellion_dance_128_startup
+		vladwyn_rhaenyra_court_positions_progression
+		segrellion_reyne_family_history_progression
 		iaf_canon_children_on_game_start_after_lobby
 		vladwyn_8106_startup
 		vladwyn_historical_dynasty_progression
@@ -7730,5 +7735,47 @@ segrellion_alex_children_parentage_progression = {
 segrellion_runtime_tyana_baratheon_progression = {
 	effect = {
 		segrellion_ensure_runtime_tyana_baratheon_effect = yes
+	}
+}
+
+
+# =========================================================
+# TRISTAN / RHAENYRA COURT OFFICE REPAIR
+#
+# Repairs historical bookmarks and old saves after 123 AC.
+# Stops once Tristan transitions to Aegon III's Kingsguard.
+# =========================================================
+
+vladwyn_rhaenyra_court_positions_progression = {
+	effect = {
+		if = {
+			limit = {
+				current_date >= 8123.1.1
+				current_date < 8131.1.28
+
+				character:Vladwyn_1 ?= {
+					is_alive = yes
+					has_character_flag = vladwyn_rhaenyra_household_captain
+					NOT = { has_character_flag = vladwyn_tristan_served_kingsguard }
+				}
+
+				character:Targaryen_63 ?= {
+					is_alive = yes
+				}
+			}
+
+			vladwyn_assign_rhaenyra_court_positions_effect = yes
+		}
+	}
+}
+
+
+# =========================================================
+# REYNE / ALYSANNE FAMILY REPAIR
+# =========================================================
+
+segrellion_reyne_family_history_progression = {
+	effect = {
+		segrellion_repair_reyne_alysanne_family_effect = yes
 	}
 }
