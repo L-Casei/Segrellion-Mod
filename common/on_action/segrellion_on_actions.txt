@@ -28,6 +28,7 @@ monthly_global_pulse = {
 		segrellion_dance_128_succession_fallback
 		segrellion_dance_128_war_start_fallback
 		segrellion_dance_128_false_banner_traitor_cleanup
+		segrellion_dance_128_vhalyrax_size_repair
 		vladwyn_historical_dynasty_progression
 		vladwyn_cerei_historical_progression
 		segrellion_black_moon_children_historical_progression
@@ -7560,6 +7561,69 @@ segrellion_early_friendship_history_progression = {
 					target = character:Segrellion_1
 					reason = friend_shared_interests
 				}
+			}
+		}
+
+		# The Stepstones bind Alex and Tristan to Daemon and Corlys from 109 AC.
+		# History entries cover later bookmarks; these guards make a 106 campaign
+		# that plays forward reach the same canon state.
+		if = {
+			limit = {
+				current_date >= 8109.1.1
+				character:Segrellion_1 ?= { is_alive = yes }
+				character:Targaryen_61 ?= {
+					is_alive = yes
+					NOT = { has_relation_friend = character:Segrellion_1 }
+					NOT = { has_relation_best_friend = character:Segrellion_1 }
+				}
+			}
+			character:Targaryen_61 = {
+				set_relation_friend = character:Segrellion_1
+			}
+		}
+
+		if = {
+			limit = {
+				current_date >= 8109.1.1
+				character:Segrellion_1 ?= { is_alive = yes }
+				character:Velaryon_31 ?= {
+					is_alive = yes
+					NOT = { has_relation_friend = character:Segrellion_1 }
+					NOT = { has_relation_best_friend = character:Segrellion_1 }
+				}
+			}
+			character:Velaryon_31 = {
+				set_relation_friend = character:Segrellion_1
+			}
+		}
+
+		if = {
+			limit = {
+				current_date >= 8109.1.1
+				character:Vladwyn_1 ?= { is_alive = yes }
+				character:Targaryen_61 ?= {
+					is_alive = yes
+					NOT = { has_relation_friend = character:Vladwyn_1 }
+					NOT = { has_relation_best_friend = character:Vladwyn_1 }
+				}
+			}
+			character:Targaryen_61 = {
+				set_relation_friend = character:Vladwyn_1
+			}
+		}
+
+		if = {
+			limit = {
+				current_date >= 8109.1.1
+				character:Vladwyn_1 ?= { is_alive = yes }
+				character:Velaryon_31 ?= {
+					is_alive = yes
+					NOT = { has_relation_friend = character:Vladwyn_1 }
+					NOT = { has_relation_best_friend = character:Vladwyn_1 }
+				}
+			}
+			character:Velaryon_31 = {
+				set_relation_friend = character:Vladwyn_1
 			}
 		}
 	}
