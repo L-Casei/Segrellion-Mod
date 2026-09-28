@@ -24,6 +24,7 @@ monthly_global_pulse = {
 		segrellion_alex_children_parentage_progression
 		segrellion_runtime_tyana_baratheon_progression
 		segrellion_early_friendship_history_progression
+		segrellion_early_canon_milestones_progression
 		segrellion_dance_128_opening_fallback
 		segrellion_dance_128_succession_fallback
 		segrellion_dance_128_war_start_fallback
@@ -7624,6 +7625,85 @@ segrellion_early_friendship_history_progression = {
 			}
 			character:Velaryon_31 = {
 				set_relation_friend = character:Vladwyn_1
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# EARLY SEGRELLION CANON MILESTONES
+#
+# History files make later bookmarks correct. This small guard
+# makes a campaign begun in 106 naturally reach the same state.
+# It intentionally avoids forcing the Eldric/Daenerys betrothal
+# in a live player campaign; that remains player-divergent.
+# =========================================================
+
+segrellion_early_canon_milestones_progression = {
+
+	effect = {
+
+		# Feast of Vhalyrax, 122 AC.
+		if = {
+			limit = {
+				current_date >= 8122.1.1
+				character:Segrellion_1 ?= {
+					is_alive = yes
+					NOT = { has_trait = knight }
+				}
+			}
+			character:Segrellion_1 = {
+				add_trait = knight
+				add_character_flag = segrellion_alex_knighted_by_corlys
+			}
+		}
+
+		if = {
+			limit = {
+				current_date >= 8122.1.1
+				character:Vladwyn_1 ?= {
+					is_alive = yes
+					NOT = { has_trait = knight }
+				}
+			}
+			character:Vladwyn_1 = {
+				add_trait = knight
+				add_character_flag = vladwyn_tristan_knighted_by_daemon
+			}
+		}
+
+		# Tristan leaves for Rhaenyra in 123; Eldric remains at Vhal
+		# under Alex's guardianship until adulthood.
+		if = {
+			limit = {
+				current_date >= 8123.1.1
+				current_date < 8131.1.1
+
+				character:Segrellion_1 ?= { is_alive = yes }
+				character:Vladwyn_2 ?= {
+					is_alive = yes
+					age < 16
+					NOT = { exists = guardian }
+				}
+			}
+			character:Vladwyn_2 = {
+				set_relation_guardian = character:Segrellion_1
+			}
+		}
+
+		# Corlys knights Maenar shortly before Alyssa's death and his coma.
+		if = {
+			limit = {
+				current_date >= 8127.1.1
+				character:Segrellion_10 ?= {
+					is_alive = yes
+					NOT = { has_trait = knight }
+				}
+			}
+			character:Segrellion_10 = {
+				add_trait = knight
+				add_character_flag = segrellion_maenar_knighted_by_corlys
 			}
 		}
 	}
