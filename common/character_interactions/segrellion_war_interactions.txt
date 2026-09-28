@@ -57,6 +57,13 @@ segrellion_join_liege_war_interaction = {
 			NOT = {
 				has_character_flag = segrellion_sansa_baelish_war_active
 			}
+
+			# The Dance is controlled by AGOT Mega War allegiance.
+			NOT = {
+				any_character_war = {
+					using_cb = segrellion_dance_of_the_dragons_war
+				}
+			}
 		}
 
 
@@ -125,8 +132,11 @@ segrellion_join_liege_war_interaction = {
 		scope:target = {
 
 			is_war_leader = scope:recipient
-
 			is_civil_war = no
+
+			NOT = {
+				using_cb = segrellion_dance_of_the_dragons_war
+			}
 		}
 	}
 
@@ -137,6 +147,11 @@ segrellion_join_liege_war_interaction = {
 
 
 		scope:target = {
+
+			# Never bypass AGOT Mega War allegiance during the Dance.
+			NOT = {
+				using_cb = segrellion_dance_of_the_dragons_war
+			}
 
 			# Liege must be leading the selected war.
 			custom_description = {
