@@ -117,22 +117,25 @@ segrellion_spawn_vhalyrax_from_egg_effect = {
 }
 
 segrellion_vhalyrax_growth_effect = {
-	# Vhalyrax has deliberately accelerated juvenile growth.
+	# Vhalyrax grows unusually quickly, but she is not meant to be an
+	# adult-sized leviathan during the Dance.
 	#
-	# With the canonical hatchling size of 8 and AGOT's normal +3/year
-	# juvenile growth, this produces the intended curve:
-	#   124 AC (age 3) = 47
-	#   127 AC (age 6) = 86
-	#   128 AC (age 7) = 100
+	# AGOT already supplies ordinary juvenile growth (+3/year). Our custom
+	# contribution is therefore deliberately smaller:
+	#   hatchling = 8
+	#   age 3 ~= 35
+	#   age 6 ~= 62
+	#   age 7 / 128 AC = 75
 	#
-	# After age 7 the custom boost ends and ordinary dragon growth resumes.
+	# Prowess growth stays high so Vhalyrax remains exceptionally dangerous
+	# for her age without needing an implausible physical size.
 	if = {
 		limit = {
 			has_character_flag = segrellion_vhalyrax_dragon
 			is_alive = yes
 			age <= 6
 		}
-		change_dragon_size = { VALUE = 10 }
+		change_dragon_size = { VALUE = 6 }
 		add_prowess_skill = 5
 	}
 	else_if = {
@@ -141,7 +144,7 @@ segrellion_vhalyrax_growth_effect = {
 			is_alive = yes
 			age = 7
 		}
-		change_dragon_size = { VALUE = 11 }
+		change_dragon_size = { VALUE = 10 }
 		add_prowess_skill = 5
 	}
 }
@@ -170,26 +173,28 @@ segrellion_apply_vhalyrax_historical_growth_bonus_effect = {
 			}
 		}
 
-		# Age 7+ keeps a permanent +79 head start:
-		# initial 8 + (6 * 10) + 11.
+		# Age 7+ keeps a permanent +54 head start:
+		# initial 8 + (6 * 6) + 10.
+		# With AGOT's normal first-seven-year growth this places
+		# Vhalyrax at exactly 75 size in the 128 AC bookmark.
 		if = {
 			limit = { age >= 7 }
-			change_dragon_size = { VALUE = 79 }
+			change_dragon_size = { VALUE = 54 }
 			add_prowess_skill = 45
 		}
 		else_if = {
 			limit = { age = 6 }
-			change_dragon_size = { VALUE = 68 }
+			change_dragon_size = { VALUE = 44 }
 			add_prowess_skill = 40
 		}
 		else_if = {
 			limit = { age = 5 }
-			change_dragon_size = { VALUE = 58 }
+			change_dragon_size = { VALUE = 26 }
 			add_prowess_skill = 35
 		}
 		else_if = {
 			limit = { age = 4 }
-			change_dragon_size = { VALUE = 48 }
+			change_dragon_size = { VALUE = 32 }
 			add_prowess_skill = 30
 		}
 		else_if = {
@@ -199,12 +204,12 @@ segrellion_apply_vhalyrax_historical_growth_bonus_effect = {
 		}
 		else_if = {
 			limit = { age = 2 }
-			change_dragon_size = { VALUE = 28 }
+			change_dragon_size = { VALUE = 20 }
 			add_prowess_skill = 20
 		}
 		else_if = {
 			limit = { age = 1 }
-			change_dragon_size = { VALUE = 18 }
+			change_dragon_size = { VALUE = 14 }
 			add_prowess_skill = 15
 		}
 		else = {
@@ -1852,5 +1857,74 @@ segrellion_spawn_dream_chosen_dragon_effect = {
 	agot_bond_dragon_relation_effect = {
 		ACTOR = scope:dream_dragon_owner
 		DRAGON = scope:dream_chosen_dragon
+	}
+}
+
+
+# ============================================================
+# VHALYRAX - 128 AC SIZE REPAIR
+#
+# Save compatibility for campaigns created before the juvenile
+# growth rebalance. The 128 bookmark should always begin with
+# Vhalyrax at size 75, regardless of stale AGOT storage.
+# ============================================================
+
+segrellion_force_vhalyrax_128_size_repair_effect = {
+
+	character:dragon_vhalyrax ?= {
+
+		if = {
+			limit = {
+				is_alive = yes
+				has_trait = dragon
+				NOT = {
+					has_character_flag = segrellion_vhalyrax_128_size_repaired
+				}
+			}
+
+			set_variable = {
+				name = dragon_size_base
+				value = 75
+			}
+
+			set_variable = {
+				name = dragon_size
+				value = 75
+			}
+
+			add_character_flag = segrellion_vhalyrax_128_size_repaired
+		}
+	}
+
+
+	if = {
+		limit = {
+			character:dragon_vhalyrax ?= {
+				has_character_flag = segrellion_vhalyrax_128_size_repaired
+			}
+
+			any_in_global_list = {
+				variable = gl_dragon_variable_storage
+				var:dragon_id ?= character:dragon_vhalyrax
+			}
+		}
+
+		random_in_global_list = {
+			variable = gl_dragon_variable_storage
+
+			limit = {
+				var:dragon_id ?= character:dragon_vhalyrax
+			}
+
+			set_variable = {
+				name = dragon_size_base
+				value = 75
+			}
+
+			set_variable = {
+				name = dragon_size
+				value = 75
+			}
+		}
 	}
 }
