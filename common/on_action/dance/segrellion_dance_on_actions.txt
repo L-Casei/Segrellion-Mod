@@ -10,6 +10,10 @@ segrellion_dance_128_startup = {
 				game_start_date = 8128.11.12
 			}
 
+			# Ensure stale dragon storage from older builds cannot leave
+			# Vhalyrax at 100-130 size in the Dance bookmark.
+			segrellion_force_vhalyrax_128_size_repair_effect = yes
+
 			character:Segrellion_1 ?= {
 				if = {
 					limit = {
@@ -182,6 +186,26 @@ segrellion_dance_128_false_banner_traitor_cleanup = {
 				remove_character_flag = segrellion_banner_oathbreaker_unpunished
 				remove_character_flag = segrellion_banner_refused_current_call
 			}
+		}
+	}
+}
+
+
+# One-time monthly recovery for 128 saves created before the size rebalance.
+segrellion_dance_128_vhalyrax_size_repair = {
+	effect = {
+		if = {
+			limit = {
+				game_start_date = 8128.11.12
+				character:dragon_vhalyrax ?= {
+					is_alive = yes
+					NOT = {
+						has_character_flag = segrellion_vhalyrax_128_size_repaired
+					}
+				}
+			}
+
+			segrellion_force_vhalyrax_128_size_repair_effect = yes
 		}
 	}
 }
