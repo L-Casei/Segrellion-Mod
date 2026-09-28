@@ -121,3 +121,67 @@ segrellion_dance_128_war_start_fallback = {
 		}
 	}
 }
+
+
+# =========================================================
+# SAVE-COMPATIBLE REPAIR
+#
+# Older builds allowed Call the Banners to run on top of
+# the Dance Mega War, incorrectly branding legitimate
+# opposite-side vassals as traitors/oathbreakers.
+# =========================================================
+
+segrellion_dance_128_false_banner_traitor_cleanup = {
+	effect = {
+		if = {
+			limit = {
+				game_start_date = 8128.11.12
+
+				character:Targaryen_63 ?= {
+					any_character_war = {
+						using_cb = segrellion_dance_of_the_dragons_war
+					}
+				}
+			}
+
+			every_ruler = {
+				limit = {
+					any_character_war = {
+						using_cb = segrellion_dance_of_the_dragons_war
+					}
+
+					OR = {
+						has_character_flag = segrellion_banner_betrayed_current_call
+						has_character_flag = segrellion_banner_fought_against_liege
+					}
+				}
+
+				if = {
+					limit = {
+						has_trait = segrellion_traitor
+					}
+					remove_trait = segrellion_traitor
+				}
+
+				if = {
+					limit = {
+						has_character_modifier = segrellion_banner_oathbreaker_modifier
+					}
+					remove_character_modifier = segrellion_banner_oathbreaker_modifier
+				}
+
+				if = {
+					limit = {
+						has_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+					}
+					remove_character_modifier = segrellion_banner_oathbreaker_minor_modifier
+				}
+
+				remove_character_flag = segrellion_banner_betrayed_current_call
+				remove_character_flag = segrellion_banner_fought_against_liege
+				remove_character_flag = segrellion_banner_oathbreaker_unpunished
+				remove_character_flag = segrellion_banner_refused_current_call
+			}
+		}
+	}
+}
