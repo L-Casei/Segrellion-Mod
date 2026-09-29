@@ -1,0 +1,89 @@
+﻿# Replace native appearance and childhood scheduling for the Golden Falcon.
+agot_init_Arryn_90 = {
+ if = { limit = { is_alive = yes } add_character_flag = is_Arryn_90 }
+ # Keep the custom DNA hairstyle, and prevent the vanilla long beard override.
+ remove_character_flag = beard_trait_male_beard_fp2_iberian_christian_03
+ add_character_flag = beard_trait_no_beard
+}
+agot_init_canon_child_Arryn_90 = {
+ if = {
+  limit = { is_alive = yes is_adult = no }
+  agot_canon_children_schedule_trait_effect = { TRAIT = flag:ambitious AGE = agot_canon_children_trait_1_year }
+  agot_canon_children_schedule_trait_effect = { TRAIT = flag:arrogant AGE = agot_canon_children_trait_2_year }
+  agot_canon_children_schedule_trait_effect = { TRAIT = flag:brave AGE = agot_canon_children_trait_3_year }
+  agot_canon_children_schedule_trait_effect = { TRAIT = flag:gregarious AGE = 16 }
+  agot_canon_children_schedule_trait_effect = { TRAIT = flag:lustful AGE = 16 }
+  agot_canon_children_schedule_trait_effect = { TRAIT = flag:honest AGE = 16 }
+  agot_canon_children_schedule_education_effect = { EDUCATION = flag:education_martial_4 }
+  agot_canon_children_schedule_prowess_education_effect = { EDUCATION = flag:education_martial_prowess_4 }
+ }
+}
+# Alys is no longer the canonical mother of Rhaegel's children.
+agot_init_canon_child_Arryn_106 = { }
+
+# Donnel and Lenora no longer produce Joffrey's Alys.
+agot_canon_children_Arryn_104_start_valid_pregnancy_effect = {
+	story_owner = {
+		save_scope_as = canon_father
+		every_in_list = {
+			variable = canon_mothers
+			save_scope_as = canon_mother
+			# Mother Lannister_117
+			if = {
+				limit = {
+					has_character_flag = is_Lannister_117
+					agot_canon_children_start_pregnancy_basic_trigger = {
+						FATHER = scope:canon_father
+						MOTHER = scope:canon_mother
+					}
+				}
+				if = {
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Arryn_105 BIRTH_YEAR = 8178 BIRTH_YEAR_MIN = 8177 } }
+					agot_canon_children_start_pregnancy_effect = {
+						CHILD_ID = Arryn_105
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+				agot_canon_children_life_cycle_effect = { MOTHER = scope:canon_mother FINAL_CHILD_ID = Arryn_105 }
+			}
+		}
+	}
+}
+
+agot_canon_children_Targaryen_109_start_valid_pregnancy_effect = {
+	story_owner = {
+		save_scope_as = canon_father
+		every_in_list = {
+			variable = canon_mothers
+			save_scope_as = canon_mother
+			# Mother IAF_Uller_Sylva_Falcon
+			if = {
+				limit = {
+					has_character_flag = is_IAF_Uller_Sylva_Falcon
+					agot_canon_children_start_pregnancy_basic_trigger = {
+						FATHER = scope:canon_father
+						MOTHER = scope:canon_mother
+					}
+				}
+				if = {
+					# Twins - Targaryen_115, Targaryen_116
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Targaryen_115 BIRTH_YEAR = 8201 BIRTH_YEAR_MIN = 8200 } }
+					agot_canon_children_start_pregnancy_twins_effect = {
+						TWIN_ONE_ID = Targaryen_115
+						TWIN_TWO_ID = Targaryen_116
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+				else_if = {
+					limit = { agot_canon_children_child_pregnancy_trigger = { ID = Targaryen_117 BIRTH_YEAR = 8213 BIRTH_YEAR_MIN = 8212 } }
+					agot_canon_children_start_pregnancy_effect = {
+						CHILD_ID = Targaryen_117
+						BIRTH_FLAG = birth_will_go_smoothly
+					}
+				}
+				agot_canon_children_life_cycle_effect = { MOTHER = scope:canon_mother FINAL_CHILD_ID = Targaryen_117 }
+			}
+		}
+	}
+}
+

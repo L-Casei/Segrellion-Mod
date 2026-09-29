@@ -1,0 +1,27 @@
+on_game_start_after_lobby = {
+	on_actions = { segrellion_golden_falcon_setup }
+}
+
+# The monthly pass gives a campaign started in 106 the adult nickname and
+# sword in 126. It does not force the historical rebellion or kill the player.
+monthly_global_pulse = {
+	on_actions = { segrellion_golden_falcon_setup }
+}
+
+segrellion_golden_falcon_setup = {
+	effect = {
+		character:Arryn_90 ?= {
+			if = {
+				limit = { is_alive = yes }
+				segrellion_golden_falcon_equipment_effect = yes
+			}
+		}
+		character:IAF_Uller_Sylva_Falcon ?= {
+			if = {
+				limit = { is_alive = yes NOT = { has_character_flag = is_IAF_Uller_Sylva_Falcon } }
+				add_character_flag = is_IAF_Uller_Sylva_Falcon
+				agot_add_mother_to_canon_father_story = { FATHER_ID = Targaryen_109 }
+			}
+		}
+	}
+}

@@ -1,0 +1,32 @@
+segrellion_golden_falcon_equipment_effect = {
+	if = {
+		limit = {
+			current_date >= 8126.1.1
+			is_adult = yes
+			NOT = { has_character_flag = segrellion_golden_falcon_equipped }
+		}
+		add_character_flag = segrellion_golden_falcon_equipped
+		give_nickname = nick_segrellion_the_golden_falcon
+		add_trait = segrellion_canon_golden_falcon
+		if = {
+			limit = { NOT = { has_global_variable = segrellion_golden_falcon_sword } }
+			save_scope_as = owner
+			set_artifact_rarity_masterwork = yes
+			create_artifact = {
+				name = segrellion_golden_falcon_sword_name
+				description = segrellion_golden_falcon_sword_desc
+				type = sword
+				visuals = vs_andal_longsword_gold_visuals
+				modifier = artifact_prowess_3_modifier
+				wealth = 60
+				quality = 60
+				save_scope_as = segrellion_new_falcon_sword
+			}
+			scope:segrellion_new_falcon_sword = {
+				set_owner = { target = scope:owner }
+				equip_artifact_to_owner_replace = yes
+				set_global_variable = { name = segrellion_golden_falcon_sword value = this }
+			}
+		}
+	}
+}
