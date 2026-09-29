@@ -1077,6 +1077,96 @@ segrellion_canon_dragon_riders_progression_effect = {
 	}
 
 
+	# Alison Hightower -> Sheepstealer
+	if = {
+		limit = {
+			current_date >= 8157.1.1
+			current_date < 8158.3.1
+			character:Segrellion_Alison_Hightower ?= { is_alive = yes }
+			character:dragon_sheepstealer ?= { is_alive = yes }
+		}
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_Alison_Hightower
+			DRAGON = character:dragon_sheepstealer
+		}
+	}
+
+	if = {
+		limit = {
+			current_date >= 8157.1.1
+			current_date < 8158.3.1
+			exists = global_var:segrellion_runtime_alison
+			global_var:segrellion_runtime_alison = { is_alive = yes }
+			character:dragon_sheepstealer ?= { is_alive = yes }
+		}
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = global_var:segrellion_runtime_alison
+			DRAGON = character:dragon_sheepstealer
+		}
+	}
+
+
+	# Maegor the Usurper -> Nightdancer
+	if = {
+		limit = {
+			current_date >= 8157.1.1
+			current_date < 8158.3.1
+			character:Segrellion_Maegor_Usurper ?= { is_alive = yes }
+			character:dragon_nightdancer ?= { is_alive = yes }
+		}
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_Maegor_Usurper
+			DRAGON = character:dragon_nightdancer
+		}
+	}
+
+	if = {
+		limit = {
+			current_date >= 8157.1.1
+			current_date < 8158.3.1
+			exists = global_var:segrellion_runtime_maegor_usurper
+			exists = global_var:segrellion_historical_nightdancer
+			global_var:segrellion_runtime_maegor_usurper = { is_alive = yes }
+			global_var:segrellion_historical_nightdancer = { is_alive = yes }
+		}
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = global_var:segrellion_runtime_maegor_usurper
+			DRAGON = global_var:segrellion_historical_nightdancer
+		}
+	}
+
+
+	# Benjen Snow -> Vhalyrax after Highwind
+	if = {
+		limit = {
+			current_date >= 8158.1.1
+			current_date < 8170.1.1
+			character:Segrellion_Benjen_Snow ?= { is_alive = yes }
+			exists = global_var:segrellion_historical_vhalyrax
+			global_var:segrellion_historical_vhalyrax = { is_alive = yes }
+		}
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = character:Segrellion_Benjen_Snow
+			DRAGON = global_var:segrellion_historical_vhalyrax
+		}
+	}
+
+	if = {
+		limit = {
+			current_date >= 8158.1.1
+			current_date < 8170.1.1
+			exists = global_var:segrellion_runtime_benjen
+			exists = global_var:segrellion_historical_vhalyrax
+			global_var:segrellion_runtime_benjen = { is_alive = yes }
+			global_var:segrellion_historical_vhalyrax = { is_alive = yes }
+		}
+		segrellion_force_canon_dragon_rider_effect = {
+			RIDER = global_var:segrellion_runtime_benjen
+			DRAGON = global_var:segrellion_historical_vhalyrax
+		}
+	}
+
+
 	# Rhaenys Segrellion -> Silverwing
 	if = {
 
@@ -1256,6 +1346,58 @@ segrellion_historical_dragons_progression_effect = {
 			DRAGON = scope:segrellion_canon_azuron
 		}
 	}
+
+	# ========================================================
+	# 158 A.C. - SHEEPSTEALER AND ALISON
+	# Silverwing breaks Sheepstealer's neck at Connington.
+	# Alison survives the crash only to be burned by Silverwing.
+	# ========================================================
+
+	if = {
+		limit = {
+			current_date >= 8158.3.1
+			character:dragon_sheepstealer ?= { is_alive = yes }
+			character:dragon_silverwing ?= { is_alive = yes }
+		}
+		character:dragon_sheepstealer = {
+			death = {
+				death_reason = death_segrellion_dragon_duel
+				killer = character:dragon_silverwing
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			current_date >= 8158.3.1
+			character:Segrellion_Alison_Hightower ?= { is_alive = yes }
+		}
+		character:Segrellion_Alison_Hightower = {
+			if = { limit = { NOT = { has_trait = wounded_3 } } add_trait = wounded_3 }
+			if = { limit = { NOT = { has_trait = incapable } } add_trait = incapable }
+			death = {
+				death_reason = death_dragon_fire
+				killer = character:dragon_silverwing
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			current_date >= 8158.3.1
+			exists = global_var:segrellion_runtime_alison
+			global_var:segrellion_runtime_alison = { is_alive = yes }
+		}
+		global_var:segrellion_runtime_alison = {
+			if = { limit = { NOT = { has_trait = wounded_3 } } add_trait = wounded_3 }
+			if = { limit = { NOT = { has_trait = incapable } } add_trait = incapable }
+			death = {
+				death_reason = death_dragon_fire
+				killer = character:dragon_silverwing
+			}
+		}
+	}
+
 
 	# ========================================================
 	# 158 A.C. - DEATH OF NIGHTDANCER
