@@ -1081,8 +1081,8 @@ segrellion_canon_dragon_riders_progression_effect = {
 	if = {
 
 		limit = {
-			current_date >= 8146.1.1
-			current_date < 8173.1.1
+			current_date >= 8141.1.1
+			current_date < 8168.11.14
 
 			character:Segrellion_17 ?= {
 				is_alive = yes
@@ -1621,7 +1621,7 @@ segrellion_historical_dragons_progression_effect = {
 	# ========================================================
 	# SILVERWING
 	#
-	# Alysanne -> no Ulf -> Rhaenys in 146 -> death in 173
+	# Alysanne -> no Ulf -> Rhaenys in 141 -> death in 168
 	# ========================================================
 
 
@@ -1643,12 +1643,12 @@ segrellion_historical_dragons_progression_effect = {
 	}
 
 
-	# 146 A.C. - Rhaenys claims Silverwing.
+	# 141 A.C. - Rhaenys claims Silverwing.
 
 	if = {
 		limit = {
-			current_date >= 8146.1.1
-			current_date < 8173.1.1
+			current_date >= 8141.1.1
+			current_date < 8168.11.14
 
 			character:dragon_silverwing ?= {
 				is_alive = yes
@@ -1710,31 +1710,20 @@ segrellion_historical_dragons_progression_effect = {
 	}
 
 
-	# 173 A.C. - Vhalyrax burns Silverwing to death.
+	# 168.11.14 A.C. - Rhaenys and Silverwing die together in the civil war.
 
 	if = {
 		limit = {
-			current_date >= 8173.1.1
+			current_date >= 8168.11.14
 
 			character:dragon_silverwing ?= {
 				is_alive = yes
 			}
-
-			exists = global_var:segrellion_historical_vhalyrax
-
-			global_var:segrellion_historical_vhalyrax = {
-				is_alive = yes
-			}
-		}
-
-		global_var:segrellion_historical_vhalyrax = {
-			save_scope_as = vhalyrax
 		}
 
 		character:dragon_silverwing = {
 			death = {
-				death_reason = death_segrellion_burned_by_vhalyrax
-				killer = scope:vhalyrax
+				death_reason = death_battle_dragon
 			}
 		}
 	}
