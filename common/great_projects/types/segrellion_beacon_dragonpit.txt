@@ -122,7 +122,28 @@ segrellion_construct_beacon_dragonpit = {
 					add_building = castle_01
 				}
 
-				add_great_building = segrellion_beacon_dragonpit_01
+				# Native AGOT backend. This is deliberately present alongside
+				# our unique Great Building so every hard-coded AGOT GUI and
+				# interaction recognizes the site as a real Dragonpit.
+				if = {
+					limit = {
+						NOT = {
+							has_building_or_higher = generic_dragon_pit_01
+						}
+					}
+
+					add_building = generic_dragon_pit_01
+				}
+
+				if = {
+					limit = {
+						NOT = {
+							has_building_or_higher = segrellion_beacon_dragonpit_01
+						}
+					}
+
+					add_great_building = segrellion_beacon_dragonpit_01
+				}
 			}
 		}
 
@@ -145,12 +166,12 @@ segrellion_construct_beacon_dragonpit = {
 				value = yes
 			}
 
-			scope:province ?= {
-				county = {
-					holder ?= {
-						segrellion_activate_beacon_dragonpit_effect = yes
-					}
-				}
+			# Rename the finished barony, keep it in the Beacon lord's
+			# personal hands, and initialize AGOT's Dragonkeeper state.
+			segrellion_repair_great_dragonpit_title_effect = yes
+
+			title:c_farring_cross.holder ?= {
+				segrellion_activate_beacon_dragonpit_effect = yes
 			}
 		}
 	}

@@ -78,7 +78,6 @@ monthly_global_pulse = {
 		segrellion_massey_secret_support_progression
 		segrellion_young_griff_deerfield_progression
 		segrellion_aegon_daemon_vassalage_progression
-		segrellion_beacon_dragonpit_historical_progression
 		segrellion_black_unicorn_personal_lock_progression
 		segrellion_rickon_return_progression
 		segrellion_young_griff_golden_company_war_sync
@@ -110,6 +109,7 @@ on_game_start_after_lobby = {
 		vladwyn_cerei_historical_progression
 		segrellion_black_moon_children_historical_progression
 		segrellion_tommen_peace_guard
+		segrellion_beacon_dragonpit_historical_progression
 		segrellion_black_unicorn_personal_lock_progression
 	}
 }
@@ -233,6 +233,7 @@ on_title_gain_inheritance = {
 
 on_title_gain = {
 	on_actions = {
+		segrellion_great_dragonpit_title_guard
 		segrellion_daemon_flamelands_title_gain
 		segrellion_daenerys_iron_throne_fertility_restore
 		segrellion_daenerys_post_throne_title_gain
@@ -7790,7 +7791,35 @@ segrellion_reyne_family_history_progression = {
 
 segrellion_beacon_dragonpit_historical_progression = {
 
+	effect = {_effect = yes
+	}
+}
+
+
+# =========================================================
+# THE GREAT DRAGONPIT - TITLE OWNERSHIP GUARD
+# =========================================================
+
+segrellion_great_dragonpit_title_guard = {
+
+	trigger = {
+
+		province:7263 = {
+			OR = {
+				has_building_or_higher = segrellion_beacon_dragonpit_01
+				has_building_or_higher = generic_dragon_pit_01
+			}
+		}
+
+		scope:title ?= {
+			OR = {
+				this = title:b_knights_bridge
+				this = title:c_farring_cross
+			}
+		}
+	}
+
 	effect = {
-		segrellion_beacon_dragonpit_historical_progression_effect = yes
+		segrellion_repair_great_dragonpit_title_effect = yes
 	}
 }

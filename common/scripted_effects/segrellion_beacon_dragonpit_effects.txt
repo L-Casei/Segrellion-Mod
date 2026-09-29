@@ -1,9 +1,75 @@
 # =========================================================
-# KNIGHT'S BRIDGE DRAGONPIT
-# AGOT DRAGONKEEPER INTEGRATION
-#
-# ROOT = holder of c_farring_cross
+# THE GREAT DRAGONPIT
+# AGOT DRAGONKEEPER + TITLE INTEGRATION
 # =========================================================
+
+
+# ---------------------------------------------------------
+# Keep the Dragonpit barony personal to the Lord of Beacon
+# and permanently use its post-construction name.
+# ---------------------------------------------------------
+
+segrellion_repair_great_dragonpit_title_effect = {
+
+	if = {
+		limit = {
+			province:7263 = {
+				OR = {
+					has_building_or_higher = segrellion_beacon_dragonpit_01
+					has_building_or_higher = generic_dragon_pit_01
+				}
+			}
+
+			exists = title:c_farring_cross.holder
+		}
+
+		# The internal barony key remains b_knights_bridge for map
+		# compatibility; its displayed title becomes The Great Dragonpit.
+		title:b_knights_bridge = {
+			set_title_name = b_segrellion_great_dragonpit
+		}
+
+		# This fortress is an extension of the Beacon itself, never an
+		# independently held barony.
+		if = {
+			limit = {
+				title:b_knights_bridge = {
+					NOT = {
+						holder = title:c_farring_cross.holder
+					}
+				}
+			}
+
+			title:c_farring_cross.holder = {
+				save_scope_as = segrellion_beacon_holder
+
+				create_title_and_vassal_change = {
+					type = revoked
+					save_scope_as = segrellion_great_dragonpit_title_change
+					add_claim_on_loss = no
+				}
+
+				title:b_knights_bridge = {
+					change_title_holder_include_vassals = {
+						holder = scope:segrellion_beacon_holder
+						change = scope:segrellion_great_dragonpit_title_change
+					}
+				}
+
+				resolve_title_and_vassal_change = scope:segrellion_great_dragonpit_title_change
+			}
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
+# AGOT Dragonkeeper state
+#
+# The actual native generic_dragon_pit_01 building is installed
+# at province 7263. This effect initializes the county/order/law
+# pieces which AGOT normally sets when a generic pit completes.
+# ---------------------------------------------------------
 
 segrellion_activate_beacon_dragonpit_effect = {
 
@@ -19,7 +85,7 @@ segrellion_activate_beacon_dragonpit_effect = {
 			}
 		}
 
-		# AGOT keys its dragonpit systems from this county variable.
+		# AGOT keys most Dragonpit systems from this county variable.
 		title:c_farring_cross = {
 
 			if = {
@@ -56,8 +122,9 @@ segrellion_activate_beacon_dragonpit_effect = {
 			}
 		}
 
-		# One ruler only needs one Head Dragonkeeper court position,
-		# even if that ruler owns several active dragonpits.
+		# Historical/history-script construction does not fire the normal
+		# generic building completion event, so ensure a Head Dragonkeeper
+		# exists. The flag prevents repeated monthly event spam.
 		if = {
 
 			limit = {
@@ -73,7 +140,7 @@ segrellion_activate_beacon_dragonpit_effect = {
 
 			add_character_flag = {
 				flag = segrellion_beacon_head_dragonkeeper_event_pending
-				days = 14
+				days = 30
 			}
 
 			trigger_event = {
@@ -85,20 +152,15 @@ segrellion_activate_beacon_dragonpit_effect = {
 }
 
 
-# =========================================================
-# HISTORICAL INAUGURATION - 160 AC
-#
-# Later bookmarks receive the castle from province history.
-# This effect supplies the Great Building itself, repairs old
-# saves, and also makes campaigns played forward reach the
-# historical inauguration in 160 AC.
-# =========================================================
+# ---------------------------------------------------------
+# Historical / save-compatible state repair
+# ---------------------------------------------------------
 
 segrellion_beacon_dragonpit_historical_progression_effect = {
 
-	# In a campaign played forward from before 160 AC, construct the
-	# historical Dragonpit if the site has not diverged and no player/
-	# AI Great Project is already actively building it.
+	# Canon inauguration: 160 AC.
+	# If no divergent Great Project is currently underway, ensure the
+	# historical site exists in all bookmarks and played-forward games.
 	if = {
 		limit = {
 			current_date >= 8160.1.1
@@ -108,10 +170,6 @@ segrellion_beacon_dragonpit_historical_progression_effect = {
 			}
 
 			province:7263 = {
-				NOT = {
-					has_building_or_higher = segrellion_beacon_dragonpit_01
-				}
-
 				OR = {
 					has_holding = no
 					has_holding_type = castle_holding
@@ -130,18 +188,84 @@ segrellion_beacon_dragonpit_historical_progression_effect = {
 				add_building = castle_01
 			}
 
-			add_great_building = segrellion_beacon_dragonpit_01
+			if = {
+				limit = {
+					NOT = {
+						has_building_or_higher = generic_dragon_pit_01
+					}
+				}
+
+				add_building = generic_dragon_pit_01
+			}
+
+			if = {
+				limit = {
+					NOT = {
+						has_building_or_higher = segrellion_beacon_dragonpit_01
+					}
+				}
+
+				add_great_building = segrellion_beacon_dragonpit_01
+			}
 		}
 	}
 
-	# Once the real building exists, it is the source of truth.
-	# Repair flags and initialize AGOT's Dragonkeeper integration.
+
+	# Save repair for Dragonpits constructed before this update.
+	# A custom Great Dragonpit always receives AGOT's native backend,
+	# even if it was completed before 160 AC in a live campaign.
+	if = {
+		limit = {
+			province:7263 = {
+				has_building_or_higher = segrellion_beacon_dragonpit_01
+
+				NOT = {
+					has_building_or_higher = generic_dragon_pit_01
+				}
+			}
+		}
+
+		province:7263 = {
+			add_building = generic_dragon_pit_01
+		}
+	}
+
+
+	# Conversely, historical 160+ bookmarks with the native backend
+	# receive our unique Great Building if an older save lacks it.
 	if = {
 		limit = {
 			current_date >= 8160.1.1
 
 			province:7263 = {
-				has_building_or_higher = segrellion_beacon_dragonpit_01
+				has_building_or_higher = generic_dragon_pit_01
+
+				NOT = {
+					has_building_or_higher = segrellion_beacon_dragonpit_01
+				}
+			}
+		}
+
+		province:7263 = {
+			add_great_building = segrellion_beacon_dragonpit_01
+		}
+	}
+
+
+	# Once either canonical layer is present, repair ownership, name and
+	# every AGOT Dragonkeeper state dependency.
+	if = {
+		limit = {
+			province:7263 = {
+				OR = {
+					has_building_or_higher = segrellion_beacon_dragonpit_01
+
+					AND = {
+						this = province:7263
+						has_building_or_higher = generic_dragon_pit_01
+						current_date >= 8160.1.1
+					}
+				}
 			}
 		}
 
@@ -157,6 +281,8 @@ segrellion_beacon_dragonpit_historical_progression_effect = {
 			name = segrellion_beacon_dragonpit_completed
 			value = yes
 		}
+
+		segrellion_repair_great_dragonpit_title_effect = yes
 
 		title:c_farring_cross.holder ?= {
 			segrellion_activate_beacon_dragonpit_effect = yes
