@@ -1,0 +1,148 @@
+# =========================================================
+# TRUEFLAME - LOST ANCESTRAL SWORD
+# =========================================================
+
+segrellion_search_for_trueflame_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_search_legendary_relic_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_search_for_trueflame_decision_desc
+	selection_tooltip = segrellion_search_for_trueflame_decision_tooltip
+	confirm_text = segrellion_search_for_trueflame_decision_confirm
+
+	cost = {
+		gold = 200
+	}
+
+	is_shown = {
+		is_adult = yes
+		house = house:house_Segrellion
+		is_house_head = yes
+
+		has_global_variable = segrellion_trueflame_story_known
+
+		NOT = {
+			exists = global_var:segrellion_trueflame
+		}
+
+		NOT = {
+			has_character_flag = segrellion_trueflame_search_active
+		}
+	}
+
+	is_valid = {
+		is_landed = yes
+		primary_title.tier >= tier_county
+		is_imprisoned = no
+		is_travelling = no
+
+		NOT = {
+			has_trait = incapable
+		}
+
+		custom_description = {
+			text = segrellion_trueflame_prestige_requirement
+			prestige >= 1500
+		}
+
+		custom_description = {
+			text = segrellion_trueflame_skill_requirement
+
+			OR = {
+				martial >= 10
+				intrigue >= 10
+			}
+		}
+	}
+
+	effect = {
+		add_character_flag = segrellion_trueflame_search_active
+
+		trigger_event = {
+			id = segrellion_trueflame.0100
+		}
+	}
+
+	ai_check_interval = 24
+
+	ai_potential = {
+		house = house:house_Segrellion
+		is_house_head = yes
+		is_landed = yes
+	}
+
+	ai_will_do = {
+		base = 35
+	}
+}
+
+
+# =========================================================
+# RECLAIM TRUEFLAME
+# =========================================================
+
+segrellion_reclaim_trueflame_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/segrellion_search_legendary_relic_decision_background.dds"
+	}
+
+	decision_group_type = ice_and_fire
+
+	desc = segrellion_reclaim_trueflame_decision_desc
+	selection_tooltip = segrellion_reclaim_trueflame_decision_tooltip
+	confirm_text = segrellion_reclaim_trueflame_decision_confirm
+
+	is_shown = {
+		is_adult = yes
+		house = house:house_Segrellion
+		is_house_head = yes
+
+		exists = global_var:segrellion_trueflame
+
+		global_var:segrellion_trueflame = {
+			exists = artifact_owner
+
+			artifact_owner = {
+				NOT = {
+					this = root
+				}
+			}
+		}
+	}
+
+	is_valid = {
+		is_imprisoned = no
+		is_travelling = no
+
+		NOT = {
+			has_trait = incapable
+		}
+
+		custom_description = {
+			text = segrellion_reclaim_trueflame_prestige_requirement
+			prestige >= 1000
+		}
+	}
+
+	effect = {
+		trigger_event = {
+			id = segrellion_trueflame.0400
+		}
+	}
+
+	ai_check_interval = 36
+
+	ai_potential = {
+		house = house:house_Segrellion
+		is_house_head = yes
+	}
+
+	ai_will_do = {
+		base = 20
+	}
+}
