@@ -41,6 +41,14 @@ segrellion_captain_of_unicorn_riders_court_position = {
 		}
 
 		if = {
+			limit = { has_trait = knight }
+			add = {
+				value = 15
+				desc = segrellion_court_position_knight_trait
+			}
+		}
+
+		if = {
 			limit = { has_trait = gallant }
 			add = {
 				value = 10
@@ -103,15 +111,37 @@ segrellion_captain_of_unicorn_riders_court_position = {
 
 	is_shown_character = {
 		scope:employee = {
-			court_position_employee_shown_trigger = yes
+			is_adult = yes
+			is_imprisoned = no
+			is_human = yes
+
+			OR = {
+				is_courtier_of = scope:liege
+				is_vassal_of = scope:liege
+			}
+
+			can_be_combatant_based_on_gender_trigger = {
+				ARMY_OWNER = scope:liege
+			}
 		}
 	}
 
 	valid_character = {
 		scope:employee = {
+			base_court_position_validity_trigger = {
+				EMPLOYER = scope:liege
+			}
+
 			is_adult = yes
-			is_imprisoned = no
-			has_trait = knight
+
+			OR = {
+				is_courtier_of = scope:liege
+				is_vassal_of = scope:liege
+			}
+
+			can_be_combatant_based_on_gender_trigger = {
+				ARMY_OWNER = scope:liege
+			}
 		}
 	}
 
