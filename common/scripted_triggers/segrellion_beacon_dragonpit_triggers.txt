@@ -1,0 +1,66 @@
+# =========================================================
+# KNIGHT'S BRIDGE DRAGONPIT - PROJECT FINANCING
+# =========================================================
+
+segrellion_beacon_dragonpit_project_exists_trigger = {
+
+	has_global_variable = segrellion_beacon_dragonpit_project_active
+
+	title:c_farring_cross.holder ?= {
+		any_great_project = {
+			great_project_type = segrellion_construct_beacon_dragonpit
+			great_project_construction_phase_is = planned
+		}
+	}
+}
+
+
+segrellion_beacon_dragonpit_has_unfunded_contribution_trigger = {
+
+	segrellion_beacon_dragonpit_project_exists_trigger = yes
+
+	title:c_farring_cross.holder ?= {
+		any_great_project = {
+			great_project_type = segrellion_construct_beacon_dragonpit
+			great_project_construction_phase_is = planned
+
+			any_contribution = {
+				contribution_is_funded = no
+			}
+		}
+	}
+}
+
+
+segrellion_can_finance_beacon_dragonpit_project_trigger = {
+
+	segrellion_beacon_dragonpit_has_unfunded_contribution_trigger = yes
+
+	OR = {
+
+		# The current Beacon holder / project owner.
+		has_title = title:c_farring_cross
+
+		# Any vassal below the Beacon holder.
+		is_vassal_or_below_of = title:c_farring_cross.holder
+
+		# Any member of House Segrellion's dynasty, regardless of realm.
+		dynasty = dynasty:dynn_Segrellion
+
+		# The original founder and their close or extended family,
+		# even if they belong to another dynasty after marriage.
+		title:c_farring_cross.holder ?= {
+			any_great_project = {
+				great_project_type = segrellion_construct_beacon_dragonpit
+				great_project_construction_phase_is = planned
+
+				great_project_founder = {
+					OR = {
+						this = root
+						is_close_or_extended_family_of = root
+					}
+				}
+			}
+		}
+	}
+}

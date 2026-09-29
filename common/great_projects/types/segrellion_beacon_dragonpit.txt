@@ -1,8 +1,8 @@
 # =========================================================
 # THE DRAGONPIT OF KNIGHT'S BRIDGE
 #
-# Started through the dedicated decision. Once planned, the
-# normal Great Project interface handles funding and building.
+# The project is created through the dedicated decision.
+# Only the holder of the Beacon can see the project itself.
 # =========================================================
 
 segrellion_construct_beacon_dragonpit = {
@@ -22,11 +22,21 @@ segrellion_construct_beacon_dragonpit = {
 	is_important = yes
 	show_in_list = yes
 
+	# The Great Project object itself is only visible to the ruler
+	# who personally holds the Beacon, and never once the Dragonpit exists.
 	is_shown = {
 		has_global_variable = segrellion_beacon_dragonpit_project_active
+		has_title = title:c_farring_cross
+
+		province:7263 = {
+			NOT = {
+				has_building_or_higher = segrellion_beacon_dragonpit_01
+			}
+		}
 	}
 
-	# Placement is intentionally locked to the decision.
+	# Placement is locked to the decision so the project cannot be
+	# manually placed in another barony through the Great Project planner.
 	can_start_planning = {
 		always = no
 	}
@@ -45,17 +55,28 @@ segrellion_construct_beacon_dragonpit = {
 		}
 	}
 
+	# Hidden project-lifetime validation. Player-facing requirements
+	# live on the decision and have explicit localization.
 	is_valid = {
 		scope:owner ?= {
 			has_title = title:c_farring_cross
 		}
+
 		scope:province ?= {
 			this = province:7263
-			has_holding = no
+
+			NOT = {
+				has_building_or_higher = segrellion_beacon_dragonpit_01
+			}
+
+			OR = {
+				has_holding = no
+				has_holding_type = castle_holding
+			}
 		}
 	}
 
-	# Planning cost is paid by the decision.
+	# Planning fee is paid by the decision.
 	cost = {
 		gold = 0
 	}
@@ -68,6 +89,9 @@ segrellion_construct_beacon_dragonpit = {
 	contribution_threshold = 0
 	contributor_cooldown = standard_contributor_cooldown_value
 
+	# Native Great Project financing supports the founder/current owner
+	# and vassals. Family and Segrellion contributors outside this native
+	# filter use the dedicated financing decision below.
 	allowed_contributor_filter = {
 		owner = yes
 		vassals = yes
@@ -95,6 +119,7 @@ segrellion_construct_beacon_dragonpit = {
 					}
 
 					set_holding_type = castle_holding
+					add_building = castle_01
 				}
 
 				add_great_building = segrellion_beacon_dragonpit_01
@@ -120,8 +145,6 @@ segrellion_construct_beacon_dragonpit = {
 				value = yes
 			}
 
-			# Activate AGOT's keeper/order/law integration after the
-			# Great Building exists in the province.
 			scope:province ?= {
 				county = {
 					holder ?= {
@@ -219,7 +242,7 @@ segrellion_construct_beacon_dragonpit = {
 		}
 	}
 
-	# The dedicated decision controls AI project creation.
+	# Creation is handled by the decision AI, never by generic GP planning.
 	ai_will_do = {
 		value = 0
 	}

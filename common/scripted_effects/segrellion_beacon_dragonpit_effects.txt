@@ -83,3 +83,83 @@ segrellion_activate_beacon_dragonpit_effect = {
 		}
 	}
 }
+
+
+# =========================================================
+# HISTORICAL INAUGURATION - 160 AC
+#
+# Later bookmarks receive the castle from province history.
+# This effect supplies the Great Building itself, repairs old
+# saves, and also makes campaigns played forward reach the
+# historical inauguration in 160 AC.
+# =========================================================
+
+segrellion_beacon_dragonpit_historical_progression_effect = {
+
+	# In a campaign played forward from before 160 AC, construct the
+	# historical Dragonpit if the site has not diverged and no player/
+	# AI Great Project is already actively building it.
+	if = {
+		limit = {
+			current_date >= 8160.1.1
+
+			NOT = {
+				has_global_variable = segrellion_beacon_dragonpit_project_active
+			}
+
+			province:7263 = {
+				NOT = {
+					has_building_or_higher = segrellion_beacon_dragonpit_01
+				}
+
+				OR = {
+					has_holding = no
+					has_holding_type = castle_holding
+				}
+			}
+		}
+
+		province:7263 = {
+
+			if = {
+				limit = {
+					has_holding = no
+				}
+
+				set_holding_type = castle_holding
+				add_building = castle_01
+			}
+
+			add_great_building = segrellion_beacon_dragonpit_01
+		}
+	}
+
+	# Once the real building exists, it is the source of truth.
+	# Repair flags and initialize AGOT's Dragonkeeper integration.
+	if = {
+		limit = {
+			current_date >= 8160.1.1
+
+			province:7263 = {
+				has_building_or_higher = segrellion_beacon_dragonpit_01
+			}
+		}
+
+		if = {
+			limit = {
+				has_global_variable = segrellion_beacon_dragonpit_project_active
+			}
+
+			remove_global_variable = segrellion_beacon_dragonpit_project_active
+		}
+
+		set_global_variable = {
+			name = segrellion_beacon_dragonpit_completed
+			value = yes
+		}
+
+		title:c_farring_cross.holder ?= {
+			segrellion_activate_beacon_dragonpit_effect = yes
+		}
+	}
+}
