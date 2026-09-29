@@ -1,0 +1,199 @@
+# =========================================================
+# TRUEFLAME - DYNAMIC SEARCH AND RECLAMATION
+# =========================================================
+
+
+# =========================================================
+# RECOVER THE LOST SWORD
+# =========================================================
+
+segrellion_recover_trueflame_effect = {
+
+	$OWNER$ = {
+		save_scope_as = trueflame_owner
+	}
+
+	segrellion_find_trueflame_effect = yes
+
+	if = {
+		limit = {
+			NOT = {
+				exists = global_var:segrellion_trueflame
+			}
+		}
+
+		save_scope_value_as = {
+			name = trueflame_quality
+			value = 95
+		}
+
+		save_scope_value_as = {
+			name = trueflame_wealth
+			value = 95
+		}
+
+		set_artifact_rarity_illustrious = yes
+
+		create_artifact = {
+			name = segrellion_trueflame_name
+			description = segrellion_trueflame_desc
+
+			type = sword
+
+			visuals = segrellion_trueflame_visuals
+			template = segrellion_trueflame_template
+
+			wealth = scope:trueflame_wealth
+			quality = scope:trueflame_quality
+
+			modifier = segrellion_trueflame_modifier
+
+			save_scope_as = recovered_trueflame
+
+			decaying = no
+		}
+
+		scope:recovered_trueflame = {
+
+			set_owner = {
+				target = scope:trueflame_owner
+
+				history = {
+					type = discovered
+					actor = scope:trueflame_owner
+					recipient = scope:trueflame_owner
+				}
+			}
+
+			equip_artifact_to_owner_replace = yes
+
+			set_global_variable = {
+				name = segrellion_trueflame
+				value = this
+			}
+
+			set_variable = {
+				name = valyrian_steel
+				value = yes
+			}
+
+			set_variable = {
+				name = historical_unique_artifact
+				value = yes
+			}
+
+			set_variable = {
+				name = traditional_house_owner
+				value = house:house_Segrellion
+			}
+
+			set_variable = {
+				name = segrellion_trueflame_artifact
+				value = yes
+			}
+
+			set_variable = {
+				name = segrellion_trueflame_dynamically_recovered
+				value = yes
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# TRANSFER TRUEFLAME
+# =========================================================
+
+segrellion_transfer_trueflame_effect = {
+
+	$NEW_OWNER$ = {
+		save_scope_as = trueflame_new_owner
+	}
+
+	segrellion_find_trueflame_effect = yes
+
+	global_var:segrellion_trueflame ?= {
+
+		set_owner = {
+			target = scope:trueflame_new_owner
+			generate_history = yes
+		}
+
+		equip_artifact_to_owner_replace = yes
+	}
+}
+
+
+# =========================================================
+# FINISH SEARCH
+# =========================================================
+
+segrellion_finish_trueflame_search_effect = {
+
+	remove_character_flag = segrellion_trueflame_search_active
+	remove_character_flag = segrellion_trueflame_personal_expedition
+	remove_character_flag = segrellion_trueflame_agents_expedition
+
+	if = {
+		limit = {
+			is_travelling = yes
+		}
+
+		return_home = yes
+	}
+}
+
+
+# =========================================================
+# RANDOM RUMOR
+#
+# Approximately 15% per year while Trueflame is absent.
+# Once the tale has been heard, it becomes inherited House
+# knowledge through a global flag and the decision remains
+# available to future Segrellion House Heads.
+# =========================================================
+
+segrellion_trueflame_rumor_yearly_effect = {
+
+	segrellion_find_trueflame_effect = yes
+
+	if = {
+		limit = {
+
+			NOT = {
+				exists = global_var:segrellion_trueflame
+			}
+
+			NOT = {
+				has_global_variable = segrellion_trueflame_story_known
+			}
+
+			house:house_Segrellion ?= {
+				exists = house_head
+			}
+		}
+
+		house:house_Segrellion.house_head ?= {
+
+			if = {
+				limit = {
+					is_alive = yes
+					is_adult = yes
+
+					NOT = {
+						has_trait = incapable
+					}
+				}
+
+				random = {
+					chance = 15
+
+					trigger_event = {
+						id = segrellion_trueflame.0001
+					}
+				}
+			}
+		}
+	}
+}
