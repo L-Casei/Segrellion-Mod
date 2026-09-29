@@ -160,10 +160,6 @@ segrellion_seed_great_dragonpit_dragons_effect = {
 		limit = {
 			current_date >= 8160.1.1
 
-			NOT = {
-				has_global_variable = segrellion_great_dragonpit_dragons_initialized
-			}
-
 			province:7263 = {
 				has_building_or_higher = dragonpit_01
 			}
@@ -173,24 +169,33 @@ segrellion_seed_great_dragonpit_dragons_effect = {
 			}
 		}
 
+		# This deliberately runs as a repair instead of a one-shot.
+		# It only moves dragons that are not already housed in the
+		# Great Dragonpit, so bookmarks and old saves repair cleanly.
 		every_living_character = {
 			limit = {
 				has_trait = dragon
 
 				OR = {
-					# Canon Ice and Fire dragon characters.
+					# Dragons already tied to the Segrellion household by 160 AC.
 					this = character:dragon_vhalyrax
 					this = character:dragon_maenor
 					this = character:dragon_valor
-					this = character:dragon_azuron
 					this = character:dragon_silverwing
+
+					# Azuron remains a King's Landing dragon until Aegon
+					# Dragonspear claims him in 167 AC.
+					AND = {
+						current_date >= 8167.1.1
+						this = character:dragon_azuron
+					}
 
 					# Dynamic early-bookmark versions.
 					has_character_flag = segrellion_vhalyrax_dragon
 					has_character_flag = segrellion_maenor_dragon
 					has_character_flag = segrellion_nightdancer_dragon
 
-					# Any other dragon actually ridden by a Segrellion in 160.
+					# Any other living dragon actually ridden by a Segrellion.
 					AND = {
 						exists = var:current_rider
 						var:current_rider = {
@@ -198,12 +203,20 @@ segrellion_seed_great_dragonpit_dragons_effect = {
 						}
 					}
 				}
+
+				# Do nothing if the dragon is already in this exact pit.
+				NOT = {
+					AND = {
+						has_character_flag = in_dragonpit
+						var:pitted_dragon_location ?= title:c_farring_cross
+					}
+				}
 			}
 
 			save_scope_as = segrellion_dragon_to_move
 
-			# Remove cleanly from Dragonstone, King's Landing, Vhal or any
-			# other pit before adding it to the Great Dragonpit.
+			# Remove cleanly from Dragonstone, King's Landing, Vhal or
+			# another pit before assigning the Great Dragonpit.
 			if = {
 				limit = {
 					has_character_flag = in_dragonpit
@@ -226,9 +239,19 @@ segrellion_seed_great_dragonpit_dragons_effect = {
 			}
 		}
 
-		set_global_variable = {
-			name = segrellion_great_dragonpit_dragons_initialized
-			value = yes
+		# Retain the old marker for save/debug compatibility, but it no
+		# longer blocks future repair passes.
+		if = {
+			limit = {
+				NOT = {
+					has_global_variable = segrellion_great_dragonpit_dragons_initialized
+				}
+			}
+
+			set_global_variable = {
+				name = segrellion_great_dragonpit_dragons_initialized
+				value = yes
+			}
 		}
 	}
 }
