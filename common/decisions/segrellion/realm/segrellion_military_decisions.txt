@@ -1,5 +1,3 @@
-
-
 segrellion_raise_unicorn_riders_decision = {
 
 	picture = {
@@ -15,24 +13,31 @@ segrellion_raise_unicorn_riders_decision = {
 
 	# =========================================================
 	# VISIBILITY
+	#
+	# The Unicorn Riders are founded after The Beacon exists.
+	# Once founded, their existence is stored globally and access
+	# follows the Segrellion lord who personally holds The Beacon.
 	# =========================================================
 
 	is_shown = {
 
-		# The Unicorn Riders historically exist from roughly 140 AC onward.
-		current_date >= 8140.1.1
+		dynasty = dynasty:dynn_Segrellion
 
-		# Only rulers of the historical seats of the Flamelands
-		# may restore the Unicorn Riders.
-		OR = {
-			has_title = title:c_farring_cross
-			has_title = title:k_flamelands
-			has_title = title:e_flamelands
+		has_title = title:b_castle_farring
+
+		title:b_castle_farring = {
+			holder = root
 		}
 
-		# This character has not already restored the order.
+		# The decision only exists after Castle Farring has actually
+		# become The Beacon.
+		title:b_castle_farring.title_province = {
+			has_building_or_higher = segrellion_beacon_01
+		}
+
+		# This is a founding decision, not a repeatable restoration.
 		NOT = {
-			has_character_flag = segrellion_unicorn_riders_recruitment_unlocked
+			has_global_variable = segrellion_unicorn_riders_created
 		}
 	}
 
@@ -54,10 +59,16 @@ segrellion_raise_unicorn_riders_decision = {
 		custom_description = {
 			text = segrellion_unicorn_riders_title_requirement_tt
 
-			OR = {
-				has_title = title:c_farring_cross
-				has_title = title:k_flamelands
-				has_title = title:e_flamelands
+			AND = {
+				has_title = title:b_castle_farring
+
+				title:b_castle_farring = {
+					holder = root
+				}
+
+				title:b_castle_farring.title_province = {
+					has_building_or_higher = segrellion_beacon_01
+				}
 			}
 		}
 
@@ -82,9 +93,17 @@ segrellion_raise_unicorn_riders_decision = {
 
 	effect = {
 
+		# Permanent institution state. This survives succession.
+		set_global_variable = {
+			name = segrellion_unicorn_riders_created
+			value = yes
+		}
+
+		# Legacy compatibility for saves or scripts that still inspect
+		# the old personal unlock flag.
 		add_character_flag = segrellion_unicorn_riders_recruitment_unlocked
 
-		custom_tooltip = segrellion_reinstitute_unicorn_riders_effect_tt
+		custom_tooltip = segrellion_create_unicorn_riders_effect_tt
 
 		trigger_event = segrellion_unicorn_riders.0001
 	}
@@ -109,6 +128,7 @@ segrellion_raise_unicorn_riders_decision = {
 		}
 	}
 }
+
 
 # =========================================================
 # CALL THE BANNERS
