@@ -1,0 +1,249 @@
+# =========================================================
+# HOUSE SEGRELLION - HISTORICAL HOUSE RELATIONS
+# =========================================================
+
+segrellion_house_relations_progression_effect = {
+
+	# =====================================================
+	# LONG-TERM HOUSE RELATIONSHIPS
+	# Initialized once per campaign.
+	# =====================================================
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = segrellion_base_house_relations_initialized
+			}
+		}
+
+		# The Vladwyns are the closest non-Segrellion house to the family.
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = house:house_Vladwyn
+				level = amity
+				description = segrellion_house_relation_vladwyn_desc
+			}
+		}
+
+		# House Correy shares the same highest-tier historical bond.
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:Correy_21.house
+				level = amity
+				description = segrellion_house_relation_correy_desc
+			}
+		}
+
+		# Strong historical allies and friends.
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:Massey_1.house
+				level = friendly
+				description = segrellion_house_relation_massey_desc
+			}
+		}
+
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:Velaryon_31.house
+				level = friendly
+				description = segrellion_house_relation_velaryon_desc
+			}
+		}
+
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:Targaryen_63.house
+				level = friendly
+				description = segrellion_house_relation_targaryen_desc
+			}
+		}
+
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:Stokeworth_3.house
+				level = friendly
+				description = segrellion_house_relation_stokeworth_desc
+			}
+		}
+
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:Fell_30.house
+				level = friendly
+				description = segrellion_house_relation_fell_desc
+			}
+		}
+
+		# The Stauntons and Segrellions have never quite trusted each other.
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:Staunton_1.house
+				level = quarrel
+				description = segrellion_house_relation_staunton_desc
+			}
+		}
+
+		set_global_variable = {
+			name = segrellion_base_house_relations_initialized
+			value = yes
+		}
+	}
+
+
+	# =====================================================
+	# ORYS BARATHEON - 131 AC
+	#
+	# In Ice and Fire canon Orys survives the Kingsroad battle,
+	# is captured, and is personally executed by Alex Segrellion.
+	# This runtime branch makes campaigns begun before 131 follow
+	# that history even though base AGOT uses another death.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8131.1.10
+
+			character:Baratheon_38 ?= {
+				is_alive = yes
+			}
+
+			character:Segrellion_1 ?= {
+				is_alive = yes
+			}
+		}
+
+		character:Baratheon_38 = {
+			death = {
+				death_reason = death_execution
+				killer = character:Segrellion_1
+			}
+		}
+	}
+
+
+	# =====================================================
+	# SEGRELLION - BARATHEON FEUD
+	# Begins with Orys' execution.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8131.1.10
+
+			NOT = {
+				has_global_variable = segrellion_baratheon_reconciliation_done
+			}
+
+			NOT = {
+				has_global_variable = segrellion_baratheon_feud_initialized
+			}
+		}
+
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:IAF_Baratheon_1.house
+				level = feud
+				description = segrellion_house_relation_baratheon_feud_desc
+			}
+		}
+
+		set_global_variable = {
+			name = segrellion_baratheon_feud_initialized
+			value = yes
+		}
+	}
+
+
+	# =====================================================
+	# ARGELLA'S EXILE - 141 AC
+	# Rolland is granted the Stormlands and Argella takes refuge
+	# at Aeryn's court.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8141.7.1
+			current_date < 8145.10.1
+
+			NOT = {
+				has_global_variable = segrellion_argella_exile_runtime_done
+			}
+
+			character:IAF_Baratheon_1 ?= {
+				is_alive = yes
+			}
+
+			character:IAF_Baratheon_5 ?= {
+				is_alive = yes
+				has_title = title:e_the_stormlands
+			}
+
+			character:Segrellion_12 ?= {
+				is_alive = yes
+			}
+		}
+
+		character:IAF_Baratheon_1 = {
+			set_employer = character:Segrellion_12
+
+			set_relation_rival = character:IAF_Baratheon_5
+
+			add_opinion = {
+				target = character:IAF_Baratheon_5
+				modifier = segrellion_argella_hates_rolland_opinion
+			}
+
+			add_opinion = {
+				target = character:Targaryen_78
+				modifier = segrellion_argella_hates_iron_throne_opinion
+			}
+
+			add_character_flag = segrellion_argella_exiled_to_aeryn_court
+		}
+
+		set_global_variable = {
+			name = segrellion_argella_exile_runtime_done
+			value = yes
+		}
+	}
+
+
+	# =====================================================
+	# RECONCILIATION - AFTER ARGELLA
+	#
+	# The feud ends only when BOTH conditions are fulfilled:
+	# Argella is dead and Ammanda rules the Stormlands.
+	# =====================================================
+
+	if = {
+		limit = {
+			current_date >= 8158.3.2
+
+			NOT = {
+				has_global_variable = segrellion_baratheon_reconciliation_done
+			}
+
+			character:IAF_Baratheon_1 ?= {
+				is_alive = no
+			}
+
+			title:e_the_stormlands = {
+				holder = character:IAF_Baratheon_2
+			}
+		}
+
+		house:house_Segrellion = {
+			set_house_relation = {
+				target = character:IAF_Baratheon_2.house
+				level = friendly
+				description = segrellion_house_relation_baratheon_reconciliation_desc
+			}
+		}
+
+		set_global_variable = {
+			name = segrellion_baratheon_reconciliation_done
+			value = yes
+		}
+	}
+}
