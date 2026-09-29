@@ -820,7 +820,7 @@ segrellion_create_artifact_trueflame_effect = {
         save_scope_as = newly_created_artifact
         decaying = no
         history = {
-            type = created_before_history
+            type = discovered
             date = 8150.1.1
             recipient = character:Segrellion_17
         }
@@ -846,7 +846,7 @@ segrellion_create_artifact_trueflame_effect = {
 
         set_variable = {
             name = traditional_house_owner
-            value = scope:owner.house
+            value = house:house_Segrellion
         }
 
         set_variable = {
@@ -1035,321 +1035,185 @@ segrellion_setup_trueflame_history_effect = {
 	segrellion_find_trueflame_effect = yes
 
 	# =====================================================
-	# CREATE TRUEFLAME AT THE CORRECT HISTORICAL OWNER
+	# BOOKMARK RECONSTRUCTION ONLY
+	#
+	# If the campaign STARTS after Trueflame's historical
+	# recovery, rebuild the sword and its canonical bearer.
+	#
+	# A campaign that started before 150 AC must NOT have
+	# Trueflame appear automatically when the calendar reaches
+	# 150. In those campaigns, the sword is recovered only
+	# through the dynamic rumor/search system.
 	# =====================================================
 
 	if = {
 		limit = {
-			current_date >= 8150.1.1
+			game_start_date >= 8150.1.1
 
 			NOT = {
-				exists = global_var:segrellion_trueflame
+				has_global_variable = segrellion_trueflame_history_initialized
 			}
 		}
 
-		# 150-161 AC: Rhaenys Segrellion is the first bearer.
 		if = {
 			limit = {
-				current_date < 8161.10.21
-				character:Segrellion_17 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_17 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
+				NOT = {
+					exists = global_var:segrellion_trueflame
 				}
 			}
-		}
 
-		# On his eighteenth birthday, Rhaegar I receives Trueflame.
-		else_if = {
-			limit = {
-				current_date < 8174.9.17
-				character:Segrellion_18 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_18 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# Maelor keeps Trueflame after Rhaegar's fall.
-		else_if = {
-			limit = {
-				current_date < 8196.4.12
-				character:Segrellion_38 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_38 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# After Maelor's death it returns to Aegon Dragonspear.
-		else_if = {
-			limit = {
-				current_date < 8200.4.12
-				character:Segrellion_21 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_21 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# Dragonspear entrusts it to Aethan.
-		else_if = {
-			limit = {
-				current_date < 8218.9.26
-				character:Segrellion_24 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_24 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# After Aethan's death it passes to Rhaegar II.
-		else_if = {
-			limit = {
-				current_date < 8231.5.2
-				character:Segrellion_25 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_25 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# Rhaegar gives Trueflame to Aenys when Aenys comes of age.
-		else_if = {
-			limit = {
-				current_date < 8258.4.8
-				character:Segrellion_30 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_30 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# After Aenys' death it passes to Maegor.
-		else_if = {
-			limit = {
-				current_date < 8266.1.1
-				character:Segrellion_39 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_39 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# In 266 AC Daena steals Trueflame.
-		else_if = {
-			limit = {
-				current_date < 8294.1.1
-				character:Segrellion_40 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_40 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-
-		# After Daena's murder in 294 AC, Trueflame passes to Daemon.
-		else_if = {
-			limit = {
-				current_date >= 8294.1.1
-				character:Segrellion_60 ?= { is_alive = yes }
-			}
-
-			character:Segrellion_60 = {
-				segrellion_create_artifact_trueflame_effect = {
-					OWNER = this
-				}
-			}
-		}
-	}
-
-
-	# =====================================================
-	# EXISTING ARTIFACT / PLAYED-THROUGH CAMPAIGN REPAIR
-	#
-	# The monthly progression calls this effect, so Trueflame
-	# follows its canon bearer line even when the campaign is
-	# played through the handoff dates instead of loaded from
-	# a later bookmark.
-	# =====================================================
-
-	if = {
-		limit = {
-			exists = global_var:segrellion_trueflame
-		}
-
-		global_var:segrellion_trueflame = {
-
-			# Rhaenys: first bearer, 150-161 AC.
+			# 150-161 AC: Rhaenys is the historical discoverer/bearer.
 			if = {
 				limit = {
-					current_date >= 8150.1.1
 					current_date < 8161.10.21
 					character:Segrellion_17 ?= { is_alive = yes }
+				}
 
-					NOT = {
-						artifact_owner = character:Segrellion_17
+				character:Segrellion_17 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
 					}
 				}
-
-				set_owner = {
-					target = character:Segrellion_17
-					generate_history = no
-				}
-
-				equip_artifact_to_owner_replace = yes
 			}
 
-			# Rhaegar I: receives it on his 18th birthday.
+			# Rhaegar I.
 			else_if = {
 				limit = {
-					current_date >= 8161.10.21
 					current_date < 8174.9.17
 					character:Segrellion_18 ?= { is_alive = yes }
-
-					NOT = {
-						artifact_owner = character:Segrellion_18
-					}
 				}
 
-				set_owner = {
-					target = character:Segrellion_18
-					generate_history = no
-				}
-
-				equip_artifact_to_owner_replace = yes
-
-				if = {
-					limit = {
-						NOT = {
-							has_variable = segrellion_trueflame_rhaegar_i_handoff_recorded
-						}
-					}
-
-					agot_add_artifact_history = {
-						ARTIFACT = this
-						TYPE = inherited
-						DATE = 8161.10.21
-						RECIPIENT = character:Segrellion_18
-					}
-
-					set_variable = {
-						name = segrellion_trueflame_rhaegar_i_handoff_recorded
-						value = yes
+				character:Segrellion_18 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
 					}
 				}
 			}
 
+			# Maelor.
 			else_if = {
 				limit = {
-					current_date >= 8174.9.17
 					current_date < 8196.4.12
 					character:Segrellion_38 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_38 }
 				}
-				set_owner = { target = character:Segrellion_38 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_38 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
 			}
 
+			# Aegon Dragonspear.
 			else_if = {
 				limit = {
-					current_date >= 8196.4.12
 					current_date < 8200.4.12
 					character:Segrellion_21 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_21 }
 				}
-				set_owner = { target = character:Segrellion_21 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_21 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
 			}
 
+			# Aethan.
 			else_if = {
 				limit = {
-					current_date >= 8200.4.12
 					current_date < 8218.9.26
 					character:Segrellion_24 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_24 }
 				}
-				set_owner = { target = character:Segrellion_24 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_24 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
 			}
 
+			# Rhaegar II.
 			else_if = {
 				limit = {
-					current_date >= 8218.9.26
 					current_date < 8231.5.2
 					character:Segrellion_25 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_25 }
 				}
-				set_owner = { target = character:Segrellion_25 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_25 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
 			}
 
+			# Aenys.
 			else_if = {
 				limit = {
-					current_date >= 8231.5.2
 					current_date < 8258.4.8
 					character:Segrellion_30 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_30 }
 				}
-				set_owner = { target = character:Segrellion_30 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_30 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
 			}
 
+			# Maegor.
 			else_if = {
 				limit = {
-					current_date >= 8258.4.8
 					current_date < 8266.1.1
 					character:Segrellion_39 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_39 }
 				}
-				set_owner = { target = character:Segrellion_39 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_39 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
 			}
 
+			# Daena.
 			else_if = {
 				limit = {
-					current_date >= 8266.1.1
 					current_date < 8294.1.1
 					character:Segrellion_40 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_40 }
 				}
-				set_owner = { target = character:Segrellion_40 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_40 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
 			}
 
+			# Daemon.
 			else_if = {
 				limit = {
 					current_date >= 8294.1.1
 					character:Segrellion_60 ?= { is_alive = yes }
-					NOT = { artifact_owner = character:Segrellion_60 }
 				}
-				set_owner = { target = character:Segrellion_60 generate_history = no }
-				equip_artifact_to_owner_replace = yes
+
+				character:Segrellion_60 = {
+					segrellion_create_artifact_trueflame_effect = {
+						OWNER = this
+					}
+				}
+			}
+		}
+
+		# Once reconstructed successfully, stop forcing ownership.
+		# From this point onward normal gameplay, inheritance and
+		# the reclamation decision determine where the sword goes.
+		if = {
+			limit = {
+				exists = global_var:segrellion_trueflame
+			}
+
+			set_global_variable = {
+				name = segrellion_trueflame_history_initialized
+				value = yes
 			}
 		}
 	}
