@@ -1,0 +1,206 @@
+# =========================================================
+# CAPTAIN OF THE UNICORN RIDERS
+#
+# Unique military court office of the Lord of the Beacon.
+# It exists only while House Segrellion controls the Beacon
+# and the Unicorn Riders have been founded.
+# =========================================================
+
+segrellion_captain_of_unicorn_riders_court_position = {
+
+	sort_order = 273
+	skill = martial
+	max_available_positions = 1
+
+	court_position_asset = {
+		animation = marshal_shield
+		background = "gfx/interface/illustrations/event_scenes/ep2_tournament_western.dds"
+	}
+
+	opinion = {
+		value = ceremonial_court_position_opinion
+	}
+
+	aptitude_level_breakpoints = { 20 40 60 80 }
+
+	aptitude = {
+		value = 1
+
+		add = {
+			value = martial
+			multiply = 2
+			max = 50
+			desc = court_position_skill_martial
+		}
+
+		add = {
+			value = prowess
+			multiply = 2
+			max = 50
+			desc = court_position_skill_prowess
+		}
+
+		if = {
+			limit = { has_trait = gallant }
+			add = {
+				value = 10
+				desc = court_position_gallant_trait
+			}
+		}
+
+		if = {
+			limit = { has_trait = strategist }
+			add = {
+				value = 10
+				desc = court_position_strategist_trait
+			}
+		}
+
+		if = {
+			limit = { has_trait = organizer }
+			add = {
+				value = 10
+				desc = court_position_organizer_trait
+			}
+		}
+
+		if = {
+			limit = { has_trait = brave }
+			add = {
+				value = 5
+				desc = court_position_brave_trait
+			}
+		}
+
+		if = {
+			limit = { has_trait = craven }
+			add = {
+				value = -15
+				desc = court_position_craven_trait
+			}
+		}
+
+		add = court_position_aptitude_family_business_value
+		add = general_aptitude_bonus
+	}
+
+	# Only the Segrellion Lord of the Beacon may maintain this office.
+	is_shown = {
+		is_landed_or_landless_administrative = yes
+		dynasty = dynasty:dynn_Segrellion
+		has_title = title:b_castle_farring
+		has_global_variable = segrellion_unicorn_riders_created
+	}
+
+	# Losing the Beacon or the active Unicorn Riders institution
+	# immediately invalidates the office.
+	valid_position = {
+		is_landed_or_landless_administrative = yes
+		dynasty = dynasty:dynn_Segrellion
+		has_title = title:b_castle_farring
+		has_global_variable = segrellion_unicorn_riders_created
+	}
+
+	is_shown_character = {
+		scope:employee = {
+			court_position_employee_shown_trigger = yes
+		}
+	}
+
+	valid_character = {
+		scope:employee = {
+			is_adult = yes
+			is_imprisoned = no
+			is_knight = yes
+		}
+	}
+
+	revoke_cost = {
+		prestige = {
+			value = major_court_position_prestige_revoke_cost
+		}
+	}
+
+	salary = {
+		round = no
+
+		gold = {
+			value = medium_court_position_salary
+		}
+
+		prestige = {
+			value = medium_court_position_prestige_salary
+		}
+	}
+
+	received_salary = {
+		gold = {
+			value = medium_court_position_salary
+		}
+
+		prestige = {
+			value = medium_court_position_prestige_salary
+		}
+
+		round = no
+	}
+
+	# The Captain drills the elite mounted household and coordinates
+	# the knights who ride beside the Unicorn Riders.
+	scaling_employer_modifiers = {
+		terrible = {
+			knight_effectiveness_mult = 0.01
+		}
+		poor = {
+			knight_effectiveness_mult = 0.03
+		}
+		average = {
+			knight_effectiveness_mult = 0.05
+			knight_limit = 1
+		}
+		good = {
+			knight_effectiveness_mult = 0.08
+			knight_limit = 1
+		}
+		excellent = {
+			knight_effectiveness_mult = 0.12
+			knight_limit = 2
+		}
+	}
+
+	modifier = {
+		monthly_prestige = 0.3
+		monthly_martial_lifestyle_xp_mult = 0.05
+	}
+
+	on_court_position_received = {
+		basic_gained_court_position_effect = yes
+	}
+
+	on_court_position_revoked = {
+		basic_revoked_court_position_effect = yes
+	}
+
+	on_court_position_invalidated = {
+		basic_invalidated_court_position_effect = yes
+	}
+
+	on_court_position_vacated = {
+		court_position_vacated_event_effect = {
+			COURT_POSITION_TYPE = segrellion_captain_of_unicorn_riders_court_position
+		}
+	}
+
+	ai_position_score = {
+		value = 20
+		add = court_position_debt_considerations_value
+	}
+
+	ai_candidate_score = {
+		value = 50
+		add = scope:base_value
+		add = court_position_candidate_score_base_value
+		add = court_position_candidate_aptitude_value
+		add = court_position_debt_considerations_value
+	}
+}
