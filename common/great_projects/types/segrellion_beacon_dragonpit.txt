@@ -36,6 +36,7 @@ segrellion_construct_beacon_dragonpit = {
 
 		province:7263 = {
 			NOR = {
+				has_building_or_higher = dragonpit_01
 				has_building_or_higher = segrellion_beacon_dragonpit_01
 				has_building_or_higher = generic_dragon_pit_01
 			}
@@ -68,6 +69,7 @@ segrellion_construct_beacon_dragonpit = {
 
 		province:7263 = {
 			NOR = {
+				has_building_or_higher = dragonpit_01
 				has_building_or_higher = segrellion_beacon_dragonpit_01
 				has_building_or_higher = generic_dragon_pit_01
 			}
@@ -127,6 +129,7 @@ segrellion_construct_beacon_dragonpit = {
 			this = province:7263
 
 			NOR = {
+				has_building_or_higher = dragonpit_01
 				has_building_or_higher = segrellion_beacon_dragonpit_01
 				has_building_or_higher = generic_dragon_pit_01
 			}
@@ -188,26 +191,40 @@ segrellion_construct_beacon_dragonpit = {
 					add_building = castle_01
 				}
 
-				# Native AGOT Dragonpit backend.
+				# The finished structure is AGOT's own fully completed Dragonpit
+				# special building. This gives us native functionality everywhere,
+				# the correct King’s Landing Dragonpit icon, upkeep and bonuses.
 				if = {
 					limit = {
-						NOT = {
-							has_building_or_higher = generic_dragon_pit_01
-						}
+						has_special_building_slot = no
 					}
 
-					add_building = generic_dragon_pit_01
+					add_special_building_slot = dragonpit_03
 				}
 
-				# Unique Ice and Fire Great Building.
+				# Remove compatibility layers used by earlier versions of the mod.
+				if = {
+					limit = {
+						has_building_or_higher = generic_dragon_pit_01
+					}
+					remove_building = generic_dragon_pit_01
+				}
+
+				if = {
+					limit = {
+						has_building_or_higher = segrellion_beacon_dragonpit_01
+					}
+					remove_building = segrellion_beacon_dragonpit_01
+				}
+
 				if = {
 					limit = {
 						NOT = {
-							has_building_or_higher = segrellion_beacon_dragonpit_01
+							has_building_or_higher = dragonpit_01
 						}
 					}
 
-					add_great_building = segrellion_beacon_dragonpit_01
+					add_special_building = dragonpit_03
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 # =========================================================
 # THE GREAT DRAGONPIT
-# AGOT DRAGONKEEPER + TITLE INTEGRATION
+# TITLE, AGOT DRAGONKEEPER AND HISTORICAL INTEGRATION
 # =========================================================
 
 
@@ -15,6 +15,9 @@ segrellion_repair_great_dragonpit_title_effect = {
 		limit = {
 			province:7263 = {
 				OR = {
+					has_building_or_higher = dragonpit_01
+
+					# Compatibility with saves from older mod versions.
 					has_building_or_higher = segrellion_beacon_dragonpit_01
 					has_building_or_higher = generic_dragon_pit_01
 				}
@@ -23,14 +26,10 @@ segrellion_repair_great_dragonpit_title_effect = {
 			exists = title:c_farring_cross.holder
 		}
 
-		# The internal barony key remains b_knights_bridge for map
-		# compatibility; its displayed title becomes The Great Dragonpit.
 		title:b_knights_bridge = {
 			set_title_name = b_segrellion_great_dragonpit
 		}
 
-		# This fortress is an extension of the Beacon itself, never an
-		# independently held barony.
 		if = {
 			limit = {
 				title:b_knights_bridge = {
@@ -65,10 +64,6 @@ segrellion_repair_great_dragonpit_title_effect = {
 
 # ---------------------------------------------------------
 # AGOT Dragonkeeper state
-#
-# The actual native generic_dragon_pit_01 building is installed
-# at province 7263. This effect initializes the county/order/law
-# pieces which AGOT normally sets when a generic pit completes.
 # ---------------------------------------------------------
 
 segrellion_activate_beacon_dragonpit_effect = {
@@ -78,14 +73,12 @@ segrellion_activate_beacon_dragonpit_effect = {
 		limit = {
 
 			title:c_farring_cross = {
-
 				any_county_province = {
 					segrellion_beacon_dragonpit_building_active_trigger = yes
 				}
 			}
 		}
 
-		# AGOT keys most Dragonpit systems from this county variable.
 		title:c_farring_cross = {
 
 			if = {
@@ -122,9 +115,6 @@ segrellion_activate_beacon_dragonpit_effect = {
 			}
 		}
 
-		# Historical/history-script construction does not fire the normal
-		# generic building completion event, so ensure a Head Dragonkeeper
-		# exists. The flag prevents repeated monthly event spam.
 		if = {
 
 			limit = {
@@ -153,14 +143,103 @@ segrellion_activate_beacon_dragonpit_effect = {
 
 
 # ---------------------------------------------------------
+# Canon Segrellion dragons move to the Great Dragonpit in 160 AC.
+#
+# This fires once. It deliberately does not keep forcing dragons back
+# into the pit after the player later releases or relocates them.
+#
+# The rider-dynasty check also catches dynamically-created Segrellion
+# dragons in campaigns played forward from early bookmarks.
+# ---------------------------------------------------------
+
+segrellion_seed_great_dragonpit_dragons_effect = {
+
+	if = {
+		limit = {
+			current_date >= 8160.1.1
+
+			NOT = {
+				has_global_variable = segrellion_great_dragonpit_dragons_initialized
+			}
+
+			province:7263 = {
+				has_building_or_higher = dragonpit_01
+			}
+
+			title:c_farring_cross = {
+				has_variable = has_dragonkeeper_order
+			}
+		}
+
+		every_living_character = {
+			limit = {
+				has_trait = dragon
+
+				OR = {
+					# Canon Ice and Fire dragon characters.
+					this = character:dragon_vhalyrax
+					this = character:dragon_maenor
+					this = character:dragon_valor
+					this = character:dragon_azuron
+					this = character:dragon_silverwing
+
+					# Dynamic early-bookmark versions.
+					has_character_flag = segrellion_vhalyrax_dragon
+					has_character_flag = segrellion_maenor_dragon
+					has_character_flag = segrellion_nightdancer_dragon
+
+					# Any other dragon actually ridden by a Segrellion in 160.
+					AND = {
+						exists = var:current_rider
+						var:current_rider = {
+							dynasty = dynasty:dynn_Segrellion
+						}
+					}
+				}
+			}
+
+			save_scope_as = segrellion_dragon_to_move
+
+			# Remove cleanly from Dragonstone, King's Landing, Vhal or any
+			# other pit before adding it to the Great Dragonpit.
+			if = {
+				limit = {
+					has_character_flag = in_dragonpit
+					exists = var:pitted_dragon_location
+				}
+
+				var:pitted_dragon_location = {
+					save_scope_as = segrellion_previous_dragonpit
+				}
+
+				agot_remove_from_dragonpit_no_event = {
+					DRAGON = scope:segrellion_dragon_to_move
+					DRAGONPIT_COUNTY = scope:segrellion_previous_dragonpit
+				}
+			}
+
+			agot_send_to_dragonpit_no_event = {
+				DRAGON = scope:segrellion_dragon_to_move
+				DRAGONPIT_COUNTY = title:c_farring_cross
+			}
+		}
+
+		set_global_variable = {
+			name = segrellion_great_dragonpit_dragons_initialized
+			value = yes
+		}
+	}
+}
+
+
+# ---------------------------------------------------------
 # Historical / save-compatible state repair
 # ---------------------------------------------------------
 
 segrellion_beacon_dragonpit_historical_progression_effect = {
 
-	# Canon inauguration: 160 AC.
-	# If no divergent Great Project is currently underway, ensure the
-	# historical site exists in all bookmarks and played-forward games.
+	# Canon inauguration: 160 AC. New bookmarks at or after this date
+	# receive the castle and AGOT's fully completed native Dragonpit.
 	if = {
 		limit = {
 			current_date >= 8160.1.1
@@ -190,82 +269,93 @@ segrellion_beacon_dragonpit_historical_progression_effect = {
 
 			if = {
 				limit = {
-					NOT = {
-						has_building_or_higher = generic_dragon_pit_01
-					}
+					has_special_building_slot = no
 				}
 
-				add_building = generic_dragon_pit_01
+				add_special_building_slot = dragonpit_03
 			}
 
 			if = {
 				limit = {
 					NOT = {
-						has_building_or_higher = segrellion_beacon_dragonpit_01
+						has_building_or_higher = dragonpit_01
 					}
 				}
 
-				add_great_building = segrellion_beacon_dragonpit_01
+				add_special_building = dragonpit_03
 			}
 		}
 	}
 
 
-	# Save repair for Dragonpits constructed before this update.
-	# A custom Great Dragonpit always receives AGOT's native backend,
-	# even if it was completed before 160 AC in a live campaign.
-	if = {
-		limit = {
-			province:7263 = {
-				has_building_or_higher = segrellion_beacon_dragonpit_01
-
-				NOT = {
-					has_building_or_higher = generic_dragon_pit_01
-				}
-			}
-		}
-
-		province:7263 = {
-			add_building = generic_dragon_pit_01
-		}
-	}
-
-
-	# Conversely, historical 160+ bookmarks with the native backend
-	# receive our unique Great Building if an older save lacks it.
-	if = {
-		limit = {
-			current_date >= 8160.1.1
-
-			province:7263 = {
-				has_building_or_higher = generic_dragon_pit_01
-
-				NOT = {
-					has_building_or_higher = segrellion_beacon_dragonpit_01
-				}
-			}
-		}
-
-		province:7263 = {
-			add_great_building = segrellion_beacon_dragonpit_01
-		}
-	}
-
-
-	# Once either canonical layer is present, repair ownership, name and
-	# every AGOT Dragonkeeper state dependency.
+	# Migrate earlier Ice and Fire versions that used a custom Great
+	# Building plus generic_dragon_pit_01 as a backend. The result is
+	# now one visible Special Building: AGOT's native dragonpit_03.
 	if = {
 		limit = {
 			province:7263 = {
 				OR = {
 					has_building_or_higher = segrellion_beacon_dragonpit_01
-
-					AND = {
-						this = province:7263
-						has_building_or_higher = generic_dragon_pit_01
-						current_date >= 8160.1.1
-					}
+					has_building_or_higher = generic_dragon_pit_01
 				}
+
+				NOT = {
+					has_building_or_higher = dragonpit_01
+				}
+			}
+		}
+
+		province:7263 = {
+
+			if = {
+				limit = {
+					has_special_building_slot = no
+				}
+
+				add_special_building_slot = dragonpit_03
+			}
+
+			if = {
+				limit = {
+					has_building_or_higher = generic_dragon_pit_01
+				}
+
+				remove_building = generic_dragon_pit_01
+			}
+
+			if = {
+				limit = {
+					has_building_or_higher = segrellion_beacon_dragonpit_01
+				}
+
+				remove_building = segrellion_beacon_dragonpit_01
+			}
+
+			add_special_building = dragonpit_03
+		}
+	}
+
+
+	# Never leave the obsolete generic backend beside the real Special
+	# Building, otherwise the holding would display two Dragonpits.
+	if = {
+		limit = {
+			province:7263 = {
+				has_building_or_higher = dragonpit_01
+				has_building_or_higher = generic_dragon_pit_01
+			}
+		}
+
+		province:7263 = {
+			remove_building = generic_dragon_pit_01
+		}
+	}
+
+
+	if = {
+		limit = {
+			province:7263 = {
+				has_building_or_higher = dragonpit_01
 			}
 		}
 
@@ -287,5 +377,7 @@ segrellion_beacon_dragonpit_historical_progression_effect = {
 		title:c_farring_cross.holder ?= {
 			segrellion_activate_beacon_dragonpit_effect = yes
 		}
+
+		segrellion_seed_great_dragonpit_dragons_effect = yes
 	}
 }
