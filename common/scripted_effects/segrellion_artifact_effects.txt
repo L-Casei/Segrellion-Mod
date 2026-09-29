@@ -3843,3 +3843,139 @@ segrellion_create_alysanne_memorandum_effect = {
 		}
 	}
 }
+
+# =========================================================
+# MAEGOR THE USURPER - HISTORICAL LIGHTBRINGER
+#
+# Separate artifact identity from the prophetic Lightbringer
+# created by Icebringer's late-game Azor Ahai path.
+# =========================================================
+
+segrellion_create_usurper_lightbringer_effect = {
+
+	$OWNER$ = {
+		save_scope_as = owner
+	}
+
+	save_scope_value_as = {
+		name = quality
+		value = 90
+	}
+
+	save_scope_value_as = {
+		name = wealth
+		value = 90
+	}
+
+	set_artifact_rarity_illustrious = yes
+
+	create_artifact = {
+		name = segrellion_usurper_lightbringer_name
+		description = segrellion_usurper_lightbringer_desc
+		type = sword
+		visuals = segrellion_lightbringer_visuals
+		template = segrellion_usurper_lightbringer_template
+		wealth = scope:wealth
+		quality = scope:quality
+		modifier = segrellion_lightbringer_modifier
+
+		history = {
+			type = created
+			date = 8157.1.1
+			recipient = scope:owner
+		}
+
+		save_scope_as = newly_created_artifact
+		decaying = no
+	}
+
+	scope:newly_created_artifact = {
+		equip_artifact_to_owner_replace = yes
+
+		set_global_variable = {
+			name = segrellion_usurper_lightbringer
+			value = this
+		}
+
+		set_variable = {
+			name = valyrian_steel
+			value = yes
+		}
+
+		set_variable = {
+			name = historical_unique_artifact
+			value = yes
+		}
+
+		set_variable = {
+			name = traditional_house_owner
+			value = house:house_Segrellion
+		}
+
+		set_variable = {
+			name = segrellion_usurper_lightbringer_artifact
+			value = yes
+		}
+	}
+}
+
+
+segrellion_usurper_lightbringer_progression_effect = {
+
+	# The sword enters the historical record when Maegor returns from Pentos.
+	if = {
+		limit = {
+			current_date >= 8157.1.1
+			current_date < 8158.3.1
+			NOT = {
+				exists = global_var:segrellion_usurper_lightbringer
+			}
+		}
+
+		if = {
+			limit = {
+				character:Segrellion_Maegor_Usurper ?= {
+					is_alive = yes
+				}
+			}
+
+			character:Segrellion_Maegor_Usurper = {
+				segrellion_create_usurper_lightbringer_effect = {
+					OWNER = this
+				}
+			}
+		}
+
+		else_if = {
+			limit = {
+				exists = global_var:segrellion_runtime_maegor_usurper
+				global_var:segrellion_runtime_maegor_usurper = {
+					is_alive = yes
+				}
+			}
+
+			global_var:segrellion_runtime_maegor_usurper = {
+				segrellion_create_usurper_lightbringer_effect = {
+					OWNER = this
+				}
+			}
+		}
+	}
+
+	# Lightbringer disappears with Maegor after Connington.
+	# Its separate global is removed so the later prophetic artifact
+	# remains completely unaffected.
+	if = {
+		limit = {
+			current_date >= 8158.3.1
+			exists = global_var:segrellion_usurper_lightbringer
+		}
+
+		global_var:segrellion_usurper_lightbringer = {
+			save_scope_as = usurper_lightbringer_to_destroy
+		}
+
+		remove_global_variable = segrellion_usurper_lightbringer
+		destroy_artifact = scope:usurper_lightbringer_to_destroy
+	}
+}
