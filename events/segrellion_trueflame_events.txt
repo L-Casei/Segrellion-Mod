@@ -1,0 +1,411 @@
+namespace = segrellion_trueflame
+
+
+# =========================================================
+# 0001 - AN ESSOSI STORY
+# =========================================================
+
+segrellion_trueflame.0001 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0001.t
+	desc = segrellion_trueflame.0001.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+		name = segrellion_trueflame.0001.a
+
+		set_global_variable = {
+			name = segrellion_trueflame_story_known
+			value = yes
+		}
+
+		add_prestige = 100
+	}
+}
+
+
+# =========================================================
+# 0100 - BEGIN THE SEARCH
+# =========================================================
+
+segrellion_trueflame.0100 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0100.t
+	desc = segrellion_trueflame.0100.desc
+
+	theme = travel
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	# Travel personally.
+	option = {
+		name = segrellion_trueflame.0100.a
+
+		add_character_flag = segrellion_trueflame_personal_expedition
+
+		start_travel_plan = {
+			destination = title:c_lys.title_province
+
+			return_trip = no
+
+			on_arrival_event = segrellion_trueflame.0110
+			on_arrival_destinations = first
+
+			on_travel_planner_cancel_event = segrellion_trueflame.0090
+		}
+	}
+
+	# Send agents instead.
+	option = {
+		name = segrellion_trueflame.0100.b
+
+		add_character_flag = segrellion_trueflame_agents_expedition
+
+		trigger_event = {
+			id = segrellion_trueflame.0120
+			days = { 90 150 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0090 - JOURNEY CANCELLED
+# =========================================================
+
+segrellion_trueflame.0090 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0090.t
+	desc = segrellion_trueflame.0090.desc
+
+	theme = travel
+
+	left_portrait = {
+		character = root
+		animation = worry
+	}
+
+	option = {
+		name = segrellion_trueflame.0090.a
+
+		remove_character_flag = segrellion_trueflame_search_active
+		remove_character_flag = segrellion_trueflame_personal_expedition
+	}
+}
+
+
+# =========================================================
+# 0110 - LYS
+# =========================================================
+
+segrellion_trueflame.0110 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0110.t
+	desc = segrellion_trueflame.0110.desc
+
+	theme = travel
+
+	override_background = {
+		reference = city
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	option = {
+		name = segrellion_trueflame.0110.a
+
+		trigger_event = {
+			id = segrellion_trueflame.0200
+			days = { 5 10 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0120 - THE AGENTS RETURN
+# =========================================================
+
+segrellion_trueflame.0120 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0120.t
+	desc = segrellion_trueflame.0120.desc
+
+	theme = intrigue
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = thinking
+	}
+
+	option = {
+		name = segrellion_trueflame.0120.a
+
+		trigger_event = {
+			id = segrellion_trueflame.0200
+			days = { 5 10 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0200 - THREE RECORDS, ONE SWORD
+# =========================================================
+
+segrellion_trueflame.0200 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0200.t
+	desc = segrellion_trueflame.0200.desc
+
+	theme = learning
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = wonder
+	}
+
+	option = {
+		name = segrellion_trueflame.0200.a
+
+		add_learning_lifestyle_xp = 100
+
+		trigger_event = {
+			id = segrellion_trueflame.0300
+			days = { 10 20 }
+		}
+	}
+}
+
+
+# =========================================================
+# 0300 - TRUEFLAME
+#
+# Nothing supernatural happens. The proof is historical:
+# matching maker's marks, the old Segrellion device and an
+# unbroken chain of Essosi inventories.
+# =========================================================
+
+segrellion_trueflame.0300 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0300.t
+	desc = segrellion_trueflame.0300.desc
+
+	theme = dynasty
+
+	override_background = {
+		reference = study
+	}
+
+	left_portrait = {
+		character = root
+		animation = shock
+	}
+
+	option = {
+		name = segrellion_trueflame.0300.a
+		custom_tooltip = segrellion_trueflame.0300.a.tt
+
+		segrellion_recover_trueflame_effect = {
+			OWNER = root
+		}
+
+		add_prestige = 500
+
+		segrellion_finish_trueflame_search_effect = yes
+	}
+}
+
+
+# =========================================================
+# 0400 - RECLAIM TRUEFLAME
+# =========================================================
+
+segrellion_trueflame.0400 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0400.t
+	desc = segrellion_trueflame.0400.desc
+
+	theme = diplomacy
+
+	immediate = {
+
+		global_var:segrellion_trueflame ?= {
+
+			artifact_owner ?= {
+				save_scope_as = trueflame_current_holder
+			}
+		}
+	}
+
+	left_portrait = {
+		character = root
+		animation = personality_rational
+	}
+
+	right_portrait = {
+		character = scope:trueflame_current_holder
+		animation = personality_bold
+	}
+
+	# Buy it back.
+	option = {
+		name = segrellion_trueflame.0400.a
+
+		trigger = {
+			gold >= 500
+		}
+
+		add_gold = -500
+
+		scope:trueflame_current_holder ?= {
+			add_gold = 500
+		}
+
+		segrellion_transfer_trueflame_effect = {
+			NEW_OWNER = root
+		}
+
+		add_prestige = 250
+	}
+
+	# Assert the ancestral right of the House.
+	option = {
+		name = segrellion_trueflame.0400.b
+
+		trigger = {
+			prestige >= 1000
+		}
+
+		add_prestige = -500
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					OR = {
+						diplomacy >= 14
+						intrigue >= 14
+						dread >= 50
+					}
+				}
+
+				segrellion_transfer_trueflame_effect = {
+					NEW_OWNER = root
+				}
+
+				trigger_event = {
+					id = segrellion_trueflame.0410
+				}
+			}
+
+			else = {
+				trigger_event = {
+					id = segrellion_trueflame.0420
+				}
+			}
+		}
+	}
+
+	option = {
+		name = segrellion_trueflame.0400.c
+	}
+}
+
+
+# =========================================================
+# 0410 - THE CLAIM IS HONORED
+# =========================================================
+
+segrellion_trueflame.0410 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0410.t
+	desc = segrellion_trueflame.0410.desc
+
+	theme = dynasty
+
+	left_portrait = {
+		character = root
+		animation = personality_bold
+	}
+
+	option = {
+		name = segrellion_trueflame.0410.a
+		add_prestige = 250
+	}
+}
+
+
+# =========================================================
+# 0420 - THE CLAIM IS REFUSED
+# =========================================================
+
+segrellion_trueflame.0420 = {
+
+	type = character_event
+
+	title = segrellion_trueflame.0420.t
+	desc = segrellion_trueflame.0420.desc
+
+	theme = diplomacy
+
+	left_portrait = {
+		character = root
+		animation = anger
+	}
+
+	option = {
+		name = segrellion_trueflame.0420.a
+
+		add_character_flag = {
+			flag = segrellion_trueflame_reclaim_failed_cooldown
+			years = 3
+		}
+	}
+}
