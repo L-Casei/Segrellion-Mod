@@ -44,22 +44,33 @@ segrellion_dance_of_the_dragons_war = {
 		}
 	}
 
-	# This whole section was already commented out, I just commented it out more to prevent console errors
-	#allowed_for_character = {}
-	
-	# allowed_against_character = {
-	# 	faith.religion = scope:attacker.faith.religion
-	# }
+	# Scenario-only CB. It must never appear as a generic claim war.
+	# The scripted 128 AC setup starts this exact war directly.
+	allowed_for_character = {
+		this = character:Targaryen_63
+		game_start_date = 8128.11.12
+	}
 
-	#AGOT Added
 	allowed_against_character = {
+		scope:defender = character:Targaryen_65
 		agot_mw_war_valid_during_megawar = yes
 	}
 
-	#AGOT Added
 	valid_to_start = {
+		game_start_date = 8128.11.12
+
+		scope:attacker = {
+			this = character:Targaryen_63
+		}
+
+		scope:defender = {
+			this = character:Targaryen_65
+		}
+
 		NOT = {
-			scope:target = { agot_invalid_war_target = yes }
+			scope:target = {
+				agot_invalid_war_target = yes
+			}
 		}
 	}
 

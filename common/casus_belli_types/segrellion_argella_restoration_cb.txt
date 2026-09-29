@@ -1,0 +1,248 @@
+# =========================================================
+# AERYN SEGRELLION - RESTORE ARGELLA BARATHEON
+# =========================================================
+
+segrellion_restore_argella_baratheon_cb = {
+
+	icon = claim_cb
+	group = claim
+
+	combine_into_one = yes
+	should_show_war_goal_subview = no
+	allow_hostages = no
+
+	target_titles = none
+
+	# Only Aeryn can press this historical restoration war.
+	allowed_for_character = {
+		this = character:Segrellion_12
+	}
+
+	# Only against Rolland Baratheon.
+	allowed_against_character = {
+		scope:defender = character:IAF_Baratheon_5
+	}
+
+	valid_to_start = {
+
+		scope:attacker = {
+			is_alive = yes
+			this = character:Segrellion_12
+		}
+
+		scope:defender = {
+			is_alive = yes
+			this = character:IAF_Baratheon_5
+			has_title = title:e_the_stormlands
+		}
+
+		character:IAF_Baratheon_1 ?= {
+			is_alive = yes
+		}
+	}
+
+	should_invalidate = {
+
+		OR = {
+
+			scope:attacker = {
+				is_alive = no
+			}
+
+			character:IAF_Baratheon_1 ?= {
+				is_alive = no
+			}
+
+			scope:defender = {
+				NOT = {
+					has_title = title:e_the_stormlands
+				}
+			}
+		}
+	}
+
+	cost = {
+		prestige = 200
+	}
+
+	on_declaration = {
+
+		on_declared_war = yes
+
+		scope:attacker = {
+			add_character_flag = segrellion_argella_restoration_war_active
+		}
+
+		character:IAF_Baratheon_1 ?= {
+			add_character_flag = segrellion_argella_restoration_claimant
+		}
+	}
+
+
+	# =====================================================
+	# AERYN WINS
+	# =====================================================
+
+	on_victory_desc = {
+		desc = segrellion_restore_argella_baratheon_victory_desc
+	}
+
+	on_victory = {
+
+		scope:attacker = {
+			save_scope_as = segrellion_argella_restoration_attacker
+
+			remove_character_flag = segrellion_argella_restoration_war_active
+
+			add_character_flag = segrellion_argella_restoration_victory
+
+			add_prestige = 500
+		}
+
+		character:IAF_Baratheon_1 = {
+
+			ep3_become_landed_warning_effect = {
+				TITLE_RECEIVER = this
+				TITLE = title:e_the_stormlands
+			}
+		}
+
+		create_title_and_vassal_change = {
+			type = conquest
+			save_scope_as = segrellion_argella_restoration_change
+			add_claim_on_loss = no
+		}
+
+		# The Stormlands paramountcy and its vassals return to Argella.
+		title:e_the_stormlands = {
+			change_title_holder_include_vassals = {
+				holder = character:IAF_Baratheon_1
+				change = scope:segrellion_argella_restoration_change
+				government_base = scope:defender
+			}
+		}
+
+		# Storm's End and the traditional Baratheon title stack.
+		title:k_shipbreaker_bay = {
+			change_title_holder = {
+				holder = character:IAF_Baratheon_1
+				change = scope:segrellion_argella_restoration_change
+			}
+		}
+
+		title:d_shipbreaker_bay = {
+			change_title_holder = {
+				holder = character:IAF_Baratheon_1
+				change = scope:segrellion_argella_restoration_change
+			}
+		}
+
+		title:c_storms_end = {
+			change_title_holder = {
+				holder = character:IAF_Baratheon_1
+				change = scope:segrellion_argella_restoration_change
+			}
+		}
+
+		resolve_title_and_vassal_change = scope:segrellion_argella_restoration_change
+
+		character:IAF_Baratheon_1 = {
+
+			set_primary_title_to = title:e_the_stormlands
+			set_realm_capital = title:c_storms_end
+
+			remove_character_flag = segrellion_argella_restoration_claimant
+			remove_character_flag = segrellion_argella_exiled_to_aeryn_court
+
+			add_character_flag = segrellion_argella_restored_by_aeryn
+
+			ep3_become_landed_cleanup_effect = yes
+		}
+
+		# Rolland survived the decisive single combat, but Aeryn executes
+		# him after the war rather than allowing another counterclaim.
+		if = {
+			limit = {
+				scope:defender = {
+					is_alive = yes
+				}
+			}
+
+			scope:defender = {
+				death = {
+					death_reason = death_execution
+					killer = scope:segrellion_argella_restoration_attacker
+				}
+			}
+		}
+
+		add_truce_attacker_victory_effect = yes
+	}
+
+
+	# =====================================================
+	# WHITE PEACE
+	# =====================================================
+
+	on_white_peace_desc = {
+		desc = segrellion_restore_argella_baratheon_white_peace_desc
+	}
+
+	on_white_peace = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_argella_restoration_war_active
+		}
+
+		add_truce_white_peace_effect = yes
+	}
+
+
+	# =====================================================
+	# AERYN LOSES
+	# =====================================================
+
+	on_defeat_desc = {
+		desc = segrellion_restore_argella_baratheon_defeat_desc
+	}
+
+	on_defeat = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_argella_restoration_war_active
+		}
+
+		add_truce_attacker_defeat_effect = yes
+	}
+
+
+	on_invalidated = {
+
+		scope:attacker = {
+			remove_character_flag = segrellion_argella_restoration_war_active
+		}
+
+		character:IAF_Baratheon_1 ?= {
+			remove_character_flag = segrellion_argella_restoration_claimant
+		}
+	}
+
+	transfer_behavior = transfer
+
+	on_primary_attacker_death = invalidate
+	on_primary_defender_death = invalidate
+
+	attacker_allies_inherit = yes
+	defender_allies_inherit = yes
+
+	war_name = "segrellion_restore_argella_baratheon_war_name"
+	war_name_base = "segrellion_restore_argella_baratheon_war_name_base"
+	cb_name = "segrellion_restore_argella_baratheon_cb_name"
+
+	interface_priority = 220
+
+	attacker_wargoal_percentage = 0.8
+	max_attacker_score_from_battles = 75
+	max_defender_score_from_occupation = 150
+	max_attacker_score_from_occupation = 150
+}
