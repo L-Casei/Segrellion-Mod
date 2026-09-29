@@ -204,38 +204,52 @@ segrellion_seed_great_dragonpit_dragons_effect = {
 					}
 				}
 
-				# Do nothing if the dragon is already in this exact pit.
+				# Each dragon is historically seeded once. After that the
+				# player may release or relocate it without the monthly repair
+				# dragging it back forever.
 				NOT = {
-					AND = {
-						has_character_flag = in_dragonpit
-						var:pitted_dragon_location ?= title:c_farring_cross
-					}
+					has_character_flag = segrellion_great_dragonpit_historical_seeded
 				}
 			}
 
 			save_scope_as = segrellion_dragon_to_move
 
-			# Remove cleanly from Dragonstone, King's Landing, Vhal or
-			# another pit before assigning the Great Dragonpit.
 			if = {
 				limit = {
 					has_character_flag = in_dragonpit
-					exists = var:pitted_dragon_location
+					var:pitted_dragon_location ?= title:c_farring_cross
 				}
 
-				var:pitted_dragon_location = {
-					save_scope_as = segrellion_previous_dragonpit
-				}
-
-				agot_remove_from_dragonpit_no_event = {
-					DRAGON = scope:segrellion_dragon_to_move
-					DRAGONPIT_COUNTY = scope:segrellion_previous_dragonpit
-				}
+				# Already correct in this bookmark/save. Mark it as seeded
+				# without touching the existing dragonpit state.
+				add_character_flag = segrellion_great_dragonpit_historical_seeded
 			}
+			else = {
 
-			agot_send_to_dragonpit_no_event = {
-				DRAGON = scope:segrellion_dragon_to_move
-				DRAGONPIT_COUNTY = title:c_farring_cross
+				# Remove cleanly from Dragonstone, King's Landing, Vhal or
+				# another pit before assigning the Great Dragonpit.
+				if = {
+					limit = {
+						has_character_flag = in_dragonpit
+						exists = var:pitted_dragon_location
+					}
+
+					var:pitted_dragon_location = {
+						save_scope_as = segrellion_previous_dragonpit
+					}
+
+					agot_remove_from_dragonpit_no_event = {
+						DRAGON = scope:segrellion_dragon_to_move
+						DRAGONPIT_COUNTY = scope:segrellion_previous_dragonpit
+					}
+				}
+
+				agot_send_to_dragonpit_no_event = {
+					DRAGON = scope:segrellion_dragon_to_move
+					DRAGONPIT_COUNTY = title:c_farring_cross
+				}
+
+				add_character_flag = segrellion_great_dragonpit_historical_seeded
 			}
 		}
 
