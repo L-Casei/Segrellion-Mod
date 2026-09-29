@@ -1,0 +1,71 @@
+# =========================================================
+# SEGRELLION - DRAGONPIT GUI SAFETY OVERRIDE
+# =========================================================
+
+send_to_dragonpit = {
+	scope = character
+
+	is_shown = {
+		scope:owner ?= {
+			agot_has_an_active_dragonpit = yes
+		}
+
+		has_trait = dragon
+		exists = employer
+		employer = scope:owner
+		has_character_flag = owned_dragon
+		NOT = { has_character_flag = in_dragonpit }
+
+		# Riderless captured dragons may be managed by the pit owner.
+		# A bonded dragon can only be sent directly by its actual rider.
+		OR = {
+			NOT = { exists = var:current_rider }
+			var:current_rider = scope:owner
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = CANT_SENT_TO_DRAGONPIT_TT
+			NOT = {
+				owns_story_of_type = story_dragon_at_war
+			}
+		}
+
+		custom_tooltip = {
+			text = CANT_SENT_TO_DRAGONPIT_TRAVELING_TT
+			trigger_if = {
+				limit = {
+					exists = var:current_rider
+					exists = var:current_rider.current_travel_plan
+				}
+
+				var:current_rider.current_travel_plan = {
+					NOT = { has_travel_option = dragon_flight_option }
+				}
+			}
+
+			NOT = { exists = current_travel_plan }
+		}
+	}
+
+	ai_is_valid = {
+		scope:owner ?= {
+			agot_has_an_active_dragonpit = yes
+		}
+
+		has_trait = dragon
+		exists = employer
+		has_character_flag = owned_dragon
+		NOT = { has_character_flag = in_dragonpit }
+
+		OR = {
+			NOT = { exists = var:current_rider }
+			var:current_rider = scope:owner
+		}
+	}
+
+	effect = {
+		agot_change_dragonpit_status = yes
+	}
+}

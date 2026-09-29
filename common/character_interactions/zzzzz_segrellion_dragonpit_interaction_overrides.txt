@@ -1,0 +1,124 @@
+# =========================================================
+# SEGRELLION - SEND TO DRAGONPIT INTERACTION SAFETY OVERRIDE
+# =========================================================
+
+agot_send_to_dragonpit = {
+	icon = icon_scheme_dragon
+	category = interaction_category_friendly
+	desc = agot_send_to_dragonpit_desc
+	auto_accept = yes
+
+	cooldown = {
+		years = 1
+	}
+
+	is_shown = {
+		scope:actor = {
+			is_ai = yes
+			is_human = yes
+			agot_has_an_active_dragonpit = yes
+		}
+
+		scope:recipient = {
+			OR = {
+				any_liege_or_above = { this = scope:actor }
+
+				location.county = {
+					holder = {
+						OR = {
+							any_liege_or_above = { this = scope:actor }
+							this = scope:actor
+						}
+					}
+
+					agot_title_is_an_active_dragonpit = yes
+				}
+
+				is_courtier_of = scope:actor
+				is_foreign_court_or_pool_guest_of = scope:actor
+			}
+
+			has_trait = dragon
+
+			NOT = {
+				has_character_flag = in_dragonpit
+			}
+
+			NOT = {
+				owns_story_of_type = story_dragon_at_war
+			}
+
+			# A dragon bonded to someone else cannot be instantly entombed
+			# by its liege/court owner.
+			OR = {
+				NOT = { exists = var:current_rider }
+				var:current_rider = scope:actor
+			}
+
+			trigger_if = {
+				limit = {
+					exists = var:current_rider
+					exists = var:current_rider.current_travel_plan
+				}
+
+				var:current_rider.current_travel_plan = {
+					NOT = { has_travel_option = dragon_flight_option }
+				}
+			}
+
+			NOT = { exists = current_travel_plan }
+		}
+	}
+
+	on_accept = {
+		scope:recipient = {
+			agot_change_dragonpit_status_ai = {
+				OWNER = scope:actor
+				DRAGON_REC = scope:recipient
+			}
+		}
+
+		scope:actor = {
+			if = {
+				limit = {
+					is_ai = yes
+				}
+
+				debug_log = "AI tried to entomb dragon"
+				debug_log_scopes = yes
+			}
+		}
+	}
+
+	ai_will_do = {
+		base = 85
+
+		modifier = {
+			add = -85
+
+			scope:recipient = {
+				NOT = {
+					any_relation = {
+						type = agot_dragon
+					}
+				}
+
+				OR = {
+					has_trait = dragon_aggressive
+					has_trait = dragon_defiant
+					has_trait = dragon_bloodthirsty
+					has_trait = dragon_cannibal
+					dragon_size >= level_five_dragon_size
+					draconic_dread >= 80
+				}
+			}
+		}
+	}
+
+	ai_frequency = 12
+
+	ai_targets = {
+		ai_recipients = courtiers
+		ai_recipients = guests
+	}
+}

@@ -89,10 +89,15 @@ agot_change_dragonpit_status = {
 				}
 
 
-				# Owned dragon -> send normally
+				# Owned dragon -> send normally ONLY if riderless or ridden
+				# by the ruler attempting to place it in the pit.
 				else_if = {
 					limit = {
 						has_character_flag = owned_dragon
+						OR = {
+							NOT = { exists = var:current_rider }
+							var:current_rider = scope:owner
+						}
 					}
 
 					agot_send_to_dragonpit_effect = {
@@ -182,10 +187,15 @@ agot_change_dragonpit_status_ai = {
 		}
 
 
-		# Owned dragon
+		# Owned dragon. A bonded dragon can only be sent directly by
+		# its own current rider; riderless captured dragons remain manageable.
 		else_if = {
 			limit = {
 				has_character_flag = owned_dragon
+				OR = {
+					NOT = { exists = var:current_rider }
+					var:current_rider = $OWNER$
+				}
 			}
 
 			agot_send_to_dragonpit_effect = {
