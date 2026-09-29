@@ -1,0 +1,85 @@
+# =========================================================
+# KNIGHT'S BRIDGE DRAGONPIT
+# AGOT DRAGONKEEPER INTEGRATION
+#
+# ROOT = holder of c_farring_cross
+# =========================================================
+
+segrellion_activate_beacon_dragonpit_effect = {
+
+	if = {
+
+		limit = {
+
+			title:c_farring_cross = {
+
+				any_county_province = {
+					segrellion_beacon_dragonpit_building_active_trigger = yes
+				}
+			}
+		}
+
+		# AGOT keys its dragonpit systems from this county variable.
+		title:c_farring_cross = {
+
+			if = {
+				limit = {
+					NOT = {
+						has_variable = has_dragonkeeper_order
+					}
+				}
+
+				set_variable = {
+					name = has_dragonkeeper_order
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				agot_has_any_dragonpit_access_law = no
+			}
+
+			agot_dragonpit_access_law_close_family_effect = yes
+		}
+
+		if = {
+			limit = {
+				has_ep1_dlc_trigger = yes
+			}
+
+			hidden_effect = {
+				set_amenity_level = {
+					type = agot_dragonpit_amenities
+					value = 3
+				}
+			}
+		}
+
+		# One ruler only needs one Head Dragonkeeper court position,
+		# even if that ruler owns several active dragonpits.
+		if = {
+
+			limit = {
+
+				NOT = {
+					employs_court_position = head_dragonkeeper_court_position
+				}
+
+				NOT = {
+					has_character_flag = segrellion_beacon_head_dragonkeeper_event_pending
+				}
+			}
+
+			add_character_flag = {
+				flag = segrellion_beacon_head_dragonkeeper_event_pending
+				days = 14
+			}
+
+			trigger_event = {
+				id = agot_dragonkeepers.0001
+				days = 1
+			}
+		}
+	}
+}

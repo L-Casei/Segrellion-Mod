@@ -1,0 +1,184 @@
+# =========================================================
+# BUILD THE DRAGONPIT OF KNIGHT'S BRIDGE
+# =========================================================
+
+segrellion_build_beacon_dragonpit_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/great_projects/segrellion_beacon_dragonpit.dds"
+	}
+
+	decision_group_type = major
+	ai_goal = yes
+
+	desc = segrellion_build_beacon_dragonpit_decision_desc
+	selection_tooltip = segrellion_build_beacon_dragonpit_decision_tooltip
+	confirm_text = segrellion_build_beacon_dragonpit_decision_confirm
+
+	cost = {
+		gold = 250
+		prestige = 100
+	}
+
+	is_shown = {
+
+		is_landed = yes
+		has_title = title:c_farring_cross
+
+		NOT = {
+			has_global_variable = segrellion_beacon_dragonpit_project_active
+		}
+
+		NOT = {
+			has_global_variable = segrellion_beacon_dragonpit_completed
+		}
+
+		province:7263 = {
+			has_holding = no
+		}
+	}
+
+	is_valid = {
+
+		is_capable_adult = yes
+		is_imprisoned = no
+
+		custom_description = {
+			text = segrellion_beacon_dragonpit_requirement_county_tt
+			has_title = title:c_farring_cross
+		}
+
+		custom_description = {
+			text = segrellion_beacon_dragonpit_requirement_dragonpit_tt
+			agot_has_dragonpit_requirements_trigger = yes
+		}
+
+		custom_description = {
+			text = segrellion_beacon_dragonpit_requirement_empty_site_tt
+			province:7263 = {
+				has_holding = no
+			}
+		}
+	}
+
+	effect = {
+
+		custom_tooltip = segrellion_build_beacon_dragonpit_decision_effect_tt
+
+		hidden_effect = {
+
+			set_global_variable = {
+				name = segrellion_beacon_dragonpit_project_active
+				value = yes
+			}
+
+			province:7263 = {
+
+				plan_great_project = {
+					founder = root
+					great_project_type = segrellion_construct_beacon_dragonpit
+					save_scope_as = segrellion_beacon_dragonpit_project
+				}
+			}
+		}
+	}
+
+	ai_check_interval = 12
+
+	ai_potential = {
+		is_landed = yes
+		has_title = title:c_farring_cross
+		agot_has_dragonpit_requirements_trigger = yes
+
+		province:7263 = {
+			has_holding = no
+		}
+	}
+
+	ai_will_do = {
+
+		base = 100
+
+		modifier = {
+			add = 500
+
+			any_relation = {
+				type = agot_dragon
+			}
+		}
+
+		modifier = {
+			add = 300
+
+			any_courtier_or_guest = {
+				has_trait = dragon
+			}
+		}
+
+		modifier = {
+			add = 250
+
+			any_close_or_extended_family_member = {
+				any_relation = {
+					type = agot_dragon
+				}
+			}
+		}
+	}
+}
+
+
+# =========================================================
+# HEAD DRAGONKEEPER FALLBACK
+# =========================================================
+
+segrellion_appoint_beacon_head_dragonkeeper_decision = {
+
+	picture = {
+		reference = "gfx/interface/illustrations/great_projects/segrellion_beacon_dragonpit.dds"
+	}
+
+	decision_group_type = major
+	ai_goal = yes
+
+	desc = segrellion_appoint_beacon_head_dragonkeeper_decision_desc
+	selection_tooltip = segrellion_appoint_beacon_head_dragonkeeper_decision_tooltip
+	confirm_text = segrellion_appoint_beacon_head_dragonkeeper_decision_confirm
+
+	is_shown = {
+
+		is_landed = yes
+
+		segrellion_has_active_beacon_dragonpit = yes
+
+		NOT = {
+			employs_court_position = head_dragonkeeper_court_position
+		}
+	}
+
+	is_valid = {
+
+		is_capable_adult = yes
+		is_imprisoned = no
+
+		has_title = title:c_farring_cross
+	}
+
+	effect = {
+
+		custom_tooltip = segrellion_appoint_beacon_head_dragonkeeper_decision_effect_tt
+
+		trigger_event = {
+			id = agot_dragonkeepers.0001
+			days = 1
+		}
+	}
+
+	ai_potential = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 500
+	}
+}

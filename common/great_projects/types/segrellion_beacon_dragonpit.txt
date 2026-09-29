@@ -1,0 +1,229 @@
+# =========================================================
+# THE DRAGONPIT OF KNIGHT'S BRIDGE
+#
+# Started through the dedicated decision. Once planned, the
+# normal Great Project interface handles funding and building.
+# =========================================================
+
+segrellion_construct_beacon_dragonpit = {
+
+	icon = {
+		reference = "gfx/interface/icons/great_projects/segrellion_beacon_dragonpit.dds"
+	}
+
+	illustration = {
+		reference = "gfx/interface/illustrations/great_projects/segrellion_beacon_dragonpit.dds"
+	}
+
+	name = {
+		desc = great_project_type_segrellion_construct_beacon_dragonpit
+	}
+
+	is_important = yes
+	show_in_list = yes
+
+	is_shown = {
+		has_global_variable = segrellion_beacon_dragonpit_project_active
+	}
+
+	# Placement is intentionally locked to the decision.
+	can_start_planning = {
+		always = no
+	}
+
+	can_cancel = {
+		always = yes
+	}
+
+	owner = founder_primary_title_owner
+
+	province_filter = realm
+
+	is_location_valid = {
+		scope:province = {
+			this = province:7263
+		}
+	}
+
+	is_valid = {
+		scope:owner ?= {
+			has_title = title:c_farring_cross
+		}
+		scope:province ?= {
+			this = province:7263
+			has_holding = no
+		}
+	}
+
+	# Planning cost is paid by the decision.
+	cost = {
+		gold = 0
+	}
+
+	construction_time = {
+		value = great_project_base_construction_time
+		multiply = common_great_project_construction_time_multiplier_value
+	}
+
+	contribution_threshold = 0
+	contributor_cooldown = standard_contributor_cooldown_value
+
+	allowed_contributor_filter = {
+		owner = yes
+		vassals = yes
+	}
+
+	on_plan_build = {
+		set_global_variable = {
+			name = segrellion_beacon_dragonpit_project_active
+			value = yes
+		}
+	}
+
+	on_start_build = {}
+
+	on_complete = {
+
+		custom_tooltip = {
+			text = great_project_type_segrellion_construct_beacon_dragonpit_complete_tt
+
+			scope:province ?= {
+
+				if = {
+					limit = {
+						has_holding = no
+					}
+
+					set_holding_type = castle_holding
+				}
+
+				add_great_building = segrellion_beacon_dragonpit_01
+			}
+		}
+
+		great_project_notify_completion = {
+			CHARACTER = scope:founder
+		}
+
+		hidden_effect = {
+
+			if = {
+				limit = {
+					has_global_variable = segrellion_beacon_dragonpit_project_active
+				}
+
+				remove_global_variable = segrellion_beacon_dragonpit_project_active
+			}
+
+			set_global_variable = {
+				name = segrellion_beacon_dragonpit_completed
+				value = yes
+			}
+
+			# Activate AGOT's keeper/order/law integration after the
+			# Great Building exists in the province.
+			scope:province ?= {
+				county = {
+					holder ?= {
+						segrellion_activate_beacon_dragonpit_effect = yes
+					}
+				}
+			}
+		}
+	}
+
+	on_cancel = {
+
+		if = {
+			limit = {
+				has_global_variable = segrellion_beacon_dragonpit_project_active
+			}
+
+			remove_global_variable = segrellion_beacon_dragonpit_project_active
+		}
+	}
+
+	project_contributions = {
+
+		materials = {
+
+			is_required = yes
+
+			cost = {
+				gold = 600
+			}
+
+			allowed_contributor_filter = {
+				owner = yes
+				vassals = yes
+			}
+
+			on_contribution_funded = {
+				great_project_notify_contribution = yes
+			}
+
+			ai_check_interval = 6
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+
+		workforce = {
+
+			is_required = yes
+
+			cost = {
+				gold = 450
+			}
+
+			allowed_contributor_filter = {
+				owner = yes
+				vassals = yes
+			}
+
+			on_contribution_funded = {
+				great_project_notify_contribution = yes
+			}
+
+			ai_check_interval = 6
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+
+		dragonkeeper_quarters = {
+
+			is_required = yes
+
+			cost = {
+				gold = 300
+				prestige = 100
+			}
+
+			allowed_contributor_filter = {
+				owner = yes
+				vassals = yes
+			}
+
+			on_contribution_funded = {
+				great_project_notify_contribution = yes
+			}
+
+			ai_check_interval = 6
+
+			ai_will_do = {
+				value = 1000
+			}
+		}
+	}
+
+	# The dedicated decision controls AI project creation.
+	ai_will_do = {
+		value = 0
+	}
+
+	ai_province_filter = capital
+	ai_check_interval = 100
+}
