@@ -514,4 +514,25 @@ segrellion_repair_alex_children_parentage_effect = {
 		}
 	}
 
+
+	# Wendwater, 141 AC. Future history does not fire by itself in a
+	# campaign begun in 106, so enforce Daeryn's canonical fate here.
+	if = {
+		limit = {
+			current_date >= 8141.9.1
+			character:Segrellion_Daeryn_Younger_Braavosi ?= {
+				is_alive = yes
+				NOT = { has_character_flag = segrellion_daeryn_wendwater_fate_done }
+			}
+			character:dragon_maenor ?= { is_alive = yes }
+		}
+		character:Segrellion_Daeryn_Younger_Braavosi = {
+			add_character_flag = segrellion_daeryn_wendwater_fate_done
+			death = {
+				death_reason = death_segrellion_devoured_by_dragon
+				killer = character:dragon_maenor
+			}
+		}
+	}
+
 }
