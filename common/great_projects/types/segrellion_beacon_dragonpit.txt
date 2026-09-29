@@ -1,8 +1,10 @@
 # =========================================================
-# THE DRAGONPIT OF KNIGHT'S BRIDGE
+# THE GREAT DRAGONPIT
 #
-# The project is created through the dedicated decision.
-# Only the holder of the Beacon can see the project itself.
+# Native Great Project available directly from the Great Projects UI.
+# No decision is used to plan or finance it.
+# The only valid construction site is province 7263, Knight's Bridge,
+# which becomes The Great Dragonpit when the project is completed.
 # =========================================================
 
 segrellion_construct_beacon_dragonpit = {
@@ -22,51 +24,52 @@ segrellion_construct_beacon_dragonpit = {
 	is_important = yes
 	show_in_list = yes
 
-	# The Great Project object itself is only visible to the ruler
-	# who personally holds the Beacon, and never once the Dragonpit exists.
+	# The project appears directly in the Great Projects interface for
+	# the personal holder of the Beacon. No hidden decision/flag gate.
 	is_shown = {
-		has_global_variable = segrellion_beacon_dragonpit_project_active
+		is_landed = yes
 		has_title = title:c_farring_cross
 
+		NOT = {
+			is_planning_great_project = segrellion_construct_beacon_dragonpit
+		}
+
 		province:7263 = {
-			NOT = {
+			NOR = {
 				has_building_or_higher = segrellion_beacon_dragonpit_01
+				has_building_or_higher = generic_dragon_pit_01
 			}
 		}
 	}
 
-	# Placement is locked to the decision so the project cannot be
-	# manually placed in another barony through the Great Project planner.
+	# Planning is performed natively from the Great Projects interface.
+	# No generic AGOT dragonpit prerequisite is used here, so Aeryn can
+	# see and plan the historical project in the 144 AC bookmark.
 	can_start_planning = {
-		always = no
-	}
 
-	can_cancel = {
-		always = yes
-	}
-
-	owner = founder_primary_title_owner
-
-	province_filter = realm
-
-	is_location_valid = {
-		scope:province = {
-			this = province:7263
-		}
-	}
-
-	# Hidden project-lifetime validation. Player-facing requirements
-	# live on the decision and have explicit localization.
-	is_valid = {
-		scope:owner ?= {
+		custom_description = {
+			text = segrellion_beacon_dragonpit_requirement_county_tt
 			has_title = title:c_farring_cross
 		}
 
-		scope:province ?= {
-			this = province:7263
+		custom_description = {
+			text = segrellion_beacon_dragonpit_requirement_adult_tt
+			is_capable_adult = yes
+		}
 
-			NOT = {
+		custom_description = {
+			text = segrellion_beacon_dragonpit_requirement_not_imprisoned_tt
+			is_imprisoned = no
+		}
+
+		NOT = {
+			is_planning_great_project = segrellion_construct_beacon_dragonpit
+		}
+
+		province:7263 = {
+			NOR = {
 				has_building_or_higher = segrellion_beacon_dragonpit_01
+				has_building_or_higher = generic_dragon_pit_01
 			}
 
 			OR = {
@@ -76,25 +79,88 @@ segrellion_construct_beacon_dragonpit = {
 		}
 	}
 
-	# Planning fee is paid by the decision.
+	can_cancel = {
+		always = yes
+	}
+
+	owner = founder_primary_title_owner
+
+	# The player may open the realm selector, but only Knight's Bridge
+	# passes is_location_valid.
+	province_filter = realm
+
+	is_location_valid = {
+		scope:province = {
+
+			custom_tooltip = {
+				text = segrellion_beacon_dragonpit_location_knights_bridge_tt
+				this = province:7263
+			}
+
+			custom_tooltip = {
+				text = segrellion_beacon_dragonpit_location_not_built_tt
+				NOR = {
+					has_building_or_higher = segrellion_beacon_dragonpit_01
+					has_building_or_higher = generic_dragon_pit_01
+				}
+			}
+
+			custom_tooltip = {
+				text = segrellion_beacon_dragonpit_location_holding_tt
+				OR = {
+					has_holding = no
+					has_holding_type = castle_holding
+				}
+			}
+		}
+	}
+
+	# If the Beacon leaves the project owner's hands, the project is no
+	# longer valid. Succession normally transfers the owner's primary
+	# title and the Beacon together.
+	is_valid = {
+		scope:owner ?= {
+			has_title = title:c_farring_cross
+		}
+
+		scope:province ?= {
+			this = province:7263
+
+			NOR = {
+				has_building_or_higher = segrellion_beacon_dragonpit_01
+				has_building_or_higher = generic_dragon_pit_01
+			}
+
+			OR = {
+				has_holding = no
+				has_holding_type = castle_holding
+			}
+		}
+	}
+
+	# All monetary expense is carried by the ten required contributions.
 	cost = {
 		gold = 0
 	}
 
-	construction_time = {
-		value = great_project_base_construction_time
-		multiply = common_great_project_construction_time_multiplier_value
-	}
+	# Ten full years of construction AFTER all required contributions
+	# have been funded.
+	construction_time = 3650
 
-	contribution_threshold = 0
+	contribution_threshold = 100
 	contributor_cooldown = standard_contributor_cooldown_value
+	invite_interaction = request_great_project_contribution_interaction
 
-	# Native Great Project financing supports the founder/current owner
-	# and vassals. Family and Segrellion contributors outside this native
-	# filter use the dedicated financing decision below.
+	# Native Great Project categories. contributor_is_valid below narrows
+	# actual contributors to the Beacon ruler, their family, Segrellions,
+	# and eligible vassals.
 	allowed_contributor_filter = {
 		owner = yes
 		vassals = yes
+		tributaries = yes
+		liege = yes
+		top_liege = yes
+		allies = yes
 	}
 
 	on_plan_build = {
@@ -122,9 +188,7 @@ segrellion_construct_beacon_dragonpit = {
 					add_building = castle_01
 				}
 
-				# Native AGOT backend. This is deliberately present alongside
-				# our unique Great Building so every hard-coded AGOT GUI and
-				# interaction recognizes the site as a real Dragonpit.
+				# Native AGOT Dragonpit backend.
 				if = {
 					limit = {
 						NOT = {
@@ -135,6 +199,7 @@ segrellion_construct_beacon_dragonpit = {
 					add_building = generic_dragon_pit_01
 				}
 
+				# Unique Ice and Fire Great Building.
 				if = {
 					limit = {
 						NOT = {
@@ -148,7 +213,7 @@ segrellion_construct_beacon_dragonpit = {
 		}
 
 		great_project_notify_completion = {
-			CHARACTER = scope:founder
+			CHARACTER = scope:owner
 		}
 
 		hidden_effect = {
@@ -166,8 +231,6 @@ segrellion_construct_beacon_dragonpit = {
 				value = yes
 			}
 
-			# Rename the finished barony, keep it in the Beacon lord's
-			# personal hands, and initialize AGOT's Dragonkeeper state.
 			segrellion_repair_great_dragonpit_title_effect = yes
 
 			title:c_farring_cross.holder ?= {
@@ -177,7 +240,6 @@ segrellion_construct_beacon_dragonpit = {
 	}
 
 	on_cancel = {
-
 		if = {
 			limit = {
 				has_global_variable = segrellion_beacon_dragonpit_project_active
@@ -187,87 +249,172 @@ segrellion_construct_beacon_dragonpit = {
 		}
 	}
 
+	# =====================================================
+	# REQUIRED CONTRIBUTIONS
+	# Exact monetary total: 10,000 gold
+	# =====================================================
+
 	project_contributions = {
 
-		materials = {
-
+		survey_and_excavation = {
 			is_required = yes
-
-			cost = {
-				gold = 600
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
 			}
-
-			allowed_contributor_filter = {
-				owner = yes
-				vassals = yes
-			}
-
-			on_contribution_funded = {
-				great_project_notify_contribution = yes
-			}
-
+			cost = { gold = 500 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
 			ai_check_interval = 6
-
-			ai_will_do = {
-				value = 1000
-			}
+			ai_will_do = { value = 100 }
 		}
 
-		workforce = {
-
+		quarried_stone = {
 			is_required = yes
-
-			cost = {
-				gold = 450
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
 			}
-
-			allowed_contributor_filter = {
-				owner = yes
-				vassals = yes
-			}
-
-			on_contribution_funded = {
-				great_project_notify_contribution = yes
-			}
-
+			cost = { gold = 1000 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
 			ai_check_interval = 6
-
-			ai_will_do = {
-				value = 1000
-			}
+			ai_will_do = { value = 100 }
 		}
 
-		dragonkeeper_quarters = {
-
+		deep_foundations = {
 			is_required = yes
-
-			cost = {
-				gold = 300
-				prestige = 100
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
 			}
-
-			allowed_contributor_filter = {
-				owner = yes
-				vassals = yes
-			}
-
-			on_contribution_funded = {
-				great_project_notify_contribution = yes
-			}
-
+			cost = { gold = 1200 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
 			ai_check_interval = 6
+			ai_will_do = { value = 100 }
+		}
 
-			ai_will_do = {
-				value = 1000
+		vaulted_chambers = {
+			is_required = yes
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
 			}
+			cost = { gold = 1500 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
+			ai_check_interval = 6
+			ai_will_do = { value = 100 }
+		}
+
+		dragon_gates = {
+			is_required = yes
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
+			}
+			cost = { gold = 900 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
+			ai_check_interval = 6
+			ai_will_do = { value = 100 }
+		}
+
+		ventilation_shafts = {
+			is_required = yes
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
+			}
+			cost = { gold = 700 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
+			ai_check_interval = 6
+			ai_will_do = { value = 100 }
+		}
+
+		feeding_yards = {
+			is_required = yes
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
+			}
+			cost = { gold = 800 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
+			ai_check_interval = 6
+			ai_will_do = { value = 100 }
+		}
+
+		dragonkeeper_halls = {
+			is_required = yes
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
+			}
+			cost = { gold = 900 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
+			ai_check_interval = 6
+			ai_will_do = { value = 100 }
+		}
+
+		containment_ironworks = {
+			is_required = yes
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
+			}
+			cost = { gold = 1000 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
+			ai_check_interval = 6
+			ai_will_do = { value = 100 }
+		}
+
+		outer_fortifications = {
+			is_required = yes
+			contributor_is_valid = {
+				segrellion_beacon_dragonpit_contributor_valid_trigger = yes
+			}
+			cost = { gold = 1500 }
+			contributor_cooldown = individual_contribution_cooldown_value
+			on_contribution_funded = { great_project_notify_contribution = yes }
+			ai_check_interval = 6
+			ai_will_do = { value = 100 }
 		}
 	}
 
-	# Creation is handled by the decision AI, never by generic GP planning.
+	# AI keeps access to the same native Great Project. Historically it
+	# begins considering the undertaking around 150 AC, allowing the
+	# ten-year construction period to converge on the 160 AC inauguration.
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+
+	ai_check_interval_by_tier = {
+		barony = 0
+		county = 0
+		duchy = 12
+		kingdom = 6
+		empire = 6
+		hegemony = 6
+	}
+
 	ai_will_do = {
 		value = 0
+
+		if = {
+			limit = {
+				current_date >= 8150.1.1
+				has_title = title:c_farring_cross
+				is_at_war = no
+			}
+			add = 100
+		}
+
+		if = {
+			limit = {
+				any_relation = {
+					type = agot_dragon
+				}
+			}
+			add = 200
+		}
 	}
 
-	ai_province_filter = capital
-	ai_check_interval = 100
+	ai_province_filter = realm
+	completion_sound_effect = @msg_completion_effect_generic
 }

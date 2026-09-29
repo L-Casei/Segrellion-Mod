@@ -1,66 +1,35 @@
 # =========================================================
-# KNIGHT'S BRIDGE DRAGONPIT - PROJECT FINANCING
+# THE GREAT DRAGONPIT - NATIVE GREAT PROJECT CONTRIBUTORS
+# =========================================================
+#
+# ROOT = potential contributor
+# scope:owner = current owner of the Great Project
+#
+# The engine first applies the native allowed_contributor_filter.
+# This trigger then narrows the candidate to the groups intended for
+# the Great Dragonpit.
 # =========================================================
 
-segrellion_beacon_dragonpit_project_exists_trigger = {
-
-	has_global_variable = segrellion_beacon_dragonpit_project_active
-
-	title:c_farring_cross.holder ?= {
-		any_great_project = {
-			great_project_type = segrellion_construct_beacon_dragonpit
-			great_project_construction_phase_is = planned
-		}
-	}
-}
-
-
-segrellion_beacon_dragonpit_has_unfunded_contribution_trigger = {
-
-	segrellion_beacon_dragonpit_project_exists_trigger = yes
-
-	title:c_farring_cross.holder ?= {
-		any_great_project = {
-			great_project_type = segrellion_construct_beacon_dragonpit
-			great_project_construction_phase_is = planned
-
-			any_contribution = {
-				contribution_is_funded = no
-			}
-		}
-	}
-}
-
-
-segrellion_can_finance_beacon_dragonpit_project_trigger = {
-
-	segrellion_beacon_dragonpit_has_unfunded_contribution_trigger = yes
+segrellion_beacon_dragonpit_contributor_valid_trigger = {
 
 	OR = {
 
-		# The current Beacon holder / project owner.
-		has_title = title:c_farring_cross
+		# Current project owner / Lord of the Beacon.
+		scope:owner ?= {
+			this = root
+		}
 
-		# Any vassal below the Beacon holder.
+		# Any direct or lower vassal of the Lord of the Beacon, whenever
+		# the native Great Project contributor category exposes them.
 		is_vassal_or_below_of = title:c_farring_cross.holder
 
-		# Any member of House Segrellion's dynasty, regardless of realm.
+		# Any Segrellion dynasty member exposed to the native contributor
+		# system through vassalage, alliance, liege or top-liege relations.
 		dynasty = dynasty:dynn_Segrellion
 
-		# The original founder and their close or extended family,
-		# even if they belong to another dynasty after marriage.
-		title:c_farring_cross.holder ?= {
-			any_great_project = {
-				great_project_type = segrellion_construct_beacon_dragonpit
-				great_project_construction_phase_is = planned
-
-				great_project_founder = {
-					OR = {
-						this = root
-						is_close_or_extended_family_of = root
-					}
-				}
-			}
+		# Close or extended family of the project owner.
+		scope:owner ?= {
+			is_close_or_extended_family_of = root
 		}
 	}
 }
