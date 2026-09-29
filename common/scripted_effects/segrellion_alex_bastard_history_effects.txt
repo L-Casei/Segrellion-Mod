@@ -25,7 +25,7 @@ segrellion_ensure_runtime_alex_children_effect = {
 	if = {
 		limit = {
 			has_game_rule = segrellion_canon_children_enabled
-			current_date >= 8115.1.1
+			current_date >= 8114.1.1
 			current_date < 8158.3.1
 
 			character:Segrellion_1 ?= { is_alive = yes }
@@ -55,6 +55,11 @@ segrellion_ensure_runtime_alex_children_effect = {
 			culture = scope:segrellion_alison_mother.culture
 			dynasty = none
 			save_scope_as = segrellion_runtime_alison
+		}
+
+		set_global_variable = {
+			name = segrellion_runtime_alison
+			value = scope:segrellion_runtime_alison
 		}
 
 		scope:segrellion_runtime_alison = {
@@ -120,6 +125,11 @@ segrellion_ensure_runtime_alex_children_effect = {
 			save_scope_as = segrellion_runtime_benjen
 		}
 
+		set_global_variable = {
+			name = segrellion_runtime_benjen
+			value = scope:segrellion_runtime_benjen
+		}
+
 		scope:segrellion_runtime_benjen = {
 			# Set the legal/public father first, then restore the hidden
 			# biological parentage so Cregan never becomes the real father.
@@ -140,6 +150,80 @@ segrellion_ensure_runtime_alex_children_effect = {
 			make_unprunable = yes
 		}
 	}
+
+	# -----------------------------------------------------
+	# Maegor the Usurper
+	# Historical birth: 133 AC.
+	# Father: Daeryn Segrellion. Mother: Alison Hightower.
+	# -----------------------------------------------------
+	if = {
+		limit = {
+			has_game_rule = segrellion_canon_children_enabled
+			current_date >= 8133.1.1
+			current_date < 8158.3.1
+
+			character:Segrellion_Daeryn_Younger_Braavosi ?= { is_alive = yes }
+
+			NOT = { character:Segrellion_Maegor_Usurper ?= { exists = yes } }
+			NOT = { exists = global_var:segrellion_runtime_maegor_usurper }
+
+			OR = {
+				character:Segrellion_Alison_Hightower ?= { is_alive = yes }
+				exists = global_var:segrellion_runtime_alison
+			}
+		}
+
+		if = {
+			limit = {
+				character:Segrellion_Alison_Hightower ?= { is_alive = yes }
+			}
+			character:Segrellion_Alison_Hightower = {
+				save_scope_as = segrellion_maegor_runtime_mother
+			}
+		}
+		else_if = {
+			limit = { exists = global_var:segrellion_runtime_alison }
+			global_var:segrellion_runtime_alison = {
+				save_scope_as = segrellion_maegor_runtime_mother
+			}
+		}
+
+		if = {
+			limit = { exists = scope:segrellion_maegor_runtime_mother }
+
+			create_character = {
+				name = Maegor
+				age = 0
+				random_traits = no
+				father = character:Segrellion_Daeryn_Younger_Braavosi
+				mother = scope:segrellion_maegor_runtime_mother
+				location = scope:segrellion_maegor_runtime_mother.location
+				gender_female_chance = 0
+				faith = character:Segrellion_Daeryn_Younger_Braavosi.faith
+				culture = character:Segrellion_Daeryn_Younger_Braavosi.culture
+				dynasty = dynasty:dynn_Segrellion
+				save_scope_as = segrellion_runtime_maegor_usurper
+			}
+
+			set_global_variable = {
+				name = segrellion_runtime_maegor_usurper
+				value = scope:segrellion_runtime_maegor_usurper
+			}
+
+			scope:segrellion_runtime_maegor_usurper = {
+				set_house = house:house_Segrellion
+				add_trait = ambitious
+				add_trait = vengeful
+				add_trait = arrogant
+				add_trait = brave
+				add_trait = physique_good_2
+				add_character_flag = canon_status_canon
+				add_character_flag = is_Segrellion_Maegor_Usurper
+				make_unprunable = yes
+			}
+		}
+	}
+
 }
 
 
@@ -210,6 +294,25 @@ segrellion_apply_alison_canon_history_effect = {
 		set_father = character:Segrellion_1
 		set_house = character:Hightower_95.house
 	}
+
+	if = {
+		limit = {
+			current_date >= 8132.1.1
+			current_date < 8141.9.1
+			character:Segrellion_Daeryn_Younger_Braavosi ?= { is_alive = yes }
+			NOT = { is_spouse_of = character:Segrellion_Daeryn_Younger_Braavosi }
+		}
+		add_spouse = character:Segrellion_Daeryn_Younger_Braavosi
+	}
+
+	if = {
+		limit = {
+			current_date >= 8157.1.1
+			NOT = { has_character_flag = segrellion_alison_claimed_sheepstealer }
+		}
+		add_character_flag = segrellion_alison_claimed_sheepstealer
+	}
+
 }
 
 
@@ -218,7 +321,7 @@ segrellion_apply_benjen_canon_history_effect = {
 	# Until the reveal, Cregan is the legal/public father while Alex and
 	# Sara remain the biological parents.
 	if = {
-		limit = { current_date < 8147.1.1 }
+		limit = { current_date < 8158.4.1 }
 		set_father = character:Stark_86
 		set_real_father = character:Segrellion_1
 		set_real_mother = character:Stark_88
@@ -287,6 +390,16 @@ segrellion_apply_benjen_canon_history_effect = {
 		if = { limit = { NOT = { has_trait = logistician } } add_trait = logistician }
 		if = { limit = { NOT = { has_trait = unyielding_defender } } add_trait = unyielding_defender }
 	}
+
+	if = {
+		limit = {
+			current_date >= 8158.1.1
+			NOT = { has_character_flag = segrellion_benjen_highwind }
+		}
+		add_character_flag = segrellion_benjen_highwind
+		add_character_flag = segrellion_benjen_awakened_icebringer
+	}
+
 }
 
 
@@ -294,11 +407,53 @@ segrellion_apply_benjen_canon_history_effect = {
 # POST-HISTORY / SAVE-COMPATIBILITY REPAIR
 # =========================================================
 
+segrellion_apply_maegor_usurper_canon_history_effect = {
+
+	if = {
+		limit = {
+			current_date >= 8141.9.2
+			NOT = { has_character_flag = segrellion_maegor_exiled_pentos }
+		}
+		add_character_flag = segrellion_maegor_exiled_pentos
+	}
+
+	if = {
+		limit = { current_date >= 8149.1.1 }
+		if = { limit = { NOT = { has_trait = education_martial_4 } } add_trait = education_martial_4 }
+		if = { limit = { NOT = { has_trait = education_martial_prowess_4 } } add_trait = education_martial_prowess_4 }
+		if = { limit = { NOT = { has_trait = lifestyle_blademaster } } add_trait = lifestyle_blademaster }
+	}
+
+	if = {
+		limit = {
+			current_date >= 8157.1.1
+			NOT = { has_character_flag = segrellion_maegor_war_started }
+		}
+		add_character_flag = segrellion_maegor_war_started
+		add_character_flag = segrellion_maegor_wields_lightbringer
+		add_character_flag = segrellion_maegor_valyrian_armor
+		add_character_flag = segrellion_maegor_warriors_of_flame
+		give_nickname = nick_segrellion_the_usurper
+	}
+
+	if = {
+		limit = {
+			current_date >= 8158.3.1
+			is_alive = yes
+		}
+		death = {
+			death_reason = death_dragon_fire
+			killer = character:dragon_maenor
+		}
+	}
+}
+
+
 segrellion_repair_alex_children_parentage_effect = {
 
 	if = {
 		limit = {
-			current_date >= 8115.1.1
+			current_date >= 8114.1.1
 			character:Segrellion_1 ?= { }
 			character:Hightower_95 ?= { }
 			character:Segrellion_Alison_Hightower ?= { }
@@ -338,4 +493,25 @@ segrellion_repair_alex_children_parentage_effect = {
 		}
 		segrellion_apply_benjen_canon_history_effect = yes
 	}
+
+	if = {
+		limit = {
+			current_date >= 8133.1.1
+			character:Segrellion_Maegor_Usurper ?= { }
+		}
+		character:Segrellion_Maegor_Usurper = {
+			segrellion_apply_maegor_usurper_canon_history_effect = yes
+		}
+	}
+
+	if = {
+		limit = { exists = global_var:segrellion_runtime_maegor_usurper }
+		global_var:segrellion_runtime_maegor_usurper = {
+			if = {
+				limit = { is_alive = yes }
+				segrellion_apply_maegor_usurper_canon_history_effect = yes
+			}
+		}
+	}
+
 }
