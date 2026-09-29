@@ -37,7 +37,6 @@ Segrellion_1 = {
 	trait = calm
 	trait = physique_good_2
 	trait = beauty_good_2
-	trait = intellect_good_2
 	trait = dragon_dreams
 	trait = segrellion_dreamer_trait
 
@@ -339,14 +338,19 @@ Segrellion_10 = {
 		add_character_flag = segrellion_maenar_knighted_by_corlys
 	}
 
-	# After Alyssa's death, Maenar falls into the mysterious sleep
-	# described in Book I. He remains alive but bedridden/comatose.
+	# A badly secured crate falls from the harbour rigging and strikes
+	# Maenar in the head. He survives, but is left permanently incapable.
 	8127.4.16 = {
 		trait = incapable
-		trait = ill
-		add_character_flag = iaf_maenar_mystic_coma
-		add_character_modifier = {
-			modifier = segrellion_maenar_mystic_coma_modifier
+		trait = wounded_3
+		add_character_flag = segrellion_maenar_crate_injury
+	}
+
+	# Fifth Moon, 129 AC. Maenar finally dies from the injuries
+	# sustained in the harbour accident.
+	8129.5.1 = {
+		death = {
+			death_reason = death_wounds
 		}
 	}
 }
@@ -444,6 +448,64 @@ Segrellion_12 = {
 		make_trait_inactive = is_Segrellion_12
 		make_trait_inactive = hair_trait_male_hair_custom_20
     	make_trait_inactive = beard_trait_no_beard
+	}
+
+	# =========================================================
+	# ARGELLA BARATHEON
+	# =========================================================
+
+	# The first Stormlands conflict leaves Aeryn and Argella as rivals.
+	8141.1.1 = {
+		effect = {
+			set_relation_rival = character:IAF_Baratheon_1
+		}
+	}
+
+	# Their hostility turns into a long secret affair.
+	8142.1.1 = {
+		effect = {
+			remove_relation_rival = character:IAF_Baratheon_1
+			set_relation_lover = character:IAF_Baratheon_1
+		}
+	}
+
+	# Rhaenys is Aeryn's wife and soulmate.
+	8144.4.25 = {
+		effect = {
+			set_relation_soulmate = {
+				reason = soulmate_professed_love
+				target = character:Segrellion_17
+			}
+		}
+	}
+
+	# Tenth Moon, 145 AC. Aeryn defeats Rolland Baratheon in single
+	# combat, ending the war, but is left gravely wounded.
+	8145.10.1 = {
+		effect = {
+			add_trait = wounded_3
+			add_character_flag = segrellion_aeryn_defeated_rolland
+			add_character_flag = segrellion_aeryn_rolland_duel_wounds
+		}
+	}
+
+	# After roughly a fortnight Aeryn recovers, retaining permanent scars.
+	8145.10.15 = {
+		effect = {
+			remove_trait = wounded_3
+			add_trait = scarred
+			remove_character_flag = segrellion_aeryn_rolland_duel_wounds
+			add_character_flag = segrellion_aeryn_recovered_from_rolland_duel
+		}
+	}
+
+	# By 155 AC the affair with Argella has collapsed into hostility again.
+	# They remain rivals for the rest of Argella's life.
+	8155.1.1 = {
+		effect = {
+			remove_relation_lover = character:IAF_Baratheon_1
+			set_relation_rival = character:IAF_Baratheon_1
+		}
 	}
 
 	# Canon bearer of Icebringer from Alex's historical handoff.
