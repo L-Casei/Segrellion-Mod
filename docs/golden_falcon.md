@@ -2,6 +2,8 @@
 
 Se conserva `Arryn_90` para mantener las referencias de AGOT a Joffrey y la sucesión del Valle.
 
+Las historias modificadas sustituyen los archivos originales por su misma ruta (`00_agot_char_vale_ancestors.txt` y `00_agot_char_dragonstone_ancestors.txt`). Un archivo adicional `zz_` no elimina las entradas antiguas de muerte, matrimonio o parentesco. Los demás bloques de ambos archivos se conservan; hay que volver a integrar los cambios al actualizar AGOT.
+
 ## Cronología acordada
 
 - Joffrey nace en 106 AC y muere en la batalla del Tridente en 190, a los 84 años. El asesino registrado es Daemon Fuegoscuro (`Targaryen_94`).
